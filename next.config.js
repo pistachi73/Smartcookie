@@ -6,6 +6,8 @@ await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
 const config = {
+  trailingSlash: true,
+  reactStrictMode: false,
   images: {
     remotePatterns: [
       {
