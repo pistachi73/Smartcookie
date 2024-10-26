@@ -17,12 +17,10 @@ export default auth((req) => {
   const {
     device: { type },
   } = userAgent(req);
-  const country = req.geo?.country || "US";
   const deviceType: DeviceType =
     type === "mobile" ? "mobile" : type === "tablet" ? "tablet" : "desktop";
 
   const requestHeaders = new Headers(req.headers);
-  requestHeaders.set(VERCEL_HEADERS.COUNTRY, country);
   requestHeaders.set(VERCEL_HEADERS.DEVICE_TYPE, deviceType);
 
   /* Save URL host visible to the user in Header */

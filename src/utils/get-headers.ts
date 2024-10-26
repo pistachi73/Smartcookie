@@ -4,7 +4,6 @@ import { headers } from "next/headers";
 
 export const getHeaders = async () => {
   const parsedHeaders = await headers();
-  const countryCode = parsedHeaders.get(VERCEL_HEADERS.COUNTRY) as string;
   const deviceType = parsedHeaders.get(
     VERCEL_HEADERS.DEVICE_TYPE,
   ) as DeviceType;
@@ -12,7 +11,6 @@ export const getHeaders = async () => {
     parsedHeaders.get("authorization") || parsedHeaders.get("Authorization");
 
   return {
-    countryCode,
     deviceType,
     authorization,
   };

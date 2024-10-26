@@ -10,7 +10,6 @@ export const VERCEL_HEADERS = {
   HOST: "x-nexturl-host",
   URL: "x-url",
   PATHNAME: "x-pathname",
-  COUNTRY: "x-geo-country-code",
   DEVICE_TYPE: "x-device-type",
 } as const;
 
