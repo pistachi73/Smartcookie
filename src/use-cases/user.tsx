@@ -63,6 +63,8 @@ export const signInUseCase = async ({
     throw new LoginError();
   }
 
+  const a = "123456";
+
   if (user.isTwoFactorEnabled && user.email) {
     if (code) {
       const twoFactorToken = await getTwoFactorTokenByEmail({ email });
