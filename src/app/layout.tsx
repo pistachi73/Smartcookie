@@ -2,6 +2,8 @@ import "@/styles/globals.css";
 
 import { auth } from "@/auth-config";
 import { DeviceOnlyProvider } from "@/components/device-only/device-only-provider";
+import { ToastNotification } from "@/components/toast-notification";
+import { Toaster } from "@/components/ui/sonner";
 import { Providers } from "@/providers/providers";
 import { getHeaders } from "@/utils/get-headers";
 import { SessionProvider } from "next-auth/react";
@@ -31,6 +33,8 @@ export default async function RootLayout({
             <DeviceOnlyProvider deviceType={deviceType}>
               {children}
               {authModal}
+              <Toaster />
+              <ToastNotification />
             </DeviceOnlyProvider>
           </SessionProvider>
         </Providers>

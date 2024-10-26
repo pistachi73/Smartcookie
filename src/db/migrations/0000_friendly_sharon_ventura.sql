@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS "user" (
 	"email" text NOT NULL,
 	"name" text,
 	"image" text,
+	"emailVerified" timestamp DEFAULT now(),
 	"password" text,
 	"salt" text,
 	"role" text DEFAULT 'USER',

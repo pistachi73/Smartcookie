@@ -1,4 +1,3 @@
-export {
-  GET,
-  POST,
-} from "@/auth-config";
+import { GET, POST } from "@/auth-config";
+
+export { GET, POST };

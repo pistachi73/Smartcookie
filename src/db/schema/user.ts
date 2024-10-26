@@ -1,5 +1,5 @@
 import { relations, sql } from "drizzle-orm";
-import { boolean, index, text, uuid } from "drizzle-orm/pg-core";
+import { boolean, index, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { account } from "./account";
 import { pgTable } from "./utils";
 
@@ -10,6 +10,7 @@ export const user = pgTable(
     email: text("email").notNull(),
     name: text("name"),
     image: text("image"),
+    emailVerified: timestamp("emailVerified", { mode: "date" }).defaultNow(),
     password: text("password"),
     salt: text("salt"),
     role: text("role", { enum: ["ADMIN", "USER"] }).default("USER"),

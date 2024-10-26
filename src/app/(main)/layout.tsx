@@ -1,6 +1,5 @@
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
-import { Toaster } from "@/components/ui/sonner";
 
 export default async function RootLayout({
   children,
@@ -9,7 +8,6 @@ export default async function RootLayout({
 }) {
   return (
     <>
-      <Toaster />
       <Header />
       {children}
       <Footer />
