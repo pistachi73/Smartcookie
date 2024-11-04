@@ -1,4 +1,5 @@
 export * from "./account";
+export * from "./billing";
 export * from "./client";
 export * from "./client-hub";
 export * from "./hub";

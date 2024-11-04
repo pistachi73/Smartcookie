@@ -15,6 +15,13 @@
       "when": 1730728700292,
       "tag": "0001_green_lifeguard",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1730743056081,
+      "tag": "0002_careful_dark_phoenix",
+      "breakpoints": true
     }
   ]
 }
