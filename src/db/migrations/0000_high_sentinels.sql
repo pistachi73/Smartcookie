@@ -1,3 +1,5 @@
+CREATE TYPE "public"."payment_frequency" AS ENUM('one-time', 'monthly');--> statement-breakpoint
+CREATE TYPE "public"."time_investment" AS ENUM('low', 'medium', 'high');--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "account" (
 	"userId" uuid NOT NULL,
 	"type" text NOT NULL,
@@ -11,6 +13,22 @@ CREATE TABLE IF NOT EXISTS "account" (
 	"id_token" text,
 	"session_state" text,
 	CONSTRAINT "account_provider_providerAccountId_pk" PRIMARY KEY("provider","providerAccountId")
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "client" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"name" text NOT NULL,
+	"email" text NOT NULL,
+	"password" text NOT NULL,
+	"salt" text NOT NULL,
+	"image" text,
+	"paymentFrequency" "payment_frequency" DEFAULT 'monthly',
+	"location" text,
+	"nationality" text,
+	"age" integer,
+	"timeInvestment" "time_investment" DEFAULT 'medium',
+	"job" text,
+	"away_until" timestamp
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "password_reset_token" (

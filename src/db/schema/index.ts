@@ -1,4 +1,5 @@
 export * from "./account";
+export * from "./client";
 export * from "./password-reset-token";
 export * from "./two-factor-confirmation";
 export * from "./two-factor-token";

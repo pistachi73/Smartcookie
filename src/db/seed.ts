@@ -29,6 +29,7 @@ for (const table of [
   schema.twoFactorConirmation,
   schema.verificationToken,
   schema.passwordResetToken,
+  schema.client,
 ]) {
   await resetTable(db, table);
 }
@@ -37,6 +38,7 @@ async function main() {
   try {
     console.log("Seeding...");
     await seeds.user(db);
+    await seeds.client(db);
   } catch (error) {
     console.error("Error during seeding:", error);
     process.exit(1);

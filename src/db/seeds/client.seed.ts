@@ -1,15 +1,15 @@
 import { hashPassword } from "@/data-access/utils";
 import * as schema from "@/db/schema";
 import type { DB } from "@/db/seed";
-import users from "./data/users.seed-data";
+import clients from "./data/clients.seed-data";
 
 export default async function seed(db: DB) {
   await Promise.all(
-    users.map(async (user) => {
-      const { password, ...rest } = user;
+    clients.map(async (client) => {
+      const { password, ...rest } = client;
       const { hashedPassword, salt } = await hashPassword(password);
 
-      await db.insert(schema.user).values({
+      await db.insert(schema.client).values({
         ...rest,
         password: hashedPassword,
         salt,
