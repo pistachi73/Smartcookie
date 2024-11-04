@@ -1,6 +1,6 @@
 {
-  "id": "4b68ef62-c15a-44dd-9ee0-f61e2e61a6ae",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "6b5a96fd-9450-42be-a3f0-1a5bbf851160",
+  "prevId": "4b68ef62-c15a-44dd-9ee0-f61e2e61a6ae",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -194,6 +194,102 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "public.client_hub": {
+      "name": "client_hub",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "clientId": {
+          "name": "clientId",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hubId": {
+          "name": "hubId",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "client_hub_clientId_index": {
+          "name": "client_hub_clientId_index",
+          "columns": [
+            {
+              "expression": "clientId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "client_hub_hubId_index": {
+          "name": "client_hub_hubId_index",
+          "columns": [
+            {
+              "expression": "hubId",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "client_hub_clientId_client_id_fk": {
+          "name": "client_hub_clientId_client_id_fk",
+          "tableFrom": "client_hub",
+          "tableTo": "client",
+          "columnsFrom": [
+            "clientId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "client_hub_hubId_hub_id_fk": {
+          "name": "client_hub_hubId_hub_id_fk",
+          "tableFrom": "client_hub",
+          "tableTo": "hub",
+          "columnsFrom": [
+            "hubId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "client_hub_clientId_hubId_unique": {
+          "name": "client_hub_clientId_hubId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "clientId",
+            "hubId"
+          ]
+        }
+      },
       "checkConstraints": {}
     },
     "public.hub": {

@@ -1,5 +1,6 @@
 CREATE TYPE "public"."payment_frequency" AS ENUM('one-time', 'monthly');--> statement-breakpoint
 CREATE TYPE "public"."time_investment" AS ENUM('low', 'medium', 'high');--> statement-breakpoint
+CREATE TYPE "public"."schedule_type" AS ENUM('on-demand', 'recurrent');--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "account" (
 	"userId" uuid NOT NULL,
 	"type" text NOT NULL,
@@ -29,6 +30,15 @@ CREATE TABLE IF NOT EXISTS "client" (
 	"timeInvestment" "time_investment" DEFAULT 'medium',
 	"job" text,
 	"away_until" timestamp
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "hub" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"name" text NOT NULL,
+	"description" text NOT NULL,
+	"scheduleType" "schedule_type" NOT NULL,
+	"default_session_price" integer NOT NULL,
+	"cancelation_policy_hours" integer NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "password_reset_token" (

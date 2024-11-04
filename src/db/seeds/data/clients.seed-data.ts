@@ -1,6 +1,10 @@
 import type { InsertClient } from "@/db/schema";
 
-const clients: Omit<InsertClient, "salt">[] = [
+type InsertClientExtended = InsertClient & {
+  hubs: number[];
+};
+
+const clients: Omit<InsertClientExtended, "salt">[] = [
   {
     id: 1,
     name: "Alice Johnson",
@@ -12,6 +16,7 @@ const clients: Omit<InsertClient, "salt">[] = [
     age: 30,
     timeInvestment: "medium",
     job: "Graphic Designer",
+    hubs: [1, 2], // Added to multiple hubs
   },
   {
     id: 2,
@@ -24,6 +29,7 @@ const clients: Omit<InsertClient, "salt">[] = [
     age: 25,
     timeInvestment: "high",
     job: "Software Engineer",
+    hubs: [2],
   },
   {
     id: 3,
@@ -36,6 +42,7 @@ const clients: Omit<InsertClient, "salt">[] = [
     age: 35,
     timeInvestment: "low",
     job: "Project Manager",
+    hubs: [3],
   },
   {
     id: 4,
@@ -48,6 +55,7 @@ const clients: Omit<InsertClient, "salt">[] = [
     age: 28,
     timeInvestment: "medium",
     job: "Marketing Specialist",
+    hubs: [1, 3], // Added to multiple hubs
   },
   {
     id: 5,
@@ -60,6 +68,7 @@ const clients: Omit<InsertClient, "salt">[] = [
     age: 32,
     timeInvestment: "high",
     job: "Data Scientist",
+    hubs: [2, 3], // Added to multiple hubs
   },
   {
     id: 6,
@@ -72,6 +81,7 @@ const clients: Omit<InsertClient, "salt">[] = [
     age: 31,
     timeInvestment: "medium",
     job: "Financial Analyst",
+    hubs: [3],
   },
   {
     id: 7,
@@ -84,6 +94,7 @@ const clients: Omit<InsertClient, "salt">[] = [
     age: 36,
     timeInvestment: "high",
     job: "Teacher",
+    hubs: [1],
   },
 ];
 

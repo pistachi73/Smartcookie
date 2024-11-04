@@ -1,4 +1,6 @@
+import { relations } from "drizzle-orm";
 import { integer, pgEnum, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { clientHub } from "./client-hub";
 import { pgTable } from "./utils";
 
 export const paymentFrequencyEnum = pgEnum("payment_frequency", [
@@ -30,3 +32,7 @@ export const client = pgTable("client", {
 
 export type InsertClient = typeof client.$inferInsert;
 export type Client = typeof client.$inferSelect;
+
+export const clientRelations = relations(client, ({ many }) => ({
+  clientHub: many(clientHub),
+}));
