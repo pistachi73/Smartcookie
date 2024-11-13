@@ -32,7 +32,7 @@ export const AuthModal = ({
         }
       }}
     >
-      <ResponsiveDialogContent className="h-full  max-w-max sm:border-none sm:h-auto sm:w-auto bg-background p-0">
+      <ResponsiveDialogContent className="h-full  max-w-max sm:border-none sm:h-auto sm:w-auto  p-0 bg-background">
         <VisuallyHidden.Root>
           <ResponsiveDialogTitle>Authentication modal</ResponsiveDialogTitle>
           <ResponsiveDialogDescription>

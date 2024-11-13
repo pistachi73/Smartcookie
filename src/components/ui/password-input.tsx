@@ -1,19 +1,22 @@
-import { Eye, EyeOff } from "lucide-react";
 import * as React from "react";
-import { BsCheckCircle, BsCheckCircleFill } from "react-icons/bs";
 
 import { Input } from "./input";
 
 import { passwordRegex } from "@/components/auth/validation";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import {
+  CheckmarkCircle01Icon,
+  ViewIcon,
+  ViewOffSlashIcon,
+} from "@hugeicons/react";
 
 export type PasswordInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   withValidation?: boolean;
 };
 
 const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
-  ({ className, disabled, withValidation, onChange, ...props }, ref) => {
+  ({ className, disabled, withValidation, onChange, size, ...props }, ref) => {
     const [showPassword, setShowPassword] = React.useState(false);
     const [validations, setValidations] = React.useState<
       {
@@ -30,9 +33,9 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
     );
 
     const passwordIcon = showPassword ? (
-      <Eye className="h-4 w-4" aria-hidden="true" size={16} />
+      <ViewIcon aria-hidden="true" size={18} />
     ) : (
-      <EyeOff className="h-4 w-4" aria-hidden="true" size={16} />
+      <ViewOffSlashIcon aria-hidden="true" size={18} />
     );
 
     const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,7 +66,8 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
             type="button"
             variant="ghost"
             size="sm"
-            className="absolute right-0 top-0 h-full px-3 py-2 text-muted-foreground hover:bg-transparent"
+            iconOnly
+            className="absolute right-0 top-0 h-full px-3 py-2 text-neutral-500 hover:text-responsive-dark hover:bg-transparent"
             onClick={() => setShowPassword((prev) => !prev)}
             disabled={disabled}
           >
@@ -87,9 +91,9 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
                   {...props}
                 >
                   {valid ? (
-                    <BsCheckCircleFill size={16} />
+                    <CheckmarkCircle01Icon variant="solid" size={18} />
                   ) : (
-                    <BsCheckCircle size={16} />
+                    <CheckmarkCircle01Icon size={18} />
                   )}
                   {message}
                 </p>

@@ -5,7 +5,7 @@
 @layer base {
   @layer base {
     :root {
-      --background: 0 0% 100%;
+      /* --background: 0 0% 100%; */
       --foreground: 222.2 84% 4.9%;
       --card: 0 0% 100%;
       --card-foreground: 222.2 84% 4.9%;
@@ -23,18 +23,54 @@
       --destructive-foreground: 210 40% 98%;
       --border: 214.3 31.8% 91.4%;
       --input: 214.3 31.8% 91.4%;
-      --ring: 221.2 83.2% 53.3%;
+      /* --ring: 221.2 83.2% 53.3%; */
       --radius: 0.5rem;
+
+
+
+   
+      /* - --neutral-500: #8c939D;
+      --neutral-500/30: #8c939D4d;
+      --neutral-500/30: #8c939D4d;
+      --neutral-500/20: #8c939D33;
+      --neutral-700: #3d444b;
+
+      --primary: #ee4530;
+      
+      --dark: #101214;
+      --light: #ffffff;
+      --light-15: #ffffff26;
+      --light-30: #ffffff4d;
+      --light-70: #ffffffb3;
+      --light-85: #ffffffd9; */
+
+      --neutral-300: 239 242 245;
+      --neutral-500: 140 147 157;
+      --neutral-700: 61 68 75;
+      --primary: 238 69 48;
+      --dark: 16 18 20;
+      --light: 255 255 255;
+      --ring: 247 166 156;
+
+
+
+      --background: var(--neutral-300);
+      --background-reverse: var(--dark);
+      --border: var(--neutral-500) / 0.3;
+      --text: var(--dark);
+      --card-background: var(--light-70);
+      --responsive-light: var(--light);
+      --responsive-dark: var(--dark);
     }
 
     .dark {
-      --background: 222.2 84% 4.9%;
+      /* --background: 222.2 84% 4.9%; */
       --foreground: 210 40% 98%;
       --card: 222.2 84% 4.9%;
       --card-foreground: 210 40% 98%;
       --popover: 222.2 84% 4.9%;
       --popover-foreground: 210 40% 98%;
-      --primary: 217.2 91.2% 59.8%;
+      /* --primary: 217.2 91.2% 59.8%; */
       --primary-foreground: 222.2 47.4% 11.2%;
       --secondary: 217.2 32.6% 17.5%;
       --secondary-foreground: 210 40% 98%;
@@ -44,9 +80,21 @@
       --accent-foreground: 210 40% 98%;
       --destructive: 0 62.8% 30.6%;
       --destructive-foreground: 210 40% 98%;
-      --border: 217.2 32.6% 17.5%;
+      /* --border: 217.2 32.6% 17.5%; */
       --input: 217.2 32.6% 17.5%;
-      --ring: 224.3 76.3% 48%;
+      /* --ring: 224.3 76.3% 48%; */
+
+
+      --ring: 170 31 14;
+
+
+      --background: var(--dark);
+      --background-reverse: var(--neutral-300);
+      --border: var(--light) / .15;
+      --text: var(--light);
+      --card-background: var(--light-15);
+      --responsive-light: var(--dark);
+      --responsive-dark: var(--light);
     }
   }
 }
@@ -56,7 +104,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-responsive-dark;
   }
 
   *:focus:not(.focus-visible) {

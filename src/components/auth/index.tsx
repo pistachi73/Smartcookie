@@ -59,13 +59,13 @@ export const AuthContent = ({ className }: { className?: string }) => {
   return (
     <div
       className={cn(
-        "flex h-full w-full  flex-row overflow-hidden rounded-none p-0 sm:h-[800px] sm:max-h-[80vh] sm:w-[475px] sm:rounded-lg lg:w-[900px] shadow-sm border",
+        " flex h-full w-full  flex-row overflow-hidden rounded-none p-0 sm:h-[800px] sm:max-h-[80vh] sm:w-[475px] sm:rounded-lg lg:w-[900px] shadow-sm border border-border",
         className,
       )}
     >
-      <div className="relative hidden min-h-full w-full basis-1/2 bg-primary/20 bg-cover bg-left lg:block">
+      <div className="relative hidden min-h-full w-full basis-1/2  bg-cover bg-left lg:block bg-primary/20">
         <div className="h-full p-10">
-          <h3 className="text-balance py-6 text-xl sm:text-2xl font-semibold leading-tight tracking-tight ">
+          <h3 className="text-balance py-6 text-xl sm:text-2xl font-semibold leading-tight tracking-tight">
             The only suscription you need.
           </h3>
           <ul className="space-y-4 py-4">

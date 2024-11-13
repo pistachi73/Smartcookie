@@ -12,7 +12,7 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
       defaultTheme="system"
     >
       <LazyMotion features={domAnimation} strict>
-        <TooltipProvider delayDuration={100}>{children}</TooltipProvider>
+        <TooltipProvider delayDuration={200}>{children}</TooltipProvider>
       </LazyMotion>
     </ThemeProvider>
   );

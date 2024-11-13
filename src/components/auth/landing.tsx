@@ -85,6 +85,7 @@ export const Landing = ({ authForm }: LandingProps) => {
       </span>
       <div className="space-y-3">
         <SocialButton provider="google" />
+        <SocialButton provider="apple" />
       </div>
     </FormWrapper>
   );

@@ -5,10 +5,10 @@ import { pgTable } from "./utils";
 
 export const billing = pgTable("billing", {
   id: serial("id").primaryKey(),
-  clientId: serial("clientId")
+  clientId: serial("client_id")
     .notNull()
     .references(() => client.id, { onDelete: "cascade" }),
-  hubId: serial("hubId")
+  hubId: serial("hub_id")
     .notNull()
     .references(() => hub.id, { onDelete: "cascade" }),
   cost: integer("cost").notNull(),

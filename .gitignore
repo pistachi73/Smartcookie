@@ -44,3 +44,5 @@ yarn-error.log*
 
 # React Email
 src/emails/node_modules
+
+.npmrc

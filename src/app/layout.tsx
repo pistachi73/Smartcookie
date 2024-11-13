@@ -27,7 +27,9 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`font-sans ${inter.variable} min-h-screen`}>
+      <body
+        className={`font-sans ${inter.variable} min-h-screen bg-background`}
+      >
         <Providers>
           <SessionProvider session={session}>
             <DeviceOnlyProvider deviceType={deviceType}>

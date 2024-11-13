@@ -1,6 +1,5 @@
 import type * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
-import { AlertCircle } from "lucide-react";
 import * as React from "react";
 import {
   Controller,
@@ -13,6 +12,7 @@ import {
 
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { AlertCircleIcon } from "@hugeicons/react";
 
 const Form = FormProvider;
 
@@ -147,7 +147,7 @@ const FormMessage = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, children, ...props }, ref) => {
-  const { error, formMessageId, name } = useFormField();
+  const { error, formMessageId } = useFormField();
   const body = error ? String(error?.message) : children;
 
   if (error?.type === "informative") {
@@ -169,7 +169,7 @@ const FormMessage = React.forwardRef<
         )}
         {...props}
       >
-        <AlertCircle size={16} />
+        <AlertCircleIcon size={16} />
         {body}
       </p>
     </div>

@@ -4,10 +4,19 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
 
+export enum ToastNotificationError {
+  OAUTH_ACCOUNT_NOT_LINKED = "OAuthAccountNotLinked",
+  NOT_LOGGED_IN = "NotLoggedIn",
+}
+
 const TOAST_NOTIFICATION_ERROR_MAP = new Map<string, string>([
   [
-    "OAuthAccountNotLinked",
+    ToastNotificationError.OAUTH_ACCOUNT_NOT_LINKED,
     "Another account already exists with the same e-mail address.",
+  ],
+  [
+    ToastNotificationError.NOT_LOGGED_IN,
+    "You must be logged in to view this content",
   ],
 ]);
 

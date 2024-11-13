@@ -14,5 +14,5 @@ export const VERCEL_HEADERS = {
 } as const;
 
 export const API_AUTH_PREFIX = "/api/auth";
-export const AUTH_ROUTES = ["/login", "/reset-password", "/error"];
-export const PRIVATE_ROUTES = ["/settings", "/account"];
+export const AUTH_ROUTES = ["/login/", "/reset-password/", "/error/"];
+export const PRIVATE_ROUTES = ["/settings/", "/account/", "/dashboard/"];

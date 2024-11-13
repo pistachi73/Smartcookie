@@ -11,7 +11,6 @@ const config = {
   prefix: "",
   theme: {
     container: {
-      center: true,
       padding: "2rem",
       screens: {
         "2xl": "1400px",
@@ -22,15 +21,38 @@ const config = {
         sans: ["var(--font-inter)"],
       },
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+        neutral: {
+          "300": "rgb(var(--neutral-300))",
+          "500": {
+            "20": "rgba(var(--neutral-500/20), 0.2)",
+            "30": "rgba(var(--neutral-500/30), 0.3)",
+            DEFAULT: "rgb(var(--neutral-500))",
+          },
+          "700": "rgb(var(--neutral-700))",
+          DEFAULT: "rgb(var(--neutral-500))",
         },
+        primary: "rgb(var(--primary))",
+        dark: "rgb(var(--dark))",
+        light: {
+          "15": "rgba(var(--light-15), .15)",
+          "30": "rgba(var(--light-30), .3)",
+          "70": "rgba(var(--light-70), .7)",
+          "85": "rgba(var(--light-85), .85)",
+          DEFAULT: "rgb(var(--light))",
+        },
+        background: {
+          DEFAULT: "rgb(var(--background))",
+          reverse: "rgb(var(--background-reverse))",
+        },
+        border: "rgba(var(--border))",
+        text: "rgb(var(--text))",
+        "card-background": "rgb(var(--card-background))",
+        "responsive-light": "rgb(var(--responsive-light))",
+        "responsive-dark": "rgb(var(--responsive-dark))",
+        ring: "rgb(var(--ring))",
+
+        input: "hsl(var(--input))",
+        foreground: "hsl(var(--foreground))",
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",
@@ -63,12 +85,20 @@ const config = {
       },
       keyframes: {
         "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
+          from: {
+            height: "0",
+          },
+          to: {
+            height: "var(--radix-accordion-content-height)",
+          },
         },
         "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
+          from: {
+            height: "var(--radix-accordion-content-height)",
+          },
+          to: {
+            height: "0",
+          },
         },
         "form-message-div-down": {
           "0%": {

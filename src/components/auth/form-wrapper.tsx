@@ -1,5 +1,3 @@
-import { ArrowLeft } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,6 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { ArrowLeft02Icon } from "@hugeicons/react";
 import { m } from "framer-motion";
 import { useEffect } from "react";
 import { useAuthContext } from "./auth-context";
@@ -63,12 +62,11 @@ export const FormWrapper = ({
               await setAnimationDir(-1);
               backButtonOnClick?.();
             }}
-            size="inline"
             variant="link"
             type="button"
-            className="text-sm text-muted-foreground hover:no-underline"
+            className="text-sm"
           >
-            <ArrowLeft size={18} className="mr-2" />
+            <ArrowLeft02Icon size={18} />
             Back
           </Button>
         )}
