@@ -35,7 +35,7 @@ const AccordionTrigger = React.forwardRef<
     >
       {children}
       <ArrowDown01Icon
-        size={16}
+        size={20}
         className="shrink-0 transition-transform duration-200"
       />
     </AccordionPrimitive.Trigger>

@@ -19,8 +19,8 @@ export const UserButton = ({ user }: { user: ExtendedUser }) => {
     <DropdownMenu>
       <DropdownMenuTrigger>
         <UserAvatar
-          userImage={user.image}
-          userName={user.name}
+          userImage={user?.image}
+          userName={user?.name}
           size={"default"}
         />
       </DropdownMenuTrigger>
@@ -31,14 +31,14 @@ export const UserButton = ({ user }: { user: ExtendedUser }) => {
       >
         <DropdownMenuLabel className="mx-2 flex flex-row gap-3 items-center">
           <UserAvatar
-            userImage={user.image}
-            userName={user.name}
+            userImage={user?.image}
+            userName={user?.name}
             className="h-12 w-12 shrink-0 text-lg"
           />
           <div className="overflow-hidden">
-            <p className="text-base font-medium">{user.name}</p>
+            <p className="text-base font-medium">{user?.name}</p>
             <p className="text-neutral-500 text-sm truncate font-normal">
-              {user.email}
+              {user?.email}
             </p>
           </div>
         </DropdownMenuLabel>

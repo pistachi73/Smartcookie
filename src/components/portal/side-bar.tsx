@@ -52,8 +52,8 @@ export const SideBar = () => {
 
   return (
     <div className="flex flex-col justify-between items-center grow pb-6 rounded-full">
-      <Button variant={"outline"} iconOnly size={"lg"}>
-        <ArrowLeft02Icon size={24} strokeWidth={2} />
+      <Button variant="outline" iconOnly>
+        <ArrowLeft02Icon size={18} strokeWidth={1.5} />
       </Button>
 
       <div className="flex flex-col gap-3 shrink-0 grow-0">
@@ -68,14 +68,15 @@ export const SideBar = () => {
                   variant={"outline"}
                   iconOnly
                   asChild
-                  size={"lg"}
+                  size={"default"}
                   className={clsx(
-                    isActive && "bg-background-reverse text-responsive-light",
+                    isActive &&
+                      "bg-background-reverse text-responsive-light pointer-events-none",
                   )}
                 >
                   <Link href={href}>
                     <Icon
-                      size={22}
+                      size={18}
                       strokeWidth={1.5}
                       variant={isActive ? "bulk" : "twotone"}
                       type="rounded"

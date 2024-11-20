@@ -1,9 +1,7 @@
+import { Calendar } from "@/components/portal/calendar";
+
 const CalendarPage = () => {
-  return (
-    <div className="flex h-full w-full flex-col items-center justify-center">
-      Calendar
-    </div>
-  );
+  return <Calendar />;
 };
 
 export default CalendarPage;

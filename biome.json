@@ -25,7 +25,8 @@
         "noAccumulatingSpread": "off"
       },
       "a11y": {
-        "useKeyWithClickEvents": "warn"
+        "useKeyWithClickEvents": "warn",
+        "useSemanticElements": "off"
       },
       "correctness": {
         "useExhaustiveDependencies": "warn"

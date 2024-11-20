@@ -17,19 +17,19 @@ export default function ThemeSwitch() {
     >
       <ToggleGroupItem
         value="light"
-        size={"lg"}
+        size={"default"}
         iconOnly
         className="bg-background-reverse text-light dark:bg-background"
       >
-        <Sun02Icon size={20} variant={"stroke"} />
+        <Sun02Icon size={18} strokeWidth={1.5} variant={"stroke"} />
       </ToggleGroupItem>
       <ToggleGroupItem
         value="dark"
-        size={"lg"}
+        size={"default"}
         iconOnly
         className="bg-background text-dark dark:bg-background-reverse"
       >
-        <Moon01Icon size={20} variant={"stroke"} />
+        <Moon01Icon size={18} strokeWidth={1.5} variant={"stroke"} />
       </ToggleGroupItem>
     </ToggleGroup>
   );

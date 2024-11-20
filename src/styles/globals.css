@@ -44,10 +44,23 @@
       --light-70: #ffffffb3;
       --light-85: #ffffffd9; */
 
+
+      --primary: 238 69 48;
+      --primary-50: 253 236 234;
+      --primary-100: 250 197 191;
+      --primary-200: 247 169 160;
+      --primary-300: 244 130 116;
+      --primary-400: 241 106 89;
+      --primary-500: 238 69 48;
+      --primary-600: 217 63 44;
+      --primary-700:  169 49 34;
+      --primary-800: 131 38 26;
+      --primary-900: 100 29 20;
+
       --neutral-300: 239 242 245;
       --neutral-500: 140 147 157;
       --neutral-700: 61 68 75;
-      --primary: 238 69 48;
+
       --dark: 16 18 20;
       --light: 255 255 255;
       --ring: 247 166 156;
@@ -58,7 +71,7 @@
       --background-reverse: var(--dark);
       --border: var(--neutral-500) / 0.3;
       --text: var(--dark);
-      --card-background: var(--light-70);
+      --card-background: var(--light) / .7;
       --responsive-light: var(--light);
       --responsive-dark: var(--dark);
     }
@@ -92,7 +105,7 @@
       --background-reverse: var(--neutral-300);
       --border: var(--light) / .15;
       --text: var(--light);
-      --card-background: var(--light-15);
+      --card-background: var(--light) / .15;
       --responsive-light: var(--dark);
       --responsive-dark: var(--light);
     }
