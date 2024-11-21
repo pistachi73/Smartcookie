@@ -26,7 +26,7 @@ export const CalendarContextProvider = ({
   const [selectedDate, setSelectedDate] = React.useState<Date>(new Date());
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [calendarType, setCalendarType] = useState<"day" | "week" | "month">(
-    "day",
+    "week",
   );
 
   return (

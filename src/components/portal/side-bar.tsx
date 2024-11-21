@@ -59,7 +59,6 @@ export const SideBar = () => {
       <div className="flex flex-col gap-3 shrink-0 grow-0">
         {sidebarLinks.map(({ label, href, icon: Icon }) => {
           const isActive = pathname.includes(href);
-          console.log({ isActive, label });
           return (
             <Tooltip key={label}>
               <TooltipTrigger>

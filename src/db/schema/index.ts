@@ -4,6 +4,8 @@ export * from "./client";
 export * from "./client-hub";
 export * from "./hub";
 export * from "./password-reset-token";
+export * from "./session";
+export * from "./session-exception";
 export * from "./two-factor-confirmation";
 export * from "./two-factor-token";
 export * from "./user";

@@ -12,49 +12,57 @@ export type Event = {
 export const DayCalendar = () => {
   const { selectedDate } = useCalendarContext();
 
-  const mockEvents: Event[] = [
+  const mockEvents = [
     {
-      id: "1",
-      title: "Event",
-      start: new Date(
-        selectedDate.getFullYear(),
-        selectedDate.getMonth(),
-        selectedDate.getDate(),
-        10,
-        0,
-      ),
-      end: new Date(
-        selectedDate.getFullYear(),
-        selectedDate.getMonth(),
-        selectedDate.getDate(),
-        11,
-        0,
-      ),
+      id: 1,
+      description: "Algebra Basics",
+      hubId: 1,
+      startTime: new Date("2024-11-21T09:00:00.000Z"),
+      endTime: new Date("2024-11-21T10:30:00.000Z"),
+      price: 50,
+      isRecurring: true,
+      recurrenceRule: [Object],
+      exceptions: [Array],
     },
     {
-      id: "2",
-      title: "Event 2",
-      start: new Date(
-        selectedDate.getFullYear(),
-        selectedDate.getMonth(),
-        selectedDate.getDate(),
-        14,
-        0,
-      ),
-      end: new Date(
-        selectedDate.getFullYear(),
-        selectedDate.getMonth(),
-        selectedDate.getDate(),
-        15,
-        30,
-      ),
+      id: 1,
+      description: "Algebra Basics",
+      hubId: 1,
+      startTime: new Date("2024-12-12T09:00:00.000Z"),
+      endTime: new Date("2024-12-12T10:30:00.000Z"),
+      price: 50,
+      isRecurring: true,
+      recurrenceRule: [Object],
+      exceptions: [Array],
+    },
+    {
+      id: 1,
+      description: "Algebra Basics",
+      hubId: 1,
+      startTime: new Date("2024-12-19T09:00:00.000Z"),
+      endTime: new Date("2024-12-19T10:30:00.000Z"),
+      price: 50,
+      isRecurring: true,
+      recurrenceRule: [Object],
+      exceptions: [Array],
+    },
+    {
+      id: 1,
+      description: "Algebra Basics",
+      hubId: 1,
+      startTime: new Date("2024-12-26T09:00:00.000Z"),
+      endTime: new Date("2024-12-26T10:30:00.000Z"),
+      price: 50,
+      isRecurring: true,
+      recurrenceRule: [Object],
+      exceptions: [Array],
     },
   ];
 
   const dayEvents = mockEvents.filter(
     (event) =>
-      isSameDay(event.start, selectedDate) ||
-      isSameDay(event.end, selectedDate),
+      isSameDay(event.startTime, selectedDate) ||
+      isSameDay(event.endTime, selectedDate),
   );
 
   return (
@@ -115,9 +123,12 @@ export const DayCalendar = () => {
             <div className="flex-1 flex items-center justify-center z-20 relative">
               {dayEvents.map((event) => {
                 const top =
-                  (event.start.getHours() + event.start.getMinutes() / 60) * 4;
+                  (event.startTime.getHours() +
+                    event.startTime.getMinutes() / 60) *
+                  4;
                 const height =
-                  (differenceInMinutes(event.end, event.start) / 60) * 4;
+                  (differenceInMinutes(event.endTime, event.startTime) / 60) *
+                  4;
                 return (
                   <div
                     key={event.id}
@@ -127,11 +138,11 @@ export const DayCalendar = () => {
                       height: `${height}rem`,
                     }}
                   >
-                    <p>{event.title}</p>
+                    <p>{event.description}</p>
                     <p>
-                      From {format(event.start, "HH:mm")}
+                      From {format(event.startTime, "HH:mm")}
                       {" to "}
-                      {format(event.end, "HH:mm")}
+                      {format(event.endTime, "HH:mm")}
                     </p>
                   </div>
                 );
