@@ -5,7 +5,7 @@ import { type VariantProps, cva } from "class-variance-authority";
 import { useMemo } from "react";
 
 const userAvatarVariants = cva(
-  "flex h-full w-full items-center justify-center rounded-full bg-primary",
+  "flex h-full w-full items-center justify-center rounded-full",
   {
     variants: {
       size: {
@@ -54,9 +54,13 @@ export const UserAvatar = ({
   return (
     <Avatar className={cn(userAvatarVariants({ size }), className)}>
       <AvatarImage src={userImage ?? undefined} />
-      <AvatarFallback className="bg-primary text-light font-medium">
+      <AvatarFallback className="text-light font-medium bg-primary-500">
         {initials ?? (
-          <UserIcon variant="solid" size={iconSizeMap[size ?? "default"]} />
+          <UserIcon
+            variant="solid"
+            size={iconSizeMap[size ?? "default"]}
+            className="text-light"
+          />
         )}
       </AvatarFallback>
     </Avatar>

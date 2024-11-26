@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS "client_hub" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "hub" (
 	"id" serial PRIMARY KEY NOT NULL,
+	"user_id" uuid NOT NULL,
 	"name" text NOT NULL,
 	"description" text NOT NULL,
 	"scheduleType" "schedule_type" NOT NULL,
@@ -69,6 +70,7 @@ CREATE TABLE IF NOT EXISTS "password_reset_token" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "session" (
 	"id" serial PRIMARY KEY NOT NULL,
+	"title" text NOT NULL,
 	"description" text NOT NULL,
 	"hub_id" serial NOT NULL,
 	"start_time" timestamp NOT NULL,
@@ -149,6 +151,12 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "client_hub" ADD CONSTRAINT "client_hub_hubId_hub_id_fk" FOREIGN KEY ("hubId") REFERENCES "public"."hub"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "hub" ADD CONSTRAINT "hub_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

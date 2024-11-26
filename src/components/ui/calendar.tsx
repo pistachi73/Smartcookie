@@ -58,7 +58,6 @@ function Calendar({
       }}
       components={{
         Chevron: (props) => {
-          console.log(props);
           if (props.orientation === "left") {
             return <ArrowLeft01Icon size={20} />;
           }

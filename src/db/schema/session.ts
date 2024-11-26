@@ -9,11 +9,12 @@ import {
 } from "drizzle-orm/pg-core";
 import { attendance } from "./attendance";
 import { hub } from "./hub";
-import { sessionException } from "./session-exception";
+import { type SessionException, sessionException } from "./session-exception";
 import { pgTable } from "./utils";
 
 export const session = pgTable("session", {
   id: serial("id").primaryKey(),
+  title: text("title").notNull(),
   description: text("description").notNull(),
   hubId: serial("hub_id")
     .notNull()
@@ -22,7 +23,7 @@ export const session = pgTable("session", {
   endTime: timestamp("end_time", { mode: "date" }).notNull(),
   price: integer("price").notNull(),
   isRecurring: boolean("is_recurring").default(false),
-  recurrenceRule: jsonb("recurrence_rule").$type<RecurrenceRule>(),
+  recurrenceRule: jsonb("recurrence_rule").$type<RecurrenceRule | null>(),
 });
 
 export const sessionRelations = relations(session, ({ one, many }) => ({
@@ -40,7 +41,10 @@ export type RecurrenceRule = {
   frequency: RecurrenceRuleFrequency;
   interval: number;
   daysOfWeek: DayOfWeek[];
+  endDate: Date;
 };
 
 export type InsertSession = typeof session.$inferInsert;
-export type Session = typeof session.$inferSelect;
+export type Session = typeof session.$inferSelect & {
+  exceptions?: SessionException[];
+};

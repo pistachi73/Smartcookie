@@ -55,8 +55,6 @@ export default auth((req) => {
     });
   }
 
-  console.log({ "nextUrl.pathname": nextUrl.pathname });
-
   if (!isLoggedIn && isPrivateRoute) {
     let callbackUrl = nextUrl.pathname;
     if (nextUrl.search) {

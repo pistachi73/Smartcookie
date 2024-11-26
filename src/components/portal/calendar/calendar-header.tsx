@@ -6,7 +6,14 @@ import {
   ArrowRight01Icon,
   SidebarLeft01Icon,
 } from "@hugeicons/react";
-import { addDays, addMonths, addWeeks, format } from "date-fns";
+import {
+  addDays,
+  addMonths,
+  addWeeks,
+  endOfWeek,
+  format,
+  startOfWeek,
+} from "date-fns";
 import { useMemo } from "react";
 import { type CalendarType, useCalendarContext } from "./calendar-context";
 import { useWeekCalendar } from "./hooks/use-week-calendar";
@@ -52,18 +59,19 @@ export const CalendarHeader = () => {
       case "day":
         return format(selectedDate, "d LLLL, yyyy");
       case "week":
-        return `${currentWeekMonthNames
-          .map((name) => `${name}`)
-          .join(" - ")}, ${currentYearNumber}`;
+        return `${format(startOfWeek(selectedDate, { weekStartsOn: 1 }), "d LLLL")} - ${format(
+          endOfWeek(selectedDate, { weekStartsOn: 1 }),
+          "d LLLL",
+        )} ${format(selectedDate, "yyyy")}`;
       case "month":
         return format(selectedDate, "LLLL, yyyy");
       default:
         return "";
     }
-  }, [calendarType, currentWeekMonthNames, selectedDate, currentYearNumber]);
+  }, [calendarType, selectedDate]);
 
   return (
-    <div className="flex flex-row items-center  justify-between px-6 py-3 ">
+    <div className="flex flex-row items-center  justify-between px-6 py-4 gap-6">
       <div className="flex flex-row items-center gap-3">
         <Button
           variant="outline"
@@ -98,14 +106,19 @@ export const CalendarHeader = () => {
             <ArrowRight01Icon size={18} strokeWidth={1.5} />
           </Button>
         </div>
-        <h2 className="text-2xl font-medium">{title}</h2>
+        <h2 className="text-2xl font-medium overflow-ellipsis line-clamp-1">
+          {title}
+        </h2>
       </div>
       <ToggleGroup
         type="single"
+        value={calendarType}
         onValueChange={(value) => {
+          if (!value) return;
           setCalendarType(value as CalendarType);
         }}
         defaultValue={calendarType}
+        radioGroup="calendar-type"
       >
         <ToggleGroupItem value="day" size="sm">
           Day

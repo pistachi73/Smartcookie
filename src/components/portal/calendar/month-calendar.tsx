@@ -1,4 +1,3 @@
-import { cn } from "@/lib/utils";
 import {
   addDays,
   differenceInDays,
@@ -8,9 +7,10 @@ import {
   subDays,
 } from "date-fns";
 import { useCalendarContext } from "./calendar-context";
+import { MonthCalendarDayCell } from "./components/month-calendar-day-cell";
 
 export const MonthCalendar = () => {
-  const { selectedDate } = useCalendarContext();
+  const { selectedDate, sessionOccurrences } = useCalendarContext();
 
   const startMonth = startOfMonth(selectedDate);
   const endMonth = lastDayOfMonth(selectedDate);
@@ -28,41 +28,24 @@ export const MonthCalendar = () => {
           key={`month-row-${rowIndex}`}
           role="row"
           tabIndex={0}
-          className="flex flex-row w-full border-border basis-full grow"
+          className="flex flex-row w-full border-border basis-full overflow-hidden"
         >
           {Array.from({ length: 7 }).map((_, dayIndex) => {
             const currentDay = addDays(startCalendar, rowIndex * 7 + dayIndex);
+            const dayOccurrences =
+              sessionOccurrences?.[format(currentDay, "yyyy-MM-dd")] || [];
             const isCurrentMonth =
               currentDay.getMonth() === selectedDate.getMonth();
 
             return (
-              <div key={`month-cell-${dayIndex}`} className="flex-1">
-                <div
-                  className={cn(
-                    "h-full w-full border text-center p-1",
-                    isCurrentMonth ? "" : "",
-                    dayIndex === 0 && "border-l-0",
-                    dayIndex === 6 && "border-r-0",
-                  )}
-                >
-                  {rowIndex === 0 && (
-                    <p className="text-sm text-neutral-500 lowercase">
-                      {format(currentDay, "iii")}
-                    </p>
-                  )}
-
-                  <span
-                    className={cn(
-                      "text-base font-medium",
-                      isCurrentMonth
-                        ? "text-responsive-dark"
-                        : "text-neutral-500",
-                    )}
-                  >
-                    {currentDay.getDate()}
-                  </span>
-                </div>
-              </div>
+              <MonthCalendarDayCell
+                key={`month-cell-${dayIndex}`}
+                dayIndex={dayIndex}
+                rowIndex={rowIndex}
+                currentDay={currentDay}
+                isCurrentMonth={isCurrentMonth}
+                dayOccurrences={dayOccurrences}
+              />
             );
           })}
         </div>

@@ -17,7 +17,7 @@ const Separator = () => {
 };
 
 export const CalendarSidebar = () => {
-  const { selectedDate, setSelectedDate } = useCalendarContext();
+  const { selectedDate, setSelectedDate, hubs } = useCalendarContext();
 
   return (
     <div className="flex flex-col border-r border-border">
@@ -36,11 +36,16 @@ export const CalendarSidebar = () => {
       <Accordion type="multiple" className="max-w-full">
         <AccordionItem value="hubs">
           <AccordionTrigger>Hubs</AccordionTrigger>
-          <AccordionContent className="ml-2">
-            <div className="flex items-center text-sm dark:text-neutral-300 text-neutral-700 gap-2">
-              <Checkbox id="terms" />
-              <label htmlFor="terms">Hub 1</label>
-            </div>
+          <AccordionContent className="ml-2 space-y-4">
+            {hubs?.map((hub) => (
+              <div
+                key={hub.id}
+                className="flex items-center text-sm dark:text-neutral-300 text-neutral-700 gap-2"
+              >
+                <Checkbox id={hub.id.toString()} />
+                <label htmlFor={hub.id.toString()}>{hub.name}</label>
+              </div>
+            ))}
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="clients">

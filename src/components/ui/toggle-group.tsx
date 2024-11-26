@@ -1,7 +1,7 @@
 "use client";
 
 import * as ToggleGroupPrimitive from "@radix-ui/react-toggle-group";
-import { type VariantProps } from "class-variance-authority";
+import type { VariantProps } from "class-variance-authority";
 import * as React from "react";
 
 import { buttonVariants } from "@/components/ui/button";
@@ -12,7 +12,7 @@ const ToggleGroupContext = React.createContext<
   VariantProps<typeof buttonVariants>
 >({
   size: "default",
-  variant: "default",
+  variant: "primary",
 });
 
 const ToggleGroup = React.forwardRef<
@@ -36,7 +36,7 @@ const ToggleGroup = React.forwardRef<
     <ToggleGroupPrimitive.Root
       ref={ref}
       className={cn(
-        "flex items-center justify-center gap-1 rounded-full border border-border p-1",
+        "flex items-center justify-center gap-1 rounded-full border border-border",
         orientation === "horizontal" ? "flex-row" : "flex-col",
         className,
       )}

@@ -120,6 +120,10 @@
     @apply bg-background text-responsive-dark;
   }
 
+  .ring-none{
+    @apply ring-0 ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0;
+  }
+
   *:focus:not(.focus-visible) {
     outline: none;
   }

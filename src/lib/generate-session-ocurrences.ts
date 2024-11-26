@@ -1,5 +1,8 @@
 import type { RecurrenceRuleFrequency, Session } from "@/db/schema/session";
-import type { SessionException } from "@/db/schema/session-exception";
+import type {
+  SessionException,
+  SessionExceptionReason,
+} from "@/db/schema/session-exception";
 import {
   addDays,
   addMonths,
@@ -7,79 +10,120 @@ import {
   format,
   isWithinInterval,
 } from "date-fns";
-import type { DayOfWeek } from "../db/schema/session";
+
+export type SessionOccurrence = Session & {
+  exceptionReason?: SessionExceptionReason;
+};
 
 export const generateSessionOccurrences = ({
   session,
-  exceptions,
   startDate,
   endDate,
 }: {
   session: Session;
-  exceptions: SessionException[];
-  startDate: Date;
-  endDate: Date;
-}): Session[] => {
+  startDate?: Date;
+  endDate?: Date;
+}): SessionOccurrence[] => {
+  const { exceptions, ...sessionWithoutExceptions } = session;
+  const exceptionMap = mapSessionExceptions(session.exceptions ?? []);
+  let currentDate = new Date(session.startTime);
+  const sessionDuration =
+    new Date(session.endTime).getTime() - new Date(session.startTime).getTime();
+
   if (!session.isRecurring) {
-    return singleOccurrenceWithinRange(session, startDate, endDate);
+    const key = getSessionExceptionKey(session.id, currentDate);
+
+    const occurrence = handleSessionException({
+      exception: exceptionMap.get(key),
+      sessionWithoutExceptions,
+      currentDate,
+      sessionDuration,
+    });
+
+    if (!occurrence) return [];
+
+    if (startDate && endDate) {
+      return [occurrence].filter(
+        filterOccurrencesWithinRange(startDate, endDate),
+      );
+    }
+    return [occurrence];
   }
 
   if (!session.recurrenceRule) return [];
 
-  const exceptionMap = mapSessionExceptions(exceptions);
-  const { frequency, interval, daysOfWeek } = session.recurrenceRule;
-  const occurrences: Session[] = [];
-  let currentDate = new Date(session.startTime);
-  const sessionDuration =
-    new Date(session.endTime).getTime() - currentDate.getTime();
+  const {
+    frequency,
+    interval,
+    endDate: recurrenceEndDate,
+  } = session.recurrenceRule;
 
-  while (currentDate <= endDate) {
+  const occurrences: SessionOccurrence[] = [];
+
+  while (currentDate <= new Date(recurrenceEndDate)) {
     const key = getSessionExceptionKey(session.id, currentDate);
-    if (!exceptionMap.has(key)) {
-      occurrences.push(
-        cloneSessionWithNewDate(session, currentDate, sessionDuration),
-      );
+
+    const occurrence = handleSessionException({
+      exception: exceptionMap.get(key),
+      sessionWithoutExceptions,
+      currentDate,
+      sessionDuration,
+    });
+
+    if (occurrence) {
+      occurrences.push(occurrence);
     }
 
     currentDate = incrementDate(currentDate, frequency, interval);
   }
 
-  return occurrences.filter((occurrence) =>
-    isWithinInterval(occurrence.startTime, { start: startDate, end: endDate }),
-  );
+  if (startDate && endDate) {
+    return occurrences.filter(filterOccurrencesWithinRange(startDate, endDate));
+  }
+
+  return occurrences;
 };
 
-const singleOccurrenceWithinRange = (
-  session: Session,
-  startDate: Date,
-  endDate: Date,
-): Session[] => {
-  const sessionDate = new Date(session.startTime);
-  return isWithinInterval(sessionDate, { start: startDate, end: endDate })
-    ? [session]
-    : [];
-};
+function handleSessionException({
+  exception,
+  sessionWithoutExceptions,
+  currentDate,
+  sessionDuration,
+}: {
+  exception?: SessionException;
+  sessionWithoutExceptions: Session;
+  currentDate: Date;
+  sessionDuration: number;
+}): SessionOccurrence | undefined {
+  switch (exception?.reason) {
+    case "skip":
+      return undefined;
+    case "reschedule": {
+      const { newStartTime, newEndTime } = exception;
+      if (!newStartTime || !newEndTime) return undefined;
+      return {
+        ...sessionWithoutExceptions,
+        startTime: newStartTime,
+        endTime: newEndTime,
+        exceptionReason: exception?.reason,
+      };
+    }
+    default: {
+      return {
+        ...sessionWithoutExceptions,
+        startTime: currentDate,
+        endTime: new Date(currentDate.getTime() + sessionDuration),
+        exceptionReason: exception?.reason,
+      };
+    }
+  }
+}
 
-const cloneSessionWithNewDate = (
-  session: Session,
-  newStartDate: Date,
-  sessionDuration: number,
-): Session => {
-  return {
-    ...session,
-    startTime: newStartDate,
-    endTime: new Date(newStartDate.getTime() + sessionDuration),
-  };
-};
+const filterOccurrencesWithinRange =
+  (startDate: Date, endDate: Date) => (occurrence: SessionOccurrence) =>
+    isWithinInterval(occurrence.startTime, { start: startDate, end: endDate });
 
-const matchesRecurrenceRule = (
-  date: Date,
-  daysOfWeek: DayOfWeek[],
-): boolean => {
-  return daysOfWeek.includes(format(date, "EEEEEE") as DayOfWeek);
-};
-
-const incrementDate = (
+export const incrementDate = (
   date: Date,
   frequency: RecurrenceRuleFrequency,
   interval: number,
@@ -102,12 +146,11 @@ const getSessionExceptionKey = (sessionId: number, date: Date): string => {
 
 const mapSessionExceptions = (
   exceptions: SessionException[],
-): Map<string, SessionException> => {
-  return exceptions.reduce((map, exception) => {
+): Map<string, SessionException> =>
+  exceptions.reduce((map, exception) => {
     map.set(
       getSessionExceptionKey(exception.sessionId, exception.exceptionDate),
       exception,
     );
     return map;
   }, new Map<string, SessionException>());
-};

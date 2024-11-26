@@ -1,6 +1,6 @@
 import type { InsertHub } from "@/db/schema";
 
-const hubs: InsertHub[] = [
+const hubs: Omit<InsertHub, "userId">[] = [
   {
     id: 1,
     name: "Math Tutoring Hub",

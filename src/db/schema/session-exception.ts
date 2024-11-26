@@ -33,3 +33,4 @@ export const sessionExceptionRelations = relations(
 
 export type InsertSessionException = typeof sessionException.$inferInsert;
 export type SessionException = typeof sessionException.$inferSelect;
+export type SessionExceptionReason = SessionException["reason"];
