@@ -8,11 +8,11 @@ import {
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { ArrowLeft02Icon } from "@hugeicons/react";
-import { m } from "framer-motion";
+import { motion } from "framer-motion";
 import { useEffect } from "react";
 import { useAuthContext } from "./auth-context";
 
-const MotionCard = m(Card);
+const MotionCard = motion(Card);
 
 type FormWrapperProps = {
   children: React.ReactNode;

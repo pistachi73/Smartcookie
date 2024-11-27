@@ -159,7 +159,7 @@ const FormMessage = React.forwardRef<
   }
 
   return (
-    <div className="relative !mt-0 h-[25px] animate-form-message-div-down">
+    <div className="relative mt-0! h-[25px] animate-form-message-div-down">
       <p
         ref={ref}
         id={formMessageId}

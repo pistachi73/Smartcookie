@@ -10,7 +10,6 @@ import type { SessionOccurrence } from "@/lib/generate-session-ocurrences";
 import { cn } from "@/lib/utils";
 import { MultiplicationSignIcon } from "@hugeicons/react";
 import { format, isToday } from "date-fns";
-import { m } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { SessionOccurrenceDetails } from "./session-occurrence-details";
 
@@ -68,7 +67,7 @@ export const MonthCalendarDayCell = ({
   return (
     <div
       className={cn(
-        "flex flex-col items-center h-full w-full border overflow-hidden pt-1",
+        "flex flex-col items-center h-full w-full border-r border-t overflow-hidden pt-1",
         isCurrentMonth ? "" : "",
         dayIndex === 0 && "border-l-0",
         dayIndex === 6 && "border-r-0",
@@ -144,30 +143,6 @@ export const MonthCalendarDayCell = ({
   );
 };
 
-export const MonthOccurrenceDropdown = ({
-  occurrence,
-  isOpen,
-  setIsOpen,
-}: {
-  occurrence: SessionOccurrence;
-  isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}) => {
-  return (
-    <DropdownMenu open={isOpen} onOpenChange={setIsOpen} modal={false}>
-      <MotionDropdownMenuContent
-        className="w-full p-0"
-        align="center"
-        side="left"
-        sideOffset={8}
-        layoutId="session-occurrence-details"
-      >
-        <SessionOccurrenceDetails occurrence={occurrence} />
-      </MotionDropdownMenuContent>
-    </DropdownMenu>
-  );
-};
-
 const MonthOcccurrence = ({
   occurrence,
 }: {
@@ -175,24 +150,21 @@ const MonthOcccurrence = ({
 }) => {
   return (
     <DropdownMenu modal={false}>
-      {/* <DropdownMenuTrigger className="h-6 p-0.5 px-1 rounded-md text-dark text-sm hover:bg-neutral-500/30 flex gap-2 items-center transition-colors cursor-pointer">
+      <DropdownMenuTrigger className="h-6 p-0.5 px-1 rounded-md text-dark text-sm hover:bg-neutral-500/30 flex gap-2 items-center transition-colors cursor-pointer">
         <div className="size-2 bg-lime-300 rounded-full shrink-0" />
         <p className="line-clamp-1 text-left text-responsive-dark">
           <span>{format(occurrence.startTime, "HH:mm")}</span> -{" "}
           {occurrence.title}
         </p>
-      </DropdownMenuTrigger> */}
-      <MotionDropdownMenuContent
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
         className="w-full p-0"
         align="center"
         side="left"
         sideOffset={8}
-        layoutId="session-occurrence-details"
       >
         <SessionOccurrenceDetails occurrence={occurrence} />
-      </MotionDropdownMenuContent>
+      </DropdownMenuContent>
     </DropdownMenu>
   );
 };
-
-const MotionDropdownMenuContent = m(DropdownMenuContent);

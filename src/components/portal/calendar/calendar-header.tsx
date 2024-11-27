@@ -106,7 +106,7 @@ export const CalendarHeader = () => {
             <ArrowRight01Icon size={18} strokeWidth={1.5} />
           </Button>
         </div>
-        <h2 className="text-2xl font-medium overflow-ellipsis line-clamp-1">
+        <h2 className="text-2xl font-medium text-ellipsis line-clamp-1">
           {title}
         </h2>
       </div>

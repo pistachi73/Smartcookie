@@ -13,7 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSafeAction } from "@/hooks/use-safe-action";
 import { cn } from "@/lib/utils";
 import { regularSpring } from "@/utils/animation";
-import { AnimatePresence, m } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { AlertTriangle, ChevronDown } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
@@ -50,7 +50,7 @@ export const DangerZone = () => {
         </CardHeader>
         <AnimatePresence initial={false}>
           {isOpen && (
-            <m.div
+            <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
@@ -73,7 +73,7 @@ export const DangerZone = () => {
                   </Button>
                 </div>
               </CardContent>
-            </m.div>
+            </motion.div>
           )}
         </AnimatePresence>
       </Card>

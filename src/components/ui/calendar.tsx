@@ -42,11 +42,11 @@ function Calendar({
           buttonVariants({ variant: "ghost" }),
           "text-sm p-0 size-8 rounded-full flex items-center justify-center  font-normal hover:text-responsive-dark hover:bg-neutral-500/30",
           "aria-selected:bg-primary-100  aria-selected:dark-responsive-dark aria-selected:hover:bg-primary-200",
-          "aria-selected:dark:bg-primary-800 aria-selected:dark:hover:bg-primary-700",
+          "dark:aria-selected:bg-primary-800 dark:aria-selected:hover:bg-primary-700",
         ),
         day_button: "size-8",
         range_end: "day-range-end",
-        today: "!bg-primary !text-light",
+        today: "bg-primary! text-light!",
         outside:
           "day-outside text-neutral-500 aria-selected:bg-neutral-500/30 aria-selected:text-muted-foreground",
         disabled: "text-neutral-500/30 opacity-50",

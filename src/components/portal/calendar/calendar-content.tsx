@@ -1,7 +1,7 @@
 "use client";
 
 import { regularSpring } from "@/utils/animation";
-import { AnimatePresence, m } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useCalendarContext } from "./calendar-context";
 import { CalendarHeader } from "./calendar-header";
 import { CalendarSidebar } from "./calendar-sidebar";
@@ -20,39 +20,39 @@ export const CalendarContent = () => {
   };
 
   return (
-    <div className="bg-card-background rounded-3xl flex flex-row grow max-h-[calc(100vh-112px)] overflow-hidden">
+    <div className="h-full grow bg-card-background border shadow-xl rounded-3xl flex flex-row  max-h-[calc(100vh-96px)] overflow-hidden">
       {isSidebarOpen && <CalendarSidebar />}
       <div className="grow overflow-hidden flex flex-col">
         <CalendarHeader />
         <div className="overflow-hidden flex flex-col grow">
           <AnimatePresence mode="wait">
             {calendarType === "day" && (
-              <m.div
+              <motion.div
                 {...calendarAnimation}
                 key="day-calendar"
                 className="overflow-hidden h-full w-full"
               >
                 <DayCalendar />
-              </m.div>
+              </motion.div>
             )}
 
             {calendarType === "week" && (
-              <m.div
+              <motion.div
                 {...calendarAnimation}
                 key="week-calendar"
                 className="overflow-hidden h-full w-full"
               >
                 <WeekCalendar />
-              </m.div>
+              </motion.div>
             )}
             {calendarType === "month" && (
-              <m.div
+              <motion.div
                 {...calendarAnimation}
                 key="month-calendar"
                 className="overflow-hidden h-full w-full"
               >
                 <MonthCalendar />
-              </m.div>
+              </motion.div>
             )}
           </AnimatePresence>
         </div>

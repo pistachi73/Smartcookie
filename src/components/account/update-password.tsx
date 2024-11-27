@@ -21,7 +21,7 @@ import { useSafeAction } from "@/hooks/use-safe-action";
 import { cn } from "@/lib/utils";
 import { regularSpring } from "@/utils/animation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AnimatePresence, m } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, Loader2, Lock } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -93,7 +93,7 @@ export const UpdatePassword = () => {
       </CardHeader>
       <AnimatePresence initial={false}>
         {isOpen && (
-          <m.div
+          <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
@@ -187,7 +187,7 @@ export const UpdatePassword = () => {
                 </form>
               </Form>
             </CardContent>
-          </m.div>
+          </motion.div>
         )}
       </AnimatePresence>
     </Card>

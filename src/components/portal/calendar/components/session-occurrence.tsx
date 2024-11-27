@@ -50,13 +50,13 @@ export const SessionOccurrence = ({
             <div className="flex items-center">
               <UserAvatar
                 size="sm"
-                className="[&:not(:first-child)]:-ml-2 size-7"
+                className="not-first:-ml-2 size-7"
                 userImage={"https://i.pravatar.cc/150?img=3"}
               />
               <UserAvatar
                 userImage={"https://i.pravatar.cc/150?img=1"}
                 size="sm"
-                className="[&:not(:first-child)]:-ml-2 size-7"
+                className="not-first:-ml-2 size-7"
               />
             </div>
           </div>

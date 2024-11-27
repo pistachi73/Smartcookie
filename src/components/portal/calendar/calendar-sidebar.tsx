@@ -8,6 +8,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 
 import { Checkbox } from "@/components/ui/checkbox";
+import { ResizablePanelRoot } from "@/components/ui/resizable-panel";
 import { es } from "date-fns/locale";
 import { useCalendarContext } from "./calendar-context";
 import { UpcomingEvent } from "./upcoming-event";
@@ -25,14 +26,24 @@ export const CalendarSidebar = () => {
         <UpcomingEvent hubName="Math Tutoring Hub" />
       </div>
       <Separator />
-      <Calendar
+      <ResizablePanelRoot value="calendar">
+        <Calendar
+          required
+          mode="single"
+          onSelect={setSelectedDate}
+          selected={selectedDate}
+          // month={selectedDate}
+          locale={es}
+        />
+      </ResizablePanelRoot>
+      {/* <Calendar
         required
         mode="single"
         onSelect={setSelectedDate}
         selected={selectedDate}
-        month={selectedDate}
+        // month={selectedDate}
         locale={es}
-      />
+      /> */}
       <Accordion type="multiple" className="max-w-full">
         <AccordionItem value="hubs">
           <AccordionTrigger>Hubs</AccordionTrigger>

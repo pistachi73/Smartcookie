@@ -7,8 +7,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useCurrentUser } from "@/hooks/use-current-user";
 import {
-  ArrowLeft02Icon,
   Calendar02Icon,
   DashboardSquare01Icon,
   Folder02Icon,
@@ -16,6 +16,7 @@ import {
   UserGroupIcon,
 } from "@hugeicons/react";
 import clsx from "clsx";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -49,12 +50,13 @@ const sidebarLinks = [
 
 export const SideBar = () => {
   const pathname = usePathname();
+  const user = useCurrentUser();
 
   return (
-    <div className="flex flex-col justify-between items-center grow pb-6 rounded-full">
-      <Button variant="outline" iconOnly>
-        <ArrowLeft02Icon size={18} strokeWidth={1.5} />
-      </Button>
+    <div className="flex flex-col justify-between items-center px-5 py-4 rounded-full">
+      <Link href={"/"}>
+        <Image src={"/Logo.svg"} alt="Logo" width={24} height={48} />
+      </Link>
 
       <div className="flex flex-col gap-3 shrink-0 grow-0">
         {sidebarLinks.map(({ label, href, icon: Icon }) => {
@@ -77,7 +79,7 @@ export const SideBar = () => {
                     <Icon
                       size={18}
                       strokeWidth={1.5}
-                      variant={isActive ? "bulk" : "twotone"}
+                      variant={isActive ? "bulk" : "stroke"}
                       type="rounded"
                     />
                   </Link>

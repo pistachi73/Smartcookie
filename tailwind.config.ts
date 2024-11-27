@@ -56,7 +56,7 @@ const config = {
           DEFAULT: "rgb(var(--background))",
           reverse: "rgb(var(--background-reverse))",
         },
-        border: "rgba(var(--border))",
+        // border: "rgba(var(--border))",
         text: "rgb(var(--text))",
         "card-background": "rgba(var(--card-background))",
         "responsive-light": "rgb(var(--responsive-light))",
@@ -161,18 +161,18 @@ const config = {
           },
         },
       },
-      animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
-        "form-message-div-down":
-          "form-message-div-down 250ms ease-out 0s 1 normal none running",
-        "form-message-p-down":
-          "form-message-p-down 200ms ease 200ms 1 normal none running",
-        "password-input-div-down":
-          "password-input-div-down 250ms ease-out 0s 1 normal none running",
-        "password-input-p-down":
-          "password-input-p-down 200ms ease 200ms 1 normal none running",
-      },
+      // animation: {
+      //   "accordion-down": "accordion-down 0.2s ease-out",
+      //   "accordion-up": "accordion-up 0.2s ease-out",
+      //   "form-message-div-down":
+      //     "form-message-div-down 250ms ease-out 0s 1 normal none running",
+      //   "form-message-p-down":
+      //     "form-message-p-down 200ms ease 200ms 1 normal none running",
+      //   "password-input-div-down":
+      //     "password-input-div-down 250ms ease-out 0s 1 normal none running",
+      //   "password-input-p-down":
+      //     "password-input-p-down 200ms ease 200ms 1 normal none running",
+      // },
     },
   },
   future: {

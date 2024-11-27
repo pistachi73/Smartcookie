@@ -10,7 +10,7 @@ export const Calendar = async () => {
       hubs={res?.data?.hubs}
       sessionOccurrences={res?.data?.sessionOccurrences}
     >
-      <div className="w-full grow flex flex-col gap-12 pb-4">
+      <div className="w-full h-full grow ">
         <CalendarContent />
       </div>
     </CalendarContextProvider>

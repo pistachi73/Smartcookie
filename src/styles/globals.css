@@ -1,121 +1,146 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@plugin "tailwindcss-animate";
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Outfit", "Outfit Fallback";
+
+  --color-primary: oklch(63.16% 0.2136 36.23);
+  --color-primary-50: oklch(95.6% 0.0187 25.6);
+  --color-primary-100: oklch(86.87% 0.0615 25.86);
+  --color-primary-200: oklch(80.78% 0.0937 26.61);
+  --color-primary-300: oklch(73.05% 0.142 28.3);
+  --color-primary-400: oklch(68.68% 0.1699 29.39);
+  --color-primary-500: oklch(63.16% 0.2136 36.23);
+  --color-primary-600: oklch(59.22% 0.1939 30.56);
+  --color-primary-700: oklch(49.19% 0.163 36.93);
+  --color-primary-800: oklch(41.26% 0.1295 30.6);
+  --color-primary-900: oklch(34.34% 0.1041 30.36);
+
+  --color-dark: var(--color-neutral-900); 
+  --color-light: white;
+
+  --color-neutral-50: oklch(97.09% 0.0012 255.5);
+  --color-neutral-100: oklch(90.78% 0.014 258.35);
+  --color-neutral-200: oklch(84.6% 0.013 255.52);
+  --color-neutral-300: oklch(78.42% 0.013 259.82);
+  --color-neutral-400: oklch(72.28% 0.013 255.53);
+  --color-neutral-500: oklch(66.08% 0.013 257.22);
+  --color-neutral-600: oklch(57.11% 0.013 257.01);
+  --color-neutral-700: oklch(44.92% 0.013 257.47);
+  --color-neutral-800: oklch(32.13% 0.013 257.48);
+  --color-neutral-900: oklch(20.9% 0.013 257.72);
+
+  --color-background: var(--background);
+  --color-background-reverse: var(--background-reverse);
+  --color-border: var(--border);
+  --color-card-background: var(--card-background);
+  --color-responsive-light: var(--responsive-light);
+  --color-responsive-dark: var(--responsive-dark);
+
+  --radius-lg: 8px;
+  --radius-md: 6px;
+  --radius-sm: 4px;
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-form-message-div-down: form-message-div-down 250ms ease-out 0s 1 normal none running;
+  --animate-form-message-p-down: form-message-p-down 200ms ease 200ms 1 normal none running;
+  --animate-password-input-div-down: password-input-div-down 250ms ease-out 0s 1 normal none running;
+  --animate-password-input-p-down: password-input-p-down 200ms ease 200ms 1 normal none running;
+ 
+  @keyframes accordion-down {
+    from {
+      height: 0
+    }
+    to {
+      height: var(--radix-accordion-content-height)
+    }
+  }
+
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+
+  @keyframes form-message-div-down {
+    0%: {
+      opacity: 0;
+      transform: translateY(-5px);
+      max-height: 0px;
+    }
+    100%: {
+      opacity: 1;
+      transform: translateY(0px);
+      max-height: 25px;
+    }
+  }
+  @keyframes form-message-p-down {
+    0%: {
+      opacity: 0;
+      transform: translateY(-5px);
+      max-height: 0rem;
+    }
+    100%: {
+      opacity: 1;
+      transform: translateY(0px);
+      max-height: 25px;
+    }
+  }
+  @keyframes password-input-div-down {
+    0%: {
+      opacity: 0;
+      transform: translateY(-5px);
+      max-height: 0px;
+    }
+    100%: {
+      opacity: 1;
+      transform: translateY(0px);
+      max-height: 100px;
+    }
+  }
+  @keyframes password-input-p-down {
+    0%: {
+      opacity: 0;
+      transform: translateY(-5px);
+      max-height: 0px;
+    }
+    100%: {
+      opacity: 1;
+      transform: translateY(0px);
+      max-height: 100px;
+    }
+  }
+}
+
 
 @layer base {
-  @layer base {
-    :root {
-      /* --background: 0 0% 100%; */
-      --foreground: 222.2 84% 4.9%;
-      --card: 0 0% 100%;
-      --card-foreground: 222.2 84% 4.9%;
-      --popover: 0 0% 100%;
-      --popover-foreground: 222.2 84% 4.9%;
-      --primary: 221.2 83.2% 53.3%;
-      --primary-foreground: 210 40% 98%;
-      --secondary: 210 40% 96.1%;
-      --secondary-foreground: 222.2 47.4% 11.2%;
-      --muted: 210 40% 96.1%;
-      --muted-foreground: 215.4 16.3% 46.9%;
-      --accent: 210 40% 96.1%;
-      --accent-foreground: 222.2 47.4% 11.2%;
-      --destructive: 0 84.2% 60.2%;
-      --destructive-foreground: 210 40% 98%;
-      --border: 214.3 31.8% 91.4%;
-      --input: 214.3 31.8% 91.4%;
-      /* --ring: 221.2 83.2% 53.3%; */
-      --radius: 0.5rem;
-
-
-
-   
-      /* - --neutral-500: #8c939D;
-      --neutral-500/30: #8c939D4d;
-      --neutral-500/30: #8c939D4d;
-      --neutral-500/20: #8c939D33;
-      --neutral-700: #3d444b;
-
-      --primary: #ee4530;
-      
-      --dark: #101214;
-      --light: #ffffff;
-      --light-15: #ffffff26;
-      --light-30: #ffffff4d;
-      --light-70: #ffffffb3;
-      --light-85: #ffffffd9; */
-
-
-      --primary: 238 69 48;
-      --primary-50: 253 236 234;
-      --primary-100: 250 197 191;
-      --primary-200: 247 169 160;
-      --primary-300: 244 130 116;
-      --primary-400: 241 106 89;
-      --primary-500: 238 69 48;
-      --primary-600: 217 63 44;
-      --primary-700:  169 49 34;
-      --primary-800: 131 38 26;
-      --primary-900: 100 29 20;
-
-      --neutral-300: 239 242 245;
-      --neutral-500: 140 147 157;
-      --neutral-700: 61 68 75;
-
-      --dark: 16 18 20;
-      --light: 255 255 255;
-      --ring: 247 166 156;
-
-
-
-      --background: var(--neutral-300);
-      --background-reverse: var(--dark);
-      --border: var(--neutral-500) / 0.3;
-      --text: var(--dark);
-      --card-background: var(--light) / .7;
-      --responsive-light: var(--light);
-      --responsive-dark: var(--dark);
-    }
-
-    .dark {
-      /* --background: 222.2 84% 4.9%; */
-      --foreground: 210 40% 98%;
-      --card: 222.2 84% 4.9%;
-      --card-foreground: 210 40% 98%;
-      --popover: 222.2 84% 4.9%;
-      --popover-foreground: 210 40% 98%;
-      /* --primary: 217.2 91.2% 59.8%; */
-      --primary-foreground: 222.2 47.4% 11.2%;
-      --secondary: 217.2 32.6% 17.5%;
-      --secondary-foreground: 210 40% 98%;
-      --muted: 217.2 32.6% 17.5%;
-      --muted-foreground: 215 20.2% 65.1%;
-      --accent: 217.2 32.6% 17.5%;
-      --accent-foreground: 210 40% 98%;
-      --destructive: 0 62.8% 30.6%;
-      --destructive-foreground: 210 40% 98%;
-      /* --border: 217.2 32.6% 17.5%; */
-      --input: 217.2 32.6% 17.5%;
-      /* --ring: 224.3 76.3% 48%; */
-
-
-      --ring: 170 31 14;
-
-
-      --background: var(--dark);
-      --background-reverse: var(--neutral-300);
-      --border: var(--light) / .15;
-      --text: var(--light);
-      --card-background: var(--light) / .15;
-      --responsive-light: var(--dark);
-      --responsive-dark: var(--light);
-    }
+  :root {
+    --background: var(--color-neutral-50);
+    --background-reverse: var(--color-dark);
+    --border: var(--color-neutral-200);
+    --card-background: var(--color-light);
+    --responsive-light: var(--color-light);
+    --responsive-dark: var(--color-dark);
+  }
+  .dark {
+    --background: var(--color-dark);
+    --background-reverse: var(--color-neutral-300);
+    --border: var(--color-neutral-700);
+    --card-background: var(--color-neutral-800);
+    --responsive-light: var(--color-dark);
+    --responsive-dark: var(--color-light);
   }
 }
 
 @layer base {
   * {
     @apply border-border;
-  }
+  } 
   body {
     @apply bg-background text-responsive-dark;
   }
@@ -126,5 +151,11 @@
 
   *:focus:not(.focus-visible) {
     outline: none;
+  }
+}
+
+@utility scrollbar-hidden {
+  &::-webkit-scrollbar {
+    display: none;
   }
 }
