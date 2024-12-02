@@ -76,14 +76,14 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
         </div>
         {withValidation && (
           <div className="relative mt-0! h-[100px] animate-password-input-div-down">
-            <div className="t op-0 absolute mt-2 flex animate-password-input-p-down flex-col space-y-1 opacity-0 fill-mode-forwards">
+            <div className="top-0 absolute mt-2 flex animate-password-input-p-down flex-col space-y-1 opacity-0 fill-mode-forwards">
               {validations.map(({ message, id, valid }) => (
                 <p
                   key={id}
                   className={cn(
-                    "flex items-center gap-1.5 text-sm font-light text-muted-foreground",
+                    "flex items-center gap-1.5 text-sm font-light",
                     {
-                      "text-muted-foreground": !valid,
+                      "text-neutral-500": !valid,
                       "text-emerald-500 line-through": valid,
                     },
                     className,

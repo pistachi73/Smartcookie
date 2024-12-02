@@ -14,7 +14,7 @@ const CalendarContext = React.createContext<{
   setSelectedDate: React.Dispatch<React.SetStateAction<Date>>;
   setCalendarType: React.Dispatch<React.SetStateAction<CalendarType>>;
   hubs?: Hub[];
-  hubsMap?: Record<string, Hub>;
+  hubsMap?: Record<number, Hub>;
   sessionOccurrences?: DayGroupedSessionOccurrences;
 }>({
   selectedDate: new Date(),

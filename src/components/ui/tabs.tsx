@@ -4,7 +4,7 @@ import * as TabsPrimitive from "@radix-ui/react-tabs";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 const TabsContext = React.createContext<{
   activeTab: string;
@@ -50,7 +50,7 @@ const TabsTrigger = React.forwardRef<
     <TabsPrimitive.Trigger
       ref={ref}
       className={cn(
-        "rounded-[6px] h-full relative cursor-pointer inline-flex text-neutral-500 items-center justify-center whitespace-nowrap  px-3 py-1.5 text-sm font-medium S transition-all",
+        "outline-hidden rounded-[6px] h-full relative cursor-pointer inline-flex text-neutral-500 items-center justify-center whitespace-nowrap  px-3 py-1.5 text-sm font-medium transition-all",
         "disabled:pointer-events-none disabled:opacity-50",
         "focus-visible:outline-hidden",
         !isActive && "hover:bg-neutral-500/30 hover:text-responsive-dark",
@@ -66,7 +66,7 @@ const TabsTrigger = React.forwardRef<
       {activeTab === value && (
         <motion.span
           layoutId="bubble"
-          className="absolute inset-0 z-10 mix-blend-difference  rounded-sm bg-responsive-dark  text"
+          className="absolute inset-0 z-10  rounded-[6px] bg-responsive-dark"
           transition={{ type: "spring", bounce: 0.1, duration: 0.6 }}
         />
       )}

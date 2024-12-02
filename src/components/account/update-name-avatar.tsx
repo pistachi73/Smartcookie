@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { EditIcon, Loader2, User } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -22,6 +22,7 @@ import { UserAvatar } from "@/components/ui/user-avatar";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useSafeAction } from "@/hooks/use-safe-action";
 import { cn } from "@/lib/utils";
+import { AccountSetting02Icon, ImageAdd02Icon } from "@hugeicons/react";
 import { useSession } from "next-auth/react";
 import { updateUserNameAction } from "./actions";
 import { UpdateNameSchema } from "./validation";
@@ -54,7 +55,7 @@ export const UpdateNameAvatar = () => {
       <div className="absolute inset-0 z-10 flex items-center justify-center bg-secondary w-full h-1" />
       <CardHeader>
         <CardTitle className="flex flex-row gap-2 text-xl items-center">
-          <User className="w-5 h-5" />
+          <AccountSetting02Icon size={20} />
           Personal Information
         </CardTitle>
       </CardHeader>
@@ -74,11 +75,14 @@ export const UpdateNameAvatar = () => {
               "w-full h-full absolute opacity-0 transition-all",
               "top-0 left-0 z-0 flex items-center justify-center rounded-full",
               "bg-primary-800 px-2 py-1 text-xs font-medium text-white",
-              "group-hover:bg-primary-700/70",
+              "group-hover:bg-primary-800",
               "group-hover:opacity-100",
             )}
           >
-            <EditIcon className="w-5 h-5 scale-50 group-hover:scale-100 transition-transform" />
+            <ImageAdd02Icon
+              size={18}
+              className="scale-50 group-hover:scale-100 transition-transform"
+            />
           </div>
         </button>
         <input type="file" ref={fileInputRef} className="hidden" />

@@ -1,7 +1,7 @@
 "use client";
 
 import { regularSpring } from "@/utils/animation";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { useCalendarContext } from "./calendar-context";
 import { CalendarHeader } from "./calendar-header";
 import { CalendarSidebar } from "./calendar-sidebar";

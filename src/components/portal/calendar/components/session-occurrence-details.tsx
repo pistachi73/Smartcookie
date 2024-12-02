@@ -1,10 +1,21 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { DateTimePicker } from "@/components/ui/date-time-picker";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import {
   ResizablePanelContent,
   ResizablePanelRoot,
 } from "@/components/ui/resizable-panel";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import type { SessionOccurrence } from "@/lib/generate-session-ocurrences";
 import { cn } from "@/lib/utils";
@@ -16,6 +27,7 @@ import {
 } from "@hugeicons/react";
 import { format } from "date-fns";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { useCalendarContext } from "../calendar-context";
 
 type SessionOccurrenceDetailsProps = {
@@ -134,7 +146,7 @@ export const SessionOccurrenceDetails = ({
           </ResizablePanelContent>
           <ResizablePanelContent value="reschedule">
             <TabsContent value="reschedule" className="space-y-4">
-              res
+              <RescheduleSession />
             </TabsContent>
           </ResizablePanelContent>
           <ResizablePanelContent value="cancel">
@@ -145,5 +157,62 @@ export const SessionOccurrenceDetails = ({
         </ResizablePanelRoot>
       </Tabs>
     </div>
+  );
+};
+
+const RescheduleSession = () => {
+  const form = useForm();
+
+  const onSubmit = () => {
+    console.log("submit");
+  };
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>New schedule</FormLabel>
+              <FormControl>
+                <DateTimePicker />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Comments</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Comments"
+                  className="placeholder:text-sm resize-none	"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="flex justify-between items-center gap-4">
+          <Button size={"sm"} className="basis-1/2 rounded-lg">
+            Reschedule session
+          </Button>
+          <Button
+            size={"sm"}
+            className="basis-1/2 rounded-lg"
+            variant="tertiary"
+          >
+            Back
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 };

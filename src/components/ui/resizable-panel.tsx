@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import {
   type ComponentProps,
   type ReactNode,
@@ -26,13 +26,19 @@ export function ResizablePanelRoot({
 
   useEffect(() => {
     if (ref.current && value) {
-      setHeight(ref.current.getBoundingClientRect().height);
+      const height = ref.current.getBoundingClientRect().height;
+      if (height === 0) {
+        setHeight(-1);
+      } else {
+        setHeight(height);
+      }
     }
   }, [value]);
+  console.log({ height });
 
   return (
     <motion.div
-      animate={{ height: height > 0 ? height : undefined }}
+      animate={{ height: height === -1 ? 0 : height > 0 ? height : undefined }}
       transition={{ type: "spring", bounce: 0, duration: 0.8 }}
       style={{ overflow: "hidden", position: "relative" }}
     >
@@ -51,7 +57,7 @@ export function ResizablePanelContent({
   ...rest
 }: {
   value: string;
-  children: ReactNode;
+  children?: ReactNode;
 } & ComponentProps<"div">) {
   const panelContext = useContext(PanelContext);
   const isActive = panelContext.value === value;

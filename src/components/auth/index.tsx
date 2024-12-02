@@ -2,8 +2,8 @@
 
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AnimatePresence } from "framer-motion";
 import { BadgeCheck } from "lucide-react";
+import { AnimatePresence } from "motion/react";
 import type { UseFormReturn } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";

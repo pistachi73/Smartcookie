@@ -21,7 +21,6 @@ import {
 } from "../command";
 import { Popover, PopoverContent, PopoverTrigger } from "../popover";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "../select";
-import { Separator } from "../separator";
 import { type TimezoneName, timezones } from "./constants";
 
 const timeSelectOptions = Array.from({ length: 24 * 4 }, (_, index) => {
@@ -47,13 +46,14 @@ export const DateTimePicker = () => {
   });
 
   return (
-    <div className="rounded-xl border border-border min-w-[300px] overflow-hidden">
+    <div className="min-w-[300px]">
       <Popover open={isDateOpen} onOpenChange={setIsDateOpen}>
         <PopoverTrigger asChild>
           <Button
             variant={"outline"}
+            size={"sm"}
             className={cn(
-              "w-full justify-between text-left font-normal rounded-none border-none",
+              "w-full justify-between text-left font-normal rounded-none rounded-t-lg",
               !date && "text-neutral-500",
             )}
           >
@@ -61,7 +61,7 @@ export const DateTimePicker = () => {
             <Calendar03Icon size={16} />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0">
+        <PopoverContent className="w-auto p-0 rounded-lg">
           <Calendar
             mode="single"
             selected={date}
@@ -72,7 +72,6 @@ export const DateTimePicker = () => {
           />
         </PopoverContent>
       </Popover>
-      <Separator decorative />
       <div className="flex items-center gap-1">
         <Select
           onValueChange={(value) => {
@@ -85,9 +84,10 @@ export const DateTimePicker = () => {
           <SelectTrigger asChild>
             <Button
               variant={"outline"}
-              size={"default"}
+              size={"sm"}
               className={cn(
-                "w-full justify-between text-left font-normal rounded-none border-none",
+                "border-l border-y-0 border-r-0 w-full justify-between text-left font-normal bg-transparent rounded-none",
+                "focus-visible:border",
                 !startTime && "text-neutral-500",
               )}
             >
@@ -103,16 +103,17 @@ export const DateTimePicker = () => {
             ))}
           </SelectContent>
         </Select>
-        <div className="size-6 p-1 flex items-center justify-center bg-neutral/20 rounded-sm shrink-0">
+        <div className="size-10 p-1 flex items-center justify-center bg-neutral/20 rounded-sm shrink-0">
           <ArrowRight02Icon size={16} className="text-neutral-500" />
         </div>
         <Select onValueChange={(value) => setEndTime(value)}>
           <SelectTrigger asChild>
             <Button
               variant={"outline"}
-              size={"default"}
+              size={"sm"}
               className={cn(
-                "w-full justify-between text-left font-normal rounded-none border-none",
+                "w-full justify-between text-left font-normal rounded-none bg-transparent border-r border-y-0 border-l-0",
+                "focus-visible:border",
                 !endTime && "text-neutral-500",
               )}
             >
@@ -120,7 +121,7 @@ export const DateTimePicker = () => {
               <ArrowUpDownIcon size={16} />
             </Button>
           </SelectTrigger>
-          <SelectContent className="w-auto p-0">
+          <SelectContent className="p-0">
             {filteredEndTimeOptions.map(({ value, label }) => (
               <SelectItem key={value} value={value} className="tabular-nums">
                 {label}
@@ -129,14 +130,13 @@ export const DateTimePicker = () => {
           </SelectContent>
         </Select>
       </div>
-      <Separator />
       <Popover open={isTimezoneOpen} onOpenChange={setIsTimezoneOpen}>
         <PopoverTrigger asChild>
           <Button
             variant={"outline"}
-            size={"default"}
+            size={"sm"}
             className={cn(
-              "border-none w-full justify-between text-left font-normal rounded-none",
+              "w-full justify-between text-left font-normal rounded-none rounded-b-lg",
               !timezone && "text-neutral-500",
             )}
           >

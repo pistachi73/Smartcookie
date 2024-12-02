@@ -21,8 +21,9 @@ import { useSafeAction } from "@/hooks/use-safe-action";
 import { cn } from "@/lib/utils";
 import { regularSpring } from "@/utils/animation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AnimatePresence, motion } from "framer-motion";
-import { ChevronDown, Loader2, Lock } from "lucide-react";
+import { ArrowDown01Icon, LockKeyIcon } from "@hugeicons/react";
+import { Loader2, Lock } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -79,14 +80,14 @@ export const UpdatePassword = () => {
         <div className="p-4 flex flex-row gap-2 items-center justify-between cursor-pointer hover:bg-accent/50 transition-colors rounded-md">
           <div className="space-y-1">
             <CardTitle className="flex flex-row gap-2 text-xl items-center">
-              <Lock className="w-5 h-5" />
+              <LockKeyIcon size={20} />
               Security
             </CardTitle>
             <CardDescription>
               Change your password to keep your account secure.
             </CardDescription>
           </div>
-          <ChevronDown
+          <ArrowDown01Icon
             className={cn("transition-transform", isOpen && "rotate-180")}
           />
         </div>

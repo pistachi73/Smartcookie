@@ -20,7 +20,8 @@ import { Input } from "@/components/ui/input";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useSafeAction } from "@/hooks/use-safe-action";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Mail } from "lucide-react";
+import { MailAtSign02Icon } from "@hugeicons/react";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -62,7 +63,7 @@ export const UpdateEmail = () => {
           <div className="p-4 flex flex-row gap-2 items-center justify-between ">
             <div className="space-y-1">
               <CardTitle className="flex flex-row gap-2 text-xl items-center">
-                <Mail className="w-5 h-5" />
+                <MailAtSign02Icon className="w-5 h-5" />
                 Email
               </CardTitle>
               <CardDescription>
@@ -86,7 +87,7 @@ export const UpdateEmail = () => {
     <Card className="shadow-md">
       <CardHeader>
         <CardTitle className="flex flex-row gap-2 text-xl items-center">
-          <Mail className="w-5 h-5" />
+          <MailAtSign02Icon className="w-5 h-5" />
           Email
         </CardTitle>
         <CardDescription>

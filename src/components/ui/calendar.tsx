@@ -44,7 +44,8 @@ function Calendar({
           "aria-selected:bg-primary-100  aria-selected:dark-responsive-dark aria-selected:hover:bg-primary-200",
           "dark:aria-selected:bg-primary-800 dark:aria-selected:hover:bg-primary-700",
         ),
-        day_button: "size-8",
+        day_button:
+          "size-8 focus-ring-neutral border rounded-full border-transparent",
         range_end: "day-range-end",
         today: "bg-primary! text-light!",
         outside:

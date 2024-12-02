@@ -13,8 +13,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSafeAction } from "@/hooks/use-safe-action";
 import { cn } from "@/lib/utils";
 import { regularSpring } from "@/utils/animation";
-import { AnimatePresence, motion } from "framer-motion";
-import { AlertTriangle, ChevronDown } from "lucide-react";
+import { Alert01Icon, ArrowDown01Icon } from "@hugeicons/react";
+import { AnimatePresence, motion } from "motion/react";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
 import { deleteUserAction } from "./actions";
@@ -40,10 +40,10 @@ export const DangerZone = () => {
         <CardHeader className="p-2" onClick={() => setIsOpen(!isOpen)}>
           <div className="p-4 flex flex-row gap-2 items-center justify-between cursor-pointer hover:bg-destructive/10 transition-colors rounded-md ">
             <CardTitle className="flex flex-row gap-2 text-xl items-center">
-              <AlertTriangle className="w-5 h-5" />
+              <Alert01Icon size={20} />
               Danger zone
             </CardTitle>
-            <ChevronDown
+            <ArrowDown01Icon
               className={cn("transition-transform", isOpen && "rotate-180")}
             />
           </div>

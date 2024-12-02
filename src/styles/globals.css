@@ -19,6 +19,7 @@
 
   --color-dark: var(--color-neutral-900); 
   --color-light: white;
+  --color-destructive: oklch(58.5% 0.21 29.0); 
 
   --color-neutral-50: oklch(97.09% 0.0012 255.5);
   --color-neutral-100: oklch(90.78% 0.014 258.35);
@@ -68,55 +69,54 @@
   }
 
   @keyframes form-message-div-down {
-    0%: {
+    from {
       opacity: 0;
       transform: translateY(-5px);
       max-height: 0px;
     }
-    100%: {
+    to {
       opacity: 1;
       transform: translateY(0px);
       max-height: 25px;
     }
   }
   @keyframes form-message-p-down {
-    0%: {
+    from {
       opacity: 0;
       transform: translateY(-5px);
       max-height: 0rem;
     }
-    100%: {
+    to {
       opacity: 1;
       transform: translateY(0px);
       max-height: 25px;
     }
   }
   @keyframes password-input-div-down {
-    0%: {
+    from {
       opacity: 0;
       transform: translateY(-5px);
       max-height: 0px;
     }
-    100%: {
+    to {
       opacity: 1;
       transform: translateY(0px);
       max-height: 100px;
     }
   }
   @keyframes password-input-p-down {
-    0%: {
+    from {
       opacity: 0;
       transform: translateY(-5px);
       max-height: 0px;
     }
-    100%: {
+    to {
       opacity: 1;
       transform: translateY(0px);
       max-height: 100px;
     }
   }
 }
-
 
 @layer base {
   :root {
@@ -145,17 +145,42 @@
     @apply bg-background text-responsive-dark;
   }
 
-  .ring-none{
-    @apply ring-0 ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0;
-  }
-
   *:focus:not(.focus-visible) {
     outline: none;
   }
+}
+
+@utility focus-ring-neutral {
+  @apply focus-visible:ring-[3px];    
+  @apply focus-visible:border-neutral-300 focus-visible:ring-neutral-300/40;
+  @apply dark:focus-visible:border-neutral-500 dark:focus-visible:ring-neutral-500/30;  
+}
+
+@utility focus-ring-primary {
+  @apply focus-visible:ring-[3px] focus-visible:border-primary focus-visible:ring-primary/40;
+}
+@utility focus-ring-destructive {
+  @apply focus-visible:outline-none focus-visible:ring-[3px] focus-visible:border-destructive focus-visible:ring-destructive/40;
+}
+
+@utility focus-ring-dark {
+  @apply focus-visible:outline-none focus-visible:ring-[3px] focus-visible:border-responsive-dark focus-visible:ring-responsive-dark/40;
 }
 
 @utility scrollbar-hidden {
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }

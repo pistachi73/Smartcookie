@@ -1,7 +1,7 @@
 import { NavigationButtons } from "@/components/account/navigation-buttons";
 import { MaxWidthWrapper } from "@/components/max-width-wrapper";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft02Icon } from "@hugeicons/react";
 import Link from "next/link";
 
 const AccountLayout = ({ children }: { children: React.ReactNode }) => {
@@ -11,10 +11,10 @@ const AccountLayout = ({ children }: { children: React.ReactNode }) => {
         <Button
           variant={"ghost"}
           asChild
-          className="hidden lg:flex px-4 text-muted-foreground flex-row gap-2 text-sm items-center  justify-start font-normal"
+          className="hidden w-fit lg:flex px-4 text-neutral-500 flex-row gap-2 text-sm items-center  justify-start font-normal"
         >
           <Link href="/">
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft02Icon size={18} />
             Back
           </Link>
         </Button>

@@ -1,7 +1,12 @@
 import { Calendar } from "@/components/portal/calendar";
 
 const CalendarPage = async () => {
-  return <Calendar />;
+  return (
+    <>
+      {/* <SessionUpdateForm /> */}
+      <Calendar />
+    </>
+  );
 };
 
 export default CalendarPage;

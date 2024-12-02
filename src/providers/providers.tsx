@@ -1,7 +1,11 @@
 "use client";
 
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { LazyMotion } from "motion/react";
 import { ThemeProvider } from "next-themes";
+
+const loadFeatures = () =>
+  import("./animationFeatures.js").then((res) => res.default);
 
 export const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -10,9 +14,9 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
       disableTransitionOnChange
       defaultTheme="system"
     >
-      {/* <LazyMotion features={domAnimation} strict> */}
-      <TooltipProvider delayDuration={200}>{children}</TooltipProvider>
-      {/* </LazyMotion> */}
+      <LazyMotion features={loadFeatures}>
+        <TooltipProvider delayDuration={200}>{children}</TooltipProvider>
+      </LazyMotion>
     </ThemeProvider>
   );
 };

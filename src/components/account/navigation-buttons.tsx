@@ -1,11 +1,11 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Home } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
+import { Home09Icon } from "@hugeicons/react";
 
 export const NavigationButtons = () => {
   const pathname = usePathname();
@@ -15,18 +15,32 @@ export const NavigationButtons = () => {
       <div className=" absolute bottom-0 left-0 w-[140%] -translate-x-[20%] h-px bg-accent lg:hidden" />
       <Button
         className={cn(
-          "hover:bg-transparent lg:hover:bg-accent px-0 rounded-none lg:rounded-md text-sm lg:text-base lg:font-semibold hover:no-underline w-fit lg:w-full flex flex-row gap-2 lg:px-4 justify-start lg:border-b-0  border-b-2",
+          "px-0 text-sm lg:text-base lg:font-medium hover:no-underline w-fit lg:w-full flex flex-row gap-2 lg:px-4 justify-start ",
           pathname === "/account/"
-            ? "text-foreground border-b-4 border-secondary font-semibold "
-            : "text-foreground/70 hover:text-foreground/50 border-transparent font-normal",
+            ? "text-responsive-dark"
+            : "text-neutral-500",
         )}
         variant="ghost"
         size="lg"
         asChild
       >
         <Link href="/account">
-          <Home className="w-6 h-6 hidden lg:block" strokeWidth={2} />
+          <Home09Icon size={20} className="hidden lg:block" strokeWidth={1.5} />
           General information
+        </Link>
+      </Button>
+      <Button
+        className={cn(
+          "px-0 text-sm lg:text-base lg:font-medium hover:no-underline w-fit lg:w-full flex flex-row gap-2 lg:px-4 justify-start ",
+          pathname === "/test/" ? "text-responsive-dark" : "text-neutral-500",
+        )}
+        variant="ghost"
+        size="lg"
+        asChild
+      >
+        <Link href="/account">
+          <Home09Icon size={20} className="hidden lg:block" strokeWidth={1.5} />
+          Test
         </Link>
       </Button>
     </div>

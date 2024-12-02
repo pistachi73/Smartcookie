@@ -1,3 +1,4 @@
+import type { RecurrenceRule } from "@/components/ui/recurrence-select";
 import { relations } from "drizzle-orm";
 import {
   boolean,
@@ -34,15 +35,6 @@ export const sessionRelations = relations(session, ({ one, many }) => ({
   attendances: many(attendance),
   exceptions: many(sessionException),
 }));
-
-export type RecurrenceRuleFrequency = "daily" | "weekly" | "monthly";
-export type DayOfWeek = "Mo" | "Tu" | "We" | "Th" | "Fr" | "Sa" | "Su";
-export type RecurrenceRule = {
-  frequency: RecurrenceRuleFrequency;
-  interval: number;
-  daysOfWeek: DayOfWeek[];
-  endDate: Date;
-};
 
 export type InsertSession = typeof session.$inferInsert;
 export type Session = typeof session.$inferSelect & {

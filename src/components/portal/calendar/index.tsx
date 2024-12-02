@@ -1,6 +1,6 @@
 import { getCalendarHubsByUserIdAction } from "./actions";
-import { CalendarContent } from "./calendar-content";
 import { CalendarContextProvider } from "./calendar-context";
+import { SessionUpdateForm } from "./components/session-update-form";
 
 export const Calendar = async () => {
   const res = await getCalendarHubsByUserIdAction();
@@ -10,9 +10,10 @@ export const Calendar = async () => {
       hubs={res?.data?.hubs}
       sessionOccurrences={res?.data?.sessionOccurrences}
     >
-      <div className="w-full h-full grow ">
+      <SessionUpdateForm />
+      {/* <div className="w-full h-full grow ">
         <CalendarContent />
-      </div>
+      </div> */}
     </CalendarContextProvider>
   );
 };
