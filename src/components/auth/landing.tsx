@@ -72,9 +72,9 @@ export const Landing = ({ authForm }: LandingProps) => {
         />
         <Button
           className="w-full mt-4"
-          onClick={onContinue}
+          onPress={onContinue}
           type="submit"
-          disabled={isExecuting}
+          isDisabled={isExecuting}
         >
           {isExecuting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Continue

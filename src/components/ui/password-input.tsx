@@ -68,8 +68,8 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
             size="sm"
             iconOnly
             className="absolute right-0 top-0 h-full px-3 py-2 text-neutral-500 hover:text-responsive-dark hover:bg-transparent"
-            onClick={() => setShowPassword((prev) => !prev)}
-            disabled={disabled}
+            onPress={() => setShowPassword((prev) => !prev)}
+            isDisabled={disabled}
           >
             {passwordIcon}
           </Button>

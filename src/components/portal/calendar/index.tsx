@@ -5,6 +5,8 @@ import { SessionUpdateForm } from "./components/session-update-form";
 export const Calendar = async () => {
   const res = await getCalendarHubsByUserIdAction();
 
+  console.log({ res });
+
   return (
     <CalendarContextProvider
       hubs={res?.data?.hubs}

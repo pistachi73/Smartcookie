@@ -1,9 +1,9 @@
 import { Clock01Icon } from "@hugeicons/react";
 import type { VariantProps } from "class-variance-authority";
 import {
+  TimeField as AriaTimeField,
   DateInput,
   DateSegment,
-  TimeField,
   type TimeFieldProps,
   type TimeValue,
 } from "react-aria-components";
@@ -19,7 +19,7 @@ export function TimeInput<T extends TimeValue>({
   ...props
 }: TimeInputPorps<T>) {
   return (
-    <TimeField
+    <AriaTimeField
       className={cn(
         inputSizeVariants({ inputSize }),
         "flex flex-row items-center w-fit justify-between",
@@ -45,6 +45,6 @@ export function TimeInput<T extends TimeValue>({
         )}
       </DateInput>
       <Clock01Icon size={18} className={cn("ml-2")} />
-    </TimeField>
+    </AriaTimeField>
   );
 }

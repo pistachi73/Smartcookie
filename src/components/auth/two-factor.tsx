@@ -107,7 +107,7 @@ export const TwoFactor = ({ authForm }: TwoFactorProps) => {
                   "pointer-events-none": counter > 0,
                 })}
                 type="button"
-                onClick={() => {
+                onPress={() => {
                   if (counter !== 0) return;
                   resendTwoFactorVerificationEmail(authForm.getValues("email"));
                 }}
@@ -119,7 +119,7 @@ export const TwoFactor = ({ authForm }: TwoFactorProps) => {
           )}
         />
 
-        <Button className="w-full mt-4" type="submit" disabled={isExecuting}>
+        <Button className="w-full mt-4" type="submit" isDisabled={isExecuting}>
           {isExecuting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Confirm
         </Button>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import ThemeSwitch from "@/components/ui/theme-switch";
 import {
   Tooltip,
@@ -8,6 +8,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useCurrentUser } from "@/hooks/use-current-user";
+import { cn } from "@/lib/utils";
 import {
   Calendar02Icon,
   DashboardSquare01Icon,
@@ -15,7 +16,6 @@ import {
   Invoice03Icon,
   UserGroupIcon,
 } from "@hugeicons/react";
-import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -64,26 +64,25 @@ export const SideBar = () => {
           return (
             <Tooltip key={label}>
               <TooltipTrigger>
-                <Button
-                  key={label}
-                  variant={"outline"}
-                  iconOnly
-                  asChild
-                  size={"default"}
-                  className={clsx(
+                <Link
+                  href={href}
+                  className={cn(
+                    buttonVariants({
+                      variant: "outline",
+                      size: "default",
+                      iconOnly: true,
+                    }),
                     isActive &&
                       "bg-background-reverse text-responsive-light pointer-events-none",
                   )}
                 >
-                  <Link href={href}>
-                    <Icon
-                      size={18}
-                      strokeWidth={1.5}
-                      variant={isActive ? "bulk" : "stroke"}
-                      type="rounded"
-                    />
-                  </Link>
-                </Button>
+                  <Icon
+                    size={18}
+                    strokeWidth={1.5}
+                    variant={isActive ? "bulk" : "stroke"}
+                    type="rounded"
+                  />
+                </Link>
               </TooltipTrigger>
               <TooltipContent
                 sideOffset={8}

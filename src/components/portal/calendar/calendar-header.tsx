@@ -77,13 +77,13 @@ export const CalendarHeader = () => {
           variant="outline"
           iconOnly
           size="sm"
-          onClick={() => {
+          onPress={() => {
             setIsSidebarOpen((open) => !open);
           }}
         >
           <SidebarLeft01Icon size={18} strokeWidth={1.5} />
         </Button>
-        <Button variant="outline" size="sm" onClick={onToday}>
+        <Button variant="outline" size="sm" onPress={onToday}>
           Today
         </Button>
         <div className="flex">
@@ -92,7 +92,7 @@ export const CalendarHeader = () => {
             size="sm"
             className="text-neutral-500"
             iconOnly
-            onClick={onPrevious}
+            onPress={onPrevious}
           >
             <ArrowLeft01Icon size={18} strokeWidth={1.5} />
           </Button>
@@ -101,7 +101,7 @@ export const CalendarHeader = () => {
             size="sm"
             className="text-neutral-500"
             iconOnly
-            onClick={onNext}
+            onPress={onNext}
           >
             <ArrowRight01Icon size={18} strokeWidth={1.5} />
           </Button>

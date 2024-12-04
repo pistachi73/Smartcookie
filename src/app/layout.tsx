@@ -26,7 +26,7 @@ export default async function RootLayout({
   const { deviceType } = await getHeaders();
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={"en-GB"} dir={"ltr"} suppressHydrationWarning>
       <body
         className={`font-sans ${inter.variable} min-h-screen bg-background`}
       >

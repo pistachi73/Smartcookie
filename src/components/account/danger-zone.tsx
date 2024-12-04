@@ -67,7 +67,7 @@ export const DangerZone = () => {
                     size={"sm"}
                     type="button"
                     variant={"destructive"}
-                    onClick={() => setIsAlertOpen(true)}
+                    onPress={() => setIsAlertOpen(true)}
                   >
                     Remove account
                   </Button>
@@ -94,8 +94,8 @@ export const DangerZone = () => {
           <ResponsiveDialogFooter>
             <Button
               variant={"destructive"}
-              onClick={() => deleteUser()}
-              disabled={isExecuting}
+              onPress={() => deleteUser()}
+              isDisabled={isExecuting}
             >
               Delete account
             </Button>

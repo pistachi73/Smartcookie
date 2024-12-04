@@ -58,7 +58,7 @@ const NumberInput = ({
             className={cn(
               "h-1/2 w-6  p-0 border-0 border-l rounded-none  text-neutral-500",
             )}
-            disabled={!state.canDecrement}
+            isDisabled={!state.canDecrement}
             {...decrementButtonProps}
           >
             <ArrowDown01Icon size={12} />

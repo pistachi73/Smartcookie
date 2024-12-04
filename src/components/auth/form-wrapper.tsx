@@ -58,7 +58,7 @@ export const FormWrapper = ({
       <div className="min-h-[20px]">
         {backButton && (
           <Button
-            onClick={async () => {
+            onPress={async () => {
               await setAnimationDir(-1);
               backButtonOnClick?.();
             }}

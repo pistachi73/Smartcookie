@@ -96,7 +96,7 @@ export const EnterPassword = ({ authForm }: CreatePasswordProps) => {
                 variant="link"
                 className="text-sm font-light text-neutral-500"
                 type="button"
-                onClick={() => {
+                onPress={() => {
                   setFormType("RESET_PASSWORD");
                 }}
               >
@@ -105,7 +105,7 @@ export const EnterPassword = ({ authForm }: CreatePasswordProps) => {
             </FormItem>
           )}
         />
-        <Button className="w-full mt-4" type="submit" disabled={isExecuting}>
+        <Button className="w-full mt-4" type="submit" isDisabled={isExecuting}>
           {isExecuting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Login
         </Button>

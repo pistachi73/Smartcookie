@@ -1,9 +1,12 @@
 "use client";
 import { type VariantProps, cva } from "class-variance-authority";
-import * as React from "react";
+import type * as React from "react";
 
 import { cn } from "@/lib/utils";
-import { type AriaButtonOptions, useButton } from "react-aria";
+import {
+  Button as RACButton,
+  type ButtonProps as RACButtonProps,
+} from "react-aria-components";
 
 const buttonVariants = cva(
   "cursor-pointer inline-flex  gap-2 items-center justify-center whitespace-nowrap text-base font-medium transition-colors  disabled:pointer-events-none disabled:opacity-50 rounded-full",
@@ -41,7 +44,7 @@ const buttonVariants = cva(
   },
 );
 
-type ButtonProps = AriaButtonOptions<"button"> &
+export type ButtonProps = RACButtonProps &
   VariantProps<typeof buttonVariants> & {
     className?: string;
     iconOnly?: boolean;
@@ -56,12 +59,8 @@ const Button = ({
   children,
   ...props
 }: ButtonProps) => {
-  const ref = React.useRef<HTMLButtonElement | null>(null);
-
-  const { buttonProps } = useButton(props, ref);
-
   return (
-    <button
+    <RACButton
       className={cn(
         buttonVariants({
           variant,
@@ -70,11 +69,10 @@ const Button = ({
         }),
         className,
       )}
-      ref={ref}
-      {...buttonProps}
+      {...props}
     >
       {children}
-    </button>
+    </RACButton>
   );
 };
 

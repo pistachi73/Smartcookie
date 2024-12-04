@@ -150,14 +150,14 @@ export const UpdateEmail = () => {
                   size="sm"
                   variant="ghost"
                   type="button"
-                  disabled={isUpdatingEmail}
-                  onClick={() => setIsVerifyingEmail(false)}
+                  isDisabled={isUpdatingEmail}
+                  onPress={() => setIsVerifyingEmail(false)}
                 >
                   Back
                 </Button>
               )}
               <Button
-                disabled={!form.formState.isDirty || isUpdatingEmail}
+                isDisabled={!form.formState.isDirty || isUpdatingEmail}
                 type="submit"
                 size="sm"
               >

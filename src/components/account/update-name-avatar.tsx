@@ -112,7 +112,7 @@ export const UpdateNameAvatar = () => {
             <div className="w-full flex flex-row items-center justify-end">
               <Button
                 size={"sm"}
-                disabled={!nameForm.formState.isDirty || isUpdatingName}
+                isDisabled={!nameForm.formState.isDirty || isUpdatingName}
                 type="submit"
               >
                 {isUpdatingName && (

@@ -1,66 +1,62 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+
+import { DatePicker } from "@/components/ui/react-aria/date-picker";
+import { ListBoxItem } from "@/components/ui/react-aria/list-box";
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+  SelectField,
+  SelectFieldContent,
+} from "@/components/ui/react-aria/select-field";
+import { TextField } from "@/components/ui/react-aria/text-field";
+import { TimeField } from "@/components/ui/react-aria/time-field";
 import {
   RecurrenceRuleSchema,
   RecurrenceSelect,
 } from "@/components/ui/recurrence-select";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { TimeInput } from "@/components/ui/time-input";
-import { ComboBoxItem, MyComboBox } from "@/components/ui/time-select";
-import { TimezoneSelect } from "@/components/ui/timezone-select";
 import { getCurrentTimezone } from "@/components/ui/timezone-select/utils";
 import type { SessionOccurrence } from "@/lib/generate-session-ocurrences";
 import { cn } from "@/lib/utils";
+import { timezones } from "@/utils/timezones";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ArrowRight02Icon,
   CalendarAdd01Icon,
-  Clock01Icon,
-  Folder02Icon,
+  EarthIcon,
+  Folder01Icon,
 } from "@hugeicons/react";
-import { format } from "date-fns";
-import { type UseFormReturn, useForm } from "react-hook-form";
+import { Time } from "@internationalized/date";
+import type { DateValue, TimeValue } from "react-aria";
+import { Form, SelectValue } from "react-aria-components";
+import { Controller, type UseFormReturn, useForm } from "react-hook-form";
 import { z } from "zod";
 import { useCalendarContext } from "../../calendar-context";
-import { DateSelect } from "./date-select";
 
 type SessionUpdateFormProps = {
   sessionOcurrence?: SessionOccurrence;
 };
 
-const timeSelectOptions = Array.from({ length: 24 * 4 }, (_, index) => {
-  const hours = Math.floor(index / 4);
-  const minutes = (index % 4) * 15;
-  const time = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
-  return { value: time, label: time };
-});
-
-const sessionHour = z.string().regex(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/);
-
-const SessionUpdateSchema = z.object({
-  hubId: z.number(),
-  title: z.string(),
-  date: z.date(),
-  startHour: sessionHour,
-  endHour: sessionHour,
-  timezone: z.string(),
-  recurrenceRule: RecurrenceRuleSchema,
-});
+const SessionUpdateSchema = z
+  .object({
+    hubId: z.number(),
+    title: z.string(),
+    date: z.custom<DateValue>(),
+    startHour: z.custom<TimeValue>(),
+    endHour: z.custom<TimeValue>(),
+    timezone: z.string(),
+    recurrenceRule: RecurrenceRuleSchema,
+  })
+  .refine(
+    ({ startHour, endHour }) =>
+      startHour?.hour < endHour.hour ||
+      (startHour?.hour === endHour?.hour &&
+        startHour?.minute < endHour?.minute),
+    {
+      path: ["wrongHour"],
+      message: "End time must be greater than start time",
+    },
+  );
 
 export type SesionUpdateForm = UseFormReturn<
   z.infer<typeof SessionUpdateSchema>
@@ -69,7 +65,8 @@ export type SesionUpdateForm = UseFormReturn<
 export const SessionUpdateForm = ({
   sessionOcurrence,
 }: SessionUpdateFormProps) => {
-  const { hubsMap } = useCalendarContext();
+  console.log(getCurrentTimezone());
+  const { hubs } = useCalendarContext();
   const form = useForm<z.infer<typeof SessionUpdateSchema>>({
     resolver: zodResolver(SessionUpdateSchema),
     defaultValues: {
@@ -77,10 +74,16 @@ export const SessionUpdateForm = ({
       title: sessionOcurrence?.title ?? "",
       date: sessionOcurrence?.startTime,
       startHour: sessionOcurrence?.startTime
-        ? format(sessionOcurrence?.startTime, "HH:mm")
+        ? new Time(
+            sessionOcurrence?.startTime.getHours(),
+            sessionOcurrence?.startTime.getMinutes(),
+          )
         : undefined,
       endHour: sessionOcurrence?.endTime
-        ? format(sessionOcurrence?.endTime, "HH:mm")
+        ? new Time(
+            sessionOcurrence?.endTime.getHours(),
+            sessionOcurrence?.endTime.getMinutes(),
+          )
         : undefined,
       timezone: getCurrentTimezone()?.name ?? "",
       recurrenceRule: sessionOcurrence?.recurrenceRule ?? {
@@ -92,230 +95,180 @@ export const SessionUpdateForm = ({
     mode: "onChange",
   });
 
-  const startHour = form.watch("startHour");
+  console.log(hubs);
+  // console.log(form.getFieldState("wrongHour"));
 
-  const filteredEndTimeOptions = timeSelectOptions.filter(({ value }) => {
-    return startHour ? value > startHour : true;
-  });
-
-  const handleSubmit = (values: any) => {};
+  const onSubmit = (values: z.infer<typeof SessionUpdateSchema>) => {};
 
   return (
-    <Form {...form}>
-      <form className="space-y-6 max-w-[400px]">
-        <div className="flex items-center gap-3">
-          <CalendarAdd01Icon
-            size={36}
-            color="var(--color-responsive-dark)"
-            variant="duotone"
+    <Form
+      onSubmit={form.handleSubmit(onSubmit)}
+      className="space-y-6 max-w-[400px]"
+    >
+      <div className="flex items-center gap-3">
+        <CalendarAdd01Icon
+          size={36}
+          color="var(--color-responsive-dark)"
+          variant="duotone"
+        />
+        <div>
+          <p className="text-lg font-medium"> Create / edit session</p>
+          <p className="text-sm text-neutral-500">
+            Fill in the data below to edit the session
+          </p>
+        </div>
+      </div>
+      <div className="space-y-5">
+        <div className="space-y-2">
+          <p className="text-sm font-medium">Hub and title</p>
+
+          <Controller
+            control={form.control}
+            name="hubId"
+            render={({
+              field: { onChange, ...restField },
+              fieldState: { error, invalid },
+            }) => (
+              <SelectField
+                {...restField}
+                onSelectionChange={onChange}
+                placeholder="Select hub"
+                aria-label="Hub"
+                validationBehavior="aria"
+                isInvalid={invalid}
+                errorMessage={error?.message}
+              >
+                <Button
+                  size={"sm"}
+                  variant={"outline"}
+                  className="w-full justify-between font-normal rounded-lg"
+                >
+                  <SelectValue className="data-[placeholder]:text-neutral-500" />
+                  <Folder01Icon size={16} />
+                </Button>
+                <SelectFieldContent
+                  className="min-w-[var(--trigger-width)]"
+                  items={hubs}
+                >
+                  {({ id, name }) => <ListBoxItem id={id}>{name}</ListBoxItem>}
+                </SelectFieldContent>
+              </SelectField>
+            )}
           />
-          <div>
-            <p className="text-lg font-medium"> Create / edit session</p>
-            <p className="text-sm text-neutral-500">
-              Fill in the data below to edit the session
-            </p>
-          </div>
+          <Controller
+            control={form.control}
+            name="title"
+            render={({ field, fieldState: { error, invalid } }) => (
+              <TextField
+                {...field}
+                size={"sm"}
+                aria-label="Session title"
+                placeholder="Session title"
+                validationBehavior="aria"
+                isInvalid={invalid}
+                errorMessage={error?.message}
+              />
+            )}
+          />
         </div>
-        <div className="space-y-5">
-          <div className="space-y-2">
-            <p className="text-sm font-medium">Hub and title</p>
-
-            <FormField
+        <Separator />
+        <div className="space-y-2">
+          <p className="text-sm font-medium">Date and time</p>
+          <Controller
+            control={form.control}
+            name="date"
+            render={({ field, fieldState: { invalid, error } }) => (
+              <DatePicker
+                {...field}
+                size={"sm"}
+                aria-label="Session date"
+                validationBehavior="aria"
+                isInvalid={invalid}
+                errorMessage={error?.message}
+              />
+            )}
+          />
+          <div className="flex items-center gap-2 w-full">
+            <Controller
               control={form.control}
-              name="hubId"
-              render={({ field }) => (
-                <FormItem>
-                  <Select
-                    onValueChange={(value) => field.onChange(+value)}
-                    defaultValue={field.value as any}
-                  >
-                    <FormControl>
-                      <SelectTrigger asChild>
-                        <Button
-                          variant={"outline"}
-                          size={"sm"}
-                          className={cn(
-                            "w-full justify-between text-left font-normal bg-transparent rounded-lg",
-                            !field.value && "text-neutral-500",
-                          )}
-                        >
-                          {field.value
-                            ? hubsMap?.[field.value]?.name
-                            : "Select hub"}
-                          <Folder02Icon size={16} />
-                        </Button>
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {Object.entries(hubsMap ?? {}).map(([hubId, hub]) => (
-                        <SelectContent key={hubId}>
-                          <SelectItem value={hubId} className="text-sm">
-                            {hub.name}
-                          </SelectItem>
-                        </SelectContent>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
+              name="startHour"
+              render={({ field, fieldState: { error, invalid } }) => (
+                <TimeField
+                  {...field}
+                  className="w-full"
+                  validationBehavior="aria"
+                  size={"sm"}
+                  isInvalid={invalid}
+                  errorMessage={error?.message}
+                />
               )}
             />
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      inputSize="sm"
-                      placeholder="Session title"
-                      className="w-full py-0 "
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <Separator />
-          <div className="space-y-2">
-            <p className="text-sm font-medium">Date and time</p>
-            <DateSelect form={form} />
-            <div className="flex items-center gap-2 w-full">
-              <FormField
-                control={form.control}
-                name="startHour"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <Select
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        const endTime = form.getValues("endHour");
-                        if (endTime && value >= endTime) {
-                          form.setValue("endHour", "");
-                        }
-                      }}
-                    >
-                      <FormControl>
-                        <SelectTrigger asChild>
-                          <Button
-                            variant={"outline"}
-                            size={"sm"}
-                            className={cn(
-                              "w-full justify-between text-left font-normal bg-transparent rounded-lg",
-                              !field.value && "text-neutral-500",
-                            )}
-                          >
-                            {field.value ? field.value : <span>Start</span>}
-                            <Clock01Icon size={16} />
-                          </Button>
-                        </SelectTrigger>
-                      </FormControl>
-
-                      <SelectContent className="w-auto p-0">
-                        {timeSelectOptions.map(({ value, label }) => (
-                          <SelectItem
-                            key={value}
-                            value={value}
-                            className="tabular-nums"
-                          >
-                            {label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="size-7 shrink-0 flex items-center justify-center dark:bg-neutral-700 bg-neutral-300 dark:text-neutral-200 text-neutral-600 rounded-lg">
-                <ArrowRight02Icon size={16} />
-              </div>
-              <FormField
-                control={form.control}
-                name="endHour"
-                render={({ field }) => (
-                  <FormItem className="w-full">
-                    <Select
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                      }}
-                    >
-                      <FormControl>
-                        <SelectTrigger asChild>
-                          <Button
-                            variant={"outline"}
-                            size={"sm"}
-                            className={cn(
-                              "w-full justify-between text-left font-normal bg-transparent rounded-lg",
-                              !field.value && "text-neutral-500",
-                            )}
-                          >
-                            {field.value ? field.value : <span>End</span>}
-                            <Clock01Icon size={16} />
-                          </Button>
-                        </SelectTrigger>
-                      </FormControl>
-
-                      <SelectContent className="w-auto p-0">
-                        {filteredEndTimeOptions.map(({ value, label }) => (
-                          <SelectItem
-                            key={value}
-                            value={value}
-                            className="tabular-nums"
-                          >
-                            {label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+            <div className="size-7 shrink-0 flex items-center justify-center dark:bg-neutral-700 bg-neutral-300 dark:text-neutral-200 text-neutral-600 rounded-lg">
+              <ArrowRight02Icon size={16} />
             </div>
+            <Controller
+              control={form.control}
+              name="endHour"
+              render={({ field, fieldState: { error, invalid } }) => (
+                <TimeField
+                  {...field}
+                  validationBehavior="aria"
+                  className="w-full"
+                  size={"sm"}
+                  isInvalid={invalid}
+                  errorMessage={error?.message}
+                />
+              )}
+            />
+          </div>
 
-            <TimezoneSelect form={form} />
-          </div>
-          <Separator />
-          <div className="space-y-2">
-            <p className="text-sm font-medium">Recurrence</p>
-            <RecurrenceSelect form={form} />
-            hello
-          </div>
+          {/* <TimezoneSelect form={form} /> */}
+          <Controller
+            control={form.control}
+            name="timezone"
+            render={({
+              field: { onChange, value, ...restField },
+              fieldState: { error, invalid },
+            }) => (
+              <SelectField
+                {...restField}
+                onSelectionChange={onChange}
+                selectedKey={value}
+                aria-label="Session timezone"
+                validationBehavior="aria"
+                isInvalid={invalid}
+                errorMessage={error?.message}
+              >
+                <Button
+                  size={"sm"}
+                  variant={"outline"}
+                  className={cn(
+                    "w-full justify-between font-normal rounded-lg",
+                    !value && "text-neutral-500",
+                  )}
+                >
+                  <SelectValue className="data-[placeholder]:text-neutral-500" />
+                  <EarthIcon size={16} className="" />
+                </Button>
+                <SelectFieldContent
+                  className="min-w-[var(--trigger-width)] max-h-[300px]!"
+                  items={timezones}
+                  placement="bottom"
+                >
+                  {({ descriptiveName, name }) => (
+                    <ListBoxItem id={name}>{descriptiveName}</ListBoxItem>
+                  )}
+                </SelectFieldContent>
+              </SelectField>
+            )}
+          />
         </div>
-
-        <TimeInput inputSize={"sm"} className={"w-full"} />
-        <MyComboBox
-          menuTrigger="focus"
-          items={[
-            {
-              id: "1",
-              label: "One",
-            },
-            {
-              id: "2",
-              label: "Two",
-            },
-          ]}
-        >
-          {(item) => (
-            <ComboBoxItem
-              key={item.id}
-              className={({ isFocused, isSelected }) =>
-                `my-item ${isFocused ? "focused" : ""} ${
-                  isSelected ? "selected" : ""
-                }`
-              }
-            >
-              {item.label}
-            </ComboBoxItem>
-          )}
-        </MyComboBox>
-      </form>
+        <Separator />
+        <div className="space-y-2">
+          <p className="text-sm font-medium">Recurrence</p>
+          <RecurrenceSelect form={form} />
+        </div>
+      </div>
     </Form>
   );
 };

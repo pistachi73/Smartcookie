@@ -42,8 +42,8 @@ export const ResendVerificationEmailButton = ({
         "pointer-events-none": counter > 0,
       })}
       type="button"
-      disabled={isUpdatingEmail}
-      onClick={() => {
+      isDisabled={isUpdatingEmail}
+      onPress={() => {
         if (counter !== 0) return;
         resendVerificationToken(email);
       }}

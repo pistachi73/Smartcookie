@@ -1,13 +1,12 @@
 import { UTCTimezone, timezones } from "./timezones";
 
 export const getCurrentTimezone = () => {
-  const date = new Date();
-  const timezoneOffsetMinutes = date.getTimezoneOffset();
-  const timezoneOffset = timezoneOffsetMinutes / -60;
+  const timezoneName = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-  const timezone = findTimezoneByOffset(timezoneOffset);
+  const timezone = findTimezoneByName(timezoneName);
 
   if (!timezone) return UTCTimezone;
+
   return timezone;
 };
 

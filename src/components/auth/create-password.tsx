@@ -114,7 +114,11 @@ export const CreatePassword = ({ authForm }: CreatePasswordProps) => {
             </FormItem>
           )}
         />
-        <Button className="w-full mt-4" type="submit" disabled={isRegistering}>
+        <Button
+          className="w-full mt-4"
+          type="submit"
+          isDisabled={isRegistering}
+        >
           {isRegistering && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Register
         </Button>

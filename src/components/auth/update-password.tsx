@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   FormControl,
   FormField,
@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/form";
 import { PasswordInput } from "@/components/ui/password-input";
 import { useSafeAction } from "@/hooks/use-safe-action";
+import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -114,13 +115,16 @@ export const UpdatePassword = ({ authForm }: UpdatePasswordProps) => {
           )}
         />
         <div className="space-y-3">
-          <Button disabled={isExecuting} type="submit" className="w-full">
+          <Button isDisabled={isExecuting} type="submit" className="w-full">
             {isExecuting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Update
           </Button>
-          <Button className="w-full" type="button" variant="ghost">
-            <Link href="/login">Back to login</Link>
-          </Button>
+          <Link
+            href="/login"
+            className={cn(buttonVariants({ variant: "ghost" }), "w-full")}
+          >
+            Back to login
+          </Link>
         </div>
       </form>
     </FormWrapper>

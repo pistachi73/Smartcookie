@@ -120,7 +120,7 @@ export const EmailVerification = ({ authForm }: EmailVerificationProps) => {
                   "pointer-events-none": counter > 0,
                 })}
                 type="button"
-                onClick={() => {
+                onPress={() => {
                   if (counter !== 0) return;
                   resendEmailVerificationEmail(authForm.getValues("email"));
                 }}
@@ -131,7 +131,11 @@ export const EmailVerification = ({ authForm }: EmailVerificationProps) => {
             </FormItem>
           )}
         />
-        <Button className="w-full mt-4" type="submit" disabled={isRegistering}>
+        <Button
+          className="w-full mt-4"
+          type="submit"
+          isDisabled={isRegistering}
+        >
           {isRegistering && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Verify email
         </Button>

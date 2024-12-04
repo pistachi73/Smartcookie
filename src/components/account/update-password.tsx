@@ -176,7 +176,7 @@ export const UpdatePassword = () => {
                   <div className="w-full flex flex-row items-center justify-end">
                     <Button
                       size={"sm"}
-                      disabled={!form.formState.isDirty || isExecuting}
+                      isDisabled={!form.formState.isDirty || isExecuting}
                       type="submit"
                     >
                       {isExecuting && (

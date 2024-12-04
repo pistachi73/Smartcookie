@@ -62,7 +62,7 @@ export const SocialButton = ({ provider, className }: SocialButtonProps) => {
         className,
       )}
       type="button"
-      onClick={onClick}
+      onPress={onClick}
     >
       {icon}
       <span className="block w-full text-center">{label}</span>
