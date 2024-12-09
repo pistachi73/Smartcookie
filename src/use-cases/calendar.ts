@@ -1,10 +1,20 @@
+import { getCalendarHubsByUserId } from "@/data-access/hub";
 import type { Session } from "@/db/schema";
 import { generateSessionOccurrences } from "@/lib/generate-session-ocurrences";
 import { groupOccurrencesByDayAndTime } from "@/lib/group-overlapping-occurrences";
-import { getCalendarHubsByUserId } from "../data-access/hub";
 
 export const getCalendarHubsByUserIdUseCase = async (userId: string) => {
   const hubs = await getCalendarHubsByUserId(userId);
+
+  // hubs.forEach((hub) => {
+  //   console.log({ hub });
+  //   hub.sessions.forEach((session) => {
+  //     console.log({ session });
+  //     session.exceptions?.forEach((exception) => {
+  //       console.log({ exception });
+  //     });
+  //   });
+  // });
 
   console.time("getCalendarHubsByUserIdUseCase");
 
@@ -16,6 +26,7 @@ export const getCalendarHubsByUserIdUseCase = async (userId: string) => {
   const sessionOcurrences = sessions.flatMap((session) =>
     generateSessionOccurrences({ session }),
   );
+  // console.log({ sessionOcurrences });
 
   const groupedSessionOccurrences =
     groupOccurrencesByDayAndTime(sessionOcurrences);

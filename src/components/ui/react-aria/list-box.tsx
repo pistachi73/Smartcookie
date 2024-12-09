@@ -28,7 +28,7 @@ export const itemStyles = cva(
   {
     variants: {
       isSelected: {
-        true: "dark:bg-primary-900/60 bg-primary-100/60",
+        true: "dark:bg-primary-900/60 bg-primary-100/60 hover:bg-primary-100/80 dark:hover:bg-primary-900/80",
       },
       isHovered: {
         true: "bg-neutral-500/20",

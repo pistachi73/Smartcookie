@@ -1,16 +1,17 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Popover } from "@/components/ui/react-aria/popover";
 import type { SessionOccurrence } from "@/lib/generate-session-ocurrences";
 import { cn } from "@/lib/utils";
 import { MultiplicationSignIcon } from "@hugeicons/react";
 import { format, isToday } from "date-fns";
 import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  Button as AriaButton,
+  Dialog,
+  DialogTrigger,
+} from "react-aria-components";
 import { SessionOccurrenceDetails } from "./session-occurrence-details";
 
 type MonthCalendarDayCellProps = {
@@ -99,43 +100,46 @@ export const MonthCalendarDayCell = ({
               />
             ))}
           {visibleOccurrences < totalOccurrences && (
-            <DropdownMenu>
-              <DropdownMenuTrigger className="w-full hover:bg-neutral-500/30 rounded-md transition-colors text-sm">
+            <DialogTrigger>
+              <AriaButton className="w-full hover:bg-neutral-500/30 rounded-md transition-colors text-sm">
                 {totalOccurrences - visibleOccurrences} more
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align="center"
-                side="top"
-                sideOffset={-48}
-                className="w-[300px] p-4 space-y relative"
+              </AriaButton>
+              <Popover
+                placement="top"
+                offset={-48}
+                className="w-[300px] p-4 relative overflow-hidden"
               >
-                <Button
-                  variant="ghost"
-                  iconOnly
-                  className="absolute top-2 right-2 size-8 shrink-0"
-                >
-                  <MultiplicationSignIcon size={20} />
-                </Button>
-                <div className="flex flex-col items-center justify-center mb-4">
-                  <p className="text-sm text-neutral-500 lowercase">
-                    {format(currentDay, "iii")}
-                  </p>
-                  <p className="text-4xl font-medium text-responsive-dark ">
-                    {currentDay.getDate()}
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  {[...flattenedDayOccurrences, ...flattenedDayOccurrences].map(
-                    (occurrence, index) => (
+                <Dialog className="overflow-hidden">
+                  <Button
+                    variant="ghost"
+                    slot="close"
+                    iconOnly
+                    className="absolute top-2 right-2 size-8 shrink-0"
+                  >
+                    <MultiplicationSignIcon size={20} />
+                  </Button>
+                  <div className="flex flex-col items-center justify-center mb-4">
+                    <p className="text-sm text-neutral-500 lowercase">
+                      {format(currentDay, "iii")}
+                    </p>
+                    <p className="text-4xl font-medium text-responsive-dark ">
+                      {currentDay.getDate()}
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    {[
+                      ...flattenedDayOccurrences,
+                      ...flattenedDayOccurrences,
+                    ].map((occurrence, index) => (
                       <MonthOcccurrence
                         key={`${occurrence.id}-${index}`}
                         occurrence={occurrence}
                       />
-                    ),
-                  )}
-                </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
+                    ))}
+                  </div>
+                </Dialog>
+              </Popover>
+            </DialogTrigger>
           )}
         </div>
       </div>
@@ -149,22 +153,19 @@ const MonthOcccurrence = ({
   occurrence: SessionOccurrence;
 }) => {
   return (
-    <DropdownMenu modal={false}>
-      <DropdownMenuTrigger className="h-6 p-0.5 px-1 rounded-md text-dark text-sm hover:bg-neutral-500/30 flex gap-2 items-center transition-colors cursor-pointer">
+    <DialogTrigger>
+      <AriaButton className="h-6 p-0.5 px-1 rounded-md text-dark text-sm hover:bg-neutral-500/30 flex gap-2 items-center transition-colors cursor-pointer">
         <div className="size-2 bg-lime-300 rounded-full shrink-0" />
         <p className="line-clamp-1 text-left text-responsive-dark">
           <span>{format(occurrence.startTime, "HH:mm")}</span> -{" "}
           {occurrence.title}
         </p>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className="w-full p-0"
-        align="center"
-        side="left"
-        sideOffset={8}
-      >
-        <SessionOccurrenceDetails occurrence={occurrence} />
-      </DropdownMenuContent>
-    </DropdownMenu>
+      </AriaButton>
+      <Popover placement="right" className={"p-0 overflow-hidden"} offset={8}>
+        <Dialog>
+          <SessionOccurrenceDetails occurrence={occurrence} />
+        </Dialog>
+      </Popover>
+    </DialogTrigger>
   );
 };

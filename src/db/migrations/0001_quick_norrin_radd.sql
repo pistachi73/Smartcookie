@@ -1,0 +1,1 @@
+ALTER TABLE "session" ADD COLUMN "timezone" text DEFAULT 'UTC' NOT NULL;

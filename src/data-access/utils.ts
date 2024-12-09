@@ -1,4 +1,5 @@
 import { db } from "@/db";
+import { type Column, sql } from "drizzle-orm";
 
 export function generateRandomToken(length: number) {
   return Array.from(
@@ -45,3 +46,12 @@ export async function createTransaction<T extends typeof db>(
 ) {
   await db.transaction(cb as any);
 }
+
+export const parseDateWithTimezone = (
+  date: Column,
+  timestamp: Column,
+  as: string,
+) =>
+  sql<string>`trim(both '"' from to_json(${date}::timestamptz at time zone ${timestamp})::text)`.as(
+    as,
+  );

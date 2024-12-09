@@ -10,7 +10,7 @@ export const Label = ({ className, ...props }: LabelProps) => {
   return (
     <AriaLabel
       className={cn(
-        "block text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+        "mb-0.5 block text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
         className,
       )}
       {...props}

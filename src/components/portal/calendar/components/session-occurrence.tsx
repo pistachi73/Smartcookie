@@ -1,14 +1,11 @@
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Popover } from "@/components/ui/react-aria/popover";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import type { SessionOccurrence as SessionOccurrenceType } from "@/lib/generate-session-ocurrences";
 import { cn } from "@/lib/utils";
-import { differenceInMinutes, format } from "date-fns";
+import { parseDateTime } from "@internationalized/date";
+import { format } from "date-fns";
 import type React from "react";
-import { useCalendarContext } from "../calendar-context";
+import { Button, Dialog, DialogTrigger } from "react-aria-components";
 import { SessionOccurrenceDetails } from "./session-occurrence-details";
 
 type SessionOccurrenceProps = {
@@ -20,16 +17,18 @@ export const SessionOccurrence = ({
   className,
   ...rest
 }: SessionOccurrenceProps & React.HTMLAttributes<HTMLDivElement>) => {
-  const { calendarType } = useCalendarContext();
-  const top =
-    (occurrence.startTime.getHours() + occurrence.startTime.getMinutes() / 60) *
-    4;
-  const height =
-    (differenceInMinutes(occurrence.endTime, occurrence.startTime) / 60) * 4;
+  const [parsedStartTime, parsedEndTime] = [
+    parseDateTime(occurrence.startTime),
+    parseDateTime(occurrence.endTime),
+  ];
+
+  const top = (parsedStartTime.hour + parsedStartTime.minute / 60) * 4;
+  const bottom = (parsedEndTime.hour + parsedEndTime.minute / 60) * 4;
+  const height = bottom - top;
 
   return (
-    <DropdownMenu modal={false}>
-      <DropdownMenuTrigger
+    <DialogTrigger>
+      <Button
         className={cn("absolute", className)}
         style={{
           top: `${top}rem`,
@@ -61,14 +60,12 @@ export const SessionOccurrence = ({
             </div>
           </div>
         </div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className="w-full p-0 rounded-2xl"
-        align="center"
-        side={calendarType === "day" ? "top" : "left"}
-      >
-        <SessionOccurrenceDetails occurrence={occurrence} />
-      </DropdownMenuContent>
-    </DropdownMenu>
+      </Button>
+      <Popover placement="right" className={"p-0 overflow-hidden"}>
+        <Dialog>
+          <SessionOccurrenceDetails occurrence={occurrence} />
+        </Dialog>
+      </Popover>
+    </DialogTrigger>
   );
 };

@@ -6,6 +6,7 @@ export default async function seed(db: DB) {
   await Promise.all(
     sessions.map(async ({ session, exceptions }) => {
       await db.insert(schema.session).values({
+        id: session.id,
         ...session,
       });
 

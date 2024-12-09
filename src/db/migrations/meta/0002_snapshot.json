@@ -1,6 +1,6 @@
 {
-  "id": "f54793c3-7445-4484-9750-f8aad1372f37",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "59930f5e-e9e2-4c39-b450-162df240596a",
+  "prevId": "c950fb64-cfd9-4c8e-8096-fa9956597b93",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -545,6 +545,13 @@
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false
+        },
+        "timezone": {
+          "name": "timezone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'UTC'"
         }
       },
       "indexes": {},
@@ -607,6 +614,13 @@
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false
+        },
+        "timezone": {
+          "name": "timezone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'UTC'"
         },
         "comments": {
           "name": "comments",

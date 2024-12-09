@@ -1,4 +1,3 @@
-import type { RecurrenceRule } from "@/components/ui/recurrence-select";
 import { relations } from "drizzle-orm";
 import {
   boolean,
@@ -20,11 +19,14 @@ export const session = pgTable("session", {
   hubId: serial("hub_id")
     .notNull()
     .references(() => hub.id, { onDelete: "cascade" }),
-  startTime: timestamp("start_time", { mode: "date" }).notNull(),
-  endTime: timestamp("end_time", { mode: "date" }).notNull(),
+  startTime: timestamp("start_time", { mode: "string" }).notNull(),
+  endTime: timestamp("end_time", { mode: "string" }).notNull(),
   price: integer("price").notNull(),
   isRecurring: boolean("is_recurring").default(false),
-  recurrenceRule: jsonb("recurrence_rule").$type<RecurrenceRule | null>(),
+  recurrenceRule: jsonb(
+    "recurrence_rule",
+  ).$type<RecurrenceRuleDbSchema | null>(),
+  timezone: text("timezone").default("UTC").notNull(),
 });
 
 export const sessionRelations = relations(session, ({ one, many }) => ({
@@ -35,6 +37,19 @@ export const sessionRelations = relations(session, ({ one, many }) => ({
   attendances: many(attendance),
   exceptions: many(sessionException),
 }));
+
+export type RecurrenceRuleDbSchema =
+  | {
+      frequency: "daily";
+      interval: number;
+      endDate: string;
+    }
+  | {
+      frequency: "weekly";
+      interval: number;
+      daysOfWeek: string[];
+      endDate: string;
+    };
 
 export type InsertSession = typeof session.$inferInsert;
 export type Session = typeof session.$inferSelect & {

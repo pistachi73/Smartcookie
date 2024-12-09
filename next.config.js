@@ -9,6 +9,9 @@ import localesPlugin from "@react-aria/optimize-locales-plugin";
 const config = {
   trailingSlash: true,
   reactStrictMode: false,
+  experimental: {
+    reactCompiler: true,
+  },
   images: {
     remotePatterns: [
       {

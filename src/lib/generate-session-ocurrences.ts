@@ -1,15 +1,9 @@
-import type { RecurrenceRuleFrequency, Session } from "@/db/schema/session";
+import type { RecurrenceRuleDbSchema, Session } from "@/db/schema/session";
 import type {
   SessionException,
   SessionExceptionReason,
 } from "@/db/schema/session-exception";
-import {
-  addDays,
-  addMonths,
-  addWeeks,
-  format,
-  isWithinInterval,
-} from "date-fns";
+import { type CalendarDateTime, parseDateTime } from "@internationalized/date";
 
 export type SessionOccurrence = Session & {
   exceptionReason?: SessionExceptionReason;
@@ -21,12 +15,13 @@ export const generateSessionOccurrences = ({
   endDate,
 }: {
   session: Session;
-  startDate?: Date;
-  endDate?: Date;
+  startDate?: CalendarDateTime;
+  endDate?: CalendarDateTime;
 }): SessionOccurrence[] => {
   const { exceptions, ...sessionWithoutExceptions } = session;
-  const exceptionMap = mapSessionExceptions(session.exceptions ?? []);
-  let currentDate = new Date(session.startTime);
+  const exceptionMap = mapSessionExceptions(exceptions ?? []);
+  let currentDate = parseDateTime(session.startTime);
+
   const sessionDuration =
     new Date(session.endTime).getTime() - new Date(session.startTime).getTime();
 
@@ -39,6 +34,8 @@ export const generateSessionOccurrences = ({
       currentDate,
       sessionDuration,
     });
+
+    console.log({ occurrence });
 
     if (!occurrence) return [];
 
@@ -58,9 +55,12 @@ export const generateSessionOccurrences = ({
     endDate: recurrenceEndDate,
   } = session.recurrenceRule;
 
+  console.log({ recurrenceEndDate, start: session.startTime, sessionDuration });
+
+  const parsedRecurrenceEndDate = parseDateTime(recurrenceEndDate);
   const occurrences: SessionOccurrence[] = [];
 
-  while (currentDate <= new Date(recurrenceEndDate)) {
+  while (currentDate.compare(parsedRecurrenceEndDate) <= 0) {
     const key = getSessionExceptionKey(session.id, currentDate);
 
     const occurrence = handleSessionException({
@@ -92,7 +92,7 @@ function handleSessionException({
 }: {
   exception?: SessionException;
   sessionWithoutExceptions: Session;
-  currentDate: Date;
+  currentDate: CalendarDateTime;
   sessionDuration: number;
 }): SessionOccurrence | undefined {
   switch (exception?.reason) {
@@ -111,8 +111,8 @@ function handleSessionException({
     default: {
       return {
         ...sessionWithoutExceptions,
-        startTime: currentDate,
-        endTime: new Date(currentDate.getTime() + sessionDuration),
+        startTime: currentDate.toString(),
+        endTime: currentDate.add({ milliseconds: sessionDuration }).toString(),
         exceptionReason: exception?.reason,
       };
     }
@@ -120,28 +120,37 @@ function handleSessionException({
 }
 
 const filterOccurrencesWithinRange =
-  (startDate: Date, endDate: Date) => (occurrence: SessionOccurrence) =>
-    isWithinInterval(occurrence.startTime, { start: startDate, end: endDate });
+  (startDate: CalendarDateTime, endDate: CalendarDateTime) =>
+  (occurrence: SessionOccurrence) => {
+    const ocurrenceParsedStartDate = parseDateTime(occurrence.startTime);
+    const ocurrenceParsedEndDate = parseDateTime(occurrence.endTime);
+
+    return (
+      ocurrenceParsedStartDate.compare(startDate) <= 0 &&
+      ocurrenceParsedEndDate.compare(endDate) >= 0
+    );
+  };
 
 export const incrementDate = (
-  date: Date,
-  frequency: RecurrenceRuleFrequency,
+  date: CalendarDateTime,
+  frequency: RecurrenceRuleDbSchema["frequency"],
   interval: number,
-): Date => {
+): CalendarDateTime => {
   switch (frequency) {
     case "daily":
-      return addDays(date, interval);
+      return date.add({ days: interval });
     case "weekly":
-      return addWeeks(date, interval);
-    case "monthly":
-      return addMonths(date, interval);
+      return date.add({ weeks: interval });
     default:
       throw new Error(`Unsupported frequency: ${frequency}`);
   }
 };
 
-const getSessionExceptionKey = (sessionId: number, date: Date): string => {
-  return `${sessionId}-${format(date, "yyyy-MM-dd")}`;
+const getSessionExceptionKey = (
+  sessionId: number,
+  date: CalendarDateTime,
+): string => {
+  return `${sessionId}-${date.year}-${date.month}-${date.day}`;
 };
 
 const mapSessionExceptions = (
@@ -149,7 +158,10 @@ const mapSessionExceptions = (
 ): Map<string, SessionException> =>
   exceptions.reduce((map, exception) => {
     map.set(
-      getSessionExceptionKey(exception.sessionId, exception.exceptionDate),
+      getSessionExceptionKey(
+        exception.sessionId,
+        parseDateTime(exception.exceptionDate),
+      ),
       exception,
     );
     return map;

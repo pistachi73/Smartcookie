@@ -1,37 +1,53 @@
+import { type CalendarDateTime, parseDateTime } from "@internationalized/date";
 import { format } from "date-fns";
 import type { SessionOccurrence } from "./generate-session-ocurrences";
 
 export const groupOverlappingOccurrences = (sessions: SessionOccurrence[]) => {
-  sessions.map((session) => ({
+  const parsedSessions = sessions.map((session) => ({
     ...session,
-    startTime: new Date(session.startTime),
-    endTime: new Date(session.endTime),
+    startTime: parseDateTime(session.startTime),
+    endTime: parseDateTime(session.endTime),
   }));
 
-  sessions.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+  parsedSessions.sort((a, b) => a.startTime.compare(b.startTime));
 
   const sessionGroups: SessionOccurrence[][] = [];
   let currentGroup: SessionOccurrence[] = [];
-  let currentRange: [Date, Date] | null = null;
+  let currentRange: [CalendarDateTime, CalendarDateTime] | null = null;
 
-  for (const session of sessions) {
+  for (const session of parsedSessions) {
     if (!currentGroup.length) {
-      currentGroup.push(session);
+      currentGroup.push({
+        ...session,
+        startTime: session.startTime.toString(),
+        endTime: session.endTime.toString(),
+      });
       currentRange = [session.startTime, session.endTime];
     } else {
-      if (session.startTime <= currentRange![1]) {
-        currentGroup.push(session);
+      if (session.startTime.compare(currentRange![1]) <= 0) {
+        currentGroup.push({
+          ...session,
+          startTime: session.startTime.toString(),
+          endTime: session.endTime.toString(),
+        });
+
         currentRange = [
-          new Date(
-            Math.min(currentRange![0].getTime(), session.startTime.getTime()),
-          ),
-          new Date(
-            Math.max(currentRange![1].getTime(), session.endTime.getTime()),
-          ),
+          currentRange![0].compare(session.startTime) < 0
+            ? currentRange![0]
+            : session.startTime,
+          currentRange![1].compare(session.endTime) > 0
+            ? currentRange![1]
+            : session.endTime,
         ];
       } else {
         sessionGroups.push(currentGroup);
-        currentGroup = [session];
+        currentGroup = [
+          {
+            ...session,
+            startTime: session.startTime.toString(),
+            endTime: session.endTime.toString(),
+          },
+        ];
         currentRange = [session.startTime, session.endTime];
       }
     }
@@ -69,6 +85,7 @@ export const groupOccurrencesByDayAndTime = (
     acc[day] = groupOverlappingOccurrences(daySessions);
     return acc;
   }, {});
+  console.log({ groupedSessions });
 
   return groupedSessions;
 };

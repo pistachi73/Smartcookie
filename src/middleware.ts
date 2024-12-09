@@ -22,8 +22,6 @@ export default auth((req) => {
 
   const requestHeaders = new Headers(req.headers);
 
-  console.log({ req: req, headers: requestHeaders });
-
   requestHeaders.set(VERCEL_HEADERS.DEVICE_TYPE, deviceType);
 
   /* Save URL host visible to the user in Header */

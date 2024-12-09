@@ -14,10 +14,11 @@ export const sessionException = pgTable("session_exception", {
   sessionId: serial("session_id").references(() => session.id, {
     onDelete: "cascade",
   }),
-  exceptionDate: timestamp("exception_date", { mode: "date" }).notNull(),
+  exceptionDate: timestamp("exception_date", { mode: "string" }).notNull(),
   reason: sessionExceptionReasonEnum().notNull(),
-  newStartTime: timestamp("new_start_time", { mode: "date" }),
-  newEndTime: timestamp("new_end_time", { mode: "date" }),
+  newStartTime: timestamp("new_start_time", { mode: "string" }),
+  newEndTime: timestamp("new_end_time", { mode: "string" }),
+  timezone: text("timezone").default("UTC"),
   comments: text("comments"),
 });
 
@@ -31,6 +32,6 @@ export const sessionExceptionRelations = relations(
   }),
 );
 
-export type InsertSessionExPseception = typeof sessionException.$inferInsert;
+export type InsertSessionException = typeof sessionException.$inferInsert;
 export type SessionException = typeof sessionException.$inferSelect;
 export type SessionExceptionReason = SessionException["reason"];

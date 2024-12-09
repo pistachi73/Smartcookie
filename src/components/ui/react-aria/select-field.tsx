@@ -22,11 +22,11 @@ export const SelectField = ({
   ...props
 }: SelectFieldProps) => {
   return (
-    <Select {...props} className={cn("flex flex-col gap-1", className)}>
+    <Select {...props} className={cn(className)}>
       {label && <Label>{label}</Label>}
       {children}
       {description && <FieldDescripton>{description}</FieldDescripton>}
-      {errorMessage && <FieldError> {errorMessage}</FieldError>}
+      <FieldError errorMessage={errorMessage} />
     </Select>
   );
 };

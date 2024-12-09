@@ -5,6 +5,7 @@ import type {
   InputProps,
 } from "react-aria-components";
 
+import { cn } from "@/lib/utils";
 import { FieldDescripton } from "./field-description";
 import { FieldError } from "./field-error";
 import { Label } from "./label";
@@ -32,13 +33,13 @@ export const TextField = ({
   ...props
 }: TextFieldProps) => {
   return (
-    <AriaTextField {...props} className="flex flex-col gap-1">
+    <AriaTextField {...props} className="">
       {label && <Label className="text-sm">{label}</Label>}
-      <div className={fieldWrapperVariants({ size })}>
+      <div className={cn(fieldWrapperVariants({ size }), "")}>
         <Input placeholder={placeholder} className="flex-1" />
       </div>
       {description && <FieldDescripton>{description}</FieldDescripton>}
-      {errorMessage && <FieldError> {errorMessage}</FieldError>}
+      <FieldError errorMessage={errorMessage} />
     </AriaTextField>
   );
 };

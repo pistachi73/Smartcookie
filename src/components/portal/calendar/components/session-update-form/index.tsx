@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 
 import { DatePicker } from "@/components/ui/react-aria/date-picker";
+import { FieldError } from "@/components/ui/react-aria/field-error";
 import { ListBoxItem } from "@/components/ui/react-aria/list-box";
 import {
   SelectField,
@@ -10,10 +11,7 @@ import {
 } from "@/components/ui/react-aria/select-field";
 import { TextField } from "@/components/ui/react-aria/text-field";
 import { TimeField } from "@/components/ui/react-aria/time-field";
-import {
-  RecurrenceRuleSchema,
-  RecurrenceSelect,
-} from "@/components/ui/recurrence-select";
+import { RecurrenceSelect } from "@/components/ui/recurrence-select";
 import { Separator } from "@/components/ui/separator";
 import { getCurrentTimezone } from "@/components/ui/timezone-select/utils";
 import type { SessionOccurrence } from "@/lib/generate-session-ocurrences";
@@ -26,37 +24,21 @@ import {
   EarthIcon,
   Folder01Icon,
 } from "@hugeicons/react";
-import { Time } from "@internationalized/date";
-import type { DateValue, TimeValue } from "react-aria";
+import { Time, parseDate, parseDateTime } from "@internationalized/date";
 import { Form, SelectValue } from "react-aria-components";
-import { Controller, type UseFormReturn, useForm } from "react-hook-form";
-import { z } from "zod";
+import {
+  Controller,
+  type FieldError as FieldErrorType,
+  type UseFormReturn,
+  useForm,
+} from "react-hook-form";
+import type { z } from "zod";
 import { useCalendarContext } from "../../calendar-context";
+import { SessionUpdateSchema } from "./schema";
 
 type SessionUpdateFormProps = {
   sessionOcurrence?: SessionOccurrence;
 };
-
-const SessionUpdateSchema = z
-  .object({
-    hubId: z.number(),
-    title: z.string(),
-    date: z.custom<DateValue>(),
-    startHour: z.custom<TimeValue>(),
-    endHour: z.custom<TimeValue>(),
-    timezone: z.string(),
-    recurrenceRule: RecurrenceRuleSchema,
-  })
-  .refine(
-    ({ startHour, endHour }) =>
-      startHour?.hour < endHour.hour ||
-      (startHour?.hour === endHour?.hour &&
-        startHour?.minute < endHour?.minute),
-    {
-      path: ["wrongHour"],
-      message: "End time must be greater than start time",
-    },
-  );
 
 export type SesionUpdateForm = UseFormReturn<
   z.infer<typeof SessionUpdateSchema>
@@ -70,35 +52,46 @@ export const SessionUpdateForm = ({
   const form = useForm<z.infer<typeof SessionUpdateSchema>>({
     resolver: zodResolver(SessionUpdateSchema),
     defaultValues: {
-      hubId: sessionOcurrence?.hubId,
-      title: sessionOcurrence?.title ?? "",
-      date: sessionOcurrence?.startTime,
-      startHour: sessionOcurrence?.startTime
-        ? new Time(
-            sessionOcurrence?.startTime.getHours(),
-            sessionOcurrence?.startTime.getMinutes(),
-          )
+      hubId: sessionOcurrence?.hubId ?? 0,
+      title: "",
+      date: sessionOcurrence?.startTime
+        ? parseDate(sessionOcurrence.startTime.toString())
         : undefined,
-      endHour: sessionOcurrence?.endTime
-        ? new Time(
-            sessionOcurrence?.endTime.getHours(),
-            sessionOcurrence?.endTime.getMinutes(),
-          )
-        : undefined,
+      timeSchedule: {
+        start: sessionOcurrence?.startTime
+          ? new Time(
+              parseDateTime(sessionOcurrence?.startTime).hour,
+              parseDateTime(sessionOcurrence?.startTime).minute,
+            )
+          : undefined,
+        end: sessionOcurrence?.endTime
+          ? new Time(
+              parseDateTime(sessionOcurrence?.endTime).hour,
+              parseDateTime(sessionOcurrence?.endTime).minute,
+            )
+          : undefined,
+      },
       timezone: getCurrentTimezone()?.name ?? "",
       recurrenceRule: sessionOcurrence?.recurrenceRule ?? {
         frequency: "no-recurrence",
-        interval: 1,
+        interval: undefined,
+        daysOfWeek: undefined,
+        endDate: undefined,
       },
     },
-
     mode: "onChange",
   });
 
-  console.log(hubs);
-  // console.log(form.getFieldState("wrongHour"));
+  const onSubmit = (values: z.infer<typeof SessionUpdateSchema>) => {
+    console.log("Hola");
+    console.log(values);
+  };
 
-  const onSubmit = (values: z.infer<typeof SessionUpdateSchema>) => {};
+  const sessionTimeError = (form.formState.errors as any)?.sessionTime as
+    | FieldErrorType
+    | undefined;
+
+  console.log(form.formState.errors);
 
   return (
     <Form
@@ -126,12 +119,13 @@ export const SessionUpdateForm = ({
             control={form.control}
             name="hubId"
             render={({
-              field: { onChange, ...restField },
+              field: { onChange, value, ...restField },
               fieldState: { error, invalid },
             }) => (
               <SelectField
                 {...restField}
                 onSelectionChange={onChange}
+                selectedKey={value}
                 placeholder="Select hub"
                 aria-label="Hub"
                 validationBehavior="aria"
@@ -188,41 +182,35 @@ export const SessionUpdateForm = ({
               />
             )}
           />
-          <div className="flex items-center gap-2 w-full">
-            <Controller
-              control={form.control}
-              name="startHour"
-              render={({ field, fieldState: { error, invalid } }) => (
-                <TimeField
-                  {...field}
-                  className="w-full"
-                  validationBehavior="aria"
-                  size={"sm"}
-                  isInvalid={invalid}
-                  errorMessage={error?.message}
-                />
-              )}
-            />
-            <div className="size-7 shrink-0 flex items-center justify-center dark:bg-neutral-700 bg-neutral-300 dark:text-neutral-200 text-neutral-600 rounded-lg">
-              <ArrowRight02Icon size={16} />
-            </div>
-            <Controller
-              control={form.control}
-              name="endHour"
-              render={({ field, fieldState: { error, invalid } }) => (
-                <TimeField
-                  {...field}
-                  validationBehavior="aria"
-                  className="w-full"
-                  size={"sm"}
-                  isInvalid={invalid}
-                  errorMessage={error?.message}
-                />
-              )}
-            />
-          </div>
+          <Controller
+            control={form.control}
+            name="timeSchedule"
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <div>
+                <div className="flex items-center gap-2 w-full">
+                  <TimeField
+                    onChange={(start) => onChange({ ...value, start })}
+                    value={value?.start}
+                    className="w-full"
+                    validationBehavior="aria"
+                    size={"sm"}
+                  />
+                  <div className="size-7 shrink-0 flex items-center justify-center dark:bg-neutral-700 bg-neutral-300 dark:text-neutral-200 text-neutral-600 rounded-lg">
+                    <ArrowRight02Icon size={16} />
+                  </div>
+                  <TimeField
+                    onChange={(end) => onChange({ ...value, end })}
+                    value={value?.end}
+                    className="w-full"
+                    validationBehavior="aria"
+                    size={"sm"}
+                  />
+                </div>
+                <FieldError errorMessage={error?.message} />
+              </div>
+            )}
+          />
 
-          {/* <TimezoneSelect form={form} /> */}
           <Controller
             control={form.control}
             name="timezone"
@@ -268,6 +256,19 @@ export const SessionUpdateForm = ({
           <p className="text-sm font-medium">Recurrence</p>
           <RecurrenceSelect form={form} />
         </div>
+      </div>
+      <div className="flex items-center justify-end gap-3">
+        <Button variant="ghost" size="sm" className={"rounded-lg"}>
+          Cancel session
+        </Button>
+        <Button
+          variant="primary"
+          size="sm"
+          type="submit"
+          className={"rounded-lg"}
+        >
+          Save
+        </Button>
       </div>
     </Form>
   );

@@ -46,7 +46,7 @@ export const TimeField = <T extends TimeValue>({
         <Clock01Icon size={18} className={cn("ml-2")} />
       </div>
       {description && <FieldDescripton>{description}</FieldDescripton>}
-      {errorMessage && <FieldError> {errorMessage}</FieldError>}
+      <FieldError errorMessage={errorMessage} />
     </AriaTimeField>
   );
 };

@@ -1,0 +1,1 @@
+ALTER TABLE "session_exception" ADD COLUMN "timezone" text DEFAULT 'UTC';

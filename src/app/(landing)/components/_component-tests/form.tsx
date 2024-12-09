@@ -23,8 +23,8 @@ import { z } from "zod";
 
 const FormSchema = z
   .object({
-    name: z.string().min(2, { message: "Name must be 2 characters long" }),
-    age: z.number().min(3, { message: "Age must be 3 years or older" }),
+    name: z.string({ required_error: "Name is required" }),
+    age: z.number(),
     time: z.custom<TimeValue>(),
     date: z.custom<DateValue>(),
     country: z.string({ required_error: "Country is required" }),
@@ -62,6 +62,7 @@ export const TestForm = () => {
             {...field}
             size={"sm"}
             label="Name"
+            aria-label="Name"
             placeholder="John Doe"
             validationBehavior="aria"
             isInvalid={invalid}
@@ -79,6 +80,7 @@ export const TestForm = () => {
             label="Age"
             minValue={1}
             placeholder="Age"
+            aria-label="Age"
             validationBehavior="aria"
             isInvalid={invalid}
             errorMessage={error?.message}
@@ -94,6 +96,7 @@ export const TestForm = () => {
             label="Time"
             validationBehavior="aria"
             size={"sm"}
+            aria-label="Time"
             isInvalid={invalid}
             errorMessage={error?.message}
           />
@@ -110,6 +113,7 @@ export const TestForm = () => {
             {...restField}
             onSelectionChange={onChange}
             label="Time"
+            aria-label="Country"
             validationBehavior="aria"
             isInvalid={invalid}
             errorMessage={error?.message}
@@ -144,7 +148,8 @@ export const TestForm = () => {
           <DatePicker
             {...field}
             // size={"sm"}
-            label="Name"
+            label="Date"
+            aria-label="Date"
             validationBehavior="aria"
             isInvalid={invalid}
             errorMessage={error?.message}

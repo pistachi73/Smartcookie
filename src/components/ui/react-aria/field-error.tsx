@@ -1,24 +1,39 @@
 import { cn } from "@/lib/utils";
 import { AlertCircleIcon } from "lucide-react";
-import type { FieldErrorProps as AriaFieldErrorProps } from "react-aria-components";
-import { FieldError as AriaFieldError } from "react-aria-components";
+import { AnimatePresence, motion } from "motion/react";
+import { Text, type TextProps } from "react-aria-components";
 
-type FieldErrorProps = AriaFieldErrorProps & {
-  children: React.ReactNode;
+type FieldErrorProps = Omit<TextProps, "children"> & {
+  errorMessage?: string;
 };
 
-export const FieldError = ({ className, ...props }: FieldErrorProps) => {
+export const FieldError = ({
+  className,
+  errorMessage,
+  ...props
+}: FieldErrorProps) => {
   return (
-    <AriaFieldError
-      className={cn(
-        "relative mt-0! h-[25px] animate-form-message-div-down",
-        "flex items-center gap-1.5 text-sm font-normal text-destructive",
-        className,
+    <AnimatePresence>
+      {Boolean(errorMessage) && (
+        <motion.div
+          initial={{ opacity: 0, y: -10, height: 0 }}
+          animate={{ opacity: 1, y: 0, height: "auto" }}
+          exit={{ opacity: 0, y: -10, height: 0 }}
+          transition={{ type: "spring", bounce: 0, duration: 0.5 }}
+        >
+          <Text
+            slot="errorMessage"
+            className={cn(
+              "pt-0.5 flex items-center gap-1.5 text-xs font-normal leading-5 text-destructive",
+              className,
+            )}
+            {...props}
+          >
+            <AlertCircleIcon size={14} />
+            {errorMessage}
+          </Text>
+        </motion.div>
       )}
-      {...props}
-    >
-      <AlertCircleIcon size={16} />
-      {props.children}
-    </AriaFieldError>
+    </AnimatePresence>
   );
 };

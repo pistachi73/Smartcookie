@@ -11,6 +11,7 @@ import { DateInput } from "@/components/ui/react-aria/date-input";
 import { ListBox, ListBoxItem } from "@/components/ui/react-aria/list-box";
 import { Modal } from "@/components/ui/react-aria/modal";
 import { Popover } from "@/components/ui/react-aria/popover";
+import { Sheet } from "@/components/ui/react-aria/sheet";
 import { TextField } from "@/components/ui/react-aria/text-field";
 import { TimeField } from "@/components/ui/react-aria/time-field";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
@@ -88,6 +89,16 @@ export default function Components() {
             <p>For help accessing your account, please contact support.</p>
           </Dialog>
         </Popover>
+      </DialogTrigger>
+      <DialogTrigger>
+        <Button>Open sheet</Button>
+        <Sheet isDismissable side="right">
+          <Dialog className="h-auto w-[500px]">
+            <Heading slot="title">Notice</Heading>
+            <p>Click outside to close this dialog.</p>
+            <p>Click outside to close this dialog.</p>
+          </Dialog>
+        </Sheet>
       </DialogTrigger>
       <DialogTrigger>
         <Button>Open dialog</Button>

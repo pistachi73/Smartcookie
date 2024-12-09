@@ -19,7 +19,7 @@ import { Button } from "../button";
 export type CalendarProps<T extends DateValue> = AriaCalendarProps<T>;
 
 const cellStyles = cva(
-  "p-0 tabular-nums hover:text-responsive-dark hover:bg-neutral-500/30 font-normal size-8 text-sm cursor-default rounded-full flex items-center justify-center forced-color-adjust-none",
+  "p-0 hover:text-responsive-dark hover:bg-neutral-500/30 font-normal size-8 text-sm cursor-default rounded-full flex items-center justify-center forced-color-adjust-none",
   {
     variants: {
       isSelected: {

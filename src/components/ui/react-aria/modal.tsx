@@ -6,7 +6,7 @@ import {
 } from "react-aria-components";
 
 const overlayStyles = cva(
-  "fixed inset-0 z-50 bg-black/80 flex items-center justify-center",
+  "fixed inset-0 z-[100] bg-black/80 flex items-center justify-center",
   {
     variants: {
       isEntering: {
@@ -24,10 +24,10 @@ const modalStyles = cva(
   {
     variants: {
       isEntering: {
-        true: "animate-in zoom-in-105 ease-out duration-200",
+        true: "animate-in zoom-in-105 slide-in-from-botom-4 ease-out duration-200",
       },
       isExiting: {
-        true: "animate-out zoom-out-95 ease-in duration-200",
+        true: "animate-out zoom-out-95 slide-out-to-bottom-4 ease-in duration-200",
       },
     },
   },

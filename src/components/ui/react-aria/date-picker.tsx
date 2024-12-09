@@ -28,17 +28,18 @@ type DatePickerProps<T extends DateValue> = AriaDatePickerProps<T> &
   };
 
 export const DatePicker = <T extends DateValue>({
+  className,
   label,
   description,
   errorMessage,
   ...props
 }: DatePickerProps<T>) => {
   return (
-    <AriaDatePicker {...props}>
+    <AriaDatePicker {...props} className={className}>
       <Group
         className={cn(
           fieldWrapperVariants({ size: "sm" }),
-          "flex flex-row items-center justify-between pr-0",
+          "flex flex-row items-center justify-between pr-0 gap-4 overflow-hidden",
         )}
       >
         <DateInput className={"flex-1"} />
@@ -51,7 +52,7 @@ export const DatePicker = <T extends DateValue>({
         </Button>
       </Group>
       {description && <FieldDescripton>{description}</FieldDescripton>}
-      {errorMessage && <FieldError> {errorMessage}</FieldError>}
+      <FieldError errorMessage={errorMessage} />
       <Popover placement="bottom">
         <Dialog>
           <Calendar />

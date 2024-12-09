@@ -11,7 +11,6 @@ export const getCurrentTimezone = () => {
 };
 
 export const findTimezoneByName = (name: string) => {
-  console.log({ name });
   return timezones.find((timezone) => timezone.name === name);
 };
 export const findTimezoneByOffset = (offset: number) => {

@@ -6,40 +6,36 @@ import {
   type ReactNode,
   createContext,
   useContext,
-  useEffect,
-  useRef,
-  useState,
 } from "react";
+import useMeasure from "react-use-measure";
 
 const PanelContext = createContext({ value: "" });
 
 export function ResizablePanelRoot({
   children,
   value,
+  rerenderKey,
+  customHeight,
   ...rest
 }: {
   children: ReactNode;
   value: string;
+  rerenderKey?: string;
+  customHeight?: number;
 } & ComponentProps<"div">) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [height, setHeight] = useState<number>(0);
-
-  useEffect(() => {
-    if (ref.current && value) {
-      const height = ref.current.getBoundingClientRect().height;
-      if (height === 0) {
-        setHeight(-1);
-      } else {
-        setHeight(height);
-      }
-    }
-  }, [value]);
-  console.log({ height });
+  const [ref, bounds] = useMeasure();
 
   return (
     <motion.div
-      animate={{ height: height === -1 ? 0 : height > 0 ? height : undefined }}
-      transition={{ type: "spring", bounce: 0, duration: 0.8 }}
+      animate={{
+        height:
+          customHeight !== undefined
+            ? customHeight
+            : bounds.height > 0
+              ? bounds.height
+              : undefined,
+      }}
+      transition={{ type: "spring", bounce: 0, duration: 0.5 }}
       style={{ overflow: "hidden", position: "relative" }}
     >
       <div ref={ref}>
