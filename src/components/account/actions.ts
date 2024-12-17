@@ -1,7 +1,8 @@
 "use server";
 
+import { getPgTimezones } from "@/data-access/pg";
 import { updateUser } from "@/data-access/user";
-import { protectedAction } from "@/lib/safe-action";
+import { protectedAction, publicAction } from "@/lib/safe-action";
 import {
   updateUserEmailUseCase,
   updateUserPasswordUseCase,
@@ -54,4 +55,8 @@ export const updateUserPasswordAction = protectedAction
 export const deleteUserAction = protectedAction.action(async ({ ctx }) => {
   const { user } = ctx;
   return await deleteUser(user.id);
+});
+
+export const getPgTimezonesAction = publicAction.action(async () => {
+  return await getPgTimezones();
 });

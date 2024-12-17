@@ -51,8 +51,8 @@ export const SessionOccurrenceDetails = ({
           >
             <Edit02Icon size={18} variant="stroke" />
           </Button>
-          <Sheet side="right">
-            <Dialog className="p-6">
+          <Sheet side="right" isDismissable>
+            <Dialog className="relative p-8">
               <SessionUpdateForm sessionOcurrence={occurrence} />
             </Dialog>
           </Sheet>

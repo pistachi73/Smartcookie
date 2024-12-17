@@ -70,16 +70,16 @@ export const SessionUpdateSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: "Select some week days",
-          path: ["recurrenceRule.daysOfWeek"],
+          path: ["recurrenceRule"],
         });
       }
 
-      console.log({ frequency, interval, daysOfWeek, endDate });
       if (frequency !== "no-recurrence" && !interval) {
+        console.log({ interval, frequency });
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: "Select an interval",
-          path: ["recurrenceRule.interval"],
+          path: ["recurrenceRule"],
         });
       }
 
@@ -87,7 +87,15 @@ export const SessionUpdateSchema = z
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: "Select an end date",
-          path: ["recurrenceRule.endDate"],
+          path: ["recurrenceRule"],
+        });
+      }
+
+      if (endDate && endDate?.compare(date) <= 0) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Recurrence end date must be after the session date",
+          path: ["recurrenceRule"],
         });
       }
     },

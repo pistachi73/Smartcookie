@@ -22,7 +22,7 @@ export const formatDailyRecurrenceRule = (
   if (!interval || !endDate) return "Select recurrence options";
   const dayLabel = interval === 1 ? "day" : "days";
   const intervalLabel = interval === 1 ? "" : interval;
-  return `Occurs every ${intervalLabel} ${dayLabel} until ${format(endDate.toDate("UTC"), "d LLLL yyyy")}`;
+  return `Occurs every ${intervalLabel} ${dayLabel} until ${format(endDate.toString(), "d LLLL yyyy")}`;
 };
 
 function formatDaysList(days: string[]): string {
@@ -43,5 +43,5 @@ export const formatWeeklyRecurrenceRule = (
       (day) => daysOfWeekCheckboxes.find(({ id }) => id === day)?.longName,
     ) as string[],
   );
-  return `Occurs every ${interval} ${weekLabel} on ${daysOfWeekLabels} until ${format(endDate.toDate("UTC"), "d LLLL yyyy")}`;
+  return `Occurs every ${interval} ${weekLabel} on ${daysOfWeekLabels} until ${format(endDate.toString(), "d LLLL yyyy")}`;
 };

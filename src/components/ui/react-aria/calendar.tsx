@@ -28,7 +28,10 @@ const cellStyles = cva(
         false: "",
       },
       isDisabled: {
-        true: "text-gray-300 dark:text-zinc-600 forced-colors:text-[GrayText]",
+        true: "text-neutral-500",
+      },
+      isUnavailable: {
+        true: "opacity-30 pointer-events-none",
       },
     },
   },

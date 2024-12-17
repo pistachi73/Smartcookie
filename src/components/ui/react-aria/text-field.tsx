@@ -17,6 +17,7 @@ import {
 type TextFieldProps = AriaTextFieldProps &
   FieldWrapperVariants & {
     placeholder?: InputProps["placeholder"];
+    ariaLabel?: InputProps["aria-label"];
   } & {
     label?: string;
     description?: string;
@@ -30,13 +31,19 @@ export const TextField = ({
   label,
   description,
   errorMessage,
+  ariaLabel,
   ...props
 }: TextFieldProps) => {
+  console.log(props);
   return (
     <AriaTextField {...props} className="">
       {label && <Label className="text-sm">{label}</Label>}
       <div className={cn(fieldWrapperVariants({ size }), "")}>
-        <Input placeholder={placeholder} className="flex-1" />
+        <Input
+          placeholder={placeholder}
+          className="flex-1"
+          aria-label={ariaLabel}
+        />
       </div>
       {description && <FieldDescripton>{description}</FieldDescripton>}
       <FieldError errorMessage={errorMessage} />

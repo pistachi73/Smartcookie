@@ -23,7 +23,7 @@ type MonthCalendarDayCellProps = {
 };
 
 const SESSION_OCCURRENCE_HEIGHT = 24;
-const SESSION_OCCURRENCE_SPACING = 8;
+const SESSION_OCCURRENCE_SPACING = 4;
 
 export const MonthCalendarDayCell = ({
   dayIndex,
@@ -33,7 +33,7 @@ export const MonthCalendarDayCell = ({
   dayOccurrences,
 }: MonthCalendarDayCellProps) => {
   const sessionsContainerRef = useRef<HTMLDivElement>(null);
-  const totalOccurrences = dayOccurrences.flat().length * 2;
+  const totalOccurrences = dayOccurrences.flat().length;
   const [visibleOccurrences, setVisibleOccurrences] =
     useState<number>(totalOccurrences);
 
@@ -75,14 +75,14 @@ export const MonthCalendarDayCell = ({
       )}
     >
       {rowIndex === 0 && (
-        <span className="text-sm text-neutral-500 lowercase">
+        <span className="text-xs text-neutral-500 lowercase">
           {format(currentDay, "iii")}
         </span>
       )}
 
       <span
         className={cn(
-          "text-sm font-medium mb-2 size-6 rounded-full flex items-center justify-center",
+          "text-xs font-medium mb-2 size-5 rounded-full flex items-center justify-center",
           isCurrentMonth ? "text-responsive-dark" : "text-neutral-500",
           isToday(currentDay) && "bg-primary text-light",
         )}
@@ -90,8 +90,8 @@ export const MonthCalendarDayCell = ({
         {currentDay.getDate()}
       </span>
       <div ref={sessionsContainerRef} className="overflow-hidden grow p-1">
-        <div className="h-full w-full space-y-2">
-          {[...flattenedDayOccurrences, ...flattenedDayOccurrences]
+        <div className="h-full w-full space-y-1">
+          {flattenedDayOccurrences
             .slice(0, visibleOccurrences)
             .map((occurrence, index) => (
               <MonthOcccurrence
@@ -127,10 +127,7 @@ export const MonthCalendarDayCell = ({
                     </p>
                   </div>
                   <div className="space-y-2">
-                    {[
-                      ...flattenedDayOccurrences,
-                      ...flattenedDayOccurrences,
-                    ].map((occurrence, index) => (
+                    {flattenedDayOccurrences.map((occurrence, index) => (
                       <MonthOcccurrence
                         key={`${occurrence.id}-${index}`}
                         occurrence={occurrence}

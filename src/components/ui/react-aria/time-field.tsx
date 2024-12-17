@@ -32,9 +32,12 @@ export const TimeField = <T extends TimeValue>({
   ...props
 }: TimeFieldProps<T>) => {
   return (
-    <AriaTimeField {...props} className={cn("flex flex-col gap-1", className)}>
+    <AriaTimeField
+      {...props}
+      className={cn("flex flex-col gap-1", className)}
+      value={value}
+    >
       {label && <Label className="text-sm">{label}</Label>}
-
       <div
         className={cn(
           fieldWrapperVariants({ size }),

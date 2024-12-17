@@ -10,7 +10,7 @@ const config = {
   trailingSlash: true,
   reactStrictMode: false,
   experimental: {
-    reactCompiler: true,
+    reactCompiler: false,
   },
   images: {
     remotePatterns: [

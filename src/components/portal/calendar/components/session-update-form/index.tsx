@@ -13,25 +13,23 @@ import { TextField } from "@/components/ui/react-aria/text-field";
 import { TimeField } from "@/components/ui/react-aria/time-field";
 import { RecurrenceSelect } from "@/components/ui/recurrence-select";
 import { Separator } from "@/components/ui/separator";
-import { getCurrentTimezone } from "@/components/ui/timezone-select/utils";
+import { TimezoneSelectField } from "@/components/ui/timezone-select-field";
 import type { SessionOccurrence } from "@/lib/generate-session-ocurrences";
-import { cn } from "@/lib/utils";
-import { timezones } from "@/utils/timezones";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ArrowRight02Icon,
   CalendarAdd01Icon,
-  EarthIcon,
   Folder01Icon,
 } from "@hugeicons/react";
-import { Time, parseDate, parseDateTime } from "@internationalized/date";
-import { Form, SelectValue } from "react-aria-components";
 import {
-  Controller,
-  type FieldError as FieldErrorType,
-  type UseFormReturn,
-  useForm,
-} from "react-hook-form";
+  CalendarDate,
+  Time,
+  getLocalTimeZone,
+  parseDateTime,
+  today,
+} from "@internationalized/date";
+import { Form, SelectValue } from "react-aria-components";
+import { Controller, type UseFormReturn, useForm } from "react-hook-form";
 import type { z } from "zod";
 import { useCalendarContext } from "../../calendar-context";
 import { SessionUpdateSchema } from "./schema";
@@ -47,37 +45,65 @@ export type SesionUpdateForm = UseFormReturn<
 export const SessionUpdateForm = ({
   sessionOcurrence,
 }: SessionUpdateFormProps) => {
-  console.log(getCurrentTimezone());
+  const [parsedStartTime, parsedEndTime, parsedRecurrenceEndDateTime] = [
+    sessionOcurrence?.startTime
+      ? parseDateTime(sessionOcurrence?.startTime)
+      : undefined,
+    sessionOcurrence?.endTime
+      ? parseDateTime(sessionOcurrence?.endTime)
+      : undefined,
+    sessionOcurrence?.recurrenceRule?.endDate
+      ? parseDateTime(sessionOcurrence?.recurrenceRule?.endDate)
+      : undefined,
+  ];
+
   const { hubs } = useCalendarContext();
   const form = useForm<z.infer<typeof SessionUpdateSchema>>({
     resolver: zodResolver(SessionUpdateSchema),
     defaultValues: {
       hubId: sessionOcurrence?.hubId ?? 0,
-      title: "",
-      date: sessionOcurrence?.startTime
-        ? parseDate(sessionOcurrence.startTime.toString())
+      title: sessionOcurrence?.title ?? "",
+      date: parsedStartTime
+        ? new CalendarDate(
+            parsedStartTime.year,
+            parsedStartTime.month,
+            parsedStartTime.day,
+          )
         : undefined,
       timeSchedule: {
-        start: sessionOcurrence?.startTime
-          ? new Time(
-              parseDateTime(sessionOcurrence?.startTime).hour,
-              parseDateTime(sessionOcurrence?.startTime).minute,
-            )
+        start: parsedStartTime
+          ? new Time(parsedStartTime.hour, parsedStartTime.minute)
           : undefined,
-        end: sessionOcurrence?.endTime
-          ? new Time(
-              parseDateTime(sessionOcurrence?.endTime).hour,
-              parseDateTime(sessionOcurrence?.endTime).minute,
-            )
+        end: parsedEndTime
+          ? new Time(parsedEndTime.hour, parsedEndTime.minute)
           : undefined,
       },
-      timezone: getCurrentTimezone()?.name ?? "",
-      recurrenceRule: sessionOcurrence?.recurrenceRule ?? {
-        frequency: "no-recurrence",
-        interval: undefined,
-        daysOfWeek: undefined,
-        endDate: undefined,
-      },
+      timezone: getLocalTimeZone() ?? "",
+      recurrenceRule: sessionOcurrence?.recurrenceRule
+        ? {
+            frequency: sessionOcurrence.recurrenceRule.frequency,
+            interval: sessionOcurrence.recurrenceRule.interval,
+            daysOfWeek: sessionOcurrence.recurrenceRule?.daysOfWeek ?? [],
+            endDate: parsedRecurrenceEndDateTime
+              ? new CalendarDate(
+                  parsedRecurrenceEndDateTime.year,
+                  parsedRecurrenceEndDateTime.month,
+                  parsedRecurrenceEndDateTime.day,
+                )
+              : undefined,
+          }
+        : {
+            frequency: "no-recurrence",
+            interval: 1,
+            daysOfWeek: ["1"],
+            endDate: parsedStartTime
+              ? new CalendarDate(
+                  parsedStartTime.year,
+                  parsedStartTime.month,
+                  parsedStartTime.day,
+                ).add({ days: 1 })
+              : today(getLocalTimeZone()).add({ weeks: 1 }),
+          },
     },
     mode: "onChange",
   });
@@ -87,16 +113,10 @@ export const SessionUpdateForm = ({
     console.log(values);
   };
 
-  const sessionTimeError = (form.formState.errors as any)?.sessionTime as
-    | FieldErrorType
-    | undefined;
-
-  console.log(form.formState.errors);
-
   return (
     <Form
       onSubmit={form.handleSubmit(onSubmit)}
-      className="space-y-6 max-w-[400px]"
+      className="space-y-6 w-[400px]"
     >
       <div className="flex items-center gap-3">
         <CalendarAdd01Icon
@@ -185,30 +205,35 @@ export const SessionUpdateForm = ({
           <Controller
             control={form.control}
             name="timeSchedule"
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
-              <div>
-                <div className="flex items-center gap-2 w-full">
-                  <TimeField
-                    onChange={(start) => onChange({ ...value, start })}
-                    value={value?.start}
-                    className="w-full"
-                    validationBehavior="aria"
-                    size={"sm"}
-                  />
-                  <div className="size-7 shrink-0 flex items-center justify-center dark:bg-neutral-700 bg-neutral-300 dark:text-neutral-200 text-neutral-600 rounded-lg">
-                    <ArrowRight02Icon size={16} />
+            render={({ field: { onChange, value }, fieldState: { error } }) => {
+              console.log(value);
+              return (
+                <div>
+                  <div className="flex items-center gap-2 w-full">
+                    <TimeField
+                      onChange={(start) => onChange({ ...value, start })}
+                      value={value?.start}
+                      className="w-full"
+                      aria-label="Start time"
+                      validationBehavior="aria"
+                      size={"sm"}
+                    />
+                    <div className="size-7 shrink-0 flex items-center justify-center dark:bg-neutral-700 bg-neutral-300 dark:text-neutral-200 text-neutral-600 rounded-lg">
+                      <ArrowRight02Icon size={16} />
+                    </div>
+                    <TimeField
+                      onChange={(end) => onChange({ ...value, end })}
+                      value={value?.end}
+                      className="w-full"
+                      aria-label="End time"
+                      validationBehavior="aria"
+                      size={"sm"}
+                    />
                   </div>
-                  <TimeField
-                    onChange={(end) => onChange({ ...value, end })}
-                    value={value?.end}
-                    className="w-full"
-                    validationBehavior="aria"
-                    size={"sm"}
-                  />
+                  <FieldError errorMessage={error?.message} />
                 </div>
-                <FieldError errorMessage={error?.message} />
-              </div>
-            )}
+              );
+            }}
           />
 
           <Controller
@@ -218,7 +243,7 @@ export const SessionUpdateForm = ({
               field: { onChange, value, ...restField },
               fieldState: { error, invalid },
             }) => (
-              <SelectField
+              <TimezoneSelectField
                 {...restField}
                 onSelectionChange={onChange}
                 selectedKey={value}
@@ -226,47 +251,21 @@ export const SessionUpdateForm = ({
                 validationBehavior="aria"
                 isInvalid={invalid}
                 errorMessage={error?.message}
-              >
-                <Button
-                  size={"sm"}
-                  variant={"outline"}
-                  className={cn(
-                    "w-full justify-between font-normal rounded-lg",
-                    !value && "text-neutral-500",
-                  )}
-                >
-                  <SelectValue className="data-[placeholder]:text-neutral-500" />
-                  <EarthIcon size={16} className="" />
-                </Button>
-                <SelectFieldContent
-                  className="min-w-[var(--trigger-width)] max-h-[300px]!"
-                  items={timezones}
-                  placement="bottom"
-                >
-                  {({ descriptiveName, name }) => (
-                    <ListBoxItem id={name}>{descriptiveName}</ListBoxItem>
-                  )}
-                </SelectFieldContent>
-              </SelectField>
+              />
             )}
           />
         </div>
         <Separator />
-        <div className="space-y-2">
-          <p className="text-sm font-medium">Recurrence</p>
+        <div>
+          <p className="text-sm font-medium mb-2">Recurrence</p>
           <RecurrenceSelect form={form} />
         </div>
       </div>
       <div className="flex items-center justify-end gap-3">
-        <Button variant="ghost" size="sm" className={"rounded-lg"}>
+        <Button variant="ghost" size="sm">
           Cancel session
         </Button>
-        <Button
-          variant="primary"
-          size="sm"
-          type="submit"
-          className={"rounded-lg"}
-        >
+        <Button variant="primary" size="sm" type="submit" className="px-6">
           Save
         </Button>
       </div>

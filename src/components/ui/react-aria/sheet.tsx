@@ -22,7 +22,7 @@ const overlayStyles = cva(
   },
 );
 
-const sheetStyles = cva("fixed bg-background p-4 duration-[200ms]", {
+const sheetStyles = cva("fixed bg-background duration-[200ms]", {
   variants: {
     isEntering: {
       true: "animate-in ",
@@ -34,9 +34,9 @@ const sheetStyles = cva("fixed bg-background p-4 duration-[200ms]", {
       top: "top-0 data-[entering]:slide-in-from-top data-[exiting]:slide-out-to-top w-full rounded-b-lg left-1/2 -translate-x-1/2 top-0",
       bottom:
         "bottom-0 data-[entering]:slide-in-from-bottom data-[exiting]:slide-out-to-bottom w-full rounded-t-lg bottom-0 left-1/2 -translate-x-1/2",
-      left: "p-6 data-[entering]:slide-in-from-left data-[exiting]:slide-out-to-left h-[var(--visual-viewport-height)] rounded-r-lg top-1/2 -translate-y-1/2 left-0",
+      left: "data-[entering]:slide-in-from-left data-[exiting]:slide-out-to-left h-[var(--visual-viewport-height)] rounded-r-lg top-1/2 -translate-y-1/2 left-0",
       right:
-        "p-6 data-[entering]:slide-in-from-right data-[exiting]:slide-out-to-right h-[var(--visual-viewport-height)] rounded-l-lg top-1/2 -translate-y-1/2 right-0",
+        "data-[entering]:slide-in-from-right data-[exiting]:slide-out-to-right h-[var(--visual-viewport-height)] rounded-l-lg top-1/2 -translate-y-1/2 right-0",
     },
   },
 });

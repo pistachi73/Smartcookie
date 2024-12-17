@@ -10,7 +10,7 @@ import {
   Dialog,
   Group,
 } from "react-aria-components";
-import { Calendar } from "./calendar";
+import { Calendar, type CalendarProps } from "./calendar";
 import { DateInput } from "./date-input";
 import { FieldDescripton } from "./field-description";
 import { FieldError } from "./field-error";
@@ -25,6 +25,7 @@ type DatePickerProps<T extends DateValue> = AriaDatePickerProps<T> &
     label?: string;
     description?: string;
     errorMessage?: string;
+    calendarProps?: CalendarProps<T>;
   };
 
 export const DatePicker = <T extends DateValue>({
@@ -32,10 +33,12 @@ export const DatePicker = <T extends DateValue>({
   label,
   description,
   errorMessage,
+  value,
+  calendarProps,
   ...props
 }: DatePickerProps<T>) => {
   return (
-    <AriaDatePicker {...props} className={className}>
+    <AriaDatePicker {...props} value={value} className={className}>
       <Group
         className={cn(
           fieldWrapperVariants({ size: "sm" }),
@@ -45,7 +48,8 @@ export const DatePicker = <T extends DateValue>({
         <DateInput className={"flex-1"} />
         <Button
           className={cn(
-            "transition-colors h-full aspect-square flex items-center justify-center p-0 rounded-none text-neutral-500 hover:bg-neutral-500/30",
+            "transition-colors h-full aspect-square flex items-center justify-center p-0 rounded-none  hover:bg-neutral-500/30",
+            !value && "text-neutral-500",
           )}
         >
           <Calendar01Icon size={16} />
@@ -55,7 +59,7 @@ export const DatePicker = <T extends DateValue>({
       <FieldError errorMessage={errorMessage} />
       <Popover placement="bottom">
         <Dialog>
-          <Calendar />
+          <Calendar {...calendarProps} />
         </Dialog>
       </Popover>
     </AriaDatePicker>

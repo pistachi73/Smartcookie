@@ -24,7 +24,7 @@ export const FieldError = ({
           <Text
             slot="errorMessage"
             className={cn(
-              "pt-0.5 flex items-center gap-1.5 text-xs font-normal leading-5 text-destructive",
+              "pt-0.5 flex items-center gap-1.5 text-xs font-normal leading-5 text-destructive text-nowrap",
               className,
             )}
             {...props}

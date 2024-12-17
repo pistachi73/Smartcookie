@@ -7,6 +7,10 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/react-aria/calendar";
+import {
+  ComboBoxField,
+  ComboBoxFieldContent,
+} from "@/components/ui/react-aria/combobox";
 import { DateInput } from "@/components/ui/react-aria/date-input";
 import { ListBox, ListBoxItem } from "@/components/ui/react-aria/list-box";
 import { Modal } from "@/components/ui/react-aria/modal";
@@ -21,6 +25,7 @@ import {
   Dialog,
   DialogTrigger,
   Heading,
+  Input,
   Select,
   SelectValue,
 } from "react-aria-components";
@@ -55,6 +60,19 @@ export default function Components() {
       <TimeField size="sm" hourCycle={24} />
       <TextField placeholder="Enter your name" size="sm" />
 
+      <ComboBoxField>
+        <div>
+          <Input />
+          <Button />
+        </div>
+        <ComboBoxFieldContent items={items}>
+          {(item) => (
+            <ListBoxItem showCheckIcon key={item.id} id={item.id}>
+              {item.textValue}
+            </ListBoxItem>
+          )}
+        </ComboBoxFieldContent>
+      </ComboBoxField>
       <Calendar />
       <Select placeholder="Select an option">
         <Button variant={"outline"}>
