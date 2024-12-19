@@ -37,14 +37,14 @@ export const UserButton = ({ user }: { user: ExtendedUser }) => {
           />
           <div className="overflow-hidden">
             <p className="text-base font-medium">{user?.name}</p>
-            <p className="text-neutral-500 text-sm truncate font-normal">
+            <p className="text-text-sub text-sm truncate font-normal">
               {user?.email}
             </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator className="my-2 bg-border" />
         <DropdownMenuItem
-          className="mx-2 flex flex-row gap-2 items-center cursor-pointer text-sm py-2 text-neutral-500"
+          className="mx-2 flex flex-row gap-2 items-center cursor-pointer text-sm py-2 text-text-sub"
           asChild
         >
           <Link href="/account">

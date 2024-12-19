@@ -47,7 +47,7 @@ export const SessionOccurrenceDetails = ({
             variant="ghost"
             iconOnly
             size={"sm"}
-            className="hover:bg-neutral-500/30 hover:text-responsive-dark size-9"
+            className="hover:bg-background-base-highlight hover:text-responsive-dark size-9"
           >
             <Edit02Icon size={18} variant="stroke" />
           </Button>
@@ -62,7 +62,7 @@ export const SessionOccurrenceDetails = ({
             variant="ghost"
             iconOnly
             size={"sm"}
-            className="hover:bg-neutral-500/30 hover:text-responsive-dark size-9"
+            className="hover:bg-background-base-highlight hover:text-responsive-dark size-9"
           >
             <Delete02Icon size={18} variant="stroke" />
           </Button>
@@ -80,7 +80,7 @@ export const SessionOccurrenceDetails = ({
       <div className="space-y-4 mt-0">
         <div className="space-y-1">
           <p className="text-base font-medium">{occurrence.title}</p>
-          <p className="text-base text-neutral-500 line-clamp-2 font-normal">
+          <p className="text-base text-text-sub line-clamp-2 font-normal">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
             ullamcorper, nisl in commodo egestas, sem eros blandit nisi, vitae
             tincidunt nisi nisl sit amet elit. Sed ullamcorper, nisl in.
@@ -90,7 +90,7 @@ export const SessionOccurrenceDetails = ({
           <div className="space-y-1 basis-1/2">
             <div className="flex items-center gap-1">
               <Calendar02Icon size={14} />
-              <span className="text-neutral-500 text-sm">Date</span>
+              <span className="text-text-sub text-sm">Date</span>
             </div>
             <p className="text-base font-medium">
               {format(occurrence.startTime, "iiii, d MMMM")}
@@ -99,7 +99,7 @@ export const SessionOccurrenceDetails = ({
           <div className="space-y-1 basis-1/2">
             <div className="flex items-center gap-1">
               <Clock01Icon size={14} />
-              <span className="text-neutral-500 text-sm">Time</span>
+              <span className="text-text-sub text-sm">Time</span>
             </div>
             <p className="text-base font-medium">
               {format(occurrence.startTime, "HH:mm")} -{" "}
@@ -111,7 +111,7 @@ export const SessionOccurrenceDetails = ({
           <div className="space-y-1 ">
             <div className="flex items-center gap-1">
               <RepeatIcon size={14} />
-              <span className="text-neutral-500 text-sm">Recurrence</span>
+              <span className="text-text-sub text-sm">Recurrence</span>
             </div>
             <p className="text-base font-medium">
               <span className="capitalize">
@@ -133,7 +133,7 @@ export const SessionOccurrenceDetails = ({
         <div className="space-y-1 ">
           <div className="flex items-center gap-1">
             <UserGroupIcon size={14} />
-            <span className="text-neutral-500 text-sm">Participants</span>
+            <span className="text-text-sub text-sm">Participants</span>
           </div>
           <div className="flex items-center">
             <UserAvatar
@@ -182,7 +182,7 @@ const DeleteIndividualSessionModal = () => {
     <Modal isDismissable>
       <Dialog className="p-6">
         <Header className="text-3xl mb-3">Delete session?</Header>
-        <p className="text-base text-neutral-500">
+        <p className="text-base text-text-sub">
           Are you sure you want to delete this session?
         </p>
         <div className="mt-4 flex justify-end gap-2">

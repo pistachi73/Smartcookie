@@ -7,7 +7,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useCurrentUser } from "@/hooks/use-current-user";
 import { cn } from "@/lib/utils";
 import {
   Calendar02Icon,
@@ -16,7 +15,6 @@ import {
   Invoice03Icon,
   UserGroupIcon,
 } from "@hugeicons/react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -50,14 +48,9 @@ const sidebarLinks = [
 
 export const SideBar = () => {
   const pathname = usePathname();
-  const user = useCurrentUser();
 
   return (
-    <div className="flex flex-col justify-between items-center px-5 py-4 rounded-full">
-      <Link href={"/"}>
-        <Image src={"/Logo.svg"} alt="Logo" width={24} height={48} />
-      </Link>
-
+    <div className="flex flex-col justify-between items-center p-2 rounded-xl bg-background-base h-full ">
       <div className="flex flex-col gap-3 shrink-0 grow-0">
         {sidebarLinks.map(({ label, href, icon: Icon }) => {
           const isActive = pathname.includes(href);
@@ -68,24 +61,24 @@ export const SideBar = () => {
                   href={href}
                   className={cn(
                     buttonVariants({
-                      variant: "outline",
+                      variant: "ghost",
                       size: "default",
                       iconOnly: true,
                     }),
-                    isActive &&
-                      "bg-background-reverse text-responsive-light pointer-events-none",
+                    "rounded-lg",
+                    isActive && "bg-primary text-light pointer-events-none",
                   )}
                 >
                   <Icon
-                    size={18}
+                    size={20}
                     strokeWidth={1.5}
-                    variant={isActive ? "bulk" : "stroke"}
+                    variant={isActive ? "solid" : "stroke"}
                     type="rounded"
                   />
                 </Link>
               </TooltipTrigger>
               <TooltipContent
-                sideOffset={8}
+                sideOffset={4}
                 side="right"
                 align="center"
                 className="w-fit"

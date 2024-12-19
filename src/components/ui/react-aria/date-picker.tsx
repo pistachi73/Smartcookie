@@ -48,8 +48,8 @@ export const DatePicker = <T extends DateValue>({
         <DateInput className={"flex-1"} />
         <Button
           className={cn(
-            "transition-colors h-full aspect-square flex items-center justify-center p-0 rounded-none  hover:bg-neutral-500/30",
-            !value && "text-neutral-500",
+            "transition-colors h-full aspect-square flex items-center justify-center p-0 rounded-none  hover:bg-background-base-highlight",
+            !value && "text-text-sub",
           )}
         >
           <Calendar01Icon size={16} />

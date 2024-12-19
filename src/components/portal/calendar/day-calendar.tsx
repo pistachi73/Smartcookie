@@ -20,11 +20,9 @@ export const DayCalendar = () => {
   return (
     <div className="flex flex-col h-full gap-2 relative overflow-hidden">
       <div className="w-full flex items-center pl-6 ">
-        <div className="w-12 text-neutral-500 text-sm shrink-0 mr-3">
-          GTM +1
-        </div>
+        <div className="w-12 text-text-sub text-sm shrink-0 mr-3">GTM +1</div>
         <div className="flex flex-col w-16 items-center justify-center p-1">
-          <p className="text-sm text-neutral-500 lowercase">
+          <p className="text-sm text-text-sub lowercase">
             {format(selectedDate, "iii")}
           </p>
           <p className="text-4xl font-medium text-responsive-dark ">
@@ -43,7 +41,7 @@ export const DayCalendar = () => {
                   key={`hour-${index}`}
                   className="h-16 flex items-center justify-center relative"
                 >
-                  <span className="text-sm text-neutral-500 absolute top-[-10px] right-0">
+                  <span className="text-sm text-text-sub absolute top-[-10px] right-0">
                     {index === 0 ? "" : `${String(index).padStart(2, "0")}:00`}
                   </span>
                 </div>

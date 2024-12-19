@@ -19,16 +19,15 @@ import { Button } from "../button";
 export type CalendarProps<T extends DateValue> = AriaCalendarProps<T>;
 
 const cellStyles = cva(
-  "p-0 hover:text-responsive-dark hover:bg-neutral-500/30 font-normal size-8 text-sm cursor-default rounded-full flex items-center justify-center forced-color-adjust-none",
+  "p-0 hover:text-responsive-dark hover:bg-background-base-highlight font-normal size-8 text-sm cursor-default rounded-full flex items-center justify-center forced-color-adjust-none",
   {
     variants: {
       isSelected: {
         true: "bg-primary-100 dark-responsive-dark hover:bg-primary-200 dark:bg-primary-800 dark:hover:bg-primary-700",
-
         false: "",
       },
       isDisabled: {
-        true: "text-neutral-500",
+        true: "text-text-sub",
       },
       isUnavailable: {
         true: "opacity-30 pointer-events-none",

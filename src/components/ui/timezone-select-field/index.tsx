@@ -48,7 +48,7 @@ export const TimezoneSelectField = <T extends object>({
         <Button
           className={cn(
             "transition-colors h-full aspect-square flex items-center justify-center p-0 rounded-none hover:bg-neutral-500/30",
-            !selectedKey && "text-neutral-500",
+            !selectedKey && "text-text-sub",
           )}
         >
           {isLoading ? (

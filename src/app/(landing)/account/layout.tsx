@@ -13,7 +13,7 @@ const AccountLayout = ({ children }: { children: React.ReactNode }) => {
           href="/"
           className={cn(
             buttonVariants({ variant: "ghost" }),
-            "hidden w-fit lg:flex px-4 text-neutral-500 flex-row gap-2 text-sm items-center  justify-start font-normal",
+            "hidden w-fit lg:flex px-4 text-text-sub flex-row gap-2 text-sm items-center  justify-start font-normal",
           )}
         >
           <ArrowLeft02Icon size={18} />

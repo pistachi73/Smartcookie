@@ -50,7 +50,7 @@ const TabsTrigger = React.forwardRef<
     <TabsPrimitive.Trigger
       ref={ref}
       className={cn(
-        "outline-hidden rounded-[6px] h-full relative cursor-pointer inline-flex text-neutral-500 items-center justify-center whitespace-nowrap  px-3 py-1.5 text-sm font-medium transition-all",
+        "outline-hidden rounded-[6px] h-full relative cursor-pointer inline-flex text-text-sub items-center justify-center whitespace-nowrap  px-3 py-1.5 text-sm font-medium transition-all",
         "disabled:pointer-events-none disabled:opacity-50",
         "focus-visible:outline-hidden",
         !isActive && "hover:bg-neutral-500/30 hover:text-responsive-dark",

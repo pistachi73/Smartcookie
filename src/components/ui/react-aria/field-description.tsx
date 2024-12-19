@@ -5,7 +5,7 @@ export const FieldDescripton = ({ className, ...props }: TextProps) => {
   return (
     <Text
       slot="description"
-      className={cn("pt-0.5 text-xs text-neutral-500", className)}
+      className={cn("pt-0.5 text-xs text-text-sub", className)}
       {...props}
     />
   );

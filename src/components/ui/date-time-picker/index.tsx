@@ -54,7 +54,7 @@ export const DateTimePicker = () => {
             size={"sm"}
             className={cn(
               "w-full justify-between text-left font-normal rounded-none rounded-t-lg",
-              !date && "text-neutral-500",
+              !date && "text-text-sub",
             )}
           >
             {date ? format(date, "PPP") : <span>Pick a date</span>}
@@ -88,7 +88,7 @@ export const DateTimePicker = () => {
               className={cn(
                 "border-l border-y-0 border-r-0 w-full justify-between text-left font-normal bg-transparent rounded-none",
                 "focus-visible:border",
-                !startTime && "text-neutral-500",
+                !startTime && "text-text-sub",
               )}
             >
               {startTime ? startTime : <span>Start</span>}
@@ -104,7 +104,7 @@ export const DateTimePicker = () => {
           </SelectContent>
         </Select>
         <div className="size-10 p-1 flex items-center justify-center bg-neutral/20 rounded-sm shrink-0">
-          <ArrowRight02Icon size={16} className="text-neutral-500" />
+          <ArrowRight02Icon size={16} className="text-text-sub" />
         </div>
         <Select onValueChange={(value) => setEndTime(value)}>
           <SelectTrigger asChild>
@@ -114,7 +114,7 @@ export const DateTimePicker = () => {
               className={cn(
                 "w-full justify-between text-left font-normal rounded-none bg-transparent border-r border-y-0 border-l-0",
                 "focus-visible:border",
-                !endTime && "text-neutral-500",
+                !endTime && "text-text-sub",
               )}
             >
               {endTime ? endTime : <span>End</span>}
@@ -137,7 +137,7 @@ export const DateTimePicker = () => {
             size={"sm"}
             className={cn(
               "w-full justify-between text-left font-normal rounded-none rounded-b-lg",
-              !timezone && "text-neutral-500",
+              !timezone && "text-text-sub",
             )}
           >
             {timezone

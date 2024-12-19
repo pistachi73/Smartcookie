@@ -31,10 +31,10 @@ export const itemStyles = cva(
         true: "dark:bg-primary-900/60 bg-primary-100/60 hover:bg-primary-100/80 dark:hover:bg-primary-900/80",
       },
       isHovered: {
-        true: "bg-neutral-500/20",
+        true: "bg-background-base-highlight",
       },
       isFocusVisible: {
-        true: "inset-ring-[3px] inset-ring-neutral-300/40 dark:inset-ring-neutral-500/30  ",
+        true: "inset-ring-[3px] inset-hover:bg-background-base-highlight  ",
       },
       isDisabled: {
         true: "pointer-events-none opacity-50",

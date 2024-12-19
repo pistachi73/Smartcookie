@@ -75,7 +75,7 @@ export const MonthCalendarDayCell = ({
       )}
     >
       {rowIndex === 0 && (
-        <span className="text-xs text-neutral-500 lowercase">
+        <span className="text-xs text-text-sub lowercase">
           {format(currentDay, "iii")}
         </span>
       )}
@@ -83,7 +83,7 @@ export const MonthCalendarDayCell = ({
       <span
         className={cn(
           "text-xs font-medium mb-2 size-5 rounded-full flex items-center justify-center",
-          isCurrentMonth ? "text-responsive-dark" : "text-neutral-500",
+          isCurrentMonth ? "text-responsive-dark" : "text-text-sub",
           isToday(currentDay) && "bg-primary text-light",
         )}
       >
@@ -101,7 +101,7 @@ export const MonthCalendarDayCell = ({
             ))}
           {visibleOccurrences < totalOccurrences && (
             <DialogTrigger>
-              <AriaButton className="w-full hover:bg-neutral-500/30 rounded-md transition-colors text-sm">
+              <AriaButton className="w-full hover:bg-background-base-highlight rounded-md transition-colors text-sm">
                 {totalOccurrences - visibleOccurrences} more
               </AriaButton>
               <Popover
@@ -119,7 +119,7 @@ export const MonthCalendarDayCell = ({
                     <MultiplicationSignIcon size={20} />
                   </Button>
                   <div className="flex flex-col items-center justify-center mb-4">
-                    <p className="text-sm text-neutral-500 lowercase">
+                    <p className="text-sm text-text-sub lowercase">
                       {format(currentDay, "iii")}
                     </p>
                     <p className="text-4xl font-medium text-responsive-dark ">
@@ -151,7 +151,7 @@ const MonthOcccurrence = ({
 }) => {
   return (
     <DialogTrigger>
-      <AriaButton className="h-6 p-0.5 px-1 rounded-md text-dark text-sm hover:bg-neutral-500/30 flex gap-2 items-center transition-colors cursor-pointer">
+      <AriaButton className="h-6 p-0.5 px-1 rounded-md text-dark text-sm hover:bg-background-base-highlight flex gap-2 items-center transition-colors cursor-pointer">
         <div className="size-2 bg-lime-300 rounded-full shrink-0" />
         <p className="line-clamp-1 text-left text-responsive-dark">
           <span>{format(occurrence.startTime, "HH:mm")}</span> -{" "}

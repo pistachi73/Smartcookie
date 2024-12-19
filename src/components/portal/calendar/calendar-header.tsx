@@ -90,7 +90,7 @@ export const CalendarHeader = () => {
           <Button
             variant="ghost"
             size="sm"
-            className="text-neutral-500"
+            className="text-text-sub"
             iconOnly
             onPress={onPrevious}
           >
@@ -99,7 +99,7 @@ export const CalendarHeader = () => {
           <Button
             variant="ghost"
             size="sm"
-            className="text-neutral-500"
+            className="text-text-sub"
             iconOnly
             onPress={onNext}
           >

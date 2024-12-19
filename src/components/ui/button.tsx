@@ -18,11 +18,11 @@ const buttonVariants = cva(
         secondary:
           "focus-ring-dark bg-responsive-dark text-responsive-light hover:bg-primary hover:text-light",
         tertiary:
-          "focus-ring-neutral bg-neutral-500 text-responsive-dark hover:bg-responsive-dark hover:text-responsive-light",
+          "focus-ring-neutral bg-background-base-highlight text-responsive-dark hover:bg-responsive-dark hover:text-responsive-light",
         outline:
-          "focus-ring-neutral border border-border bg-transparent hover:bg-neutral-500/30 ",
+          "focus-ring-neutral border border-border bg-transparent hover:bg-background-base-highlight",
         ghost:
-          "focus-ring-neutral border border-transparent hover:bg-responsive-dark hover:text-responsive-light",
+          "focus-ring-neutral border border-transparent  hover:bg-background-base-highlight hover:text-responsive-dark",
         destructive:
           "focus-ring-destructive bg-destructive text-responsive-dark hover:bg-responsive-dark hover:text-responsive-light",
         link: "underline-offset-2 hover:underline px-0 h-auto",

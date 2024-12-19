@@ -7,21 +7,22 @@ export default async function PortalLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="w-full flex grow h-full min-h-screen">
-      <SideBar />
-      <div className="grow flex flex-col pr-4">
+    <div
+      className="w-full grid grid-cols-[auto_1fr] grid-rows-[auto_1fr] gap-2 min-h-screen p-2 bg-background"
+      style={{
+        gridTemplateAreas: `
+          "global-nav global-nav"
+          "left-sidebar main-view"
+        `,
+      }}
+    >
+      <div className="[grid-area:global-nav]">
         <PortalHeader />
-        {children}
       </div>
+      <div className="[grid-area:left-sidebar]  ">
+        <SideBar />
+      </div>
+      <div className="[grid-area:main-view]">{children}</div>
     </div>
   );
-  // return (
-  //   <div className="flex h-full w-full flex-col items-center gap-4 min-h-screen">
-  //     {/* <PortalHeader /> */}
-  //     <div className="w-full flex gap-6 px-6 pr-4 grow">
-  //       <SideBar />
-  //       {children}
-  //     </div>
-  //   </div>
-  // );
 }

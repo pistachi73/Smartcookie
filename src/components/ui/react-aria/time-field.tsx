@@ -42,7 +42,7 @@ export const TimeField = <T extends TimeValue>({
         className={cn(
           fieldWrapperVariants({ size }),
           "flex flex-row items-center justify-between",
-          !value && "text-neutral-500",
+          !value && "text-text-sub",
         )}
       >
         <DateInput />

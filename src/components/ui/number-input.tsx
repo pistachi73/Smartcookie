@@ -44,7 +44,7 @@ const NumberInput = ({
           <Button
             variant="outline"
             className={cn(
-              "h-1/2 w-6 border-0 border-b border-l p-0 rounded-none text-neutral-500",
+              "h-1/2 w-6 border-0 border-b border-l p-0 rounded-none text-text-sub",
             )}
             type="button"
             isDisabled={!state.canIncrement}
@@ -56,7 +56,7 @@ const NumberInput = ({
             variant="outline"
             type="button"
             className={cn(
-              "h-1/2 w-6  p-0 border-0 border-l rounded-none  text-neutral-500",
+              "h-1/2 w-6  p-0 border-0 border-l rounded-none  text-text-sub",
             )}
             isDisabled={!state.canDecrement}
             {...decrementButtonProps}
@@ -84,7 +84,7 @@ const NumberInput = ({
     //         slot="increment"
     //         className={cn(
     //           buttonVariants({ variant: "outline" }),
-    //           "h-1/2 w-6 border-0 border-b border-l p-0 rounded-none text-neutral-500",
+    //           "h-1/2 w-6 border-0 border-b border-l p-0 rounded-none text-text-sub",
     //         )}
     //       >
     //         <ArrowUp01Icon size={12} />
@@ -93,7 +93,7 @@ const NumberInput = ({
     //         slot="decrement"
     //         className={cn(
     //           buttonVariants({ variant: "outline" }),
-    //           "h-1/2 w-6  p-0 border-0 border-l rounded-none  text-neutral-500",
+    //           "h-1/2 w-6  p-0 border-0 border-l rounded-none  text-text-sub",
     //         )}
     //       >
     //         <ArrowDown01Icon size={12} />

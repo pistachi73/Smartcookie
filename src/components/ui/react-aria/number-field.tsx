@@ -54,27 +54,31 @@ export const NumberField = ({
           className="flex-1 max-w-[calc(100%-var(--spacing)*8)]"
         />
         <div className="h-full flex flex-col shrink-0">
-          <Button
-            variant="outline"
-            className={cn(
-              "h-1/2 w-6 border-0 border-l p-0 rounded-none text-neutral-500",
-            )}
-            type="button"
-            slot="increment"
-          >
-            <ArrowUp01Icon size={12} />
-          </Button>
-          <Separator className="flex-1 h-full bg-neutral-500" />
-          <Button
-            variant="outline"
-            type="button"
-            className={cn(
-              "h-1/2 w-6  p-0 border-0 border-l rounded-none  text-neutral-500",
-            )}
-            slot="decrement"
-          >
-            <ArrowDown01Icon size={12} />
-          </Button>
+          <div className={"h-1/2 w-6 border-l"}>
+            <Button
+              variant="outline"
+              className={cn(
+                "h-full w-full p-0 border-0 rounded-none   text-text-sub",
+              )}
+              type="button"
+              slot="increment"
+            >
+              <ArrowUp01Icon size={12} />
+            </Button>
+          </div>
+          <Separator className="flex-1 h-full " />
+          <div className={"h-1/2 w-6 border-l"}>
+            <Button
+              variant="outline"
+              type="button"
+              className={cn(
+                "h-full w-full p-0 border-0 rounded-none   text-text-sub",
+              )}
+              slot="decrement"
+            >
+              <ArrowDown01Icon size={12} />
+            </Button>
+          </div>
         </div>
       </Group>
       {description && <FieldDescripton>{description}</FieldDescripton>}

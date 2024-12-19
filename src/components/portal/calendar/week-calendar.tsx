@@ -21,9 +21,7 @@ export const WeekCalendar = () => {
   return (
     <div className="flex flex-col h-full gap-2 relative overflow-hidden">
       <div className="w-full flex items-center pl-6 ">
-        <div className="w-12 text-neutral-500 text-sm shrink-0 mr-2">
-          GTM +1
-        </div>
+        <div className="w-12 text-text-sub text-sm shrink-0 mr-2">GTM +1</div>
         {weekDays.map((day) => {
           const isSelected = isSameDay(day, selectedDate);
           return (
@@ -35,7 +33,7 @@ export const WeekCalendar = () => {
               )}
             >
               <div className="flex flex-col items-center justify-center p-1">
-                <p className="text-sm text-neutral-500 lowercase">
+                <p className="text-sm text-text-sub lowercase">
                   {format(day, "iii")}
                 </p>
                 <p className="text-4xl font-medium text-responsive-dark ">

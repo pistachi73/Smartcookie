@@ -26,7 +26,7 @@ export const UpcomingEvent = ({ hubName }: UpcomingEventProps) => {
       </div>
       <div className="flex justify-between items-center">
         <div>
-          <p className="text-neutral-500 text-sm">Upcoming event</p>
+          <p className="text-text-sub text-sm">Upcoming event</p>
           <p className="text-sm">Today from 3PM - 4PM</p>
         </div>
         <Button variant="secondary" size="sm" iconOnly>

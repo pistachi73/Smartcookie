@@ -4,7 +4,7 @@ import type {
   ValidationResult,
 } from "react-aria-components";
 import { ComboBox, ListBox, ListBoxItem, Popover } from "react-aria-components";
-import { TimeInput } from "./time-input";
+import { TimeInput } from "./react-aria/time-input";
 
 interface MyComboBoxProps<T extends object>
   extends Omit<ComboBoxProps<T>, "children"> {

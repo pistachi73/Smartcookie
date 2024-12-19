@@ -19,9 +19,7 @@ export const NavigationButtons = () => {
         className={cn(
           buttonVariants({ variant: "ghost", size: "lg" }),
           "px-0 text-sm lg:text-base lg:font-medium hover:no-underline w-fit lg:w-full flex flex-row gap-2 lg:px-4 justify-start ",
-          pathname === "/account/"
-            ? "text-responsive-dark"
-            : "text-neutral-500",
+          pathname === "/account/" ? "text-responsive-dark" : "text-text-sub",
         )}
       >
         <Home09Icon size={20} className="hidden lg:block" strokeWidth={1.5} />

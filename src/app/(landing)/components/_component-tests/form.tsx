@@ -119,7 +119,7 @@ export const TestForm = () => {
             errorMessage={error?.message}
           >
             <Button size={"sm"} variant={"outline"}>
-              <SelectValue className="data-[placeholder]:text-neutral-500" />
+              <SelectValue className="data-[placeholder]:text-text-sub" />
             </Button>
             <SelectFieldContent
               className="min-w-[var(--trigger-width)]"

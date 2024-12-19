@@ -67,7 +67,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
             variant="ghost"
             size="sm"
             iconOnly
-            className="absolute right-0 top-0 h-full px-3 py-2 text-neutral-500 hover:text-responsive-dark hover:bg-transparent"
+            className="absolute right-0 top-0 h-full px-3 py-2 text-text-sub hover:text-responsive-dark hover:bg-transparent"
             onPress={() => setShowPassword((prev) => !prev)}
             isDisabled={disabled}
           >
@@ -83,7 +83,7 @@ const PasswordInput = React.forwardRef<HTMLInputElement, PasswordInputProps>(
                   className={cn(
                     "flex items-center gap-1.5 text-sm font-light",
                     {
-                      "text-neutral-500": !valid,
+                      "text-text-sub": !valid,
                       "text-emerald-500 line-through": valid,
                     },
                     className,

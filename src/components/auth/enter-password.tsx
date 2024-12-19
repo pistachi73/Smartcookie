@@ -94,7 +94,7 @@ export const EnterPassword = ({ authForm }: CreatePasswordProps) => {
               <Button
                 size="inline"
                 variant="link"
-                className="text-sm font-light text-neutral-500"
+                className="text-sm font-light text-text-sub"
                 type="button"
                 onPress={() => {
                   setFormType("RESET_PASSWORD");

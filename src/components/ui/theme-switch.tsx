@@ -14,12 +14,13 @@ export default function ThemeSwitch() {
       onValueChange={(value) => {
         setTheme(value);
       }}
+      className="rounded-xl border-0 gap-px"
     >
       <ToggleGroupItem
         value="light"
         size={"default"}
         iconOnly
-        className="bg-background-reverse text-light dark:bg-background"
+        className="bg-background-reverse text-light dark:bg-transparent rounded-xl"
       >
         <Sun02Icon size={18} strokeWidth={1.5} variant={"stroke"} />
       </ToggleGroupItem>
@@ -27,7 +28,7 @@ export default function ThemeSwitch() {
         value="dark"
         size={"default"}
         iconOnly
-        className="bg-background text-dark dark:bg-background-reverse"
+        className="bg-transparent text-dark dark:bg-background-reverse rounded-xl"
       >
         <Moon01Icon size={18} strokeWidth={1.5} variant={"stroke"} />
       </ToggleGroupItem>

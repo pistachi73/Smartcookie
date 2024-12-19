@@ -76,7 +76,7 @@ export default function Components() {
       <Calendar />
       <Select placeholder="Select an option">
         <Button variant={"outline"}>
-          <SelectValue className={"data-[placeholder]:text-neutral-500"} />
+          <SelectValue className={"data-[placeholder]:text-text-sub"} />
         </Button>
         <Popover className="w-[--trigger-width] h-[300px]" placement="bottom">
           <ListBox items={items}>

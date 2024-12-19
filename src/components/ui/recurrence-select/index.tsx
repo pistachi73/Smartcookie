@@ -129,10 +129,10 @@ const daysOfWeekCheckboxes: { id: string; label: string }[] = [
 //                   frequency &&
 //                     frequency !== "no-recurrence" &&
 //                     "border-b-border rounded-b-none duration-100",
-//                   !value && "text-neutral-500",
+//                   !value && "text-text-sub",
 //                 )}
 //               >
-//                 <SelectValue className="data-[placeholder]:text-neutral-500" />
+//                 <SelectValue className="data-[placeholder]:text-text-sub" />
 //                 <RepeatIcon size={16} />
 //               </Button>
 //               <SelectFieldContent
@@ -197,7 +197,7 @@ const daysOfWeekCheckboxes: { id: string; label: string }[] = [
 //                   )}
 //                 />
 //               </div>
-//               <p className="text-neutral-500 text-xs">
+//               <p className="text-text-sub text-xs">
 //                 {formatDailyRecurrenceRule(interval, endDate)}
 //               </p>
 //             </div>
@@ -286,7 +286,7 @@ const daysOfWeekCheckboxes: { id: string; label: string }[] = [
 //                   )}
 //                 />
 //               </div>
-//               <p className="text-neutral-500 text-xs">
+//               <p className="text-text-sub text-xs">
 //                 {formatWeeklyRecurrenceRule(interval, daysOfWeek, endDate)}
 //               </p>
 //             </div>
@@ -369,10 +369,10 @@ export const RecurrenceSelect = <T extends { recurrenceRule: RecurrenceRule }>({
                   frequency &&
                     frequency !== "no-recurrence" &&
                     "border-b-border rounded-b-none duration-100",
-                  !value && "text-neutral-500",
+                  !value && "text-text-sub",
                 )}
               >
-                <SelectValue className="data-[placeholder]:text-neutral-500" />
+                <SelectValue className="data-[placeholder]:text-text-sub" />
                 <RepeatIcon size={16} />
               </Button>
               <SelectFieldContent
@@ -419,7 +419,7 @@ export const RecurrenceSelect = <T extends { recurrenceRule: RecurrenceRule }>({
                       }}
                     />
                   </div>
-                  <p className="text-neutral-500 text-xs">
+                  <p className="text-text-sub text-xs">
                     {formatDailyRecurrenceRule(interval, endDate)}
                   </p>
                 </div>
@@ -493,7 +493,7 @@ export const RecurrenceSelect = <T extends { recurrenceRule: RecurrenceRule }>({
                       }}
                     />
                   </div>
-                  <p className="text-neutral-500 text-xs">
+                  <p className="text-text-sub text-xs">
                     {formatWeeklyRecurrenceRule(interval, daysOfWeek, endDate)}
                   </p>
                 </div>

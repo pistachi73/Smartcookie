@@ -17,8 +17,8 @@
   --color-primary-800: oklch(41.26% 0.1295 30.6);
   --color-primary-900: oklch(34.34% 0.1041 30.36);
 
-  --color-dark: var(--color-neutral-900); 
-  --color-light: white;
+  --color-dark: oklch(6.72% 0 0);
+  --color-light: oklch(100% 0 0);
   --color-destructive: oklch(58.5% 0.21 29.0); 
 
   --color-neutral-50: oklch(97.09% 0.0012 255.5);
@@ -38,6 +38,15 @@
   --color-card-background: var(--card-background);
   --color-responsive-light: var(--responsive-light);
   --color-responsive-dark: var(--responsive-dark);
+
+  --color-text-base: var(--text-base);
+  --color-text-sub: var(--text-sub);
+
+  --color-background-base: var(--background-base);
+  --color-background-base-highlight: var(--background-base-highlight);
+  --color-background-base-highlight-plus: var(--background-base-highlight-plus);
+  --color-background-elevated-base: var(--background-elevated-base);
+  --color-background-elevated-base-highlight: var(--background-elevated-base-highlight);
 
   --radius-lg: 8px;
   --radius-md: 6px;
@@ -140,17 +149,33 @@
 
 @layer base {
   :root {
-    --background: var(--color-neutral-50);
+    --background: oklch(95.16% 0.0017 247.84);
+    --background-base: oklch(98.43% 0.0011 197.14);
+    --background-base-highlight: oklch(93.38% 0.0029 264.54);
+    --background-base-highlight-plus: oklch(75.38% 0.0029 264.54);
+    --background-elevated-base: oklch(93.38% 0.0029 264.54);
+    --background-elevated-base-highlight:  oklch(87% 0.0029 264.54);
     --background-reverse: var(--color-dark);
-    --border: var(--color-neutral-200);
+    --text-base: oklch(6.72% 0 0);
+    --text-sub: oklch(6.72% 0 0 / 60%);
+
+    --border: oklch(6.72% 0 0 / 10%);
     --card-background: var(--color-light);
     --responsive-light: var(--color-light);
     --responsive-dark: var(--color-dark);
   }
   .dark {
-    --background: var(--color-dark);
+    --background: oklch(6.72% 0 0);
+    --background-base: oklch(19.89% 0.0051 248.08);
+    --background-base-highlight: oklch(26.36% 0.0063 258.36);
+    --background-base-highlight-plus: oklch(66.36% 0.0063 258.36);
+    --background-elevated-base: oklch(26.36% 0.0063 258.36);
+    --background-elevated-base-highlight: oklch(27.29% 0.0063 257.61);
+    --border: oklch(100% 0 0 / 10%);
+    --text-base: oklch(100% 0 0);
+    --text-sub: oklch(100% 0 0 / 60%);
+    
     --background-reverse: var(--color-neutral-300);
-    --border: var(--color-neutral-700);
     --card-background: var(--color-neutral-800);
     --responsive-light: var(--color-dark);
     --responsive-dark: var(--color-light);
@@ -172,14 +197,12 @@
 
 @utility focus-ring-neutral {
   @apply focus-visible:ring-[4px];
-  @apply focus-visible:border-neutral-300 focus-visible:ring-neutral-300/40;
-  @apply dark:focus-visible:border-neutral-500 dark:focus-visible:ring-neutral-500/30;  
+  @apply focus-visible:border-background-base-highlight-plus focus-visible:ring-background-elevated-base-highlight/80;  
 }
 
 @utility focus-ring-neutral-vanilla {
   @apply ring-[4px];
-  @apply border-neutral-300 ring-neutral-300/40;
-  @apply dark:border-neutral-500 dark:ring-neutral-500/30;  
+  @apply border-background-base-highlight-plus ring-background-elevated-base-highlight/80;  
 }
 
 

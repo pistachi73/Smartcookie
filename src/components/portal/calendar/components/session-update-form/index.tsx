@@ -126,7 +126,7 @@ export const SessionUpdateForm = ({
         />
         <div>
           <p className="text-lg font-medium"> Create / edit session</p>
-          <p className="text-sm text-neutral-500">
+          <p className="text-sm text-text-sub">
             Fill in the data below to edit the session
           </p>
         </div>
@@ -157,7 +157,7 @@ export const SessionUpdateForm = ({
                   variant={"outline"}
                   className="w-full justify-between font-normal rounded-lg"
                 >
-                  <SelectValue className="data-[placeholder]:text-neutral-500" />
+                  <SelectValue className="data-[placeholder]:text-text-sub" />
                   <Folder01Icon size={16} />
                 </Button>
                 <SelectFieldContent

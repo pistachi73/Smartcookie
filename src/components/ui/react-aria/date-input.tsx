@@ -14,9 +14,10 @@ export const DateInput = ({ className, ...props }: DateInputProps) => {
         <DateSegment
           segment={segment}
           className={cn(
-            "tabular-nums px-0.5  rounded-sm  ",
-            "focus:bg-neutral-200 dark:focus:bg-neutral-800 focus:caret-transparent",
-            "data-[placeholder]:text-neutral-500",
+            "tabular-nums px-0.5 rounded-sm",
+            "focus:bg-background-base-highlight",
+            " focus:caret-transparent",
+            "data-[placeholder]:text-text-sub",
           )}
         />
       )}

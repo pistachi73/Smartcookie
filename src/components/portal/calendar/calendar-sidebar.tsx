@@ -21,7 +21,7 @@ export const CalendarSidebar = () => {
   const { selectedDate, setSelectedDate, hubs } = useCalendarContext();
 
   return (
-    <div className="flex flex-col border-r border-border">
+    <div className="flex flex-col">
       <div className="p-4">
         <UpcomingEvent hubName="Math Tutoring Hub" />
       </div>
