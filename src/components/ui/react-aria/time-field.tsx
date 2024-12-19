@@ -20,6 +20,7 @@ type TimeFieldProps<T extends TimeValue> = AriaTimeFieldProps<T> &
     label?: string;
     description?: string;
     errorMessage?: string;
+    withIcon?: boolean;
   };
 
 export const TimeField = <T extends TimeValue>({
@@ -29,12 +30,13 @@ export const TimeField = <T extends TimeValue>({
   size,
   className,
   value,
+  withIcon,
   ...props
 }: TimeFieldProps<T>) => {
   return (
     <AriaTimeField
       {...props}
-      className={cn("flex flex-col gap-1", className)}
+      className={cn("flex flex-col gap-1 w-full")}
       value={value}
     >
       {label && <Label className="text-sm">{label}</Label>}
@@ -42,11 +44,17 @@ export const TimeField = <T extends TimeValue>({
         className={cn(
           fieldWrapperVariants({ size }),
           "flex flex-row items-center justify-between",
+          withIcon && "pl-0",
           !value && "text-text-sub",
+          className,
         )}
       >
+        {withIcon && (
+          <div className="h-full aspect-square flex items-center justify-center">
+            <Clock01Icon size={16} className="text-text-sub" />
+          </div>
+        )}
         <DateInput />
-        <Clock01Icon size={18} className={cn("ml-2")} />
       </div>
       {description && <FieldDescripton>{description}</FieldDescripton>}
       <FieldError errorMessage={errorMessage} />

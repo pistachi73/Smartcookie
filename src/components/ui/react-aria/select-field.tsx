@@ -1,5 +1,7 @@
 import { cn } from "@/lib/utils";
-import { Select, type SelectProps } from "react-aria-components";
+import { FoldersIcon } from "@hugeicons/react";
+import { Select, type SelectProps, SelectValue } from "react-aria-components";
+import { Button } from "../button";
 import { FieldDescripton } from "./field-description";
 import { FieldError } from "./field-error";
 import { Label } from "./label";
@@ -28,6 +30,31 @@ export const SelectField = ({
       {description && <FieldDescripton>{description}</FieldDescripton>}
       <FieldError errorMessage={errorMessage} />
     </Select>
+  );
+};
+
+type SelectTriggerProps = React.ComponentProps<typeof Button> & {
+  icon?: typeof FoldersIcon;
+};
+
+export const SelectTrigger = ({
+  className,
+  icon: Icon,
+  ...props
+}: SelectTriggerProps) => {
+  const hasIcon = Icon !== undefined;
+  return (
+    <Button
+      className={cn(className, hasIcon && "pl-0 gap-0 justify-start")}
+      {...props}
+    >
+      {hasIcon && (
+        <div className="h-full aspect-square flex items-center justify-center">
+          <Icon size={16} className="text-text-sub" />
+        </div>
+      )}
+      <SelectValue className="data-[placeholder]:text-text-sub" />
+    </Button>
   );
 };
 

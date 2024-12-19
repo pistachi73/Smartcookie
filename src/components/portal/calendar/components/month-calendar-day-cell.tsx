@@ -101,7 +101,7 @@ export const MonthCalendarDayCell = ({
             ))}
           {visibleOccurrences < totalOccurrences && (
             <DialogTrigger>
-              <AriaButton className="w-full hover:bg-background-base-highlight rounded-md transition-colors text-sm">
+              <AriaButton className="w-full hover:bg-base-highlight rounded-md transition-colors text-sm">
                 {totalOccurrences - visibleOccurrences} more
               </AriaButton>
               <Popover
@@ -151,7 +151,7 @@ const MonthOcccurrence = ({
 }) => {
   return (
     <DialogTrigger>
-      <AriaButton className="h-6 p-0.5 px-1 rounded-md text-dark text-sm hover:bg-background-base-highlight flex gap-2 items-center transition-colors cursor-pointer">
+      <AriaButton className="h-6 p-0.5 px-1 rounded-md text-dark text-sm hover:bg-base-highlight flex gap-2 items-center transition-colors cursor-pointer">
         <div className="size-2 bg-lime-300 rounded-full shrink-0" />
         <p className="line-clamp-1 text-left text-responsive-dark">
           <span>{format(occurrence.startTime, "HH:mm")}</span> -{" "}

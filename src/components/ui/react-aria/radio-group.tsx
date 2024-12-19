@@ -47,7 +47,7 @@ const radioVariants = cva(
         true: "cursor-not-allowed opacity-50",
       },
       isFocusVisible: {
-        true: "before:ring-[4px] before:ring-background-base-highlight",
+        true: "before:ring-[4px] before:ring-base-highlight",
       },
       isSelected: {
         true: "before:border-5 before:border-primary!",

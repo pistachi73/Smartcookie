@@ -37,7 +37,7 @@ export const ComboBoxField = <T extends object>({
   );
 };
 
-type ComboBoxFieldContentProps<T extends object> = Omit<
+export type ComboBoxFieldContentProps<T extends object> = Omit<
   PopoverProps,
   "children"
 > & {

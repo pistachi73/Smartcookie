@@ -19,7 +19,7 @@ import { Button } from "../button";
 export type CalendarProps<T extends DateValue> = AriaCalendarProps<T>;
 
 const cellStyles = cva(
-  "p-0 hover:text-responsive-dark hover:bg-background-base-highlight font-normal size-8 text-sm cursor-default rounded-full flex items-center justify-center forced-color-adjust-none",
+  "p-0 hover:text-responsive-dark hover:bg-responsive-dark/10 font-normal size-8 text-sm cursor-default rounded-full flex items-center justify-center forced-color-adjust-none",
   {
     variants: {
       isSelected: {
@@ -82,7 +82,7 @@ export function CalendarHeader() {
           <ArrowLeft01Icon aria-hidden size={20} />
         )}
       </Button>
-      <Heading className="flex-1 font-medium text-base text-center" />
+      <Heading className="flex-1 font-medium text-text-base text-center" />
       <Button
         iconOnly
         slot="next"

@@ -7,14 +7,13 @@ import type {
 import {
   DatePicker as AriaDatePicker,
   Button,
-  Dialog,
   Group,
 } from "react-aria-components";
 import { Calendar, type CalendarProps } from "./calendar";
 import { DateInput } from "./date-input";
 import { FieldDescripton } from "./field-description";
 import { FieldError } from "./field-error";
-import { Popover } from "./popover";
+import { Popover, type PopoverProps } from "./popover";
 import {
   type FieldWrapperVariants,
   fieldWrapperVariants,
@@ -26,6 +25,7 @@ type DatePickerProps<T extends DateValue> = AriaDatePickerProps<T> &
     description?: string;
     errorMessage?: string;
     calendarProps?: CalendarProps<T>;
+    children?: React.ReactNode;
   };
 
 export const DatePicker = <T extends DateValue>({
@@ -35,33 +35,46 @@ export const DatePicker = <T extends DateValue>({
   errorMessage,
   value,
   calendarProps,
+  children,
   ...props
 }: DatePickerProps<T>) => {
   return (
-    <AriaDatePicker {...props} value={value} className={className}>
+    <AriaDatePicker {...props} value={value} className="w-full">
       <Group
         className={cn(
           fieldWrapperVariants({ size: "sm" }),
-          "flex flex-row items-center justify-between pr-0 gap-4 overflow-hidden",
+          "w-full flex flex-row items-center justify-between pl-0 overflow-hidden hover:bg-base-highlight transition-colors",
+          className,
         )}
       >
-        <DateInput className={"flex-1"} />
         <Button
           className={cn(
-            "transition-colors h-full aspect-square flex items-center justify-center p-0 rounded-none  hover:bg-background-base-highlight",
+            "cursor-pointer transition-colors h-full aspect-square flex items-center justify-center p-0 rounded-none  hover:bg-base-highlight",
             !value && "text-text-sub",
           )}
         >
-          <Calendar01Icon size={16} />
+          <Calendar01Icon size={16} className="text-text-sub" />
         </Button>
+        <DateInput className={"flex-1"} />
       </Group>
+      {children}
       {description && <FieldDescripton>{description}</FieldDescripton>}
       <FieldError errorMessage={errorMessage} />
-      <Popover placement="bottom">
-        <Dialog>
-          <Calendar {...calendarProps} />
-        </Dialog>
-      </Popover>
     </AriaDatePicker>
+  );
+};
+
+type DatePickerContentProps = Omit<PopoverProps, "children"> & {
+  calendarProps?: CalendarProps<DateValue>;
+};
+
+export const DatePickerContent = ({
+  calendarProps,
+  ...props
+}: DatePickerContentProps) => {
+  return (
+    <Popover {...props}>
+      <Calendar {...calendarProps} />
+    </Popover>
   );
 };

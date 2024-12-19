@@ -36,9 +36,9 @@ export const TextField = ({
 }: TextFieldProps) => {
   console.log(props);
   return (
-    <AriaTextField {...props} className="">
+    <AriaTextField {...props}>
       {label && <Label className="text-sm">{label}</Label>}
-      <div className={cn(fieldWrapperVariants({ size }), "")}>
+      <div className={cn(fieldWrapperVariants({ size }), className)}>
         <Input
           placeholder={placeholder}
           className="flex-1"

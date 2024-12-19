@@ -28,7 +28,7 @@ export default function ThemeSwitch() {
         value="dark"
         size={"default"}
         iconOnly
-        className="bg-transparent text-dark dark:bg-background-reverse rounded-xl"
+        className="bg-transparent text-dark dark:bg-light rounded-xl"
       >
         <Moon01Icon size={18} strokeWidth={1.5} variant={"stroke"} />
       </ToggleGroupItem>

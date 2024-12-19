@@ -9,7 +9,7 @@ import {
 } from "react-aria-components";
 
 const buttonVariants = cva(
-  "cursor-pointer inline-flex  gap-2 items-center justify-center whitespace-nowrap text-base font-medium transition-colors  disabled:pointer-events-none disabled:opacity-50 rounded-full",
+  "cursor-pointer inline-flex  gap-2 items-center justify-center whitespace-nowrap text-text-base font-medium transition-colors  disabled:pointer-events-none disabled:opacity-50 rounded-full",
   {
     variants: {
       variant: {
@@ -18,11 +18,11 @@ const buttonVariants = cva(
         secondary:
           "focus-ring-dark bg-responsive-dark text-responsive-light hover:bg-primary hover:text-light",
         tertiary:
-          "focus-ring-neutral bg-background-base-highlight text-responsive-dark hover:bg-responsive-dark hover:text-responsive-light",
+          "focus-ring-neutral bg-base-highlight text-responsive-dark hover:bg-responsive-dark hover:text-responsive-light",
         outline:
-          "focus-ring-neutral border border-border bg-transparent hover:bg-background-base-highlight",
+          "focus-ring-neutral border border-border bg-transparent hover:bg-base-highlight",
         ghost:
-          "focus-ring-neutral border border-transparent  hover:bg-background-base-highlight hover:text-responsive-dark",
+          "focus-ring-neutral border border-transparent  hover:bg-base-highlight hover:text-responsive-dark",
         destructive:
           "focus-ring-destructive bg-destructive text-responsive-dark hover:bg-responsive-dark hover:text-responsive-light",
         link: "underline-offset-2 hover:underline px-0 h-auto",

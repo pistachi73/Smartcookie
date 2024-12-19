@@ -50,8 +50,8 @@ export const SideBar = () => {
   const pathname = usePathname();
 
   return (
-    <div className="flex flex-col justify-between items-center p-2 rounded-xl bg-background-base h-full ">
-      <div className="flex flex-col gap-3 shrink-0 grow-0">
+    <div className="flex flex-col justify-between items-center p-2 rounded-xl bg-base h-full ">
+      <div className="flex flex-col gap-2 shrink-0 grow-0">
         {sidebarLinks.map(({ label, href, icon: Icon }) => {
           const isActive = pathname.includes(href);
           return (

@@ -47,7 +47,7 @@ export const SessionOccurrenceDetails = ({
             variant="ghost"
             iconOnly
             size={"sm"}
-            className="hover:bg-background-base-highlight hover:text-responsive-dark size-9"
+            className="hover:bg-base-highlight hover:text-responsive-dark size-9"
           >
             <Edit02Icon size={18} variant="stroke" />
           </Button>
@@ -62,7 +62,7 @@ export const SessionOccurrenceDetails = ({
             variant="ghost"
             iconOnly
             size={"sm"}
-            className="hover:bg-background-base-highlight hover:text-responsive-dark size-9"
+            className="hover:bg-base-highlight hover:text-responsive-dark size-9"
           >
             <Delete02Icon size={18} variant="stroke" />
           </Button>
@@ -182,7 +182,7 @@ const DeleteIndividualSessionModal = () => {
     <Modal isDismissable>
       <Dialog className="p-6">
         <Header className="text-3xl mb-3">Delete session?</Header>
-        <p className="text-base text-text-sub">
+        <p className="text-text-sub">
           Are you sure you want to delete this session?
         </p>
         <div className="mt-4 flex justify-end gap-2">
