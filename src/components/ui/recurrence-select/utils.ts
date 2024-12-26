@@ -1,47 +1,55 @@
-import { format } from "date-fns";
-import type { DateValue } from "react-aria";
+import { type Frequency, type Options, RRule } from "rrule";
 
-export const daysOfWeekCheckboxes: {
-  id: string;
-  label: string;
-  longName: string;
-}[] = [
-  { id: "1", label: "M", longName: "Monday" },
-  { id: "2", label: "T", longName: "Tuesday" },
-  { id: "3", label: "W", longName: "Wednesday" },
-  { id: "4", label: "T", longName: "Thursday" },
-  { id: "5", label: "F", longName: "Friday" },
-  { id: "6", label: "S", longName: "Saturday" },
-  { id: "7", label: "S", longName: "Sunday" },
-];
-
-export const formatDailyRecurrenceRule = (
-  interval?: number,
-  endDate?: DateValue,
-) => {
-  if (!interval || !endDate) return "Select recurrence options";
-  const dayLabel = interval === 1 ? "day" : "days";
-  const intervalLabel = interval === 1 ? "" : interval;
-  return `Occurs every ${intervalLabel} ${dayLabel} until ${format(endDate.toString(), "d LLLL yyyy")}`;
-};
-
-function formatDaysList(days: string[]): string {
-  if (days.length <= 1) return days.join("");
-  const lastDay = days.pop();
-  return `${days.join(", ")} and ${lastDay}`;
+export enum EndsEnum {
+  ENDS_NEVER = "ENDS_NEVER",
+  ENDS_ON = "ENDS_ON",
+  ENDS_AFTER = "ENDS_AFTER",
 }
 
-export const formatWeeklyRecurrenceRule = (
-  interval?: number,
-  daysOfWeek?: string[],
-  endDate?: DateValue,
-) => {
-  if (!interval || !endDate || !daysOfWeek) return "Select recurrence options";
-  const weekLabel = interval === 1 ? "week" : "weeks";
-  const daysOfWeekLabels = formatDaysList(
-    daysOfWeek.map(
-      (day) => daysOfWeekCheckboxes.find(({ id }) => id === day)?.longName,
-    ) as string[],
-  );
-  return `Occurs every ${interval} ${weekLabel} on ${daysOfWeekLabels} until ${format(endDate.toString(), "d LLLL yyyy")}`;
+export type NonNullableRruleOptions = {
+  [K in keyof Options]: NonNullable<Options[K]>;
+};
+
+export const daysOfWeekCheckboxes: {
+  id: number;
+  label: string;
+}[] = [
+  { id: 1, label: "M" },
+  { id: 2, label: "T" },
+  { id: 3, label: "W" },
+  { id: 4, label: "T" },
+  { id: 5, label: "F" },
+  { id: 6, label: "S" },
+  { id: 7, label: "S" },
+];
+
+export enum PrefefinedRecurrencesEnum {
+  NO_RECURRENCE = "no-recurrence",
+  EVERY_WEEKDAY = "every-weekday",
+  EVERY_WEEK_ON_SELECTED_DATE = "every-week-on-selected-date",
+  CUSTOM = "custom-recurrence",
+}
+
+export const getFrequencyItems = (
+  interval: number,
+): { id: Frequency; label: string }[] => {
+  const isPlural = interval > 1;
+  return [
+    {
+      id: RRule.DAILY,
+      label: `day${isPlural ? "s" : ""}`,
+    },
+    {
+      id: RRule.WEEKLY,
+      label: `week${isPlural ? "s" : ""}`,
+    },
+    {
+      id: RRule.MONTHLY,
+      label: `month${isPlural ? "s" : ""}`,
+    },
+    {
+      id: RRule.YEARLY,
+      label: `year${isPlural ? "s" : ""}`,
+    },
+  ];
 };

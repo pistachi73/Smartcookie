@@ -169,7 +169,7 @@
     --base: oklch(19.89% 0.0051 248.08);
     --base-highlight: oklch(26.36% 0.0063 258.36);
     --elevated: oklch(26.36% 0.0063 258.36);
-    --elevated-highlight: oklch(27.29% 0.0063 257.61);
+    --elevated-highlight: oklch(30.29% 0.0063 257.61);
     --border: oklch(100% 0 0 / 10%);
     --border-highlight: oklch(100% 0 0 / 30%);
     --text-base: oklch(100% 0 0);

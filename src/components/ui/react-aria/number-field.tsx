@@ -25,6 +25,7 @@ type NumberFieldProps = AriaNumberFieldProps &
     description?: string;
     errorMessage?: string;
     placeholder?: InputProps["placeholder"];
+    iconSize?: number;
   };
 
 export const NumberField = ({
@@ -34,40 +35,50 @@ export const NumberField = ({
   errorMessage,
   placeholder,
   className,
+  isDisabled,
+  iconSize = 12,
   ...props
 }: NumberFieldProps) => {
   return (
     <AriaNumberField
       {...props}
-      className={cn("flex flex-col gap-1", className)}
+      isDisabled={isDisabled}
+      className={cn("flex flex-col gap-1")}
     >
       {label && <Label className="text-sm">{label}</Label>}
 
       <Group
         className={cn(
-          fieldWrapperVariants({ size }),
-          "overflow-hidden pr-0 flex justify-between",
+          fieldWrapperVariants({ size, isDisabled }),
+          "overflow-hidden pr-0 flex justify-between items-center",
+          className,
         )}
       >
         <Input
           placeholder={placeholder}
-          className="flex-1 max-w-[calc(100%-var(--spacing)*8)]"
+          className={cn(
+            "flex-1 max-w-[calc(100%-var(--spacing)*8)] text-inherit",
+          )}
         />
         <div className="h-full flex flex-col shrink-0">
-          <div className={"h-1/2 w-6 border-l"}>
+          <div
+            className={"h-1/2 w-6 border-l flex items-center justify-center"}
+          >
             <Button
               variant="outline"
               className={cn(
-                "h-full w-full p-0 border-0 rounded-none   text-text-sub",
+                "h-full w-full p-0 border-0 rounded-none  text-text-sub",
               )}
               type="button"
               slot="increment"
             >
-              <ArrowUp01Icon size={12} />
+              <ArrowUp01Icon size={iconSize} />
             </Button>
           </div>
           <Separator className="flex-1 h-full " />
-          <div className={"h-1/2 w-6 border-l"}>
+          <div
+            className={"h-1/2 w-6 border-l flex items-center justify-center"}
+          >
             <Button
               variant="outline"
               type="button"
@@ -76,7 +87,7 @@ export const NumberField = ({
               )}
               slot="decrement"
             >
-              <ArrowDown01Icon size={12} />
+              <ArrowDown01Icon size={iconSize} />
             </Button>
           </div>
         </div>

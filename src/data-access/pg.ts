@@ -5,6 +5,7 @@ import { cache } from "react";
 export type PgTimezone = {
   name: string;
   offset: string;
+  displayoffset: string;
   displayname: string;
 };
 
@@ -13,7 +14,8 @@ export const getPgTimezones = cache(async () => {
         SELECT 
           name,
           utc_offset as offset,
-          '(UTC' || CASE WHEN length(utc_offset::text)<9 THEN '+' ELSE '' END || substring(utc_offset::text, 1, length(utc_offset::text) - 3) || ') ' || REPLACE(REPLACE(name, '/', ' - '), '_', ' ') as displayName
+          'UTC' || CASE WHEN length(utc_offset::text)<9 THEN '+' ELSE '' END || substring(utc_offset::text, 1, length(utc_offset::text) - 3) as displayOffset,
+          REPLACE(REPLACE(name, '/', ' - '), '_', ' ') as displayName
         FROM pg_timezone_names
         WHERE name NOT LIKE 'Etc%'
           AND name NOT LIKE 'GMT%'

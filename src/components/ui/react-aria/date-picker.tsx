@@ -36,13 +36,19 @@ export const DatePicker = <T extends DateValue>({
   value,
   calendarProps,
   children,
+  isDisabled,
   ...props
 }: DatePickerProps<T>) => {
   return (
-    <AriaDatePicker {...props} value={value} className="w-full">
+    <AriaDatePicker
+      {...props}
+      value={value}
+      isDisabled={isDisabled}
+      className="w-full"
+    >
       <Group
         className={cn(
-          fieldWrapperVariants({ size: "sm" }),
+          fieldWrapperVariants({ size: "sm", isDisabled }),
           "w-full flex flex-row items-center justify-between pl-0 overflow-hidden hover:bg-base-highlight transition-colors",
           className,
         )}

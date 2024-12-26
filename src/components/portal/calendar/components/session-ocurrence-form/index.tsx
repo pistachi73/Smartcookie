@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/react-aria/select-field";
 import { TextField } from "@/components/ui/react-aria/text-field";
 import { TimeField } from "@/components/ui/react-aria/time-field";
+import { RecurrenceSelect } from "@/components/ui/recurrence-select";
 import {
   TimezoneSelectContent,
   TimezoneSelectField,
@@ -23,6 +24,7 @@ import {
   CalendarAdd01Icon,
   Folder02Icon,
 } from "@hugeicons/react";
+import { CalendarDate } from "@internationalized/date";
 import { Form, Separator } from "react-aria-components";
 import { Controller, useForm } from "react-hook-form";
 import type { z } from "zod";
@@ -51,9 +53,6 @@ export const SessionOccurrenceFrom = () => {
         </div>
         <div className="space-y-2">
           <div className="flex flex-row gap-1 px-2">
-            {/* <div className="h-10 flex items-center">
-              <Folder02Icon size={16} color="var(--color-text-sub)" />
-            </div> */}
             <div className="w-full space-y-1">
               <Controller
                 control={form.control}
@@ -84,7 +83,7 @@ export const SessionOccurrenceFrom = () => {
                     />
                     <SelectFieldContent
                       placement="left top"
-                      offset={4}
+                      offset={8}
                       className="w-[250px]"
                       items={[{ id: 1, name: "Math Tutoring Hub" }]}
                     >
@@ -135,7 +134,7 @@ export const SessionOccurrenceFrom = () => {
                   errorMessage={error?.message}
                   className="border-transparent"
                 >
-                  <DatePickerContent placement="left top" offset={12} />
+                  <DatePickerContent placement="left top" offset={8} />
                 </DatePicker>
               )}
             />
@@ -194,11 +193,15 @@ export const SessionOccurrenceFrom = () => {
                 >
                   <TimezoneSelectContent
                     placement="left top"
-                    offset={12}
+                    offset={8}
                     className="max-h-[300px]! w-[300px]"
                   />
                 </TimezoneSelectField>
               )}
+            />
+            <RecurrenceSelect
+              selectedDate={new CalendarDate(2024, 12, 19)}
+              onChange={(rrule) => console.log(rrule)}
             />
           </div>
         </div>

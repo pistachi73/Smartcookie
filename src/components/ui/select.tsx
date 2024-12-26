@@ -20,14 +20,14 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex w-full items-center justify-between rounded-md border border-border bg-background   placeholder:text-muted-foreground focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+      "flex w-full items-center justify-between rounded-md border border-border bg-background   placeholder:text-muted-foreground focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-40 [&>span]:line-clamp-1",
       className,
     )}
     {...props}
   >
     {children}
     {/* <SelectPrimitive.Icon asChild>
-      <ChevronDown className="h-4 w-4 opacity-50" />
+      <ChevronDown className="h-4 w-4 opacity-40" />
     </SelectPrimitive.Icon> */}
   </SelectPrimitive.Trigger>
 ));
@@ -119,7 +119,7 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "p-2 relative flex w-full cursor-default select-none items-center rounded-sm text-base outline-hidden focus:bg-neutral-500/20 focus:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 dark:data-[state=checked]:bg-primary-900 data-[state=checked]:bg-primary-100",
+      "p-2 relative flex w-full cursor-default select-none items-center rounded-sm text-base outline-hidden focus:bg-neutral-500/20 focus:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-40 dark:data-[state=checked]:bg-primary-900 data-[state=checked]:bg-primary-100",
       className,
     )}
     {...props}

@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { FoldersIcon } from "@hugeicons/react";
+import type { FoldersIcon } from "@hugeicons/react";
 import { Select, type SelectProps, SelectValue } from "react-aria-components";
 import { Button } from "../button";
 import { FieldDescripton } from "./field-description";
@@ -40,6 +40,7 @@ type SelectTriggerProps = React.ComponentProps<typeof Button> & {
 export const SelectTrigger = ({
   className,
   icon: Icon,
+  children,
   ...props
 }: SelectTriggerProps) => {
   const hasIcon = Icon !== undefined;
@@ -53,7 +54,11 @@ export const SelectTrigger = ({
           <Icon size={16} className="text-text-sub" />
         </div>
       )}
-      <SelectValue className="data-[placeholder]:text-text-sub" />
+      {children ? (
+        children
+      ) : (
+        <SelectValue className="data-[placeholder]:text-text-sub" />
+      )}
     </Button>
   );
 };

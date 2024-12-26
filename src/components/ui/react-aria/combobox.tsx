@@ -27,7 +27,7 @@ export const ComboBoxField = <T extends object>({
   return (
     <ComboBox
       {...props}
-      className={({ isDisabled }) => cn(className, isDisabled && "opacity-50")}
+      className={({ isDisabled }) => cn(className, isDisabled && "opacity-40")}
     >
       {label && <Label>{label}</Label>}
       {children}

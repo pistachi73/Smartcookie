@@ -1,508 +1,423 @@
 import { cn } from "@/lib/utils";
-import { RepeatIcon } from "@hugeicons/react";
-import type { DateValue } from "@internationalized/date";
-import { Checkbox, CheckboxGroup, SelectValue } from "react-aria-components";
-import {
-  Controller,
-  type UseFormReturn,
-  useFormState,
-  useWatch,
-} from "react-hook-form";
+import { ArrowRight02Icon, RepeatIcon } from "@hugeicons/react";
+import { CalendarDate, getDayOfWeek } from "@internationalized/date";
+import { format } from "date-fns";
+import { useEffect, useMemo, useState } from "react";
+import { Heading, ListBoxSection } from "react-aria-components";
+import { Frequency, Options, RRule, Weekday, type WeekdayStr } from "rrule";
 import { z } from "zod";
-import { Button, buttonVariants } from "../button";
-import { DatePicker } from "../react-aria/date-picker";
-import { FieldError } from "../react-aria/field-error";
+import { Button } from "../button";
+import { DatePicker, DatePickerContent } from "../react-aria/date-picker";
+import { Dialog } from "../react-aria/dialog";
 import { ListBoxItem } from "../react-aria/list-box";
+import { Modal } from "../react-aria/modal";
 import { NumberField } from "../react-aria/number-field";
-import { SelectField, SelectFieldContent } from "../react-aria/select-field";
-import { ResizablePanelContent, ResizablePanelRoot } from "../resizable-panel";
-import { formatDailyRecurrenceRule, formatWeeklyRecurrenceRule } from "./utils";
+import { Radio, RadioGroup } from "../react-aria/radio-group";
+import {
+  SelectField,
+  SelectFieldContent,
+  SelectTrigger,
+} from "../react-aria/select-field";
+import { ByweekdayCheckboxGroup } from "./components/byweekday-checkbox-group";
+import { FrequencySelect } from "./components/frequency-select";
+import { IntervalInput } from "./components/interval-input";
+import { Test } from "./components/test";
+import { RecurrenceSelectContextProvider } from "./recurrence-select-context";
+import {
+  EndsEnum,
+  type NonNullableRruleOptions,
+  PrefefinedRecurrencesEnum,
+  getFrequencyItems,
+} from "./utils";
 
 export const RecurrenceRuleSchema = z.object({
-  frequency: z.union([
-    z.literal("no-recurrence"),
-    z.literal("daily"),
-    z.literal("weekly"),
-  ]),
+  freq: z.custom<Frequency>().optional(),
   interval: z.number().optional(),
-  daysOfWeek: z.array(z.string()).optional(),
-  endDate: z.custom<DateValue>().optional(),
+  byweekday: z.array(z.custom<Weekday>()).optional(),
+  count: z.number().optional(),
+  until: z.custom<Date>().optional(),
 });
 
 export type RecurrenceRule = z.infer<typeof RecurrenceRuleSchema>;
 
-const recurrences: { id: RecurrenceRule["frequency"]; label: string }[] = [
-  {
-    id: "no-recurrence",
-    label: "Does not repeat",
-  },
-  {
-    id: "daily",
-    label: "Repeats daily",
-  },
-  {
-    id: "weekly",
-    label: "Repeats weekly",
-  },
-];
+type RecurrenceSelectItem = {
+  value: string;
+  name: string;
+};
 
-const daysOfWeekCheckboxes: { id: string; label: string }[] = [
-  { id: "1", label: "M" },
-  { id: "2", label: "T" },
-  { id: "3", label: "W" },
-  { id: "4", label: "T" },
-  { id: "5", label: "F" },
-  { id: "6", label: "S" },
-  { id: "7", label: "S" },
-];
+type RecurrenceSelectSection = {
+  section: string;
+  items: RecurrenceSelectItem[];
+};
 
-// export const RecurrenceSelect = <T extends { recurrenceRule: RecurrenceRule }>({
-//   form,
-// }: {
-//   form: UseFormReturn<
-//     object & { date: DateValue; recurrenceRule: RecurrenceRule }
-//   >;
-// }) => {
-//   const sessionDate = useWatch({
-//     control: form.control,
-//     name: "date",
-//     defaultValue: undefined,
-//   });
-
-//   const frequency = useWatch({
-//     control: form.control,
-//     name: "recurrenceRule.frequency",
-//   });
-
-//   console.log({ frequency });
-
-//   const interval = useWatch({
-//     control: form.control,
-//     name: "recurrenceRule.interval",
-//     defaultValue: 1,
-//   });
-
-//   const daysOfWeek = useWatch({
-//     control: form.control,
-//     name: "recurrenceRule.daysOfWeek",
-//     defaultValue: [],
-//   });
-
-//   const endDate = useWatch({
-//     control: form.control,
-//     name: "recurrenceRule.endDate",
-//     defaultValue: undefined,
-//   });
-
-//   const { errors } = useFormState({
-//     control: form.control,
-//     name: "recurrenceRule",
-//   });
-
-//   return (
-//     <>
-//       <div
-//         className={cn(
-//           "p-0 flex flex-col h-auto overflow-hidden rounded-lg border bg-background",
-//         )}
-//       >
-//         <Controller
-//           control={form.control}
-//           name="recurrenceRule.frequency"
-//           render={({
-//             field: { onChange, value, ...restField },
-//             fieldState: { error, invalid },
-//           }) => (
-//             <SelectField
-//               {...restField}
-//               onSelectionChange={onChange}
-//               selectedKey={value}
-//               className={"w-full"}
-//               aria-label="Recurrence frequency"
-//               validationBehavior="aria"
-//             >
-//               <Button
-//                 size={"sm"}
-//                 variant={"outline"}
-//                 className={cn(
-//                   "w-full justify-between font-normal rounded-lg border border-transparent transition-[border-radius] duration-[500ms]",
-//                   frequency &&
-//                     frequency !== "no-recurrence" &&
-//                     "border-b-border rounded-b-none duration-100",
-//                   !value && "text-text-sub",
-//                 )}
-//               >
-//                 <SelectValue className="data-[placeholder]:text-text-sub" />
-//                 <RepeatIcon size={16} />
-//               </Button>
-//               <SelectFieldContent
-//                 className="min-w-[var(--trigger-width)]"
-//                 items={recurrences}
-//                 placement="top"
-//               >
-//                 {({ id, label }) => <ListBoxItem id={id}>{label}</ListBoxItem>}
-//               </SelectFieldContent>
-//             </SelectField>
-//           )}
-//         />
-//         <ResizablePanelRoot
-//           value={frequency}
-//           customHeight={frequency === "no-recurrence" ? 0 : undefined}
-//         >
-//           <ResizablePanelContent value="daily">
-//             <div className="p-4 flex flex-col gap-y-3 text-sm font-normal">
-//               <div className="flex flex-row justify-start">
-//                 <p className="w-16 h-10 flex items-center">Every</p>
-
-//                 <Controller
-//                   control={form.control}
-//                   name="recurrenceRule.interval"
-//                   render={({ field, fieldState: { error, invalid } }) => (
-//                     <NumberField
-//                       {...field}
-//                       size={"sm"}
-//                       className={"mr-3 max-w-[120px]"}
-//                       aria-label="Every x days"
-//                       step={1}
-//                       minValue={1}
-//                       maxValue={99}
-//                       validationBehavior="aria"
-//                       isInvalid={invalid}
-//                       errorMessage={error?.message}
-//                     />
-//                   )}
-//                 />
-//                 <p className="h-10 flex items-center">day(s)</p>
-//               </div>
-//               <div className="flex flex-row items-start">
-//                 <p className="w-16 h-10 flex items-center">Ends on</p>
-//                 <Controller
-//                   control={form.control}
-//                   name="recurrenceRule.endDate"
-//                   render={({ field, fieldState: { invalid, error } }) => (
-//                     <DatePicker
-//                       {...field}
-//                       size={"sm"}
-//                       className="w-[calc(var(--spacing)*10*7-6px)]"
-//                       label="Name"
-//                       aria-label="End date"
-//                       validationBehavior="aria"
-//                       isInvalid={invalid}
-//                       errorMessage={error?.message}
-//                       calendarProps={{
-//                         isDateUnavailable: (date) =>
-//                           date.compare(sessionDate) <= 0,
-//                       }}
-//                     />
-//                   )}
-//                 />
-//               </div>
-//               <p className="text-text-sub text-xs">
-//                 {formatDailyRecurrenceRule(interval, endDate)}
-//               </p>
-//             </div>
-//           </ResizablePanelContent>
-//           <ResizablePanelContent value="weekly">
-//             <div className="p-4 flex flex-col gap-y-3 text-sm font-normal">
-//               <div className="flex flex-row justify-start">
-//                 <p className="w-16 h-10 flex items-center">Every</p>
-//                 <Controller
-//                   control={form.control}
-//                   name="recurrenceRule.interval"
-//                   render={({ field, fieldState: { error, invalid } }) => (
-//                     <NumberField
-//                       {...field}
-//                       size={"sm"}
-//                       className={"mr-3 max-w-[80px]"}
-//                       aria-label="Every x weeks"
-//                       step={1}
-//                       minValue={1}
-//                       maxValue={99}
-//                       validationBehavior="aria"
-//                       isInvalid={invalid}
-//                       errorMessage={error?.message}
-//                     />
-//                   )}
-//                 />
-//                 <p className="h-10 flex items-center">weeks(s)</p>
-//               </div>
-
-//               <div className="flex flex-row items-center">
-//                 <p className="w-16">On</p>
-//                 <Controller
-//                   control={form.control}
-//                   name="recurrenceRule.daysOfWeek"
-//                   render={({ field, fieldState }) => (
-//                     <CheckboxGroup
-//                       {...field}
-//                       aria-label="Weekly recurrence days of week"
-//                       className="rounded-lg flex items-center h-10"
-//                     >
-//                       {daysOfWeekCheckboxes.map(({ id, label }) => (
-//                         <Checkbox
-//                           key={id}
-//                           value={id}
-//                           className={({ isSelected, isFocusVisible }) =>
-//                             cn(
-//                               buttonVariants({ variant: "outline" }),
-//                               "rounded-none p-0 text-lg",
-//                               "first:rounded-l-lg last:rounded-r-lg",
-//                               "h-full aspect-square flex items-center justify-center shrink-0",
-//                               "not-first:-ml-px",
-//                               isSelected &&
-//                                 "dark:bg-primary-900/60 bg-primary-100/60 hover:bg-primary-100/80 dark:hover:bg-primary-900/80",
-//                               isFocusVisible &&
-//                                 "focus-ring-neutral-vanilla border-neutral-500 z-10",
-//                             )
-//                           }
-//                         >
-//                           {label}
-//                         </Checkbox>
-//                       ))}
-//                     </CheckboxGroup>
-//                   )}
-//                 />
-//               </div>
-//               <div className="flex flex-row items-center">
-//                 <p className="w-16">Ends on</p>
-//                 <Controller
-//                   control={form.control}
-//                   name="recurrenceRule.endDate"
-//                   render={({ field, fieldState: { invalid, error } }) => (
-//                     <DatePicker
-//                       {...field}
-//                       size={"sm"}
-//                       className="w-[calc(var(--spacing)*10*7-6px)]"
-//                       label="Name"
-//                       aria-label="End date"
-//                       validationBehavior="aria"
-//                       isInvalid={invalid}
-//                       errorMessage={error?.message}
-//                       calendarProps={{
-//                         isDateUnavailable: (date) =>
-//                           date.compare(sessionDate) <= 0,
-//                       }}
-//                     />
-//                   )}
-//                 />
-//               </div>
-//               <p className="text-text-sub text-xs">
-//                 {formatWeeklyRecurrenceRule(interval, daysOfWeek, endDate)}
-//               </p>
-//             </div>
-//           </ResizablePanelContent>
-//         </ResizablePanelRoot>
-//       </div>
-//       <FieldError errorMessage={errors.recurrenceRule?.root?.message} />
-//     </>
-//   );
-// };
-
-export const RecurrenceSelect = <T extends { recurrenceRule: RecurrenceRule }>({
-  form,
+export const RecurrenceSelect = ({
+  selectedDate,
+  onChange,
 }: {
-  form: UseFormReturn<
-    object & { date: DateValue; recurrenceRule: RecurrenceRule }
-  >;
+  selectedDate: CalendarDate;
+  onChange: (rrule: string) => void;
 }) => {
-  const sessionDate = useWatch({
-    control: form.control,
-    name: "date",
-    defaultValue: undefined,
+  const selectedDateWeekdayStr = useMemo(
+    () =>
+      new Weekday(getDayOfWeek(selectedDate, "en-GB")).toString() as WeekdayStr,
+    [selectedDate],
+  );
+
+  console.log({
+    selectedDateDay: selectedDate.day,
+    selectedDateUTC: selectedDate.toDate("UTC"),
+  });
+  const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
+  const [rruleOptions, setRruleOptions] = useState<
+    Partial<NonNullableRruleOptions>
+  >({
+    freq: RRule.WEEKLY,
+    interval: 1,
+    byweekday: [getDayOfWeek(selectedDate, "en-GB")],
+    until: selectedDate.toDate("UTC"),
   });
 
-  const frequency = useWatch({
-    control: form.control,
-    name: "recurrenceRule.frequency",
-  });
+  const [freq, setFreq] = useState<Frequency | undefined>(RRule.WEEKLY);
+  const [interval, setInterval] = useState<number | undefined>(1);
+  const [count, setCount] = useState<number | undefined>(1);
+  const [until, setUntil] = useState<CalendarDate | null>(selectedDate);
+  const [ends, setEnds] = useState<EndsEnum>(EndsEnum.ENDS_NEVER);
+  const [byweekday, setByweekday] = useState<WeekdayStr[] | undefined>([
+    selectedDateWeekdayStr,
+  ]);
+  const [rrule, setRrule] = useState<RRule | null>(null);
 
-  console.log({ frequency });
+  const [text, setText] = useState<string | null>(null);
+  const [auxText, setAuxText] = useState<string | null>(null);
 
-  const interval = useWatch({
-    control: form.control,
-    name: "recurrenceRule.interval",
-    defaultValue: 1,
-  });
+  const selectedDateDate = selectedDate.toDate("UTC");
 
-  const daysOfWeek = useWatch({
-    control: form.control,
-    name: "recurrenceRule.daysOfWeek",
-    defaultValue: [],
-  });
+  const [items, setItems] = useState<RecurrenceSelectSection[]>([
+    {
+      section: "no-repeat",
+      items: [
+        {
+          value: PrefefinedRecurrencesEnum.NO_RECURRENCE,
+          name: "Does not repeat",
+        },
+      ],
+    },
+    {
+      section: "predefined",
+      items: [
+        {
+          value: PrefefinedRecurrencesEnum.EVERY_WEEKDAY,
+          name: "Every weekday",
+        },
+        {
+          value: PrefefinedRecurrencesEnum.EVERY_WEEK_ON_SELECTED_DATE,
+          name: `Every week on ${format(selectedDateDate, "iii")}`,
+        },
+      ],
+    },
+    {
+      section: "custom",
+      items: [{ value: PrefefinedRecurrencesEnum.CUSTOM, name: "Custom..." }],
+    },
+  ]);
 
-  const endDate = useWatch({
-    control: form.control,
-    name: "recurrenceRule.endDate",
-    defaultValue: undefined,
-  });
+  const [frequencyItems, setFrequencyItems] = useState(getFrequencyItems(1));
 
-  const { errors } = useFormState({
-    control: form.control,
-    name: "recurrenceRule",
-  });
+  useEffect(() => {
+    setFrequencyItems(getFrequencyItems(interval ?? 1));
+    if (!interval) setInterval(1);
+  }, [interval]);
+
+  useEffect(() => {
+    if (!count) setCount(1);
+  }, [count]);
+
+  const generateRrule = () => {
+    let rrule: RRule | null = null;
+    console.log({ freq, interval, ends, until, count, byweekday });
+    if (freq) {
+      const options: Partial<Options> = {
+        freq,
+        interval: interval || 1,
+        ...(ends === EndsEnum.ENDS_ON && { until: until?.toDate("UTC") }),
+        ...(ends === EndsEnum.ENDS_AFTER && { count }),
+        ...(freq === RRule.WEEKLY &&
+          byweekday?.length && {
+            byweekday: byweekday.map((v) => new Weekday(v.toString())),
+          }),
+      };
+
+      console.log(options);
+      rrule = new RRule(options);
+    }
+    return rrule;
+  };
+
+  const handleCustomRecurrence = (option: PrefefinedRecurrencesEnum) => {
+    if (option === PrefefinedRecurrencesEnum.EVERY_WEEKDAY) {
+      setFreq(RRule.WEEKLY);
+      setByweekday(["MO", "TU", "WE", "TH", "FR"]);
+      const rrule = generateRrule();
+      setRrule(rrule);
+      setText("Every weekday");
+      setAuxText("Mon - Fri");
+    } else if (
+      option === PrefefinedRecurrencesEnum.EVERY_WEEK_ON_SELECTED_DATE
+    ) {
+      setFreq(RRule.WEEKLY);
+      setByweekday([selectedDateWeekdayStr]);
+      const rrule = generateRrule();
+      setRrule(rrule);
+      setText("Every week");
+      setAuxText(`on ${format(selectedDate.toDate("UTC"), "iii")}`);
+    } else if (option === PrefefinedRecurrencesEnum.CUSTOM) {
+      setIsCustomModalOpen(true);
+    }
+  };
+
+  const saveCustomRecurrenceRule = () => {
+    const rrule = generateRrule();
+    console.log(rrule?.toString());
+    if (!rrule) return;
+    setRrule(rrule);
+    setText(rrule.toText());
+    setIsCustomModalOpen(false);
+  };
+
+  useEffect(() => {
+    console.log(rruleOptions);
+  }, [rruleOptions]);
+
+  const untilCalendarDate = useMemo(() => {
+    if (!rruleOptions.until) return null;
+    return new CalendarDate(
+      rruleOptions.until.getFullYear(),
+      rruleOptions.until.getMonth() + 1,
+      rruleOptions.until.getDate(),
+    );
+  }, [rruleOptions.until]);
 
   return (
-    <Controller
-      control={form.control}
-      name="recurrenceRule"
-      render={({ field: { onChange, value }, fieldState: { error } }) => (
-        <>
-          <div
-            className={cn(
-              "p-0 flex flex-col h-auto overflow-hidden rounded-lg border bg-background",
-            )}
-          >
-            <SelectField
-              onSelectionChange={(frequency) =>
-                onChange({ ...value, frequency })
-              }
-              selectedKey={value.frequency}
-              className={"w-full"}
-              aria-label="Recurrence frequency"
-              validationBehavior="aria"
-            >
-              <Button
-                size={"sm"}
-                variant={"outline"}
-                className={cn(
-                  "w-full justify-between font-normal rounded-lg border border-transparent transition-[border-radius] duration-[500ms]",
-                  frequency &&
-                    frequency !== "no-recurrence" &&
-                    "border-b-border rounded-b-none duration-100",
-                  !value && "text-text-sub",
-                )}
-              >
-                <SelectValue className="data-[placeholder]:text-text-sub" />
-                <RepeatIcon size={16} />
-              </Button>
-              <SelectFieldContent
-                className="min-w-[var(--trigger-width)]"
-                items={recurrences}
-                placement="top"
-              >
-                {({ id, label }) => <ListBoxItem id={id}>{label}</ListBoxItem>}
-              </SelectFieldContent>
-            </SelectField>
-            <ResizablePanelRoot
-              value={frequency}
-              customHeight={frequency === "no-recurrence" ? 0 : undefined}
-            >
-              <ResizablePanelContent value="daily">
-                <div className="p-4 flex flex-col gap-y-3 text-sm font-normal">
-                  <div className="flex flex-row justify-start">
-                    <p className="w-16 h-10 flex items-center">Every</p>
-                    <NumberField
-                      value={value?.interval}
-                      onChange={(interval) => onChange({ ...value, interval })}
-                      size={"sm"}
-                      className={"mr-3 max-w-[120px]"}
-                      aria-label="Every x days"
-                      step={1}
-                      minValue={1}
-                      maxValue={99}
-                    />
-                    <p className="h-10 flex items-center">day(s)</p>
-                  </div>
-                  <div className="flex flex-row items-start">
-                    <p className="w-16 h-10 flex items-center">Ends on</p>
+    <RecurrenceSelectContextProvider selectedDate={selectedDate}>
+      <Test />
+      <button
+        type="button"
+        onClick={() => {
+          const rrrule = new RRule({
+            freq: RRule.MONTHLY,
+            interval: 2,
+            byweekday: [1, 2, 3, 4, 5],
+          });
 
-                    <DatePicker
-                      value={value?.endDate}
-                      onChange={(endDate) => onChange({ ...value, endDate })}
-                      size={"sm"}
-                      className="w-[calc(var(--spacing)*10*7-6px)]"
-                      label="Name"
-                      aria-label="End date"
-                      calendarProps={{
-                        isDateUnavailable: (date) =>
-                          date.compare(sessionDate) <= 0,
-                      }}
-                    />
-                  </div>
-                  <p className="text-text-sub text-xs">
-                    {formatDailyRecurrenceRule(interval, endDate)}
-                  </p>
-                </div>
-              </ResizablePanelContent>
-              <ResizablePanelContent value="weekly">
-                <div className="p-4 flex flex-col gap-y-3 text-sm font-normal">
-                  <div className="flex flex-row justify-start">
-                    <p className="w-16 h-10 flex items-center">Every</p>
-
-                    <NumberField
-                      value={value.interval}
-                      onChange={(interval) => onChange({ ...value, interval })}
-                      size={"sm"}
-                      className={"mr-3 max-w-[80px]"}
-                      aria-label="Every x weeks"
-                      step={1}
-                      minValue={1}
-                      maxValue={99}
-                    />
-
-                    <p className="h-10 flex items-center">weeks(s)</p>
-                  </div>
-
-                  <div className="flex flex-row items-center">
-                    <p className="w-16">On</p>
-
-                    <CheckboxGroup
-                      onChange={(daysOfWeek) =>
-                        onChange({ ...value, daysOfWeek })
-                      }
-                      value={value.daysOfWeek}
-                      aria-label="Weekly recurrence days of week"
-                      className="rounded-lg flex items-center h-10"
-                    >
-                      {daysOfWeekCheckboxes.map(({ id, label }) => (
-                        <Checkbox
-                          key={id}
-                          value={id}
-                          className={({ isSelected, isFocusVisible }) =>
-                            cn(
-                              buttonVariants({ variant: "outline" }),
-                              "rounded-none p-0 text-lg",
-                              "first:rounded-l-lg last:rounded-r-lg",
-                              "h-full aspect-square flex items-center justify-center shrink-0",
-                              "not-first:-ml-px",
-                              isSelected &&
-                                "dark:bg-primary-900/60 bg-primary-100/60 hover:bg-primary-100/80 dark:hover:bg-primary-900/80",
-                              isFocusVisible &&
-                                "focus-ring-neutral-vanilla border-neutral-500 z-10",
-                            )
-                          }
-                        >
-                          {label}
-                        </Checkbox>
-                      ))}
-                    </CheckboxGroup>
-                  </div>
-                  <div className="flex flex-row items-center">
-                    <p className="w-16">Ends on</p>
-
-                    <DatePicker
-                      value={value?.endDate}
-                      onChange={(endDate) => onChange({ ...value, endDate })}
-                      size={"sm"}
-                      className="w-[calc(var(--spacing)*10*7-6px)]"
-                      label="Name"
-                      aria-label="End date"
-                      calendarProps={{
-                        isDateUnavailable: (date) =>
-                          date.compare(sessionDate) <= 0,
-                      }}
-                    />
-                  </div>
-                  <p className="text-text-sub text-xs">
-                    {formatWeeklyRecurrenceRule(interval, daysOfWeek, endDate)}
-                  </p>
-                </div>
-              </ResizablePanelContent>
-            </ResizablePanelRoot>
+          console.log(
+            rrrule.toText(
+              (t) => {
+                console.log(t);
+                return t;
+              },
+              {
+                dayNames: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+                monthNames: [
+                  "Jan",
+                  "Feb",
+                  "Mar",
+                  "Apr",
+                  "May",
+                  "Jun",
+                  "Jul",
+                  "Aug",
+                  "Sep",
+                  "Oct",
+                  "Nov",
+                  "Dec",
+                ],
+              },
+              (year, month, day) => {
+                console.log({ year, month, day });
+              },
+            ),
+          );
+        }}
+      >
+        test
+      </button>
+      <SelectField
+        placeholder="Recurrence"
+        aria-label="Hub"
+        validationBehavior="aria"
+        onSelectionChange={(value) => {
+          handleCustomRecurrence(value as PrefefinedRecurrencesEnum);
+        }}
+      >
+        <SelectTrigger
+          size={"sm"}
+          variant={"ghost"}
+          className={cn(
+            "w-full font-normal rounded-lg ",
+            "data-[pressed]:border-base",
+            "data-[pressed]:bg-base-highlight",
+            "overflow-hidden",
+            text ? "" : "text-text-sub",
+          )}
+          icon={RepeatIcon}
+        >
+          <div className="pr-2 overflow-ellipsis">
+            {rrule ? <p>{rrule?.toText()}</p> : "Recurrence"}
           </div>
-          <FieldError errorMessage={error?.message} />
-        </>
-      )}
-    />
+        </SelectTrigger>
+        <SelectFieldContent
+          placement="left top"
+          offset={4}
+          className="w-[250px] p-0"
+          items={items}
+        >
+          {({ section, items }) => (
+            <ListBoxSection
+              id={section}
+              items={items}
+              className="not-last:border-b not-last:py-1 p-1"
+            >
+              {({ name, value }) => {
+                return (
+                  <ListBoxItem id={value} showCheckIcon>
+                    {name}
+                  </ListBoxItem>
+                );
+              }}
+            </ListBoxSection>
+          )}
+        </SelectFieldContent>
+      </SelectField>
+      <Modal isOpen={isCustomModalOpen} onOpenChange={setIsCustomModalOpen}>
+        <Dialog>
+          <Heading slot="title" className="mb-4">
+            Custom recurrence rule
+          </Heading>
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <p className="text-sm text-text-sub shrink-0 w-12">Every</p>
+              <IntervalInput />
+              <FrequencySelect />
+            </div>
+            {freq === Frequency.WEEKLY && (
+              <div className="flex items-center gap-2">
+                <p className="text-sm text-text-sub w-12 shrink-0">On</p>
+                <ByweekdayCheckboxGroup />
+              </div>
+            )}
+            <div className="flex flex-col gap-2">
+              <p className="text-sm text-text-sub">Ends</p>
+              <RadioGroup
+                value={ends}
+                onChange={(ends) => setEnds(ends as EndsEnum)}
+              >
+                <Radio
+                  value={EndsEnum.ENDS_NEVER}
+                  className="before:shrink-0 data-[selected]:before:bg-primary-100 text-sm before:bg-elevated before:border-border hover:before:bg-elevated-highlight  data-[selected]:before:border-primary"
+                >
+                  <p className="w-20">Never</p>
+                </Radio>
+                <div className="flex items-center">
+                  <Radio
+                    value={EndsEnum.ENDS_ON}
+                    className="before:shrink-0 data-[selected]:before:bg-primary-100 text-sm before:bg-elevated before:border-border hover:before:bg-elevated-highlight  data-[selected]:before:border-primary"
+                  >
+                    <p className="w-20">On</p>
+                  </Radio>
+                  <DatePicker
+                    defaultValue={selectedDate}
+                    onChange={(untilDate) => {
+                      setRruleOptions({
+                        ...rruleOptions,
+                        until: untilDate ? untilDate?.toDate("UTC") : undefined,
+                      });
+                    }}
+                    onBlur={() => {
+                      console.log(rruleOptions.until);
+                      if (!rruleOptions.until) {
+                        console.log("reset");
+                        setRruleOptions({
+                          ...rruleOptions,
+                          until: selectedDate.toDate("UTC"),
+                        });
+                      }
+                    }}
+                    className="h-8 text-sm w-32 hover:bg-elevated-highlight"
+                    isDisabled={ends !== EndsEnum.ENDS_ON}
+                  >
+                    <DatePickerContent
+                      placement="right top"
+                      calendarProps={{
+                        isDateUnavailable: (date) =>
+                          date.compare(selectedDate) < 0,
+                      }}
+                    />
+                  </DatePicker>
+                </div>
+                <div className="flex items-center">
+                  <Radio
+                    value={EndsEnum.ENDS_AFTER}
+                    className="before:shrink-0 data-[selected]:before:bg-primary-100 text-sm before:bg-elevated before:border-border hover:before:bg-elevated-highlight  data-[selected]:before:border-primary"
+                  >
+                    <p className="w-20">After</p>
+                  </Radio>
+                  <div className="flex items-center gap-2">
+                    <NumberField
+                      onChange={(count) => {
+                        setRruleOptions({
+                          ...rruleOptions,
+                          count: Number.isNaN(count) ? 1 : count,
+                        });
+                      }}
+                      value={rruleOptions.count}
+                      defaultValue={1}
+                      size={"sm"}
+                      aria-label="Ends after x days"
+                      step={1}
+                      minValue={1}
+                      maxValue={99}
+                      className={
+                        "w-16 h-8 text-sm rounded-md hover:bg-elevated-highlight"
+                      }
+                      isDisabled={ends !== EndsEnum.ENDS_AFTER}
+                    />
+                    <span
+                      className={cn(
+                        "text-sm",
+                        ends !== EndsEnum.ENDS_AFTER && "opacity-40",
+                      )}
+                    >
+                      time{count === 1 ? "" : "s"}
+                    </span>
+                  </div>
+                </div>
+              </RadioGroup>
+            </div>
+
+            <div className="flex items-center justify-end gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                slot="close"
+                className="text-text-sub"
+                onPress={() => setIsCustomModalOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                size="sm"
+                className="px-6 group"
+                type="button"
+                onPress={saveCustomRecurrenceRule}
+              >
+                Save
+                <ArrowRight02Icon size={14} />
+              </Button>
+            </div>
+          </div>
+        </Dialog>
+      </Modal>
+    </RecurrenceSelectContextProvider>
   );
 };

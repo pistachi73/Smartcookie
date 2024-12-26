@@ -23,7 +23,7 @@ export function ListBox<T extends object>({
   );
 }
 
-export const itemStyles = cva(
+export const listBoxitemStyles = cva(
   "p-2 relative flex items-center cursor-default select-none rounded-lg text-sm",
   {
     variants: {
@@ -37,7 +37,7 @@ export const itemStyles = cva(
         true: "inset-ring-[3px] inset-hover:bg-base-highlight  ",
       },
       isDisabled: {
-        true: "pointer-events-none opacity-50",
+        true: "pointer-events-none opacity-40",
       },
     },
   },
@@ -56,7 +56,11 @@ export function ListBoxItem({
     props.textValue ||
     (typeof props.children === "string" ? props.children : undefined);
   return (
-    <AriaListBoxItem {...props} textValue={textValue} className={itemStyles}>
+    <AriaListBoxItem
+      {...props}
+      textValue={textValue}
+      className={listBoxitemStyles}
+    >
       {composeRenderProps(props.children, (children, { isSelected }) => (
         <>
           {showCheckIcon && (

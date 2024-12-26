@@ -40,11 +40,11 @@ export const RadioGroup = ({
 type RadioProps = AriaRadioProps;
 
 const radioVariants = cva(
-  "flex items-center gap-2 px-2 py-1 text-base outline-none transition-all before:transition-all before:content-[''] before:size-4 before:bg-background before:rounded-full before:border ",
+  "flex items-center gap-2 px-2 py-1 text-text-base outline-none transition-all before:transition-all before:content-[''] before:size-4 before:bg-background before:rounded-full before:border ",
   {
     variants: {
       isDisabled: {
-        true: "cursor-not-allowed opacity-50",
+        true: "cursor-not-allowed opacity-40",
       },
       isFocusVisible: {
         true: "before:ring-[4px] before:ring-base-highlight",
