@@ -1,7 +1,13 @@
-import { cva } from "class-variance-authority";
+import { type VariantProps, cva } from "class-variance-authority";
 
 export const fieldWrapperVariants = cva(
-  "flex rounded-lg h-10 w-full border px-3 placeholder:text-text-sub  disabled:cursor-not-allowed disabled:opacity-40 focus-within:ring-[4px] focus-within:border-border-highlight focus-within:ring-elevated-highlight/80 hover:bg-base-highlight transition-colors",
+  [
+    "flex rounded-lg w-full border px-3 placeholder:text-text-sub transition-colors",
+    "hover:bg-base-highlight",
+    "focus-within:bg-base-highlight",
+    "disabled:cursor-not-allowed disabled:opacity-40",
+    "has-data-[pressed]:bg-base-highlight",
+  ],
   {
     variants: {
       size: {
@@ -21,6 +27,4 @@ export const fieldWrapperVariants = cva(
   },
 );
 
-export type FieldWrapperVariants = React.ComponentPropsWithoutRef<
-  typeof fieldWrapperVariants
->;
+export type FieldWrapperVariants = VariantProps<typeof fieldWrapperVariants>;

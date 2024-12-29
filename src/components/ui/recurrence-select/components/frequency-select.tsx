@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { ArrowDown01Icon } from "@hugeicons/react";
-import { use, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { SelectValue } from "react-aria-components";
 import type { Frequency } from "rrule";
 
@@ -17,6 +17,10 @@ import { getFrequencyItems } from "../utils";
 export const FrequencySelect = () => {
   const { setRruleOptions, rruleOptions } = use(RecurrenceSelectContext);
   const [frequencyItems, setFrequencyItems] = useState(getFrequencyItems(1));
+
+  useEffect(() => {
+    setFrequencyItems(getFrequencyItems(rruleOptions?.interval ?? 1));
+  }, [rruleOptions.interval]);
 
   return (
     <SelectField
@@ -44,7 +48,7 @@ export const FrequencySelect = () => {
       <SelectFieldContent
         className="min-w-[var(--trigger-width)] z-50 rounded-md"
         items={frequencyItems}
-        placement="top"
+        placement="right top"
       >
         {({ id, label }) => <ListBoxItem id={id}>{label}</ListBoxItem>}
       </SelectFieldContent>

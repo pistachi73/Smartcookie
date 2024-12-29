@@ -11,12 +11,14 @@ export const ByweekdayCheckboxGroup = () => {
   const { setRruleOptions, rruleOptions } = use(RecurrenceSelectContext);
   return (
     <CheckboxGroup
-      value={(rruleOptions.byweekday as number[]).map((v) => v.toString())}
+      value={(rruleOptions.weeklyByweekday as number[]).map((v) =>
+        v.toString(),
+      )}
       onChange={(byweekday) => {
         if (!byweekday.length) return;
         setRruleOptions({
           ...rruleOptions,
-          byweekday: byweekday.map((v) => Number.parseInt(v)),
+          weeklyByweekday: byweekday.map((v) => Number.parseInt(v)),
         });
       }}
       aria-label="Weekly recurrence days of week"

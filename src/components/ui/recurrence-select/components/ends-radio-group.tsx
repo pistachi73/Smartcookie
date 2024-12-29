@@ -5,16 +5,21 @@ import {
 import { NumberField } from "@/components/ui/react-aria/number-field";
 import { Radio, RadioGroup } from "@/components/ui/react-aria/radio-group";
 import { cn } from "@/lib/utils";
-
-export enum EndsEnum {
-  ENDS_NEVER = "never",
-  ENDS_ON = "on",
-  ENDS_AFTER = "after",
-}
+import { use } from "react";
+import { RecurrenceSelectContext } from "../recurrence-select-context";
+import { EndsEnum } from "../utils";
 
 export const EndsRadioGroup = () => {
+  const { setRruleOptions, rruleOptions, selectedDate, ends, setEnds } = use(
+    RecurrenceSelectContext,
+  );
   return (
-    <RadioGroup value={ends} onChange={(ends) => setEnds(ends as EndsEnum)}>
+    <RadioGroup
+      value={ends}
+      onChange={(ends) => {
+        setEnds(ends as EndsEnum);
+      }}
+    >
       <Radio
         value={EndsEnum.ENDS_NEVER}
         className="before:shrink-0 data-[selected]:before:bg-primary-100 text-sm before:bg-elevated before:border-border hover:before:bg-elevated-highlight  data-[selected]:before:border-primary"
@@ -90,7 +95,7 @@ export const EndsRadioGroup = () => {
               ends !== EndsEnum.ENDS_AFTER && "opacity-40",
             )}
           >
-            time{count === 1 ? "" : "s"}
+            time{rruleOptions.count === 1 ? "" : "s"}
           </span>
         </div>
       </div>

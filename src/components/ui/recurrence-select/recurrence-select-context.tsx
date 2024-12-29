@@ -1,14 +1,16 @@
 import { CalendarDate, getDayOfWeek } from "@internationalized/date";
-import { createContext, useMemo, useState } from "react";
+import { createContext, useState } from "react";
 import { RRule } from "rrule";
-import type { NonNullableRruleOptions } from "./utils";
+import { type CustomRruleOptions, EndsEnum } from "./utils";
 
 type RecurrenceSelectContextType = {
-  rruleOptions: Partial<NonNullableRruleOptions>;
-  setRruleOptions: React.Dispatch<
-    React.SetStateAction<Partial<NonNullableRruleOptions>>
-  >;
+  rruleOptions: CustomRruleOptions;
+  setRruleOptions: React.Dispatch<React.SetStateAction<CustomRruleOptions>>;
   selectedDate: CalendarDate;
+  ends: EndsEnum;
+  setEnds: React.Dispatch<React.SetStateAction<EndsEnum>>;
+  rrule: RRule | null;
+  setRrule: React.Dispatch<React.SetStateAction<RRule | null>>;
 };
 
 export const RecurrenceSelectContext =
@@ -16,6 +18,10 @@ export const RecurrenceSelectContext =
     rruleOptions: {},
     setRruleOptions: () => {},
     selectedDate: new CalendarDate(2023, 1, 1),
+    ends: EndsEnum.ENDS_NEVER,
+    setEnds: () => {},
+    rrule: null,
+    setRrule: () => {},
   });
 
 type RecurrenceSelectProviderProps = {
@@ -27,19 +33,26 @@ export const RecurrenceSelectContextProvider = ({
   children,
   selectedDate,
 }: RecurrenceSelectProviderProps) => {
-  const [rruleOptions, setRruleOptions] = useState<
-    Partial<NonNullableRruleOptions>
-  >({
+  const [rrule, setRrule] = useState<RRule | null>(null);
+  const [ends, setEnds] = useState<EndsEnum>(EndsEnum.ENDS_NEVER);
+  const [rruleOptions, setRruleOptions] = useState<CustomRruleOptions>({
+    dstart: selectedDate.toDate("UTC"),
     freq: RRule.WEEKLY,
     interval: 1,
-    byweekday: [getDayOfWeek(selectedDate, "en-GB")],
+    weeklyByweekday: [getDayOfWeek(selectedDate, "en-GB")],
+    bymonthday: [selectedDate.day],
     until: selectedDate.toDate("UTC"),
   });
 
-  const value = useMemo(
-    () => ({ rruleOptions, setRruleOptions, selectedDate }),
-    [rruleOptions, selectedDate],
-  );
+  const value = {
+    rruleOptions,
+    setRruleOptions,
+    selectedDate,
+    ends,
+    setEnds,
+    rrule,
+    setRrule,
+  };
 
   return (
     <RecurrenceSelectContext value={value}>{children}</RecurrenceSelectContext>

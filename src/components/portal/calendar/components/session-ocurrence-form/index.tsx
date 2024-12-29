@@ -116,6 +116,27 @@ export const SessionOccurrenceFrom = () => {
                   />
                 )}
               />
+              <Controller
+                control={form.control}
+                name="description"
+                render={({ field, fieldState: { error, invalid } }) => (
+                  <TextField
+                    {...field}
+                    size={"sm"}
+                    aria-label="Session title"
+                    placeholder="Description"
+                    validationBehavior="aria"
+                    isInvalid={invalid}
+                    errorMessage={error?.message}
+                    className={cn(
+                      "w-auto ml-7 min-h-10",
+                      "bg-transparent border-transparent transition-colors",
+                      "hover:bg-base-highlight",
+                    )}
+                    type="textarea"
+                  />
+                )}
+              />
             </div>
           </div>
           <Separator className="bg-border" />
@@ -204,6 +225,7 @@ export const SessionOccurrenceFrom = () => {
               onChange={(rrule) => console.log(rrule)}
             />
           </div>
+          <Separator className="bg-border/20" />
         </div>
       </div>
     </Form>

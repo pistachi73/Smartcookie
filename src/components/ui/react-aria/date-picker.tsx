@@ -11,6 +11,7 @@ import {
 } from "react-aria-components";
 import { Calendar, type CalendarProps } from "./calendar";
 import { DateInput } from "./date-input";
+import { Dialog } from "./dialog";
 import { FieldDescripton } from "./field-description";
 import { FieldError } from "./field-error";
 import { Popover, type PopoverProps } from "./popover";
@@ -49,7 +50,7 @@ export const DatePicker = <T extends DateValue>({
       <Group
         className={cn(
           fieldWrapperVariants({ size: "sm", isDisabled }),
-          "w-full flex flex-row items-center justify-between pl-0 overflow-hidden hover:bg-base-highlight transition-colors",
+          "w-full flex flex-row gap-1 items-center justify-between pl-0 overflow-hidden transition-colors",
           className,
         )}
       >
@@ -58,6 +59,7 @@ export const DatePicker = <T extends DateValue>({
             "cursor-pointer transition-colors h-full aspect-square flex items-center justify-center p-0 rounded-none  hover:bg-base-highlight",
             !value && "text-text-sub",
           )}
+          excludeFromTabOrder
         >
           <Calendar01Icon size={16} className="text-text-sub" />
         </Button>
@@ -80,7 +82,9 @@ export const DatePickerContent = ({
 }: DatePickerContentProps) => {
   return (
     <Popover {...props}>
-      <Calendar {...calendarProps} />
+      <Dialog className="p-0! bg-elevated-highlight">
+        <Calendar {...calendarProps} />
+      </Dialog>
     </Popover>
   );
 };

@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { Modal } from "@/components/ui/react-aria/modal";
 import { Radio, RadioGroup } from "@/components/ui/react-aria/radio-group";
-import { Sheet } from "@/components/ui/react-aria/sheet";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import type { SessionOccurrence } from "@/lib/generate-session-ocurrences";
 import { cn } from "@/lib/utils";
@@ -18,7 +17,6 @@ import {
 import { format } from "date-fns";
 import { Dialog, DialogTrigger, Header } from "react-aria-components";
 import { useCalendarContext } from "../calendar-context";
-import { SessionUpdateForm } from "./session-update-form";
 
 type SessionOccurrenceDetailsProps = {
   occurrence: SessionOccurrence;
@@ -51,11 +49,11 @@ export const SessionOccurrenceDetails = ({
           >
             <Edit02Icon size={18} variant="stroke" />
           </Button>
-          <Sheet side="right" isDismissable>
+          {/* <Sheet side="right" isDismissable>
             <Dialog className="relative p-8">
               <SessionUpdateForm sessionOcurrence={occurrence} />
             </Dialog>
-          </Sheet>
+          </Sheet> */}
         </DialogTrigger>
         <DialogTrigger>
           <Button

@@ -7,6 +7,10 @@ import { FieldError } from "./field-error";
 import { Label } from "./label";
 import { ListBox } from "./list-box";
 import { Popover, type PopoverProps } from "./popover";
+import {
+  type FieldWrapperVariants,
+  fieldWrapperVariants,
+} from "./shared-styles/field-variants";
 
 export type SelectFieldProps = SelectProps & {
   children: React.ReactNode;
@@ -33,20 +37,28 @@ export const SelectField = ({
   );
 };
 
-type SelectTriggerProps = React.ComponentProps<typeof Button> & {
-  icon?: typeof FoldersIcon;
-};
+type SelectTriggerProps = React.ComponentProps<typeof Button> &
+  FieldWrapperVariants & {
+    icon?: typeof FoldersIcon;
+  };
 
 export const SelectTrigger = ({
   className,
   icon: Icon,
   children,
+  size,
+  isDisabled,
   ...props
 }: SelectTriggerProps) => {
   const hasIcon = Icon !== undefined;
   return (
     <Button
-      className={cn(className, hasIcon && "pl-0 gap-0 justify-start")}
+      className={cn(
+        fieldWrapperVariants({ size, isDisabled }),
+        className,
+        hasIcon && "pl-0 gap-0 justify-start",
+      )}
+      isDisabled={isDisabled}
       {...props}
     >
       {hasIcon && (

@@ -6,6 +6,7 @@ export const SessionOcurrenceFormSchema = z
   .object({
     hubId: z.number().optional(),
     title: z.string(),
+    description: z.string(),
     date: z.custom<DateValue>(),
     timeSchedule: z.object({
       start: z.custom<TimeValue>(),

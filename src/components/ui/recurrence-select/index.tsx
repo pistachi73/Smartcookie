@@ -1,33 +1,37 @@
+import { getWeekdayCardinal } from "@/lib/calendar";
 import { cn } from "@/lib/utils";
 import { ArrowRight02Icon, RepeatIcon } from "@hugeicons/react";
-import { CalendarDate, getDayOfWeek } from "@internationalized/date";
+import type { CalendarDate } from "@internationalized/date";
 import { format } from "date-fns";
-import { useEffect, useMemo, useState } from "react";
+import { use, useState } from "react";
 import { Heading, ListBoxSection } from "react-aria-components";
-import { Frequency, Options, RRule, Weekday, type WeekdayStr } from "rrule";
+import { Frequency, RRule, type Weekday } from "rrule";
 import { z } from "zod";
 import { Button } from "../button";
-import { DatePicker, DatePickerContent } from "../react-aria/date-picker";
 import { Dialog } from "../react-aria/dialog";
 import { ListBoxItem } from "../react-aria/list-box";
 import { Modal } from "../react-aria/modal";
-import { NumberField } from "../react-aria/number-field";
-import { Radio, RadioGroup } from "../react-aria/radio-group";
 import {
   SelectField,
   SelectFieldContent,
   SelectTrigger,
 } from "../react-aria/select-field";
 import { ByweekdayCheckboxGroup } from "./components/byweekday-checkbox-group";
+import { EndsRadioGroup } from "./components/ends-radio-group";
 import { FrequencySelect } from "./components/frequency-select";
 import { IntervalInput } from "./components/interval-input";
-import { Test } from "./components/test";
-import { RecurrenceSelectContextProvider } from "./recurrence-select-context";
+import { MonthOptionsSelect } from "./components/month-options-select";
+import {
+  RecurrenceSelectContext,
+  RecurrenceSelectContextProvider,
+} from "./recurrence-select-context";
 import {
   EndsEnum,
-  type NonNullableRruleOptions,
   PrefefinedRecurrencesEnum,
-  getFrequencyItems,
+  getPredefinedRecurrencesLabelMap,
+  getPredefinedRecurrencesOptionsMap,
+  parseRruleOptions,
+  parseRruleText,
 } from "./utils";
 
 export const RecurrenceRuleSchema = z.object({
@@ -40,59 +44,35 @@ export const RecurrenceRuleSchema = z.object({
 
 export type RecurrenceRule = z.infer<typeof RecurrenceRuleSchema>;
 
-type RecurrenceSelectItem = {
-  value: string;
-  name: string;
-};
+const SelectLabel = ({ option }: { option: PrefefinedRecurrencesEnum }) => {
+  const { selectedDate, rrule, rruleOptions } = use(RecurrenceSelectContext);
+  const val = getPredefinedRecurrencesLabelMap(selectedDate)[option];
+  const rruleText = parseRruleText(rrule, rruleOptions.interval ?? 1);
 
-type RecurrenceSelectSection = {
-  section: string;
-  items: RecurrenceSelectItem[];
-};
+  const label = val?.label ?? rruleText.label;
+  const auxLabel = val?.auxLabel ?? rruleText.auxLabel;
 
-export const RecurrenceSelect = ({
-  selectedDate,
-  onChange,
-}: {
-  selectedDate: CalendarDate;
-  onChange: (rrule: string) => void;
-}) => {
-  const selectedDateWeekdayStr = useMemo(
-    () =>
-      new Weekday(getDayOfWeek(selectedDate, "en-GB")).toString() as WeekdayStr,
-    [selectedDate],
+  return (
+    <p className="first-letter:uppercase truncate">
+      <span>
+        {label}
+        {auxLabel && <span className="text-text-sub"> {auxLabel}</span>}
+      </span>
+    </p>
   );
+};
 
-  console.log({
-    selectedDateDay: selectedDate.day,
-    selectedDateUTC: selectedDate.toDate("UTC"),
-  });
+export const RecurrenceSelectContent = () => {
+  const { rruleOptions, setRruleOptions, rrule, setRrule, selectedDate, ends } =
+    use(RecurrenceSelectContext);
+
   const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
-  const [rruleOptions, setRruleOptions] = useState<
-    Partial<NonNullableRruleOptions>
-  >({
-    freq: RRule.WEEKLY,
-    interval: 1,
-    byweekday: [getDayOfWeek(selectedDate, "en-GB")],
-    until: selectedDate.toDate("UTC"),
-  });
+  const [selectedKey, setSelectedKey] = useState<PrefefinedRecurrencesEnum>(
+    PrefefinedRecurrencesEnum.NO_RECURRENCE,
+  );
+  const shortWeekdayStr = format(selectedDate.toDate("UTC"), "iii");
 
-  const [freq, setFreq] = useState<Frequency | undefined>(RRule.WEEKLY);
-  const [interval, setInterval] = useState<number | undefined>(1);
-  const [count, setCount] = useState<number | undefined>(1);
-  const [until, setUntil] = useState<CalendarDate | null>(selectedDate);
-  const [ends, setEnds] = useState<EndsEnum>(EndsEnum.ENDS_NEVER);
-  const [byweekday, setByweekday] = useState<WeekdayStr[] | undefined>([
-    selectedDateWeekdayStr,
-  ]);
-  const [rrule, setRrule] = useState<RRule | null>(null);
-
-  const [text, setText] = useState<string | null>(null);
-  const [auxText, setAuxText] = useState<string | null>(null);
-
-  const selectedDateDate = selectedDate.toDate("UTC");
-
-  const [items, setItems] = useState<RecurrenceSelectSection[]>([
+  const items = [
     {
       section: "no-repeat",
       items: [
@@ -106,12 +86,33 @@ export const RecurrenceSelect = ({
       section: "predefined",
       items: [
         {
+          value: PrefefinedRecurrencesEnum.EVERY_DAY,
+          name: "Every day",
+        },
+        {
           value: PrefefinedRecurrencesEnum.EVERY_WEEKDAY,
           name: "Every weekday",
+          auxName: "Mon - Fri",
         },
         {
           value: PrefefinedRecurrencesEnum.EVERY_WEEK_ON_SELECTED_DATE,
-          name: `Every week on ${format(selectedDateDate, "iii")}`,
+          name: "Every week",
+          auxName: `on ${shortWeekdayStr}`,
+        },
+        {
+          value: PrefefinedRecurrencesEnum.EVERY_MONTHDAY,
+          name: "Every month",
+          auxName: `on the ${format(selectedDate.toDate("UTC"), "do")}`,
+        },
+        {
+          value: PrefefinedRecurrencesEnum.EVERY_CARDINAL_MONTHDAY,
+          name: "Every month",
+          auxName: `on the ${getWeekdayCardinal(selectedDate.toDate("UTC")).label} ${shortWeekdayStr}`,
+        },
+        {
+          value: PrefefinedRecurrencesEnum.EVERY_YEARDAY,
+          name: "Every year",
+          auxName: `on ${format(selectedDate.toDate("UTC"), "MMM d")}`,
         },
       ],
     },
@@ -119,133 +120,59 @@ export const RecurrenceSelect = ({
       section: "custom",
       items: [{ value: PrefefinedRecurrencesEnum.CUSTOM, name: "Custom..." }],
     },
-  ]);
+  ];
 
-  const [frequencyItems, setFrequencyItems] = useState(getFrequencyItems(1));
+  const predefinedRecurrenceOptionsMap =
+    getPredefinedRecurrencesOptionsMap(selectedDate);
 
-  useEffect(() => {
-    setFrequencyItems(getFrequencyItems(interval ?? 1));
-    if (!interval) setInterval(1);
-  }, [interval]);
-
-  useEffect(() => {
-    if (!count) setCount(1);
-  }, [count]);
-
-  const generateRrule = () => {
-    let rrule: RRule | null = null;
-    console.log({ freq, interval, ends, until, count, byweekday });
-    if (freq) {
-      const options: Partial<Options> = {
-        freq,
-        interval: interval || 1,
-        ...(ends === EndsEnum.ENDS_ON && { until: until?.toDate("UTC") }),
-        ...(ends === EndsEnum.ENDS_AFTER && { count }),
-        ...(freq === RRule.WEEKLY &&
-          byweekday?.length && {
-            byweekday: byweekday.map((v) => new Weekday(v.toString())),
-          }),
-      };
-
-      console.log(options);
-      rrule = new RRule(options);
-    }
-    return rrule;
-  };
+  const predefinedRecurrenceLabelsMap =
+    getPredefinedRecurrencesLabelMap(selectedDate);
 
   const handleCustomRecurrence = (option: PrefefinedRecurrencesEnum) => {
-    if (option === PrefefinedRecurrencesEnum.EVERY_WEEKDAY) {
-      setFreq(RRule.WEEKLY);
-      setByweekday(["MO", "TU", "WE", "TH", "FR"]);
-      const rrule = generateRrule();
-      setRrule(rrule);
-      setText("Every weekday");
-      setAuxText("Mon - Fri");
-    } else if (
-      option === PrefefinedRecurrencesEnum.EVERY_WEEK_ON_SELECTED_DATE
-    ) {
-      setFreq(RRule.WEEKLY);
-      setByweekday([selectedDateWeekdayStr]);
-      const rrule = generateRrule();
-      setRrule(rrule);
-      setText("Every week");
-      setAuxText(`on ${format(selectedDate.toDate("UTC"), "iii")}`);
-    } else if (option === PrefefinedRecurrencesEnum.CUSTOM) {
-      setIsCustomModalOpen(true);
+    switch (option) {
+      case PrefefinedRecurrencesEnum.NO_RECURRENCE:
+        setRrule(null);
+        break;
+      case PrefefinedRecurrencesEnum.CUSTOM:
+        console.log(rruleOptions);
+        setIsCustomModalOpen(true);
+        break;
+      default: {
+        const newRruleOptions = predefinedRecurrenceOptionsMap[option];
+
+        if (!newRruleOptions) return;
+
+        setRruleOptions({
+          ...rruleOptions,
+          ...newRruleOptions,
+        });
+
+        setRrule(
+          new RRule(
+            parseRruleOptions({
+              rruleOptions: newRruleOptions,
+              ends: EndsEnum.ENDS_NEVER,
+            }),
+          ),
+        );
+        break;
+      }
     }
   };
 
   const saveCustomRecurrenceRule = () => {
-    const rrule = generateRrule();
-    console.log(rrule?.toString());
-    if (!rrule) return;
-    setRrule(rrule);
-    setText(rrule.toText());
+    console.log(parseRruleOptions({ rruleOptions, ends }), ends);
+    setRrule(new RRule(parseRruleOptions({ rruleOptions, ends })));
     setIsCustomModalOpen(false);
   };
 
-  useEffect(() => {
-    console.log(rruleOptions);
-  }, [rruleOptions]);
-
-  const untilCalendarDate = useMemo(() => {
-    if (!rruleOptions.until) return null;
-    return new CalendarDate(
-      rruleOptions.until.getFullYear(),
-      rruleOptions.until.getMonth() + 1,
-      rruleOptions.until.getDate(),
-    );
-  }, [rruleOptions.until]);
-
   return (
-    <RecurrenceSelectContextProvider selectedDate={selectedDate}>
-      <Test />
-      <button
-        type="button"
-        onClick={() => {
-          const rrrule = new RRule({
-            freq: RRule.MONTHLY,
-            interval: 2,
-            byweekday: [1, 2, 3, 4, 5],
-          });
-
-          console.log(
-            rrrule.toText(
-              (t) => {
-                console.log(t);
-                return t;
-              },
-              {
-                dayNames: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-                monthNames: [
-                  "Jan",
-                  "Feb",
-                  "Mar",
-                  "Apr",
-                  "May",
-                  "Jun",
-                  "Jul",
-                  "Aug",
-                  "Sep",
-                  "Oct",
-                  "Nov",
-                  "Dec",
-                ],
-              },
-              (year, month, day) => {
-                console.log({ year, month, day });
-              },
-            ),
-          );
-        }}
-      >
-        test
-      </button>
+    <>
       <SelectField
-        placeholder="Recurrence"
-        aria-label="Hub"
-        validationBehavior="aria"
+        aria-label="Recurrence Select Main"
+        selectedKey={selectedKey}
         onSelectionChange={(value) => {
+          setSelectedKey(value as PrefefinedRecurrencesEnum);
           handleCustomRecurrence(value as PrefefinedRecurrencesEnum);
         }}
       >
@@ -253,16 +180,13 @@ export const RecurrenceSelect = ({
           size={"sm"}
           variant={"ghost"}
           className={cn(
-            "w-full font-normal rounded-lg ",
-            "data-[pressed]:border-base",
-            "data-[pressed]:bg-base-highlight",
-            "overflow-hidden",
-            text ? "" : "text-text-sub",
+            "w-full font-normal rounded-lg",
+            rrule ? "" : "text-text-sub",
           )}
           icon={RepeatIcon}
         >
-          <div className="pr-2 overflow-ellipsis">
-            {rrule ? <p>{rrule?.toText()}</p> : "Recurrence"}
+          <div className="pr-2 truncate">
+            <SelectLabel option={selectedKey} />
           </div>
         </SelectTrigger>
         <SelectFieldContent
@@ -277,10 +201,15 @@ export const RecurrenceSelect = ({
               items={items}
               className="not-last:border-b not-last:py-1 p-1"
             >
-              {({ name, value }) => {
+              {({ name, value, auxName }) => {
                 return (
                   <ListBoxItem id={value} showCheckIcon>
-                    {name}
+                    <p>
+                      {name}
+                      {auxName && (
+                        <span className="text-text-sub"> {auxName}</span>
+                      )}
+                    </p>
                   </ListBoxItem>
                 );
               }}
@@ -299,99 +228,21 @@ export const RecurrenceSelect = ({
               <IntervalInput />
               <FrequencySelect />
             </div>
-            {freq === Frequency.WEEKLY && (
+            {rruleOptions.freq === Frequency.WEEKLY && (
               <div className="flex items-center gap-2">
                 <p className="text-sm text-text-sub w-12 shrink-0">On</p>
                 <ByweekdayCheckboxGroup />
               </div>
             )}
+            {rruleOptions.freq === Frequency.MONTHLY && (
+              <div className="flex items-center gap-2">
+                <p className="text-sm text-text-sub w-12 shrink-0">On</p>
+                <MonthOptionsSelect />
+              </div>
+            )}
             <div className="flex flex-col gap-2">
               <p className="text-sm text-text-sub">Ends</p>
-              <RadioGroup
-                value={ends}
-                onChange={(ends) => setEnds(ends as EndsEnum)}
-              >
-                <Radio
-                  value={EndsEnum.ENDS_NEVER}
-                  className="before:shrink-0 data-[selected]:before:bg-primary-100 text-sm before:bg-elevated before:border-border hover:before:bg-elevated-highlight  data-[selected]:before:border-primary"
-                >
-                  <p className="w-20">Never</p>
-                </Radio>
-                <div className="flex items-center">
-                  <Radio
-                    value={EndsEnum.ENDS_ON}
-                    className="before:shrink-0 data-[selected]:before:bg-primary-100 text-sm before:bg-elevated before:border-border hover:before:bg-elevated-highlight  data-[selected]:before:border-primary"
-                  >
-                    <p className="w-20">On</p>
-                  </Radio>
-                  <DatePicker
-                    defaultValue={selectedDate}
-                    onChange={(untilDate) => {
-                      setRruleOptions({
-                        ...rruleOptions,
-                        until: untilDate ? untilDate?.toDate("UTC") : undefined,
-                      });
-                    }}
-                    onBlur={() => {
-                      console.log(rruleOptions.until);
-                      if (!rruleOptions.until) {
-                        console.log("reset");
-                        setRruleOptions({
-                          ...rruleOptions,
-                          until: selectedDate.toDate("UTC"),
-                        });
-                      }
-                    }}
-                    className="h-8 text-sm w-32 hover:bg-elevated-highlight"
-                    isDisabled={ends !== EndsEnum.ENDS_ON}
-                  >
-                    <DatePickerContent
-                      placement="right top"
-                      calendarProps={{
-                        isDateUnavailable: (date) =>
-                          date.compare(selectedDate) < 0,
-                      }}
-                    />
-                  </DatePicker>
-                </div>
-                <div className="flex items-center">
-                  <Radio
-                    value={EndsEnum.ENDS_AFTER}
-                    className="before:shrink-0 data-[selected]:before:bg-primary-100 text-sm before:bg-elevated before:border-border hover:before:bg-elevated-highlight  data-[selected]:before:border-primary"
-                  >
-                    <p className="w-20">After</p>
-                  </Radio>
-                  <div className="flex items-center gap-2">
-                    <NumberField
-                      onChange={(count) => {
-                        setRruleOptions({
-                          ...rruleOptions,
-                          count: Number.isNaN(count) ? 1 : count,
-                        });
-                      }}
-                      value={rruleOptions.count}
-                      defaultValue={1}
-                      size={"sm"}
-                      aria-label="Ends after x days"
-                      step={1}
-                      minValue={1}
-                      maxValue={99}
-                      className={
-                        "w-16 h-8 text-sm rounded-md hover:bg-elevated-highlight"
-                      }
-                      isDisabled={ends !== EndsEnum.ENDS_AFTER}
-                    />
-                    <span
-                      className={cn(
-                        "text-sm",
-                        ends !== EndsEnum.ENDS_AFTER && "opacity-40",
-                      )}
-                    >
-                      time{count === 1 ? "" : "s"}
-                    </span>
-                  </div>
-                </div>
-              </RadioGroup>
+              <EndsRadioGroup />
             </div>
 
             <div className="flex items-center justify-end gap-2">
@@ -418,6 +269,20 @@ export const RecurrenceSelect = ({
           </div>
         </Dialog>
       </Modal>
+    </>
+  );
+};
+
+export const RecurrenceSelect = ({
+  selectedDate,
+  onChange,
+}: {
+  selectedDate: CalendarDate;
+  onChange: (rrule: string) => void;
+}) => {
+  return (
+    <RecurrenceSelectContextProvider selectedDate={selectedDate}>
+      <RecurrenceSelectContent />
     </RecurrenceSelectContextProvider>
   );
 };

@@ -1,4 +1,8 @@
-import { TextField as AriaTextField, Input } from "react-aria-components";
+import {
+  TextField as AriaTextField,
+  Input,
+  TextArea,
+} from "react-aria-components";
 
 import type {
   TextFieldProps as AriaTextFieldProps,
@@ -22,6 +26,7 @@ type TextFieldProps = AriaTextFieldProps &
     label?: string;
     description?: string;
     errorMessage?: string;
+    type?: "input" | "textarea";
   };
 
 export const TextField = ({
@@ -32,18 +37,38 @@ export const TextField = ({
   description,
   errorMessage,
   ariaLabel,
+  value,
+  type = "input",
   ...props
 }: TextFieldProps) => {
-  console.log(props);
   return (
-    <AriaTextField {...props}>
+    <AriaTextField {...props} value={value}>
       {label && <Label className="text-sm">{label}</Label>}
-      <div className={cn(fieldWrapperVariants({ size }), className)}>
-        <Input
-          placeholder={placeholder}
-          className="flex-1"
-          aria-label={ariaLabel}
-        />
+      <div
+        className={cn(
+          fieldWrapperVariants({ size }),
+          type === "textarea" && "h-auto",
+          className,
+        )}
+      >
+        {type === "input" ? (
+          <Input
+            placeholder={placeholder}
+            className="flex-1"
+            aria-label={ariaLabel}
+          />
+        ) : (
+          <TextArea
+            placeholder={placeholder}
+            className={({ isFocused }) =>
+              cn(
+                "flex-1 field-sizing-content my-2 resize-none",
+                isFocused || value ? "min-h-20" : "h-full",
+              )
+            }
+            aria-label={ariaLabel}
+          />
+        )}
       </div>
       {description && <FieldDescripton>{description}</FieldDescripton>}
       <FieldError errorMessage={errorMessage} />
