@@ -9,7 +9,7 @@ import {
 } from "react-aria-components";
 
 const buttonVariants = cva(
-  "cursor-pointer inline-flex  gap-2 items-center justify-center whitespace-nowrap text-text-base font-medium transition-colors  disabled:pointer-events-none disabled:opacity-40 rounded-full",
+  "cursor-pointer inline-flex  gap-2 items-center justify-center whitespace-nowrap text-text-base font-medium transition-colors  disabled:pointer-events-none disabled:opacity-60 rounded-full",
   {
     variants: {
       variant: {

@@ -176,10 +176,10 @@ importers:
         version: 2.5.5
       tailwindcss-animate:
         specifier: ^1.0.7
-        version: 1.0.7(tailwindcss@4.0.0-beta.2)
+        version: 1.0.7(tailwindcss@4.0.0-beta.8)
       tailwindcss-react-aria-components:
         specifier: ^1.2.0
-        version: 1.2.0(tailwindcss@4.0.0-beta.2)
+        version: 1.2.0(tailwindcss@4.0.0-beta.8)
       vaul:
         specifier: ^1.1.0
         version: 1.1.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(types-react-dom@19.0.0-rc.1)(types-react@19.0.0-rc.1)
@@ -227,8 +227,8 @@ importers:
         specifier: ^8.4.35
         version: 8.4.49
       tailwindcss:
-        specifier: 4.0.0-beta.2
-        version: 4.0.0-beta.2
+        specifier: 4.0.0-beta.8
+        version: 4.0.0-beta.8
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@22.10.1)(typescript@5.7.2)
@@ -4855,6 +4855,9 @@ packages:
 
   tailwindcss@4.0.0-beta.2:
     resolution: {integrity: sha512-uZ+vgVsy6i18Glc3XYMkTq7dl4GsU4m8X8qRTVlU4+g8Uit7g+wttwfDCl3p+ZOq5KCB09th9XgVDx1zFLCeHA==}
+
+  tailwindcss@4.0.0-beta.8:
+    resolution: {integrity: sha512-21HmdRq9tHDLJZavb2cRBGJxBvRODpwb0/t3tRbMOl65hJE6zG6K6lD6lLS3IOC35u4SOjKjdZiJJi9AuWCf+Q==}
 
   tapable@2.2.1:
     resolution: {integrity: sha512-GNzQvQTOIP6RyTfE2Qxb8ZVlNmw0n88vp1szwWRimP02mnTsx3Wtn5qRdqY9w2XduFNUgvOwhNnQsjwCp+kqaQ==}
@@ -10166,15 +10169,17 @@ snapshots:
 
   tailwind-merge@2.5.5: {}
 
-  tailwindcss-animate@1.0.7(tailwindcss@4.0.0-beta.2):
+  tailwindcss-animate@1.0.7(tailwindcss@4.0.0-beta.8):
     dependencies:
-      tailwindcss: 4.0.0-beta.2
+      tailwindcss: 4.0.0-beta.8
 
-  tailwindcss-react-aria-components@1.2.0(tailwindcss@4.0.0-beta.2):
+  tailwindcss-react-aria-components@1.2.0(tailwindcss@4.0.0-beta.8):
     dependencies:
-      tailwindcss: 4.0.0-beta.2
+      tailwindcss: 4.0.0-beta.8
 
   tailwindcss@4.0.0-beta.2: {}
+
+  tailwindcss@4.0.0-beta.8: {}
 
   tapable@2.2.1: {}
 

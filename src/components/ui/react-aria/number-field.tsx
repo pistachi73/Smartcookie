@@ -26,6 +26,7 @@ type NumberFieldProps = AriaNumberFieldProps &
     errorMessage?: string;
     placeholder?: InputProps["placeholder"];
     iconSize?: number;
+    withButtons?: boolean;
   };
 
 export const NumberField = ({
@@ -37,6 +38,7 @@ export const NumberField = ({
   className,
   isDisabled,
   iconSize = 12,
+  withButtons = true,
   ...props
 }: NumberFieldProps) => {
   return (
@@ -50,47 +52,52 @@ export const NumberField = ({
       <Group
         className={cn(
           fieldWrapperVariants({ size, isDisabled }),
-          "overflow-hidden pr-0 flex justify-between items-center",
+          "overflow-hidden",
+          withButtons && "pr-0 flex justify-between items-center",
           className,
         )}
       >
         <Input
           placeholder={placeholder}
           className={cn(
-            "flex-1 max-w-[calc(100%-var(--spacing)*8)] text-inherit",
+            "flex-1 text-inherit placeholder:text-text-sub ",
+            withButtons ? "max-w-[calc(100%-var(--spacing)*8)]" : "w-full",
           )}
         />
-        <div className="h-full flex flex-col shrink-0">
-          <div
-            className={"h-1/2 w-6 border-l flex items-center justify-center"}
-          >
-            <Button
-              variant="outline"
-              className={cn(
-                "h-full w-full p-0 border-0 rounded-none  text-text-sub",
-              )}
-              type="button"
-              slot="increment"
+
+        {withButtons && (
+          <div className="h-full flex flex-col shrink-0">
+            <div
+              className={"h-1/2 w-6 border-l flex items-center justify-center"}
             >
-              <ArrowUp01Icon size={iconSize} />
-            </Button>
-          </div>
-          <Separator className="flex-1 h-full " />
-          <div
-            className={"h-1/2 w-6 border-l flex items-center justify-center"}
-          >
-            <Button
-              variant="outline"
-              type="button"
-              className={cn(
-                "h-full w-full p-0 border-0 rounded-none   text-text-sub",
-              )}
-              slot="decrement"
+              <Button
+                variant="outline"
+                className={cn(
+                  "h-full w-full p-0 border-0 rounded-none  text-text-sub",
+                )}
+                type="button"
+                slot="increment"
+              >
+                <ArrowUp01Icon size={iconSize} />
+              </Button>
+            </div>
+            <Separator className="flex-1 h-full " />
+            <div
+              className={"h-1/2 w-6 border-l flex items-center justify-center"}
             >
-              <ArrowDown01Icon size={iconSize} />
-            </Button>
+              <Button
+                variant="outline"
+                type="button"
+                className={cn(
+                  "h-full w-full p-0 border-0 rounded-none   text-text-sub",
+                )}
+                slot="decrement"
+              >
+                <ArrowDown01Icon size={iconSize} />
+              </Button>
+            </div>
           </div>
-        </div>
+        )}
       </Group>
       {description && <FieldDescripton>{description}</FieldDescripton>}
       <FieldError errorMessage={errorMessage} />

@@ -63,7 +63,7 @@ export const TextField = ({
             className={({ isFocused }) =>
               cn(
                 "flex-1 field-sizing-content my-2 resize-none",
-                isFocused || value ? "min-h-20" : "h-full",
+                isFocused || value ? "min-h-12" : "h-full",
               )
             }
             aria-label={ariaLabel}

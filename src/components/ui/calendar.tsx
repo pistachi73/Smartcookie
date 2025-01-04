@@ -50,7 +50,7 @@ function Calendar({
         today: "bg-primary! text-light!",
         outside:
           "day-outside text-text-sub aria-selected:bg-neutral-500/30 aria-selected:text-muted-foreground",
-        disabled: "text-text-sub/30 opacity-40",
+        disabled: "text-text-sub/30 opacity-60",
         range_middle:
           "aria-selected:bg-accent aria-selected:text-accent-foreground",
         hidden: "invisible",

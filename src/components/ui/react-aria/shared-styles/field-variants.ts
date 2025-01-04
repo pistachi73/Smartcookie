@@ -5,7 +5,7 @@ export const fieldWrapperVariants = cva(
     "flex rounded-lg w-full border px-3 placeholder:text-text-sub transition-colors",
     "hover:bg-base-highlight",
     "focus-within:bg-base-highlight",
-    "disabled:cursor-not-allowed disabled:opacity-40",
+    "disabled:cursor-not-allowed disabled:opacity-60",
     "has-data-[pressed]:bg-base-highlight",
   ],
   {
@@ -16,7 +16,7 @@ export const fieldWrapperVariants = cva(
         sm: "h-10 px-3 text-sm placeholder:text-sm",
       },
       isDisabled: {
-        true: "cursor-not-allowed opacity-40 pointer-events-none",
+        true: "cursor-not-allowed opacity-60 pointer-events-none",
         false: "",
       },
     },

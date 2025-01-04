@@ -3,7 +3,7 @@ import { ComboBox, type ComboBoxProps } from "react-aria-components";
 import { FieldDescripton } from "./field-description";
 import { FieldError } from "./field-error";
 import { Label } from "./label";
-import { ListBox } from "./list-box";
+import { ListBox, listBoxitemStyles } from "./list-box";
 import { Popover, type PopoverProps } from "./popover";
 
 export type ComboBoxFieldProps<T extends object> = Omit<
@@ -22,12 +22,14 @@ export const ComboBoxField = <T extends object>({
   description,
   errorMessage,
   className,
+  allowsEmptyCollection = true,
   ...props
 }: ComboBoxFieldProps<T>) => {
   return (
     <ComboBox
       {...props}
-      className={({ isDisabled }) => cn(className, isDisabled && "opacity-40")}
+      allowsEmptyCollection={allowsEmptyCollection}
+      className={({ isDisabled }) => cn(className, isDisabled && "opacity-60")}
     >
       {label && <Label>{label}</Label>}
       {children}
@@ -52,7 +54,18 @@ export const ComboBoxFieldContent = <T extends object>({
 }: ComboBoxFieldContentProps<T>) => {
   return (
     <Popover {...props}>
-      <ListBox items={items}>{children}</ListBox>
+      <ListBox
+        items={items}
+        renderEmptyState={() => {
+          return (
+            <div className={cn(listBoxitemStyles(), "text-text-sub")}>
+              No results found
+            </div>
+          );
+        }}
+      >
+        {children}
+      </ListBox>
     </Popover>
   );
 };

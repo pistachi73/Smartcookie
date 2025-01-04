@@ -24,7 +24,7 @@ export function ListBox<T extends object>({
 }
 
 export const listBoxitemStyles = cva(
-  "p-2 relative flex items-center cursor-default select-none rounded-lg text-sm",
+  "p-2 relative flex items-center cursor-default select-none rounded-md text-sm",
   {
     variants: {
       isSelected: {
@@ -34,7 +34,7 @@ export const listBoxitemStyles = cva(
         true: "bg-responsive-dark/10",
       },
       isFocusVisible: {
-        true: "inset-ring-[3px] inset-hover:bg-base-highlight  ",
+        true: "inset-ring-[2px] inset-ring-responsive-dark/20 bg-responsive-dark/10",
       },
       isDisabled: {
         true: "pointer-events-none opacity-40",

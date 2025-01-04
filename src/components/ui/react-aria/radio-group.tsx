@@ -44,7 +44,7 @@ const radioVariants = cva(
   {
     variants: {
       isDisabled: {
-        true: "cursor-not-allowed opacity-40",
+        true: "cursor-not-allowed opacity-60",
       },
       isFocusVisible: {
         true: "before:ring-[4px] before:ring-base-highlight",

@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import "@/styles/scrollbar.css";
 
 import { auth } from "@/auth-config";
 import { DeviceOnlyProvider } from "@/components/device-only/device-only-provider";

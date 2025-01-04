@@ -14,23 +14,23 @@ import { ListBoxItem } from "../react-aria/list-box";
 import { fieldWrapperVariants } from "../react-aria/shared-styles/field-variants";
 import { getPgTimezonesAction } from "./actions";
 
-type TimezoneSelectFieldProps<T extends object> = ComboBoxFieldProps<T> & {
+type TimezoneComboboxProps<T extends object> = ComboBoxFieldProps<T> & {
   withIcon?: boolean;
 };
 
-const TimezoneSelectContext = createContext<{
+const TimezoneComboboxxt = createContext<{
   items: PgTimezone[] | undefined;
 }>({
   items: undefined,
 });
 
-export const TimezoneSelectField = <T extends object>({
+export const TimezoneCombobox = <T extends object>({
   className,
   isDisabled,
   selectedKey,
   children,
   ...props
-}: TimezoneSelectFieldProps<T>) => {
+}: TimezoneComboboxProps<T>) => {
   const [isFocused, setIsFocused] = useState(false);
   const { data: items, isLoading } = useQuery({
     queryKey: ["timezones"],
@@ -51,7 +51,7 @@ export const TimezoneSelectField = <T extends object>({
   );
 
   return (
-    <TimezoneSelectContext.Provider value={{ items }}>
+    <TimezoneComboboxxt.Provider value={{ items }}>
       <ComboBoxField
         menuTrigger="focus"
         isDisabled={isDisabled || isLoading}
@@ -69,13 +69,20 @@ export const TimezoneSelectField = <T extends object>({
         >
           <Button
             className={cn(
-              "absolute left-0 top-0 transition-colors h-full aspect-square flex items-center justify-center p-0 rounded-none ",
-              !selectedKey && "text-text-sub",
+              "absolute top-0 left-0",
+              "h-full aspect-square p-0 rounded-none",
+              "flex items-center justify-center",
               isLoading ? "cursor-not-allowed" : "cursor-pointer",
             )}
           >
             {isLoading ? (
-              <Loading02Icon size={16} className="animate-spin" />
+              <Loading02Icon
+                size={16}
+                variant="bulk"
+                strokeWidth={0}
+                className="animate-spin"
+                color="var(--color-text-sub)"
+              />
             ) : (
               <Globe02Icon size={16} color="var(--color-text-sub)" />
             )}
@@ -92,7 +99,7 @@ export const TimezoneSelectField = <T extends object>({
           )}
           <Input
             className={cn(
-              "relative z-10 flex-1 h-full",
+              "relative z-10 flex-1 h-full truncate pr-2",
               selectedKey ? "data-[focused]:pl-10 pl-30 " : "pl-10",
             )}
             placeholder="Timezone"
@@ -100,19 +107,19 @@ export const TimezoneSelectField = <T extends object>({
         </Group>
         {children}
       </ComboBoxField>
-    </TimezoneSelectContext.Provider>
+    </TimezoneComboboxxt.Provider>
   );
 };
 
-type TimezoneSelectContentProps<T extends object> = Omit<
+type TimezoneComboboxContentProps<T extends object> = Omit<
   ComboBoxFieldContentProps<T>,
   "items" | "children"
 >;
 
-export const TimezoneSelectContent = <T extends object>({
+export const TimezoneComboboxContent = <T extends object>({
   ...props
-}: TimezoneSelectContentProps<T>) => {
-  const { items } = useContext(TimezoneSelectContext);
+}: TimezoneComboboxContentProps<T>) => {
+  const { items } = useContext(TimezoneComboboxxt);
   return (
     <ComboBoxFieldContent items={items} {...props}>
       {(item) => (
@@ -122,7 +129,9 @@ export const TimezoneSelectContent = <T extends object>({
           id={item.name}
           textValue={`${item.displayname}`}
         >
-          <span className="text-text-sub">{item.displayoffset}</span>
+          <span className="text-text-sub tabular-nums shrink-0">
+            {item.displayoffset}
+          </span>
           {item.displayname}
         </ListBoxItem>
       )}

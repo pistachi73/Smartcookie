@@ -91,7 +91,7 @@ export default function Components() {
       <ListBox
         aria-label="Ice cream flavor"
         selectionMode="single"
-        className={"p-2 border rounded-lg space-y-0.5"}
+        className={"p-2 border rounded-lg space-y-0.5 bg-elevated-highlight/20"}
       >
         {items.map((item) => (
           <ListBoxItem key={item.id} id={item.id}>

@@ -92,7 +92,7 @@ export const EndsRadioGroup = () => {
           <span
             className={cn(
               "text-sm",
-              ends !== EndsEnum.ENDS_AFTER && "opacity-40",
+              ends !== EndsEnum.ENDS_AFTER && "opacity-60",
             )}
           >
             time{rruleOptions.count === 1 ? "" : "s"}

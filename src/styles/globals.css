@@ -193,7 +193,14 @@
   *:focus:not(.focus-visible) {
     outline: none;
   }
+
+
+  
+
 }
+
+
+
 
 @utility focus-ring-neutral {
   @apply focus-visible:ring-[4px];
