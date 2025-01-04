@@ -1,12 +1,10 @@
-import { Popover } from "@/components/ui/react-aria/popover";
-import { UserAvatar } from "@/components/ui/user-avatar";
 import type { SessionOccurrence as SessionOccurrenceType } from "@/lib/generate-session-ocurrences";
 import { cn } from "@/lib/utils";
 import { parseDateTime } from "@internationalized/date";
 import { format } from "date-fns";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import type React from "react";
-import { Button, Dialog, DialogTrigger } from "react-aria-components";
-import { SessionOccurrenceDetails } from "./session-occurrence-details";
+import { Button } from "react-aria-components";
 
 type SessionOccurrenceProps = {
   occurrence: SessionOccurrenceType;
@@ -17,6 +15,10 @@ export const SessionOccurrence = ({
   className,
   ...rest
 }: SessionOccurrenceProps & React.HTMLAttributes<HTMLDivElement>) => {
+  const params = useSearchParams();
+  const router = useRouter();
+  const { sessionId } = useParams();
+
   const [parsedStartTime, parsedEndTime] = [
     parseDateTime(occurrence.startTime),
     parseDateTime(occurrence.endTime),
@@ -26,46 +28,44 @@ export const SessionOccurrence = ({
   const bottom = (parsedEndTime.hour + parsedEndTime.minute / 60) * 4;
   const height = bottom - top;
 
+  const onNavigation = () => {
+    router.push(`/calendar/session/${occurrence.id}`);
+    // window.history.pushState(null, "", `/calendar/session/${occurrence.id}`);
+  };
+
+  const isSelected =
+    typeof sessionId === "string" && Number(sessionId) === occurrence.id;
+
   return (
-    <DialogTrigger>
-      <Button
-        className={cn("absolute", className)}
-        style={{
-          top: `${top}rem`,
-          height: `${height}rem`,
-          ...rest.style,
-        }}
+    <Button
+      className={cn("absolute", className)}
+      style={{
+        top: `${top}rem`,
+        height: `${height}rem`,
+        ...rest.style,
+      }}
+      onPress={onNavigation}
+    >
+      <div
+        className={cn(
+          "h-full w-full bg-[#286552] brightness-80 flex flex-row rounded-md gap-2 overflow-hidden",
+          "border border-transparent",
+          isSelected && "brightness-100 border-responsive-dark/70 ",
+        )}
       >
-        <div className="h-full w-full bg-[#1C7357] rounded-lg p-[6px] flex flex-row gap-3 overflow-hidden">
-          <div className="h-full w-1 rounded-full bg-[#30EEAC] shrink-0" />
-          <div className=" flex flex-col justify-between py-0.5">
-            <div className="text-left text-sm text-responsive-dark">
-              <p className="line-clamp-1 font-medium">{occurrence.title}</p>
-              <span className="line-clamp-1 opacity-60">
-                {format(occurrence.startTime, "HH:mm")} -{" "}
-                {format(occurrence.endTime, "HH:mm")}
-              </span>
-            </div>
-            <div className="flex items-center">
-              <UserAvatar
-                size="sm"
-                className="not-first:-ml-2 size-7"
-                userImage={"https://i.pravatar.cc/150?img=3"}
-              />
-              <UserAvatar
-                userImage={"https://i.pravatar.cc/150?img=1"}
-                size="sm"
-                className="not-first:-ml-2 size-7"
-              />
-            </div>
+        <div className="h-full w-1 bg-responsive-dark/70 shrink-0" />
+        <div className=" flex flex-col justify-between py-1.5 pr-2">
+          <div className="text-left text-sm text-responsive-dark">
+            <p className="line-clamp-2 font-normal leading-tight mb-0.5 text-xs">
+              {occurrence.title}
+            </p>
+            <span className="line-clamp-1 text-text-sub text-xs">
+              {format(occurrence.startTime, "HH:mm")} -{" "}
+              {format(occurrence.endTime, "HH:mm")}
+            </span>
           </div>
         </div>
-      </Button>
-      <Popover placement="right" className={"p-0 overflow-hidden"}>
-        <Dialog>
-          <SessionOccurrenceDetails occurrence={occurrence} />
-        </Dialog>
-      </Popover>
-    </DialogTrigger>
+      </div>
+    </Button>
   );
 };

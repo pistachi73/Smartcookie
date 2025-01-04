@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { regularSpring } from "@/utils/animation";
 import { AnimatePresence, motion } from "motion/react";
 import { useCalendarContext } from "./calendar-context";
@@ -19,7 +20,13 @@ export const CalendarContent = () => {
   };
 
   return (
-    <div className="h-full grow flex flex-row overflow-hidden ">
+    <div
+      className={cn(
+        "h-full grow flex flex-row overflow-hidden",
+        "[--row-height:calc(var(--spacing)*12)]",
+        "[--left-spacing:calc(var(--spacing)*4)]",
+      )}
+    >
       <div className="grow overflow-hidden flex flex-col">
         <CalendarHeader />
         <div className="overflow-hidden flex flex-col grow">

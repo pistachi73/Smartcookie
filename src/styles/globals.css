@@ -36,6 +36,7 @@
   --color-background-reverse: var(--background-reverse);
   --color-border: var(--border);
   --color-border-highlight: var(--border-highlight);
+  --color-calendar-border: var(--calendar-border);
   --color-card-background: var(--card-background);
   --color-responsive-light: var(--responsive-light);
   --color-responsive-dark: var(--responsive-dark);
@@ -158,7 +159,9 @@
     --text-base: oklch(6.72% 0 0);
     --text-sub: oklch(6.72% 0 0 / 60%);
     --border: oklch(6.72% 0 0 / 10%);
-    --border-highlight: oklch(6.72% 0 0 / 30%);
+    --border-highlight: oklch(6.72% 0 0 / 60%);
+
+    --calendar-border: oklch(93.43% 0.0011 197.14);
 
     --card-background: var(--color-light);
     --responsive-light: var(--color-light);
@@ -172,6 +175,9 @@
     --elevated-highlight: oklch(30.29% 0.0063 257.61);
     --border: oklch(100% 0 0 / 10%);
     --border-highlight: oklch(100% 0 0 / 30%);
+
+    --calendar-border: oklch(25.89% 0.0051 248.08);
+
     --text-base: oklch(100% 0 0);
     --text-sub: oklch(100% 0 0 / 60%);
     

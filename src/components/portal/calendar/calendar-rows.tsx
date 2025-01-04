@@ -11,8 +11,8 @@ export const CalendarRows = ({ rows = 24 }: CalendarRowsProps) => {
         <div
           key={`hour-${hourIndex}`}
           className={cn(
-            "flex h-16",
-            "after:content-[''] after:z-10 after:w-full after:absolute  after:border-b after:border-border",
+            "flex h-[var(--row-height,calc(var(--spacing)*12))]",
+            "after:content-[''] after:z-10 after:w-full after:absolute  after:border-b after:border-calendar-border",
           )}
         />
       ))}

@@ -180,6 +180,9 @@ importers:
       tailwindcss-react-aria-components:
         specifier: ^1.2.0
         version: 1.2.0(tailwindcss@4.0.0-beta.8)
+      usehooks-ts:
+        specifier: ^3.1.0
+        version: 3.1.0(react@19.0.0)
       vaul:
         specifier: ^1.1.0
         version: 1.1.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(types-react-dom@19.0.0-rc.1)(types-react@19.0.0-rc.1)
@@ -4114,6 +4117,9 @@ packages:
     resolution: {integrity: sha512-t7hw9pI+WvuwNJXwk5zVHpyhIqzg2qTlklJOf0mVxGSbe3Fp2VieZcduNYjaLDoy6p9uGpQEGWG87WpMKlNq8g==}
     engines: {node: '>=8'}
 
+  lodash.debounce@4.0.8:
+    resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
+
   lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
 
@@ -4967,6 +4973,12 @@ packages:
     resolution: {integrity: sha512-PElTlVMwpblvbNqQ82d2n6RjStvdSoNe9FG28kNfz3WiXilJm4DdNkEzRhCZuIDwY8U08WVihhGR5iRqAwfDiw==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
+
+  usehooks-ts@3.1.0:
+    resolution: {integrity: sha512-bBIa7yUyPhE1BCc0GmR96VU/15l/9gP1Ch5mYdLcFBaFGQsdmXkvjV0TtOqW1yUd6VjIwDunm+flSciCQXujiw==}
+    engines: {node: '>=16.15.0'}
+    peerDependencies:
+      react: ^16.8.0  || ^17 || ^18
 
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
@@ -9377,6 +9389,8 @@ snapshots:
     dependencies:
       p-locate: 4.1.0
 
+  lodash.debounce@4.0.8: {}
+
   lodash@4.17.21: {}
 
   log-symbols@4.1.0:
@@ -10284,6 +10298,11 @@ snapshots:
 
   use-sync-external-store@1.2.2(react@19.0.0):
     dependencies:
+      react: 19.0.0
+
+  usehooks-ts@3.1.0(react@19.0.0):
+    dependencies:
+      lodash.debounce: 4.0.8
       react: 19.0.0
 
   util-deprecate@1.0.2: {}

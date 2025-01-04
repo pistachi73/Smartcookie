@@ -1,18 +1,10 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Popover } from "@/components/ui/react-aria/popover";
 import type { SessionOccurrence } from "@/lib/generate-session-ocurrences";
 import { cn } from "@/lib/utils";
-import { MultiplicationSignIcon } from "@hugeicons/react";
 import { format, isToday } from "date-fns";
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  Button as AriaButton,
-  Dialog,
-  DialogTrigger,
-} from "react-aria-components";
-import { SessionOccurrenceDetails } from "./session-occurrence-details";
 
 type MonthCalendarDayCellProps = {
   dayIndex: number;
@@ -82,7 +74,7 @@ export const MonthCalendarDayCell = ({
 
       <span
         className={cn(
-          "text-xs font-medium mb-2 size-5 rounded-full flex items-center justify-center",
+          "text-xs font-medium size-5 rounded-full flex items-center justify-center",
           isCurrentMonth ? "text-responsive-dark" : "text-text-sub",
           isToday(currentDay) && "bg-primary text-light",
         )}
@@ -90,7 +82,7 @@ export const MonthCalendarDayCell = ({
         {currentDay.getDate()}
       </span>
       <div ref={sessionsContainerRef} className="overflow-hidden grow p-1">
-        <div className="h-full w-full space-y-1">
+        <div className="flex flex-col">
           {flattenedDayOccurrences
             .slice(0, visibleOccurrences)
             .map((occurrence, index) => (
@@ -99,7 +91,7 @@ export const MonthCalendarDayCell = ({
                 occurrence={occurrence}
               />
             ))}
-          {visibleOccurrences < totalOccurrences && (
+          {/* {visibleOccurrences < totalOccurrences && (
             <DialogTrigger>
               <AriaButton className="w-full hover:bg-base-highlight rounded-md transition-colors text-sm">
                 {totalOccurrences - visibleOccurrences} more
@@ -129,7 +121,7 @@ export const MonthCalendarDayCell = ({
                   <div className="space-y-2">
                     {flattenedDayOccurrences.map((occurrence, index) => (
                       <MonthOcccurrence
-                        key={`${occurrence.id}-${index}`}
+                        key={occurrence.id}
                         occurrence={occurrence}
                       />
                     ))}
@@ -137,7 +129,7 @@ export const MonthCalendarDayCell = ({
                 </Dialog>
               </Popover>
             </DialogTrigger>
-          )}
+          )} */}
         </div>
       </div>
     </div>
@@ -150,19 +142,18 @@ const MonthOcccurrence = ({
   occurrence: SessionOccurrence;
 }) => {
   return (
-    <DialogTrigger>
-      <AriaButton className="h-6 p-0.5 px-1 rounded-md text-dark text-sm hover:bg-base-highlight flex gap-2 items-center transition-colors cursor-pointer">
-        <div className="size-2 bg-lime-300 rounded-full shrink-0" />
-        <p className="line-clamp-1 text-left text-responsive-dark">
-          <span>{format(occurrence.startTime, "HH:mm")}</span> -{" "}
-          {occurrence.title}
-        </p>
-      </AriaButton>
-      <Popover placement="right" className={"p-0 overflow-hidden"} offset={8}>
-        <Dialog>
-          <SessionOccurrenceDetails occurrence={occurrence} />
-        </Dialog>
-      </Popover>
-    </DialogTrigger>
+    <Link
+      key={occurrence.id}
+      href={`/calendar/session/${occurrence.id}`}
+      className="min-w-0 w-full h-6 p-0.5 px-1 rounded-md text-text-base text-sm hover:bg-base-highlight flex gap-1 items-center transition-colors cursor-pointer"
+    >
+      <div className="size-1 bg-lime-300 rounded-full shrink-0" />
+      <p className="text-xs text-left text-text-base line-clamp-1">
+        <span className="text-text-sub">
+          {format(occurrence.startTime, "HH:mm")}
+        </span>{" "}
+        - {occurrence.title}
+      </p>
+    </Link>
   );
 };

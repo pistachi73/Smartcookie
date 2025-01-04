@@ -1,13 +1,18 @@
+import { cn } from "@/lib/utils";
+
 export const HoursColumn = () => {
   return (
-    <div className="mr-2 h-auto w-12">
+    <div className="mr-4 h-auto w-12 shrink-0">
       {Array.from({ length: 24 }).map((_, index) => {
         return (
           <div
             key={`hour-${index}`}
-            className="h-16 flex items-center justify-center relative"
+            className={cn(
+              "h-[var(--row-height,calc(var(--spacing)*12))]",
+              "flex items-center justify-center relative",
+            )}
           >
-            <span className="text-sm text-text-sub absolute top-[-10px] right-0">
+            <span className="text-xs text-text-sub tabular-nums absolute -top-[8px] right-0">
               {index === 0 ? "" : `${String(index).padStart(2, "0")}:00`}
             </span>
           </div>

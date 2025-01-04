@@ -29,7 +29,7 @@ export const UpcomingEvent = ({ hubName }: UpcomingEventProps) => {
           <p className="text-text-sub text-sm">Upcoming event</p>
           <p className="text-sm">Today from 3PM - 4PM</p>
         </div>
-        <Button variant="secondary" size="sm" iconOnly>
+        <Button variant="tertiary" size="sm" iconOnly>
           <ArrowUpRight01Icon />
         </Button>
       </div>

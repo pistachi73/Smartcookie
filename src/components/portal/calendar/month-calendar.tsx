@@ -28,7 +28,7 @@ export const MonthCalendar = () => {
           key={`month-row-${rowIndex}`}
           role="row"
           tabIndex={0}
-          className="flex flex-row w-full border-border basis-full overflow-hidden"
+          className="flex flex-row w-full border-calendar-border basis-full overflow-hidden"
         >
           {Array.from({ length: 7 }).map((_, dayIndex) => {
             const currentDay = addDays(startCalendar, rowIndex * 7 + dayIndex);

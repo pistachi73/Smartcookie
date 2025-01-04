@@ -1,11 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import {
-  ArrowLeft01Icon,
-  ArrowRight01Icon,
-  SidebarLeft01Icon,
-} from "@hugeicons/react";
+import { ArrowLeft01Icon, ArrowRight01Icon } from "@hugeicons/react";
 import {
   addDays,
   addMonths,
@@ -71,18 +67,8 @@ export const CalendarHeader = () => {
   }, [calendarType, selectedDate]);
 
   return (
-    <div className="flex flex-row items-center  justify-between px-6 py-4 gap-6">
+    <div className="flex flex-row items-center  justify-between px-4 py-4 pb-6 gap-6">
       <div className="flex flex-row items-center gap-3">
-        <Button
-          variant="outline"
-          iconOnly
-          size="sm"
-          onPress={() => {
-            setIsSidebarOpen((open) => !open);
-          }}
-        >
-          <SidebarLeft01Icon size={18} strokeWidth={1.5} />
-        </Button>
         <Button variant="outline" size="sm" onPress={onToday}>
           Today
         </Button>

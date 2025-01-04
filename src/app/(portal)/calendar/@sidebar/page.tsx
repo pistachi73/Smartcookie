@@ -2,7 +2,7 @@ import { CalendarSidebar } from "@/components/portal/calendar/calendar-sidebar";
 
 const SideBarDefault = () => {
   return (
-    <div className="h-full w-[280px] rounded-xl shrink-0 bg-base">
+    <div className="h-full w-[300px] rounded-xl shrink-0 bg-base">
       <CalendarSidebar />
     </div>
   );
