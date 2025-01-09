@@ -31,8 +31,8 @@ for (const table of [
   schema.passwordResetToken,
   schema.client,
   schema.hub,
-  schema.session,
-  schema.sessionException,
+  schema.event,
+  schema.eventOccurrence,
 ]) {
   await resetTable(db, table);
 }
@@ -42,7 +42,8 @@ async function main() {
     console.log("Seeding...");
     await seeds.user(db);
     await seeds.hub(db);
-    await seeds.session(db);
+    await seeds.event(db);
+    console.log("Seedin client!");
     await seeds.client(db);
   } catch (error) {
     console.error("Error during seeding:", error);

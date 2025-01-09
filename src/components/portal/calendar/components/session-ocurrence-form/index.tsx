@@ -32,27 +32,36 @@ import {
   Folder02Icon,
 } from "@hugeicons/react";
 import { CalendarDate } from "@internationalized/date";
-import { useRef } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useRef } from "react";
 import { Form, Separator } from "react-aria-components";
-import { Controller, useForm, useWatch } from "react-hook-form";
+import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
 import type { z } from "zod";
+import { consumeOccurrenceOverrides } from "../../utils";
 import type { SessionOcurrenceFormSchema } from "./schema";
 
-export const SessionOccurrenceFrom = () => {
-  const form = useForm<z.infer<typeof SessionOcurrenceFormSchema>>({});
-
+export const SessionOccurrenceFrom = ({
+  form,
+}: { form: UseFormReturn<z.infer<typeof SessionOcurrenceFormSchema>> }) => {
   const timeComboboxTriggerRef = useRef<HTMLDivElement>(null);
-
-  const onSubmit = (values: z.infer<typeof SessionOcurrenceFormSchema>) => {
-    console.log(values);
-  };
+  const searchParams = useSearchParams();
 
   const startTime = useWatch({
     control: form.control,
     name: "startTime",
   });
-
   const isBillable = useWatch({ control: form.control, name: "isBillable" });
+
+  useEffect(() => {
+    const overrides = consumeOccurrenceOverrides(searchParams);
+    if (!overrides) return;
+    form.reset(overrides);
+  }, [searchParams, form]);
+
+  const onSubmit = (values: z.infer<typeof SessionOcurrenceFormSchema>) => {
+    console.log(values);
+    console.log(form.formState.isDirty);
+  };
 
   return (
     <Form onSubmit={form.handleSubmit(onSubmit)} className="relative h-full">
@@ -110,7 +119,10 @@ export const SessionOccurrenceFrom = () => {
               <Controller
                 control={form.control}
                 name="title"
-                render={({ field, fieldState: { error, invalid } }) => (
+                render={({
+                  field,
+                  fieldState: { error, invalid, isDirty },
+                }) => (
                   <TextField
                     {...field}
                     size={"sm"}

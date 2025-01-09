@@ -4,26 +4,20 @@ import { useCalendarStore } from "@/providers/calendar-store-provider";
 import { addDays, format, isSameDay, startOfWeek } from "date-fns";
 import { useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { useCalendarContext } from "./calendar-context";
-import { CalendarRows } from "./calendar-rows";
-import { HoursColumn } from "./components/hours-column";
-import { SessionOccurrence } from "./components/session-occurrence";
-import { getWeekDays } from "./utils";
+import { CalendarRows } from "../calendar-rows";
+import { HoursColumn } from "../components/hours-column";
+import { getWeekDays } from "../utils";
 
-const useWeekCalendar = () =>
+const useWeekView = () =>
   useCalendarStore(
-    useShallow(({ setActiveSidebar, selectedDate }) => ({
+    useShallow(({ selectedDate, handleCalendarColumnDoubleClick }) => ({
       selectedDate,
-      setActiveSidebar,
+      handleCalendarColumnDoubleClick,
     })),
   );
 
-export const WeekCalendar = () => {
-  const { sessionOccurrences } = useCalendarContext();
-
-  const { selectedDate, setActiveSidebar } = useWeekCalendar();
-
-  console.log(selectedDate);
+export const WeekView = () => {
+  const { selectedDate, handleCalendarColumnDoubleClick } = useWeekView();
 
   const selectedDateWeekStart = startOfWeek(selectedDate, { weekStartsOn: 1 });
   const weekDays = useMemo(() => getWeekDays(selectedDate), [selectedDate]);
@@ -65,15 +59,18 @@ export const WeekCalendar = () => {
             <CalendarRows />
             {Array.from({ length: 7 }).map((_, weekDayIndex) => {
               const weekDay = addDays(selectedDateWeekStart, weekDayIndex);
-              const dayOccurrences =
-                sessionOccurrences?.[format(weekDay, "yyyy-MM-dd")] || [];
+              //   const dayOccurrences =
+              //     sessionOccurrences?.[format(weekDay, "yyyy-MM-dd")] || [];
 
               return (
                 <div
                   key={`day-${weekDayIndex}`}
                   className="flex-1 relative not-last:border-r border-calendar-border"
+                  onDoubleClick={(e) => {
+                    handleCalendarColumnDoubleClick(e, weekDay);
+                  }}
                 >
-                  {dayOccurrences.map((occurrenceGroup) => {
+                  {/* {dayOccurrences.map((occurrenceGroup) => {
                     const columnWidth = 100 / occurrenceGroup.length;
                     return occurrenceGroup.map((occurrence, index) => (
                       <SessionOccurrence
@@ -86,7 +83,7 @@ export const WeekCalendar = () => {
                         }}
                       />
                     ));
-                  })}
+                  })} */}
                 </div>
               );
             })}

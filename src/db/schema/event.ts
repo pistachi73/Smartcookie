@@ -2,56 +2,43 @@ import { relations } from "drizzle-orm";
 import {
   boolean,
   integer,
-  jsonb,
   serial,
   text,
   timestamp,
+  uuid,
 } from "drizzle-orm/pg-core";
 import { attendance } from "./attendance";
+import { eventOccurrence } from "./event-occurrence";
 import { hub } from "./hub";
-import { type SessionException, sessionException } from "./session-exception";
+import { user } from "./user";
 import { pgTable } from "./utils";
 
-export const session = pgTable("session", {
+export const event = pgTable("event", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
   description: text("description").notNull(),
   hubId: serial("hub_id")
     .notNull()
     .references(() => hub.id, { onDelete: "cascade" }),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
   startTime: timestamp("start_time", { mode: "string" }).notNull(),
   endTime: timestamp("end_time", { mode: "string" }).notNull(),
   price: integer("price").notNull(),
   isRecurring: boolean("is_recurring").default(false),
-  recurrenceRule: jsonb(
-    "recurrence_rule",
-  ).$type<RecurrenceRuleDbSchema | null>(),
+  recurrenceRule: text("recurrence_rule"),
   timezone: text("timezone").default("UTC").notNull(),
 });
 
-export const sessionRelations = relations(session, ({ one, many }) => ({
+export const eventRelations = relations(event, ({ one, many }) => ({
   hub: one(hub, {
-    fields: [session.hubId],
+    fields: [event.hubId],
     references: [hub.id],
   }),
+  occurrences: many(eventOccurrence),
   attendances: many(attendance),
-  exceptions: many(sessionException),
 }));
 
-export type RecurrenceRuleDbSchema =
-  | {
-      frequency: "daily";
-      interval: number;
-      endDate: string;
-    }
-  | {
-      frequency: "weekly";
-      interval: number;
-      daysOfWeek: string[];
-      endDate: string;
-    };
-
-export type InsertSession = typeof session.$inferInsert;
-export type Session = typeof session.$inferSelect & {
-  exceptions?: SessionException[];
-};
+export type InsertEvent = typeof event.$inferInsert;
+export type Event = typeof event.$inferSelect;

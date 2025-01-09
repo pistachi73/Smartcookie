@@ -1,4 +1,4 @@
-import type { RecurrenceRuleDbSchema, Session } from "@/db/schema/session";
+import type { RecurrenceRuleDbSchema, Session } from "@/db/schema/event";
 import type {
   SessionException,
   SessionExceptionReason,

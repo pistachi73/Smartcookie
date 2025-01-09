@@ -1,7 +1,6 @@
 CREATE TYPE "public"."payment_frequency" AS ENUM('one-time', 'monthly');--> statement-breakpoint
 CREATE TYPE "public"."time_investment" AS ENUM('low', 'medium', 'high');--> statement-breakpoint
 CREATE TYPE "public"."schedule_type" AS ENUM('on-demand', 'recurrent');--> statement-breakpoint
-CREATE TYPE "public"."session_exception_reason" AS ENUM('cancelled', 'skip', 'reschedule');--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "account" (
 	"userId" uuid NOT NULL,
 	"type" text NOT NULL,
@@ -50,6 +49,27 @@ CREATE TABLE IF NOT EXISTS "client_hub" (
 	CONSTRAINT "client_hub_clientId_hubId_unique" UNIQUE("clientId","hubId")
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "event" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"title" text NOT NULL,
+	"description" text NOT NULL,
+	"hub_id" serial NOT NULL,
+	"user_id" uuid NOT NULL,
+	"start_time" timestamp NOT NULL,
+	"end_time" timestamp NOT NULL,
+	"price" integer NOT NULL,
+	"is_recurring" boolean DEFAULT false,
+	"recurrence_rule" text,
+	"timezone" text DEFAULT 'UTC' NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "event_occurrence" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"event_id" serial NOT NULL,
+	"start_time" timestamp NOT NULL,
+	"end_time" timestamp NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "hub" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"user_id" uuid NOT NULL,
@@ -66,28 +86,6 @@ CREATE TABLE IF NOT EXISTS "password_reset_token" (
 	"email" text NOT NULL,
 	"expires" timestamp NOT NULL,
 	CONSTRAINT "password_reset_token_email_token_unique" UNIQUE("email","token")
-);
---> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "session" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"title" text NOT NULL,
-	"description" text NOT NULL,
-	"hub_id" serial NOT NULL,
-	"start_time" timestamp NOT NULL,
-	"end_time" timestamp NOT NULL,
-	"price" integer NOT NULL,
-	"is_recurring" boolean DEFAULT false,
-	"recurrence_rule" jsonb
-);
---> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "session_exception" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"session_id" serial NOT NULL,
-	"exception_date" timestamp NOT NULL,
-	"reason" "session_exception_reason" NOT NULL,
-	"new_start_time" timestamp,
-	"new_end_time" timestamp,
-	"comments" text
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "two_factor_confirmation" (
@@ -156,19 +154,25 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
+ ALTER TABLE "event" ADD CONSTRAINT "event_hub_id_hub_id_fk" FOREIGN KEY ("hub_id") REFERENCES "public"."hub"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "event" ADD CONSTRAINT "event_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "event_occurrence" ADD CONSTRAINT "event_occurrence_event_id_event_id_fk" FOREIGN KEY ("event_id") REFERENCES "public"."event"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
  ALTER TABLE "hub" ADD CONSTRAINT "hub_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- ALTER TABLE "session" ADD CONSTRAINT "session_hub_id_hub_id_fk" FOREIGN KEY ("hub_id") REFERENCES "public"."hub"("id") ON DELETE cascade ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- ALTER TABLE "session_exception" ADD CONSTRAINT "session_exception_session_id_session_id_fk" FOREIGN KEY ("session_id") REFERENCES "public"."session"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

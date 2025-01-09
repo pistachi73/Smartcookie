@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { hub, session, sessionException } from "@/db/schema";
+import { hub, session } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { parseDateWithTimezone } from "./utils";
 
@@ -38,24 +38,7 @@ export const getCalendarHubsByUserId = async (userId: string) => {
           ),
         },
         with: {
-          exceptions: {
-            columns: {
-              newStartTime: false,
-              newEndTime: false,
-            },
-            extras: {
-              newStartTime: parseDateWithTimezone(
-                sessionException.newStartTime,
-                session.timezone,
-                "newStartTime",
-              ),
-              newEndTime: parseDateWithTimezone(
-                sessionException.newEndTime,
-                session.timezone,
-                "newEndTime",
-              ),
-            },
-          },
+          occurrences: true,
         },
       },
     },

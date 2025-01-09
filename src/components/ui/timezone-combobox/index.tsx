@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/react-aria/combobox";
 import type { PgTimezone } from "@/data-access/pg";
 import { cn } from "@/lib/utils";
-import { Globe02Icon, Loading02Icon } from "@hugeicons/react";
+import { Globe02Icon } from "@hugeicons/react";
 import { useQuery } from "@tanstack/react-query";
 import { createContext, useContext, useMemo, useState } from "react";
 import { Button, Group, Input } from "react-aria-components";
@@ -75,17 +75,7 @@ export const TimezoneCombobox = <T extends object>({
               isLoading ? "cursor-not-allowed" : "cursor-pointer",
             )}
           >
-            {isLoading ? (
-              <Loading02Icon
-                size={16}
-                variant="bulk"
-                strokeWidth={0}
-                className="animate-spin"
-                color="var(--color-text-sub)"
-              />
-            ) : (
-              <Globe02Icon size={16} color="var(--color-text-sub)" />
-            )}
+            <Globe02Icon size={16} color="var(--color-text-sub)" />
           </Button>
           {selectedKey && (
             <p

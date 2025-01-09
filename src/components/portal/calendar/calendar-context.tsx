@@ -9,20 +9,20 @@ export type CalendarType = "day" | "week" | "month";
 const CalendarContext = React.createContext<{
   isSidebarOpen: boolean;
   selectedDate: Date;
-  calendarType: CalendarType;
+  calendarView: CalendarType;
   setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedDate: React.Dispatch<React.SetStateAction<Date>>;
-  setCalendarType: React.Dispatch<React.SetStateAction<CalendarType>>;
+  setCalendarView: React.Dispatch<React.SetStateAction<CalendarType>>;
   hubs?: Hub[];
   hubsMap?: Record<number, Hub>;
   sessionOccurrences?: DayGroupedSessionOccurrences;
 }>({
   selectedDate: new Date(),
-  calendarType: "month",
+  calendarView: "month",
   isSidebarOpen: true,
   setIsSidebarOpen: () => {},
   setSelectedDate: () => {},
-  setCalendarType: () => {},
+  setCalendarView: () => {},
   hubs: [],
   hubsMap: {},
   sessionOccurrences: {},
@@ -39,7 +39,7 @@ export const CalendarContextProvider = ({
 }) => {
   const [selectedDate, setSelectedDate] = React.useState<Date>(new Date());
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [calendarType, setCalendarType] = useState<"day" | "week" | "month">(
+  const [calendarView, setCalendarView] = useState<"day" | "week" | "month">(
     "month",
   );
 
@@ -53,10 +53,10 @@ export const CalendarContextProvider = ({
       value={{
         isSidebarOpen,
         selectedDate,
-        calendarType,
+        calendarView,
         setIsSidebarOpen,
         setSelectedDate,
-        setCalendarType,
+        setCalendarView,
         hubs,
         hubsMap,
         sessionOccurrences,

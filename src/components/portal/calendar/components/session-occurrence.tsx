@@ -24,8 +24,8 @@ export const SessionOccurrence = ({
     parseDateTime(occurrence.endTime),
   ];
 
-  const top = (parsedStartTime.hour + parsedStartTime.minute / 60) * 4;
-  const bottom = (parsedEndTime.hour + parsedEndTime.minute / 60) * 4;
+  const top = parsedStartTime.hour + parsedStartTime.minute / 60;
+  const bottom = parsedEndTime.hour + parsedEndTime.minute / 60;
   const height = bottom - top;
 
   const onNavigation = () => {
@@ -40,15 +40,15 @@ export const SessionOccurrence = ({
     <Button
       className={cn("absolute", className)}
       style={{
-        top: `${top}rem`,
-        height: `${height}rem`,
+        top: `calc(${top}*var(--row-height)`,
+        height: `calc(${height}*var(--row-height)`,
         ...rest.style,
       }}
       onPress={onNavigation}
     >
       <div
         className={cn(
-          "h-full w-full bg-[#286552] brightness-80 flex flex-row rounded-md gap-2 overflow-hidden",
+          "h-full w-full bg-[#286552] brightness-100 flex flex-row rounded-md gap-2 overflow-hidden",
           "border border-transparent",
           isSelected && "brightness-100 border-responsive-dark/70 ",
         )}

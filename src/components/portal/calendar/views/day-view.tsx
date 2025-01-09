@@ -1,38 +1,34 @@
-"use client";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useShallow } from "zustand/react/shallow";
-import { useCalendarContext } from "./calendar-context";
-import { CalendarRows } from "./calendar-rows";
-import { HoursColumn } from "./components/hours-column";
-import { SessionOccurrence } from "./components/session-occurrence";
-import { handleCalendarColumnDoubleClick } from "./utils";
 
-export type Event = {
-  id: string;
-  title: string;
-  start: Date;
-  end: Date;
-};
+import { CalendarRows } from "../calendar-rows";
+import { HoursColumn } from "../components/hours-column";
 
-const useDayCalendar = () =>
+const useDayView = () =>
   useCalendarStore(
-    useShallow(({ setActiveSidebar, selectedDate }) => ({
-      selectedDate,
-      setActiveSidebar,
-    })),
+    useShallow(
+      ({
+        setActiveSidebar,
+        selectedDate,
+        handleCalendarColumnDoubleClick,
+      }) => ({
+        selectedDate,
+        setActiveSidebar,
+        handleCalendarColumnDoubleClick,
+      }),
+    ),
   );
 
-export const DayCalendar = () => {
+export const DayView = () => {
   const router = useRouter();
-  const { sessionOccurrences } = useCalendarContext();
-  const { setActiveSidebar, selectedDate } = useDayCalendar();
+  const { selectedDate, handleCalendarColumnDoubleClick } = useDayView();
 
   console.log("daycalendar", selectedDate);
 
   const formattedDateKey = format(selectedDate, "yyyy-MM-dd");
-  const dailyOccurrences = sessionOccurrences?.[formattedDateKey] || [];
+  //   const dailyOccurrences = sessionOccurrences?.[formattedDateKey] || [];
 
   return (
     <div className="flex flex-col h-full gap-2 relative overflow-hidden">
@@ -58,18 +54,11 @@ export const DayCalendar = () => {
               id="calendar-container"
               className="h-full w-full"
               onDoubleClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleCalendarColumnDoubleClick(
-                  e,
-                  "calendar-container",
-                  selectedDate,
-                );
-                router.push("/calendar/session/create", { shallow: true });
-                setActiveSidebar("edit-session");
+                console.log("Hola");
+                handleCalendarColumnDoubleClick(e, selectedDate);
               }}
             >
-              {dailyOccurrences.map((occurrenceGroup) => {
+              {/* {dailyOccurrences?.map((occurrenceGroup) => {
                 const columnWidth = 100 / occurrenceGroup.length;
                 return occurrenceGroup.map((occurrence, index) => (
                   <SessionOccurrence
@@ -82,7 +71,7 @@ export const DayCalendar = () => {
                     }}
                   />
                 ));
-              })}
+              })} */}
             </div>
           </div>
         </div>

@@ -1,57 +1,31 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { useCalendarStore } from "@/providers/calendar-store-provider";
+import type { CalendarView } from "@/stores/calendar-store";
 import { ArrowLeft01Icon, ArrowRight01Icon } from "@hugeicons/react";
-import {
-  addDays,
-  addMonths,
-  addWeeks,
-  endOfWeek,
-  format,
-  startOfWeek,
-} from "date-fns";
+import { endOfWeek, format, startOfWeek } from "date-fns";
 import { useMemo } from "react";
-import { type CalendarType, useCalendarContext } from "./calendar-context";
-import { useWeekCalendar } from "./hooks/use-week-calendar";
+import { useShallow } from "zustand/react/shallow";
 
-type CalendarHeaderProps = {
-  title: string;
-};
-
-const onNavigationFunctionMapper: Record<CalendarType, any> = {
-  day: addDays,
-  week: addWeeks,
-  month: addMonths,
-};
+const useCalendarHeader = () =>
+  useCalendarStore(
+    useShallow((store) => ({
+      onToday: store.onToday,
+      selectedDate: store.selectedDate,
+      setDate: store.selectDate,
+      calendarView: store.calendarView,
+      setCalendarView: store.setCalendarView,
+      onNavigation: store.onNavigation,
+    })),
+  );
 
 export const CalendarHeader = () => {
-  const { currentWeekMonthNames, currentYearNumber } = useWeekCalendar();
-  const {
-    calendarType,
-    setIsSidebarOpen,
-    setCalendarType,
-    setSelectedDate,
-    selectedDate,
-  } = useCalendarContext();
-
-  const onPrevious = () => {
-    setSelectedDate((date) => {
-      return onNavigationFunctionMapper[calendarType](date || new Date(), -1);
-    });
-  };
-
-  const onNext = () => {
-    setSelectedDate((date) => {
-      return onNavigationFunctionMapper[calendarType](date || new Date(), 1);
-    });
-  };
-
-  const onToday = () => {
-    setSelectedDate(new Date());
-  };
+  const { selectedDate, calendarView, onToday, setCalendarView, onNavigation } =
+    useCalendarHeader();
 
   const title = useMemo(() => {
-    switch (calendarType) {
+    switch (calendarView) {
       case "day":
         return format(selectedDate, "d LLLL, yyyy");
       case "week":
@@ -61,10 +35,11 @@ export const CalendarHeader = () => {
         )} ${format(selectedDate, "yyyy")}`;
       case "month":
         return format(selectedDate, "LLLL, yyyy");
+
       default:
         return "";
     }
-  }, [calendarType, selectedDate]);
+  }, [calendarView, selectedDate]);
 
   return (
     <div className="flex flex-row items-center  justify-between px-4 py-4 pb-6 gap-6">
@@ -78,7 +53,9 @@ export const CalendarHeader = () => {
             size="sm"
             className="text-text-sub"
             iconOnly
-            onPress={onPrevious}
+            onPress={() => {
+              onNavigation(-1);
+            }}
           >
             <ArrowLeft01Icon size={18} strokeWidth={1.5} />
           </Button>
@@ -87,7 +64,9 @@ export const CalendarHeader = () => {
             size="sm"
             className="text-text-sub"
             iconOnly
-            onPress={onNext}
+            onPress={() => {
+              onNavigation(1);
+            }}
           >
             <ArrowRight01Icon size={18} strokeWidth={1.5} />
           </Button>
@@ -98,12 +77,12 @@ export const CalendarHeader = () => {
       </div>
       <ToggleGroup
         type="single"
-        value={calendarType}
+        value={calendarView}
         onValueChange={(value) => {
           if (!value) return;
-          setCalendarType(value as CalendarType);
+          setCalendarView(value as CalendarView);
         }}
-        defaultValue={calendarType}
+        defaultValue={calendarView}
         radioGroup="calendar-type"
       >
         <ToggleGroupItem value="day" size="sm">
@@ -114,6 +93,9 @@ export const CalendarHeader = () => {
         </ToggleGroupItem>
         <ToggleGroupItem value="month" size="sm">
           Month
+        </ToggleGroupItem>
+        <ToggleGroupItem value="agenda" size="sm">
+          Agenda
         </ToggleGroupItem>
       </ToggleGroup>
     </div>

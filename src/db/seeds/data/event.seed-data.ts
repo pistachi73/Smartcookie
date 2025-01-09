@@ -1,5 +1,5 @@
-import type { InsertSession } from "@/db/schema/session";
-import type { InsertSessionException } from "@/db/schema/session-exception";
+import type { InsertEvent } from "@/db/schema/event";
+import type { InsertEventOccurrence } from "@/db/schema/event-occurrence";
 import { CalendarDateTime, getLocalTimeZone } from "@internationalized/date";
 
 const today = new Date();
@@ -15,12 +15,12 @@ const parseToUTCISOString = (date: CalendarDateTime) => {
   return date.toDate(timezone).toISOString();
 };
 
-const sessions: {
-  session: InsertSession;
-  exceptions?: InsertSessionException[];
+const events: {
+  event: Omit<InsertEvent, "userId">;
+  eventOccurrences?: InsertEventOccurrence[];
 }[] = [
   {
-    session: {
+    event: {
       id: 1,
       title: "Algebra Basics - Level 1",
       description: "Algebra Basics",
@@ -40,42 +40,22 @@ const sessions: {
       timezone,
       price: 50,
       isRecurring: true,
-      recurrenceRule: {
-        frequency: "weekly",
-        interval: 1,
-        daysOfWeek: ["1", "3"],
-        endDate: todayCalendarDateTime.add({ months: 4 }).toString(),
-      },
+      recurrenceRule: "Rule",
     },
-    exceptions: [
-      {
-        sessionId: 1,
-        exceptionDate: parseToUTCISOString(
-          todayCalendarDateTime.add({ weeks: 4 }),
-        ),
-        reason: "cancelled",
-        newStartTime: null,
-        newEndTime: null,
-        comments: "Session cancelled due to holiday",
-      },
-      {
-        sessionId: 1,
-        exceptionDate: parseToUTCISOString(
-          todayCalendarDateTime.add({ days: 14 }),
-        ),
-        reason: "reschedule",
-        newStartTime: parseToUTCISOString(
-          todayCalendarDateTime.add({ days: 14 }).set({ hour: 11, minute: 0 }),
-        ),
-        newEndTime: parseToUTCISOString(
-          todayCalendarDateTime.add({ days: 14 }).set({ hour: 12, minute: 30 }),
-        ),
-        comments: "Session rescheduled for later time",
-      },
-    ],
+    eventOccurrences: Array.from({ length: 10 }).map((_, index) => ({
+      eventId: 1,
+      startTime: todayCalendarDateTime
+        .add({ days: index })
+        .set({ hour: 10, minute: 0 })
+        .toString(),
+      endTime: todayCalendarDateTime
+        .add({ days: index })
+        .set({ hour: 11, minute: 30 })
+        .toString(),
+    })),
   },
   {
-    session: {
+    event: {
       id: 2,
       title: "Spanish 101 - Introduction",
       description: "Spanish 101",
@@ -99,7 +79,7 @@ const sessions: {
     },
   },
   {
-    session: {
+    event: {
       id: 3,
       title: "Organic Chemistry Lab - Basics",
       description: "Organic Chemistry Lab",
@@ -123,7 +103,7 @@ const sessions: {
     },
   },
   {
-    session: {
+    event: {
       id: 4,
       title: "Biology II - Advanced Concepts",
       description: "Biology II",
@@ -147,7 +127,7 @@ const sessions: {
     },
   },
   {
-    session: {
+    event: {
       id: 5,
       title: "Advanced Calculus - Techniques",
       description: "Advanced Calculus",
@@ -172,4 +152,4 @@ const sessions: {
   },
 ];
 
-export default sessions;
+export default events;

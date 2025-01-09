@@ -48,6 +48,7 @@ export const TimeCombobox = <T extends TimeSelectOption>({
   onKeyDown,
   ...props
 }: TimeComboboxProps<T>) => {
+  console.log({ value });
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [items, setItems] = useState(generateTimeSelectOptions(minValue));
@@ -77,18 +78,18 @@ export const TimeCombobox = <T extends TimeSelectOption>({
   };
 
   useEffect(() => {
-    // If the value is less than the minValue, set the input to the minValue
-    if (!minValue || !value) return;
+    if (!value) return;
+    const timeValue = generateTimeValue(value.hour, value.minute, minValue);
 
-    if (minValue.compare(value) >= 0) {
-      const timeValue = generateTimeValue(value.hour, value.minute, minValue);
+    // If the value is less than the minValue, change the value
+    if (minValue && value.compare(minValue) < 0) {
       onChange(timeValue);
-      setInput(formatLabel(timeValue.hour, timeValue.minute));
     }
+
+    setInput(formatLabel(timeValue.hour, timeValue.minute));
   }, [value, minValue, onChange]);
 
   useEffect(() => {
-    // Reset the items when the minValue changes
     if (!minValue) return;
     setItems(generateTimeSelectOptions(minValue));
   }, [minValue]);
