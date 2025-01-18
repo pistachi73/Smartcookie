@@ -1,5 +1,5 @@
 import { VERCEL_HEADERS } from "@/app-config";
-import { getCalendarHubsByUserIdAction } from "@/components/portal/calendar/actions";
+import { getCalendarDataAction } from "@/components/portal/calendar/actions";
 import { CalendarStoreProvider } from "@/providers/calendar-store-provider";
 import type { CalendarStore, CalendarView } from "@/stores/calendar-store";
 import { headers } from "next/headers";
@@ -27,17 +27,26 @@ const parseCalendarLayoutPathname = (
 } => {
   if (!pathname) return { skipHydration: false };
 
-  const [, , calendarView, year, month, day] = pathname.split("/");
+  const [, , calendarView, yearOrEventId, month, day] = pathname.split("/");
 
-  console.log(calendarView);
+  console.log(pathname);
 
   if (!isCalendarView(calendarView)) {
+    if (isNumber(yearOrEventId)) {
+      return {
+        skipHydration: false,
+        initialCalendarStore: {
+          editingEventOccurrenceId: Number(yearOrEventId),
+          activeSidebar: "edit-session",
+        },
+      };
+    }
     return {
       skipHydration: false,
     };
   }
 
-  if (!isNumber(year) || !isNumber(month) || !isNumber(day)) {
+  if (!isNumber(yearOrEventId) || !isNumber(month) || !isNumber(day)) {
     return {
       skipHydration: false,
     };
@@ -48,14 +57,21 @@ const parseCalendarLayoutPathname = (
     initialCalendarStore: {
       _isHydrated: true,
       calendarView,
-      selectedDate: new Date(Number(year), Number(month) - 1, Number(day)),
+      selectedDate: new Date(
+        Number(yearOrEventId),
+        Number(month) - 1,
+        Number(day),
+      ),
     },
   };
 };
 
 const CalendarLayout = async ({ children }: { children: React.ReactNode }) => {
-  const a = await getCalendarHubsByUserIdAction();
+  const res = await getCalendarDataAction();
   const parsedHeaders = await headers();
+
+  const { hubs, eventOcurrences } = res?.data ?? {};
+
   const pathName = parsedHeaders.get(VERCEL_HEADERS.PATHNAME);
 
   const { initialCalendarStore, skipHydration } =
@@ -63,7 +79,11 @@ const CalendarLayout = async ({ children }: { children: React.ReactNode }) => {
 
   return (
     <CalendarStoreProvider
-      initialCalendarStore={initialCalendarStore}
+      initialCalendarStore={{
+        ...initialCalendarStore,
+        hubs,
+        eventOccurrences: eventOcurrences,
+      }}
       skipHydration={skipHydration}
     >
       {children}

@@ -18,9 +18,6 @@ importers:
       '@auth/drizzle-adapter':
         specifier: ^1.7.2
         version: 1.7.4
-      '@date-fns/utc':
-        specifier: ^2.1.0
-        version: 2.1.0
       '@hookform/resolvers':
         specifier: ^3.3.4
         version: 3.9.1(react-hook-form@7.53.2(react@19.0.0))
@@ -114,6 +111,9 @@ importers:
       drizzle-orm:
         specifier: ^0.35.3
         version: 0.35.3(@libsql/client-wasm@0.14.0)(@neondatabase/serverless@0.10.4)(@types/pg@8.11.10)(react@19.0.0)(types-react@19.0.0-rc.1)
+      immer:
+        specifier: ^10.1.1
+        version: 10.1.1
       lucide-react:
         specifier: ^0.453.0
         version: 0.453.0(react@19.0.0)
@@ -180,12 +180,6 @@ importers:
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@4.0.0-beta.8)
-      tailwindcss-react-aria-components:
-        specifier: ^1.2.0
-        version: 1.2.0(tailwindcss@4.0.0-beta.8)
-      usehooks-ts:
-        specifier: ^3.1.0
-        version: 3.1.0(react@19.0.0)
       vaul:
         specifier: ^1.1.0
         version: 1.1.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(types-react-dom@19.0.0-rc.1)(types-react@19.0.0-rc.1)
@@ -194,7 +188,7 @@ importers:
         version: 3.23.8
       zustand:
         specifier: ^5.0.2
-        version: 5.0.2(react@19.0.0)(types-react@19.0.0-rc.1)(use-sync-external-store@1.2.2(react@19.0.0))
+        version: 5.0.2(immer@10.1.1)(react@19.0.0)(types-react@19.0.0-rc.1)(use-sync-external-store@1.2.2(react@19.0.0))
     devDependencies:
       '@biomejs/biome':
         specifier: 1.9.4
@@ -525,9 +519,6 @@ packages:
 
   '@date-fns/tz@1.2.0':
     resolution: {integrity: sha512-LBrd7MiJZ9McsOgxqWX7AaxrDjcFVjWH/tIKJd7pnR7McaslGYOP1QmmiBXdJH/H/yLCT+rcQ7FaPBUxRGUtrg==}
-
-  '@date-fns/utc@2.1.0':
-    resolution: {integrity: sha512-176grgAgU2U303rD2/vcOmNg0kGPbhzckuH1TEP2al7n0AQipZIy9P15usd2TKQCG1g+E1jX/ZVQSzs4sUDwgA==}
 
   '@drizzle-team/brocli@0.10.2':
     resolution: {integrity: sha512-z33Il7l5dKjUgGULTqBsQBQwckHh5AbIuxhdsIxDDiZAzBOrZO6q9ogcWC65kU382AfynTfgNumVcNIjuIua6w==}
@@ -3747,6 +3738,9 @@ packages:
   ieee754@1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
 
+  immer@10.1.1:
+    resolution: {integrity: sha512-s2MPrmjovJcoMaHtx6K11Ra7oD05NT97w1IC5zpMkT6Atjr7H8LjaDd81iIxUYpMKSRRNMJE703M1Fhr/TctHw==}
+
   import-local@3.2.0:
     resolution: {integrity: sha512-2SPlun1JUPWoM6t3F0dw0FkCF/jWY8kttcY4f599GLTSjh2OCuuhdTkJQsEcZzBqbXZGKMK2OqW1oZsjtf/gQA==}
     engines: {node: '>=8'}
@@ -4130,9 +4124,6 @@ packages:
   locate-path@5.0.0:
     resolution: {integrity: sha512-t7hw9pI+WvuwNJXwk5zVHpyhIqzg2qTlklJOf0mVxGSbe3Fp2VieZcduNYjaLDoy6p9uGpQEGWG87WpMKlNq8g==}
     engines: {node: '>=8'}
-
-  lodash.debounce@4.0.8:
-    resolution: {integrity: sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==}
 
   lodash@4.17.21:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
@@ -4872,11 +4863,6 @@ packages:
     peerDependencies:
       tailwindcss: '>=3.0.0 || insiders'
 
-  tailwindcss-react-aria-components@1.2.0:
-    resolution: {integrity: sha512-ynlQIfAdoWAz0Og0dCe/d4QVE+L8Yuo6rtK9apdhehZZMoLC1GdwtnvLZyUyx+wHwnTjRuNtFPdN0DpPsPXJJg==}
-    peerDependencies:
-      tailwindcss: '*'
-
   tailwindcss@4.0.0-beta.2:
     resolution: {integrity: sha512-uZ+vgVsy6i18Glc3XYMkTq7dl4GsU4m8X8qRTVlU4+g8Uit7g+wttwfDCl3p+ZOq5KCB09th9XgVDx1zFLCeHA==}
 
@@ -4991,12 +4977,6 @@ packages:
     resolution: {integrity: sha512-PElTlVMwpblvbNqQ82d2n6RjStvdSoNe9FG28kNfz3WiXilJm4DdNkEzRhCZuIDwY8U08WVihhGR5iRqAwfDiw==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
-
-  usehooks-ts@3.1.0:
-    resolution: {integrity: sha512-bBIa7yUyPhE1BCc0GmR96VU/15l/9gP1Ch5mYdLcFBaFGQsdmXkvjV0TtOqW1yUd6VjIwDunm+flSciCQXujiw==}
-    engines: {node: '>=16.15.0'}
-    peerDependencies:
-      react: ^16.8.0  || ^17 || ^18
 
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
@@ -5443,8 +5423,6 @@ snapshots:
       '@jridgewell/trace-mapping': 0.3.9
 
   '@date-fns/tz@1.2.0': {}
-
-  '@date-fns/utc@2.1.0': {}
 
   '@drizzle-team/brocli@0.10.2': {}
 
@@ -8869,6 +8847,8 @@ snapshots:
 
   ieee754@1.2.1: {}
 
+  immer@10.1.1: {}
+
   import-local@3.2.0:
     dependencies:
       pkg-dir: 4.2.0
@@ -9430,8 +9410,6 @@ snapshots:
   locate-path@5.0.0:
     dependencies:
       p-locate: 4.1.0
-
-  lodash.debounce@4.0.8: {}
 
   lodash@4.17.21: {}
 
@@ -10233,10 +10211,6 @@ snapshots:
     dependencies:
       tailwindcss: 4.0.0-beta.8
 
-  tailwindcss-react-aria-components@1.2.0(tailwindcss@4.0.0-beta.8):
-    dependencies:
-      tailwindcss: 4.0.0-beta.8
-
   tailwindcss@4.0.0-beta.2: {}
 
   tailwindcss@4.0.0-beta.8: {}
@@ -10346,11 +10320,6 @@ snapshots:
     dependencies:
       react: 19.0.0
 
-  usehooks-ts@3.1.0(react@19.0.0):
-    dependencies:
-      lodash.debounce: 4.0.8
-      react: 19.0.0
-
   util-deprecate@1.0.2: {}
 
   v8-compile-cache-lib@3.0.1: {}
@@ -10452,8 +10421,9 @@ snapshots:
 
   zod@3.23.8: {}
 
-  zustand@5.0.2(react@19.0.0)(types-react@19.0.0-rc.1)(use-sync-external-store@1.2.2(react@19.0.0)):
+  zustand@5.0.2(immer@10.1.1)(react@19.0.0)(types-react@19.0.0-rc.1)(use-sync-external-store@1.2.2(react@19.0.0)):
     optionalDependencies:
       '@types/react': types-react@19.0.0-rc.1
+      immer: 10.1.1
       react: 19.0.0
       use-sync-external-store: 1.2.2(react@19.0.0)

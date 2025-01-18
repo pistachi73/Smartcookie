@@ -77,6 +77,23 @@ const events: {
       isRecurring: false,
       recurrenceRule: null,
     },
+    eventOccurrences: [
+      {
+        eventId: 2,
+        startTime: parseToUTCISOString(
+          todayCalendarDateTime.set({
+            hour: 12,
+            minute: 0,
+          }),
+        ),
+        endTime: parseToUTCISOString(
+          todayCalendarDateTime.set({
+            hour: 13,
+            minute: 30,
+          }),
+        ),
+      },
+    ],
   },
   {
     event: {
@@ -101,6 +118,23 @@ const events: {
       isRecurring: false,
       recurrenceRule: null,
     },
+    eventOccurrences: [
+      {
+        eventId: 3,
+        startTime: parseToUTCISOString(
+          todayCalendarDateTime.set({
+            hour: 14,
+            minute: 0,
+          }),
+        ),
+        endTime: parseToUTCISOString(
+          todayCalendarDateTime.set({
+            hour: 15,
+            minute: 30,
+          }),
+        ),
+      },
+    ],
   },
   {
     event: {
@@ -125,6 +159,23 @@ const events: {
       isRecurring: false,
       recurrenceRule: null,
     },
+    eventOccurrences: [
+      {
+        eventId: 4,
+        startTime: parseToUTCISOString(
+          todayCalendarDateTime.set({
+            hour: 9,
+            minute: 0,
+          }),
+        ),
+        endTime: parseToUTCISOString(
+          todayCalendarDateTime.set({
+            hour: 10,
+            minute: 30,
+          }),
+        ),
+      },
+    ],
   },
   {
     event: {
@@ -149,6 +200,23 @@ const events: {
       isRecurring: false,
       recurrenceRule: null,
     },
+    eventOccurrences: [
+      {
+        eventId: 5,
+        startTime: parseToUTCISOString(
+          todayCalendarDateTime.set({
+            hour: 11,
+            minute: 0,
+          }),
+        ),
+        endTime: parseToUTCISOString(
+          todayCalendarDateTime.set({
+            hour: 12,
+            minute: 30,
+          }),
+        ),
+      },
+    ],
   },
 ];
 

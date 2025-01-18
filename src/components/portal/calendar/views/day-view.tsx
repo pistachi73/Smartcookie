@@ -1,10 +1,15 @@
 import { useCalendarStore } from "@/providers/calendar-store-provider";
 import { format } from "date-fns";
-import { useRouter } from "next/navigation";
 import { useShallow } from "zustand/react/shallow";
 
 import { CalendarRows } from "../calendar-rows";
 import { HoursColumn } from "../components/hours-column";
+import {
+  calculateOccurrenceHeight,
+  calculateOccurrenceTop,
+  getEventOccurrenceDayKey,
+} from "../utils";
+import { DayWeekViewOccurrence } from "./day-week-view-occurrence";
 
 const useDayView = () =>
   useCalendarStore(
@@ -13,22 +18,30 @@ const useDayView = () =>
         setActiveSidebar,
         selectedDate,
         handleCalendarColumnDoubleClick,
+        groupedEventOccurrences,
+        draftEventOccurrence,
+        editingEventOccurrenceId,
       }) => ({
         selectedDate,
         setActiveSidebar,
+        groupedEventOccurrences,
+        editingEventOccurrenceId,
+        draftEventOccurrence,
         handleCalendarColumnDoubleClick,
       }),
     ),
   );
 
 export const DayView = () => {
-  const router = useRouter();
-  const { selectedDate, handleCalendarColumnDoubleClick } = useDayView();
+  const {
+    selectedDate,
+    handleCalendarColumnDoubleClick,
+    groupedEventOccurrences,
+    draftEventOccurrence,
+  } = useDayView();
 
-  console.log("daycalendar", selectedDate);
-
-  const formattedDateKey = format(selectedDate, "yyyy-MM-dd");
-  //   const dailyOccurrences = sessionOccurrences?.[formattedDateKey] || [];
+  const formattedDateKey = getEventOccurrenceDayKey(selectedDate);
+  const dayOcurrences = groupedEventOccurrences?.[formattedDateKey] || [];
 
   return (
     <div className="flex flex-col h-full gap-2 relative overflow-hidden">
@@ -51,27 +64,40 @@ export const DayView = () => {
           <div className="flex flex-row w-full h-auto relative">
             <CalendarRows />
             <div
-              id="calendar-container"
               className="h-full w-full"
+              onClick={(e) => {
+                console.log("hola");
+              }}
               onDoubleClick={(e) => {
-                console.log("Hola");
+                e.preventDefault();
                 handleCalendarColumnDoubleClick(e, selectedDate);
               }}
             >
-              {/* {dailyOccurrences?.map((occurrenceGroup) => {
-                const columnWidth = 100 / occurrenceGroup.length;
-                return occurrenceGroup.map((occurrence, index) => (
-                  <SessionOccurrence
-                    key={`${occurrence.id}-${index}`}
-                    className="z-20 pr-2"
-                    occurrence={occurrence}
-                    style={{
-                      width: `${columnWidth}%`,
-                      left: `${index * columnWidth}%`, // Position each session in its own column
-                    }}
-                  />
-                ));
-              })} */}
+              {dayOcurrences?.map((eventOcurrences) =>
+                eventOcurrences.map((occurrence, index) => {
+                  const widthPercentage = 100 / eventOcurrences.length;
+                  const topPercentage = calculateOccurrenceTop(
+                    occurrence.startTime,
+                  );
+                  const heightPercentage = calculateOccurrenceHeight(
+                    occurrence.startTime,
+                    occurrence.endTime,
+                  );
+
+                  return (
+                    <DayWeekViewOccurrence
+                      key={`event-occurrence-${occurrence.eventOccurrenceId}`}
+                      occurrence={occurrence}
+                      style={{
+                        top: `${topPercentage}%`,
+                        height: `${heightPercentage}%`,
+                        width: `${widthPercentage}%`,
+                        left: `${index * widthPercentage}%`,
+                      }}
+                    />
+                  );
+                }),
+              )}
             </div>
           </div>
         </div>

@@ -1,16 +1,20 @@
+import type { CalendarView } from "@/stores/calendar-store";
 import { CalendarDate, CalendarDateTime, Time } from "@internationalized/date";
-import { addDays, endOfWeek, format, startOfWeek } from "date-fns";
-import { ReadonlyURLSearchParams } from "next/navigation";
-import { z } from "zod";
-import { SessionOcurrenceFormSchema } from "./components/session-ocurrence-form/schema";
+import { addDays, endOfWeek, format, isSameMonth, startOfWeek } from "date-fns";
+import type { ReadonlyURLSearchParams } from "next/navigation";
+import type { z } from "zod";
+import type { SessionOcurrenceFormSchema } from "./event-occurrence-form/schema";
 
 export const ROW_HEIGHT = 48;
 export const TIMESLOT_HEIGHT = ROW_HEIGHT / 4;
+const CALENDAR_START_HOUR = 0; // Adjust based on your calendar's start hour
+const CALENDAR_END_HOUR = 24; // Adjust based on your calendar's end hour
+const TOTAL_MINUTES = (CALENDAR_END_HOUR - CALENDAR_START_HOUR) * 60;
+const PIXELS_PER_MINUTE = ROW_HEIGHT / 60;
 
 export const getWeekBoundaries = (date: Date) => {
   // You can specify which day to consider as the start of the week; by default, it is Sunday (0).
   // To set Monday as the start of the week, we can pass { weekStartsOn: 1 }.
-
   const startDay = startOfWeek(date, { weekStartsOn: 1 });
   const lastDay = endOfWeek(date, { weekStartsOn: 1 });
 
@@ -26,31 +30,31 @@ export const getMonthName = (date: Date): string => format(date, "LLLL");
 export const getYearNumber = (date: Date): number =>
   Number.parseInt(format(date, "yyyy"), 10);
 
-export const handleCalendarColumnDoubleClick = (
-  event: React.MouseEvent<HTMLDivElement>,
-  containerId: string,
+export const formatCalendarHeaderTitle = (
   date: Date,
+  calendarType: CalendarView,
 ) => {
-  const container = document.getElementById(containerId);
-  if (!container) return;
+  switch (calendarType) {
+    case "day":
+      return format(date, "d LLLL, yyyy");
+    case "week":
+      return `${format(startOfWeek(date, { weekStartsOn: 1 }), "d LLLL")} - ${format(
+        endOfWeek(date, { weekStartsOn: 1 }),
+        "d LLLL",
+      )} ${format(date, "yyyy")}`;
+    case "month":
+      return format(date, "LLLL, yyyy");
 
-  const top = event.clientY - container.getBoundingClientRect().top;
-  const timeslotPosition = Math.trunc(top / TIMESLOT_HEIGHT);
-
-  const encodedOverrides = generateOccurrenceEncodedOverrides({
-    timeslotPosition,
-    date,
-  });
-
-  const params = new URLSearchParams({
-    overrides: encodedOverrides,
-  });
-
-  // window.history.pushState(
-  //   null,
-  //   "",
-  //   `/calendar/session/create?${params.toString()}`,
-  // );
+    case "agenda": {
+      const rangeEndDate = addDays(date, 14);
+      if (isSameMonth(date, rangeEndDate)) {
+        return `${format(date, "LLLL, yyyy")}`;
+      }
+      return `${format(date, "LLLL, yyyy")} - ${format(rangeEndDate, "LLLL, yyyy")}`;
+    }
+    default:
+      return "";
+  }
 };
 
 export const generateOccurrenceEncodedOverrides = ({
@@ -118,4 +122,27 @@ export const consumeOccurrenceOverrides = (
     console.error("Error parsing occurrence overrides:", error);
     return;
   }
+};
+
+export const getEventOccurrenceDayKey = (date: Date) => {
+  if (!date) return "";
+  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+};
+
+export const calculateOccurrenceTop = (startTime: Date): number => {
+  const date = new Date(startTime);
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const totalMinutes = (hours - CALENDAR_START_HOUR) * 60 + minutes;
+  return (totalMinutes / TOTAL_MINUTES) * 100; // Percentage top
+};
+
+export const calculateOccurrenceHeight = (
+  startTime: Date,
+  endTime: Date,
+): number => {
+  const start = new Date(startTime).getTime();
+  const end = new Date(endTime).getTime();
+  const duration = (end - start) / (1000 * 60); // Duration in minutes
+  return (duration / TOTAL_MINUTES) * 100; // Percentage height
 };

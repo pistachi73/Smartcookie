@@ -1,18 +1,11 @@
 import { db } from "@/db";
-import { hub, session } from "@/db/schema";
+import { hub } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { parseDateWithTimezone } from "./utils";
 
 export const getHubsByUserId = async (userId: string) => {
   return await db.query.hub.findMany({
     where: eq(hub.userId, userId),
-    with: {
-      sessions: {
-        with: {
-          exceptions: true,
-        },
-      },
-    },
   });
 };
 

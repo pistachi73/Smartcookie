@@ -6,6 +6,7 @@ import { regularSpring } from "@/utils/animation";
 import { AnimatePresence, motion } from "motion/react";
 import { useShallow } from "zustand/react/shallow";
 import { CalendarHeader } from "./calendar-header";
+import { AgendaView } from "./views/agenda-view";
 import { DayView } from "./views/day-view";
 import { MonthView } from "./views/month-view/month-view";
 import { WeekView } from "./views/week-view";
@@ -27,7 +28,7 @@ export const CalendarView = () => {
     <div
       className={cn(
         "h-full grow flex flex-row overflow-hidden",
-        "[--row-height:48px)]",
+        "[--row-height:48px]",
         "[--left-spacing:calc(var(--spacing)*4)]",
       )}
     >
@@ -61,6 +62,15 @@ export const CalendarView = () => {
                 className="overflow-hidden h-full w-full"
               >
                 <MonthView />
+              </motion.div>
+            )}
+            {calendarView === "agenda" && (
+              <motion.div
+                {...calendarAnimation}
+                key="month-view"
+                className="overflow-hidden h-full w-full"
+              >
+                <AgendaView />
               </motion.div>
             )}
           </AnimatePresence>

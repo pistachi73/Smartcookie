@@ -48,7 +48,6 @@ export const TimeCombobox = <T extends TimeSelectOption>({
   onKeyDown,
   ...props
 }: TimeComboboxProps<T>) => {
-  console.log({ value });
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [items, setItems] = useState(generateTimeSelectOptions(minValue));

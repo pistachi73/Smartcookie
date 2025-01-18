@@ -17,6 +17,7 @@ import { Switch, SwitchIndicator } from "@/components/ui/react-aria/switch";
 import { TextField } from "@/components/ui/react-aria/text-field";
 import { RecurrenceSelect } from "@/components/ui/recurrence-select";
 
+import { Button } from "@/components/ui/button";
 import {
   TimeCombobox,
   TimeComboboxContent,
@@ -26,6 +27,7 @@ import {
   TimezoneComboboxContent,
 } from "@/components/ui/timezone-combobox";
 import { cn } from "@/lib/utils";
+import { useCalendarStore } from "@/providers/calendar-store-provider";
 import {
   ArrowRight02Icon,
   CalendarAdd01Icon,
@@ -37,12 +39,35 @@ import { useEffect, useRef } from "react";
 import { Form, Separator } from "react-aria-components";
 import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
 import type { z } from "zod";
-import { consumeOccurrenceOverrides } from "../../utils";
+import { useShallow } from "zustand/react/shallow";
+import { consumeOccurrenceOverrides } from "../utils";
 import type { SessionOcurrenceFormSchema } from "./schema";
+
+const useEventOccurrenceForm = () =>
+  useCalendarStore(
+    useShallow((store) => ({
+      hubs: store.hubs,
+      setDraftEventOccurrence: store.setDraftEventOccurrence,
+      setActiveSidebar: store.setActiveSidebar,
+      clearDraftEventOccurrence: store.clearDraftEventOccurrence,
+      clearEditingEventOccurrence: store.clearEditingEventOccurrence,
+    })),
+  );
 
 export const SessionOccurrenceFrom = ({
   form,
-}: { form: UseFormReturn<z.infer<typeof SessionOcurrenceFormSchema>> }) => {
+  editingEventOccurrenceId,
+}: {
+  form: UseFormReturn<z.infer<typeof SessionOcurrenceFormSchema>>;
+  editingEventOccurrenceId: number;
+}) => {
+  const {
+    hubs,
+    setDraftEventOccurrence,
+    setActiveSidebar,
+    clearDraftEventOccurrence,
+    clearEditingEventOccurrence,
+  } = useEventOccurrenceForm();
   const timeComboboxTriggerRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
 
@@ -50,6 +75,17 @@ export const SessionOccurrenceFrom = ({
     control: form.control,
     name: "startTime",
   });
+
+  const endTime = useWatch({
+    control: form.control,
+    name: "endTime",
+  });
+
+  const date = useWatch({
+    control: form.control,
+    name: "date",
+  });
+
   const isBillable = useWatch({ control: form.control, name: "isBillable" });
 
   useEffect(() => {
@@ -58,13 +94,87 @@ export const SessionOccurrenceFrom = ({
     form.reset(overrides);
   }, [searchParams, form]);
 
+  useEffect(() => {
+    if (!startTime || !endTime || !date) return;
+
+    if (editingEventOccurrenceId === -1) {
+      setDraftEventOccurrence({
+        eventOccurrenceId: -1,
+        startTime: new Date(
+          date.year,
+          date.month - 1,
+          date.day,
+          startTime.hour,
+          startTime.minute,
+        ),
+        endTime: new Date(
+          date.year,
+          date.month - 1,
+          date.day,
+          endTime.hour,
+          endTime.minute,
+        ),
+      });
+    }
+  }, [
+    setDraftEventOccurrence,
+    editingEventOccurrenceId,
+    date,
+    startTime,
+    endTime,
+  ]);
+
   const onSubmit = (values: z.infer<typeof SessionOcurrenceFormSchema>) => {
     console.log(values);
-    console.log(form.formState.isDirty);
+    const { date, startTime, endTime, timezone } = values;
+
+    setDraftEventOccurrence({
+      eventOccurrenceId: -1,
+      startTime: new Date(
+        date.year,
+        date.month - 1,
+        date.day,
+        startTime.hour,
+        startTime.minute,
+      ),
+      endTime: new Date(
+        date.year,
+        date.month - 1,
+        date.day,
+        endTime.hour,
+        endTime.minute,
+      ),
+      timezone,
+    });
   };
 
+  const onCancel = () => {
+    clearDraftEventOccurrence();
+    clearEditingEventOccurrence();
+    setActiveSidebar("main");
+  };
+
+  useEffect(() => {
+    const eventListener = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onCancel();
+      }
+    };
+
+    window.addEventListener("keydown", eventListener);
+
+    return () => {
+      window.removeEventListener("keydown", eventListener);
+    };
+  }, []);
+
+  const hubItems = hubs?.map((hub) => ({ id: hub.id, name: hub.name }));
+
   return (
-    <Form onSubmit={form.handleSubmit(onSubmit)} className="relative h-full">
+    <Form
+      onSubmit={form.handleSubmit(onSubmit)}
+      className="relative h-full flex flex-col justify-between"
+    >
       {/* <div className="bg-gradient-to-t from-[#30EEAC]/30 to-transparent absolute bottom-0 left-0 h-[300px] w-full" /> */}
       <div className="py-6 z-20 relative">
         <div className="flex items-center gap-3 mb-6 px-4">
@@ -105,7 +215,7 @@ export const SessionOccurrenceFrom = ({
                       placement="left top"
                       offset={6}
                       className="w-[250px]"
-                      items={[{ id: 1, name: "Math Tutoring Hub" }]}
+                      items={hubItems}
                     >
                       {({ id, name }) => (
                         <ListBoxItem id={id} showCheckIcon>
@@ -375,6 +485,14 @@ export const SessionOccurrenceFrom = ({
             />
           </div>
         </div>
+      </div>
+      <div className="flex items-center justify-end gap-2 p-4">
+        <Button variant={"ghost"} size="sm" onPress={onCancel}>
+          Cancel
+        </Button>
+        <Button size="sm" className="px-6" type="submit">
+          Save
+        </Button>
       </div>
     </Form>
   );

@@ -2,6 +2,7 @@ import { useCalendarStore } from "@/providers/calendar-store-provider";
 import {
   addDays,
   differenceInDays,
+  format,
   lastDayOfMonth,
   startOfMonth,
   subDays,
@@ -11,14 +12,25 @@ import { MonthViewCell } from "./month-view-cell";
 
 const useMonthView = () =>
   useCalendarStore(
-    useShallow(({ selectedDate, handleCalendarColumnDoubleClick }) => ({
-      selectedDate,
-      handleCalendarColumnDoubleClick,
-    })),
+    useShallow(
+      ({
+        selectedDate,
+        groupedEventOccurrences,
+        handleCalendarColumnDoubleClick,
+      }) => ({
+        selectedDate,
+        groupedEventOccurrences,
+        handleCalendarColumnDoubleClick,
+      }),
+    ),
   );
 
 export const MonthView = () => {
-  const { selectedDate, handleCalendarColumnDoubleClick } = useMonthView();
+  const {
+    selectedDate,
+    groupedEventOccurrences,
+    handleCalendarColumnDoubleClick,
+  } = useMonthView();
 
   const startMonth = startOfMonth(selectedDate);
   const endMonth = lastDayOfMonth(selectedDate);
@@ -40,8 +52,8 @@ export const MonthView = () => {
         >
           {Array.from({ length: 7 }).map((_, dayIndex) => {
             const currentDay = addDays(startCalendar, rowIndex * 7 + dayIndex);
-            // const dayOccurrences =
-            //   sessionOccurrences?.[format(currentDay, "yyyy-MM-dd")] || [];
+            const dayOccurrences =
+              groupedEventOccurrences?.[format(currentDay, "yyyy-MM-dd")] || [];
             const isCurrentMonth =
               currentDay.getMonth() === selectedDate.getMonth();
 
@@ -52,7 +64,7 @@ export const MonthView = () => {
                 rowIndex={rowIndex}
                 currentDay={currentDay}
                 isCurrentMonth={isCurrentMonth}
-                // dayOccurrences={dayOccurrences}
+                dayOccurrences={dayOccurrences}
               />
             );
           })}

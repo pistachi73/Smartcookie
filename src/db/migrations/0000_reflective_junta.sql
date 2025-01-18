@@ -67,7 +67,8 @@ CREATE TABLE IF NOT EXISTS "event_occurrence" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"event_id" serial NOT NULL,
 	"start_time" timestamp NOT NULL,
-	"end_time" timestamp NOT NULL
+	"end_time" timestamp NOT NULL,
+	"overrides" jsonb NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "hub" (

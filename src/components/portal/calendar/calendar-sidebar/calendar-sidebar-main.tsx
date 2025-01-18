@@ -15,17 +15,19 @@ import { CalendarDate } from "@internationalized/date";
 import { useEffect, useState } from "react";
 import { Separator } from "react-aria-components";
 import { useShallow } from "zustand/react/shallow";
+import { UpcomingEvent } from "../components/upcoming-event";
 
 const useCalendarSidebarMain = () =>
   useCalendarStore(
     useShallow((store) => ({
+      hubs: store.hubs,
       selectedDate: store.selectedDate,
       selectDate: store.selectDate,
     })),
   );
 
 export const CalendarSidebarMain = () => {
-  const { selectDate, selectedDate } = useCalendarSidebarMain();
+  const { hubs, selectDate, selectedDate } = useCalendarSidebarMain();
 
   const calendarValue = selectedDate
     ? new CalendarDate(
@@ -52,9 +54,9 @@ export const CalendarSidebarMain = () => {
 
   return (
     <div className="flex flex-col">
-      {/* <div className="p-4">
+      <div className="p-4">
         <UpcomingEvent hubName="Math Tutoring Hub" />
-      </div> */}
+      </div>
       <Separator />
       <ResizablePanelRoot value="calendar">
         <div className="py-4">
@@ -73,7 +75,7 @@ export const CalendarSidebarMain = () => {
         <AccordionItem value="hubs">
           <AccordionTrigger>Hubs</AccordionTrigger>
           <AccordionContent className="ml-2 space-y-4">
-            {/* {hubs?.map((hub) => (
+            {hubs?.map((hub) => (
               <div
                 key={hub.id}
                 className="flex items-center text-sm dark:text-neutral-300 text-neutral-700 gap-2"
@@ -81,12 +83,20 @@ export const CalendarSidebarMain = () => {
                 <Checkbox id={hub.id.toString()} />
                 <label htmlFor={hub.id.toString()}>{hub.name}</label>
               </div>
-            ))} */}
+            ))}
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="clients">
           <AccordionTrigger>Clients</AccordionTrigger>
           <AccordionContent className="ml-2">
+            <div className="flex items-center text-sm dark:text-neutral-300 text-neutral-700 gap-2">
+              <Checkbox id="client" />
+              <label htmlFor="client">Client 1</label>
+            </div>
+            <div className="flex items-center text-sm dark:text-neutral-300 text-neutral-700 gap-2">
+              <Checkbox id="client" />
+              <label htmlFor="client">Client 1</label>
+            </div>
             <div className="flex items-center text-sm dark:text-neutral-300 text-neutral-700 gap-2">
               <Checkbox id="client" />
               <label htmlFor="client">Client 1</label>

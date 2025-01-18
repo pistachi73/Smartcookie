@@ -5,7 +5,7 @@ import {
   Modal as RACModal,
 } from "react-aria-components";
 
-const overlayStyles = cva(
+export const overlayStyles = cva(
   "fixed inset-0 z-[100] bg-black/80 flex items-center justify-center",
   {
     variants: {
@@ -19,7 +19,7 @@ const overlayStyles = cva(
   },
 );
 
-const modalStyles = cva(
+export const modalStyles = cva(
   "w-full max-w-md max-h-full rounded-2xl bg-background",
   {
     variants: {

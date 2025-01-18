@@ -42,3 +42,18 @@ export const eventRelations = relations(event, ({ one, many }) => ({
 
 export type InsertEvent = typeof event.$inferInsert;
 export type Event = typeof event.$inferSelect;
+
+export type EventOverrides = {
+  title: Event["title"];
+  description: Event["description"];
+  price: Event["price"];
+  recurrenceRule: Event["recurrenceRule"];
+  timezone: Event["timezone"];
+};
+
+export type EventOccurrence = Omit<Event, "id" | "startTime" | "endTime"> & {
+  eventId: number;
+  eventOccurrenceId: number;
+  startTime: Date;
+  endTime: Date;
+};

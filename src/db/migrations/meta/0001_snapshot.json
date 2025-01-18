@@ -1,6 +1,6 @@
 {
-  "id": "a362df98-41f4-4363-8db4-f976409c7bcf",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "cf4cb76d-4cf9-4e78-921c-ed71b81655d4",
+  "prevId": "a362df98-41f4-4363-8db4-f976409c7bcf",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -513,7 +513,7 @@
           "name": "overrides",
           "type": "jsonb",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         }
       },
       "indexes": {},

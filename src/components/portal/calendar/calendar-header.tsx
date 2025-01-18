@@ -4,9 +4,8 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
 import type { CalendarView } from "@/stores/calendar-store";
 import { ArrowLeft01Icon, ArrowRight01Icon } from "@hugeicons/react";
-import { endOfWeek, format, startOfWeek } from "date-fns";
-import { useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
+import { formatCalendarHeaderTitle } from "./utils";
 
 const useCalendarHeader = () =>
   useCalendarStore(
@@ -24,22 +23,7 @@ export const CalendarHeader = () => {
   const { selectedDate, calendarView, onToday, setCalendarView, onNavigation } =
     useCalendarHeader();
 
-  const title = useMemo(() => {
-    switch (calendarView) {
-      case "day":
-        return format(selectedDate, "d LLLL, yyyy");
-      case "week":
-        return `${format(startOfWeek(selectedDate, { weekStartsOn: 1 }), "d LLLL")} - ${format(
-          endOfWeek(selectedDate, { weekStartsOn: 1 }),
-          "d LLLL",
-        )} ${format(selectedDate, "yyyy")}`;
-      case "month":
-        return format(selectedDate, "LLLL, yyyy");
-
-      default:
-        return "";
-    }
-  }, [calendarView, selectedDate]);
+  const title = formatCalendarHeaderTitle(selectedDate, calendarView);
 
   return (
     <div className="flex flex-row items-center  justify-between px-4 py-4 pb-6 gap-6">
