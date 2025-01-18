@@ -1,77 +1,141 @@
 import { getEventOccurrenceDayKey } from "@/components/portal/calendar/utils";
-import type { EventOccurrence } from "@/db/schema";
-import type { DraftEventOccurrence } from "@/stores/calendar-store";
+import type {
+  CalendarDraftEventOccurrence,
+  CalendarEventOccurrence,
+} from "@/stores/calendar-store";
+import Heap from "heap-js";
+
+export type GroupProps = {
+  columnIndex: number;
+  totalColumns: number;
+};
+
+export type GroupedCalendarOccurrence = CalendarEventOccurrence & GroupProps;
+export type GroupedDraftCalendarOccurrence = CalendarDraftEventOccurrence &
+  GroupProps;
+
+export type GroupedOccurrence =
+  | GroupedCalendarOccurrence
+  | GroupedDraftCalendarOccurrence;
+
+interface TimePoint {
+  time: number; // Using timestamp for efficiency
+  type: "start" | "end";
+  event: GroupedOccurrence;
+}
 
 export const sweepLineGroupOverlappingOccurrences = (
-  eventOccurrences: (EventOccurrence | DraftEventOccurrence)[],
-): (EventOccurrence | DraftEventOccurrence)[][] => {
+  eventOccurrences: (CalendarEventOccurrence | CalendarDraftEventOccurrence)[],
+): GroupedOccurrence[] => {
   if (eventOccurrences.length === 0) {
     return [];
   }
 
-  const times: {
-    time: Date;
-    type: "start" | "end";
-    event: EventOccurrence | DraftEventOccurrence;
-  }[] = [];
-
-  eventOccurrences.forEach((event) => {
-    times.push({ time: new Date(event.startTime), type: "start", event });
-    times.push({ time: new Date(event.endTime), type: "end", event });
-  });
+  // Create time points for all start and end times
+  const times: TimePoint[] = eventOccurrences.flatMap((event) => [
+    {
+      time: event.startTime.getTime(),
+      type: "start",
+      event: { ...event, columnIndex: 0, totalColumns: 0 },
+    },
+    {
+      time: event.endTime.getTime(),
+      type: "end",
+      event: {
+        ...event,
+        columnIndex: 0,
+        totalColumns: 0,
+      },
+    },
+  ]);
 
   times.sort((a, b) => {
-    const diff = a.time.getTime() - b.time.getTime();
-    if (diff !== 0) return diff;
-    return a.type === "start" ? 1 : -1;
+    if (a.time !== b.time) return a.time - b.time;
+    return a.type === "end" ? -1 : 1; // 'end' comes before 'start' if times are equal
   });
 
-  const activeEvents: Set<EventOccurrence | DraftEventOccurrence> = new Set();
-  const groups: (EventOccurrence | DraftEventOccurrence)[][] = [];
-  const columnsEndTime: Date[] = []; // Tracks end time for each column
+  const groups: GroupedOccurrence[][] = [];
+  const activeEvents: Set<number> = new Set();
+
+  // Heap to keep track of active columns sorted by endTime
+  const activeColumnsHeap = new Heap<{ endTime: number; columnIndex: number }>(
+    (a, b) => {
+      if (a.endTime !== b.endTime) {
+        return a.endTime - b.endTime;
+      }
+      return a.columnIndex - b.columnIndex;
+    },
+  );
+
+  // Heap to keep track of available columns sorted by columnIndex
+  const availableColumnsHeap = new Heap<number>((a, b) => a - b);
+
+  let maxColumns = 0;
+  let currentGroup: GroupedOccurrence[] = [];
 
   times.forEach((point) => {
+    const event = point.event;
+
     if (point.type === "start") {
-      let assignedColumn = columnsEndTime.findIndex(
-        (endTime) => endTime <= point.time,
-      );
-      if (assignedColumn === -1) {
-        // No available column, create a new one
-        assignedColumn = columnsEndTime.length;
-        columnsEndTime.push(point.time);
-      } else {
-        // Assign to this column and update the end time
-        if (columnsEndTime.length) {
-          columnsEndTime[assignedColumn] =
-            point.time > columnsEndTime[assignedColumn]
-              ? point.time
-              : columnsEndTime[assignedColumn];
-        }
+      activeEvents.add(event.eventOccurrenceId);
+
+      // Release all columns that have ended before the current event's start time
+      while (
+        !activeColumnsHeap.isEmpty() &&
+        activeColumnsHeap.peek()!.endTime <= point.time
+      ) {
+        const freedColumn = activeColumnsHeap.pop()!.columnIndex;
+        availableColumnsHeap.push(freedColumn);
       }
-      activeEvents.add(point.event);
-      if (activeEvents.size === 1) {
-        groups.push([point.event]);
+
+      // Assign a column
+      let assignedColumn: number;
+      if (!availableColumnsHeap.isEmpty()) {
+        assignedColumn = availableColumnsHeap.pop()!;
       } else {
-        const currentGroup = groups[groups.length - 1];
-        currentGroup!.push(point.event);
+        assignedColumn = maxColumns;
+        maxColumns += 1;
       }
+
+      // Assign columnIndex and push to activeColumnsHeap
+      event.columnIndex = assignedColumn;
+      activeColumnsHeap.push({
+        endTime: event.endTime.getTime(),
+        columnIndex: assignedColumn,
+      });
+
+      // Add to current group
+      currentGroup.push(event);
     } else {
-      activeEvents.delete(point.event);
+      activeEvents.delete(event.eventOccurrenceId);
+      // Note: The column is already released in the "start" event processing
+    }
+
+    // If no active events, push the current group and reset
+    if (activeEvents.size === 0) {
+      // Set totalColumns for the group
+      const totalCols = maxColumns;
+      currentGroup.forEach((occ) => {
+        occ.totalColumns = totalCols;
+      });
+      // Clear the heaps for the next group
+      activeColumnsHeap.removeAll();
+      availableColumnsHeap.removeAll();
+      groups.push(currentGroup);
+      currentGroup = [];
+      maxColumns = 0;
     }
   });
 
-  return groups;
+  return groups.flat();
 };
-export type DayGroupedEventOccurrences = Record<
-  string,
-  (EventOccurrence | DraftEventOccurrence)[][]
->;
+export type DayGroupedEventOccurrences = Record<string, GroupedOccurrence[]>;
 
 export const groupEventOccurrencesByDayAndTime = (
-  eventOccurrences: EventOccurrence[],
+  eventOccurrences: CalendarEventOccurrence[],
 ) => {
   const eventOccurrencesByDay = eventOccurrences.reduce<
-    Record<string, (EventOccurrence | DraftEventOccurrence)[]>
+    Record<string, CalendarEventOccurrence[]>
   >((ocurrencesByDay, occurrence) => {
     const dayKey = getEventOccurrenceDayKey(occurrence.startTime);
 

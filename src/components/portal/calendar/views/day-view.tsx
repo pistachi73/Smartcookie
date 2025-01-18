@@ -3,42 +3,22 @@ import { format } from "date-fns";
 import { useShallow } from "zustand/react/shallow";
 
 import { CalendarRows } from "../calendar-rows";
+import { DayEventsColumn } from "../components/day-events-column";
 import { HoursColumn } from "../components/hours-column";
-import {
-  calculateOccurrenceHeight,
-  calculateOccurrenceTop,
-  getEventOccurrenceDayKey,
-} from "../utils";
+import { getEventOccurrenceDayKey } from "../utils";
+import { DayWeekViewDraftOccurrence } from "./day-week-view-draft-occurrence";
 import { DayWeekViewOccurrence } from "./day-week-view-occurrence";
 
 const useDayView = () =>
   useCalendarStore(
-    useShallow(
-      ({
-        setActiveSidebar,
-        selectedDate,
-        handleCalendarColumnDoubleClick,
-        groupedEventOccurrences,
-        draftEventOccurrence,
-        editingEventOccurrenceId,
-      }) => ({
-        selectedDate,
-        setActiveSidebar,
-        groupedEventOccurrences,
-        editingEventOccurrenceId,
-        draftEventOccurrence,
-        handleCalendarColumnDoubleClick,
-      }),
-    ),
+    useShallow(({ selectedDate, groupedEventOccurrences }) => ({
+      selectedDate,
+      groupedEventOccurrences,
+    })),
   );
 
 export const DayView = () => {
-  const {
-    selectedDate,
-    handleCalendarColumnDoubleClick,
-    groupedEventOccurrences,
-    draftEventOccurrence,
-  } = useDayView();
+  const { selectedDate, groupedEventOccurrences } = useDayView();
 
   const formattedDateKey = getEventOccurrenceDayKey(selectedDate);
   const dayOcurrences = groupedEventOccurrences?.[formattedDateKey] || [];
@@ -58,47 +38,29 @@ export const DayView = () => {
 
         <div className="h-full px-2" />
       </div>
-      <div className="pl-[var(--left-spacing)] relative flex flex-col overflow-y-scroll">
+      <div
+        id="calendar-container"
+        className="pl-[var(--left-spacing)] relative flex flex-col  overflow-y-scroll"
+      >
         <div className="items-stretch flex flex-auto">
           <HoursColumn />
           <div className="flex flex-row w-full h-auto relative">
             <CalendarRows />
-            <div
-              className="h-full w-full"
-              onClick={(e) => {
-                console.log("hola");
-              }}
-              onDoubleClick={(e) => {
-                e.preventDefault();
-                handleCalendarColumnDoubleClick(e, selectedDate);
-              }}
-            >
-              {dayOcurrences?.map((eventOcurrences) =>
-                eventOcurrences.map((occurrence, index) => {
-                  const widthPercentage = 100 / eventOcurrences.length;
-                  const topPercentage = calculateOccurrenceTop(
-                    occurrence.startTime,
-                  );
-                  const heightPercentage = calculateOccurrenceHeight(
-                    occurrence.startTime,
-                    occurrence.endTime,
-                  );
-
-                  return (
-                    <DayWeekViewOccurrence
-                      key={`event-occurrence-${occurrence.eventOccurrenceId}`}
-                      occurrence={occurrence}
-                      style={{
-                        top: `${topPercentage}%`,
-                        height: `${heightPercentage}%`,
-                        width: `${widthPercentage}%`,
-                        left: `${index * widthPercentage}%`,
-                      }}
-                    />
-                  );
-                }),
+            <DayEventsColumn date={selectedDate}>
+              {dayOcurrences?.map((occurrence) =>
+                occurrence.isDraft ? (
+                  <DayWeekViewDraftOccurrence
+                    key={`draft-occurrence-${occurrence.eventOccurrenceId}`}
+                    occurrence={occurrence}
+                  />
+                ) : (
+                  <DayWeekViewOccurrence
+                    key={`event-occurrence-${occurrence.eventOccurrenceId}`}
+                    occurrence={occurrence}
+                  />
+                ),
               )}
-            </div>
+            </DayEventsColumn>
           </div>
         </div>
       </div>

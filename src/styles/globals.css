@@ -3,7 +3,7 @@
 @variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: "Outfit", "Outfit Fallback";
+  --font-sans: "Urbanist", "Urbanist Fallback";
 
   --color-primary: oklch(63.16% 0.2136 36.23);
   --color-primary-50: oklch(95.6% 0.0187 25.6);

@@ -1,17 +1,10 @@
-import {
-  TIMESLOT_HEIGHT,
-  getEventOccurrenceDayKey,
-} from "@/components/portal/calendar/utils";
+import { getEventOccurrenceDayKey } from "@/components/portal/calendar/utils";
 import type { EventOccurrence, Hub } from "@/db/schema";
 import {
   groupEventOccurrencesByDayAndTime,
   sweepLineGroupOverlappingOccurrences,
 } from "@/lib/group-overlapping-occurrences";
-import {
-  CalendarDateTime,
-  Time,
-  getLocalTimeZone,
-} from "@internationalized/date";
+import { getLocalTimeZone } from "@internationalized/date";
 import { addDays, addMonths, addWeeks } from "date-fns";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
@@ -21,20 +14,27 @@ import { superjsonStorage } from "./superjson-storage";
 export type CalendarView = "day" | "week" | "month" | "agenda";
 export type SidebarType = "main" | "edit-session";
 export type DraftEventOccurrence = Partial<EventOccurrence> & {
+  eventOccurrenceId: number;
   startTime: Date;
   endTime: Date;
   timezone: string;
 };
+
+export type CalendarEventOccurrence = EventOccurrence & { isDraft: false };
+export type CalendarDraftEventOccurrence = DraftEventOccurrence & {
+  isDraft: true;
+};
+
 export type CalendarState = {
   _isHydrated: boolean;
   activeSidebar: SidebarType;
   selectedDate: Date;
   calendarView: CalendarView;
   hubs: Hub[];
-  eventOccurrences?: Record<string, EventOccurrence>;
+  eventOccurrences?: Record<string, CalendarEventOccurrence>;
   groupedEventOccurrences: ReturnType<typeof groupEventOccurrencesByDayAndTime>;
   editingEventOccurrenceId?: number;
-  draftEventOccurrence: DraftEventOccurrence;
+  draftEventOccurrence: CalendarDraftEventOccurrence;
 };
 
 export type CalendarActions = {
@@ -44,17 +44,14 @@ export type CalendarActions = {
   setActiveSidebar: (sidebar: SidebarType) => void;
   onNavigation: (n: number) => void;
   onToday: () => void;
-  handleCalendarColumnDoubleClick: (
-    event: React.MouseEvent<HTMLDivElement>,
-    date: Date,
-  ) => void;
   regenerateGroupedEventOccurrencesForDay: (dayKey: string[]) => void;
-  navigateToEditEventOccurrence: (eventOccurrenceId: number) => void;
+  createDraftEvent: (startDate: Date, endDate: Date) => void;
   setDraftEventOccurrence: (
-    eventOccurrence: Partial<DraftEventOccurrence>,
+    eventOccurrence: Partial<CalendarDraftEventOccurrence>,
   ) => void;
   clearDraftEventOccurrence: () => void;
   clearEditingEventOccurrence: () => void;
+  openEditEventOccurrence: (eventOccurrenceId: number) => void;
 };
 
 export type CalendarStore = CalendarState & CalendarActions;
@@ -75,7 +72,7 @@ export const initCalendarStore = (
     calendarView: initilData?.calendarView || "week",
     activeSidebar: initilData?.activeSidebar || "main",
     editingEventOccurrenceId: initilData?.editingEventOccurrenceId || undefined,
-    draftEventOccurrence: {} as DraftEventOccurrence,
+    draftEventOccurrence: {} as CalendarDraftEventOccurrence,
   };
 };
 
@@ -130,29 +127,13 @@ export const createCalendarStore = (
           });
         },
 
-        handleCalendarColumnDoubleClick: (
-          event: React.MouseEvent<HTMLDivElement>,
-          date: Date,
-        ) => {
-          const container = event.currentTarget;
-          const top = event.clientY - container.getBoundingClientRect().top;
-          const timeslotPosition = Math.trunc(top / TIMESLOT_HEIGHT);
-
-          const startTime = new Time(0, 0).add({
-            minutes: timeslotPosition * 15,
-          });
-
-          const startDate = new CalendarDateTime(
-            date.getFullYear(),
-            date.getMonth(),
-            date.getDate(),
-            startTime.hour,
-            startTime.minute,
-          );
-
-          const endDate = startDate.add({ minutes: 30 });
-
-          const overrides = [startDate.toString(), endDate.toString()];
+        createDraftEvent: (startDate: Date, endDate: Date) => {
+          const timezone = getLocalTimeZone();
+          const overrides = [
+            startDate.toString(),
+            endDate.toString(),
+            timezone,
+          ];
           const encodedOverrides = encodeURIComponent(
             JSON.stringify(overrides),
           );
@@ -166,23 +147,24 @@ export const createCalendarStore = (
             `/calendar/event/create?${params.toString()}`,
           );
 
-          console.log({ startDateStromg: startDate.toString() });
-          const timezone = getLocalTimeZone();
-          const newDraftEventOccurrence: DraftEventOccurrence = {
+          const newDraftEventOccurrence: CalendarDraftEventOccurrence = {
             eventOccurrenceId: -1,
-            startTime: startDate.toDate(timezone),
-            endTime: endDate.toDate(timezone),
+            startTime: startDate,
+            endTime: endDate,
             timezone,
+            isDraft: true,
           };
 
           get().setDraftEventOccurrence(newDraftEventOccurrence);
           get().setActiveSidebar("edit-session");
+          set((state) => {
+            state.editingEventOccurrenceId = -1;
+          });
         },
 
         setDraftEventOccurrence: (
           draftEventOccurrence: Partial<DraftEventOccurrence>,
         ) => {
-          console.log("setDraftEventOccurrence", draftEventOccurrence);
           const prevDraftOccurrence = get().draftEventOccurrence;
 
           const newDraftEventOccurrence = {
@@ -206,7 +188,7 @@ export const createCalendarStore = (
           if (!draftEventOccurrence) return;
 
           set((state) => {
-            state.draftEventOccurrence = {} as DraftEventOccurrence;
+            state.draftEventOccurrence = {} as CalendarDraftEventOccurrence;
           });
 
           get().regenerateGroupedEventOccurrencesForDay([
@@ -222,28 +204,29 @@ export const createCalendarStore = (
               (e) =>
                 e.startTime && getEventOccurrenceDayKey(e.startTime) === dayKey,
             );
+
             set((state) => {
               state.groupedEventOccurrences[dayKey] =
                 sweepLineGroupOverlappingOccurrences(dayEvents);
             });
           });
         },
-        navigateToEditEventOccurrence: (eventOccurrenceId: number) => {
+
+        clearEditingEventOccurrence: () => {
+          set((state) => {
+            state.editingEventOccurrenceId = undefined;
+          });
+        },
+        openEditEventOccurrence: (eventOccurrenceId: number) => {
           set((state) => {
             state.activeSidebar = "edit-session";
             state.editingEventOccurrenceId = eventOccurrenceId;
           });
-
           window.history.pushState(
             null,
             "",
             `/calendar/event/${eventOccurrenceId}`,
           );
-        },
-        clearEditingEventOccurrence: () => {
-          set((state) => {
-            state.editingEventOccurrenceId = undefined;
-          });
         },
       })),
       {

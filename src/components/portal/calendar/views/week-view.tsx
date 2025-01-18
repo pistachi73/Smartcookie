@@ -5,36 +5,22 @@ import { addDays, format, isSameDay, startOfWeek } from "date-fns";
 import { useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { CalendarRows } from "../calendar-rows";
+import { DayEventsColumn } from "../components/day-events-column";
 import { HoursColumn } from "../components/hours-column";
-import {
-  calculateOccurrenceHeight,
-  calculateOccurrenceTop,
-  getEventOccurrenceDayKey,
-  getWeekDays,
-} from "../utils";
+import { getEventOccurrenceDayKey, getWeekDays } from "../utils";
+import { DayWeekViewDraftOccurrence } from "./day-week-view-draft-occurrence";
 import { DayWeekViewOccurrence } from "./day-week-view-occurrence";
 
 const useWeekView = () =>
   useCalendarStore(
-    useShallow(
-      ({
-        selectedDate,
-        groupedEventOccurrences,
-        handleCalendarColumnDoubleClick,
-      }) => ({
-        selectedDate,
-        groupedEventOccurrences,
-        handleCalendarColumnDoubleClick,
-      }),
-    ),
+    useShallow(({ selectedDate, groupedEventOccurrences }) => ({
+      selectedDate,
+      groupedEventOccurrences,
+    })),
   );
 
 export const WeekView = () => {
-  const {
-    selectedDate,
-    handleCalendarColumnDoubleClick,
-    groupedEventOccurrences,
-  } = useWeekView();
+  const { selectedDate, groupedEventOccurrences } = useWeekView();
 
   const selectedDateWeekStart = startOfWeek(selectedDate, { weekStartsOn: 1 });
   const weekDays = useMemo(() => getWeekDays(selectedDate), [selectedDate]);
@@ -80,39 +66,21 @@ export const WeekView = () => {
               const dayOccurrences = groupedEventOccurrences[weekDayKey];
 
               return (
-                <div
-                  key={`day-${weekDayIndex}`}
-                  className="flex-1 relative not-last:border-r border-calendar-border"
-                  onDoubleClick={(e) => {
-                    handleCalendarColumnDoubleClick(e, weekDay);
-                  }}
-                >
-                  {dayOccurrences?.map((group) =>
-                    group.map((occurrence, index) => {
-                      const widthPercentage = 100 / group.length;
-                      const topPercentage = calculateOccurrenceTop(
-                        occurrence.startTime,
-                      );
-                      const heightPercentage = calculateOccurrenceHeight(
-                        occurrence.startTime,
-                        occurrence.endTime,
-                      );
-                      return (
-                        <DayWeekViewOccurrence
-                          key={`event-occurrence-${occurrence.eventOccurrenceId}`}
-                          className="z-20 pr-2"
-                          occurrence={occurrence}
-                          style={{
-                            top: `${topPercentage}%`,
-                            height: `${heightPercentage}%`,
-                            width: `${widthPercentage}%`,
-                            left: `${index * widthPercentage}%`,
-                          }}
-                        />
-                      );
-                    }),
+                <DayEventsColumn key={weekDay.toISOString()} date={weekDay}>
+                  {dayOccurrences?.map((occurrence) =>
+                    occurrence.isDraft ? (
+                      <DayWeekViewDraftOccurrence
+                        key="event-draft-occurrence"
+                        occurrence={occurrence}
+                      />
+                    ) : (
+                      <DayWeekViewOccurrence
+                        key={`event-occurrence-${occurrence.eventOccurrenceId}`}
+                        occurrence={occurrence}
+                      />
+                    ),
                   )}
-                </div>
+                </DayEventsColumn>
               );
             })}
           </div>

@@ -90,6 +90,7 @@ export const TimeCombobox = <T extends TimeSelectOption>({
 
   useEffect(() => {
     if (!minValue) return;
+    console.log({ minValue });
     setItems(generateTimeSelectOptions(minValue));
   }, [minValue]);
 
@@ -98,6 +99,10 @@ export const TimeCombobox = <T extends TimeSelectOption>({
       <ComboBoxField
         menuTrigger="focus"
         inputValue={input}
+        selectedKey={input}
+        onSelectionChange={(time) => {
+          setInput(time as string);
+        }}
         onInputChange={setInput}
         onOpenChange={(open, trigger) => {
           if (trigger === "input") return;
@@ -138,6 +143,11 @@ export const TimeCombobox = <T extends TimeSelectOption>({
           <Input
             className={cn("w-full h-full truncate px-2", withIcon && "pl-10")}
             placeholder="hh:mm"
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                e.stopPropagation();
+              }
+            }}
           />
         </Group>
         {children}
@@ -165,7 +175,7 @@ export const TimeComboboxContent = <T extends object>({
       {({ label, difference, isDisabled }: TimeSelectOption) => (
         <ListBoxItem id={label} textValue={`${label}`} isDisabled={isDisabled}>
           {label}
-          {difference?.hour || difference?.minute ? (
+          {difference?.hours || difference?.minutes ? (
             <span className="text-text-sub text-sm">
               {formatDifferenceLabel(difference)}
             </span>

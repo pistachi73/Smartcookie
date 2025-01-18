@@ -42,7 +42,7 @@ const events: {
       isRecurring: true,
       recurrenceRule: "Rule",
     },
-    eventOccurrences: Array.from({ length: 10 }).map((_, index) => ({
+    eventOccurrences: Array.from({ length: 1 }).map((_, index) => ({
       eventId: 1,
       startTime: todayCalendarDateTime
         .add({ days: index })
@@ -212,6 +212,47 @@ const events: {
         endTime: parseToUTCISOString(
           todayCalendarDateTime.set({
             hour: 12,
+            minute: 30,
+          }),
+        ),
+      },
+    ],
+  },
+  {
+    event: {
+      id: 6,
+      title: "Advanced Calculus 2 - Techniques",
+      description: "Advanced Calculus 2",
+      hubId: 1,
+      startTime: parseToUTCISOString(
+        todayCalendarDateTime.set({
+          hour: 12,
+          minute: 30,
+        }),
+      ),
+      endTime: parseToUTCISOString(
+        todayCalendarDateTime.set({
+          hour: 14,
+          minute: 30,
+        }),
+      ),
+      timezone,
+      price: 50,
+      isRecurring: false,
+      recurrenceRule: null,
+    },
+    eventOccurrences: [
+      {
+        eventId: 6,
+        startTime: parseToUTCISOString(
+          todayCalendarDateTime.set({
+            hour: 12,
+            minute: 30,
+          }),
+        ),
+        endTime: parseToUTCISOString(
+          todayCalendarDateTime.set({
+            hour: 14,
             minute: 30,
           }),
         ),

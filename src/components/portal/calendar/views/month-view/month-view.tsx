@@ -2,35 +2,24 @@ import { useCalendarStore } from "@/providers/calendar-store-provider";
 import {
   addDays,
   differenceInDays,
-  format,
   lastDayOfMonth,
   startOfMonth,
   subDays,
 } from "date-fns";
 import { useShallow } from "zustand/react/shallow";
+import { getEventOccurrenceDayKey } from "../../utils";
 import { MonthViewCell } from "./month-view-cell";
 
 const useMonthView = () =>
   useCalendarStore(
-    useShallow(
-      ({
-        selectedDate,
-        groupedEventOccurrences,
-        handleCalendarColumnDoubleClick,
-      }) => ({
-        selectedDate,
-        groupedEventOccurrences,
-        handleCalendarColumnDoubleClick,
-      }),
-    ),
+    useShallow(({ selectedDate, groupedEventOccurrences }) => ({
+      selectedDate,
+      groupedEventOccurrences,
+    })),
   );
 
 export const MonthView = () => {
-  const {
-    selectedDate,
-    groupedEventOccurrences,
-    handleCalendarColumnDoubleClick,
-  } = useMonthView();
+  const { selectedDate, groupedEventOccurrences } = useMonthView();
 
   const startMonth = startOfMonth(selectedDate);
   const endMonth = lastDayOfMonth(selectedDate);
@@ -53,7 +42,8 @@ export const MonthView = () => {
           {Array.from({ length: 7 }).map((_, dayIndex) => {
             const currentDay = addDays(startCalendar, rowIndex * 7 + dayIndex);
             const dayOccurrences =
-              groupedEventOccurrences?.[format(currentDay, "yyyy-MM-dd")] || [];
+              groupedEventOccurrences[getEventOccurrenceDayKey(currentDay)] ||
+              [];
             const isCurrentMonth =
               currentDay.getMonth() === selectedDate.getMonth();
 

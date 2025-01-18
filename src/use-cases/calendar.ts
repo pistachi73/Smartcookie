@@ -1,8 +1,8 @@
 import { getCalendarHubsByUserId, getHubsByUserId } from "@/data-access/hub";
 import { db } from "@/db";
 import { event, eventOccurrence } from "@/db/schema";
+import type { CalendarEventOccurrence } from "@/stores/calendar-store";
 import { and, asc, eq } from "drizzle-orm";
-import type { EventOccurrence } from "../db/schema/event";
 
 export const getCalendarDataUseCase = async (userId: string) => {
   const [hubs, result] = await Promise.all([
@@ -13,7 +13,7 @@ export const getCalendarDataUseCase = async (userId: string) => {
       .leftJoin(eventOccurrence, eq(eventOccurrence.eventId, event.id))
       .where(
         and(
-          eq(event.userId, userId),
+          // eq(event.userId, userId),
           // between(EventOccurrences.occurrenceStart, startDate, endDate),
         ),
       )
@@ -21,7 +21,7 @@ export const getCalendarDataUseCase = async (userId: string) => {
       .execute(),
   ]);
 
-  const eventOccurrencesMap = new Map<number, EventOccurrence>();
+  const eventOccurrencesMap = new Map<number, CalendarEventOccurrence>();
 
   result.forEach((record) => {
     const event = record.event;
@@ -44,6 +44,7 @@ export const getCalendarDataUseCase = async (userId: string) => {
       recurrenceRule: event.recurrenceRule,
       timezone: eventOccurrence.overrides?.timezone || event.timezone,
       price: eventOccurrence.overrides?.price || event.price,
+      isDraft: false,
     });
   });
 

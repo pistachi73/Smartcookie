@@ -1,6 +1,13 @@
 import type { CalendarView } from "@/stores/calendar-store";
 import { CalendarDate, CalendarDateTime, Time } from "@internationalized/date";
-import { addDays, endOfWeek, format, isSameMonth, startOfWeek } from "date-fns";
+import {
+  add,
+  addDays,
+  endOfWeek,
+  format,
+  isSameMonth,
+  startOfWeek,
+} from "date-fns";
 import type { ReadonlyURLSearchParams } from "next/navigation";
 import type { z } from "zod";
 import type { SessionOcurrenceFormSchema } from "./event-occurrence-form/schema";
@@ -11,7 +18,7 @@ const CALENDAR_START_HOUR = 0; // Adjust based on your calendar's start hour
 const CALENDAR_END_HOUR = 24; // Adjust based on your calendar's end hour
 const TOTAL_MINUTES = (CALENDAR_END_HOUR - CALENDAR_START_HOUR) * 60;
 const PIXELS_PER_MINUTE = ROW_HEIGHT / 60;
-
+const PIXELS_PER_15_MINUTES = ROW_HEIGHT / 4;
 export const getWeekBoundaries = (date: Date) => {
   // You can specify which day to consider as the start of the week; by default, it is Sunday (0).
   // To set Monday as the start of the week, we can pass { weekStartsOn: 1 }.
@@ -98,7 +105,7 @@ export const consumeOccurrenceOverrides = (
       decodeURIComponent(encodedOverrides),
     );
 
-    const [startDateString, endDateString] = overridesArray;
+    const [startDateString, endDateString, timezone] = overridesArray;
 
     const startDate = startDateString ? new Date(startDateString) : undefined;
     const endDate = endDateString ? new Date(endDateString) : undefined;
@@ -117,6 +124,7 @@ export const consumeOccurrenceOverrides = (
       endTime: endDate
         ? new Time(endDate.getHours(), endDate.getMinutes())
         : undefined,
+      timezone,
     };
   } catch (error) {
     console.error("Error parsing occurrence overrides:", error);
@@ -134,7 +142,7 @@ export const calculateOccurrenceTop = (startTime: Date): number => {
   const hours = date.getHours();
   const minutes = date.getMinutes();
   const totalMinutes = (hours - CALENDAR_START_HOUR) * 60 + minutes;
-  return (totalMinutes / TOTAL_MINUTES) * 100; // Percentage top
+  return totalMinutes * PIXELS_PER_MINUTE;
 };
 
 export const calculateOccurrenceHeight = (
@@ -144,5 +152,20 @@ export const calculateOccurrenceHeight = (
   const start = new Date(startTime).getTime();
   const end = new Date(endTime).getTime();
   const duration = (end - start) / (1000 * 60); // Duration in minutes
-  return (duration / TOTAL_MINUTES) * 100; // Percentage height
+  return duration * PIXELS_PER_MINUTE;
+};
+
+export const getSnapToNearest15MinutesIndex = (yPosition: number) => {
+  return Math.round(yPosition / PIXELS_PER_15_MINUTES);
+};
+
+export const getDateFromSnapIndex = ({
+  snapIndex,
+  date,
+}: { snapIndex: number; date: Date }): Date => {
+  const minutes = snapIndex * 15;
+  const currentDate = new Date(date);
+  const snapDate = add(currentDate, { minutes });
+
+  return snapDate;
 };

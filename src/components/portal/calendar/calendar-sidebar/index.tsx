@@ -63,10 +63,10 @@ export const CalendarSidebar = () => {
               }}
               animate={{
                 height: "calc(100dvh - 16px)",
-                width: "calc(100% + 100px)",
+                width: "calc(100% + 50px)",
               }}
               // transition={regularSpring}
-              className="absolute bottom-0 right-0 bg-base   rounded-xl z-200"
+              className="absolute bottom-0 right-0 bg-base border   rounded-xl z-200"
             >
               <motion.div
                 initial={{
@@ -78,7 +78,7 @@ export const CalendarSidebar = () => {
                 transition={{
                   delay: 0.3,
                 }}
-                className="h-full w-full"
+                className="h-full w-full brightness-125 "
               >
                 <CalendarSidebarEditSession />
               </motion.div>

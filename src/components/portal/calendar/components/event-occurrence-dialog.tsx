@@ -1,24 +1,35 @@
 import { Button } from "@/components/ui/button";
-import { Popover } from "@/components/ui/react-aria/popover";
 import { UserAvatar } from "@/components/ui/user-avatar";
-import type { EventOccurrence } from "@/db/schema";
+import type { GroupedCalendarOccurrence } from "@/lib/group-overlapping-occurrences";
+import { useCalendarStore } from "@/providers/calendar-store-provider";
 import {
   ArrowRight02Icon,
-  ArrowUpRight01Icon,
   Clock01Icon,
-  MoreVerticalCircle01Icon,
+  File02Icon,
+  UserGroupIcon,
 } from "@hugeicons/react";
 import { getLocalTimeZone, parseAbsolute } from "@internationalized/date";
-import { Dialog, DialogTrigger, Separator } from "react-aria-components";
+import { format } from "date-fns";
+import { Dialog, Separator } from "react-aria-components";
+import { useShallow } from "zustand/react/shallow";
 import { formatZonedDateTime } from "../views/day-week-view-occurrence";
 
+const useEventOccurrenceDialog = () =>
+  useCalendarStore(
+    useShallow((store) => ({
+      openEditEventOccurrence: store.openEditEventOccurrence,
+    })),
+  );
+
 type EventOccurrenceDialogProps = {
-  occurrence: EventOccurrence;
+  occurrence: GroupedCalendarOccurrence;
 };
 
 export const EventOccurrenceDialog = ({
   occurrence,
 }: EventOccurrenceDialogProps) => {
+  const { openEditEventOccurrence } = useEventOccurrenceDialog();
+
   const [parsedStartTime, parsedEndTime] = [
     parseAbsolute(
       occurrence.startTime.toISOString(),
@@ -32,18 +43,20 @@ export const EventOccurrenceDialog = ({
 
   return (
     <Dialog className="space-y-3 w-[300px]">
-      <div
-        className="flex items-center justify-between"
-        onDoubleClick={(e) => e.stopPropagation()}
-      >
-        <div className="space-y-2">
-          <div className="flex items-center gap-1.5">
-            <div className="size-2 rounded-full bg-violet-700" />
-            <p className="">{occurrence.title}</p>
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center gap-2">
+          <div className="w-5 flex items-center justify-center">
+            <div className="size-3 rounded-full bg-lime-400" />
           </div>
-          <div className="flex items-center gap-1.5">
+          <p className="text-lg">{occurrence.title}</p>
+        </div>
+        <div className="text-sm flex items-start gap-2">
+          <div className="w-5 flex items-center justify-center h-5">
             <Clock01Icon size={16} />
+          </div>
 
+          <div className="space-y-0.5">
+            <p> {format(occurrence.startTime, "EEEE, dd LLLL y")}</p>
             <div className="text-sm flex items-center gap-1.5">
               <p className=" text-text-sub">
                 {formatZonedDateTime(parsedStartTime)}
@@ -59,57 +72,57 @@ export const EventOccurrenceDialog = ({
             </div>
           </div>
         </div>
-        <DialogTrigger>
-          <Button
-            variant="ghost"
-            size="sm"
-            iconOnly
-            className="hover:bg-transparent text-text-sub px-0 size-6"
-          >
-            <MoreVerticalCircle01Icon size={18} />
-          </Button>
-          <Popover placement="right">
-            <div className="w-[300px]">
-              <p>Edit</p>
-            </div>
-          </Popover>
-        </DialogTrigger>
       </div>
       <Separator className="bg-border/20" />
-      <div>
-        <p className="text-sm">{occurrence.description}</p>
+      <div className="text-sm flex items-start gap-2">
+        <div className="w-5 flex items-center justify-center h-5">
+          <File02Icon size={16} />
+        </div>
+        <p className="text-sm">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+          ullamcorper, nisl in commodo egestas, sem eros blandit nisi.
+        </p>
       </div>
-      <div className="space-y-2">
-        <p className="text-sm">Participants (2)</p>
-        <div className="group  hover:bg-responsive-dark/5 mb-1 flex items-center justify-between gap-2 w-full border rounded-md px-3 py-2 shadow-lg">
-          <div className="flex gap-2 items-center">
+
+      <Separator className="bg-border/20" />
+      <div className="text-sm flex items-start gap-2">
+        <div className="w-5 flex items-center justify-center h-5">
+          <UserGroupIcon size={16} />
+        </div>
+        <div className="space-y-2 w-full">
+          <p className="text-sm">Participants (2)</p>
+          <div className="flex flex-row items-center not-last:-ml-4">
             <UserAvatar
               userImage={"https://i.pravatar.cc/150?img=1"}
               userName={"Oscar Pulido"}
               size="sm"
-              className="size-6"
+              className="size-9"
             />
-            <p className="text-sm inline">John Smith</p>
+            <UserAvatar
+              userImage={"https://i.pravatar.cc/150?img=1"}
+              userName={"Oscar Pulido"}
+              size="sm"
+              className="size-9"
+            />
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            iconOnly
-            className="opacity-0 group-hover:opacity-100 transition-all h-auto text-text-sub px-0 hover:bg-transparent"
-          >
-            <ArrowUpRight01Icon size={18} />
-          </Button>
         </div>
+      </div>
 
-        <div className="flex items-center gap-2 w-full border rounded-md px-3 py-2 shadow-lg">
-          <UserAvatar
-            userImage={"https://i.pravatar.cc/150?img=1"}
-            userName={"Oscar Pulido"}
-            size="sm"
-            className="size-6"
-          />
-          <p className="text-sm">Alberto Smith</p>
-        </div>
+      {/* <Separator className="bg-border/20" /> */}
+      <div className="flex items-center justify-end gap-2">
+        <Button size="sm" variant="outline">
+          Delete
+        </Button>
+        <Button
+          size="sm"
+          className="px-6"
+          slot="close"
+          onPress={() => {
+            openEditEventOccurrence(occurrence.eventOccurrenceId);
+          }}
+        >
+          Edit
+        </Button>
       </div>
     </Dialog>
   );

@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Popover } from "@/components/ui/react-aria/popover";
-import type { EventOccurrence } from "@/db/schema";
+import type { GroupedOccurrence } from "@/lib/group-overlapping-occurrences";
 import { cn } from "@/lib/utils";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
 import { MultiplicationSignIcon } from "@hugeicons/react";
@@ -14,6 +14,7 @@ import {
   DialogTrigger,
 } from "react-aria-components";
 import { useShallow } from "zustand/react/shallow";
+import { MonthViewDraftOccurrence } from "./month-view-draft-occurrence";
 import { MonthViewOccurrence } from "./month-view-occurrence";
 
 type MonthCalendarDayCellProps = {
@@ -21,7 +22,7 @@ type MonthCalendarDayCellProps = {
   rowIndex: number;
   currentDay: Date;
   isCurrentMonth: boolean;
-  dayOccurrences?: EventOccurrence[][];
+  dayOccurrences?: GroupedOccurrence[];
 };
 
 const SESSION_OCCURRENCE_HEIGHT = 24 + 1;
@@ -29,9 +30,7 @@ const SESSION_OCCURRENCE_SPACING = 4;
 
 const useMonthViewCell = () =>
   useCalendarStore(
-    useShallow(({ selectedDate, handleCalendarColumnDoubleClick }) => ({
-      handleCalendarColumnDoubleClick,
-    })),
+    useShallow(({ createDraftEvent }) => ({ createDraftEvent })),
   );
 
 export const MonthViewCell = ({
@@ -41,12 +40,11 @@ export const MonthViewCell = ({
   isCurrentMonth,
   dayOccurrences,
 }: MonthCalendarDayCellProps) => {
-  const { handleCalendarColumnDoubleClick } = useMonthViewCell();
   const sessionsContainerRef = useRef<HTMLDivElement>(null);
-  const flattenedDayOccurrences = dayOccurrences?.flat() || [];
-  const totalOccurrences = flattenedDayOccurrences.length;
+  const totalOccurrences = dayOccurrences?.length ?? 0;
   const [visibleOccurrences, setVisibleOccurrences] =
     useState<number>(totalOccurrences);
+  const [isViewAllOpen, setIsViewAllOpen] = useState(false);
 
   useEffect(() => {
     const observer = new ResizeObserver((entries) => {
@@ -81,9 +79,6 @@ export const MonthViewCell = ({
         dayIndex === 0 && "border-l-0",
         dayIndex === 6 && "border-r-0",
       )}
-      onDoubleClick={(e) => {
-        handleCalendarColumnDoubleClick(e, currentDay);
-      }}
     >
       {rowIndex === 0 && (
         <span className="text-xs text-text-sub lowercase">
@@ -101,16 +96,26 @@ export const MonthViewCell = ({
         {currentDay.getDate()}
       </span>
       <div ref={sessionsContainerRef} className="mt-1 overflow-hidden grow p-1">
-        {flattenedDayOccurrences
-          .slice(0, visibleOccurrences)
-          .map((occurrence) => (
-            <MonthViewOccurrence
-              key={`event-ocurrence-${occurrence.eventOccurrenceId}`}
-              occurrence={occurrence}
-            />
-          ))}
+        {dayOccurrences
+          ?.slice(0, visibleOccurrences)
+          .map((occurrence) =>
+            occurrence.isDraft ? (
+              <MonthViewDraftOccurrence
+                key={`event-ocurrence-${occurrence.eventOccurrenceId}`}
+                occurrence={occurrence}
+              />
+            ) : (
+              <MonthViewOccurrence
+                key={`event-ocurrence-${occurrence.eventOccurrenceId}`}
+                occurrence={occurrence}
+              />
+            ),
+          )}
         {visibleOccurrences < totalOccurrences && (
-          <DialogTrigger>
+          <DialogTrigger
+            isOpen={isViewAllOpen}
+            onOpenChange={(open) => setIsViewAllOpen(open)}
+          >
             <AriaButton className="h-6 w-full hover:bg-base-highlight rounded-md transition-colors text-xs">
               {totalOccurrences - visibleOccurrences} more
             </AriaButton>
@@ -136,14 +141,26 @@ export const MonthViewCell = ({
                     {currentDay.getDate()}
                   </p>
                 </div>
-                <div className="space-y-1">
-                  {flattenedDayOccurrences.map((occurrence, index) => (
-                    <MonthViewOccurrence
-                      key={`event-ocurrence-${occurrence.eventOccurrenceId}`}
-                      occurrence={occurrence}
-                      className="text-sm h-7 px-2"
-                    />
-                  ))}
+                <div className="space-y-1 w-full">
+                  {dayOccurrences?.map((occurrence, index) =>
+                    occurrence.isDraft ? null : (
+                      <MonthViewOccurrence
+                        key={`event-ocurrence-${occurrence.eventOccurrenceId}`}
+                        occurrence={occurrence}
+                        className="text-sm h-7 px-2 w-full"
+                        popoverProps={{
+                          offset: 8,
+                          placement: "left top",
+                          onOpenChange: (open) => {
+                            console.log({ open });
+                            if (!open) {
+                              setIsViewAllOpen(false);
+                            }
+                          },
+                        }}
+                      />
+                    ),
+                  )}
                 </div>
               </Dialog>
             </Popover>

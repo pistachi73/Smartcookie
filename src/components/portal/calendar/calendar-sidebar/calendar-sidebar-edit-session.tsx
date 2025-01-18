@@ -1,13 +1,19 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { Dialog } from "@/components/ui/react-aria/dialog";
+import { Modal } from "@/components/ui/react-aria/modal";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
-import { CalendarDate, Time } from "@internationalized/date";
-import { useEffect, useRef } from "react";
+import { CalendarDate, Time, getLocalTimeZone } from "@internationalized/date";
+import { useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import { Heading } from "react-aria-components";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 import { useShallow } from "zustand/react/shallow";
 import { SessionOccurrenceFrom } from "../event-occurrence-form";
 import type { SessionOcurrenceFormSchema } from "../event-occurrence-form/schema";
+import { consumeOccurrenceOverrides } from "../utils";
 
 const useCalendarSidebarEditSession = () =>
   useCalendarStore(
@@ -20,8 +26,21 @@ const useCalendarSidebarEditSession = () =>
     })),
   );
 
+const defaultValues: Partial<z.infer<typeof SessionOcurrenceFormSchema>> = {
+  hubId: undefined,
+  title: "",
+  description: "",
+  date: undefined,
+  startTime: undefined,
+  endTime: undefined,
+  timezone: getLocalTimeZone(),
+  recurrenceRule: undefined,
+  participants: [],
+  isBillable: false,
+  price: undefined,
+};
+
 export const CalendarSidebarEditSession = () => {
-  const sidebarRef = useRef<HTMLDivElement>(null);
   const {
     setActiveSidebar,
     editingEventOccurrenceId,
@@ -29,29 +48,12 @@ export const CalendarSidebarEditSession = () => {
     clearDraftEventOccurrence,
     clearEditingEventOccurrence,
   } = useCalendarSidebarEditSession();
+  const [isDiscardModalOpen, setIsDiscardModalOpen] = useState(false);
 
-  const form = useForm<z.infer<typeof SessionOcurrenceFormSchema>>();
-
-  // useOnClickOutside(
-  //   sidebarRef as any,
-  //   () => {
-  //     console.log("clicked outside", editingEventOccurrenceId);
-  //     const { formState } = form;
-  //     const { dirtyFields, isDirty } = formState;
-
-  //     console.log({ dirtyFields, isDirty });
-
-  //     form.formState.isDirty ? toast.info("Changes not saved") : null;
-  //     form.reset();
-
-  //     clearDraftEventOccurrence();
-  //     clearEditingEventOccurrence();
-  //     setActiveSidebar("main");
-  //     window.history.pushState(null, "", "/calendar");
-  //   },
-  //   "mouseup",
-  //   { passive: true },
-  // );
+  const searchParams = useSearchParams();
+  const form = useForm<z.infer<typeof SessionOcurrenceFormSchema>>({
+    defaultValues,
+  });
 
   useEffect(() => {
     if (!editingEventOccurrenceId) return;
@@ -65,6 +67,7 @@ export const CalendarSidebarEditSession = () => {
     const endTimeDate = new Date(endTime);
 
     form.reset({
+      ...defaultValues,
       date: new CalendarDate(
         startTimeDate.getFullYear(),
         startTimeDate.getMonth() + 1,
@@ -77,12 +80,90 @@ export const CalendarSidebarEditSession = () => {
     });
   }, [editingEventOccurrenceId, eventOccurrences, form.reset]);
 
+  useEffect(() => {
+    const overrides = consumeOccurrenceOverrides(searchParams);
+    if (!overrides) return;
+    const { date, startTime, endTime, timezone } = overrides;
+    if (date) {
+      form.setValue("date", date);
+    }
+    if (startTime) {
+      form.setValue("startTime", startTime);
+    }
+    if (endTime) {
+      form.setValue("endTime", endTime);
+    }
+    if (timezone) {
+      form.setValue("timezone", timezone);
+    }
+  }, [searchParams, form.setValue]);
+
+  const closeEditSidebar = useCallback(() => {
+    clearEditingEventOccurrence();
+    setActiveSidebar("main");
+    clearDraftEventOccurrence();
+    window.history.pushState(null, "", "/calendar");
+  }, [
+    clearDraftEventOccurrence,
+    clearEditingEventOccurrence,
+    setActiveSidebar,
+  ]);
+
+  const onCancel = useCallback(() => {
+    const isDirty = form.formState.isDirty;
+    if (isDirty) setIsDiscardModalOpen(true);
+    else {
+      closeEditSidebar();
+    }
+  }, [form, closeEditSidebar]);
+
+  useEffect(() => {
+    const eventListener = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      onCancel();
+    };
+
+    window.addEventListener("keydown", eventListener);
+
+    return () => {
+      window.removeEventListener("keydown", eventListener);
+    };
+  }, []);
+
   return (
-    <div ref={sidebarRef} className="h-full w-full">
+    <>
       <SessionOccurrenceFrom
         form={form}
-        editingEventOccurrenceId={editingEventOccurrenceId || -1}
+        editingEventOccurrenceId={editingEventOccurrenceId}
+        onCancel={onCancel}
       />
-    </div>
+      <Modal isOpen={isDiscardModalOpen} onOpenChange={setIsDiscardModalOpen}>
+        <Dialog className="p-6 w-fit rounded-3xl">
+          <Heading slot="title" className="text-2xl text-center px-3">
+            Discard unsaved changes?
+          </Heading>
+
+          <div className="mt-6 flex justify-end gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              slot="close"
+              className="text-text-sub"
+            >
+              Cancel
+            </Button>
+            <Button
+              autoFocus
+              onPress={closeEditSidebar}
+              variant="destructive"
+              size="sm"
+              className="px-8"
+            >
+              Discard
+            </Button>
+          </div>
+        </Dialog>
+      </Modal>
+    </>
   );
 };

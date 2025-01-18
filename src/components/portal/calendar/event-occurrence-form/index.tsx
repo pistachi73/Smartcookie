@@ -34,13 +34,11 @@ import {
   Folder02Icon,
 } from "@hugeicons/react";
 import { CalendarDate } from "@internationalized/date";
-import { useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { Form, Separator } from "react-aria-components";
 import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
 import type { z } from "zod";
 import { useShallow } from "zustand/react/shallow";
-import { consumeOccurrenceOverrides } from "../utils";
 import type { SessionOcurrenceFormSchema } from "./schema";
 
 const useEventOccurrenceForm = () =>
@@ -48,28 +46,20 @@ const useEventOccurrenceForm = () =>
     useShallow((store) => ({
       hubs: store.hubs,
       setDraftEventOccurrence: store.setDraftEventOccurrence,
-      setActiveSidebar: store.setActiveSidebar,
-      clearDraftEventOccurrence: store.clearDraftEventOccurrence,
-      clearEditingEventOccurrence: store.clearEditingEventOccurrence,
     })),
   );
 
 export const SessionOccurrenceFrom = ({
   form,
   editingEventOccurrenceId,
+  onCancel,
 }: {
   form: UseFormReturn<z.infer<typeof SessionOcurrenceFormSchema>>;
-  editingEventOccurrenceId: number;
+  editingEventOccurrenceId?: number;
+  onCancel: () => void;
 }) => {
-  const {
-    hubs,
-    setDraftEventOccurrence,
-    setActiveSidebar,
-    clearDraftEventOccurrence,
-    clearEditingEventOccurrence,
-  } = useEventOccurrenceForm();
+  const { hubs, setDraftEventOccurrence } = useEventOccurrenceForm();
   const timeComboboxTriggerRef = useRef<HTMLDivElement>(null);
-  const searchParams = useSearchParams();
 
   const startTime = useWatch({
     control: form.control,
@@ -86,15 +76,13 @@ export const SessionOccurrenceFrom = ({
     name: "date",
   });
 
-  const isBillable = useWatch({ control: form.control, name: "isBillable" });
+  const isBillable = useWatch({
+    control: form.control,
+    name: "isBillable",
+  });
 
   useEffect(() => {
-    const overrides = consumeOccurrenceOverrides(searchParams);
-    if (!overrides) return;
-    form.reset(overrides);
-  }, [searchParams, form]);
-
-  useEffect(() => {
+    console.log("setdraftevent");
     if (!startTime || !endTime || !date) return;
 
     if (editingEventOccurrenceId === -1) {
@@ -148,26 +136,6 @@ export const SessionOccurrenceFrom = ({
     });
   };
 
-  const onCancel = () => {
-    clearDraftEventOccurrence();
-    clearEditingEventOccurrence();
-    setActiveSidebar("main");
-  };
-
-  useEffect(() => {
-    const eventListener = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        onCancel();
-      }
-    };
-
-    window.addEventListener("keydown", eventListener);
-
-    return () => {
-      window.removeEventListener("keydown", eventListener);
-    };
-  }, []);
-
   const hubItems = hubs?.map((hub) => ({ id: hub.id, name: hub.name }));
 
   return (
@@ -213,7 +181,7 @@ export const SessionOccurrenceFrom = ({
                     />
                     <SelectFieldContent
                       placement="left top"
-                      offset={6}
+                      offset={12}
                       className="w-[250px]"
                       items={hubItems}
                     >
@@ -267,7 +235,7 @@ export const SessionOccurrenceFrom = ({
                   errorMessage={error?.message}
                   className="border-transparent gap-0"
                 >
-                  <DatePickerContent placement="left top" offset={6} />
+                  <DatePickerContent placement="left top" offset={12} />
                 </DatePicker>
               )}
             />
@@ -289,7 +257,7 @@ export const SessionOccurrenceFrom = ({
                     <TimeComboboxContent
                       triggerRef={timeComboboxTriggerRef}
                       placement="left top"
-                      offset={6}
+                      offset={12}
                     />
                   </TimeCombobox>
                 )}
@@ -311,50 +279,13 @@ export const SessionOccurrenceFrom = ({
                     <TimeComboboxContent
                       triggerRef={timeComboboxTriggerRef}
                       placement="left top"
-                      offset={6}
+                      offset={12}
                     />
                   </TimeCombobox>
                 )}
               />
             </div>
 
-            {/* <Controller
-              control={form.control}
-              name="timeSchedule"
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-              }) => {
-                return (
-                  <div>
-                    <div className="flex items-center gap-2 w-full">
-                      <TimeField
-                        onChange={(start) => onChange({ ...value, start })}
-                        value={value?.start}
-                        className="border-transparent"
-                        aria-label="Start time"
-                        validationBehavior="aria"
-                        size={"sm"}
-                        withIcon
-                      />
-                      <div className="size-7 shrink-0 flex items-center justify-center dark:bg-neutral-700 bg-neutral-300 dark:text-neutral-200 text-neutral-600 rounded-lg">
-                        <ArrowRight02Icon size={16} />
-                      </div>
-                      <TimeField
-                        onChange={(end) => onChange({ ...value, end })}
-                        value={value?.end}
-                        className="border-transparent"
-                        aria-label="End time"
-                        validationBehavior="aria"
-                        minValue={startTime}
-                        size={"sm"}
-                      />
-                    </div>
-                    <FieldError errorMessage={error?.message} />
-                  </div>
-                );
-              }}
-            /> */}
             <Controller
               control={form.control}
               name="timezone"
@@ -367,14 +298,12 @@ export const SessionOccurrenceFrom = ({
                   onSelectionChange={onChange}
                   selectedKey={value}
                   aria-label="Session timezone"
-                  validationBehavior="aria"
-                  isInvalid={invalid}
                   errorMessage={error?.message}
                   className="border-transparent"
                 >
                   <TimezoneComboboxContent
                     placement="left top"
-                    offset={6}
+                    offset={12}
                     className="max-h-[300px]! w-[300px]"
                   />
                 </TimezoneCombobox>
@@ -423,7 +352,7 @@ export const SessionOccurrenceFrom = ({
                   className={"h-10 gap-0"}
                 >
                   <div className="h-full aspect-square flex items-center justify-center">
-                    <SwitchIndicator size="sm" className="" />
+                    <SwitchIndicator size="sm" />
                   </div>
                   <p className="text-sm">Billable</p>
                 </Switch>

@@ -90,9 +90,14 @@ export const TimezoneCombobox = <T extends object>({
           <Input
             className={cn(
               "relative z-10 flex-1 h-full truncate pr-2",
-              selectedKey ? "data-[focused]:pl-10 pl-30 " : "pl-10",
+              selectedKey ? "data-[focused]:pl-10 pl-29 " : "pl-10",
             )}
             placeholder="Timezone"
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                e.stopPropagation();
+              }
+            }}
           />
         </Group>
         {children}

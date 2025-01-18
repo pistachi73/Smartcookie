@@ -1,12 +1,14 @@
 import { CalendarDateTime, Time } from "@internationalized/date";
 
+export type TimeDifference = { hours: number; minutes: number };
+
 export type TimeSelectOption = {
   label: string;
   value: {
     hour: number;
     minute: number;
   };
-  difference: Time | null;
+  difference: TimeDifference | null;
   isDisabled: boolean;
 };
 
@@ -26,7 +28,11 @@ export const generateTimeSelectOptions = (
           new Time(currentTime.hour, currentTime.minute),
         )
       : null;
-
+    console.log({
+      minValue,
+      currentTime,
+      difference,
+    });
     options.push({
       label: formatLabel(currentTime.hour, currentTime.minute),
       value: {
@@ -67,11 +73,18 @@ export const parseTimeInput = (input: string) => {
 export const calculateDifference = (
   startTime: Time,
   endTime: Time,
-): Time | null => {
+): { hours: number; minutes: number } | null => {
   if (startTime.compare(endTime) >= 0) return null;
-  const diffInMinutes = endTime.minute - startTime.minute;
-  const diffInHours = endTime.hour - startTime.hour;
-  return new Time(diffInHours, diffInMinutes);
+
+  const startMinutes = startTime.hour * 60 + startTime.minute;
+  const endMinutes = endTime.hour * 60 + endTime.minute;
+
+  const diff = endMinutes - startMinutes;
+
+  const diffHours = Math.floor(diff / 60);
+  const diffMinutes = diff % 60;
+
+  return { hours: diffHours, minutes: diffMinutes };
 };
 
 export const generateTimeValue = (
@@ -97,7 +110,7 @@ export const formatLabel = (hour: number, minute: number) => {
   return `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`;
 };
 
-export const formatDifferenceLabel = (difference: Time | null) => {
+export const formatDifferenceLabel = (difference: TimeDifference | null) => {
   if (!difference) return "";
-  return `(${difference.hour}h${difference.minute ? " " : ""}${difference.minute ? `${difference.minute}m` : ""})`;
+  return `(${difference.hours}h${difference.minutes ? " " : ""}${difference.minutes ? `${difference.minutes}m` : ""})`;
 };
