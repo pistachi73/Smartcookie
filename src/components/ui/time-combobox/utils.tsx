@@ -24,15 +24,11 @@ export const generateTimeSelectOptions = (
   while (currentTime.compare(end) <= 0) {
     const difference = minValue
       ? calculateDifference(
-          new Time(minValue.hour, minValue.minute),
+          minValue,
           new Time(currentTime.hour, currentTime.minute),
         )
       : null;
-    console.log({
-      minValue,
-      currentTime,
-      difference,
-    });
+
     options.push({
       label: formatLabel(currentTime.hour, currentTime.minute),
       value: {

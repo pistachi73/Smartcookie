@@ -14,21 +14,19 @@ import { user } from "./user";
 import { pgTable } from "./utils";
 
 export const event = pgTable("event", {
-  id: serial("id").primaryKey(),
-  title: text("title").notNull(),
-  description: text("description").notNull(),
-  hubId: serial("hub_id")
-    .notNull()
-    .references(() => hub.id, { onDelete: "cascade" }),
-  userId: uuid("user_id")
+  id: serial().primaryKey(),
+  hubId: integer().references(() => hub.id, { onDelete: "cascade" }),
+  userId: uuid()
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
-  startTime: timestamp("start_time", { mode: "string" }).notNull(),
-  endTime: timestamp("end_time", { mode: "string" }).notNull(),
-  price: integer("price").notNull(),
-  isRecurring: boolean("is_recurring").default(false),
-  recurrenceRule: text("recurrence_rule"),
-  timezone: text("timezone").default("UTC").notNull(),
+  title: text().notNull(),
+  description: text(),
+  startTime: timestamp({ mode: "string" }).notNull(),
+  endTime: timestamp({ mode: "string" }).notNull(),
+  price: integer(),
+  isRecurring: boolean().default(false),
+  recurrenceRule: text(),
+  timezone: text().default("UTC").notNull(),
 });
 
 export const eventRelations = relations(event, ({ one, many }) => ({
@@ -51,9 +49,13 @@ export type EventOverrides = {
   timezone: Event["timezone"];
 };
 
-export type EventOccurrence = Omit<Event, "id" | "startTime" | "endTime"> & {
+export type EventOccurrence = Omit<
+  Event,
+  "id" | "startTime" | "endTime" | "userId"
+> & {
   eventId: number;
   eventOccurrenceId: number;
   startTime: Date;
   endTime: Date;
+  userId?: string;
 };

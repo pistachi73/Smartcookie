@@ -1,18 +1,17 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Dialog } from "@/components/ui/react-aria/dialog";
 import { Modal } from "@/components/ui/react-aria/modal";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarDate, Time, getLocalTimeZone } from "@internationalized/date";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { Heading } from "react-aria-components";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 import { useShallow } from "zustand/react/shallow";
+import { DiscardChangesDialog } from "../components/discard-changes-dialog";
 import { SessionOccurrenceFrom } from "../event-occurrence-form";
-import type { SessionOcurrenceFormSchema } from "../event-occurrence-form/schema";
+import { SessionOcurrenceFormSchema } from "../event-occurrence-form/schema";
 import { consumeOccurrenceOverrides } from "../utils";
 
 const useCalendarSidebarEditSession = () =>
@@ -53,6 +52,7 @@ export const CalendarSidebarEditSession = () => {
   const searchParams = useSearchParams();
   const form = useForm<z.infer<typeof SessionOcurrenceFormSchema>>({
     defaultValues,
+    resolver: zodResolver(SessionOcurrenceFormSchema),
   });
 
   useEffect(() => {
@@ -138,31 +138,7 @@ export const CalendarSidebarEditSession = () => {
         onCancel={onCancel}
       />
       <Modal isOpen={isDiscardModalOpen} onOpenChange={setIsDiscardModalOpen}>
-        <Dialog className="p-6 w-fit rounded-3xl">
-          <Heading slot="title" className="text-2xl text-center px-3">
-            Discard unsaved changes?
-          </Heading>
-
-          <div className="mt-6 flex justify-end gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              slot="close"
-              className="text-text-sub"
-            >
-              Cancel
-            </Button>
-            <Button
-              autoFocus
-              onPress={closeEditSidebar}
-              variant="destructive"
-              size="sm"
-              className="px-8"
-            >
-              Discard
-            </Button>
-          </div>
-        </Dialog>
+        <DiscardChangesDialog onDiscardChanges={closeEditSidebar} />
       </Modal>
     </>
   );

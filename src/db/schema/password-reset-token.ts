@@ -4,10 +4,10 @@ import { pgTable } from "./utils";
 export const passwordResetToken = pgTable(
   "password_reset_token",
   {
-    id: serial("id").primaryKey(),
-    token: text("token").notNull(),
-    email: text("email").notNull(),
-    expires: timestamp("expires", { mode: "date" }).notNull(),
+    id: serial().primaryKey(),
+    token: text().notNull(),
+    email: text().notNull(),
+    expires: timestamp({ mode: "date" }).notNull(),
   },
   (t) => ({
     passwordResetTokenUnique: unique().on(t.email, t.token),

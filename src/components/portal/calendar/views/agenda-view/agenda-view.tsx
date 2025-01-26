@@ -34,7 +34,7 @@ export const AgendaView = () => {
                   isToday && "bg-primary/40",
                 )}
               >
-                <p className="text-lg font-medium text-text-base leading-tight">
+                <p className="text-lg font-medium text-text-default leading-tight">
                   {format(currentDay, "MMM")} {currentDay.getDate()}
                 </p>
                 <p className="text-sm text-text-sub">

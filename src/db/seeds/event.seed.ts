@@ -12,15 +12,21 @@ export default async function seed(db: DB) {
 
   await Promise.all(
     events.map(async ({ event, eventOccurrences }) => {
-      await db.insert(schema.event).values({
-        userId: user.id,
-        ...event,
-      });
+      const [insertedEvent] = await db
+        .insert(schema.event)
+        .values({
+          userId: user.id,
+          ...event,
+        })
+        .returning();
+
+      if (!insertedEvent) throw new Error("Event not inserted!");
 
       if (eventOccurrences) {
         await Promise.all(
           eventOccurrences.map(async (occurrence) => {
             await db.insert(schema.eventOccurrence).values({
+              eventId: insertedEvent.id,
               ...occurrence,
             });
           }),

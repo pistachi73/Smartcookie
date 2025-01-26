@@ -36,7 +36,7 @@ export const UserButton = ({ user }: { user: ExtendedUser }) => {
             className="h-12 w-12 shrink-0 text-lg"
           />
           <div className="overflow-hidden">
-            <p className="text-base font-medium">{user?.name}</p>
+            <p className="text-md font-medium">{user?.name}</p>
             <p className="text-text-sub text-sm truncate font-normal">
               {user?.email}
             </p>

@@ -16,19 +16,19 @@ export const timeInvestmentEnum = pgEnum("time_investment", [
 ]);
 
 export const client = pgTable("client", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  email: text("email").notNull(),
-  password: text("password").notNull(),
-  salt: text("salt").notNull(),
-  image: text("image"),
+  id: serial().primaryKey(),
+  name: text().notNull(),
+  email: text().notNull(),
+  password: text().notNull(),
+  salt: text().notNull(),
+  image: text(),
   paymentFrequency: paymentFrequencyEnum().default("monthly"),
-  location: text("location"),
-  nationality: text("nationality"),
+  location: text(),
+  nationality: text(),
   age: integer("age"),
   timeInvestment: timeInvestmentEnum().default("medium"),
-  job: text("job"),
-  awayUntil: timestamp("away_until", { mode: "date" }),
+  job: text(),
+  awayUntil: timestamp({ mode: "date" }),
 });
 
 export type InsertClient = typeof client.$inferInsert;

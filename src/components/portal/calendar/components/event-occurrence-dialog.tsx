@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Modal } from "@/components/ui/react-aria/modal";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import type { GroupedCalendarOccurrence } from "@/lib/group-overlapping-occurrences";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
@@ -8,11 +9,10 @@ import {
   File02Icon,
   UserGroupIcon,
 } from "@hugeicons/react";
-import { getLocalTimeZone, parseAbsolute } from "@internationalized/date";
 import { format } from "date-fns";
-import { Dialog, Separator } from "react-aria-components";
+import { Dialog, DialogTrigger, Separator } from "react-aria-components";
 import { useShallow } from "zustand/react/shallow";
-import { formatZonedDateTime } from "../views/day-week-view-occurrence";
+import { DeleteEventOccurrenceDialog } from "./delete-event-occurrence-dialog";
 
 const useEventOccurrenceDialog = () =>
   useCalendarStore(
@@ -23,23 +23,14 @@ const useEventOccurrenceDialog = () =>
 
 type EventOccurrenceDialogProps = {
   occurrence: GroupedCalendarOccurrence;
+  onEditPress?: () => void;
 };
 
 export const EventOccurrenceDialog = ({
   occurrence,
+  onEditPress,
 }: EventOccurrenceDialogProps) => {
   const { openEditEventOccurrence } = useEventOccurrenceDialog();
-
-  const [parsedStartTime, parsedEndTime] = [
-    parseAbsolute(
-      occurrence.startTime.toISOString(),
-      occurrence.timezone || getLocalTimeZone(),
-    ),
-    parseAbsolute(
-      occurrence.endTime.toISOString(),
-      occurrence.timezone || getLocalTimeZone(),
-    ),
-  ];
 
   return (
     <Dialog className="space-y-3 w-[300px]">
@@ -59,7 +50,7 @@ export const EventOccurrenceDialog = ({
             <p> {format(occurrence.startTime, "EEEE, dd LLLL y")}</p>
             <div className="text-sm flex items-center gap-1.5">
               <p className=" text-text-sub">
-                {formatZonedDateTime(parsedStartTime)}
+                {format(occurrence.startTime, "HH:mm")}
               </p>
               <ArrowRight02Icon
                 color="var(--color-text-sub)"
@@ -67,22 +58,26 @@ export const EventOccurrenceDialog = ({
                 variant="solid"
               />
               <p className="text-text-sub">
-                {formatZonedDateTime(parsedEndTime)}
+                {format(occurrence.endTime, "HH:mm")}
               </p>
             </div>
           </div>
         </div>
       </div>
-      <Separator className="bg-border/20" />
-      <div className="text-sm flex items-start gap-2">
-        <div className="w-5 flex items-center justify-center h-5">
-          <File02Icon size={16} />
-        </div>
-        <p className="text-sm">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-          ullamcorper, nisl in commodo egestas, sem eros blandit nisi.
-        </p>
-      </div>
+      {occurrence.description && (
+        <>
+          <Separator className="bg-border/20" />
+          <div className="text-sm flex items-start gap-2">
+            <div className="w-5 flex items-center justify-center h-5">
+              <File02Icon size={16} />
+            </div>
+            <p className="text-sm">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+              ullamcorper, nisl in commodo egestas, sem eros blandit nisi.
+            </p>
+          </div>
+        </>
+      )}
 
       <Separator className="bg-border/20" />
       <div className="text-sm flex items-start gap-2">
@@ -110,14 +105,20 @@ export const EventOccurrenceDialog = ({
 
       {/* <Separator className="bg-border/20" /> */}
       <div className="flex items-center justify-end gap-2">
-        <Button size="sm" variant="outline">
-          Delete
-        </Button>
+        <DialogTrigger>
+          <Button size="sm" variant="outline">
+            Delete
+          </Button>
+          <Modal>
+            <DeleteEventOccurrenceDialog />
+          </Modal>
+        </DialogTrigger>
         <Button
           size="sm"
           className="px-6"
           slot="close"
           onPress={() => {
+            onEditPress?.();
             openEditEventOccurrence(occurrence.eventOccurrenceId);
           }}
         >

@@ -23,6 +23,8 @@ export const DayView = () => {
   const formattedDateKey = getEventOccurrenceDayKey(selectedDate);
   const dayOcurrences = groupedEventOccurrences?.[formattedDateKey] || [];
 
+  console.log({ dayOcurrences });
+
   return (
     <div className="flex flex-col h-full gap-2 relative overflow-hidden">
       <div className="w-full flex items-center pl-[var(--left-spacing)]">
@@ -31,12 +33,12 @@ export const DayView = () => {
           <p className="text-sm text-text-sub lowercase">
             {format(selectedDate, "iii")}
           </p>
-          <p className="text-3xl font-medium text-text-base">
+          <p className="text-3xl font-medium text-text-default">
             {selectedDate.getDate()}
           </p>
         </div>
 
-        <div className="h-full px-2" />
+        <div className="flex-1" />
       </div>
       <div
         id="calendar-container"

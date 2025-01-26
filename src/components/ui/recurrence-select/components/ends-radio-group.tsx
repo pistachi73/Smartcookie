@@ -5,6 +5,7 @@ import {
 import { NumberField } from "@/components/ui/react-aria/number-field";
 import { Radio, RadioGroup } from "@/components/ui/react-aria/radio-group";
 import { cn } from "@/lib/utils";
+import { CalendarDate } from "@internationalized/date";
 import { use } from "react";
 import { RecurrenceSelectContext } from "../recurrence-select-context";
 import { EndsEnum } from "../utils";
@@ -14,27 +15,35 @@ export const EndsRadioGroup = () => {
     RecurrenceSelectContext,
   );
   return (
-    <RadioGroup
-      value={ends}
-      onChange={(ends) => {
-        setEnds(ends as EndsEnum);
-      }}
-    >
-      <Radio
-        value={EndsEnum.ENDS_NEVER}
-        className="before:shrink-0 data-[selected]:before:bg-primary-100 text-sm before:bg-elevated before:border-border hover:before:bg-elevated-highlight  data-[selected]:before:border-primary"
+    <div className="flex flex-row">
+      <RadioGroup
+        value={ends}
+        onChange={(ends) => {
+          setEnds(ends as EndsEnum);
+        }}
       >
-        <p className="w-20">Never</p>
-      </Radio>
-      <div className="flex items-center">
-        <Radio
-          value={EndsEnum.ENDS_ON}
-          className="before:shrink-0 data-[selected]:before:bg-primary-100 text-sm before:bg-elevated before:border-border hover:before:bg-elevated-highlight  data-[selected]:before:border-primary"
-        >
+        <Radio value={EndsEnum.ENDS_NEVER} className="h-8">
+          <p className="w-20">Never</p>
+        </Radio>
+        <Radio value={EndsEnum.ENDS_ON} className="h-8">
           <p className="w-20">On</p>
         </Radio>
+        <Radio value={EndsEnum.ENDS_AFTER} className="h-8">
+          <p className="w-20">After</p>
+        </Radio>
+      </RadioGroup>
+      <div className="flex flex-col gap-2">
+        <div className="h-8" />
         <DatePicker
-          defaultValue={selectedDate}
+          value={
+            rruleOptions?.until
+              ? new CalendarDate(
+                  rruleOptions?.until?.getFullYear(),
+                  rruleOptions?.until?.getMonth() + 1,
+                  rruleOptions?.until?.getDate(),
+                )
+              : selectedDate
+          }
           onChange={(untilDate) => {
             setRruleOptions({
               ...rruleOptions,
@@ -42,9 +51,7 @@ export const EndsRadioGroup = () => {
             });
           }}
           onBlur={() => {
-            console.log(rruleOptions.until);
             if (!rruleOptions.until) {
-              console.log("reset");
               setRruleOptions({
                 ...rruleOptions,
                 until: selectedDate.toDate("UTC"),
@@ -61,14 +68,6 @@ export const EndsRadioGroup = () => {
             }}
           />
         </DatePicker>
-      </div>
-      <div className="flex items-center">
-        <Radio
-          value={EndsEnum.ENDS_AFTER}
-          className="before:shrink-0 data-[selected]:before:bg-primary-100 text-sm before:bg-elevated before:border-border hover:before:bg-elevated-highlight  data-[selected]:before:border-primary"
-        >
-          <p className="w-20">After</p>
-        </Radio>
         <div className="flex items-center gap-2">
           <NumberField
             onChange={(count) => {
@@ -99,6 +98,6 @@ export const EndsRadioGroup = () => {
           </span>
         </div>
       </div>
-    </RadioGroup>
+    </div>
   );
 };

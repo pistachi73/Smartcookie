@@ -6,7 +6,7 @@ import {
 } from "react-aria-components";
 
 export const overlayStyles = cva(
-  "fixed inset-0 z-[9900] bg-black/25 backdrop-blur flex items-center justify-center",
+  "fixed inset-0 z-50! bg-black/25 backdrop-blur flex items-center justify-center",
   {
     variants: {
       isEntering: {

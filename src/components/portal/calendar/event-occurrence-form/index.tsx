@@ -15,7 +15,10 @@ import {
 import { fieldWrapperVariants } from "@/components/ui/react-aria/shared-styles/field-variants";
 import { Switch, SwitchIndicator } from "@/components/ui/react-aria/switch";
 import { TextField } from "@/components/ui/react-aria/text-field";
-import { RecurrenceSelect } from "@/components/ui/recurrence-select";
+import {
+  RecurrenceSelect,
+  RecurrenceSelectContent,
+} from "@/components/ui/recurrence-select";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -33,18 +36,21 @@ import {
   CalendarAdd01Icon,
   Folder02Icon,
 } from "@hugeicons/react";
-import { CalendarDate } from "@internationalized/date";
+import { CalendarDate, toCalendarDate } from "@internationalized/date";
+import { Loader2 } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { Form, Separator } from "react-aria-components";
 import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
 import type { z } from "zod";
 import { useShallow } from "zustand/react/shallow";
 import type { SessionOcurrenceFormSchema } from "./schema";
+import { useCreateEvent } from "./use-create-event";
 
 const useEventOccurrenceForm = () =>
   useCalendarStore(
     useShallow((store) => ({
       hubs: store.hubs,
+      selectedDate: store.selectedDate,
       setDraftEventOccurrence: store.setDraftEventOccurrence,
     })),
   );
@@ -58,7 +64,9 @@ export const SessionOccurrenceFrom = ({
   editingEventOccurrenceId?: number;
   onCancel: () => void;
 }) => {
-  const { hubs, setDraftEventOccurrence } = useEventOccurrenceForm();
+  const { hubs, setDraftEventOccurrence, selectedDate } =
+    useEventOccurrenceForm();
+  const { createEvent, isCreatingEvent } = useCreateEvent();
   const timeComboboxTriggerRef = useRef<HTMLDivElement>(null);
 
   const startTime = useWatch({
@@ -113,31 +121,13 @@ export const SessionOccurrenceFrom = ({
   ]);
 
   const onSubmit = (values: z.infer<typeof SessionOcurrenceFormSchema>) => {
-    console.log(values);
-    const { date, startTime, endTime, timezone } = values;
-
-    setDraftEventOccurrence({
-      eventOccurrenceId: -1,
-      startTime: new Date(
-        date.year,
-        date.month - 1,
-        date.day,
-        startTime.hour,
-        startTime.minute,
-      ),
-      endTime: new Date(
-        date.year,
-        date.month - 1,
-        date.day,
-        endTime.hour,
-        endTime.minute,
-      ),
-      timezone,
-    });
+    if (editingEventOccurrenceId === -1) {
+      createEvent(values);
+    }
   };
 
   const hubItems = hubs?.map((hub) => ({ id: hub.id, name: hub.name }));
-
+  const isFormDisabled = isCreatingEvent;
   return (
     <Form
       onSubmit={form.handleSubmit(onSubmit)}
@@ -172,6 +162,7 @@ export const SessionOccurrenceFrom = ({
                     validationBehavior="aria"
                     isInvalid={invalid}
                     errorMessage={error?.message}
+                    isDisabled={isFormDisabled}
                   >
                     <SelectTrigger
                       size={"sm"}
@@ -201,20 +192,23 @@ export const SessionOccurrenceFrom = ({
                   field,
                   fieldState: { error, invalid, isDirty },
                 }) => (
-                  <TextField
-                    {...field}
-                    size={"sm"}
-                    aria-label="Session title"
-                    placeholder="Title"
-                    validationBehavior="aria"
-                    isInvalid={invalid}
-                    errorMessage={error?.message}
-                    className={cn(
-                      "w-auto ml-7",
-                      "bg-transparent border-transparent transition-colors",
-                      "hover:bg-base-highlight",
-                    )}
-                  />
+                  <div className="ml-7">
+                    <TextField
+                      {...field}
+                      size={"sm"}
+                      aria-label="Session title"
+                      placeholder="Title"
+                      validationBehavior="aria"
+                      isInvalid={invalid}
+                      errorMessage={error?.message}
+                      isDisabled={isFormDisabled}
+                      className={cn(
+                        "w-auto",
+                        "bg-transparent border-transparent transition-colors",
+                        "hover:bg-base-highlight",
+                      )}
+                    />
+                  </div>
                 )}
               />
             </div>
@@ -233,6 +227,7 @@ export const SessionOccurrenceFrom = ({
                   validationBehavior="aria"
                   isInvalid={invalid}
                   errorMessage={error?.message}
+                  isDisabled={isFormDisabled}
                   className="border-transparent gap-0"
                 >
                   <DatePickerContent placement="left top" offset={12} />
@@ -253,6 +248,7 @@ export const SessionOccurrenceFrom = ({
                     onChange={onChange}
                     withIcon
                     className="border-transparent"
+                    isDisabled={isFormDisabled}
                   >
                     <TimeComboboxContent
                       triggerRef={timeComboboxTriggerRef}
@@ -275,6 +271,7 @@ export const SessionOccurrenceFrom = ({
                     onChange={onChange}
                     minValue={startTime}
                     className="border-transparent"
+                    isDisabled={isFormDisabled}
                   >
                     <TimeComboboxContent
                       triggerRef={timeComboboxTriggerRef}
@@ -291,7 +288,7 @@ export const SessionOccurrenceFrom = ({
               name="timezone"
               render={({
                 field: { onChange, value, ...restField },
-                fieldState: { error, invalid },
+                fieldState: { error },
               }) => (
                 <TimezoneCombobox
                   {...restField}
@@ -300,6 +297,7 @@ export const SessionOccurrenceFrom = ({
                   aria-label="Session timezone"
                   errorMessage={error?.message}
                   className="border-transparent"
+                  isDisabled={isFormDisabled}
                 >
                   <TimezoneComboboxContent
                     placement="left top"
@@ -309,9 +307,32 @@ export const SessionOccurrenceFrom = ({
                 </TimezoneCombobox>
               )}
             />
-            <RecurrenceSelect
-              selectedDate={new CalendarDate(2024, 12, 19)}
-              onChange={(rrule) => console.log(rrule)}
+            <Controller
+              control={form.control}
+              name="recurrenceRule"
+              render={({ field: { onChange, value } }) => (
+                <RecurrenceSelect
+                  value={value}
+                  onChange={onChange}
+                  selectedDate={
+                    date
+                      ? toCalendarDate(date)
+                      : new CalendarDate(
+                          selectedDate.getFullYear(),
+                          selectedDate.getMonth() + 1,
+                          selectedDate.getDate(),
+                        )
+                  }
+                >
+                  <RecurrenceSelectContent
+                    selectProps={{ isDisabled: isFormDisabled }}
+                    popoverProps={{
+                      offset: 12,
+                      placement: "left top",
+                    }}
+                  />
+                </RecurrenceSelect>
+              )}
             />
           </div>
           <Separator className="bg-border/20 h-0" />
@@ -326,6 +347,7 @@ export const SessionOccurrenceFrom = ({
                   aria-label="Session title"
                   placeholder="Description"
                   validationBehavior="aria"
+                  isDisabled={isFormDisabled}
                   isInvalid={invalid}
                   errorMessage={error?.message}
                   className={cn(
@@ -341,7 +363,7 @@ export const SessionOccurrenceFrom = ({
 
           <Separator className="bg-border/20 h-0" />
 
-          <div className="flex flex-row items-center gap-3 w-full px-2">
+          <div className="flex flex-row items-center gap-3 w-full px-2 h-10">
             <Controller
               control={form.control}
               name="isBillable"
@@ -349,6 +371,7 @@ export const SessionOccurrenceFrom = ({
                 <Switch
                   {...restField}
                   isSelected={value}
+                  isDisabled={isFormDisabled}
                   className={"h-10 gap-0"}
                 >
                   <div className="h-full aspect-square flex items-center justify-center">
@@ -375,6 +398,7 @@ export const SessionOccurrenceFrom = ({
                       aria-label="Session price"
                       placeholder="Price"
                       withButtons={false}
+                      isDisabled={isFormDisabled}
                       minValue={1}
                       formatOptions={{
                         style: "currency",
@@ -408,6 +432,7 @@ export const SessionOccurrenceFrom = ({
                   {...restField}
                   value={value}
                   onChange={onChange}
+                  isDisabled={isFormDisabled}
                   className="border-transparent"
                 />
               )}
@@ -416,10 +441,22 @@ export const SessionOccurrenceFrom = ({
         </div>
       </div>
       <div className="flex items-center justify-end gap-2 p-4">
-        <Button variant={"ghost"} size="sm" onPress={onCancel}>
+        <Button
+          variant={"ghost"}
+          size="sm"
+          onPress={onCancel}
+          isDisabled={isFormDisabled}
+        >
           Cancel
         </Button>
-        <Button size="sm" className="px-6" type="submit">
+
+        <Button
+          size="sm"
+          className="px-6"
+          type="submit"
+          isDisabled={isFormDisabled}
+        >
+          {isCreatingEvent && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Save
         </Button>
       </div>

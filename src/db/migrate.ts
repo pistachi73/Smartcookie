@@ -7,7 +7,7 @@ import { env } from "@/env";
 import * as schema from "./schema";
 
 const client = neon(env.DATABASE_URL);
-const db = drizzle(client, { schema });
+const db = drizzle(client, { schema, casing: "snake_case" });
 
 const main = async () => {
   console.log("Running migrations...");

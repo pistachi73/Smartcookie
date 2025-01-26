@@ -52,8 +52,6 @@ export const MonthViewCell = ({
       const sessionContainerHeight =
         entry.target.getBoundingClientRect().height;
 
-      console.log({ sessionContainerHeight });
-
       const visibleSessions = Math.floor(
         sessionContainerHeight /
           (SESSION_OCCURRENCE_HEIGHT + SESSION_OCCURRENCE_SPACING),
@@ -151,12 +149,9 @@ export const MonthViewCell = ({
                         popoverProps={{
                           offset: 8,
                           placement: "left top",
-                          onOpenChange: (open) => {
-                            console.log({ open });
-                            if (!open) {
-                              setIsViewAllOpen(false);
-                            }
-                          },
+                        }}
+                        onEditPress={() => {
+                          setIsViewAllOpen(false);
                         }}
                       />
                     ),

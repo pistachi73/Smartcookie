@@ -31,7 +31,7 @@ export type CalendarState = {
   selectedDate: Date;
   calendarView: CalendarView;
   hubs: Hub[];
-  eventOccurrences?: Record<string, CalendarEventOccurrence>;
+  eventOccurrences: Record<string, CalendarEventOccurrence>;
   groupedEventOccurrences: ReturnType<typeof groupEventOccurrencesByDayAndTime>;
   editingEventOccurrenceId?: number;
   draftEventOccurrence: CalendarDraftEventOccurrence;
@@ -52,6 +52,8 @@ export type CalendarActions = {
   clearDraftEventOccurrence: () => void;
   clearEditingEventOccurrence: () => void;
   openEditEventOccurrence: (eventOccurrenceId: number) => void;
+  addEventOccurrences: (eventOccurrence: CalendarEventOccurrence[]) => void;
+  removeEventOccurreces: (eventOccurrencesIds: number[]) => void;
 };
 
 export type CalendarStore = CalendarState & CalendarActions;
@@ -227,6 +229,42 @@ export const createCalendarStore = (
             "",
             `/calendar/event/${eventOccurrenceId}`,
           );
+        },
+        addEventOccurrences: (eventOccurrences) => {
+          const dayKeys = new Set<string>(
+            eventOccurrences.map((occurrence) =>
+              getEventOccurrenceDayKey(occurrence.startTime),
+            ),
+          );
+
+          set((state) => {
+            eventOccurrences.forEach((eventOccurrence) => {
+              state.eventOccurrences[eventOccurrence.eventOccurrenceId] =
+                eventOccurrence;
+            });
+          });
+
+          get().regenerateGroupedEventOccurrencesForDay(Array.from(dayKeys));
+        },
+        removeEventOccurreces: (eventOccurrenceIds) => {
+          const eventOccurrences = get().eventOccurrences;
+          const dayKeys = new Set<string>(
+            eventOccurrenceIds
+              .map((id) => {
+                const occurrence = eventOccurrences[id];
+                if (!occurrence) return undefined;
+                return getEventOccurrenceDayKey(occurrence.startTime);
+              })
+              .filter(Boolean) as string[],
+          );
+
+          set((state) => {
+            eventOccurrenceIds.forEach((id) => {
+              delete state.eventOccurrences[id];
+            });
+          });
+
+          get().regenerateGroupedEventOccurrencesForDay(Array.from(dayKeys));
         },
       })),
       {

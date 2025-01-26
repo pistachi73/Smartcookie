@@ -82,7 +82,7 @@ export const DatePickerContent = ({
 }: DatePickerContentProps) => {
   return (
     <Popover {...props}>
-      <Dialog className="p-0! bg-elevated-highlight">
+      <Dialog className="">
         <Calendar {...calendarProps} />
       </Dialog>
     </Popover>

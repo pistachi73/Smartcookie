@@ -1,9 +1,7 @@
-import { getWeekdayCardinal } from "@/lib/calendar";
 import { cn } from "@/lib/utils";
 import { ArrowRight02Icon, RepeatIcon } from "@hugeicons/react";
 import type { CalendarDate } from "@internationalized/date";
-import { format } from "date-fns";
-import { use, useState } from "react";
+import { use, useMemo, useState } from "react";
 import { Heading, ListBoxSection } from "react-aria-components";
 import { Frequency, RRule, type Weekday } from "rrule";
 import { z } from "zod";
@@ -11,9 +9,11 @@ import { Button } from "../button";
 import { Dialog } from "../react-aria/dialog";
 import { ListBoxItem } from "../react-aria/list-box";
 import { Modal } from "../react-aria/modal";
+import type { PopoverProps } from "../react-aria/popover";
 import {
   SelectField,
   SelectFieldContent,
+  type SelectFieldProps,
   SelectTrigger,
 } from "../react-aria/select-field";
 import { ByweekdayCheckboxGroup } from "./components/byweekday-checkbox-group";
@@ -26,11 +26,10 @@ import {
   RecurrenceSelectContextProvider,
 } from "./recurrence-select-context";
 import {
-  EndsEnum,
   PrefefinedRecurrencesEnum,
-  getPredefinedRecurrencesLabelMap,
-  getPredefinedRecurrencesOptionsMap,
-  parseRruleOptions,
+  convertCustomToRRuleOptions,
+  convertRRuleOptionsToCustom,
+  getSelectItems,
   parseRruleText,
 } from "./utils";
 
@@ -44,137 +43,98 @@ export const RecurrenceRuleSchema = z.object({
 
 export type RecurrenceRule = z.infer<typeof RecurrenceRuleSchema>;
 
-const SelectLabel = ({ option }: { option: PrefefinedRecurrencesEnum }) => {
-  const { selectedDate, rrule, rruleOptions } = use(RecurrenceSelectContext);
-  const val = getPredefinedRecurrencesLabelMap(selectedDate)[option];
-  const rruleText = parseRruleText(rrule, rruleOptions.interval ?? 1);
+const SelectLabel = () => {
+  const { value } = use(RecurrenceSelectContext);
 
-  const label = val?.label ?? rruleText.label;
-  const auxLabel = val?.auxLabel ?? rruleText.auxLabel;
+  const rruleText = parseRruleText(value);
 
   return (
     <p className="first-letter:uppercase truncate">
       <span>
-        {label}
-        {auxLabel && <span className="text-text-sub"> {auxLabel}</span>}
+        {rruleText.label}
+        {rruleText.auxLabel && (
+          <span className="text-text-sub"> {rruleText.auxLabel}</span>
+        )}
       </span>
     </p>
   );
 };
 
-export const RecurrenceSelectContent = () => {
-  const { rruleOptions, setRruleOptions, rrule, setRrule, selectedDate, ends } =
-    use(RecurrenceSelectContext);
+export const RecurrenceSelectContent = ({
+  selectProps,
+  popoverProps,
+}: {
+  selectProps?: Omit<SelectFieldProps, "children">;
+  popoverProps?: Omit<PopoverProps, "children">;
+}) => {
+  const {
+    rruleOptions,
+    setRruleOptions,
+    rrule,
+    setRrule,
+    selectedDate,
+    ends,
+    value,
+    onChange,
+  } = use(RecurrenceSelectContext);
 
   const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
-  const [selectedKey, setSelectedKey] = useState<PrefefinedRecurrencesEnum>(
-    PrefefinedRecurrencesEnum.NO_RECURRENCE,
+
+  const items = useMemo(
+    () => getSelectItems(selectedDate, value),
+    [selectedDate, value],
   );
-  const shortWeekdayStr = format(selectedDate.toDate("UTC"), "iii");
 
-  const items = [
-    {
-      section: "no-repeat",
-      items: [
-        {
-          value: PrefefinedRecurrencesEnum.NO_RECURRENCE,
-          name: "Does not repeat",
-        },
-      ],
-    },
-    {
-      section: "predefined",
-      items: [
-        {
-          value: PrefefinedRecurrencesEnum.EVERY_DAY,
-          name: "Every day",
-        },
-        {
-          value: PrefefinedRecurrencesEnum.EVERY_WEEKDAY,
-          name: "Every weekday",
-          auxName: "Mon - Fri",
-        },
-        {
-          value: PrefefinedRecurrencesEnum.EVERY_WEEK_ON_SELECTED_DATE,
-          name: "Every week",
-          auxName: `on ${shortWeekdayStr}`,
-        },
-        {
-          value: PrefefinedRecurrencesEnum.EVERY_MONTHDAY,
-          name: "Every month",
-          auxName: `on the ${format(selectedDate.toDate("UTC"), "do")}`,
-        },
-        {
-          value: PrefefinedRecurrencesEnum.EVERY_CARDINAL_MONTHDAY,
-          name: "Every month",
-          auxName: `on the ${getWeekdayCardinal(selectedDate.toDate("UTC")).label} ${shortWeekdayStr}`,
-        },
-        {
-          value: PrefefinedRecurrencesEnum.EVERY_YEARDAY,
-          name: "Every year",
-          auxName: `on ${format(selectedDate.toDate("UTC"), "MMM d")}`,
-        },
-      ],
-    },
-    {
-      section: "custom",
-      items: [{ value: PrefefinedRecurrencesEnum.CUSTOM, name: "Custom..." }],
-    },
-  ];
-
-  const predefinedRecurrenceOptionsMap =
-    getPredefinedRecurrencesOptionsMap(selectedDate);
-
-  const predefinedRecurrenceLabelsMap =
-    getPredefinedRecurrencesLabelMap(selectedDate);
-
-  const handleCustomRecurrence = (option: PrefefinedRecurrencesEnum) => {
-    switch (option) {
+  const handleCustomRecurrence = (value: string) => {
+    switch (value) {
       case PrefefinedRecurrencesEnum.NO_RECURRENCE:
         setRrule(null);
+        onChange(value);
         break;
       case PrefefinedRecurrencesEnum.CUSTOM:
-        console.log(rruleOptions);
         setIsCustomModalOpen(true);
         break;
       default: {
-        const newRruleOptions = predefinedRecurrenceOptionsMap[option];
-
-        if (!newRruleOptions) return;
+        const rrule = RRule.fromString(value);
 
         setRruleOptions({
           ...rruleOptions,
-          ...newRruleOptions,
+          ...convertRRuleOptionsToCustom(rrule.options),
+          dstart: selectedDate.toDate("UTC"),
         });
 
-        setRrule(
-          new RRule(
-            parseRruleOptions({
-              rruleOptions: newRruleOptions,
-              ends: EndsEnum.ENDS_NEVER,
-            }),
-          ),
-        );
+        setRrule(rrule);
+        onChange(value);
         break;
       }
     }
   };
 
   const saveCustomRecurrenceRule = () => {
-    console.log(parseRruleOptions({ rruleOptions, ends }), ends);
-    setRrule(new RRule(parseRruleOptions({ rruleOptions, ends })));
+    const rrule = new RRule(
+      convertCustomToRRuleOptions({
+        rruleOptions: {
+          ...rruleOptions,
+          dstart: selectedDate.toDate("UTC"),
+        },
+        ends,
+      }),
+    );
+
+    setRrule(rrule);
+    onChange(rrule.toString());
     setIsCustomModalOpen(false);
   };
 
   return (
-    <>
+    <div onKeyDown={(e) => e.stopPropagation()}>
       <SelectField
         aria-label="Recurrence Select Main"
-        selectedKey={selectedKey}
+        selectedKey={value}
         onSelectionChange={(value) => {
-          setSelectedKey(value as PrefefinedRecurrencesEnum);
-          handleCustomRecurrence(value as PrefefinedRecurrencesEnum);
+          handleCustomRecurrence(value as string);
         }}
+        {...selectProps}
       >
         <SelectTrigger
           size={"sm"}
@@ -186,13 +146,14 @@ export const RecurrenceSelectContent = () => {
           icon={RepeatIcon}
         >
           <div className="pr-2 truncate">
-            <SelectLabel option={selectedKey} />
+            <SelectLabel />
           </div>
         </SelectTrigger>
         <SelectFieldContent
           placement="left top"
           offset={4}
-          className="w-[250px] p-0"
+          className="w-fit p-0"
+          {...popoverProps}
           items={items}
         >
           {({ section, items }) => (
@@ -217,7 +178,11 @@ export const RecurrenceSelectContent = () => {
           )}
         </SelectFieldContent>
       </SelectField>
-      <Modal isOpen={isCustomModalOpen} onOpenChange={setIsCustomModalOpen}>
+      <Modal
+        isOpen={isCustomModalOpen}
+        onOpenChange={setIsCustomModalOpen}
+        isKeyboardDismissDisabled
+      >
         <Dialog>
           <Heading slot="title" className="mb-4">
             Custom recurrence rule
@@ -251,7 +216,15 @@ export const RecurrenceSelectContent = () => {
                 size="sm"
                 slot="close"
                 className="text-text-sub"
-                onPress={() => setIsCustomModalOpen(false)}
+                onPress={() => {
+                  if (rrule === null) return;
+
+                  setRruleOptions({
+                    ...rruleOptions,
+                    ...convertRRuleOptionsToCustom(rrule.options),
+                    dstart: selectedDate.toDate("UTC"),
+                  });
+                }}
               >
                 Cancel
               </Button>
@@ -269,20 +242,28 @@ export const RecurrenceSelectContent = () => {
           </div>
         </Dialog>
       </Modal>
-    </>
+    </div>
   );
 };
 
 export const RecurrenceSelect = ({
   selectedDate,
   onChange,
+  value,
+  children,
 }: {
   selectedDate: CalendarDate;
-  onChange: (rrule: string) => void;
+  onChange: (rrule: string | undefined) => void;
+  value?: string;
+  children?: React.ReactNode;
 }) => {
   return (
-    <RecurrenceSelectContextProvider selectedDate={selectedDate}>
-      <RecurrenceSelectContent />
+    <RecurrenceSelectContextProvider
+      selectedDate={selectedDate}
+      onChange={onChange}
+      value={value}
+    >
+      {children ?? <RecurrenceSelectContent />}
     </RecurrenceSelectContextProvider>
   );
 };

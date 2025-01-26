@@ -26,7 +26,6 @@ export const CalendarSidebar = () => {
       <AnimatePresence>
         {activeSidebar === "main" && (
           <motion.div
-            className="z-1000"
             key="main"
             initial={{
               opacity: 1,
@@ -55,7 +54,7 @@ export const CalendarSidebar = () => {
                   delay: 0.15,
                 },
               }}
-              className="fixed h-[100vh] w-[100vw] bg-background/50 top-0 left-0 z-200"
+              className="fixed h-[100vh] w-[100vw] bg-background/50 top-0 left-0 z-50"
             />
             <motion.div
               initial={{
@@ -66,7 +65,7 @@ export const CalendarSidebar = () => {
                 width: "calc(100% + 50px)",
               }}
               // transition={regularSpring}
-              className="absolute bottom-0 right-0 bg-base border   rounded-xl z-200"
+              className="absolute bottom-0 right-0 bg-base border   rounded-xl z-50"
             >
               <motion.div
                 initial={{

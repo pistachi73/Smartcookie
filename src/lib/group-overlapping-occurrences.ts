@@ -3,6 +3,7 @@ import type {
   CalendarDraftEventOccurrence,
   CalendarEventOccurrence,
 } from "@/stores/calendar-store";
+import { TZDate, TZDateMini } from "@date-fns/tz";
 import Heap from "heap-js";
 
 export type GroupProps = {
@@ -104,8 +105,12 @@ export const sweepLineGroupOverlappingOccurrences = (
         columnIndex: assignedColumn,
       });
 
-      // Add to current group
-      currentGroup.push(event);
+      // Add to current group with start and end times adjusted to the timezone
+      currentGroup.push({
+        ...event,
+        startTime: new Date(new TZDateMini(event.startTime, event.timezone)),
+        endTime: new Date(new TZDate(event.endTime, event.timezone)),
+      });
     } else {
       activeEvents.delete(event.eventOccurrenceId);
       // Note: The column is already released in the "start" event processing

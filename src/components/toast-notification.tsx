@@ -26,7 +26,6 @@ export const ToastNotification = () => {
   const error = searchParams.get("error");
 
   useEffect(() => {
-    console.log("error", error, TOAST_NOTIFICATION_ERROR_MAP.get(error ?? ""));
     if (error && TOAST_NOTIFICATION_ERROR_MAP.get(error)) {
       setTimeout(() => {
         toast.error(TOAST_NOTIFICATION_ERROR_MAP.get(error));

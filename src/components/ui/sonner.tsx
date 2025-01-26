@@ -30,7 +30,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
           description: "text-text-sub! text-xs",
           content: "flex flex-col gap-1!",
           closeButton:
-            "bg-transparent! text-text-sub! hover:text-text-base! transition-colors! border-0! right-1! left-auto! top-1! transform-none!",
+            "bg-transparent! text-text-sub! hover:text-text-default! transition-colors! border-0! right-1! left-auto! top-1! transform-none!",
           icon: "h-[21px]! flex items-center! justify-center! shrink-0 m-0!",
         },
       }}

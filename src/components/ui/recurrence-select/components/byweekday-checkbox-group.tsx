@@ -18,7 +18,7 @@ export const ByweekdayCheckboxGroup = () => {
         if (!byweekday.length) return;
         setRruleOptions({
           ...rruleOptions,
-          weeklyByweekday: byweekday.map((v) => Number.parseInt(v)),
+          weeklyByweekday: byweekday.map((v) => Number.parseInt(v)).sort(),
         });
       }}
       aria-label="Weekly recurrence days of week"

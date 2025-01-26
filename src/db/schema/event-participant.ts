@@ -7,13 +7,13 @@ import { pgTable } from "./utils";
 export const eventParticipant = pgTable(
   "event_participant",
   {
-    eventOccurrenceId: serial("event_occurrence_id")
+    eventOccurrenceId: serial()
       .notNull()
       .references(() => eventOccurrence.id, { onDelete: "cascade" }),
-    participantId: serial("participant_id")
+    participantId: serial()
       .notNull()
       .references(() => client.id, { onDelete: "cascade" }),
-    attended: boolean("attended").default(false),
+    attended: boolean().default(false),
   },
   (t) => ({
     cpk: primaryKey({

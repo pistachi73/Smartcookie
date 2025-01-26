@@ -39,14 +39,15 @@ export const TextField = ({
   ariaLabel,
   value,
   type = "input",
+  isDisabled,
   ...props
 }: TextFieldProps) => {
   return (
-    <AriaTextField {...props} value={value}>
+    <AriaTextField {...props} value={value} isDisabled={isDisabled}>
       {label && <Label className="text-sm">{label}</Label>}
       <div
         className={cn(
-          fieldWrapperVariants({ size }),
+          fieldWrapperVariants({ size, isDisabled }),
           type === "textarea" && "h-auto",
           className,
         )}

@@ -9,7 +9,7 @@ export const Account = () => {
     <div className="flex flex-col gap-9">
       <div className="space-y-2">
         <h1 className="font-bold tracking-tighter text-4xl">Account</h1>
-        <p className="text-base text-foreground">Details of the account</p>
+        <p className="text-md text-foreground">Details of the account</p>
       </div>
 
       <div className="space-y-4">

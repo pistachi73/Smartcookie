@@ -6,6 +6,11 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import {
+  DialogContent,
+  Dialog as N,
+  DialogTrigger as W,
+} from "@/components/ui/dialog";
 import { Calendar } from "@/components/ui/react-aria/calendar";
 import {
   ComboBoxField,
@@ -30,7 +35,6 @@ import {
   SelectValue,
 } from "react-aria-components";
 import { TestForm } from "./_component-tests/form";
-
 export default function Components() {
   const items = [
     { id: "chocolate", textValue: "Chocolate" },
@@ -55,6 +59,10 @@ export default function Components() {
 
   return (
     <div className="flex gap-3 h-full min-h-screen flex-col items-center justify-center bg-background py-12">
+      <N>
+        <W>hello</W>
+        <DialogContent>hello</DialogContent>
+      </N>
       <DateInput />
       <TestForm />
       <TimeField size="sm" hourCycle={24} />

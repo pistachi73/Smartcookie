@@ -1,5 +1,5 @@
+import type { InsertEventOccurrence } from "@/db/schema";
 import type { InsertEvent } from "@/db/schema/event";
-import type { InsertEventOccurrence } from "@/db/schema/event-occurrence";
 import { CalendarDateTime, getLocalTimeZone } from "@internationalized/date";
 
 const today = new Date();
@@ -17,11 +17,10 @@ const parseToUTCISOString = (date: CalendarDateTime) => {
 
 const events: {
   event: Omit<InsertEvent, "userId">;
-  eventOccurrences?: InsertEventOccurrence[];
+  eventOccurrences?: Omit<InsertEventOccurrence, "eventId">[];
 }[] = [
   {
     event: {
-      id: 1,
       title: "Algebra Basics - Level 1",
       description: "Algebra Basics",
       hubId: 1,
@@ -42,8 +41,7 @@ const events: {
       isRecurring: true,
       recurrenceRule: "Rule",
     },
-    eventOccurrences: Array.from({ length: 1 }).map((_, index) => ({
-      eventId: 1,
+    eventOccurrences: Array.from({ length: 10 }).map((_, index) => ({
       startTime: todayCalendarDateTime
         .add({ days: index })
         .set({ hour: 10, minute: 0 })
@@ -56,7 +54,6 @@ const events: {
   },
   {
     event: {
-      id: 2,
       title: "Spanish 101 - Introduction",
       description: "Spanish 101",
       hubId: 2,
@@ -79,7 +76,6 @@ const events: {
     },
     eventOccurrences: [
       {
-        eventId: 2,
         startTime: parseToUTCISOString(
           todayCalendarDateTime.set({
             hour: 12,
@@ -97,7 +93,6 @@ const events: {
   },
   {
     event: {
-      id: 3,
       title: "Organic Chemistry Lab - Basics",
       description: "Organic Chemistry Lab",
       hubId: 3,
@@ -120,7 +115,6 @@ const events: {
     },
     eventOccurrences: [
       {
-        eventId: 3,
         startTime: parseToUTCISOString(
           todayCalendarDateTime.set({
             hour: 14,
@@ -138,7 +132,6 @@ const events: {
   },
   {
     event: {
-      id: 4,
       title: "Biology II - Advanced Concepts",
       description: "Biology II",
       hubId: 3,
@@ -161,7 +154,6 @@ const events: {
     },
     eventOccurrences: [
       {
-        eventId: 4,
         startTime: parseToUTCISOString(
           todayCalendarDateTime.set({
             hour: 9,
@@ -179,7 +171,6 @@ const events: {
   },
   {
     event: {
-      id: 5,
       title: "Advanced Calculus - Techniques",
       description: "Advanced Calculus",
       hubId: 1,
@@ -202,7 +193,6 @@ const events: {
     },
     eventOccurrences: [
       {
-        eventId: 5,
         startTime: parseToUTCISOString(
           todayCalendarDateTime.set({
             hour: 11,
@@ -220,7 +210,6 @@ const events: {
   },
   {
     event: {
-      id: 6,
       title: "Advanced Calculus 2 - Techniques",
       description: "Advanced Calculus 2",
       hubId: 1,
@@ -243,7 +232,6 @@ const events: {
     },
     eventOccurrences: [
       {
-        eventId: 6,
         startTime: parseToUTCISOString(
           todayCalendarDateTime.set({
             hour: 12,

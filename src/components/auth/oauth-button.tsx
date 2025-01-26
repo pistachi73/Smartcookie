@@ -58,7 +58,7 @@ export const SocialButton = ({ provider, className }: SocialButtonProps) => {
       size="default"
       variant="outline"
       className={cn(
-        "flex w-full justify-between border text-sm sm:text-base",
+        "flex w-full justify-between border text-sm sm:text-md",
         className,
       )}
       type="button"

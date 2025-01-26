@@ -29,6 +29,7 @@ export const TimezoneCombobox = <T extends object>({
   isDisabled,
   selectedKey,
   children,
+  withIcon = true,
   ...props
 }: TimezoneComboboxProps<T>) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -61,22 +62,24 @@ export const TimezoneCombobox = <T extends object>({
       >
         <Group
           className={cn(
-            fieldWrapperVariants({ size: "sm" }),
+            fieldWrapperVariants({ size: "sm", isDisabled }),
             "flex flex-row items-center justify-between px-0 overflow-hidden pl-0 relative",
             "[[data-focus-within=true]>span]:text-3xl",
             className,
           )}
         >
-          <Button
-            className={cn(
-              "absolute top-0 left-0",
-              "h-full aspect-square p-0 rounded-none",
-              "flex items-center justify-center",
-              isLoading ? "cursor-not-allowed" : "cursor-pointer",
-            )}
-          >
-            <Globe02Icon size={16} color="var(--color-text-sub)" />
-          </Button>
+          {withIcon && (
+            <Button
+              className={cn(
+                "absolute top-0 left-0",
+                "h-full aspect-square p-0 rounded-none",
+                "flex items-center justify-center",
+                isLoading ? "cursor-not-allowed" : "cursor-pointer",
+              )}
+            >
+              <Globe02Icon size={16} color="var(--color-text-sub)" />
+            </Button>
+          )}
           {selectedKey && (
             <p
               className={cn(
@@ -90,7 +93,9 @@ export const TimezoneCombobox = <T extends object>({
           <Input
             className={cn(
               "relative z-10 flex-1 h-full truncate pr-2",
-              selectedKey ? "data-[focused]:pl-10 pl-29 " : "pl-10",
+              selectedKey && !isLoading
+                ? "data-[focused]:pl-10 pl-29 "
+                : "pl-10",
             )}
             placeholder="Timezone"
             onKeyDown={(e) => {

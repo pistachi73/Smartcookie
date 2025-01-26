@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS "billing" (
 	"client_id" serial NOT NULL,
 	"hub_id" serial NOT NULL,
 	"cost" integer NOT NULL,
-	"billingType" "payment_frequency" NOT NULL,
+	"billing_type" "payment_frequency" NOT NULL,
 	"tentative" boolean DEFAULT true,
 	"invoice_sent" boolean DEFAULT false
 );
@@ -33,31 +33,31 @@ CREATE TABLE IF NOT EXISTS "client" (
 	"password" text NOT NULL,
 	"salt" text NOT NULL,
 	"image" text,
-	"paymentFrequency" "payment_frequency" DEFAULT 'monthly',
+	"payment_frequency" "payment_frequency" DEFAULT 'monthly',
 	"location" text,
 	"nationality" text,
 	"age" integer,
-	"timeInvestment" "time_investment" DEFAULT 'medium',
+	"time_investment" "time_investment" DEFAULT 'medium',
 	"job" text,
 	"away_until" timestamp
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "client_hub" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"clientId" serial NOT NULL,
-	"hubId" serial NOT NULL,
-	CONSTRAINT "client_hub_clientId_hubId_unique" UNIQUE("clientId","hubId")
+	"client_id" serial NOT NULL,
+	"hub_id" serial NOT NULL,
+	CONSTRAINT "client_hub_clientId_hubId_unique" UNIQUE("client_id","hub_id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "event" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"title" text NOT NULL,
-	"description" text NOT NULL,
-	"hub_id" serial NOT NULL,
+	"hub_id" integer,
 	"user_id" uuid NOT NULL,
+	"title" text NOT NULL,
+	"description" text,
 	"start_time" timestamp NOT NULL,
 	"end_time" timestamp NOT NULL,
-	"price" integer NOT NULL,
+	"price" integer,
 	"is_recurring" boolean DEFAULT false,
 	"recurrence_rule" text,
 	"timezone" text DEFAULT 'UTC' NOT NULL
@@ -65,10 +65,10 @@ CREATE TABLE IF NOT EXISTS "event" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "event_occurrence" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"event_id" serial NOT NULL,
+	"event_id" integer NOT NULL,
 	"start_time" timestamp NOT NULL,
 	"end_time" timestamp NOT NULL,
-	"overrides" jsonb NOT NULL
+	"overrides" jsonb
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "hub" (
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS "hub" (
 	"user_id" uuid NOT NULL,
 	"name" text NOT NULL,
 	"description" text NOT NULL,
-	"scheduleType" "schedule_type" NOT NULL,
+	"schedule_type" "schedule_type" NOT NULL,
 	"default_session_price" integer NOT NULL,
 	"cancelation_policy_hours" integer NOT NULL
 );
@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS "two_factor_confirmation" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"token" text NOT NULL,
 	"user_id" uuid NOT NULL,
-	CONSTRAINT "two_factor_confirmation_user_id_token_unique" UNIQUE("user_id","token")
+	CONSTRAINT "two_factor_confirmation_userId_token_unique" UNIQUE("user_id","token")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "two_factor_token" (
@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS "user" (
 	"email" text NOT NULL,
 	"name" text,
 	"image" text,
-	"emailVerified" timestamp DEFAULT now(),
+	"email_verified" timestamp DEFAULT now(),
 	"password" text,
 	"salt" text,
 	"role" text DEFAULT 'USER',
@@ -143,13 +143,13 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "client_hub" ADD CONSTRAINT "client_hub_clientId_client_id_fk" FOREIGN KEY ("clientId") REFERENCES "public"."client"("id") ON DELETE cascade ON UPDATE no action;
+ ALTER TABLE "client_hub" ADD CONSTRAINT "client_hub_client_id_client_id_fk" FOREIGN KEY ("client_id") REFERENCES "public"."client"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "client_hub" ADD CONSTRAINT "client_hub_hubId_hub_id_fk" FOREIGN KEY ("hubId") REFERENCES "public"."hub"("id") ON DELETE cascade ON UPDATE no action;
+ ALTER TABLE "client_hub" ADD CONSTRAINT "client_hub_hub_id_hub_id_fk" FOREIGN KEY ("hub_id") REFERENCES "public"."hub"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -184,7 +184,7 @@ EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "client_hub_clientId_index" ON "client_hub" USING btree ("clientId");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "client_hub_hubId_index" ON "client_hub" USING btree ("hubId");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "client_hub_client_id_index" ON "client_hub" USING btree ("client_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "client_hub_hub_id_index" ON "client_hub" USING btree ("hub_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "two_factor_confirmation_token_index" ON "two_factor_confirmation" USING btree ("token");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "user_email_index" ON "user" USING btree ("email");

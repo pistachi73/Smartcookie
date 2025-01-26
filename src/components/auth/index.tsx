@@ -74,7 +74,7 @@ export const AuthContent = ({ className }: { className?: string }) => {
                 <div className="flex h-7 items-center justify-center ">
                   <BadgeCheck size={20} strokeWidth={2} />{" "}
                 </div>
-                <p className="text-base">{content}</p>
+                <p className="text-md">{content}</p>
               </li>
             ))}
           </ul>

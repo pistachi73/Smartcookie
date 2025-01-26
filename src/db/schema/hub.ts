@@ -11,15 +11,15 @@ export const scheduleTypeEnum = pgEnum("schedule_type", [
 ]);
 
 export const hub = pgTable("hub", {
-  id: serial("id").primaryKey(),
-  userId: uuid("user_id")
+  id: serial().primaryKey(),
+  userId: uuid()
     .references(() => user.id, { onDelete: "cascade" })
     .notNull(),
-  name: text("name").notNull(),
-  description: text("description").notNull(),
+  name: text().notNull(),
+  description: text().notNull(),
   scheduleType: scheduleTypeEnum().notNull(),
-  defaultSessionPrice: integer("default_session_price").notNull(),
-  cancelationPolicyHours: integer("cancelation_policy_hours").notNull(),
+  defaultSessionPrice: integer().notNull(),
+  cancelationPolicyHours: integer().notNull(),
 });
 
 export type InsertHub = typeof hub.$inferInsert;

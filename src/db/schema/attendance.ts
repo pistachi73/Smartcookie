@@ -5,12 +5,12 @@ import { event } from "./event";
 import { pgTable } from "./utils";
 
 export const attendance = pgTable("attendance", {
-  id: serial("id").primaryKey(),
-  attendance: boolean("attendance").default(true),
-  clientId: serial("client_id")
+  id: serial().primaryKey(),
+  attendance: boolean().default(true),
+  clientId: serial()
     .notNull()
     .references(() => client.id, { onDelete: "cascade" }),
-  eventId: serial("event_id")
+  eventId: serial()
     .notNull()
     .references(() => event.id, { onDelete: "cascade" }),
 });

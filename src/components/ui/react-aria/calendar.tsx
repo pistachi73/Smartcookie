@@ -19,7 +19,7 @@ import { Button } from "../button";
 export type CalendarProps<T extends DateValue> = AriaCalendarProps<T>;
 
 const cellStyles = cva(
-  "p-0 hover:text-responsive-dark hover:bg-responsive-dark/10 font-normal size-8 text-sm cursor-default rounded-full flex items-center justify-center forced-color-adjust-none",
+  "m-0.5 p-0 hover:text-responsive-dark hover:bg-responsive-dark/10 font-normal size-8 text-sm cursor-default rounded-full flex items-center justify-center forced-color-adjust-none",
   {
     variants: {
       isSelected: {
@@ -43,7 +43,7 @@ export function Calendar<T extends DateValue>({
   return (
     <AriaCalendar {...props} className="flex flex-col items-center">
       <CalendarHeader />
-      <CalendarGrid className="flex flex-col items-center gap-1">
+      <CalendarGrid className="flex flex-col items-center gap-1 ">
         <CalendarGridHeader />
         <CalendarGridBody className="w-full">
           {(date) => (
@@ -68,7 +68,7 @@ export function CalendarHeader() {
   const { direction } = useLocale();
 
   return (
-    <header className="flex items-center gap-1 pb-3 px-1 w-[calc(var(--spacing)*8*7)]">
+    <header className="flex items-center gap-1 pb-3 px-1 w-[calc(var(--spacing)*9*7)]">
       <Button
         iconOnly
         slot="previous"
@@ -82,7 +82,7 @@ export function CalendarHeader() {
           <ArrowLeft01Icon aria-hidden size={20} />
         )}
       </Button>
-      <Heading className="flex-1 font-medium text-text-base text-center" />
+      <Heading className="flex-1 font-medium text-text-default text-center" />
       <Button
         iconOnly
         slot="next"
@@ -102,9 +102,9 @@ export function CalendarHeader() {
 
 export function CalendarGridHeader() {
   return (
-    <AriaCalendarGridHeader>
+    <AriaCalendarGridHeader className="flex justify-between">
       {(day) => (
-        <CalendarHeaderCell className="text-responsive-dark text-sm rounded-md w-8 font-normal">
+        <CalendarHeaderCell className="text-responsive-dark text-sm rounded-md w-9 font-medium">
           {day}
         </CalendarHeaderCell>
       )}

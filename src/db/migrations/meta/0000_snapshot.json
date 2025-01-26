@@ -1,5 +1,5 @@
 {
-  "id": "a362df98-41f4-4363-8db4-f976409c7bcf",
+  "id": "e5ac6874-c13a-4688-b994-eae3921eb645",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -131,8 +131,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "billingType": {
-          "name": "billingType",
+        "billing_type": {
+          "name": "billing_type",
           "type": "payment_frequency",
           "typeSchema": "public",
           "primaryKey": false,
@@ -226,8 +226,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "paymentFrequency": {
-          "name": "paymentFrequency",
+        "payment_frequency": {
+          "name": "payment_frequency",
           "type": "payment_frequency",
           "typeSchema": "public",
           "primaryKey": false,
@@ -252,8 +252,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "timeInvestment": {
-          "name": "timeInvestment",
+        "time_investment": {
+          "name": "time_investment",
           "type": "time_investment",
           "typeSchema": "public",
           "primaryKey": false,
@@ -289,25 +289,25 @@
           "primaryKey": true,
           "notNull": true
         },
-        "clientId": {
-          "name": "clientId",
+        "client_id": {
+          "name": "client_id",
           "type": "serial",
           "primaryKey": false,
           "notNull": true
         },
-        "hubId": {
-          "name": "hubId",
+        "hub_id": {
+          "name": "hub_id",
           "type": "serial",
           "primaryKey": false,
           "notNull": true
         }
       },
       "indexes": {
-        "client_hub_clientId_index": {
-          "name": "client_hub_clientId_index",
+        "client_hub_client_id_index": {
+          "name": "client_hub_client_id_index",
           "columns": [
             {
-              "expression": "clientId",
+              "expression": "client_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -318,11 +318,11 @@
           "method": "btree",
           "with": {}
         },
-        "client_hub_hubId_index": {
-          "name": "client_hub_hubId_index",
+        "client_hub_hub_id_index": {
+          "name": "client_hub_hub_id_index",
           "columns": [
             {
-              "expression": "hubId",
+              "expression": "hub_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -335,12 +335,12 @@
         }
       },
       "foreignKeys": {
-        "client_hub_clientId_client_id_fk": {
-          "name": "client_hub_clientId_client_id_fk",
+        "client_hub_client_id_client_id_fk": {
+          "name": "client_hub_client_id_client_id_fk",
           "tableFrom": "client_hub",
           "tableTo": "client",
           "columnsFrom": [
-            "clientId"
+            "client_id"
           ],
           "columnsTo": [
             "id"
@@ -348,12 +348,12 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "client_hub_hubId_hub_id_fk": {
-          "name": "client_hub_hubId_hub_id_fk",
+        "client_hub_hub_id_hub_id_fk": {
+          "name": "client_hub_hub_id_hub_id_fk",
           "tableFrom": "client_hub",
           "tableTo": "hub",
           "columnsFrom": [
-            "hubId"
+            "hub_id"
           ],
           "columnsTo": [
             "id"
@@ -368,8 +368,8 @@
           "name": "client_hub_clientId_hubId_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "clientId",
-            "hubId"
+            "client_id",
+            "hub_id"
           ]
         }
       },
@@ -385,6 +385,18 @@
           "primaryKey": true,
           "notNull": true
         },
+        "hub_id": {
+          "name": "hub_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
         "title": {
           "name": "title",
           "type": "text",
@@ -395,19 +407,7 @@
           "name": "description",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
-        },
-        "hub_id": {
-          "name": "hub_id",
-          "type": "serial",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "start_time": {
           "name": "start_time",
@@ -425,7 +425,7 @@
           "name": "price",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "is_recurring": {
           "name": "is_recurring",
@@ -493,7 +493,7 @@
         },
         "event_id": {
           "name": "event_id",
-          "type": "serial",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
@@ -513,7 +513,7 @@
           "name": "overrides",
           "type": "jsonb",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         }
       },
       "indexes": {},
@@ -564,8 +564,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "scheduleType": {
-          "name": "scheduleType",
+        "schedule_type": {
+          "name": "schedule_type",
           "type": "schedule_type",
           "typeSchema": "public",
           "primaryKey": false,
@@ -705,8 +705,8 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "two_factor_confirmation_user_id_token_unique": {
-          "name": "two_factor_confirmation_user_id_token_unique",
+        "two_factor_confirmation_userId_token_unique": {
+          "name": "two_factor_confirmation_userId_token_unique",
           "nullsNotDistinct": false,
           "columns": [
             "user_id",
@@ -789,8 +789,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "emailVerified": {
-          "name": "emailVerified",
+        "email_verified": {
+          "name": "email_verified",
           "type": "timestamp",
           "primaryKey": false,
           "notNull": false,

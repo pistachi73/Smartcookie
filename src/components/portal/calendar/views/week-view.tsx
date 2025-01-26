@@ -39,13 +39,13 @@ export const WeekView = () => {
               <div
                 className={cn(
                   "flex flex-col items-center justify-center p-1 rounded-lg",
-                  isSelected && "bg-base-highlight text-text-base",
+                  isSelected && "bg-base-highlight text-text-default",
                 )}
               >
                 <p className="text-sm text-text-sub lowercase">
                   {format(day, "iii")}
                 </p>
-                <p className="text-3xl font-medium text-text-base">
+                <p className="text-3xl font-medium text-text-default">
                   {day.getDate()}
                 </p>
               </div>
@@ -53,7 +53,7 @@ export const WeekView = () => {
           );
         })}
 
-        <div className="h-full w-3" />
+        <div className="w-3" />
       </div>
       <div className="pl-4 relative flex flex-col overflow-y-scroll">
         <div className="items-stretch flex flex-auto">

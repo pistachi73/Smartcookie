@@ -7,11 +7,11 @@ import { pgTable } from "./utils";
 export const clientHub = pgTable(
   "client_hub",
   {
-    id: serial("id").primaryKey(),
-    clientId: serial("clientId")
+    id: serial().primaryKey(),
+    clientId: serial()
       .notNull()
       .references(() => client.id, { onDelete: "cascade" }),
-    hubId: serial("hubId")
+    hubId: serial()
       .notNull()
       .references(() => hub.id, { onDelete: "cascade" }),
   },

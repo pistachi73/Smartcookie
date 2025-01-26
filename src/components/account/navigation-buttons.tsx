@@ -18,7 +18,7 @@ export const NavigationButtons = () => {
         href="/account"
         className={cn(
           buttonVariants({ variant: "ghost", size: "lg" }),
-          "px-0 text-sm lg:text-base lg:font-medium hover:no-underline w-fit lg:w-full flex flex-row gap-2 lg:px-4 justify-start ",
+          "px-0 text-sm lg:text-md lg:font-medium hover:no-underline w-fit lg:w-full flex flex-row gap-2 lg:px-4 justify-start ",
           pathname === "/account/" ? "text-responsive-dark" : "text-text-sub",
         )}
       >

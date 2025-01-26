@@ -4,17 +4,17 @@ import { hub } from "./hub";
 import { pgTable } from "./utils";
 
 export const billing = pgTable("billing", {
-  id: serial("id").primaryKey(),
-  clientId: serial("client_id")
+  id: serial().primaryKey(),
+  clientId: serial()
     .notNull()
     .references(() => client.id, { onDelete: "cascade" }),
-  hubId: serial("hub_id")
+  hubId: serial()
     .notNull()
     .references(() => hub.id, { onDelete: "cascade" }),
-  cost: integer("cost").notNull(),
+  cost: integer().notNull(),
   billingType: paymentFrequencyEnum().notNull(),
-  tentative: boolean("tentative").default(true),
-  invoiceSent: boolean("invoice_sent").default(false),
+  tentative: boolean().default(true),
+  invoiceSent: boolean().default(false),
 });
 
 export type InsertBilling = typeof billing.$inferInsert;

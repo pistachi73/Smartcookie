@@ -1,6 +1,12 @@
-import { getCalendarHubsByUserId, getHubsByUserId } from "@/data-access/hub";
+import { getHubsByUserId } from "@/data-access/hub";
 import { db } from "@/db";
-import { event, eventOccurrence } from "@/db/schema";
+import {
+  type InsertEvent,
+  type InsertEventOccurrence,
+  event,
+  event as eventDb,
+  eventOccurrence,
+} from "@/db/schema";
 import type { CalendarEventOccurrence } from "@/stores/calendar-store";
 import { and, asc, eq } from "drizzle-orm";
 
@@ -36,8 +42,8 @@ export const getCalendarDataUseCase = async (userId: string) => {
       eventId: event.id,
       eventOccurrenceId: eventOccurrence.id,
       userId: event.userId,
-      startTime: new Date(eventOccurrence.startTime),
-      endTime: new Date(eventOccurrence.endTime),
+      startTime: new Date(`${eventOccurrence.startTime}Z`),
+      endTime: new Date(`${eventOccurrence.endTime}Z`),
       title: eventOccurrence.overrides?.title || event.title,
       description: eventOccurrence.overrides?.description || event.description,
       isRecurring: event.isRecurring,
@@ -48,48 +54,48 @@ export const getCalendarDataUseCase = async (userId: string) => {
     });
   });
 
-  // const eventOccurrencesMap = Array.from(eventOccurrencesMap.values());
   const eventOcurrences = Object.fromEntries(eventOccurrencesMap.entries());
-
-  // const groupedEventOccurrences =
-  //   groupEventOccurrencesByDayAndTime(eventOccurrences);
 
   return {
     hubs,
     eventOcurrences: eventOcurrences,
   };
 };
-export const getCalendarHubsByUserIdUseCase = async (userId: string) => {
-  const hubs = await getCalendarHubsByUserId(userId);
 
-  hubs.forEach((hub) => {
-    console.log({ hub });
-    hub.sessions.forEach((session) => {
-      console.log({ session });
-      session.occurrences?.forEach((occurrence) => {
-        console.log({ occurrence });
-      });
-    });
+export const createEventUseCase = async ({
+  userId,
+  event,
+  occurrences,
+}: {
+  userId: string;
+  event: Omit<InsertEvent, "userId">;
+  occurrences: Omit<InsertEventOccurrence, "eventId">[];
+}) => {
+  return await db.transaction(async (trx) => {
+    const [createdEvent] = await trx
+      .insert(eventDb)
+      .values({ userId, ...event })
+      .returning();
+
+    if (!createdEvent) {
+      trx.rollback();
+      return;
+    }
+
+    const createdEventId = createdEvent.id;
+    const occurrencesWithEventId = occurrences.map((occurrence) => ({
+      ...occurrence,
+      eventId: createdEventId,
+    }));
+
+    const createdOccurrences = await trx
+      .insert(eventOccurrence)
+      .values(occurrencesWithEventId)
+      .returning();
+
+    return {
+      createdEvent,
+      createdOccurrences,
+    };
   });
-
-  // console.time("getCalendarHubsByUserIdUseCase");
-
-  // const sessions = hubs.reduce<Session[]>((acc, hub) => {
-  //   acc.push(...hub.sessions);
-  //   return acc;
-  // }, []);
-
-  // const sessionOcurrences = sessions.flatMap((session) =>
-  //   generateSessionOccurrences({ session }),
-  // );
-  // // console.log({ sessionOcurrences });
-
-  // const groupedSessionOccurrences =
-  //   groupOccurrencesByDayAndTime(sessionOcurrences);
-  // console.timeEnd("getCalendarHubsByUserIdUseCase");
-
-  return {
-    hubs: null,
-    sessionOccurrences: null,
-  };
 };

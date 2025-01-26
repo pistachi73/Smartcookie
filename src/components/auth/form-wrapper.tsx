@@ -75,9 +75,7 @@ export const FormWrapper = ({
         <CardTitle className="text-2xl font-semibold tracking-tighter ">
           {header}
         </CardTitle>
-        <CardDescription className="mt-2 text-base">
-          {subHeader}
-        </CardDescription>
+        <CardDescription className="mt-2 text-md">{subHeader}</CardDescription>
       </CardHeader>
       <CardContent className={cn("px-0 py-4", className)}>
         {children}

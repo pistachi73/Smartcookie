@@ -3,6 +3,7 @@ import { type CalendarDate, getDayOfWeek } from "@internationalized/date";
 import { format } from "date-fns";
 import { type Frequency, type Options, RRule, Weekday } from "rrule";
 import type { Language } from "rrule/dist/esm/nlp/i18n";
+import type { ParsedOptions } from "rrule/dist/esm/types";
 
 export enum EndsEnum {
   ENDS_NEVER = "ENDS_NEVER",
@@ -80,45 +81,6 @@ export const getPredefinedRecurrencesOptionsMap = (
   };
 };
 
-export const getPredefinedRecurrencesLabelMap = (
-  selectedDate: CalendarDate,
-): {
-  [key in PrefefinedRecurrencesEnum]: {
-    label: string;
-    auxLabel?: string;
-  } | null;
-} => {
-  return {
-    [PrefefinedRecurrencesEnum.NO_RECURRENCE]: {
-      label: "Does not repeat",
-    },
-    [PrefefinedRecurrencesEnum.EVERY_DAY]: {
-      label: "Every day",
-    },
-    [PrefefinedRecurrencesEnum.EVERY_WEEKDAY]: {
-      label: "Every weekday",
-      auxLabel: "Mon - Fri",
-    },
-    [PrefefinedRecurrencesEnum.EVERY_WEEK_ON_SELECTED_DATE]: {
-      label: "Every week",
-      auxLabel: `on ${format(selectedDate.toDate("UTC"), "iii")}`,
-    },
-    [PrefefinedRecurrencesEnum.EVERY_MONTHDAY]: {
-      label: "Every month",
-      auxLabel: `on the ${format(selectedDate.toDate("UTC"), "do")}`,
-    },
-    [PrefefinedRecurrencesEnum.EVERY_CARDINAL_MONTHDAY]: {
-      label: "Every month",
-      auxLabel: `on the ${getWeekdayCardinal(selectedDate.toDate("UTC")).label} ${format(selectedDate.toDate("UTC"), "iii")}`,
-    },
-    [PrefefinedRecurrencesEnum.EVERY_YEARDAY]: {
-      label: "Every year",
-      auxLabel: `on ${format(selectedDate.toDate("UTC"), "MMM d")}`,
-    },
-    [PrefefinedRecurrencesEnum.CUSTOM]: null,
-  };
-};
-
 export const getFrequencyItems = (
   interval: number,
 ): { id: Frequency; label: string }[] => {
@@ -143,6 +105,133 @@ export const getFrequencyItems = (
   ];
 };
 
+export const getSelectItems = (selectedDate: CalendarDate, value?: string) => {
+  const shortWeekdayStr = format(selectedDate.toDate("UTC"), "iii");
+
+  type Section = {
+    section: string;
+    items: {
+      value: string;
+      name: string;
+      auxName?: string;
+    }[];
+  };
+
+  const sections: [Section, Section, Section] = [
+    {
+      section: "no-repeat",
+      items: [
+        {
+          value: getSelectItemsValue(
+            PrefefinedRecurrencesEnum.NO_RECURRENCE,
+            selectedDate,
+          ),
+          name: "Does not repeat",
+        },
+      ],
+    },
+    {
+      section: "predefined",
+      items: [
+        {
+          value: getSelectItemsValue(
+            PrefefinedRecurrencesEnum.EVERY_DAY,
+            selectedDate,
+          ),
+          name: "Every day",
+        },
+        {
+          value: getSelectItemsValue(
+            PrefefinedRecurrencesEnum.EVERY_WEEKDAY,
+            selectedDate,
+          ),
+          name: "Every weekday",
+          auxName: "Mon - Fri",
+        },
+        {
+          value: getSelectItemsValue(
+            PrefefinedRecurrencesEnum.EVERY_WEEK_ON_SELECTED_DATE,
+            selectedDate,
+          ),
+          name: "Every week",
+          auxName: `on ${shortWeekdayStr}`,
+        },
+        {
+          value: getSelectItemsValue(
+            PrefefinedRecurrencesEnum.EVERY_MONTHDAY,
+            selectedDate,
+          ),
+          name: "Every month",
+          auxName: `on the ${format(selectedDate.toDate("UTC"), "do")}`,
+        },
+        {
+          value: getSelectItemsValue(
+            PrefefinedRecurrencesEnum.EVERY_CARDINAL_MONTHDAY,
+            selectedDate,
+          ),
+          name: "Every month",
+          auxName: `on the ${getWeekdayCardinal(selectedDate.toDate("UTC")).label} ${shortWeekdayStr}`,
+        },
+        {
+          value: getSelectItemsValue(
+            PrefefinedRecurrencesEnum.EVERY_YEARDAY,
+            selectedDate,
+          ),
+          name: "Every year",
+          auxName: `on ${format(selectedDate.toDate("UTC"), "MMM d")}`,
+        },
+      ],
+    },
+    {
+      section: "custom",
+      items: [{ value: "custom-recurrence", name: "Custom..." }],
+    },
+  ];
+
+  if (
+    value &&
+    !sections.some((section) =>
+      section.items.some((item) => item.value === value),
+    )
+  ) {
+    const rruleLabels = parseRruleText(value);
+    sections[1].items.push({
+      value,
+      name: rruleLabels.label,
+      auxName: rruleLabels.auxLabel,
+    });
+  }
+
+  return sections;
+};
+
+export const getSelectItemsValue = (
+  predefinedRecurrence: PrefefinedRecurrencesEnum,
+  selectedDate: CalendarDate,
+): string => {
+  if (predefinedRecurrence === PrefefinedRecurrencesEnum.NO_RECURRENCE) {
+    return PrefefinedRecurrencesEnum.NO_RECURRENCE;
+  }
+
+  if (predefinedRecurrence === PrefefinedRecurrencesEnum.CUSTOM) {
+    return PrefefinedRecurrencesEnum.CUSTOM;
+  }
+
+  const options = {
+    dstart: selectedDate.toDate("UTC"),
+    ...getPredefinedRecurrencesOptionsMap(selectedDate)[predefinedRecurrence],
+  };
+
+  const rrule = new RRule(
+    convertCustomToRRuleOptions({
+      rruleOptions: options,
+      ends: EndsEnum.ENDS_NEVER,
+    }),
+  );
+
+  return rrule.toString();
+};
+
 export type NullableCustomRruleOptions = {
   dstart?: Options["dtstart"];
   freq: Options["freq"];
@@ -150,8 +239,8 @@ export type NullableCustomRruleOptions = {
   weeklyByweekday?: Options["byweekday"];
   monthlyByweekday?: Options["byweekday"];
   bymonthday?: Options["bymonthday"];
-  until?: Options["until"];
-  count?: Options["count"];
+  until?: Options["until"] | null;
+  count?: Options["count"] | null;
 };
 
 export type CustomRruleOptions = Partial<{
@@ -160,7 +249,7 @@ export type CustomRruleOptions = Partial<{
   >;
 }>;
 
-export const parseRruleOptions = ({
+export const convertCustomToRRuleOptions = ({
   rruleOptions,
   ends,
 }: {
@@ -188,6 +277,49 @@ export const parseRruleOptions = ({
   };
 };
 
+export const convertRRuleOptionsToCustom = (
+  rruleOptions: ParsedOptions,
+): CustomRruleOptions => {
+  const { freq, byweekday, until, count, ...rest } = rruleOptions;
+
+  const options: CustomRruleOptions = {
+    ...rest,
+    freq,
+    ...(freq === RRule.WEEKLY && {
+      weeklyByweekday: byweekday,
+    }),
+    ...(freq === RRule.MONTHLY && {
+      monthlyByweekday: byweekday,
+    }),
+    until: until || undefined,
+    count: count || undefined,
+  };
+
+  return options;
+};
+
+export const parseRruleText = (
+  rruleString?: string,
+): { label: string; auxLabel: string } => {
+  if (!rruleString || rruleString === PrefefinedRecurrencesEnum.NO_RECURRENCE)
+    return { label: "Does not repeat", auxLabel: "" };
+  if (rruleString === PrefefinedRecurrencesEnum.CUSTOM)
+    return { label: "Custom", auxLabel: "" };
+
+  const rrule = RRule.fromString(rruleString);
+  const fullText = rrule.toText(undefined, rruleLanguage);
+  const wordArray = fullText.split(" ");
+
+  const sliceIndex = rrule.options.interval > 1 ? 3 : 2;
+
+  return {
+    label:
+      wordArray.slice(0, sliceIndex).join(" ").charAt(0).toUpperCase() +
+      wordArray.slice(0, sliceIndex).join(" ").slice(1),
+    auxLabel: wordArray.slice(sliceIndex).join(" "),
+  };
+};
+
 export const rruleLanguage: Language = {
   dayNames: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
   monthNames: [
@@ -205,21 +337,4 @@ export const rruleLanguage: Language = {
     "Dec",
   ],
   tokens: {},
-};
-
-export const parseRruleText = (
-  rrule: RRule | null,
-  interval: number,
-): { label: string; auxLabel: string } => {
-  if (!rrule) return { label: "Does not repeat", auxLabel: "" };
-
-  const fullText = rrule.toText(undefined, rruleLanguage);
-  const wordArray = fullText.split(" ");
-
-  const sliceIndex = interval > 1 ? 3 : 2;
-
-  return {
-    label: wordArray.slice(0, sliceIndex).join(" "),
-    auxLabel: wordArray.slice(sliceIndex).join(" "),
-  };
 };

@@ -46,6 +46,7 @@ export const TimeCombobox = <T extends TimeSelectOption>({
   onChange,
   onBlur,
   onKeyDown,
+  isDisabled,
   ...props
 }: TimeComboboxProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -55,8 +56,10 @@ export const TimeCombobox = <T extends TimeSelectOption>({
   const handleInputParsing = (v: string) => {
     // Parse the input and set the input value
     const parsedInput = parseTimeInput(v);
+    console.log({ parsedInput });
 
     if (!parsedInput) {
+      console.log("set input without parsed", value);
       setInput(value ? formatLabel(value.hour, value.minute) : "");
     } else {
       const timeValue = generateTimeValue(
@@ -67,12 +70,6 @@ export const TimeCombobox = <T extends TimeSelectOption>({
 
       onChange(timeValue);
       setInput(formatLabel(timeValue.hour, timeValue.minute));
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleInputParsing(input);
     }
   };
 
@@ -90,7 +87,6 @@ export const TimeCombobox = <T extends TimeSelectOption>({
 
   useEffect(() => {
     if (!minValue) return;
-    console.log({ minValue });
     setItems(generateTimeSelectOptions(minValue));
   }, [minValue]);
 
@@ -101,6 +97,7 @@ export const TimeCombobox = <T extends TimeSelectOption>({
         inputValue={input}
         selectedKey={input}
         onSelectionChange={(time) => {
+          if (!time) return;
           setInput(time as string);
         }}
         onInputChange={setInput}
@@ -112,18 +109,15 @@ export const TimeCombobox = <T extends TimeSelectOption>({
           handleInputParsing(input);
           onBlur?.(e);
         }}
-        onKeyDown={(e) => {
-          handleKeyDown(e);
-          onKeyDown?.(e);
-        }}
         className="min-w-0"
         allowsCustomValue
+        isDisabled={isDisabled}
         items={items}
         {...props}
       >
         <Group
           className={cn(
-            fieldWrapperVariants({ size: "sm" }),
+            fieldWrapperVariants({ size: "sm", isDisabled }),
             "block px-0 overflow-hidden pl-0 relative",
             withIcon && "pl-0",
             className,

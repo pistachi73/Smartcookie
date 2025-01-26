@@ -34,6 +34,7 @@ export const DayEventsColumn = ({
   const [dragEndY, setDragEndY] = useState<number | null>(null);
 
   const handleMouseDown = (e: React.MouseEvent) => {
+    console.log("handleMouseDown");
     e.preventDefault();
     if (columnRef.current) {
       const rect = columnRef.current.getBoundingClientRect();
@@ -62,6 +63,7 @@ export const DayEventsColumn = ({
 
   // Handles mouse up event to finalize drag
   const handleMouseUp = useCallback(() => {
+    console.log("handleMouseUp");
     setDragStartY(null);
     setDragEndY(null);
 
@@ -80,31 +82,34 @@ export const DayEventsColumn = ({
   }, [date, setDraftEventOccurrence, dragStartY, dragEndY]);
 
   useEffect(() => {
+    const abortController = new AbortController();
     if (dragStartY !== null) {
-      window.addEventListener("mousemove", handleMouseMove);
-      window.addEventListener("mouseup", handleMouseUp);
+      window.addEventListener("mousemove", handleMouseMove, {
+        signal: abortController.signal,
+      });
+      window.addEventListener("mouseup", handleMouseUp, {
+        signal: abortController.signal,
+      });
     } else {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
+      abortController.abort();
     }
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
+      abortController.abort();
     };
   }, [dragStartY, handleMouseMove, handleMouseUp]);
 
   return (
-    <div
-      ref={columnRef}
-      className={cn("h-full w-full relative", dragEndY && "cursor-move!")}
-      onMouseDown={handleMouseDown}
-    >
-      <div>
-        {children}
-        {dragStartY !== null && dragEndY !== null && (
-          <PreDraftEvent startIndex={dragStartY} endIndex={dragEndY} />
-        )}
-      </div>
+    <div className={cn("h-full w-full relative", dragEndY && "cursor-move!")}>
+      <div
+        ref={columnRef}
+        className="absolute top-0 left-0 h-full w-full"
+        onMouseDown={handleMouseDown}
+      />
+
+      {children}
+      {dragStartY !== null && dragEndY !== null && (
+        <PreDraftEvent startIndex={dragStartY} endIndex={dragEndY} />
+      )}
     </div>
   );
 };

@@ -86,7 +86,7 @@ export const DangerZone = () => {
             <ResponsiveDialogTitle className="text-xl">
               Are you absolutely sure?
             </ResponsiveDialogTitle>
-            <ResponsiveDialogDescription className="text-base">
+            <ResponsiveDialogDescription className="text-md">
               This action cannot be undone. This will permanently delete your
               account and remove your data from our servers.
             </ResponsiveDialogDescription>

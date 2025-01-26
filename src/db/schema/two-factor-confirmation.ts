@@ -5,9 +5,9 @@ import { pgTable } from "./utils";
 export const twoFactorConirmation = pgTable(
   "two_factor_confirmation",
   {
-    id: serial("id").primaryKey(),
-    token: text("token").notNull(),
-    userId: uuid("user_id")
+    id: serial().primaryKey(),
+    token: text().notNull(),
+    userId: uuid()
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
   },

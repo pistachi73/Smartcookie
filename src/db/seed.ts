@@ -10,7 +10,7 @@ import type { Table } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/neon-http";
 
 const connection = neon(env.DATABASE_URL);
-const db = drizzle(connection, { schema });
+const db = drizzle(connection, { schema, casing: "snake_case" });
 export type DB = typeof db;
 
 async function resetTable(db: DB, table: Table) {

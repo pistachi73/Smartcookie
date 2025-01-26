@@ -41,7 +41,7 @@
   --color-responsive-light: var(--responsive-light);
   --color-responsive-dark: var(--responsive-dark);
 
-  --color-text-base: var(--text-base);
+  --color-text-default: var(--text-default);
   --color-text-sub: var(--text-sub);
 
   --color-base: var(--base);
@@ -156,7 +156,7 @@
     --elevated: oklch(93.38% 0.0029 264.54);
     --elevated-highlight:  oklch(87% 0.0029 264.54);
     --background-reverse: var(--color-dark);
-    --text-base: oklch(6.72% 0 0);
+    --text-default: oklch(6.72% 0 0);
     --text-sub: oklch(6.72% 0 0 / 60%);
     --border: oklch(6.72% 0 0 / 10%);
     --border-highlight: oklch(6.72% 0 0 / 60%);
@@ -178,7 +178,7 @@
 
     --calendar-border: oklch(25.89% 0.0051 248.08);
 
-    --text-base: oklch(100% 0 0);
+    --text-default: oklch(100% 0 0);
     --text-sub: oklch(100% 0 0 / 60%);
     
     --background-reverse: var(--color-neutral-300);
@@ -230,6 +230,10 @@
   @apply focus-visible:outline-none focus-visible:ring-[4px] focus-visible:border-responsive-dark focus-visible:ring-responsive-dark/40;
 }
 
+@utility text-md {
+  @apply text-[1rem] leading-[1.5rem];
+}
+ 
 @utility scrollbar-hidden {
   &::-webkit-scrollbar {
     display: none;

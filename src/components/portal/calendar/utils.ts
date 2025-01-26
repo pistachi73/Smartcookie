@@ -97,7 +97,6 @@ export const consumeOccurrenceOverrides = (
   searchParams: ReadonlyURLSearchParams,
 ): Partial<z.infer<typeof SessionOcurrenceFormSchema>> | undefined => {
   const encodedOverrides = searchParams.get("overrides");
-  console.log({ encodedOverrides });
   if (!encodedOverrides) return;
 
   try {
@@ -137,10 +136,10 @@ export const getEventOccurrenceDayKey = (date: Date) => {
   return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 };
 
-export const calculateOccurrenceTop = (startTime: Date): number => {
-  const date = new Date(startTime);
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
+export const calculateOccurrenceTop = ({
+  hours,
+  minutes,
+}: { hours: number; minutes: number }): number => {
   const totalMinutes = (hours - CALENDAR_START_HOUR) * 60 + minutes;
   return totalMinutes * PIXELS_PER_MINUTE;
 };
@@ -149,8 +148,8 @@ export const calculateOccurrenceHeight = (
   startTime: Date,
   endTime: Date,
 ): number => {
-  const start = new Date(startTime).getTime();
-  const end = new Date(endTime).getTime();
+  const start = startTime.getTime();
+  const end = endTime.getTime();
   const duration = (end - start) / (1000 * 60); // Duration in minutes
   return duration * PIXELS_PER_MINUTE;
 };

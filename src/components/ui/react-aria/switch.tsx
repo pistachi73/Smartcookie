@@ -6,12 +6,27 @@ import { cn } from "../../../lib/utils";
 type MySwitchProps = Omit<AriaSwitchProps, "children"> & {
   children: React.ReactNode;
 };
-
-export const Switch = ({ children, className, ...props }: MySwitchProps) => {
+export const switchVariants = cva(["group flex items-center gap-2"], {
+  variants: {
+    isDisabled: {
+      true: "cursor-not-allowed opacity-60 pointer-events-none",
+      false: "",
+    },
+  },
+  defaultVariants: {
+    isDisabled: false,
+  },
+});
+export const Switch = ({
+  children,
+  className,
+  isDisabled,
+  ...props
+}: MySwitchProps) => {
   return (
     <AriaSwitch
       {...props}
-      className={cn("group flex items-center gap-2", className)}
+      className={cn(switchVariants({ isDisabled }), className)}
     >
       {children}
     </AriaSwitch>
@@ -34,6 +49,7 @@ const indicatorWrapperVariants = cva(
   {
     variants: {
       size: {
+        xs: "[--dimension:3]",
         sm: "[--dimension:4]",
         default: "[--dimension:5]",
         lg: "[--dimension:6]",

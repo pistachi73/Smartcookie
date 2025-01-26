@@ -1,44 +1,36 @@
-import { type ZonedDateTime, parseAbsolute } from "@internationalized/date";
-
 import type { GroupedDraftCalendarOccurrence } from "@/lib/group-overlapping-occurrences";
 import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { useState } from "react";
 import { Button } from "react-aria-components";
 import { calculateOccurrenceHeight, calculateOccurrenceTop } from "../utils";
-
-export const formatZonedDateTime = (zonedDateTime: ZonedDateTime) =>
-  `${String(zonedDateTime.hour).padStart(2, "0")}:${String(zonedDateTime.minute).padStart(2, "0")}`;
 
 export const DayWeekViewDraftOccurrence = ({
   occurrence,
 }: {
   occurrence: GroupedDraftCalendarOccurrence;
 }) => {
-  const [parsedStartTime, parsedEndTime] = [
-    parseAbsolute(occurrence.startTime.toISOString(), occurrence.timezone),
-    parseAbsolute(occurrence.endTime.toISOString(), occurrence.timezone),
-  ];
+  const [heightPx, setHeightPx] = useState(
+    calculateOccurrenceHeight(occurrence.startTime, occurrence.endTime),
+  );
 
   const widthPercentage = 100 / occurrence.totalColumns;
-  const topPercentage = calculateOccurrenceTop(occurrence.startTime);
-  const heightPercentage = calculateOccurrenceHeight(
-    occurrence.startTime,
-    occurrence.endTime,
-  );
-  const top = parsedStartTime.hour + parsedStartTime.minute / 60;
-  const bottom = parsedEndTime.hour + parsedEndTime.minute / 60;
-  const height = bottom - top;
 
-  const isShortEvent = height <= 1;
+  const topPx = calculateOccurrenceTop({
+    hours: occurrence.startTime.getHours(),
+    minutes: occurrence.startTime.getMinutes(),
+  });
 
-  const startTimeLabel = formatZonedDateTime(parsedStartTime);
-  const endTimeLabel = formatZonedDateTime(parsedEndTime);
+  const isShortEvent = heightPx / 15 <= 1;
+  const startTimeLabel = format(occurrence.startTime, "HH:mm");
+  const endTimeLabel = format(occurrence.endTime, "HH:mm");
 
   return (
     <Button
       className={cn("absolute pr-2 pb-0.5 z-10")}
       style={{
-        top: `${topPercentage}px`,
-        height: `${heightPercentage}px`,
+        top: `${topPx}px`,
+        height: `${heightPx}px`,
         width: `${widthPercentage}%`,
         left: `${occurrence.columnIndex * widthPercentage}%`,
       }}
