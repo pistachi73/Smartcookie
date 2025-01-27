@@ -104,7 +104,7 @@ export function CalendarGridHeader() {
   return (
     <AriaCalendarGridHeader className="flex justify-between">
       {(day) => (
-        <CalendarHeaderCell className="text-responsive-dark text-sm rounded-md w-9 font-medium">
+        <CalendarHeaderCell className="text-responsive-dark text-sm rounded-md w-9 font-medium text-text-sub">
           {day}
         </CalendarHeaderCell>
       )}

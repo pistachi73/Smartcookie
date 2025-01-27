@@ -1,13 +1,36 @@
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
+import { Input, TextField } from "react-aria-components";
+import { FieldDescripton } from "./field-description";
+import { FieldError } from "./field-error";
+import { Label } from "./label";
+import { fieldWrapperVariants } from "./shared-styles/field-variants";
+import type { TextFieldProps } from "./text-field";
 
-export type CodeInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
+export type CodeFieldProps = TextFieldProps & {
   length: number;
 };
 
-const CodeInput = React.forwardRef<HTMLInputElement, CodeInputProps>(
-  ({ className, length, onChange, value, autoFocus, ...props }, ref) => {
+const CodeField = React.forwardRef<HTMLInputElement, CodeFieldProps>(
+  (
+    {
+      size,
+      placeholder,
+      label,
+      description,
+      errorMessage,
+      ariaLabel,
+      className,
+      length,
+      value,
+      autoFocus,
+      onChange,
+      isDisabled,
+      ...props
+    },
+    ref,
+  ) => {
     const inputRefs = React.useRef<HTMLInputElement[]>([]);
     const [values, setValues] = React.useState<string[]>(
       new Array(length).fill(""),
@@ -84,30 +107,40 @@ const CodeInput = React.forwardRef<HTMLInputElement, CodeInputProps>(
     }, [autoFocus]);
 
     return (
-      <div className="flex w-full flex-row items-center justify-around gap-2">
-        {Array.from({ length }).map((_, index) => (
-          <input
-            ref={(el) => {
-              inputRefs.current[index] = el as HTMLInputElement;
-            }}
-            key={`input-${index}-${values[index]}`}
-            className={cn(
-              "remove-arrow flex h-14 w-14 rounded-md border border-input bg-background px-3 py-2 text-center text-xl ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60",
-              className,
-            )}
-            value={values[index]}
-            type="text"
-            onInput={(e) => onInputChange(e, index)}
-            onKeyUp={(e) => onKeyUp(e, index)}
-            onPaste={onPaste}
-            {...props}
-          />
-        ))}
-      </div>
+      <TextField
+        {...props}
+        value={value}
+        isDisabled={isDisabled}
+        aria-label={ariaLabel}
+      >
+        {label && <Label className="text-sm">{label}</Label>}
+        <div className="flex w-full flex-row items-center justify-around gap-2">
+          {Array.from({ length }).map((_, index) => (
+            <Input
+              ref={(el) => {
+                inputRefs.current[index] = el as HTMLInputElement;
+              }}
+              key={`input-${index}`}
+              className={cn(
+                fieldWrapperVariants({ size: "sm" }),
+                "size-14 remove-arrow flex text-center text-xl",
+                className,
+              )}
+              value={values[index]}
+              type="text"
+              onInput={(e) => onInputChange(e, index)}
+              onKeyUp={(e) => onKeyUp(e, index)}
+              onPaste={onPaste}
+            />
+          ))}
+        </div>
+        {description && <FieldDescripton>{description}</FieldDescripton>}
+        <FieldError errorMessage={errorMessage} />
+      </TextField>
     );
   },
 );
 
-CodeInput.displayName = "CodeInput";
+CodeField.displayName = "CodeField";
 
-export { CodeInput };
+export { CodeField };

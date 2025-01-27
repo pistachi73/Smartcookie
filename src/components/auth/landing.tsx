@@ -1,15 +1,10 @@
 import { Loader2 } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
+import { Form } from "react-aria-components";
+import { Controller } from "react-hook-form";
 import type { AuthFormSharedProps } from ".";
 import { Button } from "../ui/button";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
+import { TextField } from "../ui/react-aria/text-field";
 import { getUserAndAccountByEmailAction } from "./actions";
 import { useAuthContext } from "./auth-context";
 import { FormWrapper } from "./form-wrapper";
@@ -46,30 +41,27 @@ export const Landing = ({ authForm }: LandingProps) => {
       header="Welcome to OH Subscription!"
       subHeader="Log in or register to get started."
     >
-      <form
+      <Form
         onSubmit={(e) => {
           e.preventDefault();
           onContinue();
         }}
       >
-        <FormField
+        <Controller
           control={authForm.control}
           name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  autoComplete="email"
-                  autoFocus
-                  disabled={isExecuting}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+          render={({ field, fieldState: { error, invalid } }) => (
+            <TextField
+              {...field}
+              label="Email"
+              validationBehavior="aria"
+              isInvalid={invalid}
+              errorMessage={error?.message}
+              isDisabled={isExecuting}
+            />
           )}
         />
+
         <Button
           className="w-full mt-4"
           onPress={onContinue}
@@ -79,7 +71,7 @@ export const Landing = ({ authForm }: LandingProps) => {
           {isExecuting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Continue
         </Button>
-      </form>
+      </Form>
       <span className="my-6 block w-full text-center text-xs font-medium text-muted-foreground">
         OR
       </span>

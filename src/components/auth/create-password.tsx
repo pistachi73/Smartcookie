@@ -1,16 +1,11 @@
 import { useSafeAction } from "@/hooks/use-safe-action";
 import { Loader2 } from "lucide-react";
+import { Form } from "react-aria-components";
+import { Controller } from "react-hook-form";
 import { toast } from "sonner";
 import type { AuthFormSharedProps } from ".";
 import { Button } from "../ui/button";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
-import { PasswordInput } from "../ui/password-input";
+import { PasswordField } from "../ui/react-aria/password-field";
 import { registerAction } from "./actions";
 import { useAuthContext } from "./auth-context";
 import { FormWrapper } from "./form-wrapper";
@@ -65,55 +60,45 @@ export const CreatePassword = ({ authForm }: CreatePasswordProps) => {
       backButton
       backButtonOnClick={onBack}
     >
-      <form
+      <Form
         onSubmit={(e) => {
           e.preventDefault();
           onNextStep();
         }}
         className="space-y-6"
       >
-        <FormField
+        <Controller
           control={authForm.control}
           name="registerPassword"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <PasswordInput
-                  {...field}
-                  autoFocus
-                  placeholder="******"
-                  disabled={isRegistering}
-                  autoComplete="new-password"
-                  withValidation={
-                    authForm.formState.dirtyFields.registerPassword ||
-                    authForm.formState.errors.registerPassword !== undefined
-                  }
-                />
-              </FormControl>
-            </FormItem>
+            <PasswordField
+              {...field}
+              label="Password"
+              autoFocus
+              isDisabled={isRegistering}
+              autoComplete="new-password"
+              withValidation={
+                authForm.formState.dirtyFields.registerPassword ||
+                authForm.formState.errors.registerPassword !== undefined
+              }
+            />
           )}
         />
-        <FormField
+        <Controller
           control={authForm.control}
           name="registerPasswordConfirm"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="flex w-full items-center justify-between">
-                Confirm password
-              </FormLabel>
-              <FormControl>
-                <PasswordInput
-                  {...field}
-                  placeholder="******"
-                  disabled={isRegistering}
-                  autoComplete="confirm-password"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+          render={({ field, fieldState: { error, invalid } }) => (
+            <PasswordField
+              {...field}
+              label="Confirm password"
+              isDisabled={isRegistering}
+              autoComplete="confirm-password"
+              isInvalid={invalid}
+              errorMessage={error?.message}
+            />
           )}
         />
+
         <Button
           className="w-full mt-4"
           type="submit"
@@ -122,7 +107,7 @@ export const CreatePassword = ({ authForm }: CreatePasswordProps) => {
           {isRegistering && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Register
         </Button>
-      </form>
+      </Form>
     </FormWrapper>
   );
 };

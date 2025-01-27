@@ -3,9 +3,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { verificationToken } from "@/db/schema";
 import { sendVerificationEmail } from "@/lib/mail";
-import { PublicError } from "@/use-cases/errors";
 import crypto from "crypto";
-import { getUserByEmail } from "./user";
 
 export const getVerificationTokenByToken = async (token: string) => {
   try {
@@ -47,12 +45,6 @@ export const generateVerificationToken = async (email: string) => {
 };
 
 export const sendEmailVerificationEmail = async (email: string) => {
-  const user = await getUserByEmail(email);
-
-  if (!user) {
-    throw new PublicError("User not found!");
-  }
-
   const verificationToken = await generateVerificationToken(email);
 
   try {

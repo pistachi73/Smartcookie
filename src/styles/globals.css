@@ -36,6 +36,7 @@
   --color-background-reverse: var(--background-reverse);
   --color-border: var(--border);
   --color-border-highlight: var(--border-highlight);
+  --color-border-opaque: var(--border-opaque);
   --color-calendar-border: var(--calendar-border);
   --color-card-background: var(--card-background);
   --color-responsive-light: var(--responsive-light);
@@ -175,6 +176,7 @@
     --elevated-highlight: oklch(30.29% 0.0063 257.61);
     --border: oklch(100% 0 0 / 10%);
     --border-highlight: oklch(100% 0 0 / 30%);
+    --border-opaque: oklch(35.15% 0.0059 258.35);
 
     --calendar-border: oklch(25.89% 0.0051 248.08);
 

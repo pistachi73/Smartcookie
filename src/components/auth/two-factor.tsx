@@ -2,10 +2,11 @@ import { useSafeAction } from "@/hooks/use-safe-action";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Form } from "react-aria-components";
+import { Controller } from "react-hook-form";
 import type { AuthFormSharedProps } from ".";
 import { Button } from "../ui/button";
-import { CodeInput } from "../ui/code-input";
-import { FormControl, FormField, FormItem, FormMessage } from "../ui/form";
+import { CodeField } from "../ui/react-aria/code-field";
 import {
   resendTwoFactorVerificationEmailAction,
   signInAction,
@@ -81,49 +82,50 @@ export const TwoFactor = ({ authForm }: TwoFactorProps) => {
       backButtonOnClick={onBack}
       className="space-y-6"
     >
-      <form
+      <Form
         onSubmit={(e) => {
           e.preventDefault();
           onLogin();
         }}
       >
-        <FormField
+        <Controller
           control={authForm.control}
           name="code"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <CodeInput
-                  {...field}
-                  length={6}
-                  disabled={isExecuting}
-                  autoFocus
-                />
-              </FormControl>
-              <Button
-                size="inline"
-                variant="link"
-                className={cn("text-sm font-light text-muted-foreground", {
-                  "pointer-events-none": counter > 0,
-                })}
-                type="button"
-                onPress={() => {
-                  if (counter !== 0) return;
-                  resendTwoFactorVerificationEmail(authForm.getValues("email"));
-                }}
-              >
-                {counter > 0 ? `Resend code in ${counter}s` : "Resend code"}
-              </Button>
-              <FormMessage />
-            </FormItem>
+          render={({ field, fieldState: { error, invalid } }) => (
+            <CodeField
+              {...field}
+              autoFocus
+              length={6}
+              ariaLabel="Two-factor code"
+              validationBehavior="aria"
+              isInvalid={invalid}
+              errorMessage={error?.message}
+              isDisabled={isExecuting}
+            />
           )}
         />
+        <div className="flex w-full justify-end mt-1">
+          <Button
+            size="inline"
+            variant="link"
+            className={cn("text-sm font-light text-muted-foreground", {
+              "pointer-events-none": counter > 0,
+            })}
+            type="button"
+            onPress={() => {
+              if (counter !== 0) return;
+              resendTwoFactorVerificationEmail(authForm.getValues("email"));
+            }}
+          >
+            {counter > 0 ? `Resend code in ${counter}s` : "Resend code"}
+          </Button>
+        </div>
 
         <Button className="w-full mt-4" type="submit" isDisabled={isExecuting}>
           {isExecuting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Confirm
         </Button>
-      </form>
+      </Form>
     </FormWrapper>
   );
 };

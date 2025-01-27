@@ -1,17 +1,12 @@
 import { Button, buttonVariants } from "@/components/ui/button";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { PasswordInput } from "@/components/ui/password-input";
+import { PasswordField } from "@/components/ui/react-aria/password-field";
 import { useSafeAction } from "@/hooks/use-safe-action";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Form } from "react-aria-components";
+import { Controller } from "react-hook-form";
 import { toast } from "sonner";
 import type { AuthFormSharedProps } from ".";
 import { changePasswordAction } from "./actions";
@@ -66,54 +61,45 @@ export const UpdatePassword = ({ authForm }: UpdatePasswordProps) => {
       subHeader="Please enter a new password for your account."
       className="space-y-6"
     >
-      <form
+      <Form
         className="space-y-6"
         onSubmit={(e) => {
           e.preventDefault();
           onPasswordChange();
         }}
       >
-        <FormField
+        <Controller
           control={authForm.control}
           name="registerPassword"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <PasswordInput
-                  {...field}
-                  placeholder="******"
-                  disabled={isExecuting}
-                  autoComplete="new-password"
-                  withValidation={
-                    authForm.formState.dirtyFields.registerPassword ||
-                    authForm.formState.errors.registerPassword !== undefined
-                  }
-                />
-              </FormControl>
-            </FormItem>
+            <PasswordField
+              {...field}
+              label="Password"
+              autoFocus
+              isDisabled={isExecuting}
+              autoComplete="new-password"
+              withValidation={
+                authForm.formState.dirtyFields.registerPassword ||
+                authForm.formState.errors.registerPassword !== undefined
+              }
+            />
           )}
         />
-        <FormField
+        <Controller
           control={authForm.control}
           name="registerPasswordConfirm"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="flex w-full items-center justify-between">
-                Confirm password
-              </FormLabel>
-              <FormControl>
-                <PasswordInput
-                  {...field}
-                  placeholder="******"
-                  disabled={isExecuting}
-                  autoComplete="confirm-password"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+          render={({ field, fieldState: { error, invalid } }) => (
+            <PasswordField
+              {...field}
+              label="Confirm password"
+              isDisabled={isExecuting}
+              autoComplete="confirm-password"
+              isInvalid={invalid}
+              errorMessage={error?.message}
+            />
           )}
         />
+
         <div className="space-y-3">
           <Button isDisabled={isExecuting} type="submit" className="w-full">
             {isExecuting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -126,7 +112,7 @@ export const UpdatePassword = ({ authForm }: UpdatePasswordProps) => {
             Back to login
           </Link>
         </div>
-      </form>
+      </Form>
     </FormWrapper>
   );
 };

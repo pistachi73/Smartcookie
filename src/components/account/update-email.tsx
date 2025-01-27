@@ -8,7 +8,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { CodeInput } from "@/components/ui/code-input";
 import {
   Form,
   FormControl,
@@ -17,6 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { CodeField } from "@/components/ui/react-aria/code-field";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useSafeAction } from "@/hooks/use-safe-action";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -109,11 +109,11 @@ export const UpdateEmail = () => {
                 render={({ field }) => (
                   <FormItem className="w-fit">
                     <FormControl>
-                      <CodeInput
+                      <CodeField
                         {...field}
                         length={6}
                         autoFocus
-                        disabled={isUpdatingEmail}
+                        isDisabled={isUpdatingEmail}
                       />
                     </FormControl>
                     <ResendVerificationEmailButton

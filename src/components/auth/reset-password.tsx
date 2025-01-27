@@ -1,16 +1,11 @@
 import { useSafeAction } from "@/hooks/use-safe-action";
 import { Loader2 } from "lucide-react";
+import { Form } from "react-aria-components";
+import { Controller } from "react-hook-form";
 import { toast } from "sonner";
 import type { AuthFormSharedProps } from ".";
 import { Button } from "../ui/button";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
+import { TextField } from "../ui/react-aria/text-field";
 import { resetPasswordAction } from "./actions";
 import { useAuthContext } from "./auth-context";
 import { useAuthSettingsContextUpdater } from "./auth-settings-context";
@@ -60,30 +55,32 @@ export const ResetPassword = ({ authForm }: ResetPasswordProps) => {
       backButtonOnClick={onBack}
       className="space-y-6"
     >
-      <form
+      <Form
         onSubmit={(e) => {
           e.preventDefault();
           onReset();
         }}
       >
-        <FormField
+        <Controller
           control={authForm.control}
           name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input {...field} disabled={isExecuting} autoFocus />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+          render={({ field, fieldState: { error, invalid } }) => (
+            <TextField
+              {...field}
+              label="Email"
+              validationBehavior="aria"
+              isInvalid={invalid}
+              errorMessage={error?.message}
+              isDisabled={isExecuting}
+            />
           )}
         />
+
         <Button className="w-full mt-4" type="submit" isDisabled={isExecuting}>
           {isExecuting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Send link to reset password
         </Button>
-      </form>
+      </Form>
     </FormWrapper>
   );
 };

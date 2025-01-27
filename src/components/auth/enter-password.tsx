@@ -1,19 +1,16 @@
 import { useSafeAction } from "@/hooks/use-safe-action";
 import { Loader2 } from "lucide-react";
+import { Form } from "react-aria-components";
+
+import { Controller } from "react-hook-form";
 import type { AuthFormSharedProps } from ".";
-import { Button } from "../ui/button";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
-import { PasswordInput } from "../ui/password-input";
 import { signInAction } from "./actions";
 import { useAuthContext } from "./auth-context";
 import { FormWrapper } from "./form-wrapper";
 import { useLoginSuccess } from "./hooks/use-login-success";
+
+import { Button } from "@/components/ui/button";
+import { PasswordField } from "@/components/ui/react-aria/password-field";
 
 type CreatePasswordProps = AuthFormSharedProps;
 
@@ -59,7 +56,7 @@ export const EnterPassword = ({ authForm }: CreatePasswordProps) => {
       backButtonOnClick={onBack}
       className="space-y-6"
     >
-      <form
+      <Form
         onSubmit={(e) => {
           e.preventDefault();
           onLogin();
@@ -73,43 +70,39 @@ export const EnterPassword = ({ authForm }: CreatePasswordProps) => {
           autoComplete="email"
           className="hidden"
         />
-        <FormField
+        <Controller
           control={authForm.control}
           name="loginPassword"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel className="flex w-full items-center justify-between">
-                Password
-              </FormLabel>
-              <FormControl>
-                <PasswordInput
-                  {...field}
-                  autoFocus
-                  placeholder="******"
-                  disabled={isExecuting}
-                  autoComplete="current-password"
-                />
-              </FormControl>
-              <FormMessage />
-              <Button
-                size="inline"
-                variant="link"
-                className="text-sm font-light text-text-sub"
-                type="button"
-                onPress={() => {
-                  setFormType("RESET_PASSWORD");
-                }}
-              >
-                Forgot password?
-              </Button>
-            </FormItem>
+            <PasswordField
+              {...field}
+              autoFocus
+              label="Password"
+              validationBehavior="aria"
+              isDisabled={isExecuting}
+            />
           )}
         />
+
+        <div className="w-full items-end flex justify-end mt-1">
+          <Button
+            size="inline"
+            variant="link"
+            className="text-sm font-normal text-text-sub"
+            type="button"
+            onPress={() => {
+              setFormType("RESET_PASSWORD");
+            }}
+          >
+            Forgot password?
+          </Button>
+        </div>
+
         <Button className="w-full mt-4" type="submit" isDisabled={isExecuting}>
           {isExecuting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Login
         </Button>
-      </form>
+      </Form>
     </FormWrapper>
   );
 };

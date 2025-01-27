@@ -132,7 +132,10 @@ export const registerUseCase = async ({
     throw new PublicError("Email already in use!");
   }
 
+  console.log({ email, password, emailVerificationCode });
+
   if (!emailVerificationCode) {
+    console.log("send");
     await sendEmailVerificationEmail(email);
     return { emailVerification: true, user: null };
   }

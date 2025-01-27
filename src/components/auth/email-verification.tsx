@@ -3,11 +3,12 @@ import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Form } from "react-aria-components";
+import { Controller } from "react-hook-form";
 import { toast } from "sonner";
 import type { AuthFormSharedProps } from ".";
 import { Button } from "../ui/button";
-import { CodeInput } from "../ui/code-input";
-import { FormControl, FormField, FormItem, FormMessage } from "../ui/form";
+import { CodeField } from "../ui/react-aria/code-field";
 import {
   registerAction,
   resendEmailVerificationEmailAction,
@@ -25,9 +26,8 @@ export const EmailVerification = ({ authForm }: EmailVerificationProps) => {
   const router = useRouter();
   const [counter, setCounter] = useState(60);
 
-  const { execute: registerUser, isExecuting: isRegistering } = useSafeAction(
-    registerAction,
-    {
+  const { executeAsync: registerUser, isExecuting: isRegistering } =
+    useSafeAction(registerAction, {
       onSuccess: async ({ data }) => {
         if (!data?.user) return;
 
@@ -39,8 +39,7 @@ export const EmailVerification = ({ authForm }: EmailVerificationProps) => {
         setOpen(false);
         router.refresh();
       },
-    },
-  );
+    });
   const { execute: resendEmailVerificationEmail } = useSafeAction(
     resendEmailVerificationEmailAction,
     {
@@ -65,11 +64,13 @@ export const EmailVerification = ({ authForm }: EmailVerificationProps) => {
 
     if (!typecheckSuccess || !email || !password || !code) return;
 
-    registerUser({
+    await registerUser({
       email,
       password,
       emailVerificationCode: code,
     });
+
+    router.push("/calendar");
   };
 
   const onBack = () => {
@@ -93,44 +94,45 @@ export const EmailVerification = ({ authForm }: EmailVerificationProps) => {
       backButtonOnClick={onBack}
       className="space-y-6"
     >
-      <form
-        className="space-y-6"
+      <Form
         onSubmit={(e) => {
           e.preventDefault();
           onNextStep();
         }}
       >
-        <FormField
+        <Controller
           control={authForm.control}
           name="code"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <CodeInput
-                  {...field}
-                  length={6}
-                  autoFocus
-                  disabled={isRegistering}
-                />
-              </FormControl>
-              <Button
-                size="inline"
-                variant="link"
-                className={cn("text-sm font-light text-muted-foreground", {
-                  "pointer-events-none": counter > 0,
-                })}
-                type="button"
-                onPress={() => {
-                  if (counter !== 0) return;
-                  resendEmailVerificationEmail(authForm.getValues("email"));
-                }}
-              >
-                {counter > 0 ? `Resend code in ${counter}s` : "Resend code"}
-              </Button>
-              <FormMessage />
-            </FormItem>
+          render={({ field, fieldState: { error, invalid } }) => (
+            <CodeField
+              {...field}
+              autoFocus
+              length={6}
+              ariaLabel="Two-factor code"
+              validationBehavior="aria"
+              isInvalid={invalid}
+              errorMessage={error?.message}
+              isDisabled={isRegistering}
+            />
           )}
         />
+        <div className="flex w-full justify-end mt-1">
+          <Button
+            size="inline"
+            variant="link"
+            className={cn("text-sm font-light text-muted-foreground", {
+              "pointer-events-none": counter > 0,
+            })}
+            type="button"
+            onPress={() => {
+              if (counter !== 0) return;
+              resendEmailVerificationEmail(authForm.getValues("email"));
+            }}
+          >
+            {counter > 0 ? `Resend code in ${counter}s` : "Resend code"}
+          </Button>
+        </div>
+
         <Button
           className="w-full mt-4"
           type="submit"
@@ -139,7 +141,7 @@ export const EmailVerification = ({ authForm }: EmailVerificationProps) => {
           {isRegistering && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           Verify email
         </Button>
-      </form>
+      </Form>
     </FormWrapper>
   );
 };

@@ -18,7 +18,7 @@ import {
   fieldWrapperVariants,
 } from "./shared-styles/field-variants";
 
-type TextFieldProps = AriaTextFieldProps &
+export type TextFieldProps = AriaTextFieldProps &
   FieldWrapperVariants & {
     placeholder?: InputProps["placeholder"];
     ariaLabel?: InputProps["aria-label"];
