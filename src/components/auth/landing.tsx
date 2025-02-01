@@ -1,38 +1,62 @@
-import { Loader2 } from "lucide-react";
+import { useAuthStore } from "@/providers/auth-store-provider";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useAction } from "next-safe-action/hooks";
-import { Form } from "react-aria-components";
-import { Controller } from "react-hook-form";
-import type { AuthFormSharedProps } from ".";
-import { Button } from "../ui/button";
-import { TextField } from "../ui/react-aria/text-field";
+import { Controller, useForm } from "react-hook-form";
+import type { z } from "zod";
+import { useShallow } from "zustand/react/shallow";
+
 import { getUserAndAccountByEmailAction } from "./actions";
-import { useAuthContext } from "./auth-context";
 import { FormWrapper } from "./form-wrapper";
 import { SocialButton } from "./oauth-button";
+import { authSchema } from "./validation";
 
-type LandingProps = AuthFormSharedProps;
+import {
+  Button,
+  Form,
+  ProgressCircle,
+  TextField,
+} from "@/components/ui/new/ui";
 
-export const Landing = ({ authForm }: LandingProps) => {
-  const { setFormType } = useAuthContext();
-  const { executeAsync, isExecuting } = useAction(
-    getUserAndAccountByEmailAction,
+const authLandingSchema = authSchema.pick({
+  email: true,
+});
+
+type AuthLandingSchema = z.infer<typeof authLandingSchema>;
+
+const useAuthLanding = () =>
+  useAuthStore(
+    useShallow(({ setData, setStep }) => ({
+      setData,
+      setStep,
+    })),
   );
 
-  const onContinue = async () => {
-    const success = await authForm.trigger("email", { shouldFocus: true });
-    if (!success) return;
+export const Landing = () => {
+  const { setStep, setData } = useAuthLanding();
+  const { executeAsync: getUserAndAccountByEmailAsync, isExecuting } =
+    useAction(getUserAndAccountByEmailAction);
 
-    const email = authForm.getValues("email");
-    const result = await executeAsync(email);
+  const form = useForm<z.infer<typeof authLandingSchema>>({
+    resolver: zodResolver(authLandingSchema),
+    defaultValues: {
+      email: "",
+    },
+    mode: "onChange",
+  });
+
+  const onSubmit = async (values: AuthLandingSchema) => {
+    const { email } = values;
+    const result = await getUserAndAccountByEmailAsync(values.email);
 
     if (result?.data?.user && result.data.account) {
       return;
     }
 
+    setData({ email });
     if (result?.data?.user) {
-      setFormType("ENTER_PASSWORD");
+      setStep("ENTER_PASSWORD");
     } else {
-      setFormType("CREATE_PASSWORD");
+      setStep("CREATE_PASSWORD");
     }
   };
 
@@ -41,14 +65,9 @@ export const Landing = ({ authForm }: LandingProps) => {
       header="Welcome to OH Subscription!"
       subHeader="Log in or register to get started."
     >
-      <Form
-        onSubmit={(e) => {
-          e.preventDefault();
-          onContinue();
-        }}
-      >
+      <Form onSubmit={form.handleSubmit(onSubmit)}>
         <Controller
-          control={authForm.control}
+          control={form.control}
           name="email"
           render={({ field, fieldState: { error, invalid } }) => (
             <TextField
@@ -62,13 +81,10 @@ export const Landing = ({ authForm }: LandingProps) => {
           )}
         />
 
-        <Button
-          className="w-full mt-4"
-          onPress={onContinue}
-          type="submit"
-          isDisabled={isExecuting}
-        >
-          {isExecuting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        <Button className="w-full mt-4" type="submit" isPending={isExecuting}>
+          {isExecuting && (
+            <ProgressCircle isIndeterminate aria-label="Creating..." />
+          )}
           Continue
         </Button>
       </Form>

@@ -11,6 +11,11 @@ import {
   Dialog as N,
   DialogTrigger as W,
 } from "@/components/ui/dialog";
+import {
+  Button as ButtonNew,
+  Modal,
+  Popover as PopoverNew,
+} from "@/components/ui/new/ui";
 import { Calendar } from "@/components/ui/react-aria/calendar";
 import {
   ComboBoxField,
@@ -18,7 +23,6 @@ import {
 } from "@/components/ui/react-aria/combobox";
 import { DateInput } from "@/components/ui/react-aria/date-input";
 import { ListBox, ListBoxItem } from "@/components/ui/react-aria/list-box";
-import { Modal } from "@/components/ui/react-aria/modal";
 import { Popover } from "@/components/ui/react-aria/popover";
 import { Sheet } from "@/components/ui/react-aria/sheet";
 import { TextField } from "@/components/ui/react-aria/text-field";
@@ -99,7 +103,9 @@ export default function Components() {
       <ListBox
         aria-label="Ice cream flavor"
         selectionMode="single"
-        className={"p-2 border rounded-lg space-y-0.5 bg-elevated-highlight/20"}
+        className={
+          "p-2 border rounded-lg space-y-0.5 bg-overlay-elevated-highlight/20"
+        }
       >
         {items.map((item) => (
           <ListBoxItem key={item.id} id={item.id}>
@@ -126,15 +132,7 @@ export default function Components() {
           </Dialog>
         </Sheet>
       </DialogTrigger>
-      <DialogTrigger>
-        <Button>Open dialog</Button>
-        <Modal isDismissable>
-          <Dialog>
-            <Heading slot="title">Notice</Heading>
-            <p>Click outside to close this dialog.</p>
-          </Dialog>
-        </Modal>
-      </DialogTrigger>
+
       <ToggleGroup type="single">
         <ToggleGroupItem value="a">Day</ToggleGroupItem>
         <ToggleGroupItem value="b">Week</ToggleGroupItem>
@@ -209,6 +207,27 @@ export default function Components() {
         </Button>
       </div>
       <div className="flex flex-row gap-2 items-center">
+        <ButtonNew appearance="solid" intent="primary" size="large">
+          ButtonNew
+        </ButtonNew>
+        <ButtonNew appearance="solid" intent="secondary" size="large">
+          ButtonNew
+        </ButtonNew>
+        <ButtonNew appearance="outline" size="large">
+          ButtonNew
+        </ButtonNew>
+        <ButtonNew appearance="outline" intent="danger" size="large">
+          ButtonNew
+        </ButtonNew>
+        {/* <ButtonNew variant="ghost">
+          <AbacusIcon size={18} />
+          ButtonNew
+        </ButtonNew>
+        <ButtonNew variant="ghost" size="sm">
+          ButtonNew
+        </ButtonNew> */}
+      </div>
+      <div className="flex flex-row gap-2 items-center">
         <UserAvatar
           userImage={"https://i.pravatar.cc/150?img=1"}
           userName={"Oscar Pulido"}
@@ -217,6 +236,25 @@ export default function Components() {
         <UserAvatar userName={"Oscar Pulido"} />
         <UserAvatar size={"sm"} />
       </div>
+
+      <PopoverNew>
+        <ButtonNew>Forgot Password</ButtonNew>
+        <PopoverNew.Content className="sm:max-w-72">
+          <PopoverNew.Header>
+            <PopoverNew.Title>Email</PopoverNew.Title>
+            <PopoverNew.Description>
+              We'll send you an email to log in.
+            </PopoverNew.Description>
+          </PopoverNew.Header>
+        </PopoverNew.Content>
+      </PopoverNew>
+      <Modal>
+        <ButtonNew>Open dialog</ButtonNew>
+        <Modal.Content>
+          <Heading slot="title">Notice</Heading>
+          <p>Click outside to close this dialog.</p>
+        </Modal.Content>
+      </Modal>
     </div>
   );
 }

@@ -3,10 +3,10 @@ import { type VariantProps, cva } from "class-variance-authority";
 export const fieldWrapperVariants = cva(
   [
     "flex rounded-lg w-full border px-3 placeholder:text-text-sub transition-colors",
-    "hover:bg-base-highlight",
-    "focus-within:bg-base-highlight",
+    "hover:bg-overlay-highlight",
+    "focus-within:bg-overlay-highlight",
     "disabled:cursor-not-allowed disabled:opacity-60",
-    "has-data-[pressed]:bg-base-highlight",
+    "has-data-[pressed]:bg-overlay-highlight",
   ],
   {
     variants: {

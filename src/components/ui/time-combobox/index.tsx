@@ -1,8 +1,5 @@
-import { cn } from "@/lib/utils";
-import { Clock01Icon } from "@hugeicons/react";
 import type { Time } from "@internationalized/date";
-import { createContext, use, useEffect, useState } from "react";
-import { Button, Group, Input } from "react-aria-components";
+import { useEffect, useState } from "react";
 
 import {
   type TimeSelectOption,
@@ -13,50 +10,51 @@ import {
   parseTimeInput,
 } from "./utils";
 
+import { cn } from "@/lib/utils";
+import { Clock01Icon } from "@hugeicons/react";
 import {
-  ComboBoxField,
-  ComboBoxFieldContent,
-  type ComboBoxFieldContentProps,
-  type ComboBoxFieldProps,
-} from "@/components/ui/react-aria/combobox";
-import { ListBoxItem } from "@/components/ui/react-aria/list-box";
-import { fieldWrapperVariants } from "@/components/ui/react-aria/shared-styles/field-variants";
+  ComboBox,
+  type ComboBoxListProps,
+  type ComboBoxProps,
+  DropdownLabel,
+} from "../new/ui";
 
-const TimeComboboxContext = createContext<{
-  isOpen: boolean;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}>({
-  isOpen: false,
-  setIsOpen: () => {},
-});
-
-type TimeComboboxProps<T extends object> = ComboBoxFieldProps<T> & {
+type TimeComboboxProps<T extends object> = Omit<
+  ComboBoxProps<T>,
+  "className" | "children"
+> & {
   withIcon?: boolean;
   minValue?: Time;
   value: Time | null;
   onChange: (value: Time | null) => void;
+  className?: {
+    primitive?: string;
+    input?: string;
+    fieldGroup?: string;
+    overlay?: string;
+  };
+  listProps?: ComboBoxListProps<T>;
 };
 
 export const TimeCombobox = <T extends TimeSelectOption>({
-  children,
   className,
   minValue,
   withIcon = false,
   value,
   onChange,
   onBlur,
-  onKeyDown,
   isDisabled,
-  ...props
+  listProps,
 }: TimeComboboxProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState(
+    value ? formatLabel(value.hour, value.minute) : "",
+  );
   const [items, setItems] = useState(generateTimeSelectOptions(minValue));
 
   const handleInputParsing = (v: string) => {
     // Parse the input and set the input value
     const parsedInput = parseTimeInput(v);
-    console.log({ parsedInput });
 
     if (!parsedInput) {
       console.log("set input without parsed", value);
@@ -91,91 +89,73 @@ export const TimeCombobox = <T extends TimeSelectOption>({
   }, [minValue]);
 
   return (
-    <TimeComboboxContext.Provider value={{ isOpen, setIsOpen }}>
-      <ComboBoxField
-        menuTrigger="focus"
-        inputValue={input}
-        selectedKey={input}
-        onSelectionChange={(time) => {
-          if (!time) return;
+    <ComboBox
+      placeholder="hh:mm"
+      menuTrigger="focus"
+      inputValue={input}
+      selectedKey={input}
+      onFocus={() => setIsOpen(true)}
+      onSelectionChange={(time) => {
+        if (time) {
           setInput(time as string);
-        }}
-        onInputChange={setInput}
-        onOpenChange={(open, trigger) => {
-          if (trigger === "input") return;
-          setIsOpen(open);
-        }}
-        onBlur={(e) => {
-          handleInputParsing(input);
-          onBlur?.(e);
-        }}
-        className="min-w-0"
-        allowsCustomValue
-        isDisabled={isDisabled}
-        items={items}
-        {...props}
-      >
-        <Group
-          className={cn(
-            fieldWrapperVariants({ size: "sm", isDisabled }),
-            "block px-0 overflow-hidden pl-0 relative",
-            withIcon && "pl-0",
-            className,
-          )}
-        >
-          {withIcon && (
-            <Button
-              className={cn(
-                "absolute top-0 left-0",
-                "h-full aspect-square p-0 rounded-none",
-                "flex items-center justify-center",
-              )}
-            >
-              <Clock01Icon size={16} className="text-text-sub" />
-            </Button>
-          )}
-          <Input
-            className={cn("w-full h-full truncate px-2", withIcon && "pl-10")}
-            placeholder="hh:mm"
-            onKeyDown={(e) => {
-              if (e.key === "Escape") {
-                e.stopPropagation();
-              }
-            }}
-          />
-        </Group>
-        {children}
-      </ComboBoxField>
-    </TimeComboboxContext.Provider>
-  );
-};
-
-type TimeComboboxContentProps<T extends object> = Omit<
-  ComboBoxFieldContentProps<T>,
-  "items" | "children"
->;
-
-export const TimeComboboxContent = <T extends object>({
-  className,
-  ...props
-}: TimeComboboxContentProps<T>) => {
-  const { isOpen } = use(TimeComboboxContext);
-  return (
-    <ComboBoxFieldContent
-      {...props}
-      isOpen={isOpen}
-      className={cn("w-50 max-h-[300px]!", className)}
+          handleInputParsing(time as string);
+        } else {
+          handleInputParsing(input as string);
+        }
+        setIsOpen(false);
+      }}
+      onInputChange={setInput}
+      onOpenChange={(open, trigger) => {
+        if (!trigger || trigger === "input") return;
+        setIsOpen(open);
+      }}
+      onBlur={(e) => {
+        handleInputParsing(input);
+        onBlur?.(e);
+        setIsOpen(false);
+      }}
+      className={cn("min-w-0", className?.primitive)}
+      allowsCustomValue
+      isDisabled={isDisabled}
+      items={items}
     >
-      {({ label, difference, isDisabled }: TimeSelectOption) => (
-        <ListBoxItem id={label} textValue={`${label}`} isDisabled={isDisabled}>
-          {label}
-          {difference?.hours || difference?.minutes ? (
-            <span className="text-text-sub text-sm">
-              {formatDifferenceLabel(difference)}
-            </span>
-          ) : null}
-        </ListBoxItem>
-      )}
-    </ComboBoxFieldContent>
+      <ComboBox.Input
+        prefix={withIcon && <Clock01Icon size={14} className="text-text-sub" />}
+        className={{
+          input: className?.input,
+          fieldGroup: className?.fieldGroup,
+          icon: isOpen ? "rotate-180 text-fg" : "text-muted-fg",
+        }}
+        value={input}
+        onKeyDown={(e) => {
+          console.log(e.key, isOpen);
+          if (e.key === "Escape") {
+            e.stopPropagation();
+          }
+          if (e.key === "Enter") {
+            e.preventDefault();
+          }
+        }}
+      />
+      <ComboBox.List
+        items={items}
+        isOpen={isOpen}
+        className={cn("w-50 max-h-[300px]!", className?.overlay)}
+        {...listProps}
+      >
+        {({ label, difference, isDisabled }) => (
+          <ComboBox.Option id={label} textValue={label} isDisabled={isDisabled}>
+            <DropdownLabel>
+              <span className="mr-2">{label}</span>
+              {difference?.hours || difference?.minutes ? (
+                <span className="text-muted-fg text-sm">
+                  {formatDifferenceLabel(difference)}
+                </span>
+              ) : null}
+            </DropdownLabel>
+          </ComboBox.Option>
+        )}
+      </ComboBox.List>
+    </ComboBox>
   );
 };

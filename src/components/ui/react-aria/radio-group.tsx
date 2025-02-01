@@ -42,7 +42,7 @@ type RadioProps = AriaRadioProps;
 const radioVariants = cva(
   [
     "flex items-center gap-2 px-2 py-1 text-text-default outline-none transition-all before:transition-all before:content-[''] before:size-4  before:rounded-full before:border ",
-    "before:shrink-0 text-sm before:bg-elevated before:border-border hover:before:bg-elevated-highlight  data-[selected]:",
+    "before:shrink-0 text-sm before:bg-overlay-elevated before:border-border hover:before:bg-overlay-elevated-highlight  data-[selected]:",
   ],
   {
     variants: {

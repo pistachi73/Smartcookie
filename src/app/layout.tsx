@@ -4,7 +4,7 @@ import "@/styles/scrollbar.css";
 import { auth } from "@/auth-config";
 import { DeviceOnlyProvider } from "@/components/device-only/device-only-provider";
 import { ToastNotification } from "@/components/toast-notification";
-import { Toaster } from "@/components/ui/sonner";
+import { Toast } from "@/components/ui/new/ui";
 import { Providers } from "@/providers/providers";
 import { getHeaders } from "@/utils/get-headers";
 import { SessionProvider } from "next-auth/react";
@@ -28,15 +28,14 @@ export default async function RootLayout({
 
   return (
     <html lang={"en-GB"} dir={"ltr"} suppressHydrationWarning>
-      <body
-        className={`font-sans ${inter.variable} min-h-screen bg-background`}
-      >
+      <body className={`font-sans ${inter.variable} min-h-screen`}>
         <Providers>
           <SessionProvider session={session}>
             <DeviceOnlyProvider deviceType={deviceType}>
               {children}
               {authModal}
-              <Toaster />
+              <Toast />
+              {/* <Toaster /> */}
               <ToastNotification />
             </DeviceOnlyProvider>
           </SessionProvider>

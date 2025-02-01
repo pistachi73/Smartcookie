@@ -34,16 +34,16 @@ export const Switch = ({
 };
 
 const indicatorVariants = cva([
-  "block h-full aspect-square rounded-full bg-base transition-all",
+  "block h-full aspect-square rounded-full bg-overlay transition-all",
   "group-data-[selected]:[transform:translateX(calc(100%-var(--spacing)))]",
   "group-data-[disabled]:bg-border group-data-[disabled]:group-data-[selected]:bg-border",
 ]);
 
 const indicatorWrapperVariants = cva(
   [
-    "bg-elevated p-px rounded-full relative transition-colors border-1 border-transparent",
+    "bg-overlay-elevated p-px rounded-full relative transition-colors border-1 border-transparent",
     "w-[calc(var(--spacing)*(var(--dimension)*2-2))] h-[calc(var(--spacing)*(var(--dimension)))]",
-    "group-data-[hovered]:bg-elevated-highlight group-data-[selected]:bg-primary",
+    "group-data-[hovered]:bg-overlay-elevated-highlight group-data-[selected]:bg-primary",
     "group-data-[focus-visible]:ring-[2px] group-data-[focus-visible]:border-border-highlight group-data-[focus-visible]:ring-elevated-highlight/80",
   ],
   {

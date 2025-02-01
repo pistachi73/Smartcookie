@@ -1,6 +1,6 @@
 "use client";
 
-import { Modal } from "@/components/ui/react-aria/modal";
+import { Modal } from "@/components/ui/new/ui";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarDate, Time, getLocalTimeZone } from "@internationalized/date";
@@ -9,7 +9,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 import { useShallow } from "zustand/react/shallow";
-import { DiscardChangesDialog } from "../components/discard-changes-dialog";
+import { DiscardChangesModalContent } from "../components/discard-changes-modal-content";
 import { SessionOccurrenceFrom } from "../event-occurrence-form";
 import { SessionOcurrenceFormSchema } from "../event-occurrence-form/schema";
 import { consumeOccurrenceOverrides } from "../utils";
@@ -138,7 +138,7 @@ export const CalendarSidebarEditSession = () => {
         onCancel={onCancel}
       />
       <Modal isOpen={isDiscardModalOpen} onOpenChange={setIsDiscardModalOpen}>
-        <DiscardChangesDialog onDiscardChanges={closeEditSidebar} />
+        <DiscardChangesModalContent onDiscardChanges={closeEditSidebar} />
       </Modal>
     </>
   );

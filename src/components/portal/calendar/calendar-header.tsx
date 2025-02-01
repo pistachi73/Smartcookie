@@ -1,15 +1,8 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { ListBox, ListBoxItem } from "@/components/ui/react-aria/list-box";
-import { Popover } from "@/components/ui/react-aria/popover";
+import { Button, Select } from "@/components/ui/new/ui";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
-import type { CalendarView } from "@/stores/calendar-store";
-import {
-  ArrowDown01Icon,
-  ArrowLeft01Icon,
-  ArrowRight01Icon,
-} from "@hugeicons/react";
-import { Select, SelectValue } from "react-aria-components";
+import { CalendarView } from "@/stores/calendar-store";
+import { ArrowLeft01Icon, ArrowRight01Icon } from "@hugeicons/react";
 import { useShallow } from "zustand/react/shallow";
 import { formatCalendarHeaderTitle } from "./utils";
 
@@ -32,17 +25,15 @@ export const CalendarHeader = () => {
   const title = formatCalendarHeaderTitle(selectedDate, calendarView);
 
   return (
-    <div className="flex flex-row items-center  justify-between px-4 py-4 pb-6 gap-6">
+    <div className="w-full flex flex-row items-center justify-between px-4 py-4 pb-6 gap-6">
       <div className="flex flex-row items-center gap-3">
-        <Button variant="outline" size="sm" onPress={onToday}>
+        <Button appearance="outline" size="small" onPress={onToday}>
           Today
         </Button>
         <div className="flex">
           <Button
-            variant="ghost"
-            size="sm"
-            className="text-text-sub"
-            iconOnly
+            appearance="plain"
+            className="size-10 p-0 text-muted-fg hover:text-current"
             onPress={() => {
               onNavigation(-1);
             }}
@@ -50,10 +41,8 @@ export const CalendarHeader = () => {
             <ArrowLeft01Icon size={18} strokeWidth={1.5} />
           </Button>
           <Button
-            variant="ghost"
-            size="sm"
-            className="text-text-sub"
-            iconOnly
+            appearance="plain"
+            className="size-10 p-0 text-muted-fg hover:text-current"
             onPress={() => {
               onNavigation(1);
             }}
@@ -61,12 +50,53 @@ export const CalendarHeader = () => {
             <ArrowRight01Icon size={18} strokeWidth={1.5} />
           </Button>
         </div>
-        <h2 className="text-xl font-medium text-ellipsis line-clamp-1">
+        <h2 className="text-2xl font-semibold text-ellipsis line-clamp-1">
           {title}
         </h2>
       </div>
 
-      <Select
+      <div>
+        <Select
+          defaultSelectedKey={calendarView}
+          onSelectionChange={(value) => {
+            if (!value) return;
+            setCalendarView(value as CalendarView);
+          }}
+        >
+          <Select.Trigger
+            showArrow
+            className="rounded-full min-w-[60px] w-fit px-4"
+          />
+          <Select.List
+            placement="bottom right"
+            items={[
+              {
+                id: "day",
+                name: "Day",
+              },
+              {
+                id: "week",
+                name: "Week",
+              },
+              {
+                id: "month",
+                name: "Month",
+              },
+              {
+                id: "agenda",
+                name: "Agenda",
+              },
+            ]}
+          >
+            {(item) => (
+              <Select.Option id={item.id} textValue={item.name}>
+                {item.name}
+              </Select.Option>
+            )}
+          </Select.List>
+        </Select>
+      </div>
+      {/* <Select
         placeholder="Select an option"
         selectedKey={calendarView}
         onSelectionChange={(value) => {
@@ -83,24 +113,7 @@ export const CalendarHeader = () => {
           placement="bottom right"
         >
           <ListBox
-            items={[
-              {
-                id: "day",
-                textValue: "Day",
-              },
-              {
-                id: "week",
-                textValue: "Week",
-              },
-              {
-                id: "month",
-                textValue: "Month",
-              },
-              {
-                id: "agenda",
-                textValue: "Agenda",
-              },
-            ]}
+            items={}
           >
             {(item) => (
               <ListBoxItem key={item.id} id={item.id}>
@@ -109,7 +122,7 @@ export const CalendarHeader = () => {
             )}
           </ListBox>
         </Popover>
-      </Select>
+      </Select> */}
     </div>
   );
 };

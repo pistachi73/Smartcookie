@@ -1,48 +1,71 @@
-import { Button, buttonVariants } from "@/components/ui/button";
-import { PasswordField } from "@/components/ui/react-aria/password-field";
 import { useSafeAction } from "@/hooks/use-safe-action";
-import { cn } from "@/lib/utils";
-import { Loader2 } from "lucide-react";
-import Link from "next/link";
+import { useAuthStore } from "@/providers/auth-store-provider";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Form } from "react-aria-components";
-import { Controller } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import type { AuthFormSharedProps } from ".";
+import type { z } from "zod";
+import { useShallow } from "zustand/react/shallow";
+
 import { changePasswordAction } from "./actions";
 import { FormWrapper } from "./form-wrapper";
+import { authSchema } from "./validation";
 
-type UpdatePasswordProps = AuthFormSharedProps;
+import {
+  Button,
+  Form,
+  PasswordFieldWithValidation,
+  ProgressCircle,
+  TextField,
+} from "@/components/ui/new/ui";
 
-export const UpdatePassword = ({ authForm }: UpdatePasswordProps) => {
+const updatePasswordSchema = authSchema
+  .pick({
+    registerPassword: true,
+    registerPasswordConfirm: true,
+  })
+  .refine((data) => data.registerPassword === data.registerPasswordConfirm, {
+    path: ["registerPasswordConfirm"],
+    message: "Passwords does not match",
+  });
+
+type UpdatePasswordSchema = z.infer<typeof updatePasswordSchema>;
+
+const useAuthUpdatePassword = () =>
+  useAuthStore(
+    useShallow(({ setStep }) => ({
+      setStep,
+    })),
+  );
+
+export const UpdatePassword = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
+  const { setStep } = useAuthUpdatePassword();
+
+  const form = useForm<UpdatePasswordSchema>({
+    resolver: zodResolver(updatePasswordSchema),
+    defaultValues: {
+      registerPassword: "",
+      registerPasswordConfirm: "",
+    },
+    mode: "onChange",
+  });
 
   const { execute: changePassword, isExecuting } = useSafeAction(
     changePasswordAction,
     {
       onSuccess: () => {
-        authForm.reset();
+        form.reset();
         toast.success("Password updated!");
         router.push("/login");
       },
     },
   );
 
-  const onPasswordChange = async () => {
-    const typeCheckSuccess = await authForm.trigger(
-      ["registerPassword", "registerPasswordConfirm"],
-      {
-        shouldFocus: true,
-      },
-    );
-
-    const [registerPassword] = authForm.getValues(["registerPassword"]);
-
-    if (!typeCheckSuccess || !registerPassword) {
-      return;
-    }
+  const onSubmit = (value: UpdatePasswordSchema) => {
+    const { registerPassword } = value;
 
     if (!token) {
       toast.error("Token is missing!");
@@ -61,37 +84,34 @@ export const UpdatePassword = ({ authForm }: UpdatePasswordProps) => {
       subHeader="Please enter a new password for your account."
       className="space-y-6"
     >
-      <Form
-        className="space-y-6"
-        onSubmit={(e) => {
-          e.preventDefault();
-          onPasswordChange();
-        }}
-      >
+      <Form className="space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
         <Controller
-          control={authForm.control}
+          control={form.control}
           name="registerPassword"
           render={({ field }) => (
-            <PasswordField
+            <PasswordFieldWithValidation
               {...field}
               label="Password"
               autoFocus
               isDisabled={isExecuting}
               autoComplete="new-password"
-              withValidation={
-                authForm.formState.dirtyFields.registerPassword ||
-                authForm.formState.errors.registerPassword !== undefined
+              showValidation={
+                form.formState.dirtyFields.registerPassword ||
+                form.formState.errors.registerPassword !== undefined
               }
             />
           )}
         />
         <Controller
-          control={authForm.control}
+          control={form.control}
           name="registerPasswordConfirm"
           render={({ field, fieldState: { error, invalid } }) => (
-            <PasswordField
+            <TextField
               {...field}
               label="Confirm password"
+              placeholder="******"
+              type="password"
+              isRevealable
               isDisabled={isExecuting}
               autoComplete="confirm-password"
               isInvalid={invalid}
@@ -101,16 +121,21 @@ export const UpdatePassword = ({ authForm }: UpdatePasswordProps) => {
         />
 
         <div className="space-y-3">
-          <Button isDisabled={isExecuting} type="submit" className="w-full">
-            {isExecuting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          <Button className="w-full" type="submit" isPending={isExecuting}>
+            {isExecuting && (
+              <ProgressCircle isIndeterminate aria-label="Registering..." />
+            )}
             Update
           </Button>
-          <Link
-            href="/login"
-            className={cn(buttonVariants({ variant: "ghost" }), "w-full")}
+          <Button
+            appearance="plain"
+            onPress={() => {
+              setStep("LANDING");
+            }}
+            className="w-full"
           >
             Back to login
-          </Link>
+          </Button>
         </div>
       </Form>
     </FormWrapper>

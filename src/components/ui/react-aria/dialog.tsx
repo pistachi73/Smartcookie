@@ -6,7 +6,7 @@ export const Dialog = (props: DialogProps) => {
     <RACDialog
       {...props}
       className={cn(
-        "bg-elevated p-6 [[data-placement]>&]:p-4 max-h-[inherit] overflow-auto relative rounded-2xl",
+        "bg-overlay-elevated p-6 [[data-placement]>&]:p-4 max-h-[inherit] overflow-auto relative rounded-2xl",
         props.className,
       )}
     />

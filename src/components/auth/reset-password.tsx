@@ -1,50 +1,67 @@
 import { useSafeAction } from "@/hooks/use-safe-action";
-import { Loader2 } from "lucide-react";
-import { Form } from "react-aria-components";
-import { Controller } from "react-hook-form";
+import { useAuthStore } from "@/providers/auth-store-provider";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import type { AuthFormSharedProps } from ".";
-import { Button } from "../ui/button";
-import { TextField } from "../ui/react-aria/text-field";
+import type { z } from "zod";
+import { useShallow } from "zustand/react/shallow";
+
 import { resetPasswordAction } from "./actions";
-import { useAuthContext } from "./auth-context";
-import { useAuthSettingsContextUpdater } from "./auth-settings-context";
 import { FormWrapper } from "./form-wrapper";
+import { authSchema } from "./validation";
 
-type ResetPasswordProps = AuthFormSharedProps;
+import {
+  Button,
+  Form,
+  ProgressCircle,
+  TextField,
+} from "@/components/ui/new/ui";
 
-export const ResetPassword = ({ authForm }: ResetPasswordProps) => {
-  const { setOpen } = useAuthSettingsContextUpdater();
-  const { setFormType } = useAuthContext();
+const authResetPasswordSchema = authSchema.pick({
+  email: true,
+});
 
-  const { executeAsync: asyncResetPassword, isExecuting } = useSafeAction(
+type AuthResetPasswordSchema = z.infer<typeof authResetPasswordSchema>;
+
+const useAuthResetPassword = () =>
+  useAuthStore(
+    useShallow(({ setData, setStep }) => ({
+      setData,
+      setStep,
+    })),
+  );
+
+export const ResetPassword = () => {
+  const { setData, setStep } = useAuthResetPassword();
+  const router = useRouter();
+  const form = useForm<AuthResetPasswordSchema>({
+    resolver: zodResolver(authResetPasswordSchema),
+    defaultValues: {
+      email: "",
+    },
+    mode: "onChange",
+  });
+
+  const { execute: resetPassword, isExecuting } = useSafeAction(
     resetPasswordAction,
     {
       onSuccess: () => {
-        authForm.reset();
-        setOpen(false);
+        form.reset();
+        router.push("/");
         toast.success("Password reset email sent!");
       },
     },
   );
 
   const onBack = () => {
-    authForm.reset();
-    setFormType("LANDING");
+    form.reset();
+    setStep("LANDING");
   };
 
-  const onReset = async () => {
-    const typeCheckSuccess = await authForm.trigger(["email"], {
-      shouldFocus: true,
-    });
-
-    const [email] = authForm.getValues(["email"]);
-
-    if (!email || !typeCheckSuccess) {
-      return;
-    }
-
-    await asyncResetPassword(email);
+  const onSubmit = (value: AuthResetPasswordSchema) => {
+    const { email } = value;
+    resetPassword(email);
   };
 
   return (
@@ -55,14 +72,9 @@ export const ResetPassword = ({ authForm }: ResetPasswordProps) => {
       backButtonOnClick={onBack}
       className="space-y-6"
     >
-      <Form
-        onSubmit={(e) => {
-          e.preventDefault();
-          onReset();
-        }}
-      >
+      <Form onSubmit={form.handleSubmit(onSubmit)}>
         <Controller
-          control={authForm.control}
+          control={form.control}
           name="email"
           render={({ field, fieldState: { error, invalid } }) => (
             <TextField
@@ -76,8 +88,10 @@ export const ResetPassword = ({ authForm }: ResetPasswordProps) => {
           )}
         />
 
-        <Button className="w-full mt-4" type="submit" isDisabled={isExecuting}>
-          {isExecuting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        <Button className="w-full mt-4" type="submit" isPending={isExecuting}>
+          {isExecuting && (
+            <ProgressCircle isIndeterminate aria-label="Creating..." />
+          )}
           Send link to reset password
         </Button>
       </Form>

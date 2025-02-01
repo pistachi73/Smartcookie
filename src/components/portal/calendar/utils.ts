@@ -18,7 +18,7 @@ const CALENDAR_START_HOUR = 0; // Adjust based on your calendar's start hour
 const CALENDAR_END_HOUR = 24; // Adjust based on your calendar's end hour
 const TOTAL_MINUTES = (CALENDAR_END_HOUR - CALENDAR_START_HOUR) * 60;
 const PIXELS_PER_MINUTE = ROW_HEIGHT / 60;
-const PIXELS_PER_15_MINUTES = ROW_HEIGHT / 4;
+export const PIXELS_PER_15_MINUTES = ROW_HEIGHT / 4;
 export const getWeekBoundaries = (date: Date) => {
   // You can specify which day to consider as the start of the week; by default, it is Sunday (0).
   // To set Monday as the start of the week, we can pass { weekStartsOn: 1 }.

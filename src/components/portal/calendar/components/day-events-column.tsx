@@ -140,7 +140,7 @@ const PreDraftEvent = ({
     >
       <div
         className={cn(
-          "overflow-hidden text-left p-1.5 w-full h-full border border-responsive-dark/80 rounded-md bg-elevated-highlight/70",
+          "overflow-hidden text-left p-1.5 w-full h-full border border-fg/60 rounded-md bg-overlay-elevated-highlight/70",
           isShortEvent && "flex items-center py-0",
         )}
       >
@@ -151,9 +151,9 @@ const PreDraftEvent = ({
           )}
         </p>
         {!isShortEvent && (
-          <span className="text-nowrap text-text-sub text-xs">
+          <p className="text-nowrap text-text-sub text-xs">
             {startTimeLabel} - {endTimeLabel}
-          </span>
+          </p>
         )}
       </div>
     </div>

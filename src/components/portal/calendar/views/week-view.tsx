@@ -39,7 +39,7 @@ export const WeekView = () => {
               <div
                 className={cn(
                   "flex flex-col items-center justify-center p-1 rounded-lg",
-                  isSelected && "bg-base-highlight text-text-default",
+                  isSelected && "bg-overlay-highlight text-text-default",
                 )}
               >
                 <p className="text-sm text-text-sub lowercase">

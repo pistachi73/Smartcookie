@@ -20,7 +20,7 @@ export const CalendarSidebar = () => {
   return (
     <div
       className={cn(
-        "h-full w-[280px] rounded-xl shrink-0 bg-base relative transition-[width] duration-500",
+        "h-full  shrink-0 w-[284px] relative transition-[width] duration-500",
       )}
     >
       <AnimatePresence>
@@ -54,7 +54,7 @@ export const CalendarSidebar = () => {
                   delay: 0.15,
                 },
               }}
-              className="fixed h-[100vh] w-[100vw] bg-background/50 top-0 left-0 z-50"
+              className="fixed h-[100vh] w-[100vw] bg-bg/60  top-0 left-0 z-50"
             />
             <motion.div
               initial={{
@@ -65,7 +65,7 @@ export const CalendarSidebar = () => {
                 width: "calc(100% + 50px)",
               }}
               // transition={regularSpring}
-              className="absolute bottom-0 right-0 bg-base border   rounded-xl z-50"
+              className="absolute bottom-0 right-0 border  shadow-2xl bg-overlay  rounded-xl z-50"
             >
               <motion.div
                 initial={{
@@ -77,7 +77,7 @@ export const CalendarSidebar = () => {
                 transition={{
                   delay: 0.3,
                 }}
-                className="h-full w-full brightness-125 "
+                className="h-full w-full"
               >
                 <CalendarSidebarEditSession />
               </motion.div>

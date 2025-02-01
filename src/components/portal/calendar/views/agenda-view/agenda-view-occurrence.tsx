@@ -1,20 +1,20 @@
-import { Popover } from "@/components/ui/react-aria/popover";
+import { Popover } from "@/components/ui/new/ui";
 import type { GroupedCalendarOccurrence } from "@/lib/group-overlapping-occurrences";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { Button, DialogTrigger } from "react-aria-components";
-import { EventOccurrenceDialog } from "../../components/event-occurrence-dialog";
+import { Button } from "react-aria-components";
+import { EventOccurrencePopover } from "../../components/event-occurrence-popover-content";
 
 export const AgendaViewOccurrence = ({
   occurrence,
 }: { occurrence: GroupedCalendarOccurrence }) => {
   return (
-    <DialogTrigger>
+    <Popover>
       <Button
         key={`event-occurrence-${occurrence.eventOccurrenceId}`}
         className={cn(
           "relative h-full w-full border brightness-100 flex items-center rounded-md gap-2 px-1 transition-colors",
-          "hover:bg-base-highlight cursor-pointer",
+          "hover:bg-overlay-highlight cursor-pointer",
         )}
       >
         <div className="h-[calc(100%-8px)] rounded-lg w-0.5 bg-[#286552] shrink-0 min-w-0 min-h-0 " />
@@ -28,9 +28,14 @@ export const AgendaViewOccurrence = ({
           </span>
         </div>
       </Button>
-      <Popover placement="bottom" offset={-100} crossOffset={100}>
-        <EventOccurrenceDialog occurrence={occurrence} />
-      </Popover>
-    </DialogTrigger>
+      <EventOccurrencePopover
+        occurrence={occurrence}
+        popoverProps={{
+          placement: "end",
+          offset: -200,
+          // crossOffset: 100,
+        }}
+      />
+    </Popover>
   );
 };

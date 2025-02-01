@@ -1,35 +1,23 @@
 "use client";
 
-import { ParticipantsSelect } from "@/components/ui/participants-select";
-import {
-  DatePicker,
-  DatePickerContent,
-} from "@/components/ui/react-aria/date-picker";
-import { ListBoxItem } from "@/components/ui/react-aria/list-box";
-import { NumberField } from "@/components/ui/react-aria/number-field";
-import {
-  SelectField,
-  SelectFieldContent,
-  SelectTrigger,
-} from "@/components/ui/react-aria/select-field";
-import { fieldWrapperVariants } from "@/components/ui/react-aria/shared-styles/field-variants";
-import { Switch, SwitchIndicator } from "@/components/ui/react-aria/switch";
-import { TextField } from "@/components/ui/react-aria/text-field";
-import {
-  RecurrenceSelect,
-  RecurrenceSelectContent,
-} from "@/components/ui/recurrence-select";
+import { ParticipantsCombobox } from "@/components/ui/participants-combobox";
+import { RecurrenceSelect } from "@/components/ui/recurrence-select";
 
-import { Button } from "@/components/ui/button";
 import {
-  TimeCombobox,
-  TimeComboboxContent,
-} from "@/components/ui/time-combobox";
-import {
-  TimezoneCombobox,
-  TimezoneComboboxContent,
-} from "@/components/ui/timezone-combobox";
-import { cn } from "@/lib/utils";
+  Button,
+  ColorSwatch,
+  ColorSwatchPicker,
+  DatePicker,
+  Form,
+  NumberField,
+  Popover,
+  Select,
+  Switch,
+  TextField,
+  Textarea,
+} from "@/components/ui/new/ui";
+import { TimeCombobox } from "@/components/ui/time-combobox";
+import { TimezoneCombobox } from "@/components/ui/timezone-combobox";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
 import {
   ArrowRight02Icon,
@@ -39,7 +27,6 @@ import {
 import { CalendarDate, toCalendarDate } from "@internationalized/date";
 import { Loader2 } from "lucide-react";
 import { useEffect, useRef } from "react";
-import { Form, Separator } from "react-aria-components";
 import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
 import type { z } from "zod";
 import { useShallow } from "zustand/react/shallow";
@@ -68,7 +55,8 @@ export const SessionOccurrenceFrom = ({
     useEventOccurrenceForm();
   const { createEvent, isCreatingEvent } = useCreateEvent();
   const timeComboboxTriggerRef = useRef<HTMLDivElement>(null);
-
+  const timezoneComboboxTriggerRef = useRef<HTMLDivElement>(null);
+  const colorSwatchTriggerRef = useRef<HTMLDivElement>(null);
   const startTime = useWatch({
     control: form.control,
     name: "startTime",
@@ -90,8 +78,8 @@ export const SessionOccurrenceFrom = ({
   });
 
   useEffect(() => {
-    console.log("setdraftevent");
     if (!startTime || !endTime || !date) return;
+    console.log("setdraftevent");
 
     if (editingEventOccurrenceId === -1) {
       setDraftEventOccurrence({
@@ -134,8 +122,8 @@ export const SessionOccurrenceFrom = ({
       className="relative h-full flex flex-col justify-between"
     >
       {/* <div className="bg-gradient-to-t from-[#30EEAC]/30 to-transparent absolute bottom-0 left-0 h-[300px] w-full" /> */}
-      <div className="py-6 z-20 relative">
-        <div className="flex items-center gap-3 mb-6 px-4">
+      <div className="p-4 z-20 relative">
+        <div className="flex items-center gap-3 mb-6 px-2">
           <CalendarAdd01Icon
             size={24}
             variant="duotone"
@@ -143,95 +131,165 @@ export const SessionOccurrenceFrom = ({
           />
           <p className="text-lg font-medium"> Create / edit session</p> 
         </div>
-        <div className="space-y-2">
-          <div className="flex flex-row gap-1 px-2">
-            <div className="w-full space-y-1">
-              <Controller
-                control={form.control}
-                name="hubId"
-                render={({
-                  field: { onChange, value, ...restField },
-                  fieldState: { error, invalid },
-                }) => (
-                  <SelectField
+        <div className="space-y-5">
+          <div className="space-y-1.5 rounded-2xl ">
+            {/* <p className="text-sm text-muted-fg">Date & Time</p> */}
+
+            <Controller
+              control={form.control}
+              name="hubId"
+              render={({
+                field: { onChange, value, ...restField },
+                fieldState: { error, invalid },
+              }) => (
+                <>
+                  <Select
                     {...restField}
+                    placeholder="Select hub..."
                     onSelectionChange={onChange}
                     selectedKey={value}
-                    placeholder="Hub"
-                    aria-label="Hub"
+                    aria-label="Select Hub"
                     validationBehavior="aria"
                     isInvalid={invalid}
                     errorMessage={error?.message}
                     isDisabled={isFormDisabled}
                   >
-                    <SelectTrigger
-                      size={"sm"}
-                      variant={"ghost"}
-                      className={cn("w-full font-normal rounded-lg")}
-                      icon={Folder02Icon}
+                    <Select.Trigger
+                      showArrow={true}
+                      prefix={<Folder02Icon size={16} />}
                     />
-                    <SelectFieldContent
+                    <Select.List
                       placement="left top"
-                      offset={12}
-                      className="w-[250px]"
+                      offset={8}
                       items={hubItems}
                     >
-                      {({ id, name }) => (
-                        <ListBoxItem id={id} showCheckIcon>
-                          {name}
-                        </ListBoxItem>
+                      {(item) => (
+                        <Select.Option id={item.id} textValue={item.name}>
+                          {item.name}
+                        </Select.Option>
                       )}
-                    </SelectFieldContent>
-                  </SelectField>
-                )}
-              />
-              <Controller
-                control={form.control}
-                name="title"
-                render={({
-                  field,
-                  fieldState: { error, invalid, isDirty },
-                }) => (
-                  <div className="ml-7">
-                    <TextField
-                      {...field}
-                      size={"sm"}
-                      aria-label="Session title"
-                      placeholder="Title"
+                    </Select.List>
+                  </Select>
+                  {/* <SelectField
+                      {...restField}
+                      onSelectionChange={onChange}
+                      selectedKey={value}
+                      placeholder="Hub"
+                      aria-label="Hub"
                       validationBehavior="aria"
                       isInvalid={invalid}
                       errorMessage={error?.message}
                       isDisabled={isFormDisabled}
-                      className={cn(
-                        "w-auto",
-                        "bg-transparent border-transparent transition-colors",
-                        "hover:bg-base-highlight",
-                      )}
-                    />
-                  </div>
+                    >
+                      <SelectTrigger
+                        size={"sm"}
+                        variant={"ghost"}
+                        className={cn("w-full font-normal rounded-lg")}
+                        icon={Folder02Icon}
+                      />
+                      <SelectFieldContent
+                        placement="left top"
+                        offset={12}
+                        className="w-[250px]"
+                        items={hubItems}
+                      >
+                        {({ id, name }) => (
+                          <ListBoxItem id={id} showCheckIcon>
+                            {name}
+                          </ListBoxItem>
+                        )}
+                      </SelectFieldContent>
+                    </SelectField> */}
+                </>
+              )}
+            />
+            <div
+              className="flex flex-row items-center gap-2"
+              ref={colorSwatchTriggerRef}
+            >
+              <Controller
+                control={form.control}
+                name="title"
+                render={({ field, fieldState: { error, invalid } }) => (
+                  <TextField
+                    {...field}
+                    size="small"
+                    aria-label="Session title"
+                    placeholder="Title"
+                    validationBehavior="aria"
+                    isInvalid={invalid}
+                    errorMessage={error?.message}
+                    isDisabled={isFormDisabled}
+                    className={{
+                      primitive: "flex-1",
+                      fieldGroup: "hover:bg-overlay-highlight",
+                      input: "text-sm",
+                    }}
+                  />
                 )}
               />
+              <Popover>
+                <Button
+                  appearance="outline"
+                  size="square-petite"
+                  shape="square"
+                  className={"p-0 size-10"}
+                >
+                  <ColorSwatch
+                    className="size-4 rounded-xs  "
+                    color={"#8E24AA"}
+                  />
+                </Button>
+                <Popover.Content
+                  className="py-4 min-w-auto"
+                  triggerRef={colorSwatchTriggerRef}
+                  placement="left top"
+                  showArrow={false}
+                >
+                  <Popover.Body>
+                    <ColorSwatchPicker
+                      aria-label="Pick color"
+                      // value={value}
+                      // onChange={setValue}
+                      className="grid grid-cols-3 gap-3"
+                    >
+                      <ColorSwatchPicker.Item color="#8E24AA" />
+                      <ColorSwatchPicker.Item color="#AD1457" />
+                      <ColorSwatchPicker.Item color="#E64A19" />
+                      <ColorSwatchPicker.Item color="#2E7D32" />
+                      <ColorSwatchPicker.Item color="#00796B" />
+                      <ColorSwatchPicker.Item color="#5C6BC0" />
+                      <ColorSwatchPicker.Item color="#1A73E8" />
+                      <ColorSwatchPicker.Item color="#673AB7" />
+                      <ColorSwatchPicker.Item color="#424242" />
+                    </ColorSwatchPicker>
+                  </Popover.Body>
+                </Popover.Content>
+              </Popover>
             </div>
           </div>
-          <Separator className="bg-border" />
 
-          <div className="flex flex-col gap-1 px-2">
+          <div className="space-y-1.5">
+            <p className="text-sm font-medium text-muted-fg">Date & Time</p>
             <Controller
               control={form.control}
               name="date"
               render={({ field, fieldState: { invalid, error } }) => (
                 <DatePicker
                   {...field}
-                  size={"sm"}
                   aria-label="Session date"
                   validationBehavior="aria"
                   isInvalid={invalid}
                   errorMessage={error?.message}
                   isDisabled={isFormDisabled}
-                  className="border-transparent gap-0"
-                >
-                  <DatePickerContent placement="left top" offset={12} />
-                </DatePicker>
+                  className={{
+                    fieldGroup: "hover:bg-overlay-highlight",
+                  }}
+                  overlayProps={{
+                    placement: "left top",
+                    offset: 8,
+                  }}
+                />
               )}
             />
             <div
@@ -247,18 +305,20 @@ export const SessionOccurrenceFrom = ({
                     value={value}
                     onChange={onChange}
                     withIcon
-                    className="border-transparent"
                     isDisabled={isFormDisabled}
-                  >
-                    <TimeComboboxContent
-                      triggerRef={timeComboboxTriggerRef}
-                      placement="left top"
-                      offset={12}
-                    />
-                  </TimeCombobox>
+                    className={{
+                      input: "text-sm",
+                      fieldGroup: "hover:bg-overlay-highlight",
+                    }}
+                    listProps={{
+                      placement: "left top",
+                      offset: 8,
+                      triggerRef: timeComboboxTriggerRef,
+                    }}
+                  />
                 )}
               />
-              <div className="size-7 shrink-0 flex items-center justify-center bg-base-highlight/70 text-text-sub rounded-lg">
+              <div className="size-7 shrink-0 flex items-center justify-center bg-overlay-highlight/70 text-text-sub rounded-lg">
                 <ArrowRight02Icon size={16} />
               </div>
               <Controller
@@ -270,15 +330,17 @@ export const SessionOccurrenceFrom = ({
                     value={value}
                     onChange={onChange}
                     minValue={startTime}
-                    className="border-transparent"
                     isDisabled={isFormDisabled}
-                  >
-                    <TimeComboboxContent
-                      triggerRef={timeComboboxTriggerRef}
-                      placement="left top"
-                      offset={12}
-                    />
-                  </TimeCombobox>
+                    className={{
+                      input: "text-sm",
+                      fieldGroup: "hover:bg-overlay-highlight",
+                    }}
+                    listProps={{
+                      placement: "left top",
+                      triggerRef: timeComboboxTriggerRef,
+                      offset: 8,
+                    }}
+                  />
                 )}
               />
             </div>
@@ -290,21 +352,25 @@ export const SessionOccurrenceFrom = ({
                 field: { onChange, value, ...restField },
                 fieldState: { error },
               }) => (
-                <TimezoneCombobox
-                  {...restField}
-                  onSelectionChange={onChange}
-                  selectedKey={value}
-                  aria-label="Session timezone"
-                  errorMessage={error?.message}
-                  className="border-transparent"
-                  isDisabled={isFormDisabled}
-                >
-                  <TimezoneComboboxContent
-                    placement="left top"
-                    offset={12}
-                    className="max-h-[300px]! w-[300px]"
+                <div ref={timezoneComboboxTriggerRef}>
+                  <TimezoneCombobox
+                    {...restField}
+                    onSelectionChange={onChange}
+                    selectedKey={value}
+                    aria-label="Session timezone"
+                    errorMessage={error?.message}
+                    className={{
+                      fieldGroup: "hover:bg-overlay-highlight",
+                      input: "text-sm",
+                    }}
+                    isDisabled={isFormDisabled}
+                    listProps={{
+                      placement: "left top",
+                      offset: 8,
+                      triggerRef: timezoneComboboxTriggerRef,
+                    }}
                   />
-                </TimezoneCombobox>
+                </div>
               )}
             />
             <Controller
@@ -323,117 +389,106 @@ export const SessionOccurrenceFrom = ({
                           selectedDate.getDate(),
                         )
                   }
-                >
-                  <RecurrenceSelectContent
-                    selectProps={{ isDisabled: isFormDisabled }}
-                    popoverProps={{
-                      offset: 12,
-                      placement: "left top",
-                    }}
-                  />
-                </RecurrenceSelect>
+                />
               )}
             />
           </div>
-          <Separator className="bg-border/20 h-0" />
-          <div className="px-2">
+
+          <div className="space-y-1.5">
+            <p className="text-sm font-medium text-muted-fg">
+              Event description
+            </p>
             <Controller
               control={form.control}
               name="description"
               render={({ field, fieldState: { error, invalid } }) => (
-                <TextField
+                <Textarea
                   {...field}
-                  size={"sm"}
+                  // size={"sm"}
                   aria-label="Session title"
                   placeholder="Description"
                   validationBehavior="aria"
                   isDisabled={isFormDisabled}
                   isInvalid={invalid}
                   errorMessage={error?.message}
-                  className={cn(
-                    "w-auto min-h-10",
-                    "bg-transparent border-transparent transition-colors",
-                    "hover:bg-base-highlight",
-                  )}
+                  className={{
+                    textarea: "hover:bg-overlay-highlight",
+                  }}
                   type="textarea"
                 />
               )}
             />
           </div>
 
-          <Separator className="bg-border/20 h-0" />
-
-          <div className="flex flex-row items-center gap-3 w-full px-2 h-10">
-            <Controller
-              control={form.control}
-              name="isBillable"
-              render={({ field: { value, ...restField } }) => (
-                <Switch
-                  {...restField}
-                  isSelected={value}
-                  isDisabled={isFormDisabled}
-                  className={"h-10 gap-0"}
-                >
-                  <div className="h-full aspect-square flex items-center justify-center">
-                    <SwitchIndicator size="sm" />
-                  </div>
-                  <p className="text-sm">Billable</p>
-                </Switch>
-              )}
-            />
-            {isBillable && (
-              <div
-                className={cn(
-                  fieldWrapperVariants({ size: "sm" }),
-                  "relative border-transparent flex items-center bg-base-highlight/70",
+          <div className="space-y-1.5 ">
+            <p className="text-sm font-medium text-muted-fg">Event billing</p>
+            <div className="flex flex-row items-center gap-3 w-full  h-10 px-2">
+              <Controller
+                control={form.control}
+                name="isBillable"
+                render={({ field: { value, ref, ...restField } }) => (
+                  <Switch
+                    {...restField}
+                    isSelected={value}
+                    size="small"
+                    isDisabled={isFormDisabled}
+                    className={"h-10 gap-0 text-sm"}
+                  >
+                    Billable
+                  </Switch>
                 )}
-              >
-                <Controller
-                  control={form.control}
-                  name="price"
-                  render={({ field: { onChange, ...field } }) => (
-                    <NumberField
-                      {...field}
-                      size={"sm"}
-                      aria-label="Session price"
-                      placeholder="Price"
-                      withButtons={false}
-                      isDisabled={isFormDisabled}
-                      minValue={1}
-                      formatOptions={{
-                        style: "currency",
-                        currency: "EUR",
-                      }}
-                      onChange={(price) => {
-                        onChange(Number.isNaN(price) ? 1 : price);
-                      }}
-                      className={cn(
-                        "flex-1 w-full min-h-8 h-8 px-2 ",
-                        "bg-transparent border-transparent px-0 transition-colors text-sm placeholder:text-sm",
-                        "hover:bg-base-highlight",
-                        "pr-14",
-                      )}
-                    />
-                  )}
-                />
-                <span className="absolute right-2 text-sm text-text-sub">
-                  / session
-                </span>
-              </div>
-            )}
+              />
+              {isBillable && (
+                <div className="flex flex-row gap-2 items-center">
+                  <Controller
+                    control={form.control}
+                    name="price"
+                    render={({ field: { onChange, ...field } }) => (
+                      <NumberField
+                        {...field}
+                        aria-label="Session price"
+                        placeholder="Price"
+                        isDisabled={isFormDisabled}
+                        minValue={1}
+                        formatOptions={{
+                          style: "currency",
+                          currency: "EUR",
+                        }}
+                        onChange={(price) => {
+                          onChange(Number.isNaN(price) ? 1 : price);
+                        }}
+                        className={{
+                          input: "text-sm",
+                          fieldGroup: "hover:bg-overlay-highlight",
+                        }}
+                      />
+                    )}
+                  />
+                  <span className="text-sm text-muted-fg shrink-0">
+                    per session
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
-          <Separator className="bg-border/20" />
-          <div className="flex flex-col gap-1 px-2">
+          <div className="space-y-1.5">
+            <p className="text-sm font-medium text-muted-fg">
+              Event participants
+            </p>
+
             <Controller
               control={form.control}
               name="participants"
               render={({ field: { onChange, value, ...restField } }) => (
-                <ParticipantsSelect
+                <ParticipantsCombobox
                   {...restField}
                   value={value}
                   onChange={onChange}
                   isDisabled={isFormDisabled}
-                  className="border-transparent"
+                  className={{
+                    input: "text-sm",
+                    fieldGroup: "hover:bg-overlay-highlight",
+                  }}
                 />
               )}
             />
@@ -442,8 +497,8 @@ export const SessionOccurrenceFrom = ({
       </div>
       <div className="flex items-center justify-end gap-2 p-4">
         <Button
-          variant={"ghost"}
-          size="sm"
+          appearance="plain"
+          size="small"
           onPress={onCancel}
           isDisabled={isFormDisabled}
         >
@@ -451,7 +506,7 @@ export const SessionOccurrenceFrom = ({
         </Button>
 
         <Button
-          size="sm"
+          size="small"
           className="px-6"
           type="submit"
           isDisabled={isFormDisabled}

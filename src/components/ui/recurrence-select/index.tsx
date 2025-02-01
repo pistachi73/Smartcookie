@@ -1,21 +1,12 @@
-import { cn } from "@/lib/utils";
 import { ArrowRight02Icon, RepeatIcon } from "@hugeicons/react";
 import type { CalendarDate } from "@internationalized/date";
+import * as React from "react";
 import { use, useMemo, useState } from "react";
-import { Heading, ListBoxSection } from "react-aria-components";
 import { Frequency, RRule, type Weekday } from "rrule";
 import { z } from "zod";
-import { Button } from "../button";
-import { Dialog } from "../react-aria/dialog";
-import { ListBoxItem } from "../react-aria/list-box";
-import { Modal } from "../react-aria/modal";
+import { Button, DropdownLabel, Modal, Select } from "../new/ui";
 import type { PopoverProps } from "../react-aria/popover";
-import {
-  SelectField,
-  SelectFieldContent,
-  type SelectFieldProps,
-  SelectTrigger,
-} from "../react-aria/select-field";
+import type { SelectFieldProps } from "../react-aria/select-field";
 import { ByweekdayCheckboxGroup } from "./components/byweekday-checkbox-group";
 import { EndsRadioGroup } from "./components/ends-radio-group";
 import { FrequencySelect } from "./components/frequency-select";
@@ -49,14 +40,16 @@ const SelectLabel = () => {
   const rruleText = parseRruleText(value);
 
   return (
-    <p className="first-letter:uppercase truncate">
-      <span>
-        {rruleText.label}
-        {rruleText.auxLabel && (
-          <span className="text-text-sub"> {rruleText.auxLabel}</span>
-        )}
-      </span>
-    </p>
+    <div className="overflow-hidden w-fit">
+      <p className="first-letter:uppercase text-left  whitespace-nowrap">
+        <span>
+          {rruleText.label}
+          {rruleText.auxLabel && (
+            <span className="text-muted-fg"> {rruleText.auxLabel}</span>
+          )}
+        </span>
+      </p>
+    </div>
   );
 };
 
@@ -127,66 +120,61 @@ export const RecurrenceSelectContent = ({
   };
 
   return (
-    <div onKeyDown={(e) => e.stopPropagation()}>
-      <SelectField
-        aria-label="Recurrence Select Main"
-        selectedKey={value}
-        onSelectionChange={(value) => {
-          handleCustomRecurrence(value as string);
-        }}
-        {...selectProps}
-      >
-        <SelectTrigger
-          size={"sm"}
-          variant={"ghost"}
-          className={cn(
-            "w-full font-normal rounded-lg",
-            rrule ? "" : "text-text-sub",
-          )}
-          icon={RepeatIcon}
+    <>
+      <div onKeyDown={(e) => e.stopPropagation()}>
+        <Select
+          aria-label="Recurrence Select Main"
+          selectedKey={value}
+          onSelectionChange={(value) => {
+            handleCustomRecurrence(value as string);
+          }}
         >
-          <div className="pr-2 truncate">
+          <Select.Trigger
+            showArrow={true}
+            prefix={
+              <div className="shrink-0">
+                <RepeatIcon size={16} className="shrink-0" />
+              </div>
+            }
+          >
             <SelectLabel />
-          </div>
-        </SelectTrigger>
-        <SelectFieldContent
-          placement="left top"
-          offset={4}
-          className="w-fit p-0"
-          {...popoverProps}
-          items={items}
-        >
-          {({ section, items }) => (
-            <ListBoxSection
-              id={section}
-              items={items}
-              className="not-last:border-b not-last:py-1 p-1"
-            >
-              {({ name, value, auxName }) => {
-                return (
-                  <ListBoxItem id={value} showCheckIcon>
-                    <p>
+          </Select.Trigger>
+          <Select.List
+            placement="left top"
+            offset={8}
+            className="max-h-[400px]"
+          >
+            {items.map(({ items: opt }, sectionIndex) =>
+              opt.map(({ name, value, auxName }, index) => (
+                <React.Fragment key={value}>
+                  <Select.Option id={value} textValue={name}>
+                    <DropdownLabel>
                       {name}
                       {auxName && (
-                        <span className="text-text-sub"> {auxName}</span>
+                        <span className="text-muted-fg"> {auxName}</span>
                       )}
-                    </p>
-                  </ListBoxItem>
-                );
-              }}
-            </ListBoxSection>
-          )}
-        </SelectFieldContent>
-      </SelectField>
-      <Modal
+                    </DropdownLabel>
+                  </Select.Option>
+                  {index === opt.length - 1 && sectionIndex !== 2 && (
+                    <Select.Separator />
+                  )}
+                </React.Fragment>
+              )),
+            )}
+          </Select.List>
+        </Select>
+      </div>
+
+      <Modal.Content
+        size="md"
         isOpen={isCustomModalOpen}
         onOpenChange={setIsCustomModalOpen}
-        isKeyboardDismissDisabled
       >
-        <Dialog>
-          <Heading slot="title" className="mb-4">
-            Custom recurrence rule
-          </Heading>
+        <Modal.Header>
+          <Modal.Title level={2}>Custom recurrence rule</Modal.Title>
+          <Modal.Description>Set custom repeat pattern</Modal.Description>
+        </Modal.Header>
+        <Modal.Body className="overflow-visible">
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <p className="text-sm text-text-sub shrink-0 w-12">Every</p>
@@ -209,40 +197,41 @@ export const RecurrenceSelectContent = ({
               <p className="text-sm text-text-sub">Ends</p>
               <EndsRadioGroup />
             </div>
-
-            <div className="flex items-center justify-end gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                slot="close"
-                className="text-text-sub"
-                onPress={() => {
-                  if (rrule === null) return;
-
-                  setRruleOptions({
-                    ...rruleOptions,
-                    ...convertRRuleOptionsToCustom(rrule.options),
-                    dstart: selectedDate.toDate("UTC"),
-                  });
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="primary"
-                size="sm"
-                className="px-6 group"
-                type="button"
-                onPress={saveCustomRecurrenceRule}
-              >
-                Save
-                <ArrowRight02Icon size={14} />
-              </Button>
-            </div>
           </div>
-        </Dialog>
-      </Modal>
-    </div>
+        </Modal.Body>
+        <Modal.Footer className="flex items-center justify-end gap-2 flex-row">
+          <Button
+            appearance="plain"
+            size="small"
+            className="text-muted-fg hover:text-current"
+            onPress={() => {
+              setIsCustomModalOpen(false);
+              if (rrule === null) return;
+              setRruleOptions({
+                ...rruleOptions,
+                ...convertRRuleOptionsToCustom(rrule.options),
+                dstart: selectedDate.toDate("UTC"),
+              });
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            size="small"
+            className="px-6 group"
+            type="button"
+            onPress={() => {
+              saveCustomRecurrenceRule();
+              setIsCustomModalOpen(false);
+            }}
+            slot="close"
+          >
+            Save
+            <ArrowRight02Icon size={14} data-slot="icon" />
+          </Button>
+        </Modal.Footer>
+      </Modal.Content>
+    </>
   );
 };
 
@@ -258,12 +247,20 @@ export const RecurrenceSelect = ({
   children?: React.ReactNode;
 }) => {
   return (
-    <RecurrenceSelectContextProvider
-      selectedDate={selectedDate}
-      onChange={onChange}
-      value={value}
-    >
-      {children ?? <RecurrenceSelectContent />}
-    </RecurrenceSelectContextProvider>
+    <>
+      <RecurrenceSelectContextProvider
+        selectedDate={selectedDate}
+        onChange={onChange}
+        value={value}
+      >
+        <RecurrenceSelectContent />
+      </RecurrenceSelectContextProvider>
+      {/* <Modal>
+        <Button>open</Button>
+        <Modal.Content classNames={{ overlay: "z-2000", content: "z-20000" }}>
+          diasodaso
+        </Modal.Content>
+      </Modal> */}
+    </>
   );
 };

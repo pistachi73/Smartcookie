@@ -96,17 +96,25 @@ export const AuthRegisterSchema = z.object({
   code: z.string().optional(),
 });
 
-export const AuthSchema = z
-  .object({
-    email: z.string().email({
-      message: "Email is required",
-    }),
-    loginPassword: z.string().min(1, { message: "Password is required" }),
-    registerPassword: PasswordSchema.optional(),
-    registerPasswordConfirm: z.string(),
-    code: z.string().optional(),
-  })
-  .refine((data) => data.registerPassword === data.registerPasswordConfirm, {
-    path: ["registerPasswordConfirm"],
-    message: "Passwords does not match",
-  });
+export const authSchema = z.object({
+  email: z.string().email({
+    message: "Email is required",
+  }),
+  loginPassword: z.string().min(1, { message: "Password is required" }),
+  registerPassword: PasswordSchema,
+  registerPasswordConfirm: z.string(),
+  code: z.string(),
+});
+
+export type AuthSchema = z.infer<typeof authSchema>;
+
+export type AuthSteps =
+  | "LANDING"
+  | "VERIFY_EMAIL"
+  | "OAUTH"
+  | "CREATE_PASSWORD"
+  | "CONFIRM_PASSWORD"
+  | "ENTER_PASSWORD"
+  | "TWO_FACTOR"
+  | "RESET_PASSWORD"
+  | "UPDATE_PASSWORD";

@@ -1,21 +1,28 @@
-import {
-  ComboBoxField,
-  ComboBoxFieldContent,
-  type ComboBoxFieldContentProps,
-  type ComboBoxFieldProps,
-} from "@/components/ui/react-aria/combobox";
 import type { PgTimezone } from "@/data-access/pg";
 import { cn } from "@/lib/utils";
 import { Globe02Icon } from "@hugeicons/react";
 import { useQuery } from "@tanstack/react-query";
-import { createContext, useContext, useMemo, useState } from "react";
-import { Button, Group, Input } from "react-aria-components";
-import { ListBoxItem } from "../react-aria/list-box";
-import { fieldWrapperVariants } from "../react-aria/shared-styles/field-variants";
+import { createContext, useMemo, useState } from "react";
+import {
+  ComboBox,
+  type ComboBoxListProps,
+  type ComboBoxProps,
+  DropdownLabel,
+} from "../new/ui";
 import { getPgTimezonesAction } from "./actions";
 
-type TimezoneComboboxProps<T extends object> = ComboBoxFieldProps<T> & {
+type TimezoneComboboxProps<T extends object> = Omit<
+  ComboBoxProps<T>,
+  "className" | "children"
+> & {
   withIcon?: boolean;
+  className?: {
+    primitive?: string;
+    input?: string;
+    fieldGroup?: string;
+    overlay?: string;
+  };
+  listProps?: ComboBoxListProps<T>;
 };
 
 const TimezoneComboboxxt = createContext<{
@@ -28,10 +35,11 @@ export const TimezoneCombobox = <T extends object>({
   className,
   isDisabled,
   selectedKey,
-  children,
   withIcon = true,
+  listProps,
   ...props
 }: TimezoneComboboxProps<T>) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const { data: items, isLoading } = useQuery({
     queryKey: ["timezones"],
@@ -52,89 +60,68 @@ export const TimezoneCombobox = <T extends object>({
   );
 
   return (
-    <TimezoneComboboxxt.Provider value={{ items }}>
-      <ComboBoxField
-        menuTrigger="focus"
-        isDisabled={isDisabled || isLoading}
-        selectedKey={selectedKey}
-        onFocusChange={setIsFocused}
-        {...props}
+    <ComboBox
+      onOpenChange={setIsOpen}
+      menuTrigger="focus"
+      isDisabled={isDisabled || isLoading}
+      selectedKey={selectedKey}
+      onFocusChange={setIsFocused}
+      className={cn("min-w-0 relative", className?.primitive)}
+      {...props}
+    >
+      <ComboBox.Input
+        prefix={
+          withIcon && (
+            <div className="flex items-center gap-2">
+              <Globe02Icon size={14} data-slot="icon" className="shrink-0" />
+              {selectedKey && (
+                <p
+                  className={cn(
+                    "text-muted-fg text-sm whitespace-nowrap",
+                    isFocused ? "hidden" : "flex h-full",
+                  )}
+                >
+                  {itemsMap?.[selectedKey]?.displayoffset}
+                </p>
+              )}
+            </div>
+          )
+        }
+        className={{
+          input: cn(className?.input),
+          fieldGroup: className?.fieldGroup,
+          icon: isOpen ? "rotate-180 text-fg" : "text-muted-fg",
+        }}
+        placeholder="Timezone"
+        onKeyDown={(e) => {
+          if (e.key === "Escape") {
+            e.stopPropagation();
+          }
+        }}
+      />
+
+      <ComboBox.List
+        isOpen={isOpen}
+        className={cn("max-h-[300px]!", className?.overlay)}
+        {...listProps}
+        items={items}
       >
-        <Group
-          className={cn(
-            fieldWrapperVariants({ size: "sm", isDisabled }),
-            "flex flex-row items-center justify-between px-0 overflow-hidden pl-0 relative",
-            "[[data-focus-within=true]>span]:text-3xl",
-            className,
-          )}
-        >
-          {withIcon && (
-            <Button
-              className={cn(
-                "absolute top-0 left-0",
-                "h-full aspect-square p-0 rounded-none",
-                "flex items-center justify-center",
-                isLoading ? "cursor-not-allowed" : "cursor-pointer",
-              )}
-            >
-              <Globe02Icon size={16} color="var(--color-text-sub)" />
-            </Button>
-          )}
-          {selectedKey && (
-            <p
-              className={cn(
-                "items-center justify-center absolute left-0  pl-10  text-text-sub text-sm tabular-nums",
-                isFocused ? "hidden" : "flex h-full",
-              )}
-            >
-              {itemsMap?.[selectedKey]?.displayoffset}
-            </p>
-          )}
-          <Input
-            className={cn(
-              "relative z-10 flex-1 h-full truncate pr-2",
-              selectedKey && !isLoading
-                ? "data-[focused]:pl-10 pl-29 "
-                : "pl-10",
-            )}
-            placeholder="Timezone"
-            onKeyDown={(e) => {
-              if (e.key === "Escape") {
-                e.stopPropagation();
-              }
-            }}
-          />
-        </Group>
-        {children}
-      </ComboBoxField>
-    </TimezoneComboboxxt.Provider>
-  );
-};
-
-type TimezoneComboboxContentProps<T extends object> = Omit<
-  ComboBoxFieldContentProps<T>,
-  "items" | "children"
->;
-
-export const TimezoneComboboxContent = <T extends object>({
-  ...props
-}: TimezoneComboboxContentProps<T>) => {
-  const { items } = useContext(TimezoneComboboxxt);
-  return (
-    <ComboBoxFieldContent items={items} {...props}>
-      {(item) => (
-        <ListBoxItem
-          showCheckIcon
-          key={item.name}
-          id={item.name}
-          textValue={`${item.displayname}`}
-        >
-          <span className="text-text-sub tabular-nums shrink-0">
-            {item.displayoffset}
-          </span>
-          {item.displayname}
-        </ListBoxItem>
-      )}
-    </ComboBoxFieldContent>
+        {(item) => (
+          <ComboBox.Option
+            key={item.name}
+            id={item.name}
+            textValue={`${item.displayname}`}
+            isDisabled={isDisabled}
+          >
+            <DropdownLabel>
+              <span className="text-muted-fg tabular-nums shrink-0 mr-2">
+                {item.displayoffset}
+              </span>
+              {item.displayname}
+            </DropdownLabel>
+          </ComboBox.Option>
+        )}
+      </ComboBox.List>
+    </ComboBox>
   );
 };

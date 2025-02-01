@@ -3,7 +3,11 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { useState } from "react";
 import { Button } from "react-aria-components";
-import { calculateOccurrenceHeight, calculateOccurrenceTop } from "../utils";
+import {
+  PIXELS_PER_15_MINUTES,
+  calculateOccurrenceHeight,
+  calculateOccurrenceTop,
+} from "../utils";
 
 export const DayWeekViewDraftOccurrence = ({
   occurrence,
@@ -21,7 +25,7 @@ export const DayWeekViewDraftOccurrence = ({
     minutes: occurrence.startTime.getMinutes(),
   });
 
-  const isShortEvent = heightPx / 15 <= 1;
+  const isShortEvent = heightPx / PIXELS_PER_15_MINUTES <= 4;
   const startTimeLabel = format(occurrence.startTime, "HH:mm");
   const endTimeLabel = format(occurrence.endTime, "HH:mm");
 
@@ -37,23 +41,23 @@ export const DayWeekViewDraftOccurrence = ({
     >
       <div
         className={cn(
-          "h-full w-full  border-responsive-dark/80 bg-elevated-highlight flex rounded-md gap-2 overflow-hidden",
+          "h-full w-full  border-responsive-dark/80 bg-overlay-elevated-highlight flex rounded-md gap-2 overflow-hidden",
           "border ",
           isShortEvent && "items-center",
         )}
       >
-        <div className="h-full w-1 bg-responsive-dark/70 shrink-0" />
+        <div className="h-full w-1 bg-fg/70 shrink-0" />
         <div className={cn("text-left", !isShortEvent && "py-1.5 pr-2")}>
-          <p className="line-clamp-2 font-normal leading-tight mb-0.5 text-xs">
+          <p className="truncate font-medium leading-tight mb-0.5 text-xs">
             {occurrence.title ? occurrence.title : "Untitled event"}
             {isShortEvent && (
-              <span className="text-text-sub ml-2">{startTimeLabel}</span>
+              <span className="text-current/70 ml-2">{startTimeLabel}</span>
             )}
           </p>
           {!isShortEvent && (
-            <span className="line-clamp-1 text-text-sub text-xs">
+            <p className="truncate text-current/70 text-xs">
               {startTimeLabel} - {endTimeLabel}
-            </span>
+            </p>
           )}
         </div>
       </div>

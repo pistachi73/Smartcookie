@@ -56,7 +56,7 @@ export const DatePicker = <T extends DateValue>({
       >
         <Button
           className={cn(
-            "cursor-pointer transition-colors h-full aspect-square flex items-center justify-center p-0 rounded-none  hover:bg-base-highlight",
+            "cursor-pointer transition-colors h-full aspect-square flex items-center justify-center p-0 rounded-none  hover:bg-overlay-highlight",
             !value && "text-text-sub",
           )}
           excludeFromTabOrder

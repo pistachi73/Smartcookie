@@ -30,7 +30,7 @@ export const AgendaView = () => {
             <div key={currentDay.getTime()} className="h-full flex gap-2">
               <div
                 className={cn(
-                  "rounded-lg w-30 bg-base-highlight p-3 px-4",
+                  "rounded-lg w-30 bg-overlay-highlight p-3 px-4",
                   isToday && "bg-primary/40",
                 )}
               >

@@ -1,41 +1,67 @@
 import { useSafeAction } from "@/hooks/use-safe-action";
-import { Loader2 } from "lucide-react";
+import { useAuthStore } from "@/providers/auth-store-provider";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "react-aria-components";
-import { Controller } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import type { AuthFormSharedProps } from ".";
-import { Button } from "../ui/button";
-import { PasswordField } from "../ui/react-aria/password-field";
+import type { z } from "zod";
+import { useShallow } from "zustand/react/shallow";
+
 import { registerAction } from "./actions";
-import { useAuthContext } from "./auth-context";
 import { FormWrapper } from "./form-wrapper";
+import { authSchema } from "./validation";
 
-type CreatePasswordProps = AuthFormSharedProps;
+import {
+  Button,
+  PasswordFieldWithValidation,
+  ProgressCircle,
+  TextField,
+} from "@/components/ui/new/ui";
 
-export const CreatePassword = ({ authForm }: CreatePasswordProps) => {
-  const { setFormType } = useAuthContext();
+const createPasswordSchema = authSchema
+  .pick({
+    registerPassword: true,
+    registerPasswordConfirm: true,
+  })
+  .refine((data) => data.registerPassword === data.registerPasswordConfirm, {
+    path: ["registerPasswordConfirm"],
+    message: "Passwords does not match",
+  });
+
+type CreatePasswordSchema = z.infer<typeof createPasswordSchema>;
+
+const useAuthCreatePassword = () =>
+  useAuthStore(
+    useShallow(({ setData, setStep, data }) => ({
+      setData,
+      setStep,
+      data,
+    })),
+  );
+
+export const CreatePassword = () => {
+  const { setData, setStep, data } = useAuthCreatePassword();
+  const form = useForm<CreatePasswordSchema>({
+    resolver: zodResolver(createPasswordSchema),
+    defaultValues: {
+      registerPassword: "",
+      registerPasswordConfirm: "",
+    },
+  });
+
   const { executeAsync: asyncRegsiter, isExecuting: isRegistering } =
     useSafeAction(registerAction);
 
   const onBack = () => {
-    authForm.reset();
-    setFormType("LANDING");
+    form.reset();
+    setStep("LANDING");
   };
 
-  const onNextStep = async () => {
-    const [registerPassword, email] = authForm.getValues([
-      "registerPassword",
-      "email",
-    ]);
+  const onSubmit = async (values: CreatePasswordSchema) => {
+    const { registerPassword, registerPasswordConfirm } = values;
+    const { email } = data;
 
-    if (!registerPassword || !email) return;
-
-    const typeCheckSuccess = await authForm.trigger(
-      ["registerPassword", "registerPasswordConfirm", "email"],
-      { shouldFocus: true },
-    );
-
-    if (!typeCheckSuccess) return;
+    if (!email) return;
 
     const result = await asyncRegsiter({
       email,
@@ -46,8 +72,13 @@ export const CreatePassword = ({ authForm }: CreatePasswordProps) => {
       return;
     }
 
+    setData({
+      registerPassword,
+      registerPasswordConfirm,
+    });
+
     if (result?.data?.emailVerification) {
-      setFormType("VERIFY_EMAIL");
+      setStep("VERIFY_EMAIL");
     } else {
       toast.error("Something went wrong, please try again later.");
     }
@@ -60,37 +91,35 @@ export const CreatePassword = ({ authForm }: CreatePasswordProps) => {
       backButton
       backButtonOnClick={onBack}
     >
-      <Form
-        onSubmit={(e) => {
-          e.preventDefault();
-          onNextStep();
-        }}
-        className="space-y-6"
-      >
+      <Form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <Controller
-          control={authForm.control}
+          control={form.control}
           name="registerPassword"
           render={({ field }) => (
-            <PasswordField
+            <PasswordFieldWithValidation
               {...field}
               label="Password"
               autoFocus
+              placeholder="******"
               isDisabled={isRegistering}
               autoComplete="new-password"
-              withValidation={
-                authForm.formState.dirtyFields.registerPassword ||
-                authForm.formState.errors.registerPassword !== undefined
+              showValidation={
+                form.formState.dirtyFields.registerPassword ||
+                form.formState.errors.registerPassword !== undefined
               }
             />
           )}
         />
         <Controller
-          control={authForm.control}
+          control={form.control}
           name="registerPasswordConfirm"
           render={({ field, fieldState: { error, invalid } }) => (
-            <PasswordField
+            <TextField
               {...field}
               label="Confirm password"
+              placeholder="******"
+              type="password"
+              isRevealable
               isDisabled={isRegistering}
               autoComplete="confirm-password"
               isInvalid={invalid}
@@ -99,12 +128,10 @@ export const CreatePassword = ({ authForm }: CreatePasswordProps) => {
           )}
         />
 
-        <Button
-          className="w-full mt-4"
-          type="submit"
-          isDisabled={isRegistering}
-        >
-          {isRegistering && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        <Button className="w-full mt-4" type="submit" isPending={isRegistering}>
+          {isRegistering && (
+            <ProgressCircle isIndeterminate aria-label="Registering..." />
+          )}
           Register
         </Button>
       </Form>

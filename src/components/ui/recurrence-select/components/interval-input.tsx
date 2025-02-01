@@ -1,7 +1,6 @@
 import { use } from "react";
+import { NumberField } from "../../new/ui";
 import { RecurrenceSelectContext } from "../recurrence-select-context";
-
-import { NumberField } from "@/components/ui/react-aria/number-field";
 
 export const IntervalInput = () => {
   const { setRruleOptions, rruleOptions } = use(RecurrenceSelectContext);
@@ -13,10 +12,12 @@ export const IntervalInput = () => {
           interval: Number.isNaN(interval) ? 1 : interval,
         });
       }}
+      size="small"
       value={rruleOptions.interval}
       defaultValue={1}
-      size={"sm"}
-      className={"w-20 h-8 text-sm rounded-md hover:bg-elevated-highlight"}
+      className={{
+        fieldGroup: "hover:bg-overlay-elevated",
+      }}
       aria-label="Every x days"
       step={1}
       minValue={1}

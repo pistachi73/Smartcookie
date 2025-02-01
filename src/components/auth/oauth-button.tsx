@@ -4,12 +4,12 @@ import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 
 import { DEFAULT_LOGIN_REDIRECT } from "@/app-config";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAuthSettingsContextConsumer } from "./auth-settings-context";
 
 import { AppleIcon, GoogleIcon } from "@hugeicons/react";
 import type { JSX } from "react";
+import { Button } from "../ui/new/ui";
 
 type Provider = "google" | "apple";
 
@@ -55,8 +55,7 @@ export const SocialButton = ({ provider, className }: SocialButtonProps) => {
 
   return (
     <Button
-      size="default"
-      variant="outline"
+      appearance="outline"
       className={cn(
         "flex w-full justify-between border text-sm sm:text-md",
         className,

@@ -1,11 +1,11 @@
-import { Popover, type PopoverProps } from "@/components/ui/react-aria/popover";
+import { Popover, type PopoverContentProps } from "@/components/ui/new/ui";
 import type { GroupedCalendarOccurrence } from "@/lib/group-overlapping-occurrences";
 import { cn } from "@/lib/utils";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
 import { format } from "date-fns";
-import { Button, DialogTrigger } from "react-aria-components";
+import { Button } from "react-aria-components";
 import { useShallow } from "zustand/react/shallow";
-import { EventOccurrenceDialog } from "../../components/event-occurrence-dialog";
+import { EventOccurrencePopover } from "../../components/event-occurrence-popover-content";
 
 const useMonthViewOccurrence = () =>
   useCalendarStore(
@@ -22,16 +22,16 @@ export const MonthViewOccurrence = ({
 }: {
   occurrence: GroupedCalendarOccurrence;
   className?: string;
-  popoverProps?: Omit<PopoverProps, "children">;
+  popoverProps?: Omit<PopoverContentProps, "children">;
   onEditPress?: () => void;
 }) => {
   const { editingEventOccurrenceId } = useMonthViewOccurrence();
   const isEditing = editingEventOccurrenceId === occurrence.eventOccurrenceId;
   return (
-    <DialogTrigger>
+    <Popover>
       <Button
         className={cn(
-          "border border-transparent text-xs min-w-0 w-full h-6 p-0.5 px-1 rounded-md text-text-default hover:bg-base-highlight flex gap-1 items-center transition-colors cursor-pointer",
+          "border border-transparent text-xs min-w-0 w-full h-6 p-0.5 px-1 rounded-md text-text-default hover:bg-overlay-elevated-highlight flex gap-1 items-center transition-colors cursor-pointer",
           className,
           isEditing && "border-responsivedark/70 bg-responsive-dark/10",
         )}
@@ -45,12 +45,14 @@ export const MonthViewOccurrence = ({
         </p>
       </Button>
 
-      <Popover placement="top" {...popoverProps}>
-        <EventOccurrenceDialog
-          occurrence={occurrence}
-          onEditPress={onEditPress}
-        />
-      </Popover>
-    </DialogTrigger>
+      <EventOccurrencePopover
+        occurrence={occurrence}
+        onEditPress={onEditPress}
+        popoverProps={{
+          placement: "top",
+          ...popoverProps,
+        }}
+      />
+    </Popover>
   );
 };

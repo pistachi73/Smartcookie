@@ -1,19 +1,18 @@
 "use client";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 
-import { Checkbox } from "@/components/ui/checkbox";
 import { ResizablePanelRoot } from "@/components/ui/resizable-panel";
 
-import { Calendar } from "@/components/ui/react-aria/calendar";
+import {
+  Calendar,
+  Checkbox,
+  CheckboxGroup,
+  Disclosure,
+  DisclosurePanel,
+  DisclosureTrigger,
+} from "@/components/ui/new/ui";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
 import { CalendarDate } from "@internationalized/date";
 import { useEffect, useState } from "react";
-import { Separator } from "react-aria-components";
 import { useShallow } from "zustand/react/shallow";
 import { UpcomingEvent } from "../components/upcoming-event";
 
@@ -53,13 +52,12 @@ export const CalendarSidebarMain = () => {
   }, [selectedDate]);
 
   return (
-    <div className="flex flex-col">
-      <div className="p-4">
+    <div className="flex flex-col  rounded-lg gap-2">
+      <div className="p-4 rounded-lg bg-overlay">
         <UpcomingEvent hubName="Math Tutoring Hub" />
       </div>
-      <Separator />
       <ResizablePanelRoot value="calendar">
-        <div className="py-4">
+        <div className="p-4 bg-overlay rounded-lg">
           <Calendar
             value={calendarValue}
             onChange={(date) => {
@@ -71,39 +69,38 @@ export const CalendarSidebarMain = () => {
         </div>
       </ResizablePanelRoot>
 
-      <Accordion type="multiple" className="max-w-full">
-        <AccordionItem value="hubs">
-          <AccordionTrigger>Hubs</AccordionTrigger>
-          <AccordionContent className="ml-2 space-y-4">
-            {hubs?.map((hub) => (
-              <div
-                key={hub.id}
-                className="flex items-center text-sm dark:text-neutral-300 text-neutral-700 gap-2"
-              >
-                <Checkbox id={hub.id.toString()} />
-                <label htmlFor={hub.id.toString()}>{hub.name}</label>
-              </div>
-            ))}
-          </AccordionContent>
-        </AccordionItem>
-        <AccordionItem value="clients">
-          <AccordionTrigger>Clients</AccordionTrigger>
-          <AccordionContent className="ml-2">
-            <div className="flex items-center text-sm dark:text-neutral-300 text-neutral-700 gap-2">
-              <Checkbox id="client" />
-              <label htmlFor="client">Client 1</label>
-            </div>
-            <div className="flex items-center text-sm dark:text-neutral-300 text-neutral-700 gap-2">
-              <Checkbox id="client" />
-              <label htmlFor="client">Client 1</label>
-            </div>
-            <div className="flex items-center text-sm dark:text-neutral-300 text-neutral-700 gap-2">
-              <Checkbox id="client" />
-              <label htmlFor="client">Client 1</label>
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+      <div className="px-4 py-2 bg-overlay rounded-lg">
+        <Disclosure className="border-b-0">
+          <DisclosureTrigger className="sm:text-base py-2">
+            Hubs
+          </DisclosureTrigger>
+          <DisclosurePanel>
+            <CheckboxGroup aria-label="Hubs" className={"ml-1"}>
+              {hubs.map((hub) => (
+                <Checkbox key={hub.id} value={hub.id.toString()}>
+                  {hub.name}
+                </Checkbox>
+              ))}
+            </CheckboxGroup>
+          </DisclosurePanel>
+        </Disclosure>
+      </div>
+      <div className="px-4 py-2 bg-overlay rounded-lg">
+        <Disclosure className="border-b-0">
+          <DisclosureTrigger className="sm:text-base py-2">
+            Clients
+          </DisclosureTrigger>
+          <DisclosurePanel>
+            <CheckboxGroup aria-label="Clients" className={"ml-1"}>
+              {hubs.map((hub) => (
+                <Checkbox key={hub.id} value={hub.id.toString()}>
+                  {hub.name}
+                </Checkbox>
+              ))}
+            </CheckboxGroup>
+          </DisclosurePanel>
+        </Disclosure>
+      </div>
     </div>
   );
 };

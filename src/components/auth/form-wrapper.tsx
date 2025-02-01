@@ -1,18 +1,12 @@
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { ArrowLeft02Icon } from "@hugeicons/react";
 import { motion } from "motion/react";
 import { useEffect } from "react";
+import { Button, Card } from "../ui/new/ui";
 import { useAuthContext } from "./auth-context";
 
-const MotionCard = motion(Card);
+// @ts-ignore
+const MotionCard = motion.create(Card);
 
 type FormWrapperProps = {
   children: React.ReactNode;
@@ -39,6 +33,7 @@ export const FormWrapper = ({
 
   return (
     <MotionCard
+      // @ts-ignore
       className="w-full border-none bg-transparent shadow-none"
       initial={{ opacity: 0, x: animationDir === 1 ? 20 : -20 }}
       animate={{
@@ -62,7 +57,8 @@ export const FormWrapper = ({
               await setAnimationDir(-1);
               backButtonOnClick?.();
             }}
-            variant="link"
+            size="extra-small"
+            appearance="plain"
             type="button"
             className="text-sm"
           >
@@ -71,15 +67,15 @@ export const FormWrapper = ({
           </Button>
         )}
       </div>
-      <CardHeader className="px-0 py-6">
-        <CardTitle className="text-2xl font-semibold tracking-tighter ">
+      <Card.Header className="px-0 py-6">
+        <Card.Title level={1} tracking="tighter">
           {header}
-        </CardTitle>
-        <CardDescription className="mt-2 text-md">{subHeader}</CardDescription>
-      </CardHeader>
-      <CardContent className={cn("px-0 py-4", className)}>
+        </Card.Title>
+        <Card.Description>{subHeader}</Card.Description>
+      </Card.Header>
+      <Card.Content className={cn("px-0 py-4", className)}>
         {children}
-      </CardContent>
+      </Card.Content>
     </MotionCard>
   );
 };

@@ -11,7 +11,7 @@ export const Calendar = () => {
 
   if (!_isHydrated)
     return (
-      <div className="h-full w-full bg-base flex items-center justify-center rounded-xl">
+      <div className="h-full w-full bg-overlay flex items-center justify-center rounded-xl">
         <Loader />
         {/* <Loading01Icon size={20} className="animate-spin ml-2" /> */}
       </div>
@@ -19,7 +19,7 @@ export const Calendar = () => {
 
   return (
     <div className="h-full flex gap-2">
-      <div className="w-full h-full rounded-xl overflow-hidden bg-base max-h-[calc(100dvh-88px)]">
+      <div className="w-full h-full rounded-xl overflow-hidden bg-overlay  max-h-[calc(100dvh-88px)]">
         <CalendarView />
       </div>
       <CalendarSidebar />

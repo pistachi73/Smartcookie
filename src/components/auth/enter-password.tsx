@@ -1,52 +1,78 @@
 import { useSafeAction } from "@/hooks/use-safe-action";
-import { Loader2 } from "lucide-react";
-import { Form } from "react-aria-components";
 
-import { Controller } from "react-hook-form";
-import type { AuthFormSharedProps } from ".";
+import {
+  Button,
+  Form,
+  Link,
+  ProgressCircle,
+  TextField,
+} from "@/components/ui/new/ui";
+import { useAuthStore } from "@/providers/auth-store-provider";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
+import type { z } from "zod";
+import { useShallow } from "zustand/react/shallow";
 import { signInAction } from "./actions";
-import { useAuthContext } from "./auth-context";
 import { FormWrapper } from "./form-wrapper";
 import { useLoginSuccess } from "./hooks/use-login-success";
+import { authSchema } from "./validation";
 
-import { Button } from "@/components/ui/button";
-import { PasswordField } from "@/components/ui/react-aria/password-field";
+const authEnterPassword = authSchema.pick({
+  loginPassword: true,
+});
 
-type CreatePasswordProps = AuthFormSharedProps;
+type AuthEnterPassword = z.infer<typeof authEnterPassword>;
 
-export const EnterPassword = ({ authForm }: CreatePasswordProps) => {
-  const { setFormType } = useAuthContext();
+const useAuthEnterPassword = () =>
+  useAuthStore(
+    useShallow(({ data, setData, setStep }) => ({
+      data,
+      setStep,
+      setData,
+    })),
+  );
+
+export const EnterPassword = () => {
+  const { setStep, data, setData } = useAuthEnterPassword();
+  const onLoginSuccess = useLoginSuccess();
+
+  const form = useForm<AuthEnterPassword>({
+    resolver: zodResolver(authEnterPassword),
+    defaultValues: {
+      loginPassword: "",
+    },
+    mode: "onChange",
+  });
+
   const { execute: signIn, isExecuting } = useSafeAction(signInAction, {
     onSuccess: ({ data }) => {
       if (data?.twoFactor) {
-        setFormType("TWO_FACTOR");
+        setStep("TWO_FACTOR");
       } else {
-        authForm.reset();
+        form.reset();
         onLoginSuccess();
       }
+      console.log("login success");
     },
     onError: () => {
-      authForm.setError("loginPassword", { type: "informative" });
+      // form.setError("loginPassword", { type: "informative" });
+      form.setFocus("loginPassword", { shouldSelect: true });
     },
   });
-  const onLoginSuccess = useLoginSuccess();
 
   const onBack = () => {
-    authForm.reset();
-    setFormType("LANDING");
+    form.reset();
+    setStep("LANDING");
   };
 
-  const onLogin = async () => {
-    const [password, email] = authForm.getValues(["loginPassword", "email"]);
+  const onSubmit = async (value: AuthEnterPassword) => {
+    const { loginPassword } = value;
+    const { email } = data;
 
-    const typeCheckSuccess = await authForm.trigger(
-      ["loginPassword", "email"],
-      { shouldFocus: true },
-    );
+    if (!email || !loginPassword) return;
 
-    if (!typeCheckSuccess || !email || !password) return;
-
-    signIn({ email, password });
+    setData({ loginPassword });
+    signIn({ email, password: loginPassword });
   };
 
   return (
@@ -56,27 +82,24 @@ export const EnterPassword = ({ authForm }: CreatePasswordProps) => {
       backButtonOnClick={onBack}
       className="space-y-6"
     >
-      <Form
-        onSubmit={(e) => {
-          e.preventDefault();
-          onLogin();
-        }}
-      >
+      <Form onSubmit={form.handleSubmit(onSubmit)}>
         <input
           type="text"
           name="email"
-          value={authForm.getValues("email")}
+          value={data.email}
           readOnly
           autoComplete="email"
           className="hidden"
         />
         <Controller
-          control={authForm.control}
+          control={form.control}
           name="loginPassword"
-          render={({ field }) => (
-            <PasswordField
-              {...field}
+          render={({ field: { ...rest } }) => (
+            <TextField
+              {...rest}
               autoFocus
+              isRevealable
+              type="password"
               label="Password"
               validationBehavior="aria"
               isDisabled={isExecuting}
@@ -85,21 +108,21 @@ export const EnterPassword = ({ authForm }: CreatePasswordProps) => {
         />
 
         <div className="w-full items-end flex justify-end mt-1">
-          <Button
-            size="inline"
-            variant="link"
-            className="text-sm font-normal text-text-sub"
-            type="button"
+          <Link
+            intent="secondary"
+            className="text-sm cursor-pointer"
             onPress={() => {
-              setFormType("RESET_PASSWORD");
+              setStep("RESET_PASSWORD");
             }}
           >
             Forgot password?
-          </Button>
+          </Link>
         </div>
 
-        <Button className="w-full mt-4" type="submit" isDisabled={isExecuting}>
-          {isExecuting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        <Button className="w-full mt-4" type="submit" isPending={isExecuting}>
+          {isExecuting && (
+            <ProgressCircle isIndeterminate aria-label="Logging in..." />
+          )}
           Login
         </Button>
       </Form>

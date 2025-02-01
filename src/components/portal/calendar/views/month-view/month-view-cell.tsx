@@ -1,18 +1,13 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Popover } from "@/components/ui/react-aria/popover";
+import { Popover } from "@/components/ui/new/ui";
 import type { GroupedOccurrence } from "@/lib/group-overlapping-occurrences";
 import { cn } from "@/lib/utils";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
 import { MultiplicationSignIcon } from "@hugeicons/react";
 import { format, isToday } from "date-fns";
 import { useEffect, useRef, useState } from "react";
-import {
-  Button as AriaButton,
-  Dialog,
-  DialogTrigger,
-} from "react-aria-components";
+import { Button as AriaButton } from "react-aria-components";
 import { useShallow } from "zustand/react/shallow";
 import { MonthViewDraftOccurrence } from "./month-view-draft-occurrence";
 import { MonthViewOccurrence } from "./month-view-occurrence";
@@ -110,56 +105,53 @@ export const MonthViewCell = ({
             ),
           )}
         {visibleOccurrences < totalOccurrences && (
-          <DialogTrigger
+          <Popover
             isOpen={isViewAllOpen}
             onOpenChange={(open) => setIsViewAllOpen(open)}
           >
-            <AriaButton className="h-6 w-full hover:bg-base-highlight rounded-md transition-colors text-xs">
+            <AriaButton className="h-6 w-full hover:bg-overlay-highlight rounded-md transition-colors text-xs">
               {totalOccurrences - visibleOccurrences} more
             </AriaButton>
-            <Popover
+            <Popover.Content
               placement="top"
-              offset={-48}
-              className="w-[300px] p-4 px-3 relative overflow-hidden"
+              className="w-[300px] relative overflow-visible"
             >
-              <Dialog className="overflow-hidden">
-                <Button
-                  variant="ghost"
-                  slot="close"
-                  iconOnly
-                  className="absolute top-1 right-1 size-8 shrink-0"
-                >
-                  <MultiplicationSignIcon size={16} />
-                </Button>
-                <div className="flex flex-col items-center justify-center mb-4">
-                  <p className="text-sm text-text-sub lowercase">
-                    {format(currentDay, "iii")}
-                  </p>
-                  <p className="text-3xl font-medium text-responsive-dark ">
-                    {currentDay.getDate()}
-                  </p>
-                </div>
-                <div className="space-y-1 w-full">
-                  {dayOccurrences?.map((occurrence, index) =>
-                    occurrence.isDraft ? null : (
-                      <MonthViewOccurrence
-                        key={`event-ocurrence-${occurrence.eventOccurrenceId}`}
-                        occurrence={occurrence}
-                        className="text-sm h-7 px-2 w-full"
-                        popoverProps={{
-                          offset: 8,
-                          placement: "left top",
-                        }}
-                        onEditPress={() => {
-                          setIsViewAllOpen(false);
-                        }}
-                      />
-                    ),
-                  )}
-                </div>
-              </Dialog>
-            </Popover>
-          </DialogTrigger>
+              <Popover.Close
+                appearance="plain"
+                size="square-petite"
+                className="absolute top-1 right-1 size-8 shrink-0"
+              >
+                <MultiplicationSignIcon size={16} />
+              </Popover.Close>
+              <Popover.Header className="flex flex-col items-center justify-center">
+                <p className="text-sm text-text-sub lowercase">
+                  {format(currentDay, "iii")}
+                </p>
+                <p className="text-3xl font-medium text-responsive-dark ">
+                  {currentDay.getDate()}
+                </p>
+              </Popover.Header>
+              <Popover.Body className="space-y-1 w-full pb-4">
+                {dayOccurrences?.map((occurrence) =>
+                  occurrence.isDraft ? null : (
+                    <MonthViewOccurrence
+                      key={`event-ocurrence-${occurrence.eventOccurrenceId}`}
+                      occurrence={occurrence}
+                      className="text-sm h-7 px-2 w-full"
+                      popoverProps={{
+                        offset: 30,
+                        placement: "left top",
+                        className: "brightness-125",
+                      }}
+                      onEditPress={() => {
+                        setIsViewAllOpen(false);
+                      }}
+                    />
+                  ),
+                )}
+              </Popover.Body>
+            </Popover.Content>
+          </Popover>
         )}
       </div>
     </div>

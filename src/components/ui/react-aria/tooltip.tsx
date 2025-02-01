@@ -14,7 +14,7 @@ export interface TooltipProps extends Omit<AriaTooltipProps, "children"> {
 
 export const tooltipVariants = cva(
   [
-    "group bg-elevated border border-border-opaque will-change-transform text-sm px-3 py-1 rounded-lg",
+    "group bg-overlay-elevated border border-border-opaque will-change-transform text-sm px-3 py-1 rounded-lg",
   ],
   {
     variants: {

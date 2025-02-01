@@ -1,7 +1,12 @@
 import { Auth } from "@/components/auth";
+import { AuthStoreProvider } from "@/providers/auth-store-provider";
 
 const LoginPage = () => {
-  return <Auth initialFormType="LANDING" className="shadow-md h-screen" />;
+  return (
+    <AuthStoreProvider initialStore={{ step: "LANDING" }}>
+      <Auth className="shadow-md h-screen" />
+    </AuthStoreProvider>
+  );
 };
 
 export default LoginPage;

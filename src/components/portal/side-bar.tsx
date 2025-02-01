@@ -1,7 +1,5 @@
 "use client";
 
-import { buttonVariants } from "@/components/ui/button";
-import ThemeSwitch from "@/components/ui/theme-switch";
 import { cn } from "@/lib/utils";
 import {
   Calendar02Icon,
@@ -11,8 +9,7 @@ import {
   UserGroupIcon,
 } from "@hugeicons/react";
 import { usePathname } from "next/navigation";
-import { Link, TooltipTrigger } from "react-aria-components";
-import { Tooltip } from "../ui/react-aria/tooltip";
+import { Link, Tooltip, buttonStyles } from "../ui/new/ui";
 
 const sidebarLinks = [
   {
@@ -46,45 +43,47 @@ export const SideBar = () => {
   const pathname = usePathname();
 
   return (
-    <div className="flex flex-col justify-between items-center p-2 rounded-xl bg-base h-full ">
+    <div className="flex flex-col justify-between items-center p-2 rounded-xl bg-zinc-900 h-full ">
       <div className="flex flex-col gap-2 shrink-0 grow-0">
         {sidebarLinks.map(({ label, href, icon: Icon }) => {
           const isActive = pathname.includes(href);
           return (
-            <TooltipTrigger key={label} delay={200} closeDelay={200}>
+            <Tooltip key={label} delay={200} closeDelay={200}>
               <Link
                 href={href}
-                className={cn(
-                  buttonVariants({
-                    variant: "ghost",
-                    size: "default",
-                    iconOnly: true,
-                  }),
-                  "rounded-lg",
-                  isActive && "bg-primary text-light pointer-events-none",
-                )}
+                className={(renderProps) =>
+                  cn(
+                    buttonStyles({
+                      ...renderProps,
+                      shape: "square",
+                      appearance: "plain",
+                      size: "square-petite",
+                      className: "aspect-square size-12",
+                    }),
+                    isActive && "bg-primary text-light pointer-events-none",
+                  )
+                }
               >
                 <Icon
-                  size={20}
+                  size={18}
                   strokeWidth={1.5}
                   variant={isActive ? "solid" : "stroke"}
                   type="rounded"
                 />
               </Link>
-              <Tooltip
-                placement="right"
-                // sideOffset={4}
-                // side="right"
-                // align="center"
-                // className="w-fit"
-              >
+              <Tooltip.Content placement="right">
                 <p className="text-sm">{label}</p>
-              </Tooltip>
-            </TooltipTrigger>
+              </Tooltip.Content>
+            </Tooltip>
           );
         })}
       </div>
-      <ThemeSwitch />
+      {/* <ThemeSwitcher
+        appearance="plain"
+        size="square-petite"
+        shape="square"
+        className={"size-11"}
+      /> */}
     </div>
   );
 };

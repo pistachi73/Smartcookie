@@ -6,7 +6,7 @@ import { MaxWidthWrapper } from "./max-width-wrapper";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { AuthButton } from "./auth/auth-button";
 import { Button } from "./ui/button";
-import ThemeSwitch from "./ui/theme-switch";
+import { ThemeSwitcher } from "./ui/theme-switcher";
 
 export const Header = () => {
   const user = useCurrentUser();
@@ -16,7 +16,7 @@ export const Header = () => {
       <MaxWidthWrapper className="flex items-center justify-between h-14">
         <nav>Logo</nav>
         <div className="flex flex-row gap-2">
-          <ThemeSwitch />
+          <ThemeSwitcher />
           {user ? (
             <UserButton user={user} />
           ) : (

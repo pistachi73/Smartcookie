@@ -1,15 +1,10 @@
 "use client";
 
 import { AUTH_ROUTES } from "@/app-config";
-import {
-  ResponsiveDialog,
-  ResponsiveDialogContent,
-  ResponsiveDialogDescription,
-  ResponsiveDialogTitle,
-} from "@/components/ui/responsive-dialog";
-import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { usePathname, useRouter } from "next/navigation";
-import { Auth, type AuthSteps } from ".";
+import { Auth } from ".";
+import { Modal, VisuallyHidden } from "../ui/new/ui";
+import type { AuthSteps } from "./validation";
 
 export const AuthModal = ({
   initialFormType,
@@ -24,23 +19,28 @@ export const AuthModal = ({
   }
 
   return (
-    <ResponsiveDialog
-      open={true}
+    <Modal
+      isOpen={true}
       onOpenChange={(open) => {
         if (!open) {
           router.back();
         }
       }}
     >
-      <ResponsiveDialogContent className="h-full  max-w-max sm:border-none sm:h-auto sm:w-auto  p-0 bg-background">
-        <VisuallyHidden.Root>
-          <ResponsiveDialogTitle>Authentication modal</ResponsiveDialogTitle>
-          <ResponsiveDialogDescription>
-            {initialFormType}
-          </ResponsiveDialogDescription>
-        </VisuallyHidden.Root>
-        <Auth className="border-none" initialFormType={initialFormType} />
-      </ResponsiveDialogContent>
-    </ResponsiveDialog>
+      <Modal.Content
+        isBlurred
+        classNames={{
+          content: "h-full  max-w-max sm:border-none sm:h-auto sm:w-auto  p-0",
+        }}
+      >
+        <VisuallyHidden>
+          <Modal.Title>Authentication modal</Modal.Title>
+          <Modal.Description>{initialFormType}</Modal.Description>
+        </VisuallyHidden>
+        <Modal.Body className="">
+          <Auth className="border-none" />
+        </Modal.Body>
+      </Modal.Content>
+    </Modal>
   );
 };

@@ -84,41 +84,6 @@ export const RecurrenceSelectContextProvider = ({
     };
   });
 
-  // useEffect(() => {
-  //   if (
-  //     value === PrefefinedRecurrencesEnum.CUSTOM ||
-  //     value === PrefefinedRecurrencesEnum.NO_RECURRENCE
-  //   )
-  //     return;
-
-  //   const rrule = RRule.fromString(value);
-
-  //   setRrule(rrule);
-  //   setEnds(
-  //     rrule.options.until
-  //       ? EndsEnum.ENDS_ON
-  //       : rrule.options.count
-  //         ? EndsEnum.ENDS_AFTER
-  //         : EndsEnum.ENDS_NEVER,
-  //   );
-  //   setRruleOptions({
-  //     dstart: rrule.options.dtstart,
-  //     freq: rrule.options.freq,
-  //     interval: rrule.options.interval,
-  //     ...(rrule.options.freq === RRule.WEEKLY &&
-  //       rrule.options.byweekday && {
-  //         weeklyByweekday: rrule.options.byweekday,
-  //       }),
-  //     ...(rrule.options.freq === RRule.MONTHLY &&
-  //       rrule.options.byweekday && {
-  //         monthlyByweekday: rrule.options.byweekday,
-  //       }),
-  //     bymonthday: rrule.options.bymonthday,
-  //     until: rrule.options.until || undefined,
-  //     count: rrule.options.count || undefined,
-  //   });
-  // }, [value]);
-
   const contextValue = {
     rruleOptions,
     setRruleOptions,

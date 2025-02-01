@@ -1,30 +1,53 @@
 import { useSafeAction } from "@/hooks/use-safe-action";
-import { cn } from "@/lib/utils";
-import { Loader2 } from "lucide-react";
+import { useAuthStore } from "@/providers/auth-store-provider";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Form } from "react-aria-components";
-import { Controller } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import type { AuthFormSharedProps } from ".";
-import { Button } from "../ui/button";
-import { CodeField } from "../ui/react-aria/code-field";
+import type { z } from "zod";
+import { useShallow } from "zustand/react/shallow";
+
 import {
   registerAction,
   resendEmailVerificationEmailAction,
   signInAction,
 } from "./actions";
-import { useAuthContext } from "./auth-context";
-import { useAuthSettingsContextUpdater } from "./auth-settings-context";
 import { FormWrapper } from "./form-wrapper";
+import { authSchema } from "./validation";
 
-type EmailVerificationProps = AuthFormSharedProps;
+import {
+  Button,
+  Form,
+  InputOTP,
+  Link,
+  ProgressCircle,
+} from "@/components/ui/new/ui";
 
-export const EmailVerification = ({ authForm }: EmailVerificationProps) => {
-  const { setOpen } = useAuthSettingsContextUpdater();
-  const { setFormType } = useAuthContext();
+const emailVerificationSchema = authSchema.pick({
+  code: true,
+});
+
+type EmailVerificationSchema = z.infer<typeof emailVerificationSchema>;
+
+const useEmailVerification = () =>
+  useAuthStore(
+    useShallow(({ setStep, data }) => ({
+      data,
+      setStep,
+    })),
+  );
+
+export const EmailVerification = () => {
+  const { setStep, data } = useEmailVerification();
+  const form = useForm<EmailVerificationSchema>({
+    resolver: zodResolver(emailVerificationSchema),
+    defaultValues: data,
+    mode: "onChange",
+  });
+
   const router = useRouter();
-  const [counter, setCounter] = useState(60);
+  const [counter, setCounter] = useState(0);
 
   const { executeAsync: registerUser, isExecuting: isRegistering } =
     useSafeAction(registerAction, {
@@ -36,10 +59,10 @@ export const EmailVerification = ({ authForm }: EmailVerificationProps) => {
           password: data.user.password as string,
         });
 
-        setOpen(false);
-        router.refresh();
+        router.push("/calendar");
       },
     });
+
   const { execute: resendEmailVerificationEmail } = useSafeAction(
     resendEmailVerificationEmailAction,
     {
@@ -50,32 +73,22 @@ export const EmailVerification = ({ authForm }: EmailVerificationProps) => {
     },
   );
 
-  const onNextStep = async () => {
-    const [email, password, code] = authForm.getValues([
-      "email",
-      "registerPassword",
-      "code",
-    ]);
+  const onSubmit = async (value: EmailVerificationSchema) => {
+    const { code } = value;
+    const { registerPassword, email } = data;
 
-    const typecheckSuccess = await authForm.trigger(
-      ["registerPassword", "code", "email"],
-      { shouldFocus: true },
-    );
-
-    if (!typecheckSuccess || !email || !password || !code) return;
+    if (!registerPassword || !email) return;
 
     await registerUser({
       email,
-      password,
+      password: registerPassword,
       emailVerificationCode: code,
     });
-
-    router.push("/calendar");
   };
 
   const onBack = () => {
-    authForm.reset();
-    setFormType("LANDING");
+    form.reset();
+    setStep("LANDING");
   };
 
   useEffect(() => {
@@ -94,51 +107,46 @@ export const EmailVerification = ({ authForm }: EmailVerificationProps) => {
       backButtonOnClick={onBack}
       className="space-y-6"
     >
-      <Form
-        onSubmit={(e) => {
-          e.preventDefault();
-          onNextStep();
-        }}
-      >
+      <Form onSubmit={form.handleSubmit(onSubmit)}>
         <Controller
-          control={authForm.control}
+          control={form.control}
           name="code"
-          render={({ field, fieldState: { error, invalid } }) => (
-            <CodeField
+          render={({ field }) => (
+            <InputOTP
+              maxLength={6}
               {...field}
               autoFocus
-              length={6}
-              ariaLabel="Two-factor code"
-              validationBehavior="aria"
-              isInvalid={invalid}
-              errorMessage={error?.message}
-              isDisabled={isRegistering}
-            />
+              aria-label="Email verification code"
+            >
+              <InputOTP.Group>
+                {[...Array(6)].map((_, index) => (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: No other option
+                  <InputOTP.Slot key={index} index={index} />
+                ))}
+              </InputOTP.Group>
+            </InputOTP>
           )}
         />
-        <div className="flex w-full justify-end mt-1">
-          <Button
-            size="inline"
-            variant="link"
-            className={cn("text-sm font-light text-muted-foreground", {
-              "pointer-events-none": counter > 0,
-            })}
-            type="button"
+
+        <div className="w-full items-end flex justify-end mt-1">
+          <Link
+            intent="secondary"
+            className="text-sm cursor-pointer"
+            isDisabled={counter > 0}
             onPress={() => {
-              if (counter !== 0) return;
-              resendEmailVerificationEmail(authForm.getValues("email"));
+              console.log(data);
+              if (counter !== 0 || !data.email) return;
+              resendEmailVerificationEmail(data.email);
             }}
           >
             {counter > 0 ? `Resend code in ${counter}s` : "Resend code"}
-          </Button>
+          </Link>
         </div>
 
-        <Button
-          className="w-full mt-4"
-          type="submit"
-          isDisabled={isRegistering}
-        >
-          {isRegistering && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        <Button className="w-full mt-4" type="submit" isPending={isRegistering}>
+          {isRegistering && (
+            <ProgressCircle isIndeterminate aria-label="Verifying email..." />
+          )}
           Verify email
         </Button>
       </Form>

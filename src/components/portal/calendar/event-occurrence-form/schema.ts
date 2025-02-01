@@ -15,6 +15,7 @@ export const SessionOcurrenceFormSchema = z
     participants: z.array(z.number()).optional(),
     isBillable: z.boolean(),
     price: z.number().optional(),
+    color: z.string().optional(),
   })
   .refine((data) => Boolean(data.title), {
     path: ["title"],

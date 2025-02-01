@@ -1,16 +1,10 @@
-import { cn } from "@/lib/utils";
 import { use } from "react";
 
-import { Button } from "@/components/ui/button";
-
 import { getWeekdayCardinal } from "@/lib/calendar";
-import { ArrowDown01Icon } from "@hugeicons/react";
 import { getDayOfWeek } from "@internationalized/date";
 import { format } from "date-fns";
-import { SelectValue } from "react-aria-components";
 import { RRule, Weekday } from "rrule";
-import { ListBoxItem } from "../../react-aria/list-box";
-import { SelectField, SelectFieldContent } from "../../react-aria/select-field";
+import { Select } from "../../new/ui";
 import { RecurrenceSelectContext } from "../recurrence-select-context";
 
 export enum MonthlyOptionsEnum {
@@ -68,7 +62,7 @@ export const MonthOptionsSelect = () => {
   };
 
   return (
-    <SelectField
+    <Select
       selectedKey={
         rruleOptions.monthlyByweekday
           ? MonthlyOptionsEnum.ON_CARDINAL_DAY
@@ -81,27 +75,15 @@ export const MonthOptionsSelect = () => {
       aria-label="Recurrence frequency"
       validationBehavior="aria"
     >
-      <Button
-        size={"sm"}
-        variant={"outline"}
-        className={cn(
-          "w-40 justify-between font-normal rounded-md h-8 text-sm pr-2 hover:bg-elevated-highlight",
-        )}
-      >
-        <SelectValue className="data-[placeholder]:text-text-sub" />
-        <ArrowDown01Icon size={14} className="text-text-sub" />
-      </Button>
-      <SelectFieldContent
-        className="min-w-[var(--trigger-width)] z-50 rounded-md"
+      <Select.Trigger className="w-fit hover:bg-overlay-elevated" showArrow />
+      <Select.List
+        className="min-w-[var(--trigger-width)] rounded-md"
         items={selectItems}
         placement="right top"
+        offset={8}
       >
-        {({ id, label }) => (
-          <ListBoxItem showCheckIcon id={id}>
-            {label}
-          </ListBoxItem>
-        )}
-      </SelectFieldContent>
-    </SelectField>
+        {({ id, label }) => <Select.Option id={id}>{label}</Select.Option>}
+      </Select.List>
+    </Select>
   );
 };
