@@ -22,10 +22,10 @@
   --color-primary: var(--primary);
   --color-primary-fg: var(--primary-fg);
 
-  --color-secondary: var(--overlay-elevated-highlight);
+  --color-secondary: var(--secondary);
   --color-secondary-fg: var(--secondary-fg);
 
-  --color-accent: var(--overlay-elevated-highlight);
+  --color-accent: var(--accent);
   --color-accent-fg: var(--accent-fg);
 
   --color-success: var(--success);
@@ -58,8 +58,49 @@
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
 
+  --color-event-blue: var(--event-blue);
+  --color-event-purple: var(--event-purple);
+  --color-event-teal: var(--event-teal);
+  --color-event-green: var(--event-green);
+  --color-event-orange: var(--event-orange);
+  --color-event-red: var(--event-red);
+  --color-event-pink: var(--event-pink);
+  --color-event-indigo: var(--event-indigo);
+  --color-event-cyan: var(--event-cyan);
+
+
+  --color-event-flamingo-bg: var(--event-flamingo-bg);
+  --color-event-tangerine-bg: var(--event-tangerine-bg);
+  --color-event-banana-bg: var(--event-banana-bg);
+  --color-event-sage-bg: var(--event-sage-bg);
+  --color-event-peacock-bg: var(--event-peacock-bg);
+  --color-event-blueberry-bg: var(--event-blueberry-bg);
+  --color-event-lavender-bg: var(--event-lavender-bg);
+  --color-event-grape-bg: var(--event-grape-bg);
+  --color-event-graphite-bg: var(--event-graphite-bg);  
+  --color-event-neutral-bg: var(--event-neutral-bg);
+  --color-event-sunshine-bg: var(--event-sunshine-bg);
+  --color-event-stone-bg: var(--event-stone-bg);
+  --color-event-slate-bg: var(--event-slate-bg);
+
+  --color-event-flamingo-border: var(--event-flamingo-border);
+  --color-event-tangerine-border: var(--event-tangerine-border);
+  --color-event-banana-border: var(--event-banana-border);
+  --color-event-sage-border: var(--event-sage-border);
+  --color-event-peacock-border: var(--event-peacock-border);
+  --color-event-blueberry-border: var(--event-blueberry-border);
+  --color-event-lavender-border: var(--event-lavender-border);  
+  --color-event-grape-border: var(--event-grape-border);
+  --color-event-graphite-border: var(--event-graphite-border);
+  --color-event-neutral-border: var(--event-neutral-border);
+  --color-event-sunshine-border: var(--event-sunshine-border);
+  --color-event-stone-border: var(--event-stone-border);
+  --color-event-slate-border: var(--event-slate-border);
+
 
   --animate-password-input-div-down: password-input-div-down 250ms ease-out 0s 1 normal none running;
+
+
 
 
   @keyframes password-input-div-down {
@@ -129,31 +170,56 @@
     --radius-2xl: calc(var(--radius-lg) * 1.5);
     --radius-3xl: calc(var(--radius-lg) * 2);
     --radius-4xl: calc(var(--radius-lg) * 3);
+
+    --event-flamingo-bg: oklch(93% 0.05 36.23);
+    --event-tangerine-bg: oklch(93% 0.05 15);
+    --event-banana-bg: oklch(93% 0.04 75);
+    --event-sage-bg: oklch(93% 0.05 130);
+    --event-peacock-bg: oklch(93% 0.06 190);
+    --event-blueberry-bg: oklch(93% 0.05 240);
+    --event-lavender-bg: oklch(93% 0.04 270);
+    --event-grape-bg: oklch(93% 0.04 300);
+    --event-graphite-bg: oklch(90% 0.02 210);
+    --event-neutral-bg: oklch(93% 0.01 0);
+  
+
+    --event-flamingo-border: oklch(55% 0.2136 36.23);  
+    --event-tangerine-border: oklch(57% 0.22 15);      
+    --event-banana-border: oklch(60% 0.18 75);      
+    --event-sage-border: oklch(59% 0.20 130);     
+    --event-peacock-border: oklch(56% 0.25 190);     
+    --event-blueberry-border: oklch(55% 0.23 240);     
+    --event-lavender-border: oklch(58% 0.16 270);     
+    --event-grape-border: oklch(54% 0.19 300);     
+    --event-graphite-border: oklch(47% 0.08 210);    
+    --event-neutral-border: oklch(50% 0.05 0); 
+
   }
   
   .dark {
     --bg: oklch(0.171 0.005 285.823);
     --fg: oklch(0.985 0 0);
+     
+    --primary: oklch(63.16% 0.20 36.23); /* Reduce chroma slightly for softer warmth */  
+    --primary-fg: oklch(98% 0 0); /* Use off-white instead of pure white */  
     
-    --primary: oklch(63.16% 0.2136 36.23);
-    --primary-fg: oklch(1 0 0);
-    
-    --secondary: oklch(0.244 0.006 286.033);
-    --secondary-fg: oklch(0.985 0 0);
-    
-    --accent: oklch(0.274 0.006 286.033);
-    --accent-fg: oklch(0.985 0 0);
+    --secondary: oklch(28% 0.01 248.08); /* Align with overlay hue */  
+    --secondary-fg: oklch(85% 0 0); /* Soft gray for hierarchy */  
+
+    --accent: oklch(35% 0.1 36.23); /* Echo primary hue for cohesion */  
+    --accent-fg: oklch(98% 0 0); /* Brighter than secondary-fg */ 
     
     --muted: oklch(0.21 0.006 285.885);
-    --muted-fg: oklch(0.705 0.015 286.067);
+    --muted-fg: oklch(75% 0.02 286.067); /* Lighten slightly */  
     
-     /* --overlay: oklch(0.170 0.006 285.885);  */
-    --overlay-fg: oklch(0.985 0 0);
 
-    --overlay: oklch(19.89% 0.0051 248.08);
-    --overlay-highlight: oklch(26.36% 0.0063 258.36);
-    --overlay-elevated: oklch(26.36% 0.0063 258.36);
-    --overlay-elevated-highlight: oklch(36.29% 0.0063 257.61);
+  /* Darkened Overlays */
+  --overlay: oklch(20% 0.008 248.08);               /* Reduced lightness, softer chroma */
+  --overlay-fg: oklch(0.985 0 0);                   /* Unchanged for readability */
+
+  --overlay-highlight: oklch(25% 0.01 258.36);      /* Darker than original, retains subtle lift */
+  --overlay-elevated: oklch(22% 0.01 258.36);       /* Slightly darker than highlight */
+  --overlay-elevated-highlight: oklch(30% 0.011 257.61); /* Softer glow, reduced lightness */
     
     --success: oklch(0.596 0.145 163.225);
     --success-fg: oklch(1 0 0);
@@ -179,8 +245,36 @@
     --chart-3: oklch(0.75 0.183 55.934);
     --chart-4: oklch(0.837 0.128 66.29);
     --chart-5: oklch(0.901 0.076 70.697);
+
+
+    --event-grape-bg: oklch(32% 0.08 310);      /* Soft berry */
+    --event-lavender-bg: oklch(36% 0.07 280);   /* Muted violet */
+    --event-blueberry-bg: oklch(32% 0.10 245);  /* Faded sapphire */
+    --event-peacock-bg: oklch(36% 0.10 195);    /* Subtle teal */
+    --event-sage-bg: oklch(32% 0.07 155);       /* Dusky jade */
+    --event-banana-bg: oklch(44% 0.10 100);     /* Dimmed lemon */
+    --event-tangerine-bg: oklch(42% 0.08 40); /* Shift hue toward primary (36.23°) */  
+    --event-sunshine-bg: oklch(44% 0.08 75); /* Align with banana for consistency */  
+    --event-graphite-bg: oklch(28% 0.05 235);   /* Deep steel gray */
+    --event-neutral-bg: oklch(32% 0.04 10);     /* Soft taupe */
+    --event-stone-bg: oklch(35% 0.01 0);       /* Warm gray (almost neutral) */
+    --event-slate-bg: oklch(30% 0.01 0);  
+
+    --event-grape-border: oklch(38% 0.08 310); /* Reduce lightness/chroma */  
+    --event-lavender-border: oklch(50% 0.13 285);  /* Vibrant violet */
+    --event-blueberry-border: oklch(46% 0.17 250);  /* Luminous sapphire */
+    --event-peacock-border: oklch(50% 0.17 200);  /* Radiant teal */
+    --event-sage-border: oklch(46% 0.13 160);  /* Fresh mint */
+    --event-banana-border: oklch(58% 0.14 100);  /* Bright lemon */
+    --event-tangerine-border: oklch(57% 0.17 45);  /* Bold amber */
+    --event-sunshine-border: oklch(58% 0.14 110);  /* Golden radiance */
+    --event-graphite-border: oklch(42% 0.08 230);  /* Sharper steel gray */
+    --event-neutral-border: oklch(45% 0.06 15);  /* Defined taupe */
+    --event-stone-border: oklch(45% 0.015 0);  /* Soft warm gray border */
+    --event-slate-border: oklch(40% 0.015 0);  /* Soft cool gray border */
   }
 }
+
 @variant dark {
   &:where(.dark, .dark *) {
     @slot;
@@ -251,4 +345,8 @@
 
 .light {
   color-scheme: light;
+}
+
+.bg-lines-pattern {
+ background: repeating-linear-gradient( 45deg, var(--color-overlay-highlight), var(--color-overlay-highlight) 2px, transparent 2px, transparent 10px );
 }

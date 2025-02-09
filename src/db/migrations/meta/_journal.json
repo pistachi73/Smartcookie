@@ -8,6 +8,27 @@
       "when": 1737662179648,
       "tag": "0000_secret_black_widow",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1738511218262,
+      "tag": "0001_peaceful_alex_power",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1738511237089,
+      "tag": "0002_brainy_goliath",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1739093599393,
+      "tag": "0003_spicy_tiger_shark",
+      "breakpoints": true
     }
   ]
 }

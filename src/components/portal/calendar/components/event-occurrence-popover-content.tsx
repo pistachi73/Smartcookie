@@ -17,6 +17,7 @@ import {
 import { format } from "date-fns";
 import { Separator } from "react-aria-components";
 import { useShallow } from "zustand/react/shallow";
+import { CALENDAR_EVENT_COLORS_MAP, DEFAULT_EVENT_COLOR } from "../utils";
 import { DeleteEventModalContent } from "./delete-event-modal-content";
 
 const useEventOccurrencePopover = () =>
@@ -40,6 +41,10 @@ export const EventOccurrencePopover = ({
   const { openEditEventOccurrence } = useEventOccurrencePopover();
   const { className: popoverClassName, ...restPopoverProps } =
     popoverProps ?? {};
+
+  const color =
+    CALENDAR_EVENT_COLORS_MAP.get(occurrence.color) ??
+    CALENDAR_EVENT_COLORS_MAP.get(DEFAULT_EVENT_COLOR);
   return (
     <Popover.Content
       className={cn("sm:w-[300px]", popoverClassName)}
@@ -48,7 +53,9 @@ export const EventOccurrencePopover = ({
       <Popover.Header className="space-y-2">
         <Popover.Title className="text-lg flex items-center gap-2">
           <div className="w-5 flex items-center justify-center">
-            <div className="size-3 rounded-full bg-lime-400" />
+            <div
+              className={cn("size-3 rounded-full border", color?.className)}
+            />
           </div>
           {occurrence.title}
         </Popover.Title>

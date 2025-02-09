@@ -194,12 +194,16 @@ export const getSelectItems = (selectedDate: CalendarDate, value?: string) => {
       section.items.some((item) => item.value === value),
     )
   ) {
-    const rruleLabels = parseRruleText(value);
-    sections[1].items.push({
-      value,
-      name: rruleLabels.label,
-      auxName: rruleLabels.auxLabel,
-    });
+    try {
+      const rruleLabels = parseRruleText(value);
+      sections[1].items.push({
+        value,
+        name: rruleLabels.label,
+        auxName: rruleLabels.auxLabel,
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   return sections;

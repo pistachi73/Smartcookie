@@ -22,6 +22,8 @@ const checkPoints = [
 export const Auth = ({ className }: { className?: string }) => {
   const step = useAuthStore((store) => store.step);
 
+  console.log({ step });
+
   return (
     <div
       className={cn(

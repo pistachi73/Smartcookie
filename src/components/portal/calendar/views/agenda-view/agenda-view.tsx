@@ -18,7 +18,7 @@ export const AgendaView = () => {
   const { selectedDate, groupedEventOccurrences } = useAgendaView();
 
   return (
-    <div className="h-full overflow-y-scroll pl-[var(--left-spacing)] pr-2 pb-[var(--left-spacing)]">
+    <div className="h-full overflow-y-scroll pl-[var(--left-spacing)] p-4 pb-[var(--left-spacing)]">
       <div className="space-y-2 ">
         {Array.from({ length: 14 }).map((_, dayIndex) => {
           const currentDay = addDays(selectedDate, dayIndex);
@@ -34,10 +34,10 @@ export const AgendaView = () => {
                   isToday && "bg-primary/40",
                 )}
               >
-                <p className="text-lg font-medium text-text-default leading-tight">
+                <p className="text-xl font-semibold text-current leading-tight">
                   {format(currentDay, "MMM")} {currentDay.getDate()}
                 </p>
-                <p className="text-sm text-text-sub">
+                <p className="text-sm text-muted-fg">
                   {format(currentDay, "iiii")}
                 </p>
               </div>

@@ -1,6 +1,8 @@
 import { getEventOccurrenceDayKey } from "@/components/portal/calendar/utils";
-import type { EventOccurrence, Hub } from "@/db/schema";
+import type { Event, EventOccurrence, Hub, Occurrence } from "@/db/schema";
 import {
+  GroupedOccurrence_,
+  _groupOccurrencesByDayAndTime,
   groupEventOccurrencesByDayAndTime,
   sweepLineGroupOverlappingOccurrences,
 } from "@/lib/group-overlapping-occurrences";
@@ -11,7 +13,7 @@ import { immer } from "zustand/middleware/immer";
 import { createStore } from "zustand/vanilla";
 import { superjsonStorage } from "./superjson-storage";
 
-export type CalendarView = "day" | "week" | "month" | "agenda";
+export type CalendarView = "day" | "weekday" | "week" | "month" | "agenda";
 export type SidebarType = "main" | "edit-session";
 export type DraftEventOccurrence = Partial<EventOccurrence> & {
   eventOccurrenceId: number;
@@ -30,11 +32,20 @@ export type CalendarState = {
   activeSidebar: SidebarType;
   selectedDate: Date;
   calendarView: CalendarView;
+
   hubs: Hub[];
   eventOccurrences: Record<string, CalendarEventOccurrence>;
   groupedEventOccurrences: ReturnType<typeof groupEventOccurrencesByDayAndTime>;
   editingEventOccurrenceId?: number;
   draftEventOccurrence: CalendarDraftEventOccurrence;
+
+  // New Stuff
+  events: Record<number, Event>;
+  occurrences: Record<number, Occurrence>;
+  groupedOccurrences: ReturnType<typeof _groupOccurrencesByDayAndTime>;
+
+  // groupedOccurrences:
+  // calendarOccurrences: Record<number, CalendarEventOccurrence>;
 };
 
 export type CalendarActions = {
@@ -53,7 +64,14 @@ export type CalendarActions = {
   clearEditingEventOccurrence: () => void;
   openEditEventOccurrence: (eventOccurrenceId: number) => void;
   addEventOccurrences: (eventOccurrence: CalendarEventOccurrence[]) => void;
+  updateOccurrences: (occurrences: CalendarEventOccurrence[]) => void;
   removeEventOccurreces: (eventOccurrencesIds: number[]) => void;
+
+  // New Stuff
+  getMergedOccurrence: (occurrenceId: number) => CalendarEventOccurrence | null;
+  getMergedGroupedOccurrences: (
+    occurrence: GroupedOccurrence_,
+  ) => CalendarEventOccurrence | null;
 };
 
 export type CalendarStore = CalendarState & CalendarActions;
@@ -75,6 +93,11 @@ export const initCalendarStore = (
     activeSidebar: initilData?.activeSidebar || "main",
     editingEventOccurrenceId: initilData?.editingEventOccurrenceId || undefined,
     draftEventOccurrence: {} as CalendarDraftEventOccurrence,
+    events: initilData?.events || {},
+    occurrences: initilData?.occurrences || {},
+    groupedOccurrences: _groupOccurrencesByDayAndTime(
+      initilData?.occurrences ? Object.values(initilData?.occurrences) : [],
+    ),
   };
 };
 
@@ -130,6 +153,7 @@ export const createCalendarStore = (
         },
 
         createDraftEvent: (startDate: Date, endDate: Date) => {
+          console.log("createDraftEvent");
           const timezone = getLocalTimeZone();
           const overrides = [
             startDate.toString(),
@@ -150,6 +174,7 @@ export const createCalendarStore = (
           );
 
           const newDraftEventOccurrence: CalendarDraftEventOccurrence = {
+            title: "",
             eventOccurrenceId: -1,
             startTime: startDate,
             endTime: endDate,
@@ -167,15 +192,30 @@ export const createCalendarStore = (
         setDraftEventOccurrence: (
           draftEventOccurrence: Partial<DraftEventOccurrence>,
         ) => {
+          console.log(draftEventOccurrence);
           const prevDraftOccurrence = get().draftEventOccurrence;
 
           const newDraftEventOccurrence = {
             ...prevDraftOccurrence,
             ...draftEventOccurrence,
           };
+
+          console.log(newDraftEventOccurrence);
           set((state) => {
             state.draftEventOccurrence = newDraftEventOccurrence;
           });
+
+          if (
+            !(
+              "date" in draftEventOccurrence ||
+              "startTime" in draftEventOccurrence ||
+              "endTime" in draftEventOccurrence
+            )
+          ) {
+            return;
+          }
+
+          console.log("update time");
 
           const dayKeys = new Set<string>([
             getEventOccurrenceDayKey(prevDraftOccurrence.startTime),
@@ -186,6 +226,7 @@ export const createCalendarStore = (
         },
 
         clearDraftEventOccurrence: () => {
+          console.log("clearDraftEventOccurrence");
           const draftEventOccurrence = get().draftEventOccurrence;
           if (!draftEventOccurrence) return;
 
@@ -198,6 +239,7 @@ export const createCalendarStore = (
           ]);
         },
         regenerateGroupedEventOccurrencesForDay: (dayKeys: string[]) => {
+          console.log({ dayKeys });
           dayKeys.forEach((dayKey) => {
             const dayEvents = [
               ...Object.values(get().eventOccurrences!),
@@ -231,6 +273,7 @@ export const createCalendarStore = (
           );
         },
         addEventOccurrences: (eventOccurrences) => {
+          console.log("addEventOccurrences");
           const dayKeys = new Set<string>(
             eventOccurrences.map((occurrence) =>
               getEventOccurrenceDayKey(occurrence.startTime),
@@ -247,6 +290,7 @@ export const createCalendarStore = (
           get().regenerateGroupedEventOccurrencesForDay(Array.from(dayKeys));
         },
         removeEventOccurreces: (eventOccurrenceIds) => {
+          console.log("removeEventOccurreces");
           const eventOccurrences = get().eventOccurrences;
           const dayKeys = new Set<string>(
             eventOccurrenceIds
@@ -265,6 +309,49 @@ export const createCalendarStore = (
           });
 
           get().regenerateGroupedEventOccurrencesForDay(Array.from(dayKeys));
+        },
+
+        updateOccurrences: (updatedOccurrences) => {
+          const dayKeys = new Set<string>();
+
+          set((state) => {
+            updatedOccurrences.forEach((updatedOccurrence) => {
+              dayKeys.add(
+                getEventOccurrenceDayKey(updatedOccurrence.startTime),
+              );
+
+              state.eventOccurrences[updatedOccurrence.eventOccurrenceId] =
+                updatedOccurrence;
+            });
+          });
+
+          console.log("dayKeys", dayKeys, updatedOccurrences);
+
+          get().regenerateGroupedEventOccurrencesForDay(Array.from(dayKeys));
+        },
+        getMergedOccurrence: (occurrenceId) => {
+          const { events, occurrences } = get();
+          const occurrence = occurrences[occurrenceId];
+          if (!occurrence) return null;
+
+          const event = events[occurrence?.eventId];
+          if (!event) return null;
+
+          const mergedOccurrence: CalendarEventOccurrence = {
+            ...event,
+            eventId: event.id,
+            eventOccurrenceId: occurrence.id,
+            startTime: new Date(`${occurrence.startTime}Z`),
+            endTime: new Date(`${occurrence.endTime}Z`),
+            title: occurrence.overrides?.title || event.title,
+            description: occurrence.overrides?.description || event.description,
+            timezone: occurrence.overrides?.timezone || event.timezone,
+            price: occurrence.overrides?.price || event.price,
+            color: occurrence.overrides?.color || event.color,
+            isDraft: false,
+          };
+
+          return mergedOccurrence;
         },
       })),
       {
@@ -307,7 +394,69 @@ const onNavigationFunctionMapper: Record<
   (date: Date, n: number) => Date
 > = {
   day: addDays,
+  weekday: addWeeks,
   week: addWeeks,
   month: addMonths,
   agenda: addDays,
 };
+
+// const mergeEventsAndOccurrences = ({
+//   events,
+//   occurrences,
+//   byOccurrenceIds,
+// }: {
+//   events: Record<number, Event>;
+//   occurrences: Record<number, DBEventOccurence>;
+//   byOccurrenceIds?: number[];
+// }) => {
+//   const calendarEventsMap = new Map<number, CalendarEventOccurrence>();
+
+//   if (byOccurrenceIds?.length) {
+//     byOccurrenceIds.forEach((occurrenceId) => {
+//       const occurrence = occurrences[occurrenceId];
+//       if (!occurrence) return;
+
+//       const event = events[occurrence.eventId];
+//       if (!event) return;
+
+//       calendarEventsMap.set(
+//         occurrence.id,
+//         getMergedOccurrence({ event, occurrence }),
+//       );
+//     });
+//   } else {
+//     Object.values(occurrences).forEach((occurrence) => {
+//       const event = events[occurrence.eventId];
+//       if (!event) return;
+
+//       calendarEventsMap.set(
+//         occurrence.id,
+//         getMergedOccurrence({ event, occurrence }),
+//       );
+//     });
+//   }
+
+//   return Object.fromEntries(calendarEventsMap.entries());
+// };
+
+// const getMergedOccurrence = ({
+//   event,
+//   occurrence,
+// }: {
+//   event: Event;
+//   occurrence: DBEventOccurence;
+// }): CalendarEventOccurrence => {
+//   return {
+//     ...event,
+//     eventId: event.id,
+//     eventOccurrenceId: occurrence.id,
+//     startTime: new Date(`${occurrence.startTime}Z`),
+//     endTime: new Date(`${occurrence.endTime}Z`),
+//     title: occurrence.overrides?.title || event.title,
+//     description: occurrence.overrides?.description || event.description,
+//     timezone: occurrence.overrides?.timezone || event.timezone,
+//     price: occurrence.overrides?.price || event.price,
+//     color: occurrence.overrides?.color || event.color,
+//     isDraft: false,
+//   };
+// };

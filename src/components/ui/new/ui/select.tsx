@@ -13,9 +13,7 @@ import {
 } from "react-aria-components";
 
 import { ArrowDown01Icon } from "@hugeicons/react";
-import type { Placement } from "@react-types/overlays";
 import { tv } from "tailwind-variants";
-// import { Button } from "./button";
 import {
   DropdownItem,
   DropdownItemDetails,
@@ -25,7 +23,7 @@ import {
 } from "./dropdown";
 import { Description, FieldError, Label } from "./field";
 import { ListBox } from "./list-box";
-import { Popover } from "./popover";
+import { Popover, PopoverContentProps } from "./popover";
 import { composeTailwindRenderProps, focusStyles } from "./primitive";
 
 interface SelectProps<T extends object> extends SelectPrimitiveProps<T> {
@@ -60,49 +58,37 @@ const Select = <T extends object>({
   );
 };
 
-interface ListProps<T extends object> extends ListBoxProps<T> {
+interface ListProps<T extends object>
+  extends Omit<ListBoxProps<T>, "className"> {
   items?: Iterable<T>;
-  placement?: Placement;
   children: React.ReactNode | ((item: T) => React.ReactNode);
-  className?: string;
-  offset?: number;
-  crossOffset?: number;
+  className?: {
+    popover?: string;
+    list?: string;
+  };
+  popoverProps?: Omit<PopoverContentProps, "children" | "className">;
 }
 
 const List = <T extends object>({
   className,
   children,
   items,
-  placement,
-  offset = 8,
-  crossOffset = 0,
+  popoverProps,
   ...props
 }: ListProps<T>) => {
   return (
-    <Popover.Picker
-      className={className}
-      placement={placement}
-      offset={offset}
-      crossOffset={crossOffset}
-    >
+    <Popover.Picker className={className?.popover} {...popoverProps}>
       <ListBox.Picker
         aria-label="items"
         items={items}
         {...props}
-        className={className}
+        className={className?.list}
       >
         {children}
       </ListBox.Picker>
     </Popover.Picker>
   );
 };
-
-interface SelectTriggerProps_ extends React.ComponentProps<typeof Button> {
-  prefix?: React.ReactNode;
-  className?: string;
-  showArrow?: boolean;
-  children?: React.ReactNode;
-}
 
 const selectTriggerStyles = tv({
   extend: focusStyles,

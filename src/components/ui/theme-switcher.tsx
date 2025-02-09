@@ -1,6 +1,6 @@
 "use client";
 
-import { ComputerIcon, Moon02Icon, Sun03Icon } from "@hugeicons/react";
+import { Moon02Icon, Sun03Icon } from "@hugeicons/react";
 import { useTheme } from "next-themes";
 import { Button } from "./new/ui";
 
@@ -13,8 +13,7 @@ export function ThemeSwitcher({
   const { theme, setTheme } = useTheme();
 
   const toggleTheme = () => {
-    const nextTheme =
-      theme === "light" ? "dark" : theme === "dark" ? "system" : "light";
+    const nextTheme = theme === "light" ? "dark" : "light";
     setTheme(nextTheme);
   };
 
@@ -28,13 +27,7 @@ export function ThemeSwitcher({
       className={className}
       {...props}
     >
-      {theme === "light" ? (
-        <Sun03Icon size={18} />
-      ) : theme === "dark" ? (
-        <Moon02Icon size={18} />
-      ) : (
-        <ComputerIcon size={18} />
-      )}
+      {theme === "light" ? <Sun03Icon size={18} /> : <Moon02Icon size={18} />}
     </Button>
   );
 }

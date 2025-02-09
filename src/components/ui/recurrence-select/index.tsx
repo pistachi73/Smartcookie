@@ -140,9 +140,11 @@ export const RecurrenceSelectContent = ({
             <SelectLabel />
           </Select.Trigger>
           <Select.List
-            placement="left top"
-            offset={8}
-            className="max-h-[400px]"
+            popoverProps={{
+              placement: "left top",
+              offset: 8,
+            }}
+            className={{ popover: "max-h-[400px]" }}
           >
             {items.map(({ items: opt }, sectionIndex) =>
               opt.map(({ name, value, auxName }, index) => (

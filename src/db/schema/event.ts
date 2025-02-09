@@ -27,6 +27,7 @@ export const event = pgTable("event", {
   isRecurring: boolean().default(false),
   recurrenceRule: text(),
   timezone: text().default("UTC").notNull(),
+  color: text().default("blue").notNull(),
 });
 
 export const eventRelations = relations(event, ({ one, many }) => ({
@@ -47,6 +48,7 @@ export type EventOverrides = {
   price: Event["price"];
   recurrenceRule: Event["recurrenceRule"];
   timezone: Event["timezone"];
+  color: Event["color"];
 };
 
 export type EventOccurrence = Omit<

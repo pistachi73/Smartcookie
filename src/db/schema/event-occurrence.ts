@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { integer, jsonb, serial, timestamp } from "drizzle-orm/pg-core";
+import { integer, jsonb, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { type EventOverrides, event } from "./event";
 import { eventParticipant } from "./event-participant";
 import { pgTable } from "./utils";
@@ -11,6 +11,7 @@ export const eventOccurrence = pgTable("event_occurrence", {
     .notNull(),
   startTime: timestamp({ mode: "string" }).notNull(),
   endTime: timestamp({ mode: "string" }).notNull(),
+  timezone: text().default("UTC").notNull(),
   overrides: jsonb().$type<EventOverrides>(),
 });
 
@@ -25,5 +26,5 @@ export const eventOccurrenceRelations = relations(
   }),
 );
 
-export type InsertEventOccurrence = typeof eventOccurrence.$inferInsert;
-export type DBEventOccurence = typeof eventOccurrence.$inferSelect;
+export type InsertOccurrence = typeof eventOccurrence.$inferInsert;
+export type Occurrence = typeof eventOccurrence.$inferSelect;

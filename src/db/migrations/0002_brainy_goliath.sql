@@ -1,0 +1,1 @@
+ALTER TABLE "event" ALTER COLUMN "color" SET DEFAULT 'blue';

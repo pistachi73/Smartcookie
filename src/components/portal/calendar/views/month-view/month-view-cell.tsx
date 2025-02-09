@@ -5,7 +5,7 @@ import type { GroupedOccurrence } from "@/lib/group-overlapping-occurrences";
 import { cn } from "@/lib/utils";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
 import { MultiplicationSignIcon } from "@hugeicons/react";
-import { format, isToday } from "date-fns";
+import { format, isSameDay, isToday } from "date-fns";
 import { useEffect, useRef, useState } from "react";
 import { Button as AriaButton } from "react-aria-components";
 import { useShallow } from "zustand/react/shallow";
@@ -25,16 +25,19 @@ const SESSION_OCCURRENCE_SPACING = 4;
 
 const useMonthViewCell = () =>
   useCalendarStore(
-    useShallow(({ createDraftEvent }) => ({ createDraftEvent })),
+    useShallow(({ selectedDate, editingEventOccurrenceId }) => ({
+      selectedDate,
+      editingEventOccurrenceId,
+    })),
   );
 
 export const MonthViewCell = ({
   dayIndex,
-  rowIndex,
   currentDay,
   isCurrentMonth,
   dayOccurrences,
 }: MonthCalendarDayCellProps) => {
+  const { selectedDate, editingEventOccurrenceId } = useMonthViewCell();
   const sessionsContainerRef = useRef<HTMLDivElement>(null);
   const totalOccurrences = dayOccurrences?.length ?? 0;
   const [visibleOccurrences, setVisibleOccurrences] =
@@ -68,27 +71,25 @@ export const MonthViewCell = ({
     <div
       className={cn(
         "flex flex-col items-center h-full w-full border-r border-t overflow-hidden pt-1",
-        isCurrentMonth ? "" : "",
+        isCurrentMonth ? "" : "bg-lines-pattern",
         dayIndex === 0 && "border-l-0",
         dayIndex === 6 && "border-r-0",
+        isSameDay(currentDay, selectedDate) && "bg-primary/10  text-light",
       )}
     >
-      {rowIndex === 0 && (
-        <span className="text-xs text-text-sub lowercase">
-          {format(currentDay, "iii")}
-        </span>
-      )}
-
       <span
         className={cn(
           "text-xs font-medium size-5 rounded-full flex items-center justify-center",
-          isCurrentMonth ? "text-responsive-dark" : "text-text-sub",
+          isCurrentMonth ? "text-current" : "text-muted-fg",
           isToday(currentDay) && "bg-primary text-light",
         )}
       >
         {currentDay.getDate()}
       </span>
-      <div ref={sessionsContainerRef} className="mt-1 overflow-hidden grow p-1">
+      <div
+        ref={sessionsContainerRef}
+        className="mt-1 overflow-hidden grow p-1 w-full space-y-1"
+      >
         {dayOccurrences
           ?.slice(0, visibleOccurrences)
           .map((occurrence) =>

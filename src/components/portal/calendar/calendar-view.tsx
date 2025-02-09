@@ -7,9 +7,8 @@ import { AnimatePresence, motion } from "motion/react";
 import { useShallow } from "zustand/react/shallow";
 import { CalendarHeader } from "./calendar-header";
 import { AgendaView } from "./views/agenda-view/agenda-view";
-import { DayView } from "./views/day-view";
+import { DayView } from "./views/day-view/day-view";
 import { MonthView } from "./views/month-view/month-view";
-import { WeekView } from "./views/week-view";
 
 const useCalendar = () =>
   useCalendarStore(useShallow(({ calendarView }) => ({ calendarView })));
@@ -38,10 +37,17 @@ export const CalendarView = () => {
           <motion.div
             {...calendarAnimation}
             key={`${calendarView}-view`}
-            className="overflow-hidden h-full w-full grow"
+            className="overflow-hidden h-full w-full grow bg-overlay rounded-lg"
           >
-            {calendarView === "day" && <DayView key="day-view" />}
-            {calendarView === "week" && <WeekView key="week-view" />}
+            {calendarView === "day" && (
+              <DayView key="day-view" numberOfDays={1} />
+            )}
+            {calendarView === "weekday" && (
+              <DayView key="weekday-view" numberOfDays={5} />
+            )}
+            {calendarView === "week" && (
+              <DayView key="week-view" numberOfDays={7} />
+            )}
             {calendarView === "month" && <MonthView key="month-view" />}
             {calendarView === "agenda" && <AgendaView key="agenda-view" />}
           </motion.div>

@@ -175,7 +175,7 @@ const PopoverContent = ({
             width={12}
             height={12}
             viewBox="0 0 12 12"
-            className="group-data-[placement='left']:-rotate-90 block fill-overlay-highlight stroke-border group-data-[placement='bottom']:rotate-180 group-data-[placement='right']:rotate-90 forced-colors:fill-[Canvas] forced-colors:stroke-[ButtonBorder]"
+            className="group-data-[placement='left']:-rotate-90 block fill-overlay-elevated stroke-border group-data-[placement='bottom']:rotate-180 group-data-[placement='right']:rotate-90 forced-colors:fill-[Canvas] forced-colors:stroke-[ButtonBorder]"
           >
             <title>Overlay Arrow</title>
             <path d="M0 0 L6 6 L12 0" />

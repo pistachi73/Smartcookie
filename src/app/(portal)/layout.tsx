@@ -1,4 +1,3 @@
-import { PortalHeader } from "@/components/portal/header";
 import { SideBar } from "@/components/portal/side-bar";
 
 export default async function PortalLayout({
@@ -11,14 +10,14 @@ export default async function PortalLayout({
       className="w-full grid grid-cols-[auto_1fr] grid-rows-[auto_1fr] gap-2 min-h-screen p-2 bg-background"
       style={{
         gridTemplateAreas: `
-          "global-nav global-nav"
+          "left-sidebar main-view"
           "left-sidebar main-view"
         `,
       }}
     >
-      <div className="[grid-area:global-nav]">
+      {/* <div className="[grid-area:global-nav]">
         <PortalHeader />
-      </div>
+      </div> */}
       <div className="[grid-area:left-sidebar]  ">
         <SideBar />
       </div>

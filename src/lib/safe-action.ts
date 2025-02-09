@@ -1,3 +1,4 @@
+import { PublicError } from "@/use-cases/errors";
 import { createSafeActionClient } from "next-safe-action";
 import { currentUser } from "./auth";
 
@@ -13,7 +14,7 @@ export const protectedAction = actionClient.use(async ({ next }) => {
   const user = await currentUser();
 
   if (!user || !user.id || !user.email) {
-    throw new Error("Not authenticated");
+    throw new PublicError("Not authenticated");
   }
 
   return next({ ctx: { user } });

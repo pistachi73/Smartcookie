@@ -6,8 +6,8 @@ import { CalendarRows } from "../calendar-rows";
 import { DayEventsColumn } from "../components/day-events-column";
 import { HoursColumn } from "../components/hours-column";
 import { getEventOccurrenceDayKey } from "../utils";
-import { DayWeekViewDraftOccurrence } from "./day-week-view-draft-occurrence";
-import { DayWeekViewOccurrence } from "./day-week-view-occurrence";
+import { DayViewDraftOccurrence } from "./day-view/day-view-draft-occurrence";
+import { DayViewOccurrence } from "./day-view/day-view-occurrence";
 
 const useDayView = () =>
   useCalendarStore(
@@ -17,7 +17,11 @@ const useDayView = () =>
     })),
   );
 
-export const DayView = () => {
+type PerDayViewProps = {
+  mode: number | "weekdays";
+};
+
+export const DayView = ({ mode }: PerDayViewProps) => {
   const { selectedDate, groupedEventOccurrences } = useDayView();
 
   const formattedDateKey = getEventOccurrenceDayKey(selectedDate);
@@ -51,12 +55,12 @@ export const DayView = () => {
             <DayEventsColumn date={selectedDate}>
               {dayOcurrences?.map((occurrence) =>
                 occurrence.isDraft ? (
-                  <DayWeekViewDraftOccurrence
+                  <DayViewDraftOccurrence
                     key={`draft-occurrence-${occurrence.eventOccurrenceId}`}
                     occurrence={occurrence}
                   />
                 ) : (
-                  <DayWeekViewOccurrence
+                  <DayViewOccurrence
                     key={`event-occurrence-${occurrence.eventOccurrenceId}`}
                     occurrence={occurrence}
                   />

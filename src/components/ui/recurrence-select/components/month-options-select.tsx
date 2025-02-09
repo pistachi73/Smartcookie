@@ -77,10 +77,12 @@ export const MonthOptionsSelect = () => {
     >
       <Select.Trigger className="w-fit hover:bg-overlay-elevated" showArrow />
       <Select.List
-        className="min-w-[var(--trigger-width)] rounded-md"
+        className={{ popover: "min-w-[var(--trigger-width)] rounded-md" }}
         items={selectItems}
-        placement="right top"
-        offset={8}
+        popoverProps={{
+          placement: "right top",
+          offset: 8,
+        }}
       >
         {({ id, label }) => <Select.Option id={id}>{label}</Select.Option>}
       </Select.List>

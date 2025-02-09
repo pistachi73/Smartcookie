@@ -1,7 +1,7 @@
 "use client";
 import { Button, Select } from "@/components/ui/new/ui";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
-import { CalendarView } from "@/stores/calendar-store";
+import type { CalendarView } from "@/stores/calendar-store";
 import { ArrowLeft01Icon, ArrowRight01Icon } from "@hugeicons/react";
 import { useShallow } from "zustand/react/shallow";
 import { formatCalendarHeaderTitle } from "./utils";
@@ -22,14 +22,20 @@ export const CalendarHeader = () => {
   const { selectedDate, calendarView, onToday, setCalendarView, onNavigation } =
     useCalendarHeader();
 
-  const title = formatCalendarHeaderTitle(selectedDate, calendarView);
+  const title = formatCalendarHeaderTitle(
+    selectedDate,
+    calendarView === "weekday" ? "week" : calendarView,
+  );
 
   return (
-    <div className="w-full flex flex-row items-center justify-between px-4 py-4 pb-6 gap-6">
+    <div className="w-full flex flex-row items-center justify-between p-4 gap-6 border-b">
       <div className="flex flex-row items-center gap-3">
-        <Button appearance="outline" size="small" onPress={onToday}>
-          Today
-        </Button>
+        <h2 className="text-2xl font-semibold text-ellipsis line-clamp-1">
+          {title}
+        </h2>
+      </div>
+
+      <div className="flex flex-row gap-2">
         <div className="flex">
           <Button
             appearance="plain"
@@ -50,12 +56,6 @@ export const CalendarHeader = () => {
             <ArrowRight01Icon size={18} strokeWidth={1.5} />
           </Button>
         </div>
-        <h2 className="text-2xl font-semibold text-ellipsis line-clamp-1">
-          {title}
-        </h2>
-      </div>
-
-      <div>
         <Select
           defaultSelectedKey={calendarView}
           onSelectionChange={(value) => {
@@ -65,14 +65,20 @@ export const CalendarHeader = () => {
         >
           <Select.Trigger
             showArrow
-            className="rounded-full min-w-[60px] w-fit px-4"
+            className="min-w-[60px] w-fit px-4 hover:bg-secondary"
           />
           <Select.List
-            placement="bottom right"
+            popoverProps={{
+              placement: "bottom right",
+            }}
             items={[
               {
                 id: "day",
                 name: "Day",
+              },
+              {
+                id: "weekday",
+                name: "Weekdays",
               },
               {
                 id: "week",
@@ -95,34 +101,19 @@ export const CalendarHeader = () => {
             )}
           </Select.List>
         </Select>
-      </div>
-      {/* <Select
-        placeholder="Select an option"
-        selectedKey={calendarView}
-        onSelectionChange={(value) => {
-          if (!value) return;
-          setCalendarView(value as CalendarView);
-        }}
-      >
-        <Button variant={"outline"} size={"sm"}>
-          <SelectValue className={"data-[placeholder]:text-text-sub"} />
-          <ArrowDown01Icon size={16} />
-        </Button>
-        <Popover
-          className="min-w-[--trigger-width] w-[200px]"
-          placement="bottom right"
+        <Button
+          appearance="outline"
+          size="small"
+          shape="square"
+          onPress={onToday}
         >
-          <ListBox
-            items={}
-          >
-            {(item) => (
-              <ListBoxItem key={item.id} id={item.id}>
-                {item.textValue}
-              </ListBoxItem>
-            )}
-          </ListBox>
-        </Popover>
-      </Select> */}
+          Today
+        </Button>
+
+        <Button size="small" shape="square" className={"shrink-0"}>
+          Add Event
+        </Button>
+      </div>
     </div>
   );
 };

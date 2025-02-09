@@ -70,7 +70,7 @@ const CalendarLayout = async ({ children }: { children: React.ReactNode }) => {
   const res = await getCalendarDataAction();
   const parsedHeaders = await headers();
 
-  const { hubs, eventOcurrences } = res?.data ?? {};
+  const { hubs, eventOcurrences, events, occurrences } = res?.data ?? {};
 
   const pathName = parsedHeaders.get(VERCEL_HEADERS.PATHNAME);
 
@@ -83,6 +83,8 @@ const CalendarLayout = async ({ children }: { children: React.ReactNode }) => {
         ...initialCalendarStore,
         hubs,
         eventOccurrences: eventOcurrences,
+        events,
+        occurrences,
       }}
       skipHydration={skipHydration}
     >

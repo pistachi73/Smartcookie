@@ -12,10 +12,16 @@ import { MonthViewCell } from "./month-view-cell";
 
 const useMonthView = () =>
   useCalendarStore(
-    useShallow(({ selectedDate, groupedEventOccurrences }) => ({
-      selectedDate,
-      groupedEventOccurrences,
-    })),
+    useShallow(
+      ({
+        selectedDate,
+        groupedEventOccurrences,
+        editingEventOccurrenceId,
+      }) => ({
+        selectedDate,
+        groupedEventOccurrences,
+      }),
+    ),
   );
 
 export const MonthView = () => {
@@ -23,7 +29,10 @@ export const MonthView = () => {
 
   const startMonth = startOfMonth(selectedDate);
   const endMonth = lastDayOfMonth(selectedDate);
-  const prefixDays = startMonth.getDay(); // Get the day index of the start of the month
+
+  // Get the day index of the start of the month (0 = Sunday, 6 = Saturday)
+  // Convert to Monday-based (0 = Monday, 6 = Sunday)
+  const prefixDays = startMonth.getDay() === 0 ? 6 : startMonth.getDay() - 1;
   const totalDays = differenceInDays(endMonth, startMonth) + 1;
 
   // Calculate start and end of the calendar view
@@ -32,6 +41,17 @@ export const MonthView = () => {
 
   return (
     <div role="grid" className="h-full w-full flex flex-col grow">
+      <div className="flex flex-row w-full border-calendar-border">
+        {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day, index) => (
+          <p
+            key={`weekday-header-${day}`}
+            role="columnheader"
+            className="flex-1 text-muted-fg  text-xs text-center py-2 font-medium uppercase"
+          >
+            {day}
+          </p>
+        ))}
+      </div>
       {Array.from({ length: rows }).map((_, rowIndex) => (
         <div
           key={`month-row-${rowIndex}`}

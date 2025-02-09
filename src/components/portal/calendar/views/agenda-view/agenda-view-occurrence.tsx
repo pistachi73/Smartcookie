@@ -4,21 +4,32 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Button } from "react-aria-components";
 import { EventOccurrencePopover } from "../../components/event-occurrence-popover-content";
+import { getCalendarColor } from "../../utils";
 
 export const AgendaViewOccurrence = ({
   occurrence,
 }: { occurrence: GroupedCalendarOccurrence }) => {
+  const color = getCalendarColor(occurrence.color);
   return (
     <Popover>
       <Button
         key={`event-occurrence-${occurrence.eventOccurrenceId}`}
         className={cn(
-          "relative h-full w-full border brightness-100 flex items-center rounded-md gap-2 px-1 transition-colors",
+          "relative h-full w-full border brightness-100 flex items-center rounded-md gap-3 px-1 transition-colors",
           "hover:bg-overlay-highlight cursor-pointer",
         )}
       >
-        <div className="h-[calc(100%-8px)] rounded-lg w-0.5 bg-[#286552] shrink-0 min-w-0 min-h-0 " />
-        <div className="text-left flex flex-col gap-0.5 justify-between py-3 pr-2">
+        <div
+          className={cn(
+            "h-[calc(100%-8px)] rounded-lg w-1.5 shrink-0 min-w-0 min-h-0 border",
+            color?.className,
+          )}
+        />
+        <div
+          className={cn(
+            "text-left flex flex-col gap-0.5 justify-between py-3 pr-2",
+          )}
+        >
           <p className="text-sm line-clamp-2 font-normal leading-tight mb-0.5">
             {occurrence.title}
           </p>

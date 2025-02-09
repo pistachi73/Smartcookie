@@ -1,12 +1,16 @@
 import { Button, Modal } from "@/components/ui/new/ui";
 
 export const DiscardChangesModalContent = ({
+  isOpen,
+  onOpenChange,
   onDiscardChanges,
 }: {
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
   onDiscardChanges: () => void;
 }) => {
   return (
-    <Modal.Content size="sm">
+    <Modal.Content isOpen={isOpen} onOpenChange={onOpenChange} size="sm">
       <Modal.Header>
         <Modal.Title level={1} className="sm:text-2xl">
           Discard unsaved changes?

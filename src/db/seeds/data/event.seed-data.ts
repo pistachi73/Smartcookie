@@ -1,4 +1,4 @@
-import type { InsertEventOccurrence } from "@/db/schema";
+import type { InsertOccurrence } from "@/db/schema";
 import type { InsertEvent } from "@/db/schema/event";
 import { CalendarDateTime, getLocalTimeZone } from "@internationalized/date";
 
@@ -17,7 +17,7 @@ const parseToUTCISOString = (date: CalendarDateTime) => {
 
 const events: {
   event: Omit<InsertEvent, "userId">;
-  eventOccurrences?: Omit<InsertEventOccurrence, "eventId">[];
+  eventOccurrences?: Omit<InsertOccurrence, "eventId">[];
 }[] = [
   {
     event: {

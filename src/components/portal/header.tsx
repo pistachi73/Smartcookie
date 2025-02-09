@@ -14,13 +14,13 @@ export const PortalHeader = async ({ className }: { className?: string }) => {
   return (
     <div
       className={clsx(
-        "flex  w-full  items-center justify-between h-16",
+        "flex  w-full  items-center justify-between h-16 bg-overlay rounded-lg",
         className,
       )}
     >
       <div className="flex items-center justify-center size-12 w-16">
         <Link href={"/"}>
-          <Image src={"/Logo.svg"} alt="Logo" width={24} height={48} />
+          <Image src={"/Logo.svg"} alt="Logo" width={18} height={36} />
         </Link>
       </div>
       <ScheduleTracker />

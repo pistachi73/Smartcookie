@@ -10,7 +10,7 @@ import {
 } from "date-fns";
 import type { ReadonlyURLSearchParams } from "next/navigation";
 import type { z } from "zod";
-import type { SessionOcurrenceFormSchema } from "./event-occurrence-form/schema";
+import type { OccurrenceFormSchema } from "./occurrence-form-sheet/schema";
 
 export const ROW_HEIGHT = 48;
 export const TIMESLOT_HEIGHT = ROW_HEIGHT / 4;
@@ -95,7 +95,7 @@ export const generateOccurrenceEncodedOverrides = ({
 
 export const consumeOccurrenceOverrides = (
   searchParams: ReadonlyURLSearchParams,
-): Partial<z.infer<typeof SessionOcurrenceFormSchema>> | undefined => {
+): Partial<z.infer<typeof OccurrenceFormSchema>> | undefined => {
   const encodedOverrides = searchParams.get("overrides");
   if (!encodedOverrides) return;
 
@@ -168,3 +168,79 @@ export const getDateFromSnapIndex = ({
 
   return snapDate;
 };
+
+export const DEFAULT_EVENT_COLOR = "tangerine";
+// Ordered array (hue progression)
+
+export const CALENDAR_EVENT_COLORS_ARRAY = [
+  // Neutrals (hue 0° or near-neutral)
+  {
+    id: "stone",
+    name: "Stone",
+    className: "bg-event-stone-bg border-event-stone-border ",
+  },
+  {
+    id: "slate",
+    name: "Slate",
+    className: "bg-event-slate-bg border-event-slate-border ",
+  },
+  {
+    id: "neutral",
+    name: "Neutral",
+    className: "bg-event-neutral-bg border-event-neutral-border ",
+  },
+  // Warm → Cool progression
+  {
+    id: "tangerine",
+    name: "Tangerine",
+    className: "bg-event-tangerine-bg border-event-tangerine-border ",
+  },
+  {
+    id: "sunshine",
+    name: "Sunshine",
+    className: "bg-event-sunshine-bg border-event-sunshine-border ",
+  },
+  {
+    id: "banana",
+    name: "Banana",
+    className: "bg-event-banana-bg border-event-banana-border ",
+  },
+  {
+    id: "sage",
+    name: "Sage",
+    className: "bg-event-sage-bg border-event-sage-border ",
+  },
+  {
+    id: "peacock",
+    name: "Peacock",
+    className: "bg-event-peacock-bg border-event-peacock-border ",
+  },
+  {
+    id: "graphite",
+    name: "Graphite",
+    className: "bg-event-graphite-bg border-event-graphite-border ",
+  },
+  {
+    id: "blueberry",
+    name: "Blueberry",
+    className: "bg-event-blueberry-bg border-event-blueberry-border ",
+  },
+  {
+    id: "lavender",
+    name: "Lavender",
+    className: "bg-event-lavender-bg border-event-lavender-border ",
+  },
+  {
+    id: "grape",
+    name: "Grape",
+    className: "bg-event-grape-bg border-event-grape-border ",
+  },
+];
+
+export const CALENDAR_EVENT_COLORS_MAP = new Map(
+  CALENDAR_EVENT_COLORS_ARRAY.map((color) => [color.id, color]),
+);
+
+export const getCalendarColor = (color?: string) =>
+  CALENDAR_EVENT_COLORS_MAP.get(color || "") ??
+  CALENDAR_EVENT_COLORS_MAP.get(DEFAULT_EVENT_COLOR);

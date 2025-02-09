@@ -8,7 +8,7 @@ import { Toast } from "@/components/ui/new/ui";
 import { Providers } from "@/providers/providers";
 import { getHeaders } from "@/utils/get-headers";
 import { SessionProvider } from "next-auth/react";
-import { inter } from "./fonts";
+import { sans } from "./fonts";
 
 export const metadata = {
   title: "Title",
@@ -28,7 +28,7 @@ export default async function RootLayout({
 
   return (
     <html lang={"en-GB"} dir={"ltr"} suppressHydrationWarning>
-      <body className={`font-sans ${inter.variable} min-h-screen`}>
+      <body className={`f${sans.variable} font-sans min-h-screen`}>
         <Providers>
           <SessionProvider session={session}>
             <DeviceOnlyProvider deviceType={deviceType}>

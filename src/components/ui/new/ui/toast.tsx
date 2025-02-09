@@ -19,6 +19,7 @@ const Toast = ({ ...props }: ToasterProps) => {
     <ToasterPrimitive
       theme={theme as ToasterProps["theme"]}
       className="toaster group"
+      position="bottom-left"
       richColors
       icons={{
         info: (

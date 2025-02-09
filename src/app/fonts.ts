@@ -1,6 +1,6 @@
 import { Urbanist } from "next/font/google";
 
-export const inter = Urbanist({
+export const sans = Urbanist({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-sans",
 });

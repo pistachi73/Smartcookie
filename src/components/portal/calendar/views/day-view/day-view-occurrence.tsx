@@ -6,26 +6,34 @@ import { format } from "date-fns";
 import { useState } from "react";
 import { Button } from "react-aria-components";
 import { useShallow } from "zustand/react/shallow";
-import { EventOccurrencePopover } from "../components/event-occurrence-popover-content";
+import { EventOccurrencePopover } from "../../components/event-occurrence-popover-content";
 import {
+  CALENDAR_EVENT_COLORS_MAP,
+  DEFAULT_EVENT_COLOR,
   PIXELS_PER_15_MINUTES,
   calculateOccurrenceHeight,
   calculateOccurrenceTop,
-} from "../utils";
+} from "../../utils";
 
-const useDayWeekViewOccurrence = () =>
+const useDayViewOccurrence = () =>
   useCalendarStore(
-    useShallow(({ editingEventOccurrenceId }) => ({
+    useShallow(({ editingEventOccurrenceId, getMergedOccurrence }) => ({
       editingEventOccurrenceId,
+      getMergedOccurrence,
     })),
   );
 
-export const DayWeekViewOccurrence = ({
-  occurrence,
+export const DayViewOccurrence = ({
+  occurrence: occurrence_,
 }: {
   occurrence: GroupedOccurrence;
 }) => {
-  const { editingEventOccurrenceId } = useDayWeekViewOccurrence();
+  const { editingEventOccurrenceId, getMergedOccurrence } =
+    useDayViewOccurrence();
+  const occurrence = getMergedOccurrence(occurrence_.eventOccurrenceId);
+
+  if (!occurrence) return null;
+  console.log({ occurrence, id: occurrence.eventOccurrenceId });
 
   if (occurrence.isDraft) return null;
 
@@ -45,11 +53,16 @@ export const DayWeekViewOccurrence = ({
   const endTimeLabel = format(occurrence.endTime, "HH:mm");
 
   const isEditing = editingEventOccurrenceId === occurrence.eventOccurrenceId;
-  console.log({ isShortEvent, heightPx });
+  const eventColor =
+    CALENDAR_EVENT_COLORS_MAP.get(occurrence.color) ??
+    CALENDAR_EVENT_COLORS_MAP.get(DEFAULT_EVENT_COLOR);
+
   return (
     <Popover>
       <Button
-        className={cn("absolute pr-2 pb-0.5 z-10")}
+        className={cn(
+          "absolute pb-0.5 pr-1.5 z-10 transition-transform duration-300 ease-in-out",
+        )}
         excludeFromTabOrder
         style={{
           top: `${topPx}px`,
@@ -60,25 +73,34 @@ export const DayWeekViewOccurrence = ({
       >
         <div
           className={cn(
-            "relative h-full w-full bg-[#286552] flex rounded-md gap-2 overflow-hidden",
-            "border border-transparent",
-            isShortEvent && "items-center",
-            isEditing && "border-responsive-dark/70",
+            "border relative h-full w-full overflow-hidden",
+            eventColor?.className,
+            isShortEvent ? "rounded-sm" : "rounded-md",
+            isEditing && "border-fg",
           )}
         >
-          <div className="h-full w-1 bg-fg/70 shrink-0" />
-          <div className={cn("text-left", !isShortEvent && "py-1.5 pr-2")}>
-            <p className="truncate font-medium leading-tight mb-0.5 text-xs">
-              {occurrence.title ? occurrence.title : "Untitled event"}
-              {isShortEvent && (
-                <span className="text-current/70 ml-2">{startTimeLabel}</span>
-              )}
-            </p>
-            {!isShortEvent && (
-              <p className="truncate text-current/70 text-xs">
-                {startTimeLabel} - {endTimeLabel}
-              </p>
+          <div
+            className={cn(
+              "text-left px-1.5 flex w-full",
+              isShortEvent
+                ? "flex-row justify-between gap-1 h-full items-center"
+                : "flex-col py-1.5  gap-0.5",
             )}
+          >
+            <p className="truncate font-semibold leading-tight text-xs">
+              {occurrence.title ? occurrence.title : "Untitled"}
+            </p>
+
+            <p
+              className={cn(
+                "text-current/70 text-xs ",
+                !isShortEvent && "truncate",
+              )}
+            >
+              {isShortEvent
+                ? startTimeLabel
+                : `${startTimeLabel} - ${endTimeLabel}`}
+            </p>
           </div>
           <div className="w-full absolute top-0 cursor-ns-resize right-0 h-1 bg-transparent" />
           <div className="w-full absolute bottom-0 cursor-ns-resize right-0 h-1 bg-transparent" />

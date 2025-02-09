@@ -12,7 +12,8 @@ export const CalendarRows = ({ rows = 24 }: CalendarRowsProps) => {
           key={`hour-${hourIndex}`}
           className={cn(
             "flex h-[var(--row-height,calc(var(--spacing)*12))]",
-            "after:content-[''] after:z-10 after:w-full after:absolute  after:border-b after:border-border/70",
+            hourIndex !== 0 &&
+              "after:content-[''] after:z-10 after:w-full after:absolute  after:border-b after:border-border/70",
           )}
         />
       ))}

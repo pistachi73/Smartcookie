@@ -4,6 +4,7 @@ import { add } from "date-fns";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { getSnapToNearest15MinutesIndex } from "../utils";
+import { HourMarker } from "./hour-marker";
 
 const getTimeLabelFromSnapIndex = (snapIndex: number) => {
   const minutes = snapIndex * 15;
@@ -12,11 +13,22 @@ const getTimeLabelFromSnapIndex = (snapIndex: number) => {
   return `${hours.padStart(2, "0")}:${minutesRemainder.padStart(2, "0")}`;
 };
 
+const getScrollableParent = (
+  element: HTMLElement | null,
+): HTMLElement | null => {
+  if (!element) return null;
+  const style = window.getComputedStyle(element);
+  const isScrollable =
+    style.overflowY === "auto" || style.overflowY === "scroll";
+
+  if (isScrollable) return element;
+  return getScrollableParent(element.parentElement);
+};
+
 const useDayEventsColumn = () =>
   useCalendarStore(
-    useShallow(({ createDraftEvent, setDraftEventOccurrence }) => ({
+    useShallow(({ createDraftEvent }) => ({
       createDraftEvent,
-      setDraftEventOccurrence,
     })),
   );
 
@@ -27,62 +39,88 @@ export const DayEventsColumn = ({
   children: React.ReactNode;
   date: Date;
 }) => {
-  const { createDraftEvent, setDraftEventOccurrence } = useDayEventsColumn();
+  const { createDraftEvent } = useDayEventsColumn();
 
+  const scrollableParent = useRef<HTMLElement | null>(null);
   const columnRef = useRef<HTMLDivElement>(null);
   const [dragStartY, setDragStartY] = useState<number | null>(null);
   const [dragEndY, setDragEndY] = useState<number | null>(null);
+  const currentMouseYRef = useRef<number | null>(null);
+
+  const dragState = useRef({
+    startY: null as number | null,
+    currentY: null as number | null,
+    lastUpdate: 0,
+  });
+
+  useEffect(() => {
+    scrollableParent.current = getScrollableParent(columnRef.current);
+  }, []);
+
+  // Memoize these calculations
+  const getSnappedY = useCallback((clientY: number) => {
+    if (!columnRef.current) return 0;
+    const column = columnRef.current;
+    const rect = column.getBoundingClientRect();
+    const y = clientY - rect.top + column.scrollTop;
+    return Math.max(0, Math.min(95, getSnapToNearest15MinutesIndex(y)));
+  }, []);
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    console.log("handleMouseDown");
     e.preventDefault();
-    if (columnRef.current) {
-      const rect = columnRef.current.getBoundingClientRect();
-      const y = e.clientY - rect.top + columnRef.current.scrollTop;
-      const snappedY = getSnapToNearest15MinutesIndex(y);
-      setDragStartY(snappedY);
-    }
+    const snappedY = getSnappedY(e.clientY);
+    dragState.current.startY = snappedY;
+    setDragStartY(snappedY);
   };
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
-      if (dragStartY === null || columnRef.current === null) {
-        return;
-      }
+      const now = performance.now();
+      if (now - dragState.current.lastUpdate < 16) return; // ~60fps
 
-      const column = columnRef.current;
-      const rect = column.getBoundingClientRect();
-      const y = e.clientY - rect.top + column.scrollTop; // Adjusted to include scrollTop
-      const snappedY = Math.max(0, getSnapToNearest15MinutesIndex(y));
-      if (Math.abs(snappedY - dragStartY) >= 1) {
+      dragState.current.lastUpdate = now;
+      const snappedY = getSnappedY(e.clientY);
+
+      currentMouseYRef.current = e.clientY;
+      if (dragStartY === null || columnRef.current === null) return;
+      // Only update state if value actually changed
+      if (
+        dragState.current.currentY !== snappedY &&
+        Math.abs(snappedY - dragStartY) >= 1
+      ) {
+        dragState.current.currentY = snappedY;
         setDragEndY(snappedY);
       }
     },
     [dragStartY],
   );
 
-  // Handles mouse up event to finalize drag
   const handleMouseUp = useCallback(() => {
-    console.log("handleMouseUp");
+    // Use ref values instead of state for final calculation
+    const startY = dragState.current.startY;
+    const endY = dragState.current.currentY;
+
+    if (startY !== null) {
+      const startSlot = endY !== null ? Math.min(startY, endY) : startY - 1;
+      const endSlot = endY !== null ? Math.max(startY, endY) : startY + 1;
+
+      const startDate = add(date.setHours(0, 0, 0), {
+        minutes: startSlot * 15,
+      });
+      const endDate = add(date.setHours(0, 0, 0), { minutes: endSlot * 15 });
+      createDraftEvent(startDate, endDate);
+    }
+
+    // Reset all state at once
+    dragState.current = { startY: null, currentY: null, lastUpdate: 0 };
     setDragStartY(null);
     setDragEndY(null);
-
-    if (dragStartY == null) return;
-
-    const startSlot =
-      dragEndY !== null ? Math.min(dragStartY, dragEndY) : dragStartY - 1;
-    const endSlot =
-      dragEndY !== null ? Math.max(dragStartY, dragEndY) : dragStartY + 1;
-
-    const startDate = add(date.setHours(0, 0, 0), { minutes: startSlot * 15 });
-    const endDate = add(date.setHours(0, 0, 0), {
-      minutes: endSlot * 15,
-    });
-    createDraftEvent(startDate, endDate);
-  }, [date, setDraftEventOccurrence, dragStartY, dragEndY]);
+  }, [date, createDraftEvent]);
 
   useEffect(() => {
     const abortController = new AbortController();
+    let animationFrameId: number;
+
     if (dragStartY !== null) {
       window.addEventListener("mousemove", handleMouseMove, {
         signal: abortController.signal,
@@ -90,16 +128,52 @@ export const DayEventsColumn = ({
       window.addEventListener("mouseup", handleMouseUp, {
         signal: abortController.signal,
       });
+
+      const scrollLoop = () => {
+        if (!scrollableParent.current || !currentMouseYRef.current) {
+          animationFrameId = requestAnimationFrame(scrollLoop);
+          return;
+        }
+
+        const parent = scrollableParent.current;
+        const parentRect = parent.getBoundingClientRect();
+        const cursorY = currentMouseYRef.current;
+        const threshold = 48 / 4; // Distance from edge to start scrolling
+        const maxSpeed = 15; // Maximum scroll speed (pixels per frame)
+
+        const distanceFromTop = cursorY - parentRect.top;
+        const distanceFromBottom = parentRect.bottom - cursorY;
+
+        let scrollDelta = 0;
+
+        if (distanceFromTop < threshold) {
+          const speedFactor = (threshold - distanceFromTop) / threshold;
+          scrollDelta = -maxSpeed * speedFactor;
+        } else if (distanceFromBottom < threshold) {
+          const speedFactor = (threshold - distanceFromBottom) / threshold;
+          scrollDelta = maxSpeed * speedFactor;
+        }
+
+        parent.scrollTop += scrollDelta;
+        animationFrameId = requestAnimationFrame(scrollLoop);
+      };
+
+      animationFrameId = requestAnimationFrame(scrollLoop);
     } else {
       abortController.abort();
     }
+
     return () => {
       abortController.abort();
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
     };
   }, [dragStartY, handleMouseMove, handleMouseUp]);
 
   return (
     <div className={cn("h-full w-full relative", dragEndY && "cursor-move!")}>
+      <HourMarker date={date} />
       <div
         ref={columnRef}
         className="absolute top-0 left-0 h-full w-full"
@@ -113,6 +187,8 @@ export const DayEventsColumn = ({
     </div>
   );
 };
+
+// PreDraftEvent component remains unchanged
 
 const PreDraftEvent = ({
   startIndex,
@@ -132,7 +208,7 @@ const PreDraftEvent = ({
 
   return (
     <div
-      className="absolute left-0 right-0 z-30 pr-2 pb-0.5"
+      className="absolute left-0 right-0 z-30 pb-0.5 pr-1"
       style={{
         top: `calc(var(--row-height) / 4 * ${realStartIndex})`,
         height: `calc(var(--row-height) / 4 * ${height})`,
@@ -140,21 +216,21 @@ const PreDraftEvent = ({
     >
       <div
         className={cn(
-          "overflow-hidden text-left p-1.5 w-full h-full border border-fg/60 rounded-md bg-overlay-elevated-highlight/70",
-          isShortEvent && "flex items-center py-0",
+          "flex border px-1.5 h-full border-fg/70 bg-overlay-elevated-highlight/70 w-full overflow-hidden",
+          isShortEvent
+            ? "rounded-sm flex-row justify-between gap-1 items-center"
+            : "rounded-md flex-col py-1.5  gap-0.5",
         )}
       >
-        <p className="text-nowrap font-normal leading-tight mb-0.5 text-xs">
-          (Untitled)
-          {isShortEvent && (
-            <span className="text-text-sub ml-2">{startTimeLabel}</span>
-          )}
+        <p className="truncate font-semibold leading-tight text-xs">Untitled</p>
+
+        <p
+          className={cn("text-current/70 text-xs", !isShortEvent && "truncate")}
+        >
+          {isShortEvent
+            ? startTimeLabel
+            : `${startTimeLabel} - ${endTimeLabel}`}
         </p>
-        {!isShortEvent && (
-          <p className="text-nowrap text-text-sub text-xs">
-            {startTimeLabel} - {endTimeLabel}
-          </p>
-        )}
       </div>
     </div>
   );
