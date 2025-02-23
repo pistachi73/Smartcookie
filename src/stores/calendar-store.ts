@@ -1,107 +1,148 @@
-import { getEventOccurrenceDayKey } from "@/components/portal/calendar/utils";
-import type { Event, EventOccurrence, Hub, Occurrence } from "@/db/schema";
+import type {
+  CalendarView,
+  DatedOccurrence,
+  MergedOccurrence,
+  OccurrenceGridPosition,
+} from "@/components/portal/calendar/calendar.types";
 import {
-  GroupedOccurrence_,
-  _groupOccurrencesByDayAndTime,
-  groupEventOccurrencesByDayAndTime,
-  sweepLineGroupOverlappingOccurrences,
-} from "@/lib/group-overlapping-occurrences";
-import { getLocalTimeZone } from "@internationalized/date";
-import { addDays, addMonths, addWeeks } from "date-fns";
+  generateOccurrenceOverrides,
+  getDayKeyFromDate,
+} from "@/components/portal/calendar/utils";
+import type { Event, Hub, Occurrence } from "@/db/schema";
+import { groupOverlappingOccurrences } from "@/lib/group-overlapping-occurrences";
+import { Temporal } from "@js-temporal/polyfill";
+import { enableMapSet } from "immer";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { createStore } from "zustand/vanilla";
 import { superjsonStorage } from "./superjson-storage";
 
-export type CalendarView = "day" | "weekday" | "week" | "month" | "agenda";
-export type SidebarType = "main" | "edit-session";
-export type DraftEventOccurrence = Partial<EventOccurrence> & {
-  eventOccurrenceId: number;
-  startTime: Date;
-  endTime: Date;
-  timezone: string;
-};
-
-export type CalendarEventOccurrence = EventOccurrence & { isDraft: false };
-export type CalendarDraftEventOccurrence = DraftEventOccurrence & {
-  isDraft: true;
-};
-
 export type CalendarState = {
   _isHydrated: boolean;
-  activeSidebar: SidebarType;
-  selectedDate: Date;
+  hubs: Hub[];
+  selectedDate: Temporal.PlainDate;
   calendarView: CalendarView;
 
-  hubs: Hub[];
-  eventOccurrences: Record<string, CalendarEventOccurrence>;
-  groupedEventOccurrences: ReturnType<typeof groupEventOccurrencesByDayAndTime>;
-  editingEventOccurrenceId?: number;
-  draftEventOccurrence: CalendarDraftEventOccurrence;
-
   // New Stuff
-  events: Record<number, Event>;
-  occurrences: Record<number, Occurrence>;
-  groupedOccurrences: ReturnType<typeof _groupOccurrencesByDayAndTime>;
+  events: Map<number, Event>;
+  occurrences: Map<number, DatedOccurrence>;
+  dailyOccurrencesIds: Map<string, Set<number>>;
+  dailyOccurrencesGridPosition: Map<string, OccurrenceGridPosition[]>;
+  editedOccurrenceId?: number;
+};
 
-  // groupedOccurrences:
-  // calendarOccurrences: Record<number, CalendarEventOccurrence>;
+const initiCalendarStoreOccurrences = (occurrences: DatedOccurrence[]) => {
+  const groupedByDay = occurrences.reduce<Record<string, DatedOccurrence[]>>(
+    (acc, occurrence) => {
+      const dayKey = getDayKeyFromDate(occurrence.startTime);
+      if (!acc[dayKey]) {
+        acc[dayKey] = [];
+      }
+      acc[dayKey].push(occurrence);
+      return acc;
+    },
+    {},
+  );
+
+  const dailyOccurrencesGridPosition = new Map<
+    string,
+    OccurrenceGridPosition[]
+  >();
+  const dailyOccurrencesIds = new Map<string, Set<number>>();
+  for (const [day, dayOccurrences] of Object.entries(groupedByDay)) {
+    dailyOccurrencesIds.set(day, new Set(dayOccurrences.map((occ) => occ.id)));
+    dailyOccurrencesGridPosition.set(
+      day,
+      groupOverlappingOccurrences(dayOccurrences),
+    );
+  }
+
+  return { dailyOccurrencesGridPosition, dailyOccurrencesIds };
+};
+
+export type InitCalendarState = Omit<
+  Partial<CalendarState>,
+  "occurrences" | "events" | "selectedDate"
+> & {
+  selectedDate?: string;
+  occurrences?: Occurrence[];
+  events?: Event[];
 };
 
 export type CalendarActions = {
   _setHydrated: () => void;
-  selectDate: (date: Date) => void;
+  selectDate: (date: Temporal.PlainDate) => void;
   setCalendarView: (calendarView: CalendarView) => void;
-  setActiveSidebar: (sidebar: SidebarType) => void;
+  setEdittedOccurrenceId: (id?: number) => void;
   onNavigation: (n: number) => void;
   onToday: () => void;
-  regenerateGroupedEventOccurrencesForDay: (dayKey: string[]) => void;
-  createDraftEvent: (startDate: Date, endDate: Date) => void;
-  setDraftEventOccurrence: (
-    eventOccurrence: Partial<CalendarDraftEventOccurrence>,
-  ) => void;
-  clearDraftEventOccurrence: () => void;
-  clearEditingEventOccurrence: () => void;
-  openEditEventOccurrence: (eventOccurrenceId: number) => void;
-  addEventOccurrences: (eventOccurrence: CalendarEventOccurrence[]) => void;
-  updateOccurrences: (occurrences: CalendarEventOccurrence[]) => void;
-  removeEventOccurreces: (eventOccurrencesIds: number[]) => void;
 
   // New Stuff
-  getMergedOccurrence: (occurrenceId: number) => CalendarEventOccurrence | null;
-  getMergedGroupedOccurrences: (
-    occurrence: GroupedOccurrence_,
-  ) => CalendarEventOccurrence | null;
+  addEvents: (events: Event | Event[]) => void;
+  addOccurrences: (occurrences: DatedOccurrence | DatedOccurrence[]) => void;
+  updateEvents: (
+    events:
+      | (Partial<Event> & Pick<Event, "id">)
+      | Array<Partial<Event> & Pick<Event, "id">>,
+    options?: { silent?: boolean; mergeStrategy?: "shallow" | "deep" },
+  ) => void;
+  updateOccurrences: (
+    occurrences:
+      | (Partial<DatedOccurrence> & Pick<DatedOccurrence, "id">)
+      | Array<Partial<DatedOccurrence> & Pick<DatedOccurrence, "id">>,
+    options?: { silent?: boolean; mergeStrategy?: "shallow" | "deep" },
+  ) => void;
+  removeEvents: (
+    ids: number | number[],
+    options?: { silent?: boolean },
+  ) => void;
+  removeOccurrences: (
+    ids: number | number[],
+    options?: { silent?: boolean },
+  ) => void;
+
+  addDraftOccurrence: (occurrence: DatedOccurrence) => void;
+  recalculateDailyOccurrences: (dayKeys: string | string[]) => void;
 };
 
 export type CalendarStore = CalendarState & CalendarActions;
 
 export const initCalendarStore = (
-  initilData?: Partial<CalendarState>,
+  initilData?: InitCalendarState,
 ): CalendarState => {
+  const datedOccurrences =
+    initilData?.occurrences?.map(toDatedOccurrence) || [];
+  const datedOccurrencesMap = new Map<number, DatedOccurrence>(
+    datedOccurrences?.map((occurrence) => [occurrence.id, occurrence]),
+  );
+
+  const eventsMap = new Map<number, Event>(
+    initilData?.events?.map((event) => [event.id, event]),
+  );
+
+  const { dailyOccurrencesIds, dailyOccurrencesGridPosition } =
+    initiCalendarStoreOccurrences(datedOccurrences);
+
+  const initialSelectedDate = initilData?.selectedDate
+    ? Temporal.PlainDate.from(initilData?.selectedDate)
+    : Temporal.Now.plainDateISO();
+
   return {
     _isHydrated: initilData?._isHydrated || false,
     hubs: initilData?.hubs || [],
-    eventOccurrences: initilData?.eventOccurrences || {},
-    groupedEventOccurrences: groupEventOccurrencesByDayAndTime(
-      initilData?.eventOccurrences
-        ? Object.values(initilData?.eventOccurrences)
-        : [],
-    ),
-    selectedDate: initilData?.selectedDate || new Date(),
+
+    selectedDate: initialSelectedDate,
     calendarView: initilData?.calendarView || "week",
-    activeSidebar: initilData?.activeSidebar || "main",
-    editingEventOccurrenceId: initilData?.editingEventOccurrenceId || undefined,
-    draftEventOccurrence: {} as CalendarDraftEventOccurrence,
-    events: initilData?.events || {},
-    occurrences: initilData?.occurrences || {},
-    groupedOccurrences: _groupOccurrencesByDayAndTime(
-      initilData?.occurrences ? Object.values(initilData?.occurrences) : [],
-    ),
+    events: eventsMap,
+    occurrences: datedOccurrencesMap,
+    dailyOccurrencesIds,
+    dailyOccurrencesGridPosition,
   };
 };
 
 export const defaultInitState: CalendarState = initCalendarStore();
+
+enableMapSet();
 
 export const createCalendarStore = (
   initState: CalendarState = defaultInitState,
@@ -112,25 +153,30 @@ export const createCalendarStore = (
       immer((set, get) => ({
         ...initState,
         _setHydrated: () => set({ _isHydrated: true }),
-        selectDate: (selectedDate: Date) => {
-          updateURL({ calendarView: get().calendarView, selectedDate });
-          return set((state) => {
-            state.selectedDate = selectedDate;
+        selectDate: (date) => {
+          updateURL({ calendarView: get().calendarView, selectedDate: date });
+          set((state) => {
+            state.selectedDate = date;
           });
         },
         setCalendarView: (calendarView: CalendarView) => {
           updateURL({ calendarView, selectedDate: get().selectedDate });
-          return set(() => ({ calendarView }));
+          set((state) => {
+            state.calendarView = calendarView;
+          });
         },
-        setActiveSidebar: (activeSidebar: SidebarType) =>
-          set(() => ({ activeSidebar })),
+        setEdittedOccurrenceId: (id) => {
+          set((state) => {
+            state.editedOccurrenceId = id;
+          });
+        },
         onToday: () => {
-          const today = new Date();
+          const today = Temporal.Now.plainDateISO();
           updateURL({
             calendarView: get().calendarView,
             selectedDate: today,
           });
-          return set((state) => {
+          set((state) => {
             state.selectedDate = today;
           });
         },
@@ -138,10 +184,13 @@ export const createCalendarStore = (
           const calendarView = get().calendarView;
           const selectedDate = get().selectedDate;
 
-          const navigationDate = onNavigationFunctionMapper[calendarView](
-            selectedDate,
-            n,
-          );
+          const navigationDate = selectedDate.add({
+            ...(calendarView === "day" && { weeks: n }),
+            ...(calendarView === "agenda" && { days: n }),
+            ...(calendarView === "weekday" && { weeks: n }),
+            ...(calendarView === "week" && { weeks: n }),
+            ...(calendarView === "month" && { months: n }),
+          });
 
           updateURL({
             calendarView: get().calendarView,
@@ -152,206 +201,158 @@ export const createCalendarStore = (
           });
         },
 
-        createDraftEvent: (startDate: Date, endDate: Date) => {
-          console.log("createDraftEvent");
-          const timezone = getLocalTimeZone();
-          const overrides = [
-            startDate.toString(),
-            endDate.toString(),
-            timezone,
-          ];
-          const encodedOverrides = encodeURIComponent(
-            JSON.stringify(overrides),
-          );
-          const params = new URLSearchParams({
-            overrides: encodedOverrides,
-          });
-
-          window.history.pushState(
-            null,
-            "",
-            `/calendar/event/create?${params.toString()}`,
-          );
-
-          const newDraftEventOccurrence: CalendarDraftEventOccurrence = {
-            title: "",
-            eventOccurrenceId: -1,
-            startTime: startDate,
-            endTime: endDate,
-            timezone,
-            isDraft: true,
-          };
-
-          get().setDraftEventOccurrence(newDraftEventOccurrence);
-          get().setActiveSidebar("edit-session");
-          set((state) => {
-            state.editingEventOccurrenceId = -1;
-          });
-        },
-
-        setDraftEventOccurrence: (
-          draftEventOccurrence: Partial<DraftEventOccurrence>,
-        ) => {
-          console.log(draftEventOccurrence);
-          const prevDraftOccurrence = get().draftEventOccurrence;
-
-          const newDraftEventOccurrence = {
-            ...prevDraftOccurrence,
-            ...draftEventOccurrence,
-          };
-
-          console.log(newDraftEventOccurrence);
-          set((state) => {
-            state.draftEventOccurrence = newDraftEventOccurrence;
-          });
-
-          if (
-            !(
-              "date" in draftEventOccurrence ||
-              "startTime" in draftEventOccurrence ||
-              "endTime" in draftEventOccurrence
-            )
-          ) {
-            return;
-          }
-
-          console.log("update time");
-
-          const dayKeys = new Set<string>([
-            getEventOccurrenceDayKey(prevDraftOccurrence.startTime),
-            getEventOccurrenceDayKey(newDraftEventOccurrence.startTime),
-          ]);
-
-          get().regenerateGroupedEventOccurrencesForDay(Array.from(dayKeys));
-        },
-
-        clearDraftEventOccurrence: () => {
-          console.log("clearDraftEventOccurrence");
-          const draftEventOccurrence = get().draftEventOccurrence;
-          if (!draftEventOccurrence) return;
+        // --------------------- NEWWWWW ---------------------
+        addEvents: (events) => {
+          const eventsToAdd = Array.isArray(events) ? events : [events];
 
           set((state) => {
-            state.draftEventOccurrence = {} as CalendarDraftEventOccurrence;
-          });
-
-          get().regenerateGroupedEventOccurrencesForDay([
-            getEventOccurrenceDayKey(draftEventOccurrence.startTime),
-          ]);
-        },
-        regenerateGroupedEventOccurrencesForDay: (dayKeys: string[]) => {
-          console.log({ dayKeys });
-          dayKeys.forEach((dayKey) => {
-            const dayEvents = [
-              ...Object.values(get().eventOccurrences!),
-              get().draftEventOccurrence,
-            ].filter(
-              (e) =>
-                e.startTime && getEventOccurrenceDayKey(e.startTime) === dayKey,
-            );
-
-            set((state) => {
-              state.groupedEventOccurrences[dayKey] =
-                sweepLineGroupOverlappingOccurrences(dayEvents);
+            eventsToAdd.forEach((event) => {
+              state.events.set(event.id, event);
             });
           });
         },
 
-        clearEditingEventOccurrence: () => {
-          set((state) => {
-            state.editingEventOccurrenceId = undefined;
-          });
-        },
-        openEditEventOccurrence: (eventOccurrenceId: number) => {
-          set((state) => {
-            state.activeSidebar = "edit-session";
-            state.editingEventOccurrenceId = eventOccurrenceId;
-          });
-          window.history.pushState(
-            null,
-            "",
-            `/calendar/event/${eventOccurrenceId}`,
-          );
-        },
-        addEventOccurrences: (eventOccurrences) => {
-          console.log("addEventOccurrences");
-          const dayKeys = new Set<string>(
-            eventOccurrences.map((occurrence) =>
-              getEventOccurrenceDayKey(occurrence.startTime),
-            ),
-          );
-
-          set((state) => {
-            eventOccurrences.forEach((eventOccurrence) => {
-              state.eventOccurrences[eventOccurrence.eventOccurrenceId] =
-                eventOccurrence;
-            });
-          });
-
-          get().regenerateGroupedEventOccurrencesForDay(Array.from(dayKeys));
-        },
-        removeEventOccurreces: (eventOccurrenceIds) => {
-          console.log("removeEventOccurreces");
-          const eventOccurrences = get().eventOccurrences;
-          const dayKeys = new Set<string>(
-            eventOccurrenceIds
-              .map((id) => {
-                const occurrence = eventOccurrences[id];
-                if (!occurrence) return undefined;
-                return getEventOccurrenceDayKey(occurrence.startTime);
-              })
-              .filter(Boolean) as string[],
-          );
-
-          set((state) => {
-            eventOccurrenceIds.forEach((id) => {
-              delete state.eventOccurrences[id];
-            });
-          });
-
-          get().regenerateGroupedEventOccurrencesForDay(Array.from(dayKeys));
-        },
-
-        updateOccurrences: (updatedOccurrences) => {
+        addOccurrences: (occurrences) => {
+          const { recalculateDailyOccurrences } = get();
           const dayKeys = new Set<string>();
+          const occurrencesToAdd = Array.isArray(occurrences)
+            ? occurrences
+            : [occurrences];
+          set((state) => {
+            occurrencesToAdd.forEach((occurrence) => {
+              const dayKey = getDayKeyFromDate(occurrence.startTime);
+              const dayOccurrencesIds = state.dailyOccurrencesIds.get(dayKey);
+              dayKeys.add(dayKey);
+              state.occurrences.set(occurrence.id, occurrence);
+              state.dailyOccurrencesIds.set(
+                dayKey,
+                new Set([...(dayOccurrencesIds || []), occurrence.id]),
+              );
+            });
+          });
+          recalculateDailyOccurrences(Array.from(dayKeys));
+        },
+
+        addDraftOccurrence: (draftOccurrence) => {
+          const { addOccurrences } = get();
+          console.time("setState");
+          set((state) => {
+            state.editedOccurrenceId = -1;
+          });
+          console.timeEnd("setState");
+          addOccurrences(draftOccurrence);
+
+          const overrides = generateOccurrenceOverrides(draftOccurrence);
+          windowPushHistory(`/calendar/event/create?${overrides}`);
+        },
+
+        updateEvents: (events, options) => {
+          const eventsToUpdate = Array.isArray(events) ? events : [events];
+          set((state) => {
+            eventsToUpdate.forEach((update) => {
+              const existing = state.events.get(update.id);
+              if (!existing) {
+                if (options?.silent) return;
+                throw new Error(`Event ${update.id} not found`);
+              }
+
+              state.events.set(update.id, {
+                ...existing,
+                ...update,
+              });
+            });
+          });
+        },
+
+        updateOccurrences: (occurrences, options) => {
+          const occurrencesToUpdate = Array.isArray(occurrences)
+            ? occurrences
+            : [occurrences];
 
           set((state) => {
-            updatedOccurrences.forEach((updatedOccurrence) => {
-              dayKeys.add(
-                getEventOccurrenceDayKey(updatedOccurrence.startTime),
-              );
+            occurrencesToUpdate.forEach((update) => {
+              const existing = state.occurrences.get(update.id);
+              if (!existing) {
+                if (options?.silent) return;
+                throw new Error(`Occurrence ${update.id} not found`);
+              }
 
-              state.eventOccurrences[updatedOccurrence.eventOccurrenceId] =
-                updatedOccurrence;
+              state.occurrences.set(update.id, {
+                ...existing,
+                ...update,
+              });
+            });
+          });
+        },
+
+        removeEvents: (ids, options) => {
+          const idsToDelete = Array.isArray(ids) ? ids : [ids];
+          set((state) => {
+            idsToDelete.forEach((id) => {
+              if (!state.events.has(id)) {
+                if (options?.silent) return;
+                throw new Error(`Cannot delete non-existent event: ${id}`);
+              }
+              state.events.delete(id);
+            });
+          });
+        },
+        removeOccurrences: (ids, options) => {
+          const { recalculateDailyOccurrences } = get();
+          const dayKeys = new Set<string>();
+          const idsToDelete = Array.isArray(ids) ? ids : [ids];
+
+          set((state) => {
+            idsToDelete.forEach((id) => {
+              const occurrence = state.occurrences.get(id);
+              if (!occurrence) {
+                if (options?.silent) return;
+                throw new Error(`Cannot delete non-existent occurrence: ${id}`);
+              }
+              const dayKey = getDayKeyFromDate(occurrence.startTime);
+              const dayOccurrenceIds = state.dailyOccurrencesIds.get(dayKey);
+
+              if (!dayOccurrenceIds) {
+                if (options?.silent) return;
+                throw new Error(
+                  `Cannot delete non-existent occurrence in day occurrences: ${id}`,
+                );
+              }
+
+              dayKeys.add(dayKey);
+              dayOccurrenceIds.delete(id);
+              state.occurrences.delete(id);
+              state.dailyOccurrencesIds.set(dayKey, dayOccurrenceIds);
             });
           });
 
-          console.log("dayKeys", dayKeys, updatedOccurrences);
-
-          get().regenerateGroupedEventOccurrencesForDay(Array.from(dayKeys));
+          recalculateDailyOccurrences(Array.from(dayKeys));
         },
-        getMergedOccurrence: (occurrenceId) => {
-          const { events, occurrences } = get();
-          const occurrence = occurrences[occurrenceId];
-          if (!occurrence) return null;
 
-          const event = events[occurrence?.eventId];
-          if (!event) return null;
+        recalculateDailyOccurrences: (dayKeys) => {
+          const dayKeysToRecalculate = Array.isArray(dayKeys)
+            ? dayKeys
+            : [dayKeys];
 
-          const mergedOccurrence: CalendarEventOccurrence = {
-            ...event,
-            eventId: event.id,
-            eventOccurrenceId: occurrence.id,
-            startTime: new Date(`${occurrence.startTime}Z`),
-            endTime: new Date(`${occurrence.endTime}Z`),
-            title: occurrence.overrides?.title || event.title,
-            description: occurrence.overrides?.description || event.description,
-            timezone: occurrence.overrides?.timezone || event.timezone,
-            price: occurrence.overrides?.price || event.price,
-            color: occurrence.overrides?.color || event.color,
-            isDraft: false,
-          };
+          set((state) => {
+            dayKeysToRecalculate.forEach((dayKey) => {
+              const dayOccurrenceIds = state.dailyOccurrencesIds.get(dayKey);
+              const dayOccurrences: DatedOccurrence[] = [];
 
-          return mergedOccurrence;
+              if (!dayOccurrenceIds) return;
+
+              for (const dayOccurrenceId of dayOccurrenceIds) {
+                const occurrence = state.occurrences.get(dayOccurrenceId);
+                if (!occurrence) continue;
+                dayOccurrences.push(occurrence);
+              }
+
+              state.dailyOccurrencesGridPosition.set(
+                dayKey,
+                groupOverlappingOccurrences(dayOccurrences),
+              );
+            });
+          });
         },
       })),
       {
@@ -375,11 +376,11 @@ export const createCalendarStore = (
 const updateURL = ({
   calendarView,
   selectedDate,
-}: { calendarView: CalendarView; selectedDate: Date }) => {
+}: { calendarView: CalendarView; selectedDate: Temporal.PlainDate }) => {
   const [year, month, day] = [
-    selectedDate.getFullYear(),
-    selectedDate.getMonth() + 1,
-    selectedDate.getDate(),
+    selectedDate.year,
+    selectedDate.month,
+    selectedDate.day,
   ];
 
   window.history.pushState(
@@ -389,74 +390,34 @@ const updateURL = ({
   );
 };
 
-const onNavigationFunctionMapper: Record<
-  CalendarView,
-  (date: Date, n: number) => Date
-> = {
-  day: addDays,
-  weekday: addWeeks,
-  week: addWeeks,
-  month: addMonths,
-  agenda: addDays,
+const windowPushHistory = (path: string) => {
+  if (!window.history.pushState) return;
+  window.history.pushState(null, "", path);
 };
 
-// const mergeEventsAndOccurrences = ({
-//   events,
-//   occurrences,
-//   byOccurrenceIds,
-// }: {
-//   events: Record<number, Event>;
-//   occurrences: Record<number, DBEventOccurence>;
-//   byOccurrenceIds?: number[];
-// }) => {
-//   const calendarEventsMap = new Map<number, CalendarEventOccurrence>();
+const toDatedOccurrence = (occurrence: Occurrence): DatedOccurrence => ({
+  ...occurrence,
+  startTime: Temporal.ZonedDateTime.from(occurrence.startTime),
+  endTime: Temporal.ZonedDateTime.from(occurrence.endTime),
+});
 
-//   if (byOccurrenceIds?.length) {
-//     byOccurrenceIds.forEach((occurrenceId) => {
-//       const occurrence = occurrences[occurrenceId];
-//       if (!occurrence) return;
-
-//       const event = events[occurrence.eventId];
-//       if (!event) return;
-
-//       calendarEventsMap.set(
-//         occurrence.id,
-//         getMergedOccurrence({ event, occurrence }),
-//       );
-//     });
-//   } else {
-//     Object.values(occurrences).forEach((occurrence) => {
-//       const event = events[occurrence.eventId];
-//       if (!event) return;
-
-//       calendarEventsMap.set(
-//         occurrence.id,
-//         getMergedOccurrence({ event, occurrence }),
-//       );
-//     });
-//   }
-
-//   return Object.fromEntries(calendarEventsMap.entries());
-// };
-
-// const getMergedOccurrence = ({
-//   event,
-//   occurrence,
-// }: {
-//   event: Event;
-//   occurrence: DBEventOccurence;
-// }): CalendarEventOccurrence => {
-//   return {
-//     ...event,
-//     eventId: event.id,
-//     eventOccurrenceId: occurrence.id,
-//     startTime: new Date(`${occurrence.startTime}Z`),
-//     endTime: new Date(`${occurrence.endTime}Z`),
-//     title: occurrence.overrides?.title || event.title,
-//     description: occurrence.overrides?.description || event.description,
-//     timezone: occurrence.overrides?.timezone || event.timezone,
-//     price: occurrence.overrides?.price || event.price,
-//     color: occurrence.overrides?.color || event.color,
-//     isDraft: false,
-//   };
-// };
+export const mergeEventAndOccurrence = ({
+  event,
+  occurrence,
+}: {
+  event: Event;
+  occurrence: DatedOccurrence;
+}): MergedOccurrence => {
+  return {
+    ...event,
+    eventId: event.id,
+    occurrenceId: occurrence.id,
+    startTime: occurrence.startTime,
+    endTime: occurrence.endTime,
+    title: occurrence.overrides?.title || event.title,
+    description: occurrence.overrides?.description || event.description,
+    timezone: occurrence.overrides?.timezone || event.timezone,
+    price: occurrence.overrides?.price || event.price,
+    color: occurrence.overrides?.color || event.color,
+  };
+};

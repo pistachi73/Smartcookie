@@ -1,220 +1,40 @@
-import { getEventOccurrenceDayKey } from "@/components/portal/calendar/utils";
-import { Occurrence } from "@/db/schema";
 import type {
-  CalendarDraftEventOccurrence,
-  CalendarEventOccurrence,
-} from "@/stores/calendar-store";
-import { TZDate, TZDateMini } from "@date-fns/tz";
+  DatedOccurrence,
+  OccurrenceGridPosition,
+  TimeBoundary,
+} from "@/components/portal/calendar/calendar.types";
 import Heap from "heap-js";
 
-export type GroupProps = {
-  columnIndex: number;
-  totalColumns: number;
-};
-
-export type GroupedCalendarOccurrence = CalendarEventOccurrence & GroupProps;
-export type GroupedDraftCalendarOccurrence = CalendarDraftEventOccurrence &
-  GroupProps;
-
-export type GroupedOccurrence =
-  | GroupedCalendarOccurrence
-  | GroupedDraftCalendarOccurrence;
-
-interface TimePoint {
-  time: number; // Using timestamp for efficiency
-  type: "start" | "end";
-  event: GroupedOccurrence;
-}
-
-export const sweepLineGroupOverlappingOccurrences = (
-  eventOccurrences: (CalendarEventOccurrence | CalendarDraftEventOccurrence)[],
-): GroupedOccurrence[] => {
-  if (eventOccurrences.length === 0) {
-    return [];
-  }
-
-  // Create time points for all start and end times
-  const times: TimePoint[] = eventOccurrences.flatMap((event) => [
-    {
-      time: new Date(new TZDateMini(event.startTime, event.timezone)).getTime(),
-      type: "start",
-      event: { ...event, columnIndex: 0, totalColumns: 0 },
-    },
-    {
-      time: new Date(new TZDateMini(event.endTime, event.timezone)).getTime(),
-      type: "end",
-      event: {
-        ...event,
-        columnIndex: 0,
-        totalColumns: 0,
-      },
-    },
-  ]);
-
-  times.sort((a, b) => {
-    if (a.time !== b.time) return a.time - b.time;
-    return a.type === "end" ? -1 : 1; // 'end' comes before 'start' if times are equal
-  });
-
-  const groups: GroupedOccurrence[][] = [];
-  const activeEvents: Set<number> = new Set();
-
-  // Heap to keep track of active columns sorted by endTime
-  const activeColumnsHeap = new Heap<{ endTime: number; columnIndex: number }>(
-    (a, b) => {
-      if (a.endTime !== b.endTime) {
-        return a.endTime - b.endTime;
-      }
-      return a.columnIndex - b.columnIndex;
-    },
-  );
-
-  // Heap to keep track of available columns sorted by columnIndex
-  const availableColumnsHeap = new Heap<number>((a, b) => a - b);
-
-  let maxColumns = 0;
-  let currentGroup: GroupedOccurrence[] = [];
-
-  times.forEach((point) => {
-    const event = point.event;
-
-    if (point.type === "start") {
-      activeEvents.add(event.eventOccurrenceId);
-
-      // Release all columns that have ended before the current event's start time
-      while (
-        !activeColumnsHeap.isEmpty() &&
-        activeColumnsHeap.peek()!.endTime <= point.time
-      ) {
-        const freedColumn = activeColumnsHeap.pop()!.columnIndex;
-        availableColumnsHeap.push(freedColumn);
-      }
-
-      // Assign a column
-      let assignedColumn: number;
-      if (!availableColumnsHeap.isEmpty()) {
-        assignedColumn = availableColumnsHeap.pop()!;
-      } else {
-        assignedColumn = maxColumns;
-        maxColumns += 1;
-      }
-
-      // Assign columnIndex and push to activeColumnsHeap
-      event.columnIndex = assignedColumn;
-      activeColumnsHeap.push({
-        endTime: event.endTime.getTime(),
-        columnIndex: assignedColumn,
-      });
-
-      // Add to current group with start and end times adjusted to the timezone
-      currentGroup.push({
-        ...event,
-        startTime: new Date(new TZDateMini(event.startTime, event.timezone)),
-        endTime: new Date(new TZDate(event.endTime, event.timezone)),
-      });
-    } else {
-      activeEvents.delete(event.eventOccurrenceId);
-      // Note: The column is already released in the "start" event processing
-    }
-
-    // If no active events, push the current group and reset
-    if (activeEvents.size === 0) {
-      // Set totalColumns for the group
-      const totalCols = maxColumns;
-      currentGroup.forEach((occ) => {
-        occ.totalColumns = totalCols;
-      });
-      // Clear the heaps for the next group
-      activeColumnsHeap.removeAll();
-      availableColumnsHeap.removeAll();
-      groups.push(currentGroup);
-      currentGroup = [];
-      maxColumns = 0;
-    }
-  });
-
-  return groups.flat();
-};
-
-type DayGroupedEventOccurrences = Record<string, GroupedOccurrence[]>;
-
-export const groupEventOccurrencesByDayAndTime = (
-  eventOccurrences: CalendarEventOccurrence[],
-) => {
-  const eventOccurrencesByDay = eventOccurrences.reduce<
-    Record<string, CalendarEventOccurrence[]>
-  >((ocurrencesByDay, occurrence) => {
-    const dayKey = getEventOccurrenceDayKey(occurrence.startTime);
-
-    if (!ocurrencesByDay[dayKey]) {
-      ocurrencesByDay[dayKey] = [];
-    }
-    ocurrencesByDay[dayKey].push(occurrence);
-    return ocurrencesByDay;
-  }, {});
-
-  const groupedEventOccurrences: DayGroupedEventOccurrences = {};
-
-  Object.entries(eventOccurrencesByDay).forEach(
-    ([day, dayEventOccurrences]) => {
-      groupedEventOccurrences[day] =
-        sweepLineGroupOverlappingOccurrences(dayEventOccurrences);
-    },
-  );
-
-  return groupedEventOccurrences;
-};
-
-// --------------------- NEWWWWW ---------------------
-
-export type GroupedOccurrence_ = Occurrence & {
-  columnIndex: number;
-  totalColumns: number;
-};
-
-interface TimePoint_ {
-  time: number;
-  type: "start" | "end";
-  occurrence: GroupedOccurrence_;
-}
-
-type DayGroupedEventOccurrences_ = Record<string, GroupedOccurrence_[]>;
-
-export const _sweepLineGroupOverlappingOccurrences = (
-  occurrences: Occurrence[],
-): GroupedOccurrence_[] => {
+export const groupOverlappingOccurrences = (
+  occurrences: DatedOccurrence[],
+): OccurrenceGridPosition[] => {
   if (occurrences.length === 0) {
     return [];
   }
 
   // Create time points for all start and end times
-  const times: TimePoint_[] = occurrences.flatMap((occurrence) => [
+  const timeBoundaries: TimeBoundary[] = occurrences.flatMap((occurrence) => [
     {
-      time: new Date(
-        new TZDateMini(occurrence.startTime, occurrence.timezone),
-      ).getTime(),
+      time: occurrence.startTime.epochMilliseconds,
       type: "start",
-      occurrence: { ...occurrence, columnIndex: 0, totalColumns: 0 },
+      occurrenceId: occurrence.id,
     },
     {
-      time: new Date(
-        new TZDateMini(occurrence.endTime, occurrence.timezone),
-      ).getTime(),
+      time: occurrence.endTime.epochMilliseconds,
       type: "end",
-      occurrence: {
-        ...occurrence,
-        columnIndex: 0,
-        totalColumns: 0,
-      },
+      occurrenceId: occurrence.id,
     },
   ]);
 
-  times.sort((a, b) => {
+  timeBoundaries.sort((a, b) => {
     if (a.time !== b.time) return a.time - b.time;
     return a.type === "end" ? -1 : 1; // 'end' comes before 'start' if times are equal
   });
 
-  const groups: GroupedOccurrence_[][] = [];
+  const occurrencesMap = new Map<number, DatedOccurrence>(
+    occurrences.map((occurrence) => [occurrence.id, occurrence]),
+  );
+  const groups: OccurrenceGridPosition[][] = [];
   const activeEvents: Set<number> = new Set();
 
   // Heap to keep track of active columns sorted by endTime
@@ -231,18 +51,19 @@ export const _sweepLineGroupOverlappingOccurrences = (
   const availableColumnsHeap = new Heap<number>((a, b) => a - b);
 
   let maxColumns = 0;
-  let currentGroup: GroupedOccurrence_[] = [];
+  let currentGroup: OccurrenceGridPosition[] = [];
 
-  times.forEach((point) => {
-    const occurrence = point.occurrence;
+  timeBoundaries.forEach((timeBoundary) => {
+    const occurrence = occurrencesMap.get(timeBoundary.occurrenceId);
+    if (!occurrence) return;
 
-    if (point.type === "start") {
-      activeEvents.add(occurrence.occurrenceId);
+    if (timeBoundary.type === "start") {
+      activeEvents.add(occurrence.id);
 
       // Release all columns that have ended before the current event's start time
       while (
         !activeColumnsHeap.isEmpty() &&
-        activeColumnsHeap.peek()!.endTime <= point.time
+        activeColumnsHeap.peek()!.endTime <= timeBoundary.time
       ) {
         const freedColumn = activeColumnsHeap.pop()!.columnIndex;
         availableColumnsHeap.push(freedColumn);
@@ -257,24 +78,18 @@ export const _sweepLineGroupOverlappingOccurrences = (
         maxColumns += 1;
       }
 
-      // Assign columnIndex and push to activeColumnsHeap
-      occurrence.columnIndex = assignedColumn;
       activeColumnsHeap.push({
-        endTime: occurrence.endTime.getTime(),
+        endTime: occurrence.endTime.epochMilliseconds,
         columnIndex: assignedColumn,
       });
 
-      // Add to current group with start and end times adjusted to the timezone
       currentGroup.push({
-        ...occurrence,
-        startTime: new Date(
-          new TZDateMini(occurrence.startTime, occurrence.timezone),
-        ),
-        endTime: new Date(new TZDate(occurrence.endTime, occurrence.timezone)),
+        occurrenceId: occurrence.id,
+        columnIndex: assignedColumn,
+        totalColumns: maxColumns,
       });
     } else {
-      activeEvents.delete(occurrence.occurrenceId);
-      // Note: The column is already released in the "start" event processing
+      activeEvents.delete(occurrence.id);
     }
 
     // If no active events, push the current group and reset
@@ -294,28 +109,4 @@ export const _sweepLineGroupOverlappingOccurrences = (
   });
 
   return groups.flat();
-};
-
-export const _groupOccurrencesByDayAndTime = (occurrences: Occurrence[]) => {
-  const occurrencesByDay = occurrences.reduce<Record<string, Occurrence[]>>(
-    (ocurrencesByDay, occurrence) => {
-      const dayKey = getEventOccurrenceDayKey(new Date(occurrence.startTime));
-
-      if (!ocurrencesByDay[dayKey]) {
-        ocurrencesByDay[dayKey] = [];
-      }
-      ocurrencesByDay[dayKey].push(occurrence);
-      return ocurrencesByDay;
-    },
-    {},
-  );
-
-  const groupedOccurrences: DayGroupedEventOccurrences_ = {};
-
-  Object.entries(occurrencesByDay).forEach(([day, occurrences]) => {
-    groupedOccurrences[day] =
-      _sweepLineGroupOverlappingOccurrences(occurrences);
-  });
-
-  return groupedOccurrences;
 };

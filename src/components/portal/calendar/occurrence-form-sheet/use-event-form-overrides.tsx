@@ -1,68 +1,67 @@
 import { useCalendarStore } from "@/providers/calendar-store-provider";
-import { removeNullValues } from "@/utils/remove-null-values";
-import { CalendarDate, Time } from "@internationalized/date";
-import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import type { UseFormReturn } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import type { z } from "zod";
 import { useShallow } from "zustand/react/shallow";
-import { consumeOccurrenceOverrides } from "../utils";
 import type { OccurrenceFormSchema } from "./schema";
 import { defaultformData } from "./utils";
 
-export const useEventFormOverrides = (
-  form: UseFormReturn<z.infer<typeof OccurrenceFormSchema>>,
-) => {
-  const searchParams = useSearchParams();
-  const { eventOccurrences, editingEventOccurrenceId } = useCalendarStore(
+type OccurrenceForm = z.infer<typeof OccurrenceFormSchema>;
+
+//TODO: EXPLORE THIS HOOK
+export const useEventFormOverrides = () => {
+  const { reset } = useFormContext();
+
+  const { editedOccurrenceId } = useCalendarStore(
     useShallow((store) => ({
-      eventOccurrences: store.eventOccurrences,
-      editingEventOccurrenceId: store.editingEventOccurrenceId,
+      editedOccurrenceId: store.editedOccurrenceId,
     })),
   );
 
-  //Overrides from draft events in search params
+  const edittedOccurrence = useCalendarStore(
+    useShallow((store) => store.occurrences.get(editedOccurrenceId ?? -2)),
+  );
+
+  // Memoize parsed occurrence data to prevent unnecessary resets
+
+  //Handle URL parameter overrides
+  // useUpdateEffect(() => {
+  //   console.time("url");
+  //   if (!paramsOverrides) return;
+  //   console.timeEnd("url");
+
+  //   console.log("update URL parameters");
+  //   const update: Partial<z.infer<typeof OccurrenceFormSchema>> = {};
+
+  //   if (paramsOverrides.date) update.date = paramsOverrides.date;
+  //   if (paramsOverrides.startTime) update.startTime = paramsOverrides.startTime;
+  //   if (paramsOverrides.endTime) update.endTime = paramsOverrides.endTime;
+  //   if (paramsOverrides.timezone) update.timezone = paramsOverrides.timezone;
+
+  //   if (Object.keys(update).length > 0) {
+  //     setValue("date", update.date ?? getValues("date"));
+  //     // Use silent update to prevent validation triggers
+  //     Object.entries(update).forEach(([key, value]) => {
+  //       setValue(key as keyof OccurrenceForm, value, {
+  //         shouldValidate: false,
+  //         shouldDirty: false,
+  //       });
+  //     });
+  //   }
+  // }, [paramsOverrides]);
+
+  // Handle occurrence edits
   useEffect(() => {
-    const overrides = consumeOccurrenceOverrides(searchParams);
-    if (!overrides) return;
-    const { date, startTime, endTime, timezone } = overrides;
-    if (date) {
-      form.setValue("date", date);
-    }
-    if (startTime) {
-      form.setValue("startTime", startTime);
-    }
-    if (endTime) {
-      form.setValue("endTime", endTime);
-    }
-    if (timezone) {
-      form.setValue("timezone", timezone);
-    }
-  }, [searchParams, form.setValue]);
+    if (!edittedOccurrence) return;
 
-  useEffect(() => {
-    if (!editingEventOccurrenceId) return;
-    const eventOccurrence = eventOccurrences?.[editingEventOccurrenceId];
+    const { startTime, endTime, ...rest } = edittedOccurrence;
+    if (!startTime || !endTime) return;
 
-    if (!eventOccurrence) return;
-
-    // Remove null values from event occurrence
-    const clean = removeNullValues(eventOccurrence);
-    const { userId, startTime, endTime, ...rest } = clean;
-
-    const startTimeDate = new Date(startTime);
-    const endTimeDate = new Date(endTime);
-
-    form.reset({
-      ...defaultformData,
-      date: new CalendarDate(
-        startTimeDate.getFullYear(),
-        startTimeDate.getMonth() + 1,
-        startTimeDate.getDate(),
-      ),
-      startTime: new Time(startTimeDate.getHours(), startTimeDate.getMinutes()),
-      endTime: new Time(endTimeDate.getHours(), endTimeDate.getMinutes()),
-      ...rest,
+    reset({
+      ...defaultformData, // Ensure default values are properly typed
+      // date: new CalendarDate(startTime.year, startTime.month, startTime.day),
+      // startTime: new Time(startTime.hour, startTime.minute),
+      // endTime: new Time(endTime.hour, endTime.minute),
     });
-  }, [editingEventOccurrenceId, eventOccurrences, form.reset]);
+  }, [edittedOccurrence]);
 };

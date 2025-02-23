@@ -1,15 +1,10 @@
-import type { CalendarView } from "@/stores/calendar-store";
+import { getEndOfWeek, getStartOfWeek } from "@/lib/temporal/week";
 import { CalendarDate, CalendarDateTime, Time } from "@internationalized/date";
-import {
-  add,
-  addDays,
-  endOfWeek,
-  format,
-  isSameMonth,
-  startOfWeek,
-} from "date-fns";
+import { Temporal } from "@js-temporal/polyfill";
+import { add } from "date-fns";
 import type { ReadonlyURLSearchParams } from "next/navigation";
 import type { z } from "zod";
+import type { CalendarView, DatedOccurrence } from "./calendar.types";
 import type { OccurrenceFormSchema } from "./occurrence-form-sheet/schema";
 
 export const ROW_HEIGHT = 48;
@@ -19,45 +14,54 @@ const CALENDAR_END_HOUR = 24; // Adjust based on your calendar's end hour
 const TOTAL_MINUTES = (CALENDAR_END_HOUR - CALENDAR_START_HOUR) * 60;
 const PIXELS_PER_MINUTE = ROW_HEIGHT / 60;
 export const PIXELS_PER_15_MINUTES = ROW_HEIGHT / 4;
-export const getWeekBoundaries = (date: Date) => {
-  // You can specify which day to consider as the start of the week; by default, it is Sunday (0).
-  // To set Monday as the start of the week, we can pass { weekStartsOn: 1 }.
-  const startDay = startOfWeek(date, { weekStartsOn: 1 });
-  const lastDay = endOfWeek(date, { weekStartsOn: 1 });
-
-  return { startDay, lastDay };
-};
-
-export const getWeekDays = (date: Date): Date[] => {
-  const startDay = startOfWeek(date, { weekStartsOn: 1 });
-  return Array.from({ length: 7 }).map((_, i) => addDays(startDay, i));
-};
-
-export const getMonthName = (date: Date): string => format(date, "LLLL");
-export const getYearNumber = (date: Date): number =>
-  Number.parseInt(format(date, "yyyy"), 10);
 
 export const formatCalendarHeaderTitle = (
-  date: Date,
+  date: Temporal.PlainDate,
   calendarType: CalendarView,
 ) => {
+  const startOfWeek = getStartOfWeek(date);
+  const startOfWeekMonth = startOfWeek.toLocaleString("en-US", {
+    month: "long",
+  });
+  const startOfWeekDay = startOfWeek.toLocaleString("en-US", {
+    day: "numeric",
+  });
+
+  const endOfWeek = getEndOfWeek(date);
+  const endOfWeekMonth = endOfWeek.toLocaleString("en-US", {
+    month: "long",
+  });
+  const endOfWeekDay = endOfWeek.toLocaleString("en-US", {
+    day: "numeric",
+  });
+
+  const year = date.toLocaleString("en-US", { year: "numeric" });
+  const month = date.toLocaleString("en-US", { month: "long" });
+  const day = date.toLocaleString("en-US", { day: "numeric" });
   switch (calendarType) {
     case "day":
-      return format(date, "d LLLL, yyyy");
-    case "week":
-      return `${format(startOfWeek(date, { weekStartsOn: 1 }), "d LLLL")} - ${format(
-        endOfWeek(date, { weekStartsOn: 1 }),
-        "d LLLL",
-      )} ${format(date, "yyyy")}`;
+      return `${day} ${month}, ${year}`;
+    case "week": {
+      return `${startOfWeekDay} ${startOfWeekMonth} - ${endOfWeekDay} ${endOfWeekMonth}, ${year}`;
+    }
+
     case "month":
-      return format(date, "LLLL, yyyy");
+      return `${month} ${year}`;
 
     case "agenda": {
-      const rangeEndDate = addDays(date, 14);
-      if (isSameMonth(date, rangeEndDate)) {
-        return `${format(date, "LLLL, yyyy")}`;
+      const rangeEndDate = date.add({ days: 14 });
+      if (date.month === rangeEndDate.month) {
+        return `${month} ${year}`;
       }
-      return `${format(date, "LLLL, yyyy")} - ${format(rangeEndDate, "LLLL, yyyy")}`;
+
+      const rangeEndMonth = rangeEndDate.toLocaleString("en-US", {
+        month: "long",
+      });
+      const rangeEndYear = rangeEndDate.toLocaleString("en-US", {
+        year: "numeric",
+      });
+
+      return `${month} ${year} - ${rangeEndMonth} ${rangeEndYear}`;
     }
     default:
       return "";
@@ -93,6 +97,29 @@ export const generateOccurrenceEncodedOverrides = ({
   return encodedOverrides;
 };
 
+const parseDateTimeString = (str?: string) => {
+  if (!str) return undefined;
+
+  // Use regex with named capture groups for better type safety
+  const match = str.match(
+    /^(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})T(?<hour>\d{2})(?<minute>\d{2})/,
+  );
+
+  if (!match?.groups) return undefined;
+
+  // Type guard for parsed values
+  const { year, month, day, hour, minute } = match.groups;
+  if (!year || !month || !day || !hour || !minute) return undefined;
+
+  return {
+    year: Number.parseInt(year, 10),
+    month: Number.parseInt(month, 10),
+    day: Number.parseInt(day, 10),
+    hour: Number.parseInt(hour, 10),
+    minute: Number.parseInt(minute, 10),
+  };
+};
+
 export const consumeOccurrenceOverrides = (
   searchParams: ReadonlyURLSearchParams,
 ): Partial<z.infer<typeof OccurrenceFormSchema>> | undefined => {
@@ -104,26 +131,31 @@ export const consumeOccurrenceOverrides = (
       decodeURIComponent(encodedOverrides),
     );
 
-    const [startDateString, endDateString, timezone] = overridesArray;
+    const [startDateString, endDateString] = overridesArray;
+    const [startDate, endDate] = [
+      parseDateTimeString(startDateString),
+      parseDateTimeString(endDateString),
+    ];
 
-    const startDate = startDateString ? new Date(startDateString) : undefined;
-    const endDate = endDateString ? new Date(endDateString) : undefined;
+    const date =
+      startDate?.year && startDate.month && startDate.day
+        ? new CalendarDate(startDate.year, startDate.month, startDate.day)
+        : undefined;
+
+    const startTime =
+      startDate?.hour !== undefined && startDate?.minute !== undefined
+        ? new Time(startDate.hour, startDate.minute)
+        : undefined;
+
+    const endTime =
+      endDate?.hour !== undefined && endDate?.minute !== undefined
+        ? new Time(endDate.hour, endDate.minute)
+        : undefined;
 
     return {
-      date: startDate
-        ? new CalendarDate(
-            startDate.getFullYear(),
-            startDate.getMonth() + 1,
-            startDate.getDate(),
-          )
-        : undefined,
-      startTime: startDate
-        ? new Time(startDate.getHours(), startDate.getMinutes())
-        : undefined,
-      endTime: endDate
-        ? new Time(endDate.getHours(), endDate.getMinutes())
-        : undefined,
-      timezone,
+      date,
+      startTime,
+      endTime,
     };
   } catch (error) {
     console.error("Error parsing occurrence overrides:", error);
@@ -131,9 +163,40 @@ export const consumeOccurrenceOverrides = (
   }
 };
 
-export const getEventOccurrenceDayKey = (date: Date) => {
-  if (!date) return "";
-  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+export const generateOccurrenceOverrides = (
+  draftOccurrence: DatedOccurrence,
+) => {
+  const formattedStartTime = draftOccurrence.startTime
+    .toPlainDateTime()
+    .toString({
+      calendarName: "never",
+      fractionalSecondDigits: 0,
+    })
+    .replace(/[-:]/g, "");
+
+  const formattedEndTime = draftOccurrence.endTime
+    .toPlainDateTime()
+    .toString({
+      calendarName: "never",
+      fractionalSecondDigits: 0,
+    })
+    .replace(/[-:]/g, "");
+
+  const overrides = [formattedStartTime, formattedEndTime];
+  const params = new URLSearchParams({
+    overrides: encodeURIComponent(JSON.stringify(overrides)),
+  });
+
+  return params.toString();
+};
+
+export const getDayKeyFromDate = (
+  date: Temporal.ZonedDateTime | Temporal.PlainDate | Temporal.PlainDateTime,
+): string => {
+  const year = date.year;
+  const month = date.month;
+  const day = date.day;
+  return `${year}-${month}-${day}`;
 };
 
 export const calculateOccurrenceTop = ({
@@ -145,11 +208,12 @@ export const calculateOccurrenceTop = ({
 };
 
 export const calculateOccurrenceHeight = (
-  startTime: Date,
-  endTime: Date,
+  startTime: Temporal.ZonedDateTime,
+  endTime: Temporal.ZonedDateTime,
 ): number => {
-  const start = startTime.getTime();
-  const end = endTime.getTime();
+  const start = startTime.epochMilliseconds;
+  const end = endTime.epochMilliseconds;
+
   const duration = (end - start) / (1000 * 60); // Duration in minutes
   return duration * PIXELS_PER_MINUTE;
 };
@@ -170,7 +234,6 @@ export const getDateFromSnapIndex = ({
 };
 
 export const DEFAULT_EVENT_COLOR = "tangerine";
-// Ordered array (hue progression)
 
 export const CALENDAR_EVENT_COLORS_ARRAY = [
   // Neutrals (hue 0° or near-neutral)
@@ -244,3 +307,19 @@ export const CALENDAR_EVENT_COLORS_MAP = new Map(
 export const getCalendarColor = (color?: string) =>
   CALENDAR_EVENT_COLORS_MAP.get(color || "") ??
   CALENDAR_EVENT_COLORS_MAP.get(DEFAULT_EVENT_COLOR);
+
+export const getCurrentTimezone = () => {
+  const instant = Temporal.Now.instant();
+  const timezoneId = Temporal.Now.timeZoneId();
+  const timezone = Temporal.TimeZone.from(timezoneId);
+
+  const offsetNs = timezone.getOffsetNanosecondsFor(instant);
+  const offsetHours = offsetNs / 3_600_000_000_000; // 1 hour = 3.6e+12 ns
+  const offsetString = `${Math.floor(offsetHours)}:${String(Math.abs((offsetNs % 3_600_000_000_000) / 60_000_000_000)).padStart(2, "0")}`;
+
+  return {
+    id: timezoneId,
+    offsetHours,
+    offsetString,
+  };
+};

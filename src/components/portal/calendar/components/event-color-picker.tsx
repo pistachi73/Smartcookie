@@ -26,8 +26,6 @@ export const EventColorPicker = <T extends object>({
   popoverProps,
   ...props
 }: EventColorPickerProps<T>) => {
-  console.log({ selectedKey });
-
   const selectedColor = selectedKey
     ? CALENDAR_EVENT_COLORS_MAP.get(selectedKey as string)
     : CALENDAR_EVENT_COLORS_MAP.get(DEFAULT_EVENT_COLOR);

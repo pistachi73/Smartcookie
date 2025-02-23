@@ -5,12 +5,11 @@ import { type ReactNode, createContext, use, useState } from "react";
 import { useStore } from "zustand";
 
 import {
-  type CalendarState,
   type CalendarStore,
+  type InitCalendarState,
   createCalendarStore,
   initCalendarStore,
 } from "@/stores/calendar-store";
-
 export type CalendarStoreApi = ReturnType<typeof createCalendarStore>;
 
 export const CalendarStoreContext = createContext<CalendarStoreApi | undefined>(
@@ -19,7 +18,7 @@ export const CalendarStoreContext = createContext<CalendarStoreApi | undefined>(
 
 export interface CalendarStoreProviderProps {
   children: ReactNode;
-  initialCalendarStore?: Partial<CalendarState>;
+  initialCalendarStore?: InitCalendarState;
   skipHydration?: boolean;
 }
 

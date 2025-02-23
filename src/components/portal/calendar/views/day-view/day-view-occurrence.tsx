@@ -1,61 +1,59 @@
 import { Popover } from "@/components/ui/new/ui";
-import type { GroupedOccurrence } from "@/lib/group-overlapping-occurrences";
 import { cn } from "@/lib/utils";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
-import { format } from "date-fns";
-import { useState } from "react";
+import dynamic from "next/dynamic";
 import { Button } from "react-aria-components";
 import { useShallow } from "zustand/react/shallow";
-import { EventOccurrencePopover } from "../../components/event-occurrence-popover-content";
+import { formatDate24Hour } from "../../../../../lib/temporal-formatting/index";
+import type { OccurrenceGridPosition } from "../../calendar.types";
+import { useMergedOccurrence } from "../../hooks/use-merged-occurrence";
 import {
-  CALENDAR_EVENT_COLORS_MAP,
-  DEFAULT_EVENT_COLOR,
   PIXELS_PER_15_MINUTES,
   calculateOccurrenceHeight,
   calculateOccurrenceTop,
+  getCalendarColor,
 } from "../../utils";
+
+const LazyPopoverContent = dynamic(() =>
+  import("../../components/event-occurrence-popover-content").then(
+    (mod) => mod.EventOccurrencePopover,
+  ),
+);
 
 const useDayViewOccurrence = () =>
   useCalendarStore(
-    useShallow(({ editingEventOccurrenceId, getMergedOccurrence }) => ({
-      editingEventOccurrenceId,
-      getMergedOccurrence,
+    useShallow(({ editedOccurrenceId }) => ({
+      editedOccurrenceId,
     })),
   );
 
 export const DayViewOccurrence = ({
-  occurrence: occurrence_,
-}: {
-  occurrence: GroupedOccurrence;
-}) => {
-  const { editingEventOccurrenceId, getMergedOccurrence } =
-    useDayViewOccurrence();
-  const occurrence = getMergedOccurrence(occurrence_.eventOccurrenceId);
+  occurrenceId,
+  columnIndex,
+  totalColumns,
+}: OccurrenceGridPosition) => {
+  const { editedOccurrenceId } = useDayViewOccurrence();
+  const mergedOccurrence = useMergedOccurrence({ occurrenceId });
 
-  if (!occurrence) return null;
-  console.log({ occurrence, id: occurrence.eventOccurrenceId });
+  if (!mergedOccurrence) return null;
 
-  if (occurrence.isDraft) return null;
-
-  const [heightPx, setHeightPx] = useState(
-    calculateOccurrenceHeight(occurrence.startTime, occurrence.endTime),
+  const heightPx = calculateOccurrenceHeight(
+    mergedOccurrence.startTime,
+    mergedOccurrence.endTime,
   );
 
-  const widthPercentage = 100 / occurrence.totalColumns;
-
   const topPx = calculateOccurrenceTop({
-    hours: occurrence.startTime.getHours(),
-    minutes: occurrence.startTime.getMinutes(),
+    hours: mergedOccurrence.startTime.hour,
+    minutes: mergedOccurrence.startTime.minute,
   });
 
-  const isShortEvent = heightPx / PIXELS_PER_15_MINUTES <= 4;
-  const startTimeLabel = format(occurrence.startTime, "HH:mm");
-  const endTimeLabel = format(occurrence.endTime, "HH:mm");
+  const startTimeLabel = formatDate24Hour(mergedOccurrence.startTime);
+  const endTimeLabel = formatDate24Hour(mergedOccurrence.endTime);
+  const eventColor = getCalendarColor(mergedOccurrence.color);
 
-  const isEditing = editingEventOccurrenceId === occurrence.eventOccurrenceId;
-  const eventColor =
-    CALENDAR_EVENT_COLORS_MAP.get(occurrence.color) ??
-    CALENDAR_EVENT_COLORS_MAP.get(DEFAULT_EVENT_COLOR);
+  const widthPercentage = 100 / totalColumns;
+  const isShortEvent = heightPx / PIXELS_PER_15_MINUTES <= 4;
+  const isEditing = editedOccurrenceId === occurrenceId;
 
   return (
     <Popover>
@@ -68,7 +66,7 @@ export const DayViewOccurrence = ({
           top: `${topPx}px`,
           height: `${heightPx}px`,
           width: `${widthPercentage}%`,
-          left: `${occurrence.columnIndex * widthPercentage}%`,
+          left: `${columnIndex * widthPercentage}%`,
         }}
       >
         <div
@@ -88,7 +86,7 @@ export const DayViewOccurrence = ({
             )}
           >
             <p className="truncate font-semibold leading-tight text-xs">
-              {occurrence.title ? occurrence.title : "Untitled"}
+              {mergedOccurrence.title ? mergedOccurrence.title : "Untitled"}
             </p>
 
             <p
@@ -107,7 +105,7 @@ export const DayViewOccurrence = ({
         </div>
       </Button>
 
-      <EventOccurrencePopover occurrence={occurrence} />
+      <LazyPopoverContent occurrence={mergedOccurrence} />
     </Popover>
   );
 };

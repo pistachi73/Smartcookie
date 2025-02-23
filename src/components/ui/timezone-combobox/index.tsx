@@ -1,8 +1,9 @@
 import type { PgTimezone } from "@/data-access/pg";
 import { cn } from "@/lib/utils";
 import { Globe02Icon } from "@hugeicons/react";
+import { getLocalTimeZone } from "@internationalized/date";
 import { useQuery } from "@tanstack/react-query";
-import { createContext, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   ComboBox,
   type ComboBoxListProps,
@@ -24,12 +25,6 @@ type TimezoneComboboxProps<T extends object> = Omit<
   };
   listProps?: ComboBoxListProps<T>;
 };
-
-const TimezoneComboboxxt = createContext<{
-  items: PgTimezone[] | undefined;
-}>({
-  items: undefined,
-});
 
 export const TimezoneCombobox = <T extends object>({
   className,
@@ -65,6 +60,7 @@ export const TimezoneCombobox = <T extends object>({
       menuTrigger="focus"
       isDisabled={isDisabled || isLoading}
       selectedKey={selectedKey}
+      defaultSelectedKey={getLocalTimeZone()}
       onFocusChange={setIsFocused}
       className={cn("min-w-0 relative", className?.primitive)}
       {...props}

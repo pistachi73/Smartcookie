@@ -1,37 +1,38 @@
 import { Popover, type PopoverContentProps } from "@/components/ui/new/ui";
-import type { GroupedCalendarOccurrence } from "@/lib/group-overlapping-occurrences";
+import { get24HourTime } from "@/lib/temporal/format";
 import { cn } from "@/lib/utils";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
-import { format } from "date-fns";
 import { Button } from "react-aria-components";
 import { useShallow } from "zustand/react/shallow";
 import { EventOccurrencePopover } from "../../components/event-occurrence-popover-content";
-import { CALENDAR_EVENT_COLORS_MAP, DEFAULT_EVENT_COLOR } from "../../utils";
+import { useMergedOccurrence } from "../../hooks/use-merged-occurrence";
+import { getCalendarColor } from "../../utils";
 
 const useMonthViewOccurrence = () =>
   useCalendarStore(
     useShallow((store) => ({
-      editingEventOccurrenceId: store.editingEventOccurrenceId,
+      editedOccurrenceId: store.editedOccurrenceId,
     })),
   );
 
 export const MonthViewOccurrence = ({
-  occurrence,
+  occurrenceId,
   className,
   popoverProps,
   onEditPress,
 }: {
-  occurrence: GroupedCalendarOccurrence;
+  occurrenceId: number;
   className?: string;
   popoverProps?: Omit<PopoverContentProps, "children">;
   onEditPress?: () => void;
 }) => {
-  const { editingEventOccurrenceId } = useMonthViewOccurrence();
-  const color =
-    CALENDAR_EVENT_COLORS_MAP.get(occurrence.color) ??
-    CALENDAR_EVENT_COLORS_MAP.get(DEFAULT_EVENT_COLOR);
+  const { editedOccurrenceId } = useMonthViewOccurrence();
+  const mergedOccurrence = useMergedOccurrence({ occurrenceId });
+  if (!mergedOccurrence) return null;
 
-  const isEditing = editingEventOccurrenceId === occurrence.eventOccurrenceId;
+  const color = getCalendarColor(mergedOccurrence.color);
+  const isEditing = editedOccurrenceId === mergedOccurrence.occurrenceId;
+
   return (
     <Popover>
       <Button
@@ -44,16 +45,16 @@ export const MonthViewOccurrence = ({
         )}
       >
         <p className="truncate font-semibold leading-tight">
-          {occurrence.title ? occurrence.title : "Untitled"}
+          {mergedOccurrence.title ? mergedOccurrence.title : "Untitled"}
         </p>
 
         <p className={cn("text-current/70")}>
-          {format(occurrence.startTime, "HH:mm")}
+          {get24HourTime(mergedOccurrence.startTime)}
         </p>
       </Button>
 
       <EventOccurrencePopover
-        occurrence={occurrence}
+        occurrence={mergedOccurrence}
         onEditPress={onEditPress}
         popoverProps={{
           placement: "top",

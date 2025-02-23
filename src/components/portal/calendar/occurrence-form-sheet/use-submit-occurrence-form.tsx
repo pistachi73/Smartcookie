@@ -4,38 +4,22 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useShallow } from "zustand/react/shallow";
 import { createEventAction, editNonRecurrentEventAction } from "../actions";
-import { mapDBOccurrencesToCalendarEvents } from "./utils";
 
 export const useSubmitOccurrenceForm = () => {
-  const {
-    updateOccurrences,
-    clearEditingEventOccurrence,
-    clearDraftEventOccurrence,
-    setActiveSidebar,
-  } = useCalendarStore(
-    useShallow(
-      ({
-        updateOccurrences,
-        setActiveSidebar,
-        addEventOccurrences,
-        removeEventOccurreces,
-        clearEditingEventOccurrence,
-        clearDraftEventOccurrence,
-      }) => ({
-        updateOccurrences,
-        setActiveSidebar,
-        addEventOccurrences,
-        removeEventOccurreces,
-        clearEditingEventOccurrence,
-        clearDraftEventOccurrence,
-      }),
-    ),
-  );
+  const { updateOccurrences, removeOccurrences, setEdittedOccurrenceId } =
+    useCalendarStore(
+      useShallow(
+        ({ updateOccurrences, removeOccurrences, setEdittedOccurrenceId }) => ({
+          updateOccurrences,
+          removeOccurrences,
+          setEdittedOccurrenceId,
+        }),
+      ),
+    );
 
   const onMutationSuccess = () => {
-    clearEditingEventOccurrence();
-    clearDraftEventOccurrence();
-    setActiveSidebar("main");
+    setEdittedOccurrenceId(undefined);
+    removeOccurrences(-1, { silent: true });
   };
 
   const { mutate: createEvent, isPending: isCreatingEvent } = useMutation({
@@ -46,12 +30,12 @@ export const useSubmitOccurrenceForm = () => {
         return;
       }
 
-      updateOccurrences(
-        mapDBOccurrencesToCalendarEvents({
-          event: output.data.createdEvent,
-          occurrences: output.data.createdOccurrences,
-        }),
-      );
+      // updateOccurrences(
+      //   mapDBOccurrencesToCalendarEvents({
+      //     event: output.data.createdEvent,
+      //     occurrences: output.data.createdOccurrences,
+      //   }),
+      // );
     },
     onError: (error) => {
       toast.error(error.message);
@@ -68,15 +52,14 @@ export const useSubmitOccurrenceForm = () => {
         return;
       }
 
-      updateOccurrences(
-        mapDBOccurrencesToCalendarEvents({
-          event: output.data.updatedEvent,
-          occurrences: output.data.updatedOccurrences,
-        }),
-      );
+      // updateOccurrences(
+      //   mapDBOccurrencesToCalendarEvents({
+      //     event: output.data.updatedEvent,
+      //     occurrences: output.data.updatedOccurrences,
+      //   }),
+      // );
       onMutationSuccess();
       toast.success("Event updated successfully!");
-      onMutationSuccess();
     },
   });
 

@@ -1,7 +1,8 @@
 import { VERCEL_HEADERS } from "@/app-config";
 import { getCalendarDataAction } from "@/components/portal/calendar/actions";
 import { CalendarStoreProvider } from "@/providers/calendar-store-provider";
-import type { CalendarStore, CalendarView } from "@/stores/calendar-store";
+import type { CalendarView, InitCalendarState } from "@/stores/calendar-store";
+import { Temporal } from "@js-temporal/polyfill";
 import { headers } from "next/headers";
 
 const isCalendarView = (
@@ -23,7 +24,7 @@ const parseCalendarLayoutPathname = (
   pathname: string | null,
 ): {
   skipHydration: boolean;
-  initialCalendarStore?: Partial<CalendarStore>;
+  initialCalendarStore?: InitCalendarState;
 } => {
   if (!pathname) return { skipHydration: false };
 
@@ -52,16 +53,18 @@ const parseCalendarLayoutPathname = (
     };
   }
 
+  const selectedDate = new Temporal.PlainDate(
+    Number(yearOrEventId),
+    Number(month),
+    Number(day),
+  );
+
   return {
     skipHydration: true,
     initialCalendarStore: {
       _isHydrated: true,
       calendarView,
-      selectedDate: new Date(
-        Number(yearOrEventId),
-        Number(month) - 1,
-        Number(day),
-      ),
+      selectedDate: selectedDate.toString(),
     },
   };
 };

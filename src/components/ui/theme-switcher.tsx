@@ -1,5 +1,6 @@
 "use client";
 
+import { useIsMounted } from "@/hooks/use-is-mounted";
 import { Moon02Icon, Sun03Icon } from "@hugeicons/react";
 import { useTheme } from "next-themes";
 import { Button } from "./new/ui";
@@ -10,6 +11,9 @@ export function ThemeSwitcher({
   className,
   ...props
 }: React.ComponentProps<typeof Button>) {
+  const isMounted = useIsMounted();
+
+  if (!isMounted) return null;
   const { theme, setTheme } = useTheme();
 
   const toggleTheme = () => {

@@ -1,14 +1,18 @@
 "use client";
-import { Loader } from "@/components/ui/loader";
+import { Loader } from "@/components/ui/new/ui";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
+import dynamic from "next/dynamic";
+import { useShallow } from "zustand/react/shallow";
 import { CalendarView } from "./calendar-view";
 import { CalendarSidebar } from "./components/calendar-sidebar";
-import { EventOccurrenceFormSheet } from "./occurrence-form-sheet";
 
+const LazyEventOccurrenceFormSheet = dynamic(() =>
+  import("./occurrence-form-sheet").then((mod) => mod.EventOccurrenceFormSheet),
+);
 export const Calendar = () => {
-  const _isHydrated = useCalendarStore((store) => store._isHydrated);
-
-  console.log("_isHydrated", _isHydrated);
+  const _isHydrated = useCalendarStore(
+    useShallow((store) => store._isHydrated),
+  );
 
   if (!_isHydrated)
     return (
@@ -26,7 +30,7 @@ export const Calendar = () => {
           <CalendarView />
         </div>
       </div>
-      <EventOccurrenceFormSheet />
+      <LazyEventOccurrenceFormSheet />
     </>
   );
 };

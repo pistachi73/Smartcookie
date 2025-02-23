@@ -5,6 +5,7 @@ import { ResizablePanelRoot } from "@/components/ui/resizable-panel";
 import { Calendar } from "@/components/ui/new/ui";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
 import { CalendarDate } from "@internationalized/date";
+import { Temporal } from "@js-temporal/polyfill";
 import { useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { UpcomingEvents } from "./upcoming-events";
@@ -19,14 +20,10 @@ const useCalendarSidebar = () =>
   );
 
 export const CalendarSidebar = () => {
-  const { hubs, selectDate, selectedDate } = useCalendarSidebar();
+  const { selectDate, selectedDate } = useCalendarSidebar();
 
   const calendarValue = selectedDate
-    ? new CalendarDate(
-        selectedDate.getFullYear(),
-        selectedDate.getMonth() + 1,
-        selectedDate.getDate(),
-      )
+    ? new CalendarDate(selectedDate.year, selectedDate.month, selectedDate.day)
     : undefined;
 
   const [focusedDate, setFocusedDate] = useState<CalendarDate | undefined>(
@@ -36,11 +33,7 @@ export const CalendarSidebar = () => {
   useEffect(() => {
     if (!selectedDate) return;
     setFocusedDate(
-      new CalendarDate(
-        selectedDate.getFullYear(),
-        selectedDate.getMonth() + 1,
-        selectedDate.getDate(),
-      ),
+      new CalendarDate(selectedDate.year, selectedDate.month, selectedDate.day),
     );
   }, [selectedDate]);
 
@@ -55,7 +48,8 @@ export const CalendarSidebar = () => {
               <Calendar
                 value={calendarValue}
                 onChange={(date) => {
-                  selectDate(date.toDate("UTC"));
+                  console.log("date", date);
+                  selectDate(Temporal.PlainDate.from(date.toString()));
                 }}
                 focusedValue={focusedDate}
                 onFocusChange={setFocusedDate}
@@ -63,39 +57,6 @@ export const CalendarSidebar = () => {
             </div>
           </ResizablePanelRoot>
         </div>
-
-        {/* <div className="px-2 py-0.5    rounded-lg">
-          <Disclosure className="border-b-0">
-            <DisclosureTrigger className="sm:text-base py-2">
-              Hubs
-            </DisclosureTrigger>
-            <DisclosurePanel>
-              <CheckboxGroup aria-label="Hubs" className={"ml-1"}>
-                {hubs.map((hub) => (
-                  <Checkbox key={hub.id} value={hub.id.toString()}>
-                    {hub.name}
-                  </Checkbox>
-                ))}
-              </CheckboxGroup>
-            </DisclosurePanel>
-          </Disclosure>
-        </div>
-        <div className="px-2 py-0.5 rounded-lg">
-          <Disclosure className="border-b-0">
-            <DisclosureTrigger className="sm:text-base py-2">
-              Clients
-            </DisclosureTrigger>
-            <DisclosurePanel>
-              <CheckboxGroup aria-label="Clients" className={"ml-1"}>
-                {hubs.map((hub) => (
-                  <Checkbox key={hub.id} value={hub.id.toString()}>
-                    {hub.name}
-                  </Checkbox>
-                ))}
-              </CheckboxGroup>
-            </DisclosurePanel>
-          </Disclosure>
-        </div> */}
       </div>
     </div>
   );

@@ -1,19 +1,24 @@
 import { Popover } from "@/components/ui/new/ui";
-import type { GroupedCalendarOccurrence } from "@/lib/group-overlapping-occurrences";
+import { get24HourTime } from "@/lib/temporal/format";
 import { cn } from "@/lib/utils";
-import { format } from "date-fns";
 import { Button } from "react-aria-components";
 import { EventOccurrencePopover } from "../../components/event-occurrence-popover-content";
+import { useMergedOccurrence } from "../../hooks/use-merged-occurrence";
 import { getCalendarColor } from "../../utils";
 
 export const AgendaViewOccurrence = ({
-  occurrence,
-}: { occurrence: GroupedCalendarOccurrence }) => {
-  const color = getCalendarColor(occurrence.color);
+  occurrenceId,
+}: { occurrenceId: number }) => {
+  const mergedOccurrence = useMergedOccurrence({
+    occurrenceId,
+  });
+
+  if (!mergedOccurrence) return null;
+  const color = getCalendarColor(mergedOccurrence.color);
   return (
     <Popover>
       <Button
-        key={`event-occurrence-${occurrence.eventOccurrenceId}`}
+        key={`event-occurrence-${mergedOccurrence.occurrenceId}`}
         className={cn(
           "relative h-full w-full border brightness-100 flex items-center rounded-md gap-3 px-1 transition-colors",
           "hover:bg-overlay-highlight cursor-pointer",
@@ -31,20 +36,19 @@ export const AgendaViewOccurrence = ({
           )}
         >
           <p className="text-sm line-clamp-2 font-normal leading-tight mb-0.5">
-            {occurrence.title}
+            {mergedOccurrence.title}
           </p>
           <span className="text-xs line-clamp-1 text-text-sub">
-            {format(occurrence.startTime, "HH:mm")} -{" "}
-            {format(occurrence.endTime, "HH:mm")}
+            {get24HourTime(mergedOccurrence.startTime)} -{" "}
+            {get24HourTime(mergedOccurrence.endTime)}
           </span>
         </div>
       </Button>
       <EventOccurrencePopover
-        occurrence={occurrence}
+        occurrence={mergedOccurrence}
         popoverProps={{
           placement: "end",
           offset: -200,
-          // crossOffset: 100,
         }}
       />
     </Popover>

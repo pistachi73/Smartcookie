@@ -1,12 +1,11 @@
-import {
-  type Event,
-  type InsertEvent,
-  type InsertOccurrence,
-  type Occurrence,
+import type {
+  Event,
+  InsertEvent,
+  InsertOccurrence,
+  Occurrence,
 } from "@/db/schema";
-import { SerializedDateValue } from "@/lib/serialize-react-aria/serialize-date-value";
-import { SerializedTime } from "@/lib/serialize-react-aria/serialize-time";
-import type { CalendarEventOccurrence } from "@/stores/calendar-store";
+import type { SerializedDateValue } from "@/lib/serialize-react-aria/serialize-date-value";
+import type { SerializedTime } from "@/lib/serialize-react-aria/serialize-time";
 import { getLocalTimeZone } from "@internationalized/date";
 import { addDays, setHours, setMinutes } from "date-fns";
 import { RRule } from "rrule";
@@ -156,7 +155,7 @@ export const mapDBOccurrenceToCalendarEvent = ({
     price: event.price || null,
     isRecurring: event.isRecurring || false,
     timezone: event.timezone || getLocalTimeZone(),
-    eventOccurrenceId: occurrence.id,
+    eventOccurrenceId: occurrence?.id,
     startTime: occurrence?.startTime
       ? new Date(`${occurrence.startTime}Z`)
       : new Date(`${event.startTime}Z`),
@@ -166,31 +165,31 @@ export const mapDBOccurrenceToCalendarEvent = ({
     isDraft: false,
   };
 };
-export const mapDBOccurrencesToCalendarEvents = ({
-  event,
-  occurrences,
-}: {
-  event: Event;
-  occurrences?: Occurrence[];
-  occurrencesIds?: number[];
-}): CalendarEventOccurrence[] => {
-  if (!occurrences) return [];
+// export const mapDBOccurrencesToCalendarEvents = ({
+//   event,
+//   occurrences,
+// }: {
+//   event: Event;
+//   occurrences?: Occurrence[];
+//   occurrencesIds?: number[];
+// }): CalendarEventOccurrence[] => {
+//   if (!occurrences) return [];
 
-  return occurrences.map((occurrence) => ({
-    ...event,
-    eventId: event.id,
-    hubId: event.hubId || null,
-    description: event.description || null,
-    recurrenceRule: event.recurrenceRule || null,
-    price: event.price || null,
-    isRecurring: event.isRecurring || false,
-    timezone: event.timezone || getLocalTimeZone(),
-    eventOccurrenceId: occurrence.id,
-    startTime: new Date(`${occurrence.startTime}Z`),
-    endTime: new Date(`${occurrence.endTime}Z`),
-    isDraft: false,
-  }));
-};
+//   return occurrences.map((occurrence) => ({
+//     ...event,
+//     eventId: event.id,
+//     hubId: event.hubId || null,
+//     description: event.description || null,
+//     recurrenceRule: event.recurrenceRule || null,
+//     price: event.price || null,
+//     isRecurring: event.isRecurring || false,
+//     timezone: event.timezone || getLocalTimeZone(),
+//     eventOccurrenceId: occurrence.id,
+//     startTime: new Date(`${occurrence.startTime}Z`),
+//     endTime: new Date(`${occurrence.endTime}Z`),
+//     isDraft: false,
+//   }));
+// };
 
 export const defaultformData: Partial<z.infer<typeof OccurrenceFormSchema>> = {
   hubId: undefined,

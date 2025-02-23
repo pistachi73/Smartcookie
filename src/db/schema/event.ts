@@ -21,8 +21,8 @@ export const event = pgTable("event", {
     .references(() => user.id, { onDelete: "cascade" }),
   title: text().notNull(),
   description: text(),
-  startTime: timestamp({ mode: "string" }).notNull(),
-  endTime: timestamp({ mode: "string" }).notNull(),
+  startTime: timestamp({ mode: "string", withTimezone: true }).notNull(),
+  endTime: timestamp({ mode: "string", withTimezone: true }).notNull(),
   price: integer(),
   isRecurring: boolean().default(false),
   recurrenceRule: text(),
@@ -42,14 +42,14 @@ export const eventRelations = relations(event, ({ one, many }) => ({
 export type InsertEvent = typeof event.$inferInsert;
 export type Event = typeof event.$inferSelect;
 
-export type EventOverrides = {
+export type EventOverrides = Partial<{
   title: Event["title"];
   description: Event["description"];
   price: Event["price"];
   recurrenceRule: Event["recurrenceRule"];
   timezone: Event["timezone"];
   color: Event["color"];
-};
+}>;
 
 export type EventOccurrence = Omit<
   Event,

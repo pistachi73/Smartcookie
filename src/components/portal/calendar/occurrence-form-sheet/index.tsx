@@ -7,7 +7,7 @@ import {
   ProgressCircle,
   Sheet,
 } from "@/components/ui/new/ui";
-import { cn, pickKeysByFilter } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -16,63 +16,44 @@ import {
   CalendarAdd02Icon,
   CalendarSetting02Icon,
 } from "@hugeicons/react";
-import { useCallback, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+import { Profiler, useCallback, useState } from "react";
+import { FormProvider, useForm, useWatch } from "react-hook-form";
 import type { z } from "zod";
 import { useShallow } from "zustand/react/shallow";
 import { DiscardChangesModalContent } from "../components/discard-changes-modal-content";
 import { EventOccurrenceForm } from "./form";
 import { OccurrenceFormSchema, serializeOcurrenceFormData } from "./schema";
-import { useEventFormOverrides } from "./use-event-form-overrides";
-import { useSubmitOccurrenceForm } from "./use-submit-occurrence-form";
 import { defaultformData } from "./utils";
 
-const useCalendarSidebarEditSession = () =>
-  useCalendarStore(
-    useShallow((store) => ({
-      activeSidebar: store.activeSidebar,
-      eventOccurrences: store.eventOccurrences,
-      editingEventOccurrenceId: store.editingEventOccurrenceId,
-      setActiveSidebar: store.setActiveSidebar,
-      clearDraftEventOccurrence: store.clearDraftEventOccurrence,
-      clearEditingEventOccurrence: store.clearEditingEventOccurrence,
-    })),
-  );
+const isValidFiniteNumber = (input: unknown): boolean =>
+  typeof input === "number" && Number.isFinite(input);
 
 export const EventOccurrenceFormSheet = () => {
-  const {
-    setActiveSidebar,
-    editingEventOccurrenceId,
-    eventOccurrences,
-    clearDraftEventOccurrence,
-    clearEditingEventOccurrence,
-    activeSidebar,
-  } = useCalendarSidebarEditSession();
-
   const [isDiscardModalOpen, setIsDiscardModalOpen] = useState(false);
+  const { removeOccurrences, editedOccurrenceId, setEdittedOccurrenceId } =
+    useCalendarStore(
+      useShallow((store) => ({
+        editedOccurrenceId: store.editedOccurrenceId,
+        setEdittedOccurrenceId: store.setEdittedOccurrenceId,
+        removeOccurrences: store.removeOccurrences,
+      })),
+    );
+
+  // const { createEvent, editNonRecurrentEvent, isFormDisabled } =
+  //   useSubmitOccurrenceForm();
+
   const form = useForm<z.infer<typeof OccurrenceFormSchema>>({
     defaultValues: defaultformData,
     resolver: zodResolver(OccurrenceFormSchema),
   });
-  useEventFormOverrides(form);
-
-  const { createEvent, editNonRecurrentEvent, isPending } =
-    useSubmitOccurrenceForm();
 
   const closeEditSidebar = useCallback(() => {
     setIsDiscardModalOpen(false);
-    clearEditingEventOccurrence();
-    setActiveSidebar("main");
-    clearDraftEventOccurrence();
+    setEdittedOccurrenceId(undefined);
+    removeOccurrences(-1, { silent: true });
     form.reset(defaultformData);
     window.history.pushState(null, "", "/calendar");
-  }, [
-    clearDraftEventOccurrence,
-    form,
-    clearEditingEventOccurrence,
-    setActiveSidebar,
-  ]);
+  }, [form.reset, removeOccurrences, setEdittedOccurrenceId]);
 
   const onClose = useCallback(() => {
     const isDirty = form.formState.isDirty;
@@ -82,11 +63,7 @@ export const EventOccurrenceFormSheet = () => {
     }
   }, [form, closeEditSidebar]);
 
-  const isFormDisabled = isPending;
-
-  const editingOccurrence = editingEventOccurrenceId
-    ? eventOccurrences?.[editingEventOccurrenceId]
-    : undefined;
+  const isFormDisabled = false;
 
   const onSubmit = (
     formData: z.infer<typeof OccurrenceFormSchema>,
@@ -99,49 +76,60 @@ export const EventOccurrenceFormSheet = () => {
   ) => {
     const serializedFormData = serializeOcurrenceFormData(formData);
 
-    switch (mode) {
-      case "create": {
-        createEvent({ formData: serializedFormData });
-        break;
-      }
-      case "edit-non-recurrent": {
-        const eventId =
-          eventOccurrences[editingEventOccurrenceId ?? -1]?.eventId;
+    // switch (mode) {
+    //   case "create": {
+    //     createEvent({ formData: serializedFormData });
+    //     break;
+    //   }
+    //   case "edit-non-recurrent": {
+    //     // const eventId =
+    //     //   eventOccurrences[editingEventOccurrenceId ?? -1]?.eventId;
 
-        if (!editingEventOccurrenceId || !eventId) {
-          toast.error("Event occurrence not found");
-          return;
-        }
+    //     // if (!editingEventOccurrenceId || !eventId) {
+    //     //   toast.error("Event occurrence not found");
+    //     //   return;
+    //     // }
 
-        const filteredFormData = pickKeysByFilter(
-          serializedFormData,
-          form.formState.dirtyFields as Record<string, boolean>,
-        );
+    //     const filteredFormData = pickKeysByFilter(
+    //       serializedFormData,
+    //       form.formState.dirtyFields as Record<string, boolean>,
+    //     );
 
-        editNonRecurrentEvent({
-          occurrenceId: editingEventOccurrenceId,
-          formData: filteredFormData,
-          eventId,
-        });
+    //     // editNonRecurrentEvent({
+    //     //   occurrenceId: editingEventOccurrenceId,
+    //     //   formData: filteredFormData,
+    //     //   eventId,
+    //     // });
 
-        break;
-      }
-    }
+    //     break;
+    //   }
+    // }
 
     // form.reset(defaultformData);s
   };
 
+  const recurrenceRule = useWatch({
+    control: form.control,
+    name: "recurrenceRule",
+  });
+  const isEdittingEvent = isValidFiniteNumber(editedOccurrenceId);
+
   return (
-    <>
+    <Profiler
+      id="EventForm"
+      onRender={(id, phase, actualTime) => {
+        // console.log(`${id} ${phase} took ${actualTime}ms`);
+      }}
+    >
       <Sheet.Content
-        isOpen={activeSidebar === "edit-session"}
+        isOpen={isEdittingEvent}
         onOpenChange={onClose}
         side="left"
         classNames={{ content: "w-[360px]!", overlay: "bg-transparent " }}
       >
         <Sheet.Header className="sticky top-0 flex flex-row items-center gap-x-3 border-b bg-overlay p-4">
           <Sheet.Title className="gap-2">
-            {editingEventOccurrenceId === -1 ? (
+            {editedOccurrenceId === -1 ? (
               <CalendarAdd02Icon />
             ) : (
               <CalendarSetting02Icon
@@ -149,13 +137,15 @@ export const EventOccurrenceFormSheet = () => {
                 color="var(--color-primary)"
               />
             )}{" "}
-            {editingEventOccurrenceId === -1 ? "Create" : "Edit"} Session
+            {editedOccurrenceId === -1 ? "Create" : "Edit"} Session
           </Sheet.Title>
         </Sheet.Header>
         <Sheet.Body className="p-4!">
-          <Form id="event-occurrence-form">
-            <EventOccurrenceForm form={form} isDisabled={isFormDisabled} />
-          </Form>
+          <FormProvider {...form}>
+            <Form id="event-occurrence-form">
+              <EventOccurrenceForm form={form} isDisabled={isFormDisabled} />
+            </Form>
+          </FormProvider>
         </Sheet.Body>
         <Sheet.Footer className="sticky bottom-0 border-t flex items-center justify-end gap-2 p-4!">
           <Button
@@ -167,7 +157,7 @@ export const EventOccurrenceFormSheet = () => {
             Cancel
           </Button>
 
-          {editingEventOccurrenceId === -1 ? (
+          {editedOccurrenceId === -1 ? (
             <Button
               size="small"
               className="px-6"
@@ -177,7 +167,7 @@ export const EventOccurrenceFormSheet = () => {
               }}
               isDisabled={isFormDisabled}
             >
-              {isPending && (
+              {isFormDisabled && (
                 <ProgressCircle
                   isIndeterminate
                   aria-label="Creating event..."
@@ -185,7 +175,7 @@ export const EventOccurrenceFormSheet = () => {
               )}
               Create Event <ArrowRight02Icon size={14} data-slot="icon" />
             </Button>
-          ) : editingOccurrence?.isRecurring ? (
+          ) : recurrenceRule ? (
             <Menu>
               <Menu.Trigger
                 size="small"
@@ -195,7 +185,7 @@ export const EventOccurrenceFormSheet = () => {
               >
                 {({ isPressed }) => (
                   <>
-                    {isPending && (
+                    {isFormDisabled && (
                       <ProgressCircle
                         isIndeterminate
                         aria-label="Creating event..."
@@ -226,7 +216,7 @@ export const EventOccurrenceFormSheet = () => {
               }}
               isDisabled={isFormDisabled}
             >
-              {isPending && (
+              {isFormDisabled && (
                 <ProgressCircle
                   isIndeterminate
                   aria-label="Creating event..."
@@ -244,6 +234,6 @@ export const EventOccurrenceFormSheet = () => {
         onOpenChange={setIsDiscardModalOpen}
         onDiscardChanges={closeEditSidebar}
       />
-    </>
+    </Profiler>
   );
 };

@@ -29,6 +29,13 @@
       "when": 1739093599393,
       "tag": "0003_spicy_tiger_shark",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1740077681812,
+      "tag": "0004_wealthy_slayback",
+      "breakpoints": true
     }
   ]
 }

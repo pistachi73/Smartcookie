@@ -1,21 +1,18 @@
 "use client";
+import { getStartOfWeek } from "@/lib/temporal/week";
 import { cn } from "@/lib/utils";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
-import { addDays, format, isSameDay, startOfWeek } from "date-fns";
 import { useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { CalendarRows } from "../../calendar-rows";
-import { DayEventsColumn } from "../../components/day-events-column";
 import { HoursColumn } from "../../components/hours-column";
-import { getEventOccurrenceDayKey } from "../../utils";
-import { DayViewDraftOccurrence } from "./day-view-draft-occurrence";
-import { DayViewOccurrence } from "./day-view-occurrence";
+import { getCurrentTimezone, getDayKeyFromDate } from "../../utils";
+import { DayColumn } from "./day-column";
 
 const useWeekView = () =>
   useCalendarStore(
-    useShallow(({ selectedDate, groupedEventOccurrences }) => ({
+    useShallow(({ selectedDate }) => ({
       selectedDate,
-      groupedEventOccurrences,
     })),
   );
 
@@ -24,40 +21,43 @@ type DayViewProps = {
 };
 
 export const DayView = ({ numberOfDays }: DayViewProps) => {
-  const { selectedDate, groupedEventOccurrences } = useWeekView();
+  const { selectedDate } = useWeekView();
 
-  const selectedDateWeekStart = startOfWeek(selectedDate, { weekStartsOn: 1 });
+  const startOfWeek = useMemo(
+    () => getStartOfWeek(selectedDate),
+    [selectedDate],
+  );
 
   const days = useMemo(() => {
-    console.log("render days");
-
     return numberOfDays === 1
       ? [selectedDate]
       : Array.from({ length: numberOfDays }).map((_, i) =>
-          addDays(selectedDateWeekStart, i),
+          startOfWeek.add({ days: i }),
         );
-  }, [selectedDateWeekStart, numberOfDays, selectedDate]);
+  }, [startOfWeek, selectedDate, numberOfDays]);
 
-  const timezoneOffset = useMemo(
-    () => new Date().getTimezoneOffset() / -60,
+  const timezoneOffsetHours = useMemo(
+    () => getCurrentTimezone().offsetHours,
     [],
   );
+
+  console.log({ days });
 
   return (
     <div className="flex flex-col h-full relative overflow-hidden ">
       <div className="w-full flex items-center px-2 py-2 shadow-2xl  border-b">
         <div className="w-12 shrink-0 h-full mr-4 flex items-center justify-end">
           <p className="text-xs text-muted-fg">
-            GTM{timezoneOffset > 0 ? "+" : "-"}
-            {timezoneOffset}
+            GTM{timezoneOffsetHours > 0 ? "+" : "-"}
+            {timezoneOffsetHours}
           </p>
         </div>
         <div className="flex items-center w-full">
-          {days.map((day) => {
-            const isSelected = isSameDay(day, selectedDate);
+          {days.map((date) => {
+            const isSelected = date.equals(selectedDate);
             return (
               <p
-                key={format(day, "iiiiii")}
+                key={date.toString()}
                 className={cn(
                   "flex-1 w-full rounded-lg p-2",
                   "flex items-center justify-center",
@@ -67,7 +67,8 @@ export const DayView = ({ numberOfDays }: DayViewProps) => {
                     : "text-muted-fg ",
                 )}
               >
-                {format(day, "iii")} {day.getDate().toString().padStart(2, "0")}
+                {date.toLocaleString("en-US", { weekday: "short" })}{" "}
+                {date.day.toString().padStart(2, "0")}
               </p>
             );
           })}
@@ -78,28 +79,9 @@ export const DayView = ({ numberOfDays }: DayViewProps) => {
           <HoursColumn />
           <div className="flex flex-row w-full h-auto relative">
             <CalendarRows />
-            {days.map((day) => {
-              const dayKey = getEventOccurrenceDayKey(day);
-              const dayOccurrences = groupedEventOccurrences[dayKey];
-
-              return (
-                <DayEventsColumn key={day.toISOString()} date={day}>
-                  {dayOccurrences?.map((occurrence) =>
-                    occurrence.isDraft ? (
-                      <DayViewDraftOccurrence
-                        key="event-draft-occurrence"
-                        occurrence={occurrence}
-                      />
-                    ) : (
-                      <DayViewOccurrence
-                        key={`event-occurrence-${occurrence.eventOccurrenceId}`}
-                        occurrence={occurrence}
-                      />
-                    ),
-                  )}
-                </DayEventsColumn>
-              );
-            })}
+            {days.map((date) => (
+              <DayColumn key={getDayKeyFromDate(date)} date={date} />
+            ))}
           </div>
         </div>
       </div>

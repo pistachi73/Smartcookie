@@ -1,45 +1,44 @@
 "use client";
 
 import { Popover } from "@/components/ui/new/ui";
-import type { GroupedOccurrence } from "@/lib/group-overlapping-occurrences";
+import { getWeekdayAbbrev } from "@/lib/temporal/format";
 import { cn } from "@/lib/utils";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
 import { MultiplicationSignIcon } from "@hugeicons/react";
-import { format, isSameDay, isToday } from "date-fns";
-import { useEffect, useRef, useState } from "react";
+import { Temporal } from "@js-temporal/polyfill";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button as AriaButton } from "react-aria-components";
 import { useShallow } from "zustand/react/shallow";
-import { MonthViewDraftOccurrence } from "./month-view-draft-occurrence";
+import { getDayKeyFromDate } from "../../utils";
 import { MonthViewOccurrence } from "./month-view-occurrence";
 
 type MonthCalendarDayCellProps = {
+  date: Temporal.PlainDate;
   dayIndex: number;
   rowIndex: number;
-  currentDay: Date;
   isCurrentMonth: boolean;
-  dayOccurrences?: GroupedOccurrence[];
 };
 
 const SESSION_OCCURRENCE_HEIGHT = 24 + 1;
 const SESSION_OCCURRENCE_SPACING = 4;
 
-const useMonthViewCell = () =>
-  useCalendarStore(
-    useShallow(({ selectedDate, editingEventOccurrenceId }) => ({
-      selectedDate,
-      editingEventOccurrenceId,
+export const MonthViewCell = ({
+  dayIndex,
+  date,
+  isCurrentMonth,
+}: MonthCalendarDayCellProps) => {
+  const dayKey = useMemo(() => getDayKeyFromDate(date), [date]);
+
+  const { dailyOccurrences, selectedDate } = useCalendarStore(
+    useShallow((store) => ({
+      selectedDate: store.selectedDate,
+      dailyOccurrences: store.dailyOccurrencesGridPosition.get(dayKey),
     })),
   );
 
-export const MonthViewCell = ({
-  dayIndex,
-  currentDay,
-  isCurrentMonth,
-  dayOccurrences,
-}: MonthCalendarDayCellProps) => {
-  const { selectedDate, editingEventOccurrenceId } = useMonthViewCell();
   const sessionsContainerRef = useRef<HTMLDivElement>(null);
-  const totalOccurrences = dayOccurrences?.length ?? 0;
+  const totalOccurrences = dailyOccurrences?.length ?? 0;
+
   const [visibleOccurrences, setVisibleOccurrences] =
     useState<number>(totalOccurrences);
   const [isViewAllOpen, setIsViewAllOpen] = useState(false);
@@ -67,6 +66,9 @@ export const MonthViewCell = ({
     };
   }, []);
 
+  const isToday = date.day === Temporal.Now.plainDateISO().day;
+  const isSelectedDate = date.day === selectedDate.day;
+
   return (
     <div
       className={cn(
@@ -74,37 +76,29 @@ export const MonthViewCell = ({
         isCurrentMonth ? "" : "bg-lines-pattern",
         dayIndex === 0 && "border-l-0",
         dayIndex === 6 && "border-r-0",
-        isSameDay(currentDay, selectedDate) && "bg-primary/10  text-light",
+        isSelectedDate && "bg-primary/10  text-light",
       )}
     >
       <span
         className={cn(
           "text-xs font-medium size-5 rounded-full flex items-center justify-center",
           isCurrentMonth ? "text-current" : "text-muted-fg",
-          isToday(currentDay) && "bg-primary text-light",
+          isToday && "bg-primary text-light",
         )}
       >
-        {currentDay.getDate()}
+        {date.day}
       </span>
       <div
         ref={sessionsContainerRef}
         className="mt-1 overflow-hidden grow p-1 w-full space-y-1"
       >
-        {dayOccurrences
-          ?.slice(0, visibleOccurrences)
-          .map((occurrence) =>
-            occurrence.isDraft ? (
-              <MonthViewDraftOccurrence
-                key={`event-ocurrence-${occurrence.eventOccurrenceId}`}
-                occurrence={occurrence}
-              />
-            ) : (
-              <MonthViewOccurrence
-                key={`event-ocurrence-${occurrence.eventOccurrenceId}`}
-                occurrence={occurrence}
-              />
-            ),
-          )}
+        {dailyOccurrences?.slice(0, visibleOccurrences).map((occurrence) => (
+          <MonthViewOccurrence
+            key={`event-ocurrence-${occurrence.occurrenceId}`}
+            occurrenceId={occurrence.occurrenceId}
+          />
+        ))}
+
         {visibleOccurrences < totalOccurrences && (
           <Popover
             isOpen={isViewAllOpen}
@@ -126,30 +120,28 @@ export const MonthViewCell = ({
               </Popover.Close>
               <Popover.Header className="flex flex-col items-center justify-center">
                 <p className="text-sm text-text-sub lowercase">
-                  {format(currentDay, "iii")}
+                  {getWeekdayAbbrev(date)}
                 </p>
                 <p className="text-3xl font-medium text-responsive-dark ">
-                  {currentDay.getDate()}
+                  {date.day}
                 </p>
               </Popover.Header>
               <Popover.Body className="space-y-1 w-full pb-4">
-                {dayOccurrences?.map((occurrence) =>
-                  occurrence.isDraft ? null : (
-                    <MonthViewOccurrence
-                      key={`event-ocurrence-${occurrence.eventOccurrenceId}`}
-                      occurrence={occurrence}
-                      className="text-sm h-7 px-2 w-full"
-                      popoverProps={{
-                        offset: 30,
-                        placement: "left top",
-                        className: "brightness-125",
-                      }}
-                      onEditPress={() => {
-                        setIsViewAllOpen(false);
-                      }}
-                    />
-                  ),
-                )}
+                {dailyOccurrences?.map((occurrence) => (
+                  <MonthViewOccurrence
+                    key={`event-ocurrence-${occurrence.occurrenceId}`}
+                    occurrenceId={occurrence.occurrenceId}
+                    className="text-sm h-7 px-2 w-full"
+                    popoverProps={{
+                      offset: 30,
+                      placement: "left top",
+                      className: "brightness-125",
+                    }}
+                    onEditPress={() => {
+                      setIsViewAllOpen(false);
+                    }}
+                  />
+                ))}
               </Popover.Body>
             </Popover.Content>
           </Popover>

@@ -16,20 +16,21 @@ import { TimezoneCombobox } from "@/components/ui/timezone-combobox";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
 import { ArrowRight02Icon, Folder02Icon } from "@hugeicons/react";
 import { CalendarDate, toCalendarDate } from "@internationalized/date";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
 import type { z } from "zod";
 import { useShallow } from "zustand/react/shallow";
 import { EventColorPicker } from "../components/event-color-picker";
 import type { OccurrenceFormSchema } from "./schema";
+import { useEventFormOverrides } from "./use-event-form-overrides";
 
 const useEventOccurrenceForm = () =>
   useCalendarStore(
     useShallow((store) => ({
       hubs: store.hubs,
       selectedDate: store.selectedDate,
-      setDraftEventOccurrence: store.setDraftEventOccurrence,
-      editingEventOccurrenceId: store.editingEventOccurrenceId,
+      updateOccurrences: store.updateOccurrences,
+      editedOccurrenceId: store.editedOccurrenceId,
     })),
   );
 
@@ -40,12 +41,8 @@ export const EventOccurrenceForm = ({
   form: UseFormReturn<z.infer<typeof OccurrenceFormSchema>>;
   isDisabled: boolean;
 }) => {
-  const {
-    hubs,
-    setDraftEventOccurrence,
-    selectedDate,
-    editingEventOccurrenceId,
-  } = useEventOccurrenceForm();
+  const { hubs, updateOccurrences, selectedDate, editedOccurrenceId } =
+    useEventOccurrenceForm();
   const timeComboboxTriggerRef = useRef<HTMLDivElement>(null);
   const timezoneComboboxTriggerRef = useRef<HTMLDivElement>(null);
   const colorSwatchTriggerRef = useRef<HTMLDivElement>(null);
@@ -55,111 +52,79 @@ export const EventOccurrenceForm = ({
     name: ["startTime", "date", "isBillable"],
   });
 
-  useEffect(() => {
-    const subscription = form.watch((value, { name, type }) => {
-      if (type !== "change" || editingEventOccurrenceId !== -1) return;
+  useEventFormOverrides();
 
-      switch (name) {
-        case "title": {
-          console.log("va", value.title);
-          setDraftEventOccurrence({
-            title: value.title,
-          });
-          break;
-        }
-        case "startTime": {
-          const { date, startTime } = value;
-          if (!date?.year || !date.month || !startTime) return;
+  // useEffect(() => {
+  //   const subscription = form.watch((value, { name, type }) => {
+  //     if (type !== "change" || editedOccurrenceId !== -1) return;
 
-          setDraftEventOccurrence({
-            startTime: new Date(
-              date?.year,
-              date.month - 1,
-              date.day,
-              startTime.hour,
-              startTime.minute,
-            ),
-          });
-          break;
-        }
-        case "endTime": {
-          const { date, endTime } = value;
-          if (!date?.year || !date.month || !endTime) return;
+  //     switch (name) {
+  //       case "title": {
+  //         console.log("va", value.title);
+  //         updateOccurrences({
+  //           id: -1,
+  //           overrides: {
+  //             title: value.title!,
+  //           },
+  //         });
+  //         break;
+  //       }
+  //       // case "startTime": {
+  //       //   const { date, startTime } = value;
+  //       //   if (!date?.year || !date.month || !startTime) return;
 
-          setDraftEventOccurrence({
-            endTime: new Date(
-              date?.year,
-              date.month - 1,
-              date.day,
-              endTime.hour,
-              endTime.minute,
-            ),
-          });
-          break;
-        }
-        case "date": {
-          const { date, startTime, endTime } = value;
-          if (!date?.year || !date.month || !startTime || !endTime) return;
+  //       //   setDraftEventOccurrence({
+  //       //     startTime: new Date(
+  //       //       date?.year,
+  //       //       date.month - 1,
+  //       //       date.day,
+  //       //       startTime.hour,
+  //       //       startTime.minute,
+  //       //     ),
+  //       //   });
+  //       //   break;
+  //       // }
+  //       // case "endTime": {
+  //       //   const { date, endTime } = value;
+  //       //   if (!date?.year || !date.month || !endTime) return;
 
-          setDraftEventOccurrence({
-            startTime: new Date(
-              date?.year,
-              date.month - 1,
-              date.day,
-              startTime.hour,
-              startTime.minute,
-            ),
-            endTime: new Date(
-              date?.year,
-              date.month - 1,
-              date.day,
-              endTime.hour,
-              endTime.minute,
-            ),
-          });
-          break;
-        }
-      }
-      if (name === "title") {
-        setDraftEventOccurrence({
-          title: value.title,
-        });
-      }
-    });
-    return () => subscription.unsubscribe();
-  }, [form.watch, setDraftEventOccurrence]);
+  //       //   setDraftEventOccurrence({
+  //       //     endTime: new Date(
+  //       //       date?.year,
+  //       //       date.month - 1,
+  //       //       date.day,
+  //       //       endTime.hour,
+  //       //       endTime.minute,
+  //       //     ),
+  //       //   });
+  //       //   break;
+  //       // }
+  //       // case "date": {
+  //       //   const { date, startTime, endTime } = value;
+  //       //   if (!date?.year || !date.month || !startTime || !endTime) return;
 
-  //useEffect(() => {
-  //   return;
-  //   if (!startTime || !endTime || !date) return;
-  //   console.log("setdraftevent", { startTime, endTime, date });
-
-  //   if (editingEventOccurrenceId === -1) {
-  //     setDraftEventOccurrence({
-  //       eventOccurrenceId: -1,
-  //       startTime: new Date(
-  //         date.year,
-  //         date.month - 1,
-  //         date.day,
-  //         startTime.hour,
-  //         startTime.minute,
-  //       ),
-  //       endTime: new Date(
-  //         date.year,
-  //         date.month - 1,
-  //         date.day,
-  //         endTime.hour,
-  //         endTime.minute,
-  //       ),
-  //     });
-  //   }
-  // }, [
-  //   setDraftEventOccurrence,
-  //   editingEventOccurrenceId,
-  //   date,
-  //   startTime,
-  //   endTime,
-  // ]);
+  //       //   setDraftEventOccurrence({
+  //       //     startTime: new Date(
+  //       //       date?.year,
+  //       //       date.month - 1,
+  //       //       date.day,
+  //       //       startTime.hour,
+  //       //       startTime.minute,
+  //       //     ),
+  //       //     endTime: new Date(
+  //       //       date?.year,
+  //       //       date.month - 1,
+  //       //       date.day,
+  //       //       endTime.hour,
+  //       //       endTime.minute,
+  //       //     ),
+  //       //   });
+  //       //   break;
+  //       // }
+  //     }
+  //   });
+  //   return () => subscription.unsubscribe();
+  // }, [form.watch]);
 
   const hubItems = hubs?.map((hub) => ({ id: hub.id, name: hub.name }));
   return (
@@ -172,67 +137,35 @@ export const EventOccurrenceForm = ({
             field: { onChange, value, ...restField },
             fieldState: { error, invalid },
           }) => (
-            <>
-              <Select
-                {...restField}
-                placeholder="Select hub..."
-                onSelectionChange={onChange}
-                selectedKey={value}
-                aria-label="Select Hub"
-                validationBehavior="aria"
-                isInvalid={invalid}
-                errorMessage={error?.message}
-                isDisabled={isDisabled}
+            <Select
+              {...restField}
+              placeholder="Select hub..."
+              onSelectionChange={onChange}
+              selectedKey={value}
+              aria-label="Select Hub"
+              validationBehavior="aria"
+              isInvalid={invalid}
+              errorMessage={error?.message}
+              isDisabled={isDisabled}
+            >
+              <Select.Trigger
+                showArrow={true}
+                prefix={<Folder02Icon size={16} />}
+              />
+              <Select.List
+                popoverProps={{
+                  placement: "left top",
+                  offset: 8,
+                }}
+                items={hubItems}
               >
-                <Select.Trigger
-                  showArrow={true}
-                  prefix={<Folder02Icon size={16} />}
-                />
-                <Select.List
-                  popoverProps={{
-                    placement: "left top",
-                    offset: 8,
-                  }}
-                  items={hubItems}
-                >
-                  {(item) => (
-                    <Select.Option id={item.id} textValue={item.name}>
-                      {item.name}
-                    </Select.Option>
-                  )}
-                </Select.List>
-              </Select>
-              {/* <SelectField
-                      {...restField}
-                      onSelectionChange={onChange}
-                      selectedKey={value}
-                      placeholder="Hub"
-                      aria-label="Hub"
-                      validationBehavior="aria"
-                      isInvalid={invalid}
-                      errorMessage={error?.message}
-                      isDisabled={isDisabled}
-                    >
-                      <SelectTrigger
-                        size={"sm"}
-                        variant={"ghost"}
-                        className={cn("w-full font-normal rounded-lg")}
-                        icon={Folder02Icon}
-                      />
-                      <SelectFieldContent
-                        placement="left top"
-                        offset={12}
-                        className="w-[250px]"
-                        items={hubItems}
-                      >
-                        {({ id, name }) => (
-                          <ListBoxItem id={id} showCheckIcon>
-                            {name}
-                          </ListBoxItem>
-                        )}
-                      </SelectFieldContent>
-                    </SelectField> */}
-            </>
+                {(item) => (
+                  <Select.Option id={item.id} textValue={item.name}>
+                    {item.name}
+                  </Select.Option>
+                )}
+              </Select.List>
+            </Select>
           )}
         />
         <div
@@ -402,9 +335,9 @@ export const EventOccurrenceForm = ({
                 date
                   ? toCalendarDate(date)
                   : new CalendarDate(
-                      selectedDate.getFullYear(),
-                      selectedDate.getMonth() + 1,
-                      selectedDate.getDate(),
+                      selectedDate.year,
+                      selectedDate.month,
+                      selectedDate.day,
                     )
               }
             />

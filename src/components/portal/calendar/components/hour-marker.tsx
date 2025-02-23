@@ -1,11 +1,11 @@
 import { cn } from "@/lib/utils";
-import { isToday } from "date-fns";
+import { Temporal } from "@js-temporal/polyfill";
 import { useCurrentTime } from "../use-current-time";
 
-export const HourMarker = ({ date }: { date: Date }) => {
+export const HourMarker = ({ date }: { date: Temporal.PlainDate }) => {
   const { top } = useCurrentTime();
 
-  const today = isToday(date);
+  const today = date.equals(Temporal.Now.plainDateISO());
 
   return (
     <div

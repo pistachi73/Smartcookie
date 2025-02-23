@@ -1,42 +1,24 @@
+import { getEndOfMonth, getStartOfMonth } from "@/lib/temporal/month";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
-import {
-  addDays,
-  differenceInDays,
-  lastDayOfMonth,
-  startOfMonth,
-  subDays,
-} from "date-fns";
 import { useShallow } from "zustand/react/shallow";
-import { getEventOccurrenceDayKey } from "../../utils";
 import { MonthViewCell } from "./month-view-cell";
 
-const useMonthView = () =>
-  useCalendarStore(
-    useShallow(
-      ({
-        selectedDate,
-        groupedEventOccurrences,
-        editingEventOccurrenceId,
-      }) => ({
-        selectedDate,
-        groupedEventOccurrences,
-      }),
-    ),
+export const MonthView = () => {
+  const selectedDate = useCalendarStore(
+    useShallow((store) => store.selectedDate),
   );
 
-export const MonthView = () => {
-  const { selectedDate, groupedEventOccurrences } = useMonthView();
-
-  const startMonth = startOfMonth(selectedDate);
-  const endMonth = lastDayOfMonth(selectedDate);
+  const startOfMonth = getStartOfMonth(selectedDate);
+  const endOfMonth = getEndOfMonth(selectedDate);
 
   // Get the day index of the start of the month (0 = Sunday, 6 = Saturday)
   // Convert to Monday-based (0 = Monday, 6 = Sunday)
-  const prefixDays = startMonth.getDay() === 0 ? 6 : startMonth.getDay() - 1;
-  const totalDays = differenceInDays(endMonth, startMonth) + 1;
+  const prefixDays =
+    startOfMonth.dayOfWeek === 0 ? 6 : startOfMonth.dayOfWeek - 1;
+  const totalDays = endOfMonth.day - startOfMonth.day + 1;
 
   // Calculate start and end of the calendar view
-  const startCalendar = subDays(startMonth, prefixDays);
+  const startCalendar = startOfMonth.subtract({ days: prefixDays });
   const rows = Math.ceil((totalDays + prefixDays) / 7);
 
   return (
@@ -60,21 +42,19 @@ export const MonthView = () => {
           className="flex flex-row w-full border-calendar-border basis-full overflow-hidden"
         >
           {Array.from({ length: 7 }).map((_, dayIndex) => {
-            const currentDay = addDays(startCalendar, rowIndex * 7 + dayIndex);
-            const dayOccurrences =
-              groupedEventOccurrences[getEventOccurrenceDayKey(currentDay)] ||
-              [];
-            const isCurrentMonth =
-              currentDay.getMonth() === selectedDate.getMonth();
+            const date = startCalendar.add({
+              days: rowIndex * 7 + dayIndex,
+            });
+
+            const isCurrentMonth = date.month === selectedDate.month;
 
             return (
               <MonthViewCell
                 key={`month-cell-${dayIndex}`}
+                date={date}
                 dayIndex={dayIndex}
                 rowIndex={rowIndex}
-                currentDay={currentDay}
                 isCurrentMonth={isCurrentMonth}
-                dayOccurrences={dayOccurrences}
               />
             );
           })}

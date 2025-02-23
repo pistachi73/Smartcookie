@@ -1,6 +1,6 @@
-import {
+import type {
+  OccurrenceFormSchema,
   SerializedOccurrenceFormSchema,
-  SessionOcurrenceFormSchema,
 } from "@/components/portal/calendar/occurrence-form-sheet/schema";
 import {
   createDateFromParts,
@@ -10,34 +10,15 @@ import { getHubsByUserId } from "@/data-access/hub";
 import { db } from "@/db";
 import {
   type Event,
-  Occurrence,
+  type Occurrence,
   event,
   event as eventDb,
   eventOccurrence,
 } from "@/db/schema";
-import type { CalendarEventOccurrence } from "@/stores/calendar-store";
-import { SQL, and, asc, eq, getTableColumns, sql } from "drizzle-orm";
-import { PgTable } from "drizzle-orm/pg-core";
-import { z } from "zod";
+import { Temporal } from "@js-temporal/polyfill";
+import { and, asc, eq } from "drizzle-orm";
+import type { z } from "zod";
 import { PublicError } from "./errors";
-
-const buildConflictUpdateColumns = <
-  T extends PgTable,
-  Q extends keyof T["_"]["columns"],
->(
-  table: T,
-  columns: Q[],
-) => {
-  const cls = getTableColumns(table);
-  return columns.reduce(
-    (acc, column) => {
-      const colName = cls?.[column]?.name;
-      acc[column] = sql.raw(`excluded.${colName}`);
-      return acc;
-    },
-    {} as Record<Q, SQL>,
-  );
-};
 
 export const getCalendarDataUseCase = async (userId: string) => {
   const [hubs, result] = await Promise.all([
@@ -56,45 +37,28 @@ export const getCalendarDataUseCase = async (userId: string) => {
       .execute(),
   ]);
 
-  const eventOccurrencesMap = new Map<number, CalendarEventOccurrence>();
-
-  const occurrencesMap = new Map<number, Occurrence>();
-  const eventsMap = new Map<number, Event>();
+  const occurrences: Occurrence[] = [];
+  const events: Event[] = [];
 
   result.forEach((record) => {
-    eventsMap.set(record.event.id, record.event);
-    if (record.event_occurrence) {
-      occurrencesMap.set(record.event_occurrence.id, record.event_occurrence);
-    }
     const event = record.event;
-    const eventOccurrence = record?.event_occurrence;
-    if (!eventOccurrence) return;
+    const occurrence = record.event_occurrence;
+    events.push(event);
+    if (occurrence) {
+      const timezone = occurrence.overrides?.timezone || event.timezone;
+      const startInstant = Temporal.Instant.from(occurrence.startTime);
+      const endInstant = Temporal.Instant.from(occurrence.endTime);
 
-    const mapHasEventOccurrence = eventOccurrencesMap.get(eventOccurrence.id);
-    if (mapHasEventOccurrence) return;
-
-    eventOccurrencesMap.set(eventOccurrence.id, {
-      ...event,
-      eventId: event.id,
-      eventOccurrenceId: eventOccurrence.id,
-      startTime: new Date(`${eventOccurrence.startTime}Z`),
-      endTime: new Date(`${eventOccurrence.endTime}Z`),
-      title: eventOccurrence.overrides?.title || event.title,
-      description: eventOccurrence.overrides?.description || event.description,
-      timezone: eventOccurrence.overrides?.timezone || event.timezone,
-      price: eventOccurrence.overrides?.price || event.price,
-      isDraft: false,
-    });
+      occurrences.push({
+        ...occurrence,
+        startTime: startInstant.toZonedDateTimeISO(timezone).toString(),
+        endTime: endInstant.toZonedDateTimeISO(timezone).toString(),
+      });
+    }
   });
-
-  const eventOcurrences = Object.fromEntries(eventOccurrencesMap.entries());
-
-  const events = Object.fromEntries(eventsMap.entries());
-  const occurrences = Object.fromEntries(occurrencesMap.entries());
 
   return {
     hubs,
-    eventOcurrences: eventOcurrences,
     events,
     occurrences,
   };
@@ -105,7 +69,7 @@ export const createEventUseCase = async ({
   formData,
 }: {
   userId: string;
-  formData: z.infer<typeof SessionOcurrenceFormSchema>;
+  formData: z.infer<typeof OccurrenceFormSchema>;
 }) => {
   const { event, occurrences } =
     prepareEventAndOccurrencesForDatabase(formData);

@@ -1,5 +1,16 @@
-import superjson from "superjson"; //  can use anything: serialize-javascript, devalue, etc.
+import { Temporal } from "@js-temporal/polyfill";
+import superjson from "superjson";
 import type { PersistStorage } from "zustand/middleware";
+
+superjson.registerCustom<Temporal.PlainDate, string>(
+  {
+    isApplicable: (v): v is Temporal.PlainDate =>
+      v instanceof Temporal.PlainDate,
+    serialize: (v) => v.toJSON(),
+    deserialize: (v) => Temporal.PlainDate.from(v),
+  },
+  "Temporal.PlainDate",
+);
 
 export const superjsonStorage: PersistStorage<any> = {
   getItem: (name) => {

@@ -1,9 +1,9 @@
 "use client";
 import { Button, Select } from "@/components/ui/new/ui";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
-import type { CalendarView } from "@/stores/calendar-store";
 import { ArrowLeft01Icon, ArrowRight01Icon } from "@hugeicons/react";
 import { useShallow } from "zustand/react/shallow";
+import type { CalendarView } from "./calendar.types";
 import { formatCalendarHeaderTitle } from "./utils";
 
 const useCalendarHeader = () =>
