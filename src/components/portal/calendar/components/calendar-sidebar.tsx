@@ -9,7 +9,6 @@ import { Temporal } from "@js-temporal/polyfill";
 import { useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { UpcomingEvents } from "./upcoming-events";
-
 const useCalendarSidebar = () =>
   useCalendarStore(
     useShallow((store) => ({
@@ -22,10 +21,15 @@ const useCalendarSidebar = () =>
 export const CalendarSidebar = () => {
   const { selectDate, selectedDate } = useCalendarSidebar();
 
-  const calendarValue = selectedDate
-    ? new CalendarDate(selectedDate.year, selectedDate.month, selectedDate.day)
-    : undefined;
-
+  const [calendarValue, setCalendarValue] = useState<CalendarDate | undefined>(
+    selectedDate
+      ? new CalendarDate(
+          selectedDate.year,
+          selectedDate.month,
+          selectedDate.day,
+        )
+      : undefined,
+  );
   const [focusedDate, setFocusedDate] = useState<CalendarDate | undefined>(
     calendarValue,
   );
@@ -48,7 +52,7 @@ export const CalendarSidebar = () => {
               <Calendar
                 value={calendarValue}
                 onChange={(date) => {
-                  console.log("date", date);
+                  setCalendarValue(date);
                   selectDate(Temporal.PlainDate.from(date.toString()));
                 }}
                 focusedValue={focusedDate}

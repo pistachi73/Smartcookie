@@ -5,30 +5,21 @@ import {
   type PopoverContentProps,
 } from "@/components/ui/new/ui";
 import { UserAvatar } from "@/components/ui/user-avatar";
-import { formatDate24Hour, formatFullDate } from "@/lib/temporal-formatting";
 import { cn } from "@/lib/utils";
-import { useCalendarStore } from "@/providers/calendar-store-provider";
 import {
   ArrowRight02Icon,
   Clock01Icon,
   File02Icon,
   UserGroupIcon,
 } from "@hugeicons/react";
+import { format } from "date-fns";
 import { Separator } from "react-aria-components";
-import { useShallow } from "zustand/react/shallow";
-import type { MergedOccurrence } from "../calendar.types";
+import type { UIOccurrence } from "../calendar.types";
 import { getCalendarColor } from "../utils";
 import { DeleteEventModalContent } from "./delete-event-modal-content";
 
-const useEventOccurrencePopover = () =>
-  useCalendarStore(
-    useShallow((store) => ({
-      setEdittedOccurrenceId: store.setEdittedOccurrenceId,
-    })),
-  );
-
 type EventOccurrencePopoverProps = {
-  occurrence: MergedOccurrence;
+  occurrence: UIOccurrence;
   onEditPress?: () => void;
   popoverProps?: Omit<PopoverContentProps, "children">;
 };
@@ -38,7 +29,6 @@ export const EventOccurrencePopover = ({
   onEditPress,
   popoverProps,
 }: EventOccurrencePopoverProps) => {
-  const { setEdittedOccurrenceId } = useEventOccurrencePopover();
   const { className: popoverClassName, ...restPopoverProps } =
     popoverProps ?? {};
 
@@ -64,10 +54,10 @@ export const EventOccurrencePopover = ({
           </div>
 
           <div className="space-y-0.5">
-            <p>{formatFullDate(occurrence.startTime)}</p>
+            <p>{format(occurrence.startTime, "EEEE, dd MMMM yyyy")}</p>
             <div className="text-sm flex items-center gap-1.5">
               <p className=" text-text-sub">
-                {formatDate24Hour(occurrence.startTime)}
+                {format(occurrence.startTime, "HH:mm")}
               </p>
               <ArrowRight02Icon
                 color="var(--color-text-sub)"
@@ -75,7 +65,7 @@ export const EventOccurrencePopover = ({
                 variant="solid"
               />
               <p className="text-text-sub">
-                {formatDate24Hour(occurrence.endTime)}
+                {format(occurrence.endTime, "HH:mm")}
               </p>
             </div>
           </div>
@@ -134,7 +124,7 @@ export const EventOccurrencePopover = ({
           slot="close"
           onPress={() => {
             onEditPress?.();
-            setEdittedOccurrenceId(occurrence.occurrenceId);
+            // setEdittedOccurrenceId(occurrence.occurrenceId);
           }}
         >
           Edit

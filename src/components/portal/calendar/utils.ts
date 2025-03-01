@@ -19,30 +19,33 @@ export const formatCalendarHeaderTitle = (
   date: Temporal.PlainDate,
   calendarType: CalendarView,
 ) => {
-  const startOfWeek = getStartOfWeek(date);
-  const startOfWeekMonth = startOfWeek.toLocaleString("en-US", {
-    month: "long",
-  });
-  const startOfWeekDay = startOfWeek.toLocaleString("en-US", {
-    day: "numeric",
+  // Common format options
+  const formatOptions = {
+    day: { day: "numeric" } as const,
+    month: { month: "long" } as const,
+    year: { year: "numeric" } as const,
+  };
+
+  // Format date parts
+  const formatDate = (date: Temporal.PlainDate) => ({
+    day: date.toLocaleString("en-US", formatOptions.day),
+    month: date.toLocaleString("en-US", formatOptions.month),
+    year: date.toLocaleString("en-US", formatOptions.year),
   });
 
-  const endOfWeek = getEndOfWeek(date);
-  const endOfWeekMonth = endOfWeek.toLocaleString("en-US", {
-    month: "long",
-  });
-  const endOfWeekDay = endOfWeek.toLocaleString("en-US", {
-    day: "numeric",
-  });
+  const { day, month, year } = formatDate(date);
 
-  const year = date.toLocaleString("en-US", { year: "numeric" });
-  const month = date.toLocaleString("en-US", { month: "long" });
-  const day = date.toLocaleString("en-US", { day: "numeric" });
   switch (calendarType) {
     case "day":
       return `${day} ${month}, ${year}`;
+
     case "week": {
-      return `${startOfWeekDay} ${startOfWeekMonth} - ${endOfWeekDay} ${endOfWeekMonth}, ${year}`;
+      const startOfWeek = getStartOfWeek(date);
+      const endOfWeek = getEndOfWeek(date);
+      const startDate = formatDate(startOfWeek);
+      const endDate = formatDate(endOfWeek);
+
+      return `${startDate.day} ${startDate.month} - ${endDate.day} ${endDate.month}, ${year}`;
     }
 
     case "month":
@@ -50,19 +53,16 @@ export const formatCalendarHeaderTitle = (
 
     case "agenda": {
       const rangeEndDate = date.add({ days: 14 });
+
+      // If same month, just show one month
       if (date.month === rangeEndDate.month) {
         return `${month} ${year}`;
       }
 
-      const rangeEndMonth = rangeEndDate.toLocaleString("en-US", {
-        month: "long",
-      });
-      const rangeEndYear = rangeEndDate.toLocaleString("en-US", {
-        year: "numeric",
-      });
-
-      return `${month} ${year} - ${rangeEndMonth} ${rangeEndYear}`;
+      const endDateFormat = formatDate(rangeEndDate);
+      return `${month} ${year} - ${endDateFormat.month} ${endDateFormat.year}`;
     }
+
     default:
       return "";
   }
@@ -199,6 +199,15 @@ export const getDayKeyFromDate = (
   return `${year}-${month}-${day}`;
 };
 
+export const getDayKeyFromDateString = (day: string): string | null => {
+  const date = new Date(day);
+  if (date instanceof Date) {
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+  }
+
+  return null;
+};
+
 export const calculateOccurrenceTop = ({
   hours,
   minutes,
@@ -208,11 +217,11 @@ export const calculateOccurrenceTop = ({
 };
 
 export const calculateOccurrenceHeight = (
-  startTime: Temporal.ZonedDateTime,
-  endTime: Temporal.ZonedDateTime,
+  startTime: Date,
+  endTime: Date,
 ): number => {
-  const start = startTime.epochMilliseconds;
-  const end = endTime.epochMilliseconds;
+  const start = startTime.getTime();
+  const end = endTime.getTime();
 
   const duration = (end - start) / (1000 * 60); // Duration in minutes
   return duration * PIXELS_PER_MINUTE;

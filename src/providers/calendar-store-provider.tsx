@@ -1,15 +1,18 @@
-// src/providers/counter-store-provider.tsx
+// src/providers/calendar-store-provider.tsx
 "use client";
 
-import { type ReactNode, createContext, use, useState } from "react";
+import { type ReactNode, createContext, use, useRef } from "react";
 import { useStore } from "zustand";
 
 import {
-  type CalendarStore,
-  type InitCalendarState,
   createCalendarStore,
   initCalendarStore,
-} from "@/stores/calendar-store";
+} from "@/stores/calendar-store/calendar-store";
+import type {
+  CalendarStore,
+  InitialCalendarStateData,
+} from "@/stores/calendar-store/calendar-store.types";
+
 export type CalendarStoreApi = ReturnType<typeof createCalendarStore>;
 
 export const CalendarStoreContext = createContext<CalendarStoreApi | undefined>(
@@ -18,7 +21,7 @@ export const CalendarStoreContext = createContext<CalendarStoreApi | undefined>(
 
 export interface CalendarStoreProviderProps {
   children: ReactNode;
-  initialCalendarStore?: InitCalendarState;
+  initialCalendarStore?: InitialCalendarStateData;
   skipHydration?: boolean;
 }
 
@@ -27,12 +30,16 @@ export const CalendarStoreProvider = ({
   initialCalendarStore,
   skipHydration,
 }: CalendarStoreProviderProps) => {
-  const [store] = useState(() =>
-    createCalendarStore(initCalendarStore(initialCalendarStore), skipHydration),
-  );
+  console.log("CalendarStoreProvider");
+  const storeRef = useRef<CalendarStoreApi | undefined>(undefined);
+
+  if (!storeRef.current) {
+    const initialState = initCalendarStore(initialCalendarStore);
+    storeRef.current = createCalendarStore(initialState, skipHydration);
+  }
 
   return (
-    <CalendarStoreContext.Provider value={store}>
+    <CalendarStoreContext.Provider value={storeRef.current}>
       {children}
     </CalendarStoreContext.Provider>
   );

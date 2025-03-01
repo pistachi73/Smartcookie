@@ -8,7 +8,7 @@ export type DatedOccurrence = Omit<Occurrence, "startTime" | "endTime"> & {
   endTime: Temporal.ZonedDateTime;
 };
 
-export type OccurrenceGridPosition = {
+export type LayoutOccurrence = {
   occurrenceId: number;
   columnIndex: number;
   totalColumns: number;
@@ -20,15 +20,14 @@ export type TimeBoundary = {
   occurrenceId: number;
 };
 
-export type DailyOccurrences = Map<string, OccurrenceGridPosition[]>;
+export type DailyOccurrences = Map<string, LayoutOccurrence[]>;
 
-export type MergedOccurrence = Omit<
+export type UIOccurrence = Omit<
   Event,
   "id" | "startTime" | "endTime" | "userId"
 > & {
   eventId: number;
   occurrenceId: number;
-  startTime: Temporal.ZonedDateTime;
-  endTime: Temporal.ZonedDateTime;
-  userId?: string;
+  startTime: Date;
+  endTime: Date;
 };

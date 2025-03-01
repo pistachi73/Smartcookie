@@ -16,7 +16,7 @@ import {
   CalendarAdd02Icon,
   CalendarSetting02Icon,
 } from "@hugeicons/react";
-import { Profiler, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import type { z } from "zod";
 import { useShallow } from "zustand/react/shallow";
@@ -29,6 +29,7 @@ const isValidFiniteNumber = (input: unknown): boolean =>
   typeof input === "number" && Number.isFinite(input);
 
 export const EventOccurrenceFormSheet = () => {
+  console.log("----EventOccurrenceFormSheet---");
   const [isDiscardModalOpen, setIsDiscardModalOpen] = useState(false);
   const { removeOccurrences, editedOccurrenceId, setEdittedOccurrenceId } =
     useCalendarStore(
@@ -115,12 +116,7 @@ export const EventOccurrenceFormSheet = () => {
   const isEdittingEvent = isValidFiniteNumber(editedOccurrenceId);
 
   return (
-    <Profiler
-      id="EventForm"
-      onRender={(id, phase, actualTime) => {
-        // console.log(`${id} ${phase} took ${actualTime}ms`);
-      }}
-    >
+    <>
       <Sheet.Content
         isOpen={isEdittingEvent}
         onOpenChange={onClose}
@@ -234,6 +230,6 @@ export const EventOccurrenceFormSheet = () => {
         onOpenChange={setIsDiscardModalOpen}
         onDiscardChanges={closeEditSidebar}
       />
-    </Profiler>
+    </>
   );
 };

@@ -43,7 +43,6 @@ export const getCalendarDataUseCase = async (userId: string) => {
   result.forEach((record) => {
     const event = record.event;
     const occurrence = record.event_occurrence;
-    events.push(event);
     if (occurrence) {
       const timezone = occurrence.overrides?.timezone || event.timezone;
       const startInstant = Temporal.Instant.from(occurrence.startTime);
@@ -51,8 +50,12 @@ export const getCalendarDataUseCase = async (userId: string) => {
 
       occurrences.push({
         ...occurrence,
-        startTime: startInstant.toZonedDateTimeISO(timezone).toString(),
-        endTime: endInstant.toZonedDateTimeISO(timezone).toString(),
+        startTime: startInstant.toZonedDateTimeISO(timezone).toString({
+          timeZoneName: "never",
+        }),
+        endTime: endInstant.toZonedDateTimeISO(timezone).toString({
+          timeZoneName: "never",
+        }),
       });
     }
   });

@@ -19,7 +19,7 @@ export const superjsonStorage: PersistStorage<any> = {
     return superjson.parse(str);
   },
   setItem: (name, value) => {
-    localStorage.setItem(name, superjson.stringify(value));
+    window?.localStorage?.setItem(name, superjson.stringify(value));
   },
   removeItem: (name) => localStorage.removeItem(name),
 };

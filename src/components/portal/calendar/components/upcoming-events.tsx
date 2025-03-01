@@ -1,102 +1,119 @@
-import { ArrowRight02Icon, Clock02Icon } from "@hugeicons/react";
+import {
+  ArrowRight02Icon,
+  Calendar01Icon,
+  Clock02Icon,
+} from "@hugeicons/react";
 import { Temporal } from "@js-temporal/polyfill";
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 
-import type { MergedOccurrence } from "../calendar.types";
+import type { UIOccurrence } from "../calendar.types";
 import { getCalendarColor, getDayKeyFromDate } from "../utils";
 
 import { Heading } from "@/components/ui/new/ui";
 
-import { get24HourTime, getMonthAbbrev } from "@/lib/temporal/format";
 import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 
-import { useCalendarStore } from "@/providers/calendar-store-provider";
-import { mergeEventAndOccurrence } from "@/stores/calendar-store";
-import { useShallow } from "zustand/react/shallow";
+import {
+  CalendarStoreContext,
+  useCalendarStore,
+} from "@/providers/calendar-store-provider";
 
 export const UpcomingEvents = () => {
-  const now = Temporal.Now.plainDateTimeISO();
+  // Get the store context to access the store instance
+  const calendarStore = useContext(CalendarStoreContext);
 
-  const upcomingOccurrenceIds = useCalendarStore(
-    useShallow((store) =>
-      store.dailyOccurrencesIds.get(getDayKeyFromDate(now)),
-    ),
+  // Memoize the current date to prevent it from changing on each render
+  const now = useMemo(() => new Date(), []);
+
+  // Memoize the day key to prevent recalculation on each render
+  const todayKey = useMemo(() => {
+    return getDayKeyFromDate(
+      Temporal.PlainDate.from({
+        year: now.getFullYear(),
+        month: now.getMonth() + 1,
+        day: now.getDate(),
+      }),
+    );
+  }, [now]);
+
+  // Get layout occurrences with memoized dependency
+  const layoutOccurrences = useCalendarStore((state) =>
+    state.getLayoutOccurrences(todayKey),
   );
-  const occurrences = useCalendarStore(
-    useShallow((store) => store.occurrences),
-  );
-  const events = useCalendarStore(useShallow((store) => store.events));
+
+  const occurrenceIds = useMemo(() => {
+    if (!layoutOccurrences || !Array.isArray(layoutOccurrences)) return [];
+    return layoutOccurrences.map((layout) => layout.occurrenceId);
+  }, [layoutOccurrences]);
 
   const upcomingOccurrences = useMemo(() => {
-    const nowPlainTime = Temporal.Now.plainTimeISO();
-    const upcomingOccurrences: MergedOccurrence[] = [];
-    if (!upcomingOccurrenceIds?.size) return [];
+    if (!occurrenceIds.length || !calendarStore) return [];
 
-    for (const upcomingOccurrenceId of upcomingOccurrenceIds) {
-      if (upcomingOccurrenceId === -1) continue;
-      const occurrence = occurrences.get(upcomingOccurrenceId);
-
-      if (!occurrence) continue;
-
-      const event = events.get(occurrence.eventId);
-
-      if (!event) continue;
-
-      const mergedOccurrence = mergeEventAndOccurrence({
-        event,
-        occurrence,
+    return occurrenceIds
+      .map((id) => {
+        const state = calendarStore.getState();
+        return state.getUIOccurrence(id);
+      })
+      .filter((occ): occ is UIOccurrence => {
+        return occ !== null && occ.startTime >= now;
       });
-
-      if (
-        Temporal.PlainTime.compare(
-          mergedOccurrence.startTime.toPlainTime(),
-          nowPlainTime,
-        ) > 0
-      ) {
-        upcomingOccurrences.push(mergedOccurrence);
-      }
-    }
-
-    return upcomingOccurrences;
-  }, [events, occurrences, upcomingOccurrenceIds]);
+  }, [occurrenceIds, now, calendarStore]);
 
   return (
     <div className="flex flex-col gap-3 relative items-stretch">
       <div className="flex flex-row items-center gap-3 p-2">
         <div className="flex flex-col items-center bg-overlay rounded-sm border-fg/25 border overflow-hidden ">
           <p className="text-xs bg-overlay-highlight px-3 py-0.5 text-muted-fg">
-            {getMonthAbbrev(now)}
+            {format(now, "MMM")}
           </p>
-          <p className="py-0.5  font-semibold">
-            {String(now.day).padStart(2, "0")}
-          </p>
+          <p className="py-0.5  font-semibold">{format(now, "dd")}</p>
         </div>
         <div>
           <Heading level={4}>Upcoming Events</Heading>
-          <p className="text-sm text-muted-fg">Don’t miss scheduled events</p>
+          <p className="text-sm text-muted-fg">Don't miss scheduled events</p>
         </div>
       </div>
 
       <div className="space-y-2">
-        {upcomingOccurrences.slice(0, 3).map((occurrence) => (
-          <UpcomingOccurrenceCard
-            key={`upcoming-occurrence-${occurrence.occurrenceId}`}
-            occurrence={occurrence}
-          />
-        ))}
+        {upcomingOccurrences.length > 0 ? (
+          upcomingOccurrences
+            .slice(0, 3)
+            .map((occurrence) => (
+              <UpcomingOccurrenceCard
+                key={`upcoming-occurrence-${occurrence.occurrenceId}`}
+                occurrence={occurrence}
+              />
+            ))
+        ) : (
+          <EmptyUpcomingEvents />
+        )}
       </div>
+    </div>
+  );
+};
+
+const EmptyUpcomingEvents = () => {
+  return (
+    <div className="flex flex-col items-center justify-center py-6 px-4 bg-overlay-elevated rounded-md text-center">
+      <Calendar01Icon
+        size={36}
+        className="text-muted-fg mb-3"
+        variant="stroke"
+      />
+      <p className="text-sm font-medium mb-1">No upcoming events</p>
+      <p className="text-xs text-muted-fg">Your schedule is clear for now</p>
     </div>
   );
 };
 
 const UpcomingOccurrenceCard = ({
   occurrence,
-}: { occurrence: MergedOccurrence }) => {
+}: { occurrence: UIOccurrence }) => {
   const color = getCalendarColor(occurrence.color);
 
   return (
     <div
-      key={`upcoming-event-${occurrence.occurrenceId}`}
       className={cn(
         "bg-overlay-elevated",
         "relative h-full w-full flex items-stretch rounded-md gap-3 pl-1 pr-2",
@@ -115,9 +132,9 @@ const UpcomingOccurrenceCard = ({
         <div className="flex flex-row items-center gap-1.5">
           <Clock02Icon size={12} variant="stroke" />
           <div className="flex items-center gap-1 text-xs text-muted-fg">
-            {get24HourTime(occurrence.startTime)}
+            {format(occurrence.startTime, "HH:mm")}
             <ArrowRight02Icon size={14} />
-            {get24HourTime(occurrence.endTime)}
+            {format(occurrence.endTime, "HH:mm")}
           </div>
         </div>
         <p className="text-sm line-clamp-2 font-normal leading-tight">

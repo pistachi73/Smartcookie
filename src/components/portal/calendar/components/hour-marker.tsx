@@ -3,8 +3,7 @@ import { Temporal } from "@js-temporal/polyfill";
 import { useCurrentTime } from "../use-current-time";
 
 export const HourMarker = ({ date }: { date: Temporal.PlainDate }) => {
-  const { top } = useCurrentTime();
-
+  const { top, label } = useCurrentTime();
   const today = date.equals(Temporal.Now.plainDateISO());
 
   return (
@@ -17,9 +16,9 @@ export const HourMarker = ({ date }: { date: Temporal.PlainDate }) => {
       )}
       style={{ top: top }}
     >
-      {/* <div className="bg-primary border px-1 rounded-xs text-sm font-semibold absolute top-1/2 -translate-y-1/2 right-[calc(100%+var(--spacing)*2)]">
-        {format(now, "HH:mm")}
-      </div> */}
+      <div className="bg-primary border px-1 rounded-xs text-sm font-semibold absolute top-1/2 -translate-y-1/2 right-[calc(100%+var(--spacing)*2)]">
+        {label}
+      </div>
     </div>
   );
 };

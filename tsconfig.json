@@ -10,11 +10,7 @@
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "checkJs": true,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "ES2022"
-    ],
+    "lib": ["dom", "dom.iterable", "ES2024"],
     "noEmit": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
@@ -27,15 +23,9 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@/emails/*": [
-        "./src/emails/*"
-      ],
-      "ui": [
-        "./src/components/ui/index.ts"
-      ]
+      "@/*": ["./src/*"],
+      "@/emails/*": ["./src/emails/*"],
+      "ui": ["./src/components/ui/index.ts"]
     }
   },
   "include": [
@@ -47,7 +37,5 @@
     "**/*.js",
     ".next/types/**/*.ts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

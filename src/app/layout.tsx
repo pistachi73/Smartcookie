@@ -3,6 +3,7 @@ import "@/styles/scrollbar.css";
 
 import { auth } from "@/auth-config";
 import { DeviceOnlyProvider } from "@/components/device-only/device-only-provider";
+import { ReactScan } from "@/components/react-scan";
 import { ToastNotification } from "@/components/toast-notification";
 import { Toast } from "@/components/ui/new/ui";
 import { Providers } from "@/providers/providers";
@@ -28,6 +29,7 @@ export default async function RootLayout({
 
   return (
     <html lang={"en-GB"} dir={"ltr"} suppressHydrationWarning>
+      <ReactScan />
       <body className={`f${sans.variable} font-sans min-h-screen`}>
         <Providers>
           <SessionProvider session={session}>

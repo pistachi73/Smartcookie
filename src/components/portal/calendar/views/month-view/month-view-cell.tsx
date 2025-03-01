@@ -29,15 +29,18 @@ export const MonthViewCell = ({
 }: MonthCalendarDayCellProps) => {
   const dayKey = useMemo(() => getDayKeyFromDate(date), [date]);
 
-  const { dailyOccurrences, selectedDate } = useCalendarStore(
-    useShallow((store) => ({
-      selectedDate: store.selectedDate,
-      dailyOccurrences: store.dailyOccurrencesGridPosition.get(dayKey),
-    })),
-  );
+  const { selectedDate, layoutOccurrences, updateLayoutCache } =
+    useCalendarStore(
+      useShallow((store) => ({
+        selectedDate: store.selectedDate,
+        layoutOccurrences: store.getLayoutOccurrences(dayKey),
+        updateLayoutCache: store.updateLayoutCache,
+      })),
+    );
 
   const sessionsContainerRef = useRef<HTMLDivElement>(null);
-  const totalOccurrences = dailyOccurrences?.length ?? 0;
+
+  const totalOccurrences = layoutOccurrences?.length ?? 0;
 
   const [visibleOccurrences, setVisibleOccurrences] =
     useState<number>(totalOccurrences);
@@ -66,6 +69,13 @@ export const MonthViewCell = ({
     };
   }, []);
 
+  useEffect(() => {
+    // Update the cache outside of render
+    if (layoutOccurrences) {
+      updateLayoutCache(dayKey, layoutOccurrences);
+    }
+  }, [dayKey, layoutOccurrences, updateLayoutCache]);
+
   const isToday = date.day === Temporal.Now.plainDateISO().day;
   const isSelectedDate = date.day === selectedDate.day;
 
@@ -92,7 +102,7 @@ export const MonthViewCell = ({
         ref={sessionsContainerRef}
         className="mt-1 overflow-hidden grow p-1 w-full space-y-1"
       >
-        {dailyOccurrences?.slice(0, visibleOccurrences).map((occurrence) => (
+        {layoutOccurrences?.slice(0, visibleOccurrences).map((occurrence) => (
           <MonthViewOccurrence
             key={`event-ocurrence-${occurrence.occurrenceId}`}
             occurrenceId={occurrence.occurrenceId}
@@ -127,7 +137,7 @@ export const MonthViewCell = ({
                 </p>
               </Popover.Header>
               <Popover.Body className="space-y-1 w-full pb-4">
-                {dailyOccurrences?.map((occurrence) => (
+                {layoutOccurrences?.map((occurrence) => (
                   <MonthViewOccurrence
                     key={`event-ocurrence-${occurrence.occurrenceId}`}
                     occurrenceId={occurrence.occurrenceId}

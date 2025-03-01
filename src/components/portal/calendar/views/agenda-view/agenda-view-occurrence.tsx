@@ -1,24 +1,38 @@
 import { Popover } from "@/components/ui/new/ui";
-import { get24HourTime } from "@/lib/temporal/format";
 import { cn } from "@/lib/utils";
+import { useCalendarStore } from "@/providers/calendar-store-provider";
+import { format } from "date-fns";
+import { useEffect } from "react";
 import { Button } from "react-aria-components";
+import { useShallow } from "zustand/react/shallow";
 import { EventOccurrencePopover } from "../../components/event-occurrence-popover-content";
-import { useMergedOccurrence } from "../../hooks/use-merged-occurrence";
 import { getCalendarColor } from "../../utils";
 
 export const AgendaViewOccurrence = ({
   occurrenceId,
 }: { occurrenceId: number }) => {
-  const mergedOccurrence = useMergedOccurrence({
-    occurrenceId,
-  });
+  const { uiOccurrence, cacheUIOccurrence } = useCalendarStore(
+    useShallow((store) => ({
+      uiOccurrence: store.getUIOccurrence(occurrenceId),
+      cacheUIOccurrence: store.cacheUIOccurrence,
+    })),
+  );
 
-  if (!mergedOccurrence) return null;
-  const color = getCalendarColor(mergedOccurrence.color);
+  // If we have a UI occurrence, cache it for future use
+  useEffect(() => {
+    if (uiOccurrence) {
+      cacheUIOccurrence(occurrenceId, uiOccurrence);
+    }
+  }, [occurrenceId, uiOccurrence, cacheUIOccurrence]);
+
+  if (!uiOccurrence) return null;
+
+  const color = getCalendarColor(uiOccurrence.color);
+
   return (
     <Popover>
       <Button
-        key={`event-occurrence-${mergedOccurrence.occurrenceId}`}
+        key={`event-occurrence-${uiOccurrence.occurrenceId}`}
         className={cn(
           "relative h-full w-full border brightness-100 flex items-center rounded-md gap-3 px-1 transition-colors",
           "hover:bg-overlay-highlight cursor-pointer",
@@ -36,16 +50,16 @@ export const AgendaViewOccurrence = ({
           )}
         >
           <p className="text-sm line-clamp-2 font-normal leading-tight mb-0.5">
-            {mergedOccurrence.title}
+            {uiOccurrence.title || "Untitled"}
           </p>
           <span className="text-xs line-clamp-1 text-text-sub">
-            {get24HourTime(mergedOccurrence.startTime)} -{" "}
-            {get24HourTime(mergedOccurrence.endTime)}
+            {format(uiOccurrence.startTime, "HH:mm")} -{" "}
+            {format(uiOccurrence.endTime, "HH:mm")}
           </span>
         </div>
       </Button>
       <EventOccurrencePopover
-        occurrence={mergedOccurrence}
+        occurrence={uiOccurrence}
         popoverProps={{
           placement: "end",
           offset: -200,

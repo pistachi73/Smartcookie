@@ -24,12 +24,12 @@ export const HoursColumn = () => {
         })}
       </div>
 
-      <div
+      {/* <div
         className="text-sm font-medium absolute h-5 right-0 bg-primary/80 px-1 border rounded-xs border-fg/20 flex items-center justify-center"
         style={{ top: `calc(${top}px - (var(--spacing) * 5 / 2) + 1px)` }}
       >
         <p className="text-xs tabular-nums">{label}</p>
-      </div>
+      </div> */}
     </div>
   );
 };

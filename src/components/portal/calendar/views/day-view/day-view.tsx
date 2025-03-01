@@ -1,47 +1,20 @@
 "use client";
-import { getStartOfWeek } from "@/lib/temporal/week";
 import { cn } from "@/lib/utils";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
 import { useMemo } from "react";
-import { useShallow } from "zustand/react/shallow";
 import { CalendarRows } from "../../calendar-rows";
 import { HoursColumn } from "../../components/hours-column";
-import { getCurrentTimezone, getDayKeyFromDate } from "../../utils";
+import { getCurrentTimezone } from "../../utils";
 import { DayColumn } from "./day-column";
 
-const useWeekView = () =>
-  useCalendarStore(
-    useShallow(({ selectedDate }) => ({
-      selectedDate,
-    })),
-  );
-
-type DayViewProps = {
-  numberOfDays: 1 | 5 | 7;
-};
-
-export const DayView = ({ numberOfDays }: DayViewProps) => {
-  const { selectedDate } = useWeekView();
-
-  const startOfWeek = useMemo(
-    () => getStartOfWeek(selectedDate),
-    [selectedDate],
-  );
-
-  const days = useMemo(() => {
-    return numberOfDays === 1
-      ? [selectedDate]
-      : Array.from({ length: numberOfDays }).map((_, i) =>
-          startOfWeek.add({ days: i }),
-        );
-  }, [startOfWeek, selectedDate, numberOfDays]);
+export const DayView = () => {
+  const selectedDate = useCalendarStore((store) => store.selectedDate);
+  const visibleDates = useCalendarStore((store) => store.visibleDates);
 
   const timezoneOffsetHours = useMemo(
     () => getCurrentTimezone().offsetHours,
     [],
   );
-
-  console.log({ days });
 
   return (
     <div className="flex flex-col h-full relative overflow-hidden ">
@@ -53,7 +26,7 @@ export const DayView = ({ numberOfDays }: DayViewProps) => {
           </p>
         </div>
         <div className="flex items-center w-full">
-          {days.map((date) => {
+          {visibleDates.map((date) => {
             const isSelected = date.equals(selectedDate);
             return (
               <p
@@ -79,8 +52,8 @@ export const DayView = ({ numberOfDays }: DayViewProps) => {
           <HoursColumn />
           <div className="flex flex-row w-full h-auto relative">
             <CalendarRows />
-            {days.map((date) => (
-              <DayColumn key={getDayKeyFromDate(date)} date={date} />
+            {visibleDates.map((date) => (
+              <DayColumn key={date.toString()} date={date} />
             ))}
           </div>
         </div>

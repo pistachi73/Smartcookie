@@ -2,26 +2,27 @@
 
 import { cn } from "@/lib/utils";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
+import type { CalendarStore } from "@/stores/calendar-store/calendar-store.types";
 import { regularSpring } from "@/utils/animation";
 import { AnimatePresence, motion } from "motion/react";
-import { useShallow } from "zustand/react/shallow";
+import { memo } from "react";
 import { CalendarHeader } from "./calendar-header";
 import { AgendaView } from "./views/agenda-view/agenda-view";
 import { DayView } from "./views/day-view/day-view";
 import { MonthView } from "./views/month-view/month-view";
 
-const useCalendar = () =>
-  useCalendarStore(useShallow(({ calendarView }) => ({ calendarView })));
+const calendarAnimation = {
+  initial: { opacity: 0, x: -20 },
+  animate: { opacity: 1, x: 0 },
+  exit: { opacity: 0, x: 20 },
+  transition: regularSpring,
+};
 
-export const CalendarView = () => {
-  const { calendarView } = useCalendar();
+// Create a stable selector function outside the component
+const calendarViewSelector = (state: CalendarStore) => state.calendarView;
 
-  const calendarAnimation = {
-    initial: { opacity: 0, x: -20 },
-    animate: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: 20 },
-    transition: regularSpring,
-  };
+export const CalendarView = memo(() => {
+  const calendarView = useCalendarStore(calendarViewSelector);
 
   return (
     <div
@@ -39,15 +40,9 @@ export const CalendarView = () => {
             key={`${calendarView}-view`}
             className="overflow-hidden h-full w-full grow bg-overlay rounded-lg"
           >
-            {calendarView === "day" && (
-              <DayView key="day-view" numberOfDays={1} />
-            )}
-            {calendarView === "weekday" && (
-              <DayView key="weekday-view" numberOfDays={5} />
-            )}
-            {calendarView === "week" && (
-              <DayView key="week-view" numberOfDays={7} />
-            )}
+            {calendarView === "day" && <DayView key="day-view" />}
+            {calendarView === "weekday" && <DayView key="weekday-view" />}
+            {calendarView === "week" && <DayView key="week-view" />}
             {calendarView === "month" && <MonthView key="month-view" />}
             {calendarView === "agenda" && <AgendaView key="agenda-view" />}
           </motion.div>
@@ -55,4 +50,4 @@ export const CalendarView = () => {
       </div>
     </div>
   );
-};
+});
