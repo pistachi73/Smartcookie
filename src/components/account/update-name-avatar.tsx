@@ -3,21 +3,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useRef } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/new/ui/button";
+import { Card } from "@/components/ui/new/ui/card";
+import { Form } from "@/components/ui/new/ui/form";
+import { TextField } from "@/components/ui/new/ui/text-field";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useSafeAction } from "@/hooks/use-safe-action";
@@ -53,13 +46,13 @@ export const UpdateNameAvatar = () => {
   return (
     <Card className="shadow-md relative overflow-hidden">
       <div className="absolute inset-0 z-10 flex items-center justify-center bg-secondary w-full h-1" />
-      <CardHeader>
-        <CardTitle className="flex flex-row gap-2 text-xl items-center">
+      <Card.Header>
+        <Card.Title className="flex flex-row gap-2 items-center">
           <AccountSetting02Icon size={20} />
           Personal Information
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="p-6 pt-0 space-y-6">
+        </Card.Title>
+      </Card.Header>
+      <Card.Content className="pt-0 space-y-6">
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
@@ -86,44 +79,39 @@ export const UpdateNameAvatar = () => {
           </div>
         </button>
         <input type="file" ref={fileInputRef} className="hidden" />
-        <Form {...nameForm}>
-          <form
-            onSubmit={nameForm.handleSubmit(onSubmit)}
-            className="space-y-4"
-          >
-            <FormField
+        <Form onSubmit={nameForm.handleSubmit(onSubmit)}>
+          <div className="space-y-4">
+            <Controller
               control={nameForm.control}
               name="name"
-              render={({ field }) => (
-                <FormItem className="max-w-[500px]">
-                  <FormLabel className="block">Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      autoComplete="name"
-                      className="text-sm"
-                      disabled={isUpdatingName}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+              render={({ field, fieldState }) => (
+                <TextField
+                  {...field}
+                  label="Name"
+                  autoComplete="name"
+                  className={{ input: "text-sm" }}
+                  isDisabled={isUpdatingName}
+                  errorMessage={fieldState.error?.message}
+                />
               )}
             />
-            <div className="w-full flex flex-row items-center justify-end">
-              <Button
-                size={"sm"}
-                isDisabled={!nameForm.formState.isDirty || isUpdatingName}
-                type="submit"
-              >
-                {isUpdatingName && (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                )}
-                Save
-              </Button>
-            </div>
-          </form>
+            <Card.Footer className="pt-4 px-0">
+              <div className="ml-auto">
+                <Button
+                  size="small"
+                  isDisabled={!nameForm.formState.isDirty || isUpdatingName}
+                  type="submit"
+                >
+                  {isUpdatingName && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  Save
+                </Button>
+              </div>
+            </Card.Footer>
+          </div>
         </Form>
-      </CardContent>
+      </Card.Content>
     </Card>
   );
 };

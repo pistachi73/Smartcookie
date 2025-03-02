@@ -5,7 +5,7 @@ import { MaxWidthWrapper } from "./max-width-wrapper";
 
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { AuthButton } from "./auth/auth-button";
-import { Button } from "./ui/button";
+import { Button } from "./ui/new/ui";
 import { ThemeSwitcher } from "./ui/theme-switcher";
 
 export const Header = () => {
@@ -21,9 +21,7 @@ export const Header = () => {
             <UserButton user={user} />
           ) : (
             <AuthButton asChild>
-              <Button variant="ghost" size="default" className="2xl">
-                Sign in
-              </Button>
+              <Button className="2xl">Sign in</Button>
             </AuthButton>
           )}
         </div>

@@ -1,29 +1,17 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { CodeField } from "@/components/ui/react-aria/code-field";
+import { Button } from "@/components/ui/new/ui/button";
+import { Card } from "@/components/ui/new/ui/card";
+import { Form } from "@/components/ui/new/ui/form";
+import { InputOTP } from "@/components/ui/new/ui/input-otp";
+import { TextField } from "@/components/ui/new/ui/text-field";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useSafeAction } from "@/hooks/use-safe-action";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MailAtSign02Icon } from "@hugeicons/react";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
 import { updateUserEmailAction } from "./actions";
@@ -59,117 +47,119 @@ export const UpdateEmail = () => {
   if (user.isOAuth) {
     return (
       <Card className="shadow-md overflow-hidden bg-accent/50">
-        <CardHeader className="p-2">
-          <div className="p-4 flex flex-row gap-2 items-center justify-between ">
+        <Card.Header className="p-2">
+          <div className="p-4 flex flex-row gap-2 items-center justify-between">
             <div className="space-y-1">
-              <CardTitle className="flex flex-row gap-2 text-xl items-center">
+              <Card.Title className="flex flex-row gap-2 items-center">
                 <MailAtSign02Icon className="w-5 h-5" />
                 Email
-              </CardTitle>
-              <CardDescription>
+              </Card.Title>
+              <Card.Description>
                 Can't change email because you are logged in with OAuth.
-              </CardDescription>
+              </Card.Description>
             </div>
           </div>
-        </CardHeader>
-        <CardContent className="p-6 pt-0 space-y-6">
-          <Input
+        </Card.Header>
+        <Card.Content className="pt-0 space-y-6">
+          <TextField
             value={user?.email ?? ""}
-            className="text-sm max-w-[500px]"
-            disabled
+            className={{ input: "text-sm" }}
+            isDisabled
           />
-        </CardContent>
+        </Card.Content>
       </Card>
     );
   }
 
   return (
     <Card className="shadow-md">
-      <CardHeader>
-        <CardTitle className="flex flex-row gap-2 text-xl items-center">
+      <Card.Header>
+        <Card.Title className="flex flex-row gap-2 items-center">
           <MailAtSign02Icon className="w-5 h-5" />
           Email
-        </CardTitle>
-        <CardDescription>
+        </Card.Title>
+        <Card.Description>
           {isVerifyingEmail
             ? "Enter the code sent to your new email!"
             : "Enter the email addresses you want to use to log in with OH."}
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="p-6 pt-0 space-y-6">
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(updateUserEmail)}
-            className="space-y-4"
-          >
+        </Card.Description>
+      </Card.Header>
+      <Card.Content className="pt-0 space-y-6">
+        <Form onSubmit={form.handleSubmit(updateUserEmail)}>
+          <div className="space-y-4">
             {isVerifyingEmail ? (
-              <FormField
+              <Controller
                 control={form.control}
                 name="verificationToken"
-                render={({ field }) => (
-                  <FormItem className="w-fit">
-                    <FormControl>
-                      <CodeField
-                        {...field}
-                        length={6}
-                        autoFocus
-                        isDisabled={isUpdatingEmail}
-                      />
-                    </FormControl>
+                render={({ field, fieldState }) => (
+                  <div className="w-fit">
+                    <div className="mb-2">
+                      <InputOTP maxLength={6} autoFocus {...field}>
+                        <InputOTP.Group>
+                          <InputOTP.Slot index={0} />
+                          <InputOTP.Slot index={1} />
+                          <InputOTP.Slot index={2} />
+                          <InputOTP.Slot index={3} />
+                          <InputOTP.Slot index={4} />
+                          <InputOTP.Slot index={5} />
+                        </InputOTP.Group>
+                      </InputOTP>
+                    </div>
+                    {fieldState.error?.message && (
+                      <p className="text-sm text-red-500 mt-1">
+                        {fieldState.error.message}
+                      </p>
+                    )}
                     <ResendVerificationEmailButton
                       isUpdatingEmail={isUpdatingEmail}
                       email={form.getValues("email")}
                     />
-                    <FormMessage />
-                  </FormItem>
+                  </div>
                 )}
               />
             ) : (
-              <FormField
+              <Controller
                 control={form.control}
                 name="email"
-                render={({ field }) => (
-                  <FormItem className="max-w-[500px]">
-                    <FormControl>
-                      <Input
-                        {...field}
-                        value={form.getValues("email")}
-                        autoComplete="email"
-                        className="text-sm"
-                        disabled={isUpdatingEmail}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+                render={({ field, fieldState }) => (
+                  <TextField
+                    {...field}
+                    value={form.getValues("email")}
+                    autoComplete="email"
+                    className={{ input: "text-sm" }}
+                    isDisabled={isUpdatingEmail}
+                    errorMessage={fieldState.error?.message}
+                  />
                 )}
               />
             )}
-            <div className="w-full flex flex-row items-center justify-end gap-1">
-              {isVerifyingEmail && (
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  type="button"
-                  isDisabled={isUpdatingEmail}
-                  onPress={() => setIsVerifyingEmail(false)}
-                >
-                  Back
-                </Button>
-              )}
-              <Button
-                isDisabled={!form.formState.isDirty || isUpdatingEmail}
-                type="submit"
-                size="sm"
-              >
-                {isUpdatingEmail && (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            <Card.Footer className="pt-4 px-0">
+              <div className="ml-auto flex items-center gap-1">
+                {isVerifyingEmail && (
+                  <Button
+                    size="small"
+                    type="button"
+                    isDisabled={isUpdatingEmail}
+                    onPress={() => setIsVerifyingEmail(false)}
+                  >
+                    Back
+                  </Button>
                 )}
-                {isVerifyingEmail ? "Verify email" : "Save"}
-              </Button>
-            </div>
-          </form>
+                <Button
+                  isDisabled={!form.formState.isDirty || isUpdatingEmail}
+                  type="submit"
+                  size="small"
+                >
+                  {isUpdatingEmail && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  {isVerifyingEmail ? "Verify email" : "Save"}
+                </Button>
+              </div>
+            </Card.Footer>
+          </div>
         </Form>
-      </CardContent>
+      </Card.Content>
     </Card>
   );
 };

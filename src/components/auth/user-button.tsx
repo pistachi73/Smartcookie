@@ -1,67 +1,48 @@
 "use client";
 import { Home, LogOut } from "lucide-react";
+import { signOut } from "next-auth/react";
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Menu } from "@/components/ui/new/ui/menu";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import type { ExtendedUser } from "@/types/next-auth";
-import Link from "next/link";
-import { LogoutButton } from "./logout-button";
 
 export const UserButton = ({ user }: { user: ExtendedUser }) => {
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger>
+    <Menu>
+      <Menu.Trigger>
         <UserAvatar
           userImage={user?.image}
           userName={user?.name}
           size={"default"}
         />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        align="end"
-        sideOffset={4}
-        className="w-[300px] p-2 px-0"
-      >
-        <DropdownMenuLabel className="mx-2 flex flex-row gap-3 items-center">
-          <UserAvatar
-            userImage={user?.image}
-            userName={user?.name}
-            className="h-12 w-12 shrink-0 text-lg"
-          />
-          <div className="overflow-hidden">
-            <p className="text-md font-medium">{user?.name}</p>
-            <p className="text-text-sub text-sm truncate font-normal">
-              {user?.email}
-            </p>
+      </Menu.Trigger>
+      <Menu.Content placement="bottom end" popoverClassName="w-[300px]">
+        <Menu.Header>
+          <div className="flex flex-row gap-3 items-center">
+            <UserAvatar
+              userImage={user?.image}
+              userName={user?.name}
+              className="h-12 w-12 shrink-0 text-lg"
+            />
+            <div className="overflow-hidden">
+              <p className="text-md font-medium">{user?.name}</p>
+              <p className="text-text-sub text-sm truncate font-normal">
+                {user?.email}
+              </p>
+            </div>
           </div>
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator className="my-2 bg-border" />
-        <DropdownMenuItem
-          className="mx-2 flex flex-row gap-2 items-center cursor-pointer text-sm py-2 text-text-sub"
-          asChild
-        >
-          <Link href="/account">
-            <Home className="h-5 w-5" />
-            Account
-          </Link>
-        </DropdownMenuItem>
-
-        <DropdownMenuSeparator className="my-2 bg-border" />
-
-        <LogoutButton asChild>
-          <DropdownMenuItem className=" mx-2 flex flex-row gap-2 items-center cursor-pointer text-sm py-2 text-muted-foreground">
-            <LogOut className="h-5 w-5" />
-            Logout
-          </DropdownMenuItem>
-        </LogoutButton>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        </Menu.Header>
+        <Menu.Separator />
+        <Menu.Item href="/account">
+          <Home className="h-5 w-5 mr-2" />
+          Account
+        </Menu.Item>
+        <Menu.Separator />
+        <Menu.Item onAction={() => signOut({ redirectTo: "/" })}>
+          <LogOut className="h-5 w-5 mr-2" />
+          Logout
+        </Menu.Item>
+      </Menu.Content>
+    </Menu>
   );
 };

@@ -1,6 +1,5 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar } from "@/components/ui/new/ui/avatar";
 import { cn } from "@/lib/utils";
-import { UserIcon } from "@hugeicons/react";
 import { type VariantProps, cva } from "class-variance-authority";
 import { useMemo } from "react";
 
@@ -52,17 +51,12 @@ export const UserAvatar = ({
   }, [userName]);
 
   return (
-    <Avatar className={cn(userAvatarVariants({ size }), className)}>
-      <AvatarImage src={userImage ?? undefined} />
-      <AvatarFallback className="text-light font-medium bg-primary-500">
-        {initials ?? (
-          <UserIcon
-            variant="solid"
-            size={iconSizeMap[size ?? "default"]}
-            className="text-light"
-          />
-        )}
-      </AvatarFallback>
-    </Avatar>
+    <Avatar
+      className={cn(userAvatarVariants({ size }), className)}
+      src={userImage ?? undefined}
+      initials={initials}
+      alt={userName ?? undefined}
+      shape="circle"
+    />
   );
 };

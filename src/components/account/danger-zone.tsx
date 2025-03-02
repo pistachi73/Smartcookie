@@ -1,15 +1,8 @@
 "use client";
-import {
-  ResponsiveDialog,
-  ResponsiveDialogContent,
-  ResponsiveDialogDescription,
-  ResponsiveDialogFooter,
-  ResponsiveDialogHeader,
-  ResponsiveDialogTitle,
-} from "@/components/ui/responsive-dialog";
+import { Button } from "@/components/ui/new/ui/button";
+import { Card } from "@/components/ui/new/ui/card";
+import { Modal } from "@/components/ui/new/ui/modal";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSafeAction } from "@/hooks/use-safe-action";
 import { cn } from "@/lib/utils";
 import { regularSpring } from "@/utils/animation";
@@ -37,17 +30,20 @@ export const DangerZone = () => {
           isOpen && "bg-destructive/10",
         )}
       >
-        <CardHeader className="p-2" onClick={() => setIsOpen(!isOpen)}>
-          <div className="p-4 flex flex-row gap-2 items-center justify-between cursor-pointer hover:bg-destructive/10 transition-colors rounded-md ">
-            <CardTitle className="flex flex-row gap-2 text-xl items-center">
+        <Card.Header
+          className="p-2 cursor-pointer"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <div className="p-4 flex flex-row gap-2 items-center justify-between hover:bg-destructive/10 transition-colors rounded-md">
+            <Card.Title className="flex flex-row gap-2 items-center">
               <Alert01Icon size={20} />
               Danger zone
-            </CardTitle>
+            </Card.Title>
             <ArrowDown01Icon
               className={cn("transition-transform", isOpen && "rotate-180")}
             />
           </div>
-        </CardHeader>
+        </Card.Header>
         <AnimatePresence initial={false}>
           {isOpen && (
             <motion.div
@@ -56,7 +52,7 @@ export const DangerZone = () => {
               exit={{ opacity: 0, height: 0 }}
               transition={regularSpring}
             >
-              <CardContent className="p-6 pt-0 space-y-6">
+              <Card.Content className="pt-0 space-y-6">
                 <p>
                   Permanently remove your Personal Account and all of its
                   contents from the Vercel platform. This action is not
@@ -64,44 +60,42 @@ export const DangerZone = () => {
                 </p>
                 <div className="w-full flex flex-row items-center justify-end">
                   <Button
-                    size={"sm"}
+                    size="small"
                     type="button"
-                    variant={"destructive"}
+                    intent="danger"
                     onPress={() => setIsAlertOpen(true)}
                   >
                     Remove account
                   </Button>
                 </div>
-              </CardContent>
+              </Card.Content>
             </motion.div>
           )}
         </AnimatePresence>
       </Card>
-      <ResponsiveDialog
-        open={isAlertOpen}
-        onOpenChange={(open) => setIsAlertOpen(open)}
-      >
-        <ResponsiveDialogContent>
-          <ResponsiveDialogHeader className="text-balance">
-            <ResponsiveDialogTitle className="text-xl">
-              Are you absolutely sure?
-            </ResponsiveDialogTitle>
-            <ResponsiveDialogDescription className="text-md">
+      <Modal isOpen={isAlertOpen}>
+        <Modal.Content
+          isDismissable={true}
+          onOpenChange={(isOpen) => setIsAlertOpen(isOpen)}
+        >
+          <Modal.Header>
+            <Modal.Title>Are you absolutely sure?</Modal.Title>
+            <Modal.Description>
               This action cannot be undone. This will permanently delete your
               account and remove your data from our servers.
-            </ResponsiveDialogDescription>
-          </ResponsiveDialogHeader>
-          <ResponsiveDialogFooter>
+            </Modal.Description>
+          </Modal.Header>
+          <Modal.Footer>
             <Button
-              variant={"destructive"}
+              intent="danger"
               onPress={() => deleteUser()}
               isDisabled={isExecuting}
             >
               Delete account
             </Button>
-          </ResponsiveDialogFooter>
-        </ResponsiveDialogContent>
-      </ResponsiveDialog>
+          </Modal.Footer>
+        </Modal.Content>
+      </Modal>
     </>
   );
 };

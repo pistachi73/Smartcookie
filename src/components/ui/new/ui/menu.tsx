@@ -24,7 +24,7 @@ import type { VariantProps } from "tailwind-variants";
 import { tv } from "tailwind-variants";
 
 import { cn } from "@/utils/new/classes";
-import { Button, ButtonProps } from "./button";
+import { Button, type ButtonProps } from "./button";
 import {
   DropdownItemDetails,
   DropdownKeyboard,

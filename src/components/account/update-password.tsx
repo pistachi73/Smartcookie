@@ -1,21 +1,9 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { PasswordInput } from "@/components/ui/react-aria/password-field";
+import { Button } from "@/components/ui/new/ui/button";
+import { Card } from "@/components/ui/new/ui/card";
+import { Form } from "@/components/ui/new/ui/form";
+import { PasswordFieldWithValidation } from "@/components/ui/new/ui/password-field-with-validation";
+import { TextField } from "@/components/ui/new/ui/text-field";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useSafeAction } from "@/hooks/use-safe-action";
 import { cn } from "@/lib/utils";
@@ -25,7 +13,7 @@ import { ArrowDown01Icon, LockKeyIcon } from "@hugeicons/react";
 import { Loader2, Lock } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
 import { updateUserPasswordAction } from "./actions";
@@ -57,41 +45,44 @@ export const UpdatePassword = () => {
   if (user.isOAuth) {
     return (
       <Card className="shadow-md overflow-hidden bg-accent/50">
-        <CardHeader className="p-2">
-          <div className="p-4 flex flex-row gap-2 items-center justify-between ">
+        <Card.Header className="p-2">
+          <div className="p-4 flex flex-row gap-2 items-center justify-between">
             <div className="space-y-1">
-              <CardTitle className="flex flex-row gap-2 text-xl items-center">
+              <Card.Title className="flex flex-row gap-2 items-center">
                 <Lock className="w-5 h-5" />
                 Security
-              </CardTitle>
-              <CardDescription>
-                Can't change password bacause you are logged in with OAuth.
-              </CardDescription>
+              </Card.Title>
+              <Card.Description>
+                Can't change password because you are logged in with OAuth.
+              </Card.Description>
             </div>
           </div>
-        </CardHeader>
+        </Card.Header>
       </Card>
     );
   }
 
   return (
     <Card className="shadow-md overflow-hidden">
-      <CardHeader className="p-2" onClick={() => setIsOpen(!isOpen)}>
-        <div className="p-4 flex flex-row gap-2 items-center justify-between cursor-pointer hover:bg-accent/50 transition-colors rounded-md">
+      <Card.Header
+        className="p-2 cursor-pointer"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <div className="p-4 flex flex-row gap-2 items-center justify-between hover:bg-accent/50 transition-colors rounded-md">
           <div className="space-y-1">
-            <CardTitle className="flex flex-row gap-2 text-xl items-center">
+            <Card.Title className="flex flex-row gap-2 items-center">
               <LockKeyIcon size={20} />
               Security
-            </CardTitle>
-            <CardDescription>
+            </Card.Title>
+            <Card.Description>
               Change your password to keep your account secure.
-            </CardDescription>
+            </Card.Description>
           </div>
           <ArrowDown01Icon
             className={cn("transition-transform", isOpen && "rotate-180")}
           />
         </div>
-      </CardHeader>
+      </Card.Header>
       <AnimatePresence initial={false}>
         {isOpen && (
           <motion.div
@@ -100,94 +91,75 @@ export const UpdatePassword = () => {
             exit={{ opacity: 0, height: 0 }}
             transition={regularSpring}
           >
-            <CardContent className="p-6 pt-0 space-y-6">
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(updatePassword)}
-                  className="space-y-6"
-                >
-                  <FormField
+            <Card.Content className="pt-0 space-y-6">
+              <Form onSubmit={form.handleSubmit(updatePassword)}>
+                <div className="space-y-6">
+                  <Controller
                     control={form.control}
                     name="currentPassword"
-                    render={({ field }) => (
-                      <FormItem className="max-w-[500px]">
-                        <FormLabel>Current password</FormLabel>
-                        <FormControl>
-                          <PasswordInput
-                            {...field}
-                            autoComplete="current-password"
-                            className="text-sm"
-                            disabled={isExecuting}
-                            autoFocus
-                          />
-                        </FormControl>
-                        <FormMessage />
-                        {/* <Button
-                          size="inline"
-                          variant="link"
-                          className="text-sm font-light text-muted-foreground"
-                          type="button"
-                          asChild
-                        >
-                          <Link href="/forgot-password">Forgot password?</Link>
-                        </Button> */}
-                      </FormItem>
+                    render={({ field, fieldState }) => (
+                      <TextField
+                        {...field}
+                        type="password"
+                        isRevealable={true}
+                        label="Current password"
+                        autoComplete="current-password"
+                        className={{ input: "text-sm" }}
+                        isDisabled={isExecuting}
+                        autoFocus
+                        errorMessage={fieldState.error?.message}
+                      />
                     )}
                   />
-                  <FormField
+                  <Controller
                     control={form.control}
                     name="newPassword"
-                    render={({ field }) => (
-                      <FormItem className="max-w-[500px]">
-                        <FormLabel>New password</FormLabel>
-                        <FormControl>
-                          <PasswordInput
-                            {...field}
-                            autoComplete="new-password"
-                            withValidation={
-                              form.formState.dirtyFields.newPassword ||
-                              form.formState.errors.newPassword !== undefined
-                            }
-                            disabled={isExecuting}
-                          />
-                        </FormControl>
-                      </FormItem>
+                    render={({ field, fieldState }) => (
+                      <PasswordFieldWithValidation
+                        {...field}
+                        label="New password"
+                        autoComplete="new-password"
+                        showValidation={
+                          form.formState.dirtyFields.newPassword ||
+                          form.formState.errors.newPassword !== undefined
+                        }
+                        isDisabled={isExecuting}
+                        errorMessage={fieldState.error?.message}
+                      />
                     )}
                   />
-                  <FormField
+                  <Controller
                     control={form.control}
                     name="confirmPassword"
-                    render={({ field }) => (
-                      <FormItem className="max-w-[500px]">
-                        <FormLabel className="flex w-full items-center justify-between">
-                          Confirm password
-                        </FormLabel>
-                        <FormControl>
-                          <PasswordInput
-                            {...field}
-                            autoComplete="confirm-password"
-                            disabled={isExecuting}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
+                    render={({ field, fieldState }) => (
+                      <TextField
+                        {...field}
+                        type="password"
+                        isRevealable={true}
+                        label="Confirm password"
+                        autoComplete="confirm-password"
+                        isDisabled={isExecuting}
+                        errorMessage={fieldState.error?.message}
+                      />
                     )}
                   />
-                  <div className="w-full flex flex-row items-center justify-end">
-                    <Button
-                      size={"sm"}
-                      isDisabled={!form.formState.isDirty || isExecuting}
-                      type="submit"
-                    >
-                      {isExecuting && (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      )}
-                      Save
-                    </Button>
-                  </div>
-                </form>
+                  <Card.Footer className="pt-4 px-0">
+                    <div className="ml-auto">
+                      <Button
+                        size="small"
+                        isDisabled={!form.formState.isDirty || isExecuting}
+                        type="submit"
+                      >
+                        {isExecuting && (
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        )}
+                        Save
+                      </Button>
+                    </div>
+                  </Card.Footer>
+                </div>
               </Form>
-            </CardContent>
+            </Card.Content>
           </motion.div>
         )}
       </AnimatePresence>

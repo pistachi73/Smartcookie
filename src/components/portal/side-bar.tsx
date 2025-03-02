@@ -6,9 +6,9 @@ import {
   DashboardSquare01Icon,
   Folder02Icon,
   Invoice03Icon,
+  NoteIcon,
   UserGroupIcon,
 } from "@hugeicons/react";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Link, Tooltip, buttonStyles } from "../ui/new/ui";
 import { ThemeSwitcher } from "../ui/theme-switcher";
@@ -35,6 +35,11 @@ const sidebarLinks = [
     icon: UserGroupIcon,
   },
   {
+    label: "Quick Notes",
+    href: "/quick-notes",
+    icon: NoteIcon,
+  },
+  {
     label: "Billing",
     href: "/billing",
     icon: Invoice03Icon,
@@ -47,9 +52,6 @@ export const SideBar = () => {
   return (
     <div className="flex flex-col justify-between items-center p-2 rounded-xl h-full">
       <div className="flex flex-col gap-2 shrink-0 grow-0">
-        <div className="flex items-center justify-center aspect-square relative m-1 mb-4">
-          <Image src={"/Logo.svg"} alt="Logo" fill />
-        </div>
         {sidebarLinks.map(({ label, href, icon: Icon }) => {
           const isActive = pathname.includes(href);
           return (
@@ -63,7 +65,9 @@ export const SideBar = () => {
                       shape: "square",
                       appearance: "plain",
                       size: "square-petite",
-                      className: "aspect-square",
+                      className: cn("aspect-square", {
+                        "bg-overlay": isActive,
+                      }),
                     }),
                   )
                 }

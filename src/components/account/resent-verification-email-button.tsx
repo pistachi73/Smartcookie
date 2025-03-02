@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/new/ui/button";
 import { useSafeAction } from "@/hooks/use-safe-action";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
@@ -36,15 +36,13 @@ export const ResendVerificationEmailButton = ({
 
   return (
     <Button
-      size="inline"
-      variant="link"
+      size="small"
       className={cn("text-sm font-light text-muted-foreground", {
         "pointer-events-none": counter > 0,
       })}
       type="button"
-      isDisabled={isUpdatingEmail}
+      isDisabled={isUpdatingEmail || counter > 0}
       onPress={() => {
-        if (counter !== 0) return;
         resendVerificationToken(email);
       }}
     >

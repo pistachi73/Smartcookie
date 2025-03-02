@@ -4,8 +4,8 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { buttonVariants } from "@/components/ui/button";
 import { Home09Icon } from "@hugeicons/react";
+import { buttonStyles } from "../ui/new/ui";
 
 export const NavigationButtons = () => {
   const pathname = usePathname();
@@ -17,7 +17,7 @@ export const NavigationButtons = () => {
       <Link
         href="/account"
         className={cn(
-          buttonVariants({ variant: "ghost", size: "lg" }),
+          buttonStyles({ appearance: "plain", size: "large" }),
           "px-0 text-sm lg:text-md lg:font-medium hover:no-underline w-fit lg:w-full flex flex-row gap-2 lg:px-4 justify-start ",
           pathname === "/account/" ? "text-responsive-dark" : "text-text-sub",
         )}
