@@ -4,7 +4,7 @@ import {
   type ModalContentProps,
   Radio,
   RadioGroup,
-} from "@/components/ui/new/ui";
+} from "@/components/ui";
 
 export const DeleteEventModalContent = (props: ModalContentProps) => {
   return (

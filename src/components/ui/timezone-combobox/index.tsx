@@ -9,7 +9,7 @@ import {
   type ComboBoxListProps,
   type ComboBoxProps,
   DropdownLabel,
-} from "../new/ui";
+} from "../";
 import { getPgTimezonesAction } from "./actions";
 
 type TimezoneComboboxProps<T extends object> = Omit<

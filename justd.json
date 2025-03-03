@@ -1,8 +1,8 @@
 {
-  "ui": "src/components/ui/new/ui",
+  "ui": "src/components/ui",
   "utils": "src/utils/new",
   "gray": "zinc",
-  "css": "src/styles/global-new.css",
+  "css": "src/styles/globals.css",
   "alias": "@",
   "language": "typescript",
   "$schema": "https://getjustd.com/schema.json"

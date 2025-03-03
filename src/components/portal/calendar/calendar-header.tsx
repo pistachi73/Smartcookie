@@ -1,5 +1,5 @@
 "use client";
-import { Button, Select } from "@/components/ui/new/ui";
+import { Button, Select } from "@/components/ui";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
 import { ArrowLeft01Icon, ArrowRight01Icon } from "@hugeicons/react";
 import { useShallow } from "zustand/react/shallow";

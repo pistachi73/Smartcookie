@@ -1,10 +1,10 @@
 "use client";
 
-import { Button } from "@/components/ui/new/ui/button";
-import { Card } from "@/components/ui/new/ui/card";
-import { Form } from "@/components/ui/new/ui/form";
-import { InputOTP } from "@/components/ui/new/ui/input-otp";
-import { TextField } from "@/components/ui/new/ui/text-field";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Form } from "@/components/ui/form";
+import { InputOTP } from "@/components/ui/input-otp";
+import { TextField } from "@/components/ui/text-field";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useSafeAction } from "@/hooks/use-safe-action";
 import { zodResolver } from "@hookform/resolvers/zod";

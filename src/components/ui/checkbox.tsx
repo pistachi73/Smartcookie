@@ -1,26 +1,26 @@
-"use client"
+"use client";
 
-import { IconCheck, IconMinus } from "justd-icons"
+import { IconCheck, IconMinus } from "justd-icons";
 import type {
   CheckboxGroupProps as CheckboxGroupPrimitiveProps,
   CheckboxProps as CheckboxPrimitiveProps,
   ValidationResult,
-} from "react-aria-components"
+} from "react-aria-components";
 import {
   CheckboxGroup as CheckboxGroupPrimitive,
   Checkbox as CheckboxPrimitive,
   composeRenderProps,
-} from "react-aria-components"
-import { tv } from "tailwind-variants"
+} from "react-aria-components";
+import { tv } from "tailwind-variants";
 
-import { cn } from "@/utils/new/classes"
-import { Description, FieldError, Label } from "./field"
-import { composeTailwindRenderProps } from "./primitive"
+import { cn } from "@/utils/classes";
+import { Description, FieldError, Label } from "./field";
+import { composeTailwindRenderProps } from "./primitive";
 
 interface CheckboxGroupProps extends CheckboxGroupPrimitiveProps {
-  label?: string
-  description?: string
-  errorMessage?: string | ((validation: ValidationResult) => string)
+  label?: string;
+  description?: string;
+  errorMessage?: string | ((validation: ValidationResult) => string);
 }
 
 const CheckboxGroup = ({ className, ...props }: CheckboxGroupProps) => {
@@ -31,11 +31,11 @@ const CheckboxGroup = ({ className, ...props }: CheckboxGroupProps) => {
     >
       <Label>{props.label}</Label>
       {props.children as React.ReactNode}
-      {props.description && <Description className="block">{props.description}</Description>}
+      {props.description && <Description className='block'>{props.description}</Description>}
       <FieldError>{props.errorMessage}</FieldError>
     </CheckboxGroupPrimitive>
-  )
-}
+  );
+};
 
 const checkboxStyles = tv({
   base: "group flex items-center gap-2 text-sm transition",
@@ -44,7 +44,7 @@ const checkboxStyles = tv({
       true: "opacity-50",
     },
   },
-})
+});
 
 const boxStyles = tv({
   base: "flex size-4 shrink-0 items-center justify-center rounded border border-input text-bg transition *:data-[slot=icon]:size-3",
@@ -66,11 +66,11 @@ const boxStyles = tv({
       true: "border-danger/70 bg-danger/20 text-danger-fg ring-danger/20",
     },
   },
-})
+});
 
 interface CheckboxProps extends CheckboxPrimitiveProps {
-  description?: string
-  label?: string
+  description?: string;
+  label?: string;
 }
 
 const Checkbox = ({ className, ...props }: CheckboxProps) => {
@@ -78,7 +78,7 @@ const Checkbox = ({ className, ...props }: CheckboxProps) => {
     <CheckboxPrimitive
       {...props}
       className={composeRenderProps(className, (className, renderProps) =>
-        checkboxStyles({ ...renderProps, className }),
+        checkboxStyles({ ...renderProps, className })
       )}
     >
       {({ isSelected, isIndeterminate, ...renderProps }) => (
@@ -92,7 +92,7 @@ const Checkbox = ({ className, ...props }: CheckboxProps) => {
             {isIndeterminate ? <IconMinus /> : isSelected ? <IconCheck /> : null}
           </div>
 
-          <div className="flex flex-col gap-1">
+          <div className='flex flex-col gap-1'>
             <>
               {props.label ? (
                 <Label className={cn(props.description && "text-sm/4")}>{props.label}</Label>
@@ -105,8 +105,8 @@ const Checkbox = ({ className, ...props }: CheckboxProps) => {
         </div>
       )}
     </CheckboxPrimitive>
-  )
-}
+  );
+};
 
-export type { CheckboxGroupProps, CheckboxProps }
-export { Checkbox, CheckboxGroup }
+export { Checkbox, CheckboxGroup };
+export type { CheckboxGroupProps, CheckboxProps };

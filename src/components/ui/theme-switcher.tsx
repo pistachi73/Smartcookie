@@ -3,7 +3,8 @@
 import { useIsMounted } from "@/hooks/use-is-mounted";
 import { Moon02Icon, Sun03Icon } from "@hugeicons/react";
 import { useTheme } from "next-themes";
-import { Button } from "./new/ui";
+import { useCallback } from "react";
+import { Button } from "./";
 
 export function ThemeSwitcher({
   shape = "square",
@@ -16,17 +17,17 @@ export function ThemeSwitcher({
   if (!isMounted) return null;
   const { theme, setTheme } = useTheme();
 
-  const toggleTheme = () => {
+  const toggleTheme = useCallback(() => {
     const nextTheme = theme === "light" ? "dark" : "light";
     setTheme(nextTheme);
-  };
+  }, [theme, setTheme]);
 
   return (
     <Button
       shape={shape}
       appearance={appearance}
-      size="square-petite"
-      aria-label="Switch theme"
+      size='square-petite'
+      aria-label='Switch theme'
       onPress={toggleTheme}
       className={className}
       {...props}

@@ -1,4 +1,4 @@
-import { Popover } from "@/components/ui/new/ui";
+import { Popover } from "@/components/ui";
 import { cn } from "@/lib/utils";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
 import { format } from "date-fns";

@@ -2,7 +2,7 @@
 
 import { ResizablePanelRoot } from "@/components/ui/resizable-panel";
 
-import { Calendar } from "@/components/ui/new/ui";
+import { Calendar } from "@/components/ui";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
 import { CalendarDate } from "@internationalized/date";
 import { Temporal } from "@js-temporal/polyfill";

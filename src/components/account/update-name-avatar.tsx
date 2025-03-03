@@ -7,10 +7,10 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
 
-import { Button } from "@/components/ui/new/ui/button";
-import { Card } from "@/components/ui/new/ui/card";
-import { Form } from "@/components/ui/new/ui/form";
-import { TextField } from "@/components/ui/new/ui/text-field";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Form } from "@/components/ui/form";
+import { TextField } from "@/components/ui/text-field";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useSafeAction } from "@/hooks/use-safe-action";

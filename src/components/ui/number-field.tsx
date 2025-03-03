@@ -10,21 +10,9 @@ import {
 import { tv } from "tailwind-variants";
 
 import { cn } from "@/lib/utils";
-import { useMediaQuery } from "@/utils/new/use-media-query";
-import {
-  ArrowDown01Icon,
-  ArrowUp01Icon,
-  MinusSignIcon,
-  PlusSignIcon,
-} from "@hugeicons/react";
-import {
-  Description,
-  FieldError,
-  FieldGroup,
-  type FieldGroupProps,
-  Input,
-  Label,
-} from "./field";
+import { useMediaQuery } from "@/utils/use-media-query";
+import { ArrowDown01Icon, ArrowUp01Icon, MinusSignIcon, PlusSignIcon } from "@hugeicons/react";
+import { Description, FieldError, FieldGroup, type FieldGroupProps, Input, Label } from "./field";
 import { composeTailwindRenderProps } from "./primitive";
 
 const fieldBorderStyles = tv({
@@ -49,8 +37,7 @@ const numberFieldStyles = tv({
 
 const { base, stepperButton } = numberFieldStyles();
 
-interface NumberFieldProps
-  extends Omit<NumberFieldPrimitiveProps, "className"> {
+interface NumberFieldProps extends Omit<NumberFieldPrimitiveProps, "className"> {
   label?: string;
   description?: string;
   placeholder?: string;
@@ -84,14 +71,11 @@ const NumberField = ({
       className={composeTailwindRenderProps(className?.primitive, base())}
     >
       {label && <Label>{label}</Label>}
-      <FieldGroup
-        className={cn("overflow-hidden", className?.fieldGroup)}
-        size={size}
-      >
+      <FieldGroup className={cn("overflow-hidden", className?.fieldGroup)} size={size}>
         {(renderProps) => (
           <>
             {isMobile && showStepperButtons ? (
-              <StepperButton slot="decrement" className="border-r" />
+              <StepperButton slot='decrement' className='border-r' />
             ) : null}
             <Input
               ref={ref}
@@ -105,25 +89,17 @@ const NumberField = ({
               })}
             >
               {isMobile && showStepperButtons ? (
-                <StepperButton slot="increment" />
+                <StepperButton slot='increment' />
               ) : (
-                <div className="flex h-full flex-col">
-                  <StepperButton
-                    slot="increment"
-                    emblemType="chevron"
-                    className="h-5 px-1"
-                  />
+                <div className='flex h-full flex-col'>
+                  <StepperButton slot='increment' emblemType='chevron' className='h-5 px-1' />
                   <div
                     className={fieldBorderStyles({
                       ...renderProps,
                       className: "border-input border-b",
                     })}
                   />
-                  <StepperButton
-                    slot="decrement"
-                    emblemType="chevron"
-                    className="h-5 px-1"
-                  />
+                  <StepperButton slot='decrement' emblemType='chevron' className='h-5 px-1' />
                 </div>
               )}
             </div>

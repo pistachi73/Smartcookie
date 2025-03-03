@@ -16,7 +16,7 @@ import {
   PasswordFieldWithValidation,
   ProgressCircle,
   TextField,
-} from "@/components/ui/new/ui";
+} from "@/components/ui";
 
 const createPasswordSchema = authSchema
   .pick({

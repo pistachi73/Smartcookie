@@ -1,6 +1,6 @@
 "use client";
 
-import { Link, buttonStyles } from "@/components/ui/new/ui";
+import { Link, buttonStyles } from "@/components/ui";
 import { ArrowLeft02Icon } from "@hugeicons/react";
 
 export const BackToHomePageButton = () => {

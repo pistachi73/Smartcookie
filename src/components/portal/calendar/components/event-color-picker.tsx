@@ -5,7 +5,7 @@ import {
   type PopoverContentProps,
   Select,
   type SelectProps,
-} from "@/components/ui/new/ui";
+} from "@/components/ui";
 import { cn } from "@/lib/utils";
 import { Tick01Icon } from "@hugeicons/react";
 import { ListBoxItem } from "react-aria-components";

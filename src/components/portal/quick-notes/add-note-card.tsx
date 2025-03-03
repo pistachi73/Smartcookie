@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card, Textarea } from "@/components/ui/new/ui";
+import { Button, Card, Textarea } from "@/components/ui";
 import { Add01Icon } from "@hugeicons/react";
 import { useState } from "react";
 

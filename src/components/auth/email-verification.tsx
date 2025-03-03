@@ -16,13 +16,7 @@ import {
 import { FormWrapper } from "./form-wrapper";
 import { authSchema } from "./validation";
 
-import {
-  Button,
-  Form,
-  InputOTP,
-  Link,
-  ProgressCircle,
-} from "@/components/ui/new/ui";
+import { Button, Form, InputOTP, Link, ProgressCircle } from "@/components/ui";
 
 const emailVerificationSchema = authSchema.pick({
   code: true,

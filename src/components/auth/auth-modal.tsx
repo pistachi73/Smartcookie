@@ -3,7 +3,7 @@
 import { AUTH_ROUTES } from "@/app-config";
 import { usePathname, useRouter } from "next/navigation";
 import { Auth } from ".";
-import { Modal, VisuallyHidden } from "../ui/new/ui";
+import { Modal, VisuallyHidden } from "../ui/";
 
 export const AuthModal = () => {
   const router = useRouter();

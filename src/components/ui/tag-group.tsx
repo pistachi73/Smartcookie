@@ -1,26 +1,26 @@
-"use client"
+"use client";
 
-import React from "react"
+import React from "react";
 
-import { IconX } from "justd-icons"
+import { IconX } from "justd-icons";
 import type {
   TagGroupProps as TagGroupPrimitiveProps,
   TagListProps,
   TagProps as TagPrimitiveProps,
-} from "react-aria-components"
+} from "react-aria-components";
 import {
   Button,
   TagGroup as TagGroupPrimitive,
   TagList as TagListPrimitive,
   Tag as TagPrimitive,
   composeRenderProps,
-} from "react-aria-components"
-import { tv } from "tailwind-variants"
+} from "react-aria-components";
+import { tv } from "tailwind-variants";
 
-import { cn } from "@/utils/new/classes"
-import { badgeIntents, badgeShapes, badgeStyles } from "./badge"
-import { Description, Label } from "./field"
-import { composeTailwindRenderProps, focusStyles } from "./primitive"
+import { cn } from "@/utils/classes";
+import { badgeIntents, badgeShapes, badgeStyles } from "./badge";
+import { Description, Label } from "./field";
+import { composeTailwindRenderProps, focusStyles } from "./primitive";
 
 const intents = {
   primary: {
@@ -73,31 +73,31 @@ const intents = {
       "**:[[slot=remove]]:bg-danger-fg/80 **:[[slot=remove]]:data-hovered:text-danger",
     ],
   },
-}
+};
 
-type RestrictedIntent = "primary" | "secondary"
+type RestrictedIntent = "primary" | "secondary";
 
-type Intent = "primary" | "secondary" | "warning" | "danger" | "success"
+type Intent = "primary" | "secondary" | "warning" | "danger" | "success";
 
-type Shape = keyof typeof badgeShapes
+type Shape = keyof typeof badgeShapes;
 
 type TagGroupContextValue = {
-  intent: Intent
-  shape: Shape
-}
+  intent: Intent;
+  shape: Shape;
+};
 
 const TagGroupContext = React.createContext<TagGroupContextValue>({
   intent: "primary",
   shape: "square",
-})
+});
 
 interface TagGroupProps extends TagGroupPrimitiveProps {
-  intent?: Intent
-  shape?: "square" | "circle"
-  errorMessage?: string
-  label?: string
-  description?: string
-  ref?: React.RefObject<HTMLDivElement>
+  intent?: Intent;
+  shape?: "square" | "circle";
+  errorMessage?: string;
+  label?: string;
+  description?: string;
+  ref?: React.RefObject<HTMLDivElement>;
 }
 
 const TagGroup = ({ children, ref, ...props }: TagGroupProps) => {
@@ -113,13 +113,13 @@ const TagGroup = ({ children, ref, ...props }: TagGroupProps) => {
           shape: props.shape || "square",
         }}
       >
-        {props.label && <Label className="mb-1">{props.label}</Label>}
+        {props.label && <Label className='mb-1'>{props.label}</Label>}
         {children}
         {props.description && <Description>{props.description}</Description>}
       </TagGroupContext.Provider>
     </TagGroupPrimitive>
-  )
-}
+  );
+};
 
 const TagList = <T extends object>({ className, ...props }: TagListProps<T>) => {
   return (
@@ -127,8 +127,8 @@ const TagList = <T extends object>({ className, ...props }: TagListProps<T>) => 
       {...props}
       className={composeTailwindRenderProps(className, "flex flex-wrap gap-2")}
     />
-  )
-}
+  );
+};
 
 const tagStyles = tv({
   extend: focusStyles,
@@ -138,24 +138,24 @@ const tagStyles = tv({
     isDisabled: { true: "cursor-default opacity-50" },
     allowsRemoving: { true: "pr-1" },
   },
-})
+});
 
 interface TagProps extends TagPrimitiveProps {
-  intent?: Intent
-  shape?: Shape
+  intent?: Intent;
+  shape?: Shape;
 }
 
 const Tag = ({ className, intent, shape, ...props }: TagProps) => {
-  const textValue = typeof props.children === "string" ? props.children : undefined
-  const groupContext = React.useContext(TagGroupContext)
+  const textValue = typeof props.children === "string" ? props.children : undefined;
+  const groupContext = React.useContext(TagGroupContext);
 
   return (
     <TagPrimitive
       textValue={textValue}
       {...props}
       className={composeRenderProps(className, (_, renderProps) => {
-        const finalIntent = intent || groupContext.intent
-        const finalShape = shape || groupContext.shape
+        const finalIntent = intent || groupContext.intent;
+        const finalShape = shape || groupContext.shape;
 
         return tagStyles({
           ...renderProps,
@@ -164,7 +164,7 @@ const Tag = ({ className, intent, shape, ...props }: TagProps) => {
             badgeShapes[finalShape],
             renderProps.isSelected ? intents[finalIntent].selected : undefined,
           ]),
-        })
+        });
       })}
     >
       {({ allowsRemoving }) => {
@@ -173,18 +173,18 @@ const Tag = ({ className, intent, shape, ...props }: TagProps) => {
             {props.children as React.ReactNode}
             {allowsRemoving && (
               <Button
-                slot="remove"
-                className="-mr-0.5 grid size-3.5 place-content-center rounded focus:outline-none focus-visible:ring-1 focus-visible:ring-primary [&>[data-slot=icon]]:size-3 [&>[data-slot=icon]]:shrink-0"
+                slot='remove'
+                className='-mr-0.5 grid size-3.5 place-content-center rounded focus:outline-none focus-visible:ring-1 focus-visible:ring-primary [&>[data-slot=icon]]:size-3 [&>[data-slot=icon]]:shrink-0'
               >
                 <IconX />
               </Button>
             )}
           </>
-        )
+        );
       }}
     </TagPrimitive>
-  )
-}
+  );
+};
 
-export type { TagGroupProps, TagProps, TagListProps, RestrictedIntent }
-export { Tag, TagList, TagGroup }
+export { Tag, TagGroup, TagList };
+export type { RestrictedIntent, TagGroupProps, TagListProps, TagProps };

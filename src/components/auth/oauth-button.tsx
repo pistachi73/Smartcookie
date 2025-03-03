@@ -9,7 +9,7 @@ import { useAuthSettingsContextConsumer } from "./auth-settings-context";
 
 import { AppleIcon, GoogleIcon } from "@hugeicons/react";
 import type { JSX } from "react";
-import { Button } from "../ui/new/ui";
+import { Button } from "../ui/";
 
 type Provider = "google" | "apple";
 

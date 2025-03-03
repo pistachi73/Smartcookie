@@ -10,12 +10,7 @@ import { FormWrapper } from "./form-wrapper";
 import { SocialButton } from "./oauth-button";
 import { authSchema } from "./validation";
 
-import {
-  Button,
-  Form,
-  ProgressCircle,
-  TextField,
-} from "@/components/ui/new/ui";
+import { Button, Form, ProgressCircle, TextField } from "@/components/ui";
 
 const authLandingSchema = authSchema.pick({
   email: true,

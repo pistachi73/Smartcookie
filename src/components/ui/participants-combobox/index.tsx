@@ -20,7 +20,7 @@ import {
   DropdownLabel,
   Link,
   buttonStyles,
-} from "../new/ui";
+} from "../";
 
 type Participant = {
   id: number;

@@ -10,7 +10,7 @@ import {
   UserGroupIcon,
 } from "@hugeicons/react";
 import { usePathname } from "next/navigation";
-import { Link, Tooltip, buttonStyles } from "../ui/new/ui";
+import { Link, Tooltip, buttonStyles } from "../ui/";
 import { ThemeSwitcher } from "../ui/theme-switcher";
 
 const sidebarLinks = [
@@ -67,6 +67,7 @@ export const SideBar = () => {
                       size: "square-petite",
                       className: cn("aspect-square", {
                         "bg-overlay": isActive,
+                        "text-muted-fg hover:text-current": !isActive,
                       }),
                     }),
                   )
@@ -76,11 +77,7 @@ export const SideBar = () => {
                   size={20}
                   variant={isActive ? "solid" : "stroke"}
                   type="rounded"
-                  className={cn(
-                    isActive
-                      ? "text-primary"
-                      : "text-muted-fg hover:text-current",
-                  )}
+                  className={cn(isActive ? "text-primary" : "")}
                 />
               </Link>
               <Tooltip.Content placement="right">

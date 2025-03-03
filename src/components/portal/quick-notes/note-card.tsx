@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card, Textarea, Tooltip } from "@/components/ui/new/ui";
+import { Button, Card, Textarea, Tooltip } from "@/components/ui";
 import type { QuickNote } from "@/db/schema";
 import { Delete01Icon, Edit01Icon } from "@hugeicons/react";
 import Link from "next/link";

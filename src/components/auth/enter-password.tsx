@@ -1,12 +1,6 @@
 import { useSafeAction } from "@/hooks/use-safe-action";
 
-import {
-  Button,
-  Form,
-  Link,
-  ProgressCircle,
-  TextField,
-} from "@/components/ui/new/ui";
+import { Button, Form, Link, ProgressCircle, TextField } from "@/components/ui";
 import { useAuthStore } from "@/providers/auth-store-provider";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";

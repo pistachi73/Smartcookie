@@ -10,8 +10,8 @@ import {
 } from "react-aria-components";
 import { tv } from "tailwind-variants";
 
-import { cn } from "@/utils/new/classes";
-import { useMediaQuery } from "@/utils/new/use-media-query";
+import { cn } from "@/utils/classes";
+import { useMediaQuery } from "@/utils/use-media-query";
 import { Calendar01Icon } from "@hugeicons/react";
 import type { DateDuration } from "@internationalized/date";
 import { Button } from "./button";
@@ -36,8 +36,7 @@ const datePickerStyles = tv({
   },
 });
 
-const { base, datePickerIcon, calendarIcon, datePickerInput } =
-  datePickerStyles();
+const { base, datePickerIcon, calendarIcon, datePickerInput } = datePickerStyles();
 
 interface DatePickerOverlayProps
   extends Omit<DialogProps, "children" | "className" | "style">,
@@ -63,7 +62,7 @@ const DatePickerOverlay = ({
       showArrow={false}
       className={cn(
         "flex justify-center p-4 sm:min-w-[17rem] sm:p-2 sm:pt-3",
-        visibleDuration?.months === 1 ? "sm:max-w-[17.5rem]" : "sm:max-w-none",
+        visibleDuration?.months === 1 ? "sm:max-w-[17.5rem]" : "sm:max-w-none"
       )}
       {...props}
     >
@@ -76,8 +75,8 @@ const DatePickerOverlay = ({
         <Calendar />
       )}
       {closeButton && (
-        <div className="mx-auto flex w-full max-w-[inherit] justify-center py-2.5 sm:hidden">
-          <Popover.Close shape="circle" className="w-full">
+        <div className='mx-auto flex w-full max-w-[inherit] justify-center py-2.5 sm:hidden'>
+          <Popover.Close shape='circle' className='w-full'>
             Close
           </Popover.Close>
         </div>
@@ -88,16 +87,11 @@ const DatePickerOverlay = ({
 
 const DatePickerIcon = () => (
   <Button
-    size="square-petite"
-    appearance="plain"
+    size='square-petite'
+    appearance='plain'
     className={cn(datePickerIcon(), "aspect-square shrink-0")}
   >
-    <Calendar01Icon
-      size={14}
-      data-slot="icon"
-      aria-hidden
-      className={calendarIcon()}
-    />
+    <Calendar01Icon size={14} data-slot='icon' aria-hidden className={calendarIcon()} />
   </Button>
 );
 

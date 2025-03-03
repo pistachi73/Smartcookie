@@ -5,7 +5,7 @@ import { auth } from "@/auth-config";
 import { DeviceOnlyProvider } from "@/components/device-only/device-only-provider";
 import { ReactScan } from "@/components/react-scan";
 import { ToastNotification } from "@/components/toast-notification";
-import { Toast } from "@/components/ui/new/ui";
+import { Toast } from "@/components/ui";
 import { Providers } from "@/providers/providers";
 import { getHeaders } from "@/utils/get-headers";
 import { SessionProvider } from "next-auth/react";

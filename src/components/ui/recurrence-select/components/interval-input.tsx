@@ -1,5 +1,5 @@
 import { use } from "react";
-import { NumberField } from "../../new/ui";
+import { NumberField } from "../../";
 import { RecurrenceSelectContext } from "../recurrence-select-context";
 
 export const IntervalInput = () => {

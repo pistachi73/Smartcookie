@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import { ArrowLeft02Icon } from "@hugeicons/react";
 import { motion } from "motion/react";
 import { useEffect } from "react";
-import { Button, Card } from "../ui/new/ui";
+import { Button, Card } from "../ui/";
 import { useAuthContext } from "./auth-context";
 
 // @ts-ignore

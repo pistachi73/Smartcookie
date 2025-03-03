@@ -1,7 +1,7 @@
 import { use, useEffect, useState } from "react";
 import type { Frequency } from "rrule";
 
-import { Select } from "../../new/ui";
+import { Select } from "../../";
 import { RecurrenceSelectContext } from "../recurrence-select-context";
 import { getFrequencyItems } from "../utils";
 

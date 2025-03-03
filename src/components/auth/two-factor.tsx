@@ -14,8 +14,7 @@ import { FormWrapper } from "./form-wrapper";
 import { useLoginSuccess } from "./hooks/use-login-success";
 import { authSchema } from "./validation";
 
-import { Button, Form, InputOTP } from "@/components/ui/new/ui";
-import { Link, ProgressCircle } from "../ui/new/ui";
+import { Button, Form, InputOTP, Link, ProgressCircle } from "@/components/ui";
 
 const twoFactorSchema = authSchema.pick({
   code: true,

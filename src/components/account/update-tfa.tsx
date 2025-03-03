@@ -1,7 +1,5 @@
 "use client";
-import { Card } from "@/components/ui/new/ui/card";
-import { Form } from "@/components/ui/new/ui/form";
-import { Switch } from "@/components/ui/new/ui/switch";
+import { Card, Form, Switch } from "@/components/ui";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { useSafeAction } from "@/hooks/use-safe-action";
 import { zodResolver } from "@hookform/resolvers/zod";

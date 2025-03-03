@@ -1,5 +1,5 @@
 "use client";
-import { Loader } from "@/components/ui/new/ui";
+import { Loader } from "@/components/ui";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
 import type { CalendarStore } from "@/stores/calendar-store/calendar-store.types";
 import dynamic from "next/dynamic";

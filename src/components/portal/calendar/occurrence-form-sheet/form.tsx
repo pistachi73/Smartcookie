@@ -10,7 +10,7 @@ import {
   Switch,
   TextField,
   Textarea,
-} from "@/components/ui/new/ui";
+} from "@/components/ui";
 import { TimeCombobox } from "@/components/ui/time-combobox";
 import { TimezoneCombobox } from "@/components/ui/timezone-combobox";
 import { useCalendarStore } from "@/providers/calendar-store-provider";

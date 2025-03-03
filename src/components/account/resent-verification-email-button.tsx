@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/new/ui/button";
+import { Button } from "@/components/ui/button";
 import { useSafeAction } from "@/hooks/use-safe-action";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";

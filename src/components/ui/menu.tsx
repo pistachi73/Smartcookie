@@ -4,6 +4,7 @@ import { createContext, use } from "react";
 
 import { IconBulletFill, IconCheck, IconChevronLgRight } from "justd-icons";
 import type {
+  ButtonProps,
   MenuItemProps as MenuItemPrimitiveProps,
   MenuProps as MenuPrimitiveProps,
   MenuSectionProps as MenuSectionPrimitiveProps,
@@ -11,6 +12,7 @@ import type {
   PopoverProps,
 } from "react-aria-components";
 import {
+  Button,
   Collection,
   Header,
   MenuItem as MenuItemPrimitive,
@@ -23,8 +25,7 @@ import {
 import type { VariantProps } from "tailwind-variants";
 import { tv } from "tailwind-variants";
 
-import { cn } from "@/utils/new/classes";
-import { Button, type ButtonProps } from "./button";
+import { cn } from "@/utils/classes";
 import {
   DropdownItemDetails,
   DropdownKeyboard,
@@ -77,18 +78,9 @@ interface MenuTriggerProps extends ButtonProps {
 }
 
 const MenuTrigger = ({ className, ref, ...props }: MenuTriggerProps) => (
-  <Button
-    ref={ref}
-    data-slot="menu-trigger"
-    // className={trigger({ className })}
-    {...props}
-  >
+  <Button ref={ref} data-slot='menu-trigger' className={trigger({ className })} {...props}>
     {(values) => (
-      <>
-        {typeof props.children === "function"
-          ? props.children(values)
-          : props.children}
-      </>
+      <>{typeof props.children === "function" ? props.children(values) : props.children}</>
     )}
   </Button>
 );
@@ -123,20 +115,12 @@ const MenuContent = <T extends object>({
   );
 };
 
-interface MenuItemProps
-  extends MenuItemPrimitiveProps,
-    VariantProps<typeof dropdownItemStyles> {
+interface MenuItemProps extends MenuItemPrimitiveProps, VariantProps<typeof dropdownItemStyles> {
   isDanger?: boolean;
 }
 
-const MenuItem = ({
-  className,
-  isDanger = false,
-  children,
-  ...props
-}: MenuItemProps) => {
-  const textValue =
-    props.textValue || (typeof children === "string" ? children : undefined);
+const MenuItem = ({ className, isDanger = false, children, ...props }: MenuItemProps) => {
+  const textValue = props.textValue || (typeof children === "string" ? children : undefined);
   return (
     <MenuItemPrimitive
       className={composeRenderProps(className, (className, renderProps) =>
@@ -149,7 +133,7 @@ const MenuItem = ({
                 className,
               ])
             : className,
-        }),
+        })
       )}
       textValue={textValue}
       data-danger={isDanger ? "true" : undefined}
@@ -161,17 +145,14 @@ const MenuItem = ({
             <>
               {values.selectionMode === "single" && (
                 <span
-                  data-slot="bullet-icon"
-                  className="-mx-0.5 mr-2 flex size-4 shrink-0 items-center justify-center **:data-[slot=indicator]:size-2.5 **:data-[slot=indicator]:shrink-0"
+                  data-slot='bullet-icon'
+                  className='-mx-0.5 mr-2 flex size-4 shrink-0 items-center justify-center **:data-[slot=indicator]:size-2.5 **:data-[slot=indicator]:shrink-0'
                 >
-                  <IconBulletFill data-slot="indicator" />
+                  <IconBulletFill data-slot='indicator' />
                 </span>
               )}
               {values.selectionMode === "multiple" && (
-                <IconCheck
-                  className="-mx-0.5 mr-2 size-4"
-                  data-slot="checked-icon"
-                />
+                <IconCheck className='-mx-0.5 mr-2 size-4' data-slot='checked-icon' />
               )}
             </>
           )}
@@ -179,10 +160,7 @@ const MenuItem = ({
           {typeof children === "function" ? children(values) : children}
 
           {values.hasSubmenu && (
-            <IconChevronLgRight
-              data-slot="chevron"
-              className="absolute right-2 size-3.5"
-            />
+            <IconChevronLgRight data-slot='chevron' className='absolute right-2 size-3.5' />
           )}
         </>
       )}
@@ -194,16 +172,12 @@ export interface MenuHeaderProps extends React.ComponentProps<typeof Header> {
   separator?: boolean;
 }
 
-const MenuHeader = ({
-  className,
-  separator = false,
-  ...props
-}: MenuHeaderProps) => (
+const MenuHeader = ({ className, separator = false, ...props }: MenuHeaderProps) => (
   <Header
     className={cn(
       "col-span-full px-2.5 py-2 font-semibold text-base sm:text-sm",
       separator && "-mx-1 mb-1 border-b sm:px-3 sm:pb-[0.625rem]",
-      className,
+      className
     )}
     {...props}
   />
@@ -216,17 +190,9 @@ interface MenuSectionProps<T> extends MenuSectionPrimitiveProps<T> {
   title?: string;
 }
 
-const MenuSection = <T extends object>({
-  className,
-  ref,
-  ...props
-}: MenuSectionProps<T>) => {
+const MenuSection = <T extends object>({ className, ref, ...props }: MenuSectionProps<T>) => {
   return (
-    <MenuSectionPrimitive
-      ref={ref}
-      className={section({ className })}
-      {...props}
-    >
+    <MenuSectionPrimitive ref={ref} className={section({ className })} {...props}>
       {"title" in props && <Header className={header()}>{props.title}</Header>}
       <Collection items={props.items}>{props.children}</Collection>
     </MenuSectionPrimitive>
@@ -250,10 +216,4 @@ Menu.Trigger = MenuTrigger;
 Menu.Submenu = MenuSubMenu;
 
 export { Menu };
-export type {
-  MenuContentProps,
-  MenuItemProps,
-  MenuProps,
-  MenuSectionProps,
-  MenuTriggerProps,
-};
+export type { MenuContentProps, MenuItemProps, MenuProps, MenuSectionProps, MenuTriggerProps };

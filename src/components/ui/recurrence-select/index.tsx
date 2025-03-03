@@ -4,7 +4,7 @@ import * as React from "react";
 import { use, useMemo, useState } from "react";
 import { Frequency, RRule, type Weekday } from "rrule";
 import { z } from "zod";
-import { Button, DropdownLabel, Modal, Select } from "../new/ui";
+import { Button, DropdownLabel, Modal, Select } from "../";
 import type { PopoverProps } from "../react-aria/popover";
 import type { SelectFieldProps } from "../react-aria/select-field";
 import { ByweekdayCheckboxGroup } from "./components/byweekday-checkbox-group";

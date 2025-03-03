@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Home09Icon } from "@hugeicons/react";
-import { buttonStyles } from "../ui/new/ui";
+import { buttonStyles } from "../ui/";
 
 export const NavigationButtons = () => {
   const pathname = usePathname();

@@ -18,8 +18,8 @@ import {
 } from "react-aria-components";
 import { tv } from "tailwind-variants";
 
-import { cn } from "@/utils/new/classes";
-import { useMediaQuery } from "@/utils/new/use-media-query";
+import { cn } from "@/utils/classes";
+import { useMediaQuery } from "@/utils/use-media-query";
 import { twMerge } from "tailwind-merge";
 import type {
   DialogBodyProps,
@@ -36,11 +36,7 @@ const Popover = ({ children, ...props }: PopoverProps) => {
 
 const Title = ({ level = 2, className, ...props }: DialogTitleProps) => (
   <Dialog.Title
-    className={twMerge(
-      "sm:leading-none",
-      level === 2 && "sm:text-lg",
-      className,
-    )}
+    className={twMerge("sm:leading-none", level === 2 && "sm:text-lg", className)}
     {...props}
   />
 );
@@ -54,11 +50,7 @@ const Footer = ({ className, ...props }: DialogFooterProps) => (
 );
 
 const Body = ({ className, ref, ...props }: DialogBodyProps) => (
-  <Dialog.Body
-    ref={ref}
-    className={cn("sm:px-4 sm:pt-0", className)}
-    {...props}
-  />
+  <Dialog.Body ref={ref} className={cn("sm:px-4 sm:pt-0", className)} {...props} />
 );
 
 const content = tv({
@@ -115,13 +107,13 @@ interface PopoverContentProps
   extends Omit<React.ComponentProps<typeof Modal>, "children">,
     Omit<PopoverPrimitiveProps, "children" | "className">,
     Omit<ModalOverlayProps, "className"> {
-  children: React.ReactNode;
-  showArrow?: boolean;
-  style?: React.CSSProperties;
-  respectScreen?: boolean;
+  "children": React.ReactNode;
+  "showArrow"?: boolean;
+  "style"?: React.CSSProperties;
+  "respectScreen"?: boolean;
   "aria-label"?: DialogProps["aria-label"];
   "aria-labelledby"?: DialogProps["aria-labelledby"];
-  className?: string | ((values: { defaultClassName?: string }) => string);
+  "className"?: string | ((values: { defaultClassName?: string }) => string);
 }
 
 const PopoverContent = ({
@@ -140,19 +132,19 @@ const PopoverContent = ({
   const effectiveOffset = isSubmenuTrigger ? offset - 5 : offset;
   return isMobile && respectScreen ? (
     <ModalOverlay
-      className="fixed top-0 left-0 isolate z-50! h-(--visual-viewport-height) w-full bg-overlay/10 [--visual-viewport-vertical-padding:16px]"
+      className='fixed top-0 left-0 isolate z-50! h-(--visual-viewport-height) w-full bg-overlay/10 [--visual-viewport-vertical-padding:16px]'
       {...props}
       isDismissable
     >
       <Modal
         className={composeRenderProps(className, (className, renderProps) =>
-          drawer({ ...renderProps, isMenu, className }),
+          drawer({ ...renderProps, isMenu, className })
         )}
       >
         <Dialog
-          role="dialog"
+          role='dialog'
           aria-label={props["aria-label"] || isMenu ? "Menu" : undefined}
-          className="outline-hidden"
+          className='outline-hidden'
         >
           {children}
         </Dialog>
@@ -166,26 +158,26 @@ const PopoverContent = ({
         content({
           ...renderProps,
           className,
-        }),
+        })
       )}
     >
       {showArrow && (
-        <OverlayArrow className="group">
+        <OverlayArrow className='group'>
           <svg
             width={12}
             height={12}
-            viewBox="0 0 12 12"
+            viewBox='0 0 12 12'
             className="group-data-[placement='left']:-rotate-90 block fill-overlay-elevated stroke-border group-data-[placement='bottom']:rotate-180 group-data-[placement='right']:rotate-90 forced-colors:fill-[Canvas] forced-colors:stroke-[ButtonBorder]"
           >
             <title>Overlay Arrow</title>
-            <path d="M0 0 L6 6 L12 0" />
+            <path d='M0 0 L6 6 L12 0' />
           </svg>
         </OverlayArrow>
       )}
       <Dialog
-        role="dialog"
+        role='dialog'
         aria-label={props["aria-label"] || isMenu ? "Menu" : undefined}
-        className="outline-hidden"
+        className='outline-hidden'
       >
         {children}
       </Dialog>
@@ -202,7 +194,7 @@ const Picker = ({ children, className, ...props }: PopoverContentProps) => {
           ...renderProps,
           isPicker: true,
           className,
-        }),
+        })
       )}
     >
       {children}

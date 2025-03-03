@@ -3,7 +3,7 @@ import {
   Modal,
   Popover,
   type PopoverContentProps,
-} from "@/components/ui/new/ui";
+} from "@/components/ui";
 import { UserAvatar } from "@/components/ui/user-avatar";
 import { cn } from "@/lib/utils";
 import {

@@ -5,7 +5,7 @@ import { MaxWidthWrapper } from "./max-width-wrapper";
 
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { AuthButton } from "./auth/auth-button";
-import { Button } from "./ui/new/ui";
+import { Button } from "./ui";
 import { ThemeSwitcher } from "./ui/theme-switcher";
 
 export const Header = () => {

@@ -9,7 +9,7 @@ import { useContext, useMemo } from "react";
 import type { UIOccurrence } from "../calendar.types";
 import { getCalendarColor, getDayKeyFromDate } from "../utils";
 
-import { Heading } from "@/components/ui/new/ui";
+import { Heading } from "@/components/ui";
 
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";

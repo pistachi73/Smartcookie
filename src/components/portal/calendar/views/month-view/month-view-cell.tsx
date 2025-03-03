@@ -1,6 +1,6 @@
 "use client";
 
-import { Popover } from "@/components/ui/new/ui";
+import { Popover } from "@/components/ui";
 import { getWeekdayAbbrev } from "@/lib/temporal/format";
 import { cn } from "@/lib/utils";
 import { useCalendarStore } from "@/providers/calendar-store-provider";

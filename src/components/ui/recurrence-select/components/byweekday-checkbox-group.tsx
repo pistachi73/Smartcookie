@@ -1,6 +1,6 @@
 import { use } from "react";
 
-import { Toggle, ToggleGroup } from "../../new/ui";
+import { Toggle, ToggleGroup } from "../../";
 import { RecurrenceSelectContext } from "../recurrence-select-context";
 import { daysOfWeekCheckboxes } from "../utils";
 

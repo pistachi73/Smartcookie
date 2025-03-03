@@ -1,18 +1,18 @@
-"use client"
+"use client";
 
-import { useCallback, useState } from "react"
+import { useCallback, useState } from "react";
 
-import type { Key } from "react-aria-components"
-import { Group, TextField } from "react-aria-components"
-import type { ListData } from "react-stately"
-import { twJoin } from "tailwind-merge"
-import { tv } from "tailwind-variants"
+import type { Key } from "react-aria-components";
+import { Group, TextField } from "react-aria-components";
+import type { ListData } from "react-stately";
+import { twJoin } from "tailwind-merge";
+import { tv } from "tailwind-variants";
 
-import { cn } from "@/utils/new/classes"
-import type { FieldProps } from "./field"
-import { Description, Input, Label } from "./field"
-import type { RestrictedIntent, TagGroupProps } from "./tag-group"
-import { Tag, TagGroup, TagList } from "./tag-group"
+import { cn } from "@/utils/classes";
+import type { FieldProps } from "./field";
+import { Description, Input, Label } from "./field";
+import type { RestrictedIntent, TagGroupProps } from "./tag-group";
+import { Tag, TagGroup, TagList } from "./tag-group";
 
 const tagFieldsStyles = tv({
   base: ["relative flex min-h-10 flex-row flex-wrap items-center transition"],
@@ -27,24 +27,24 @@ const tagFieldsStyles = tv({
       plain: ["has-[input[data-focused=true]]:border-transparent"],
     },
   },
-})
+});
 
 interface TagItemProps {
-  id: number
-  name: string
+  id: number;
+  name: string;
 }
 
 interface TagFieldProps extends Pick<TagGroupProps, "shape">, FieldProps {
-  intent?: RestrictedIntent
-  isDisabled?: boolean
-  max?: number
-  className?: string
-  children?: React.ReactNode
-  name?: string
-  list: ListData<TagItemProps>
-  onItemInserted?: (tag: TagItemProps) => void
-  onItemCleared?: (tag: TagItemProps | undefined) => void
-  appearance?: "outline" | "plain"
+  intent?: RestrictedIntent;
+  isDisabled?: boolean;
+  max?: number;
+  className?: string;
+  children?: React.ReactNode;
+  name?: string;
+  list: ListData<TagItemProps>;
+  onItemInserted?: (tag: TagItemProps) => void;
+  onItemCleared?: (tag: TagItemProps | undefined) => void;
+  appearance?: "outline" | "plain";
 }
 
 const TagField = ({
@@ -56,30 +56,30 @@ const TagField = ({
   onItemInserted,
   ...props
 }: TagFieldProps) => {
-  const [isInvalid, setIsInvalid] = useState(false)
-  const [inputValue, setInputValue] = useState("")
+  const [isInvalid, setIsInvalid] = useState(false);
+  const [inputValue, setInputValue] = useState("");
 
-  const existingTagCount = list.items.length
-  const maxTags = props.max !== undefined ? props.max : Number.POSITIVE_INFINITY
-  const maxTagsToAdd = maxTags - existingTagCount
+  const existingTagCount = list.items.length;
+  const maxTags = props.max !== undefined ? props.max : Number.POSITIVE_INFINITY;
+  const maxTagsToAdd = maxTags - existingTagCount;
 
   const insertTag = () => {
-    const tagNames = inputValue.split(/,/)
+    const tagNames = inputValue.split(/,/);
     if (maxTagsToAdd <= 0) {
-      setIsInvalid(true)
-      setInputValue("")
+      setIsInvalid(true);
+      setInputValue("");
       const timeoutId = setTimeout(() => {
-        setIsInvalid(false)
-      }, 2000)
+        setIsInvalid(false);
+      }, 2000);
 
-      return () => clearTimeout(timeoutId)
+      return () => clearTimeout(timeoutId);
     }
 
     for (const tagName of tagNames.slice(0, maxTagsToAdd)) {
       const formattedName = tagName
         .trim()
         .replace(/\s+/g, " ")
-        .replace(/[\t\r\n]/g, "")
+        .replace(/[\t\r\n]/g, "");
 
       if (
         formattedName &&
@@ -88,57 +88,57 @@ const TagField = ({
         const tag = {
           id: (list.items.at(-1)?.id ?? 0) + 1,
           name: formattedName,
-        }
+        };
 
-        list.append(tag)
-        onItemInserted?.(tag)
+        list.append(tag);
+        onItemInserted?.(tag);
       }
     }
 
-    setInputValue("")
-  }
+    setInputValue("");
+  };
 
   const clearInvalidFeedback = () => {
     if (maxTags - list.items.length <= maxTagsToAdd) {
-      setIsInvalid(false)
+      setIsInvalid(false);
     }
-  }
+  };
 
   const onRemove = (keys: Set<Key>) => {
-    list.remove(...keys)
+    list.remove(...keys);
 
-    const firstKey = [...keys][0]
+    const firstKey = [...keys][0];
     if (firstKey !== undefined) {
-      onItemCleared?.(list.getItem(firstKey))
+      onItemCleared?.(list.getItem(firstKey));
     }
 
-    clearInvalidFeedback()
-  }
+    clearInvalidFeedback();
+  };
 
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" || e.key === ",") {
-      e.preventDefault()
-      insertTag()
+      e.preventDefault();
+      insertTag();
     }
 
     if (e.key === "Backspace" && inputValue === "") {
-      popLast()
-      clearInvalidFeedback()
+      popLast();
+      clearInvalidFeedback();
     }
-  }
+  };
 
   const popLast = useCallback(() => {
     if (list.items.length === 0) {
-      return
+      return;
     }
 
-    const endKey = list.items[list.items.length - 1]!
+    const endKey = list.items[list.items.length - 1]!;
 
     if (endKey !== null) {
-      list.remove(endKey.id)
-      onItemCleared?.(list.getItem(endKey.id))
+      list.remove(endKey.id);
+      onItemCleared?.(list.getItem(endKey.id));
     }
-  }, [list, onItemCleared])
+  }, [list, onItemCleared]);
 
   return (
     <div className={cn("flex w-full flex-col gap-y-1.5", className)}>
@@ -147,11 +147,11 @@ const TagField = ({
         <TagGroup
           intent={props.intent}
           shape={props.shape}
-          aria-label="List item inserted"
+          aria-label='List item inserted'
           onRemove={onRemove}
         >
           <div className={tagFieldsStyles({ appearance })}>
-            <div className="flex flex-1 flex-wrap items-center">
+            <div className='flex flex-1 flex-wrap items-center'>
               <TagList
                 items={list.items}
                 className={twJoin(
@@ -159,7 +159,7 @@ const TagField = ({
                     ? appearance === "outline" && "gap-1.5 px-1 py-1.5"
                     : "gap-0",
                   props.shape === "square" && "[&_.jdt3lr2x]:rounded-[calc(var(--radius-lg)-4px)]",
-                  "[&_.jdt3lr2x]:last:-mr-1 outline-hidden [&_.jdt3lr2x]:cursor-default",
+                  "[&_.jdt3lr2x]:last:-mr-1 outline-hidden [&_.jdt3lr2x]:cursor-default"
                 )}
               >
                 {(item) => <Tag>{item.name}</Tag>}
@@ -171,11 +171,11 @@ const TagField = ({
                 onKeyDown={onKeyDown}
                 onChange={setInputValue}
                 value={inputValue}
-                className="flex-1"
+                className='flex-1'
                 {...props}
               >
                 <Input
-                  className="inline"
+                  className='inline'
                   placeholder={maxTagsToAdd <= 0 ? "Remove one to add more" : props.placeholder}
                 />
               </TextField>
@@ -188,8 +188,8 @@ const TagField = ({
       </Group>
       {props.description && <Description>{props.description}</Description>}
     </div>
-  )
-}
+  );
+};
 
-export type { TagFieldProps, TagItemProps }
-export { TagField }
+export { TagField };
+export type { TagFieldProps, TagItemProps };

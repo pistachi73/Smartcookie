@@ -1,7 +1,7 @@
 "use client";
-import { Button } from "@/components/ui/new/ui/button";
-import { Card } from "@/components/ui/new/ui/card";
-import { Modal } from "@/components/ui/new/ui/modal";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Modal } from "@/components/ui/modal";
 
 import { useSafeAction } from "@/hooks/use-safe-action";
 import { cn } from "@/lib/utils";

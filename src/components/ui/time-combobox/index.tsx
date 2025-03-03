@@ -17,7 +17,7 @@ import {
   type ComboBoxListProps,
   type ComboBoxProps,
   DropdownLabel,
-} from "../new/ui";
+} from "../";
 
 type TimeComboboxProps<T extends object> = Omit<
   ComboBoxProps<T>,

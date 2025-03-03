@@ -10,7 +10,7 @@ import {
 } from "react-aria-components";
 import { tv } from "tailwind-variants";
 
-import { cn } from "../../../../utils/new/classes";
+import { cn } from "@/lib/utils";
 import { ColorSwatch } from "./color-swatch";
 import { composeTailwindRenderProps, focusRing } from "./primitive";
 
