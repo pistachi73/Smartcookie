@@ -11,8 +11,8 @@ export const PortalHeader = async ({ className }: { className?: string }) => {
   const user = (await currentUser()) as ExtendedUser;
 
   return (
-    <div className={clsx("flex  w-full  items-center justify-between h-12 rounded-lg", className)}>
-      <div className='flex items-center justify-center size-12 w-16'>
+    <div className={clsx("flex w-full items-center justify-between rounded-lg", className)}>
+      <div className='flex items-center justify-center size-12 w-[calc(var(--left-sidebar-width)+var(--panel-gap))'>
         <Link href={"/"}>
           <Image src={"/Logo.svg"} alt='Logo' width={18} height={36} />
         </Link>

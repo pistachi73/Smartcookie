@@ -2,6 +2,7 @@ import { relations } from "drizzle-orm";
 import { integer, pgEnum, serial, text, uuid } from "drizzle-orm/pg-core";
 import { clientHub } from "./client-hub";
 import { event } from "./event";
+import { quickNote } from "./quick-note";
 import { user } from "./user";
 import { pgTable } from "./utils";
 
@@ -28,4 +29,5 @@ export type Hub = typeof hub.$inferSelect;
 export const hubRelations = relations(hub, ({ many }) => ({
   clients: many(clientHub),
   sessions: many(event),
+  quickNotes: many(quickNote),
 }));

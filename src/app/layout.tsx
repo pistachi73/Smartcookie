@@ -28,9 +28,9 @@ export default async function RootLayout({
   const { deviceType } = await getHeaders();
 
   return (
-    <html lang={"en-GB"} dir={"ltr"} suppressHydrationWarning>
+    <html lang={"en-GB"} dir={"ltr"} className='h-full' suppressHydrationWarning>
       <ReactScan />
-      <body className={`f${sans.variable} font-sans min-h-screen`}>
+      <body className={`${sans.variable} font-sans h-full`}>
         <Providers>
           <SessionProvider session={session}>
             <DeviceOnlyProvider deviceType={deviceType}>

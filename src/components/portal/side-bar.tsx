@@ -46,12 +46,14 @@ const sidebarLinks = [
   },
 ];
 
-export const SideBar = () => {
+export const SideBar = ({ className }: { className?: string }) => {
   const pathname = usePathname();
 
   return (
-    <div className="flex flex-col justify-between items-center p-2 rounded-xl h-full">
-      <div className="flex flex-col gap-2 shrink-0 grow-0">
+    <div
+      className={cn("flex flex-col justify-between items-center p-2 rounded-xl h-full", className)}
+    >
+      <div className='flex flex-col gap-2 shrink-0 grow-0'>
         {sidebarLinks.map(({ label, href, icon: Icon }) => {
           const isActive = pathname.includes(href);
           return (
@@ -65,34 +67,29 @@ export const SideBar = () => {
                       shape: "square",
                       appearance: "plain",
                       size: "square-petite",
-                      className: cn("aspect-square", {
+                      className: cn("aspect-square size-12", {
                         "bg-overlay": isActive,
                         "text-muted-fg hover:text-current": !isActive,
                       }),
-                    }),
+                    })
                   )
                 }
               >
                 <Icon
                   size={20}
                   variant={isActive ? "solid" : "stroke"}
-                  type="rounded"
+                  type='rounded'
                   className={cn(isActive ? "text-primary" : "")}
                 />
               </Link>
-              <Tooltip.Content placement="right">
-                <p className="text-sm">{label}</p>
+              <Tooltip.Content placement='right'>
+                <p className='text-sm'>{label}</p>
               </Tooltip.Content>
             </Tooltip>
           );
         })}
       </div>
-      <ThemeSwitcher
-        appearance="plain"
-        size="square-petite"
-        shape="square"
-        className={"size-11"}
-      />
+      <ThemeSwitcher appearance='plain' size='square-petite' shape='square' className={"size-11"} />
     </div>
   );
 };

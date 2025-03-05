@@ -19,6 +19,7 @@ export const quickNote = pgTable("quick_note", {
     .notNull(),
   updatedAt: timestamp({ mode: "string", withTimezone: true })
     .defaultNow()
+    .$onUpdate(() => new Date().toISOString())
     .notNull(),
 });
 

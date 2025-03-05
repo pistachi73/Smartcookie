@@ -1,6 +1,7 @@
 import { relations, sql } from "drizzle-orm";
 import { boolean, index, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { account } from "./account";
+import { quickNote } from "./quick-note";
 import { pgTable } from "./utils";
 
 export const user = pgTable(
@@ -21,11 +22,12 @@ export const user = pgTable(
   }),
 );
 
-export const userRelations = relations(user, ({ one }) => ({
+export const userRelations = relations(user, ({ one, many }) => ({
   account: one(account, {
     fields: [user.id],
     references: [account.userId],
   }),
+  quickNotes: many(quickNote),
 }));
 
 export type InsertUser = typeof user.$inferInsert;
