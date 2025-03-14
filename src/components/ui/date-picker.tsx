@@ -12,7 +12,8 @@ import { tv } from "tailwind-variants";
 
 import { cn } from "@/utils/classes";
 import { useMediaQuery } from "@/utils/use-media-query";
-import { Calendar01Icon } from "@hugeicons/react";
+import { Calendar01Icon } from "@hugeicons-pro/core-solid-rounded";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { DateDuration } from "@internationalized/date";
 import { Button } from "./button";
 import { Calendar } from "./calendar";
@@ -91,7 +92,13 @@ const DatePickerIcon = () => (
     appearance='plain'
     className={cn(datePickerIcon(), "aspect-square shrink-0")}
   >
-    <Calendar01Icon size={14} data-slot='icon' aria-hidden className={calendarIcon()} />
+    <HugeiconsIcon
+      icon={Calendar01Icon}
+      size={14}
+      data-slot='icon'
+      aria-hidden
+      className={calendarIcon()}
+    />
   </Button>
 );
 

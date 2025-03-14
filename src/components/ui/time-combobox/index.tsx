@@ -11,18 +11,11 @@ import {
 } from "./utils";
 
 import { cn } from "@/lib/utils";
-import { Clock01Icon } from "@hugeicons/react";
-import {
-  ComboBox,
-  type ComboBoxListProps,
-  type ComboBoxProps,
-  DropdownLabel,
-} from "../";
+import { Clock01Icon } from "@hugeicons-pro/core-solid-rounded";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ComboBox, type ComboBoxListProps, type ComboBoxProps, DropdownLabel } from "../";
 
-type TimeComboboxProps<T extends object> = Omit<
-  ComboBoxProps<T>,
-  "className" | "children"
-> & {
+type TimeComboboxProps<T extends object> = Omit<ComboBoxProps<T>, "className" | "children"> & {
   withIcon?: boolean;
   minValue?: Time;
   value: Time | null;
@@ -47,9 +40,7 @@ export const TimeCombobox = <T extends TimeSelectOption>({
   listProps,
 }: TimeComboboxProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [input, setInput] = useState(
-    value ? formatLabel(value.hour, value.minute) : "",
-  );
+  const [input, setInput] = useState(value ? formatLabel(value.hour, value.minute) : "");
   const [items, setItems] = useState(generateTimeSelectOptions(minValue));
 
   const handleInputParsing = (v: string) => {
@@ -60,11 +51,7 @@ export const TimeCombobox = <T extends TimeSelectOption>({
       console.log("set input without parsed", value);
       setInput(value ? formatLabel(value.hour, value.minute) : "");
     } else {
-      const timeValue = generateTimeValue(
-        parsedInput.hour,
-        parsedInput.minute,
-        minValue,
-      );
+      const timeValue = generateTimeValue(parsedInput.hour, parsedInput.minute, minValue);
 
       onChange(timeValue);
       setInput(formatLabel(timeValue.hour, timeValue.minute));
@@ -90,8 +77,8 @@ export const TimeCombobox = <T extends TimeSelectOption>({
 
   return (
     <ComboBox
-      placeholder="hh:mm"
-      menuTrigger="focus"
+      placeholder='hh:mm'
+      menuTrigger='focus'
       inputValue={input}
       selectedKey={input}
       onFocus={() => setIsOpen(true)}
@@ -120,7 +107,9 @@ export const TimeCombobox = <T extends TimeSelectOption>({
       items={items}
     >
       <ComboBox.Input
-        prefix={withIcon && <Clock01Icon size={14} className="text-text-sub" />}
+        prefix={
+          withIcon && <HugeiconsIcon icon={Clock01Icon} size={14} className='text-text-sub' />
+        }
         className={{
           input: className?.input,
           fieldGroup: className?.fieldGroup,
@@ -146,11 +135,9 @@ export const TimeCombobox = <T extends TimeSelectOption>({
         {({ label, difference, isDisabled }) => (
           <ComboBox.Option id={label} textValue={label} isDisabled={isDisabled}>
             <DropdownLabel>
-              <span className="mr-2">{label}</span>
+              <span className='mr-2'>{label}</span>
               {difference?.hours || difference?.minutes ? (
-                <span className="text-muted-fg text-sm">
-                  {formatDifferenceLabel(difference)}
-                </span>
+                <span className='text-muted-fg text-sm'>{formatDifferenceLabel(difference)}</span>
               ) : null}
             </DropdownLabel>
           </ComboBox.Option>

@@ -14,12 +14,21 @@ importers:
       '@auth/drizzle-adapter':
         specifier: ^1.7.2
         version: 1.7.4
+      '@github/relative-time-element':
+        specifier: ^4.4.5
+        version: 4.4.5
       '@hookform/resolvers':
         specifier: ^3.3.4
         version: 3.9.1(react-hook-form@7.53.2(react@19.0.0))
+      '@hugeicons-pro/core-solid-rounded':
+        specifier: ^1.0.11
+        version: 1.0.11
+      '@hugeicons-pro/core-stroke-rounded':
+        specifier: ^1.0.11
+        version: 1.0.11
       '@hugeicons/react':
-        specifier: ^0.6.3
-        version: 0.6.3(react@19.0.0)
+        specifier: ^1.0.4
+        version: 1.0.4(react@19.0.0)
       '@internationalized/date':
         specifier: ^3.6.0
         version: 3.6.0
@@ -95,6 +104,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.62.3
         version: 5.62.3(react@19.0.0)
+      '@types/react-window':
+        specifier: ^1.8.8
+        version: 1.8.8
       babel-plugin-react-compiler:
         specifier: 19.0.0-beta-b2e8e9c-20241220
         version: 19.0.0-beta-b2e8e9c-20241220
@@ -173,6 +185,9 @@ importers:
       react-use-measure:
         specifier: ^2.1.1
         version: 2.1.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      react-window:
+        specifier: ^1.8.11
+        version: 1.8.11(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       resend:
         specifier: ^4.0.0
         version: 4.0.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -1298,13 +1313,22 @@ packages:
   '@formatjs/intl-localematcher@0.5.8':
     resolution: {integrity: sha512-I+WDNWWJFZie+jkfkiK5Mp4hEDyRSEvmyfYadflOno/mmKJKcB17fEpEH0oJu/OWhhCJ8kJBDz2YMd/6cDl7Mg==}
 
+  '@github/relative-time-element@4.4.5':
+    resolution: {integrity: sha512-9ejPtayBDIJfEU8x1fg/w2o5mahHkkp1SC6uObDtoKs4Gn+2a1vNK8XIiNDD8rMeEfpvDjydgSZZ+uk+7N0VsQ==}
+
   '@hookform/resolvers@3.9.1':
     resolution: {integrity: sha512-ud2HqmGBM0P0IABqoskKWI6PEf6ZDDBZkFqe2Vnl+mTHCEHzr3ISjjZyCwTjC/qpL25JC9aIDkloQejvMeq0ug==}
     peerDependencies:
       react-hook-form: ^7.0.0
 
-  '@hugeicons/react@0.6.3':
-    resolution: {integrity: sha512-iSgdMhNEaPxWEtlUk+6eaTpbtb7YMtrBrMBu+TDKVlWtoasynGGjpj7Ow/amTafmtQ9O4rLbYjeqOV/dOtaVxQ==}
+  '@hugeicons-pro/core-solid-rounded@1.0.11':
+    resolution: {integrity: sha512-30+HUgNdxAY6EwX84OK8r1yxPdtc5Z87fJdHY2pn9FV3B/vQLsfeZqYaYW6TLSZwUXiEi4HC5ZEjiaiS0Ld5PA==}
+
+  '@hugeicons-pro/core-stroke-rounded@1.0.11':
+    resolution: {integrity: sha512-zAbkYBXm454daZ9kNAAf56zCVMXobuiO6G/onW3h8nbtIkOJ1cd1EratKiLKaf+33vpTCE6i0yML/ySw+JbIGw==}
+
+  '@hugeicons/react@1.0.4':
+    resolution: {integrity: sha512-dLkGZRW3K724ePvrmb67BpMY8tT4JywYdJipF8ALtkvsyMC4qAF75R0tOvUI6X3TIshyj3/OQ7vRcAwb0J8haw==}
     peerDependencies:
       react: '>=16.0.0'
 
@@ -3235,6 +3259,9 @@ packages:
     peerDependencies:
       '@types/react': ^19.0.0
 
+  '@types/react-window@1.8.8':
+    resolution: {integrity: sha512-8Ls660bHR1AUA2kuRvVG9D/4XpRC6wjAaPT9dil7Ckc76eP9TKWZwwmgfq8Q1LANX3QNDnoU4Zp48A3w+zK69Q==}
+
   '@types/react@19.0.1':
     resolution: {integrity: sha512-YW6614BDhqbpR5KtUYzTA+zlA7nayzJRA9ljz9CQoxthR0sDisYZLuvSMsil36t4EH/uAt8T52Xb4sVw17G+SQ==}
 
@@ -4466,6 +4493,9 @@ packages:
     peerDependencies:
       react: 18.x
 
+  memoize-one@5.2.1:
+    resolution: {integrity: sha512-zYiwtZUcYyXKo/np96AGZAckk+FWWsUdJ3cHGGmld7+AhvcWmQyGCYUh1hc4Q/pkOhb65dQR/pqCyK0cOaHz4Q==}
+
   merge-stream@2.0.0:
     resolution: {integrity: sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==}
 
@@ -4957,6 +4987,13 @@ packages:
     peerDependencies:
       react: '>=16.13'
       react-dom: '>=16.13'
+
+  react-window@1.8.11:
+    resolution: {integrity: sha512-+SRbUVT2scadgFSWx+R1P754xHPEqvcfSfVX10QYg6POOz+WNgkN48pS+BtZNIMGiL1HYrSEiCkwsMS15QogEQ==}
+    engines: {node: '>8.0.0'}
+    peerDependencies:
+      react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
   react@19.0.0:
     resolution: {integrity: sha512-V8AVnmPIICiWpGfm6GLzCR/W5FXLchHop40W4nXBmdlEceh16rCN8O8LNWm5bh5XUX91fh7KpA+W0TgMKmgTpQ==}
@@ -6193,11 +6230,17 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
+  '@github/relative-time-element@4.4.5': {}
+
   '@hookform/resolvers@3.9.1(react-hook-form@7.53.2(react@19.0.0))':
     dependencies:
       react-hook-form: 7.53.2(react@19.0.0)
 
-  '@hugeicons/react@0.6.3(react@19.0.0)':
+  '@hugeicons-pro/core-solid-rounded@1.0.11': {}
+
+  '@hugeicons-pro/core-stroke-rounded@1.0.11': {}
+
+  '@hugeicons/react@1.0.4(react@19.0.0)':
     dependencies:
       react: 19.0.0
 
@@ -8585,6 +8628,10 @@ snapshots:
     dependencies:
       '@types/react': 19.0.1
 
+  '@types/react-window@1.8.8':
+    dependencies:
+      '@types/react': 19.0.1
+
   '@types/react@19.0.1':
     dependencies:
       csstype: 3.1.3
@@ -10016,6 +10063,8 @@ snapshots:
       marked: 7.0.4
       react: 19.0.0
 
+  memoize-one@5.2.1: {}
+
   merge-stream@2.0.0: {}
 
   micromatch@4.0.8:
@@ -10568,6 +10617,13 @@ snapshots:
   react-use-measure@2.1.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
       debounce: 1.2.1
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+
+  react-window@1.8.11(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
+    dependencies:
+      '@babel/runtime': 7.26.0
+      memoize-one: 5.2.1
       react: 19.0.0
       react-dom: 19.0.0(react@19.0.0)
 

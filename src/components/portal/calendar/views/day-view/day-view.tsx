@@ -11,21 +11,18 @@ export const DayView = () => {
   const selectedDate = useCalendarStore((store) => store.selectedDate);
   const visibleDates = useCalendarStore((store) => store.visibleDates);
 
-  const timezoneOffsetHours = useMemo(
-    () => getCurrentTimezone().offsetHours,
-    [],
-  );
+  const timezoneOffsetHours = useMemo(() => getCurrentTimezone().offsetHours, []);
 
   return (
-    <div className="flex flex-col h-full relative overflow-hidden ">
-      <div className="w-full flex items-center px-2 py-2 shadow-2xl  border-b">
-        <div className="w-12 shrink-0 h-full mr-4 flex items-center justify-end">
-          <p className="text-xs text-muted-fg">
+    <div className='flex flex-col h-full relative overflow-hidden '>
+      <div className='w-full flex items-center py-2 px-2 border-b'>
+        <div className='w-12 shrink-0 h-full mr-4 flex items-center justify-end'>
+          <p className='text-xs text-muted-fg'>
             GTM{timezoneOffsetHours > 0 ? "+" : "-"}
             {timezoneOffsetHours}
           </p>
         </div>
-        <div className="flex items-center w-full">
+        <div className='flex items-center w-full'>
           {visibleDates.map((date) => {
             const isSelected = date.equals(selectedDate);
             return (
@@ -35,9 +32,7 @@ export const DayView = () => {
                   "flex-1 w-full rounded-lg p-2",
                   "flex items-center justify-center",
                   "text-xs  uppercase",
-                  isSelected
-                    ? "text-current bg-overlay-highlight font-semibold"
-                    : "text-muted-fg ",
+                  isSelected ? "text-current bg-overlay-highlight font-semibold" : "text-muted-fg "
                 )}
               >
                 {date.toLocaleString("en-US", { weekday: "short" })}{" "}
@@ -47,10 +42,10 @@ export const DayView = () => {
           })}
         </div>
       </div>
-      <div className="relative flex flex-col overflow-y-scroll px-2 pt-2">
-        <div className="items-stretch flex flex-auto">
+      <div className='relative flex flex-col overflow-y-scroll px-2 pt-2'>
+        <div className='items-stretch flex flex-auto'>
           <HoursColumn />
-          <div className="flex flex-row w-full h-auto relative">
+          <div className='flex flex-row w-full h-auto relative'>
             <CalendarRows />
             {visibleDates.map((date) => (
               <DayColumn key={date.toString()} date={date} />

@@ -4,7 +4,7 @@ import {
   Copy01Icon,
   Delete02Icon,
   UserAdd02Icon,
-} from "@hugeicons/react";
+} from "@hugeicons-pro/core-stroke-rounded";
 import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import { useRef, useState } from "react";
@@ -12,6 +12,7 @@ import { toast } from "sonner";
 
 import { cn } from "@/lib/utils";
 import { regularSpring } from "@/utils/animation";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Button,
   ComboBox,
@@ -74,38 +75,30 @@ export const ParticipantsCombobox = <T extends Participant>({
     },
   ];
 
-  const participantsMap = participants.reduce<Record<number, Participant>>(
-    (acc, participant) => {
-      acc[participant.id] = participant;
-      return acc;
-    },
-    {},
-  );
+  const participantsMap = participants.reduce<Record<number, Participant>>((acc, participant) => {
+    acc[participant.id] = participant;
+    return acc;
+  }, {});
 
   const filteredParticipants = participants.filter(
-    (participant) => !value?.includes(participant.id),
+    (participant) => !value?.includes(participant.id)
   );
 
   const isSomeParticipantsComboboxed = (value?.length ?? 0) > 0;
   const isComboboxDisabled = !filteredParticipants.length || isDisabled;
   const inputPlaceholder =
-    filteredParticipants.length === 0
-      ? "No more participants"
-      : "Add participants...";
+    filteredParticipants.length === 0 ? "No more participants" : "Add participants...";
 
   const isLoading = false;
 
   return (
-    <div className="flex flex-col gap-1.5">
-      <div
-        className="flex items-center w-full gap-2"
-        ref={comboboxPrimitiveRef}
-      >
+    <div className='flex flex-col gap-1.5'>
+      <div className='flex items-center w-full gap-2' ref={comboboxPrimitiveRef}>
         <ComboBox
           selectedKey={null}
           isDisabled={isComboboxDisabled}
           inputValue={inputValue}
-          menuTrigger="focus"
+          menuTrigger='focus'
           onInputChange={(input) => {
             setInputValue(input);
             setIsOpen(true);
@@ -127,10 +120,11 @@ export const ParticipantsCombobox = <T extends Participant>({
           <ComboBox.Input
             prefix={
               !isComboboxDisabled && (
-                <UserAdd02Icon
+                <HugeiconsIcon
+                  icon={UserAdd02Icon}
                   size={14}
-                  data-slot="icon"
-                  className="shrink-0"
+                  data-slot='icon'
+                  className='shrink-0'
                 />
               )
             }
@@ -148,7 +142,7 @@ export const ParticipantsCombobox = <T extends Participant>({
           />
           <ComboBox.List
             isOpen={isOpen}
-            placement="left top"
+            placement='left top'
             offset={8}
             items={filteredParticipants}
             triggerRef={comboboxPrimitiveRef}
@@ -160,9 +154,9 @@ export const ParticipantsCombobox = <T extends Participant>({
                 textValue={`${item.name} ${item.email}`}
                 isDisabled={isComboboxDisabled}
               >
-                <DropdownLabel className="flex flex-row gap-1 items-center">
+                <DropdownLabel className='flex flex-row gap-1 items-center'>
                   <Image
-                    className="rounded-full shrink-0 size-8"
+                    className='rounded-full shrink-0 size-8'
                     src={item.image}
                     alt={item.name}
                     width={32}
@@ -170,7 +164,7 @@ export const ParticipantsCombobox = <T extends Participant>({
                   />
                   <div>
                     <p>{item.name}</p>
-                    <p className="text-muted-fg text-xs">{item.email}</p>
+                    <p className='text-muted-fg text-xs'>{item.email}</p>
                   </div>
                 </DropdownLabel>
               </ComboBox.Option>
@@ -185,11 +179,11 @@ export const ParticipantsCombobox = <T extends Participant>({
                 size: "small",
                 appearance: "plain",
               }),
-              "min-w-0 rounded-lg font-normal",
+              "min-w-0 rounded-lg font-normal"
             )}
           >
-            <span className="text-xs">Create</span>
-            <UserAdd02Icon size={14} />
+            <span className='text-xs'>Create</span>
+            <HugeiconsIcon icon={UserAdd02Icon} size={14} />
           </Link>
         )}
       </div>
@@ -221,63 +215,63 @@ export const SelectedParticipant = ({
     <div
       className={cn(
         "group pr-1 flex flex-col justify-between rounded-lg hover:bg-overlay-highlight transition-colors",
-        isExpanded && "bg-overlay-highlight",
+        isExpanded && "bg-overlay-highlight"
       )}
     >
-      <div className="flex flex-row items-center justify-between gap-2 shrink-0 h-9">
-        <div className="flex flex-row items-center h-full">
-          <div className="shrink-0 w-10 h-full relative flex items-center justify-center">
+      <div className='flex flex-row items-center justify-between gap-2 shrink-0 h-9'>
+        <div className='flex flex-row items-center h-full'>
+          <div className='shrink-0 w-10 h-full relative flex items-center justify-center'>
             <Image
-              className="rounded-full shrink-0 aspect-square"
+              className='rounded-full shrink-0 aspect-square'
               src={participant.image}
               alt={participant.name}
               width={20}
               height={20}
             />
           </div>
-          <p className="text-sm">{participant.name}</p>
+          <p className='text-sm'>{participant.name}</p>
         </div>
-        <div className="group-hover:opacity-100 transition-opacity opacity-0">
+        <div className='group-hover:opacity-100 transition-opacity opacity-0'>
           <Button
-            appearance="plain"
-            size="small"
-            shape="square"
-            className="p-0 size-7"
+            appearance='plain'
+            size='small'
+            shape='square'
+            className='p-0 size-7'
             onPress={() => setIsExpanded((prev) => !prev)}
           >
             {isExpanded ? (
-              <ArrowShrink02Icon size={14} />
+              <HugeiconsIcon icon={ArrowShrink02Icon} size={14} />
             ) : (
-              <ArrowExpand01Icon size={14} />
+              <HugeiconsIcon icon={ArrowExpand01Icon} size={14} />
             )}
           </Button>
           <Button
-            appearance="plain"
-            size="square-petite"
-            shape="square"
-            className="p-0 size-7"
+            appearance='plain'
+            size='square-petite'
+            shape='square'
+            className='p-0 size-7'
             onPress={onRemove}
           >
-            <Delete02Icon size={14} />
+            <HugeiconsIcon icon={Delete02Icon} size={14} />
           </Button>
         </div>
       </div>
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode='wait'>
         {isExpanded && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={regularSpring}
-            className="ml-10 overflow-hidden"
+            className='ml-10 overflow-hidden'
           >
-            <div className="flex items-center gap-1 pb-2">
-              <p className="text-text-sub text-xs">{participant.email}</p>
+            <div className='flex items-center gap-1 pb-2'>
+              <p className='text-text-sub text-xs'>{participant.email}</p>
               <Button
-                appearance="plain"
-                size="small"
-                slot="close"
-                className="text-muted-fg hover:bg-transparent p-0 h-auto"
+                appearance='plain'
+                size='small'
+                slot='close'
+                className='text-muted-fg hover:bg-transparent p-0 h-auto'
                 onPress={() => {
                   navigator?.clipboard?.writeText(participant.email);
                   toast.info("Copied to clipboard", {
@@ -286,7 +280,7 @@ export const SelectedParticipant = ({
                   });
                 }}
               >
-                <Copy01Icon size={12} />
+                <HugeiconsIcon icon={Copy01Icon} size={12} />
               </Button>
             </div>
           </motion.div>

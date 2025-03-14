@@ -12,7 +12,8 @@ import {
   composeRenderProps,
 } from "react-aria-components";
 
-import { ArrowDown01Icon } from "@hugeicons/react";
+import { ArrowDown01Icon } from "@hugeicons-pro/core-stroke-rounded";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { tv } from "tailwind-variants";
 import {
   DropdownItem,
@@ -23,7 +24,7 @@ import {
 } from "./dropdown";
 import { Description, FieldError, Label } from "./field";
 import { ListBox } from "./list-box";
-import { Popover, PopoverContentProps } from "./popover";
+import { Popover, type PopoverContentProps } from "./popover";
 import { composeTailwindRenderProps, focusStyles } from "./primitive";
 
 interface SelectProps<T extends object> extends SelectPrimitiveProps<T> {
@@ -129,7 +130,8 @@ const SelectTrigger = ({
         <SelectValue className="truncate *:data-[slot=icon]:-mx-0.5 *:data-[slot=avatar]:-mx-0.5 *:data-[slot=avatar]:*:-mx-0.5 grid flex-1 grid-cols-[auto_1fr] items-center text-base data-placeholder:text-muted-fg *:data-[slot=avatar]:*:mr-2 *:data-[slot=avatar]:mr-2 *:data-[slot=icon]:mr-2 sm:text-sm [&_[slot=description]]:hidden" />
       </div>
       {showArrow && (
-        <ArrowDown01Icon
+        <HugeiconsIcon
+          icon={ArrowDown01Icon}
           aria-hidden
           data-slot="icon"
           className="size-4 shrink-0 text-muted-fg duration-300 group-data-open:rotate-180 group-data-open:text-fg group-data-disabled:opacity-50 forced-colors:text-[ButtonText] forced-colors:group-data-disabled:text-[GrayText]"

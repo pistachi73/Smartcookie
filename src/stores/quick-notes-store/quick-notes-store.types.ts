@@ -5,21 +5,26 @@ export type QuickNote = Pick<
   DBQuickNote,
   "id" | "hubId" | "content" | "updatedAt"
 >;
-export type Hub = Pick<DBHub, "id" | "name">;
+export type Hub = Pick<DBHub, "name" | "id">;
 
 export type QuickNotesStore = QuickNotesState & QuickNotesActions;
 
 export type QuickNotesState = {
-  visibleHubs: number[];
+  isHydrated: boolean;
+  edittingHub: number | null;
+  visibleHubs: Set<number>;
   isFilterPanelOpen: boolean;
-  hubs: Hub[] | null;
+
+  hubsMap: Map<number, Hub>;
 };
 
 export type QuickNotesActions = {
+  setHydrated: () => void;
   // Hub visibility
   toggleHubVisibility: (hubId: number) => void;
-  setVisibleHubs: (hubIds: number[]) => void;
-  setHubs: (hubs: Hub[]) => void;
+  toggleAllHubsVisibility: () => void;
+  setVisibleHubs: (hubIds: Set<number>) => void;
+  setEdittingHub: (hubId: number | null) => void;
 
   // UI actions
   toggleFilterPanel: () => void;

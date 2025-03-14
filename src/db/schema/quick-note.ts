@@ -9,10 +9,7 @@ export const quickNote = pgTable("quick_note", {
   userId: uuid()
     .references(() => user.id, { onDelete: "cascade" })
     .notNull(),
-  hubId: integer()
-    .references(() => hub.id, { onDelete: "cascade" })
-    .notNull()
-    .default(0),
+  hubId: integer().references(() => hub.id, { onDelete: "cascade" }),
   content: text().notNull(),
   createdAt: timestamp({ mode: "string", withTimezone: true })
     .defaultNow()

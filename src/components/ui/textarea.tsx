@@ -14,7 +14,7 @@ import { composeTailwindRenderProps, focusStyles } from "./primitive";
 
 const textareaStyles = tv({
   extend: focusStyles,
-  base: "field-sizing-content min-h-10 flex-1 field-sizing-content resize-none w-full min-w-0 rounded-lg border border-input px-2.5 py-2 text-base shadow-xs outline-hidden transition-colors duration-200 data-disabled:opacity-50 sm:text-sm",
+  base: "min-h-10 flex-1 field-sizing-content resize-none w-full min-w-0 rounded-lg border border-input px-2.5 py-2 text-base shadow-xs outline-hidden transition-colors duration-200 data-disabled:opacity-50 sm:text-sm",
   variants: {
     isExpanded: {
       true: "min-h-26!",

@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
-import { ArrowLeft02Icon } from "@hugeicons/react";
+import { ArrowLeft02Icon } from "@hugeicons-pro/core-stroke-rounded";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { motion } from "motion/react";
 import { useEffect } from "react";
 import { Button, Card } from "../ui/";
@@ -34,7 +35,7 @@ export const FormWrapper = ({
   return (
     <MotionCard
       // @ts-ignore
-      className="w-full border-none bg-transparent shadow-none"
+      className='w-full border-none bg-transparent shadow-none'
       initial={{ opacity: 0, x: animationDir === 1 ? 20 : -20 }}
       animate={{
         opacity: 1,
@@ -50,32 +51,30 @@ export const FormWrapper = ({
         damping: 35,
       }}
     >
-      <div className="min-h-[20px]">
+      <div className='min-h-[20px]'>
         {backButton && (
           <Button
             onPress={async () => {
               await setAnimationDir(-1);
               backButtonOnClick?.();
             }}
-            size="extra-small"
-            appearance="plain"
-            type="button"
-            className="text-sm"
+            size='extra-small'
+            appearance='plain'
+            type='button'
+            className='text-sm'
           >
-            <ArrowLeft02Icon size={18} />
+            <HugeiconsIcon icon={ArrowLeft02Icon} size={18} />
             Back
           </Button>
         )}
       </div>
-      <Card.Header className="px-0 py-6">
-        <Card.Title level={1} tracking="tighter">
+      <Card.Header className='px-0 py-6'>
+        <Card.Title level={1} tracking='tighter'>
           {header}
         </Card.Title>
         <Card.Description>{subHeader}</Card.Description>
       </Card.Header>
-      <Card.Content className={cn("px-0 py-4", className)}>
-        {children}
-      </Card.Content>
+      <Card.Content className={cn("px-0 py-4", className)}>{children}</Card.Content>
     </MotionCard>
   );
 };

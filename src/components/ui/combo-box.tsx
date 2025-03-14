@@ -3,7 +3,8 @@
 import React from "react";
 
 import { cn } from "@/lib/utils";
-import { ArrowDown01Icon } from "@hugeicons/react";
+import { ArrowDown01Icon } from "@hugeicons-pro/core-stroke-rounded";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { IconX } from "justd-icons";
 import type { InputProps } from "react-aria-components";
 import {
@@ -37,8 +38,7 @@ const comboboxStyles = tv({
 
 const { base, chevronButton, chevronIcon, clearButton } = comboboxStyles();
 
-interface ComboBoxProps<T extends object>
-  extends Omit<ComboboxPrimitiveProps<T>, "children"> {
+interface ComboBoxProps<T extends object> extends Omit<ComboboxPrimitiveProps<T>, "children"> {
   label?: string;
   placeholder?: string;
   description?: string | null;
@@ -55,10 +55,7 @@ const ComboBox = <T extends object>({
   ...props
 }: ComboBoxProps<T>) => {
   return (
-    <ComboboxPrimitive
-      {...props}
-      className={composeTailwindRenderProps(className, base())}
-    >
+    <ComboboxPrimitive {...props} className={composeTailwindRenderProps(className, base())}>
       {label && <Label>{label}</Label>}
       {children}
       {description && <Description>{description}</Description>}
@@ -67,9 +64,7 @@ const ComboBox = <T extends object>({
   );
 };
 
-type ListBoxPickerProps<T extends object> = React.ComponentProps<
-  typeof ListBox<T>
->;
+type ListBoxPickerProps<T extends object> = React.ComponentProps<typeof ListBox<T>>;
 
 interface ComboBoxListProps<T extends object>
   extends ListBoxPickerProps<T>,
@@ -85,7 +80,7 @@ const ComboBoxList = <T extends object>({
 }: ComboBoxListProps<T>) => {
   return (
     <Popover.Picker
-      trigger="ComboBox"
+      trigger='ComboBox'
       isOpen={isOpen}
       isNonModal
       placement={props.placement}
@@ -109,30 +104,19 @@ interface ComboBoxInputProps extends Omit<InputProps, "prefix" | "className"> {
   showArrow?: boolean;
 }
 
-const ComboBoxInput = ({
-  prefix,
-  className,
-  showArrow = false,
-  ...props
-}: ComboBoxInputProps) => {
+const ComboBoxInput = ({ prefix, className, showArrow = false, ...props }: ComboBoxInputProps) => {
   const context = useSlottedContext(ComboBoxContext)!;
   return (
-    <FieldGroup
-      className={cn("relative pl-0", prefix && "pl-3.5", className?.fieldGroup)}
-    >
-      {prefix && <span className="block">{prefix}</span>}
+    <FieldGroup className={cn("relative pl-0", prefix && "pl-3.5", className?.fieldGroup)}>
+      {prefix && <span className='block'>{prefix}</span>}
       <Input
         {...props}
         className={cn(prefix && "pl-2 w-full", className?.input)}
         placeholder={props?.placeholder}
       />
-      <Button
-        size="square-petite"
-        appearance="plain"
-        className={chevronButton()}
-      >
+      <Button size='square-petite' appearance='plain' className={chevronButton()}>
         {!context?.inputValue && showArrow && (
-          <ArrowDown01Icon className={cn(chevronIcon(), className?.icon)} />
+          <HugeiconsIcon icon={ArrowDown01Icon} className={cn(chevronIcon(), className?.icon)} />
         )}
       </Button>
     </FieldGroup>
@@ -146,13 +130,13 @@ const ComboBoxClearButton = () => {
     <ButtonPrimitive
       className={clearButton()}
       slot={null}
-      aria-label="Clear"
+      aria-label='Clear'
       onPress={() => {
         state?.setSelectedKey(null);
         state?.open();
       }}
     >
-      <IconX className="size-4 animate-in" />
+      <IconX className='size-4 animate-in' />
     </ButtonPrimitive>
   );
 };

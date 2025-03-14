@@ -8,7 +8,8 @@ import {
   AlertCircleIcon,
   CheckmarkCircle01Icon,
   InformationCircleIcon,
-} from "@hugeicons/react";
+} from "@hugeicons-pro/core-solid-rounded";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { useTheme } from "next-themes";
 import { buttonStyles } from "./button";
 import { Loader } from "./loader";
@@ -18,17 +19,39 @@ const Toast = ({ ...props }: ToasterProps) => {
   return (
     <ToasterPrimitive
       theme={theme as ToasterProps["theme"]}
-      className='toaster group'
-      position='bottom-left'
+      className="toaster group"
+      position="bottom-left"
       richColors
       icons={{
         info: (
-          <InformationCircleIcon variant='solid' data-slot='icon' className='text-warning-fg' />
+          <HugeiconsIcon
+            icon={InformationCircleIcon}
+            data-slot="icon"
+            className="text-sky-500"
+          />
         ),
-        error: <Alert02Icon variant='solid' data-slot='icon' />,
-        warning: <AlertCircleIcon variant='solid' data-slot='icon' />,
-        success: <CheckmarkCircle01Icon variant='solid' data-slot='icon' />,
-        loading: <Loader variant='spin' />,
+        error: (
+          <HugeiconsIcon
+            icon={Alert02Icon}
+            data-slot="icon"
+            className="text-danger"
+          />
+        ),
+        warning: (
+          <HugeiconsIcon
+            icon={AlertCircleIcon}
+            data-slot="icon"
+            className="text-warning"
+          />
+        ),
+        success: (
+          <HugeiconsIcon
+            icon={CheckmarkCircle01Icon}
+            data-slot="icon"
+            className="text-success"
+          />
+        ),
+        loading: <Loader variant="spin" />,
       }}
       toastOptions={{
         unstyled: true,
@@ -40,13 +63,14 @@ const Toast = ({ ...props }: ToasterProps) => {
             "has-data-[slot=icon]:**:data-content:pl-0",
             "has-data-button:*:data-content:mb-10",
             "has-data-button:**:data-close-button:hidden! flex w-full rounded-xl p-4",
-            "inset-ring-1 inset-ring-current/10 backdrop-blur-3xl"
+            "inset-ring-1 inset-ring-current/10 backdrop-blur-3xl",
           ),
           icon: "absolute top-[0.2rem] [--toast-icon-margin-end:7px] *:data-[slot=icon]:text-fg *:data-[slot=icon]:size-4.5 **:data-[slot=icon]:text-current",
           title: "",
           description: "",
           default: "bg-bg text-fg [--gray2:theme(--color-fg/10%)]",
-          content: "pr-6 *:data-description:text-current/65! *:data-description:text-sm!",
+          content:
+            "pr-6 *:data-description:text-current/65! *:data-description:text-sm!",
           error:
             "inset-ring-danger/15 dark:inset-ring-danger/25 [--error-bg:theme(--color-danger/10%)] [--error-border:transparent] [--error-text:var(--color-danger)]",
           info: "inset-ring-sky-600/15 dark:inset-ring-sky-500/20 [--info-border:transparent] [--info-bg:theme(--color-sky-500/10%)] [--info-text:var(--color-sky-700)] dark:[--info-bg:theme(--color-sky-500/15%)] dark:[--info-text:var(--color-sky-400)]",

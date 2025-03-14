@@ -1,7 +1,8 @@
 "use client";
 
 import { useIsMounted } from "@/hooks/use-is-mounted";
-import { Moon02Icon, Sun03Icon } from "@hugeicons/react";
+import { Moon02Icon, Sun03Icon } from "@hugeicons-pro/core-solid-rounded";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { useTheme } from "next-themes";
 import { useCallback } from "react";
 import { Button } from "./";
@@ -32,7 +33,11 @@ export function ThemeSwitcher({
       className={className}
       {...props}
     >
-      {theme === "light" ? <Sun03Icon size={18} /> : <Moon02Icon size={18} />}
+      {theme === "light" ? (
+        <HugeiconsIcon icon={Sun03Icon} size={18} />
+      ) : (
+        <HugeiconsIcon icon={Moon02Icon} size={18} />
+      )}
     </Button>
   );
 }

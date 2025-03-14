@@ -3,18 +3,12 @@
 import { ParticipantsCombobox } from "@/components/ui/participants-combobox";
 import { RecurrenceSelect } from "@/components/ui/recurrence-select";
 
-import {
-  DatePicker,
-  NumberField,
-  Select,
-  Switch,
-  TextField,
-  Textarea,
-} from "@/components/ui";
+import { DatePicker, NumberField, Select, Switch, TextField, Textarea } from "@/components/ui";
 import { TimeCombobox } from "@/components/ui/time-combobox";
 import { TimezoneCombobox } from "@/components/ui/timezone-combobox";
 import { useCalendarStore } from "@/providers/calendar-store-provider";
-import { ArrowRight02Icon, Folder02Icon } from "@hugeicons/react";
+import { ArrowRight02Icon, Folder02Icon } from "@hugeicons-pro/core-solid-rounded";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { CalendarDate, toCalendarDate } from "@internationalized/date";
 import { useRef } from "react";
 import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
@@ -31,7 +25,7 @@ const useEventOccurrenceForm = () =>
       selectedDate: store.selectedDate,
       updateOccurrences: store.updateOccurrences,
       editedOccurrenceId: store.editedOccurrenceId,
-    })),
+    }))
   );
 
 export const EventOccurrenceForm = ({
@@ -41,8 +35,7 @@ export const EventOccurrenceForm = ({
   form: UseFormReturn<z.infer<typeof OccurrenceFormSchema>>;
   isDisabled: boolean;
 }) => {
-  const { hubs, updateOccurrences, selectedDate, editedOccurrenceId } =
-    useEventOccurrenceForm();
+  const { hubs, updateOccurrences, selectedDate, editedOccurrenceId } = useEventOccurrenceForm();
   const timeComboboxTriggerRef = useRef<HTMLDivElement>(null);
   const timezoneComboboxTriggerRef = useRef<HTMLDivElement>(null);
   const colorSwatchTriggerRef = useRef<HTMLDivElement>(null);
@@ -128,29 +121,29 @@ export const EventOccurrenceForm = ({
 
   const hubItems = hubs?.map((hub) => ({ id: hub.id, name: hub.name }));
   return (
-    <div className="space-y-5">
-      <div className="space-y-1.5 rounded-2xl ">
+    <div className='space-y-5'>
+      <div className='space-y-1.5 rounded-2xl '>
         <Controller
           control={form.control}
-          name="hubId"
+          name='hubId'
           render={({
             field: { onChange, value, ...restField },
             fieldState: { error, invalid },
           }) => (
             <Select
               {...restField}
-              placeholder="Select hub..."
+              placeholder='Select hub...'
               onSelectionChange={onChange}
               selectedKey={value}
-              aria-label="Select Hub"
-              validationBehavior="aria"
+              aria-label='Select Hub'
+              validationBehavior='aria'
               isInvalid={invalid}
               errorMessage={error?.message}
               isDisabled={isDisabled}
             >
               <Select.Trigger
                 showArrow={true}
-                prefix={<Folder02Icon size={16} />}
+                prefix={<HugeiconsIcon icon={Folder02Icon} size={16} />}
               />
               <Select.List
                 popoverProps={{
@@ -168,20 +161,17 @@ export const EventOccurrenceForm = ({
             </Select>
           )}
         />
-        <div
-          className="flex flex-row items-center gap-2"
-          ref={colorSwatchTriggerRef}
-        >
+        <div className='flex flex-row items-center gap-2' ref={colorSwatchTriggerRef}>
           <Controller
             control={form.control}
-            name="title"
+            name='title'
             render={({ field, fieldState: { error, invalid } }) => (
               <TextField
                 {...field}
-                size="small"
-                aria-label="Session title"
-                placeholder="Title"
-                validationBehavior="aria"
+                size='small'
+                aria-label='Session title'
+                placeholder='Title'
+                validationBehavior='aria'
                 isInvalid={invalid}
                 errorMessage={error?.message}
                 isDisabled={isDisabled}
@@ -195,7 +185,7 @@ export const EventOccurrenceForm = ({
           />
           <Controller
             control={form.control}
-            name="color"
+            name='color'
             render={({
               field: { onChange, value, ...restField },
               fieldState: { error, invalid },
@@ -204,8 +194,8 @@ export const EventOccurrenceForm = ({
                 {...restField}
                 selectedKey={value}
                 onSelectionChange={onChange}
-                aria-label="Event color"
-                validationBehavior="aria"
+                aria-label='Event color'
+                validationBehavior='aria'
                 isInvalid={invalid}
                 errorMessage={error?.message}
                 isDisabled={isDisabled}
@@ -220,16 +210,16 @@ export const EventOccurrenceForm = ({
         </div>
       </div>
 
-      <div className="space-y-1.5">
-        <p className="text-sm font-medium text-muted-fg">Date & Time</p>
+      <div className='space-y-1.5'>
+        <p className='text-sm font-medium text-muted-fg'>Date & Time</p>
         <Controller
           control={form.control}
-          name="date"
+          name='date'
           render={({ field, fieldState: { invalid, error } }) => (
             <DatePicker
               {...field}
-              aria-label="Session date"
-              validationBehavior="aria"
+              aria-label='Session date'
+              validationBehavior='aria'
               isInvalid={invalid}
               errorMessage={error?.message}
               isDisabled={isDisabled}
@@ -243,13 +233,10 @@ export const EventOccurrenceForm = ({
             />
           )}
         />
-        <div
-          ref={timeComboboxTriggerRef}
-          className="flex items-center gap-2 w-full"
-        >
+        <div ref={timeComboboxTriggerRef} className='flex items-center gap-2 w-full'>
           <Controller
             control={form.control}
-            name="startTime"
+            name='startTime'
             render={({ field: { onChange, value, ...restField } }) => (
               <TimeCombobox
                 {...restField}
@@ -269,12 +256,12 @@ export const EventOccurrenceForm = ({
               />
             )}
           />
-          <div className="size-7 shrink-0 flex items-center justify-center bg-overlay-highlight/70 text-text-sub rounded-lg">
-            <ArrowRight02Icon size={16} />
+          <div className='size-7 shrink-0 flex items-center justify-center bg-overlay-highlight/70 text-text-sub rounded-lg'>
+            <HugeiconsIcon icon={ArrowRight02Icon} size={16} />
           </div>
           <Controller
             control={form.control}
-            name="endTime"
+            name='endTime'
             render={({ field: { onChange, value, ...restField } }) => (
               <TimeCombobox
                 {...restField}
@@ -298,17 +285,14 @@ export const EventOccurrenceForm = ({
 
         <Controller
           control={form.control}
-          name="timezone"
-          render={({
-            field: { onChange, value, ...restField },
-            fieldState: { error },
-          }) => (
+          name='timezone'
+          render={({ field: { onChange, value, ...restField }, fieldState: { error } }) => (
             <div ref={timezoneComboboxTriggerRef}>
               <TimezoneCombobox
                 {...restField}
                 onSelectionChange={onChange}
                 selectedKey={value}
-                aria-label="Session timezone"
+                aria-label='Session timezone'
                 errorMessage={error?.message}
                 className={{
                   fieldGroup: "hover:bg-overlay-highlight",
@@ -326,7 +310,7 @@ export const EventOccurrenceForm = ({
         />
         <Controller
           control={form.control}
-          name="recurrenceRule"
+          name='recurrenceRule'
           render={({ field: { onChange, value } }) => (
             <RecurrenceSelect
               value={value}
@@ -334,52 +318,48 @@ export const EventOccurrenceForm = ({
               selectedDate={
                 date
                   ? toCalendarDate(date)
-                  : new CalendarDate(
-                      selectedDate.year,
-                      selectedDate.month,
-                      selectedDate.day,
-                    )
+                  : new CalendarDate(selectedDate.year, selectedDate.month, selectedDate.day)
               }
             />
           )}
         />
       </div>
 
-      <div className="space-y-1.5">
-        <p className="text-sm font-medium text-muted-fg">Event description</p>
+      <div className='space-y-1.5'>
+        <p className='text-sm font-medium text-muted-fg'>Event description</p>
         <Controller
           control={form.control}
-          name="description"
+          name='description'
           render={({ field, fieldState: { error, invalid } }) => (
             <Textarea
               {...field}
               // size={"sm"}
-              aria-label="Session title"
-              placeholder="Description"
-              validationBehavior="aria"
+              aria-label='Session title'
+              placeholder='Description'
+              validationBehavior='aria'
               isDisabled={isDisabled}
               isInvalid={invalid}
               errorMessage={error?.message}
               className={{
                 textarea: "hover:bg-overlay-highlight",
               }}
-              type="textarea"
+              type='textarea'
             />
           )}
         />
       </div>
 
-      <div className="space-y-1.5 ">
-        <p className="text-sm font-medium text-muted-fg">Event billing</p>
-        <div className="flex flex-row items-center gap-3 w-full  h-10 px-2">
+      <div className='space-y-1.5 '>
+        <p className='text-sm font-medium text-muted-fg'>Event billing</p>
+        <div className='flex flex-row items-center gap-3 w-full  h-10 px-2'>
           <Controller
             control={form.control}
-            name="isBillable"
+            name='isBillable'
             render={({ field: { value, ref, ...restField } }) => (
               <Switch
                 {...restField}
                 isSelected={value}
-                size="small"
+                size='small'
                 isDisabled={isDisabled}
                 className={"h-10 gap-0 text-sm"}
               >
@@ -388,15 +368,15 @@ export const EventOccurrenceForm = ({
             )}
           />
           {isBillable && (
-            <div className="flex flex-row gap-2 items-center">
+            <div className='flex flex-row gap-2 items-center'>
               <Controller
                 control={form.control}
-                name="price"
+                name='price'
                 render={({ field: { onChange, ...field } }) => (
                   <NumberField
                     {...field}
-                    aria-label="Session price"
-                    placeholder="Price"
+                    aria-label='Session price'
+                    placeholder='Price'
                     isDisabled={isDisabled}
                     minValue={1}
                     formatOptions={{
@@ -413,19 +393,17 @@ export const EventOccurrenceForm = ({
                   />
                 )}
               />
-              <span className="text-sm text-muted-fg shrink-0">
-                per session
-              </span>
+              <span className='text-sm text-muted-fg shrink-0'>per session</span>
             </div>
           )}
         </div>
       </div>
-      <div className="space-y-1.5">
-        <p className="text-sm font-medium text-muted-fg">Event participants</p>
+      <div className='space-y-1.5'>
+        <p className='text-sm font-medium text-muted-fg'>Event participants</p>
 
         <Controller
           control={form.control}
-          name="participants"
+          name='participants'
           render={({ field: { onChange, value, ...restField } }) => (
             <ParticipantsCombobox
               {...restField}

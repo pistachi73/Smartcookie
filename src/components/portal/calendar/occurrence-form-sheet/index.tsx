@@ -9,7 +9,8 @@ import {
   ArrowRight02Icon,
   CalendarAdd02Icon,
   CalendarSetting02Icon,
-} from "@hugeicons/react";
+} from "@hugeicons-pro/core-stroke-rounded";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { useCallback, useState } from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import type { z } from "zod";
@@ -25,14 +26,13 @@ const isValidFiniteNumber = (input: unknown): boolean =>
 export const EventOccurrenceFormSheet = () => {
   console.log("----EventOccurrenceFormSheet---");
   const [isDiscardModalOpen, setIsDiscardModalOpen] = useState(false);
-  const { removeOccurrences, editedOccurrenceId, setEdittedOccurrenceId } =
-    useCalendarStore(
-      useShallow((store) => ({
-        editedOccurrenceId: store.editedOccurrenceId,
-        setEdittedOccurrenceId: store.setEdittedOccurrenceId,
-        removeOccurrences: store.removeOccurrences,
-      })),
-    );
+  const { removeOccurrences, editedOccurrenceId, setEdittedOccurrenceId } = useCalendarStore(
+    useShallow((store) => ({
+      editedOccurrenceId: store.editedOccurrenceId,
+      setEdittedOccurrenceId: store.setEdittedOccurrenceId,
+      removeOccurrences: store.removeOccurrences,
+    }))
+  );
 
   // const { createEvent, editNonRecurrentEvent, isFormDisabled } =
   //   useSubmitOccurrenceForm();
@@ -67,7 +67,7 @@ export const EventOccurrenceFormSheet = () => {
       | "edit-non-recurrent"
       | "edit-recurrent-current"
       | "edit-recurrent-all"
-      | "edit-recurrent-posterior",
+      | "edit-recurrent-posterior"
   ) => {
     const serializedFormData = serializeOcurrenceFormData(formData);
 
@@ -114,83 +114,67 @@ export const EventOccurrenceFormSheet = () => {
       <Sheet.Content
         isOpen={isEdittingEvent}
         onOpenChange={onClose}
-        side="left"
+        side='left'
         classNames={{ content: "w-[360px]!", overlay: "bg-transparent " }}
       >
-        <Sheet.Header className="sticky top-0 flex flex-row items-center gap-x-3 border-b bg-overlay p-4">
-          <Sheet.Title className="gap-2">
+        <Sheet.Header className='sticky top-0 flex flex-row items-center gap-x-3 border-b bg-overlay p-4'>
+          <Sheet.Title className='gap-2'>
             {editedOccurrenceId === -1 ? (
-              <CalendarAdd02Icon />
+              <HugeiconsIcon icon={CalendarAdd02Icon} />
             ) : (
-              <CalendarSetting02Icon
-                variant="duotone"
-                color="var(--color-primary)"
-              />
+              <HugeiconsIcon icon={CalendarSetting02Icon} color='var(--color-primary)' />
             )}{" "}
             {editedOccurrenceId === -1 ? "Create" : "Edit"} Session
           </Sheet.Title>
         </Sheet.Header>
-        <Sheet.Body className="p-4!">
+        <Sheet.Body className='p-4!'>
           <FormProvider {...form}>
-            <Form id="event-occurrence-form">
+            <Form id='event-occurrence-form'>
               <EventOccurrenceForm form={form} isDisabled={isFormDisabled} />
             </Form>
           </FormProvider>
         </Sheet.Body>
-        <Sheet.Footer className="sticky bottom-0 border-t flex items-center justify-end gap-2 p-4!">
-          <Button
-            appearance="plain"
-            size="small"
-            onPress={onClose}
-            isDisabled={isFormDisabled}
-          >
+        <Sheet.Footer className='sticky bottom-0 border-t flex items-center justify-end gap-2 p-4!'>
+          <Button appearance='plain' size='small' onPress={onClose} isDisabled={isFormDisabled}>
             Cancel
           </Button>
 
           {editedOccurrenceId === -1 ? (
             <Button
-              size="small"
-              className="px-6"
-              form="event-occurrence-form"
+              size='small'
+              className='px-6'
+              form='event-occurrence-form'
               onPress={() => {
                 form.handleSubmit((d) => onSubmit(d, "create"))();
               }}
               isDisabled={isFormDisabled}
             >
-              {isFormDisabled && (
-                <ProgressCircle
-                  isIndeterminate
-                  aria-label="Creating event..."
-                />
-              )}
-              Create Event <ArrowRight02Icon size={14} data-slot="icon" />
+              {isFormDisabled && <ProgressCircle isIndeterminate aria-label='Creating event...' />}
+              Create Event <HugeiconsIcon icon={ArrowRight02Icon} size={14} />
             </Button>
           ) : recurrenceRule ? (
             <Menu>
               <Menu.Trigger
-                size="small"
-                className="px-6"
-                form="event-occurrence-form"
+                size='small'
+                className='px-6'
+                form='event-occurrence-form'
                 isDisabled={isFormDisabled}
               >
                 {({ isPressed }) => (
                   <>
                     {isFormDisabled && (
-                      <ProgressCircle
-                        isIndeterminate
-                        aria-label="Creating event..."
-                      />
+                      <ProgressCircle isIndeterminate aria-label='Creating event...' />
                     )}
                     Save
-                    <ArrowDown01Icon
+                    <HugeiconsIcon
+                      icon={ArrowDown01Icon}
                       size={14}
-                      data-slot="icon"
                       className={cn(isPressed ? "rotate-180" : "text-fg")}
                     />
                   </>
                 )}
               </Menu.Trigger>
-              <Menu.Content placement="right bottom">
+              <Menu.Content placement='right bottom'>
                 <Menu.Item>This Event</Menu.Item>
                 <Menu.Item>This and the following events</Menu.Item>
                 <Menu.Item>All events</Menu.Item>
@@ -198,20 +182,15 @@ export const EventOccurrenceFormSheet = () => {
             </Menu>
           ) : (
             <Button
-              size="small"
-              className="px-6"
-              form="event-occurrence-form"
+              size='small'
+              className='px-6'
+              form='event-occurrence-form'
               onPress={() => {
                 form.handleSubmit((d) => onSubmit(d, "edit-non-recurrent"))();
               }}
               isDisabled={isFormDisabled}
             >
-              {isFormDisabled && (
-                <ProgressCircle
-                  isIndeterminate
-                  aria-label="Creating event..."
-                />
-              )}
+              {isFormDisabled && <ProgressCircle isIndeterminate aria-label='Creating event...' />}
               Save
             </Button>
           )}

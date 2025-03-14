@@ -1,5 +1,8 @@
 import { QuickNotes } from "@/components/portal/quick-notes";
-import { quickNotesQueryOptions } from "@/components/portal/quick-notes/utils";
+import {
+  quickNotesHubsQueryOptions,
+  quickNotesQueryOptions,
+} from "@/components/portal/quick-notes/utils";
 import { QuickNotesStoreProvider } from "@/providers/quick-notes-store-provider";
 import { getQueryClient } from "@/utils/get-query-client";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
@@ -12,6 +15,7 @@ export const metadata = {
 export default async function QuickNotesPage() {
   const queryClient = getQueryClient();
   await queryClient.prefetchQuery(quickNotesQueryOptions);
+  await queryClient.prefetchQuery(quickNotesHubsQueryOptions);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

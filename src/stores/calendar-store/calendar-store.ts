@@ -47,6 +47,7 @@ export const initCalendarStore = (
   return {
     //Internal
     _isHydrated: initilData?._isHydrated || false,
+    sidebarOpen: initilData?.sidebarOpen || true,
 
     hubs: initilData?.hubs || [],
     selectedDate: initialSelectedDate,
@@ -75,6 +76,7 @@ export const createCalendarStore = (
         immer((set, get) => ({
           ...initState,
           _setHydrated: () => set({ _isHydrated: true }),
+          toggleSidebar: () => set({ sidebarOpen: !get().sidebarOpen }),
           selectDate: (date) => {
             const { visibleDates } = get();
             let newVisibleDates = undefined;

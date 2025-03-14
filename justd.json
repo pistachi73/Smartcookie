@@ -1,6 +1,6 @@
 {
   "ui": "src/components/ui",
-  "utils": "src/utils/new",
+  "utils": "src/utils",
   "gray": "zinc",
   "css": "src/styles/globals.css",
   "alias": "@",

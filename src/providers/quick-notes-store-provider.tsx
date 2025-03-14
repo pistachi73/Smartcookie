@@ -1,13 +1,12 @@
 "use client";
 
 import { type ReactNode, createContext, use, useRef } from "react";
-import { useStore } from "zustand";
 
 import { createQuickNotesStore, initQuickNotesStore } from "@/stores/quick-notes-store";
 import type { QuickNotesStore } from "@/stores/quick-notes-store/quick-notes-store.types";
 import { useQuery } from "@tanstack/react-query";
+import { useStore } from "zustand";
 import { quickNotesQueryOptions } from "../components/portal/quick-notes/utils";
-
 export type QuickNotesStoreApi = ReturnType<typeof createQuickNotesStore>;
 
 export const QuickNotesStoreContext = createContext<QuickNotesStoreApi | undefined>(undefined);

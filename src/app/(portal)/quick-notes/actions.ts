@@ -2,92 +2,107 @@
 import { db } from "@/db";
 import { hub, quickNote } from "@/db/schema";
 import { protectedAction } from "@/lib/safe-action";
-import { desc, eq, max, sql } from "drizzle-orm";
+import type { Hub } from "@/stores/quick-notes-store/quick-notes-store.types";
+import { and, desc, eq, isNull } from "drizzle-orm";
 import { z } from "zod";
-import type { NoteSummary } from "./types";
+import type { HubWithNotes, NoteSummary } from "./types";
 
-export const getQuickNotesDataAction = protectedAction.action(
+export const getHubsWithNotesAction = protectedAction.action(
   async ({ ctx }) => {
     const {
       user: { id },
     } = ctx;
-
-    // Get hubs with their most recent quick note's updatedAt timestamp
-    const hubsWithLatestNotes = await db
+    const res = await db
       .select({
-        id: hub.id,
-        name: hub.name,
-        latestNoteDate: max(quickNote.updatedAt),
-      })
-      .from(hub)
-      .where(eq(hub.userId, id))
-      .leftJoin(quickNote, eq(quickNote.hubId, hub.id))
-      .groupBy(hub.id, hub.name)
-      .orderBy(
-        // Order by the latest note date (descending), with nulls last
-        sql`CASE WHEN ${max(quickNote.updatedAt)} IS NULL THEN 1 ELSE 0 END, ${max(quickNote.updatedAt)} DESC`,
-      );
-
-    console.log(hubsWithLatestNotes);
-
-    return hubsWithLatestNotes;
-  },
-);
-
-export const getQuickNotesPageDataAction = protectedAction.action(
-  async ({ ctx }) => {
-    const {
-      user: { id },
-    } = ctx;
-
-    console.log("user id", id);
-
-    const hubsWithNotes = await db
-      .select({
+        quickNote: {
+          id: quickNote.id,
+          hubId: quickNote.hubId,
+          content: quickNote.content,
+          updatedAt: quickNote.updatedAt,
+        },
         hub: {
           id: hub.id,
           name: hub.name,
         },
-        quickNotes: {
-          id: quickNote.id,
-          content: quickNote.content,
-          updatedAt: quickNote.updatedAt,
-          hubId: quickNote.hubId,
-        },
       })
-      .from(hub)
-      .where(eq(hub.userId, id))
-      .leftJoin(quickNote, eq(quickNote.hubId, hub.id))
+      .from(quickNote)
+      .leftJoin(hub, eq(quickNote.hubId, hub.id))
+      .where(eq(quickNote.userId, id))
       .orderBy(desc(quickNote.updatedAt));
 
-    // Group notes by hub
-    const groupedByHub = hubsWithNotes.reduce((acc, item) => {
-      const hubId = item.hub.id;
+    const hubMap = new Map<number, Hub>();
+    hubMap.set(0, { id: 0, name: "General Notes" });
+    res.forEach(({ hub }) => {
+      if (hub && !hubMap.has(hub.id)) {
+        hubMap.set(hub.id, hub);
+      }
+    });
 
-      // If this hub doesn't exist in our accumulator yet, add it
+    const hubs = Array.from(hubMap.values());
+
+    const quickNotesByHubId = res.reduce((acc, { hub, quickNote }) => {
+      const hubId = hub?.id || 0;
       if (!acc.has(hubId)) {
-        acc.set(hubId, {
-          hub: item.hub,
-          notes: [],
-        });
+        acc.set(hubId, []);
       }
-
-      // Add the note to this hub's notes array (if it exists)
-      if (item.quickNotes && item.quickNotes.id !== null) {
-        acc.get(hubId)!.notes.push(item.quickNotes);
-      }
-
+      acc.get(hubId)!.push(quickNote);
       return acc;
-    }, new Map());
+    }, new Map<number, NoteSummary[]>());
 
-    // Convert Map to array
-    const result = Array.from(groupedByHub.values());
-
-    console.log(result);
-
-    return result;
+    return Array.from(hubs).map((hub) => ({
+      hub,
+      notes: quickNotesByHubId.get(hub.id || 0) || [],
+    })) as HubWithNotes[];
   },
 );
+
+export const getHubsAction = protectedAction.action(async ({ ctx }) => {
+  const {
+    user: { id },
+  } = ctx;
+
+  const hubs = await db
+    .select({
+      id: hub.id,
+      name: hub.name,
+    })
+    .from(hub)
+    .where(eq(hub.userId, id));
+
+  return [{ id: 0, name: "General Notes" }, ...hubs];
+});
+
+export const getHubNotesAction = protectedAction
+  .schema(
+    z.object({
+      hubId: z.number(),
+    }),
+  )
+  .action(async ({ ctx, parsedInput }) => {
+    const {
+      user: { id },
+    } = ctx;
+
+    const notes = await db
+      .select({
+        id: quickNote.id,
+        content: quickNote.content,
+        updatedAt: quickNote.updatedAt,
+        hubId: quickNote.hubId,
+      })
+      .from(quickNote)
+      .where(
+        and(
+          eq(quickNote.userId, id),
+          parsedInput.hubId === 0
+            ? isNull(quickNote.hubId)
+            : eq(quickNote.hubId, parsedInput.hubId),
+        ),
+      )
+      .orderBy(desc(quickNote.updatedAt));
+
+    return notes as NoteSummary[];
+  });
 
 const AddQuickNoteSchema = z.object({
   hubId: z.number(),
@@ -102,60 +117,63 @@ export const addQuickNoteAction = protectedAction
       user: { id },
     } = ctx;
 
-    const newNote = await db
-      .insert(quickNote)
-      .values({
-        content: parsedInput.content,
-        hubId: parsedInput.hubId,
-        updatedAt: parsedInput.updatedAt,
-        userId: id,
-      })
-      .returning();
+    const hubId = parsedInput.hubId === 0 ? null : parsedInput.hubId;
 
-    return newNote[0];
+    try {
+      const newNote = await db
+        .insert(quickNote)
+        .values({
+          content: parsedInput.content,
+          hubId: hubId,
+          updatedAt: parsedInput.updatedAt,
+          userId: id,
+        })
+        .returning();
+
+      return newNote[0];
+    } catch (error) {
+      console.log(error);
+      throw new Error("Failed to add note");
+    }
   });
 
-export const getHubsWithNotesAction = protectedAction.action(
-  async ({ ctx }) => {
+const UpdateQuickNoteSchema = z.object({
+  id: z.number(),
+  content: z.string(),
+});
+
+export const updateQuickNoteAction = protectedAction
+  .schema(UpdateQuickNoteSchema)
+  .action(async ({ ctx, parsedInput }) => {
     const {
       user: { id },
     } = ctx;
-    const [userHubs, allNotes] = await Promise.all([
-      db
-        .select({
-          id: hub.id,
-          name: hub.name,
-        })
-        .from(hub)
-        .where(eq(hub.userId, id)),
 
-      db
-        .select({
-          id: quickNote.id,
-          content: quickNote.content,
-          updatedAt: quickNote.updatedAt,
-          hubId: quickNote.hubId,
-        })
-        .from(quickNote)
-        .where(eq(quickNote.userId, id))
-        .orderBy(desc(quickNote.updatedAt)),
-    ]);
+    const updatedNote = await db
+      .update(quickNote)
+      .set({
+        content: parsedInput.content,
+      })
+      .where(and(eq(quickNote.id, parsedInput.id), eq(quickNote.userId, id)))
+      .returning();
 
-    const allHubs = [{ id: 0, name: "General Notes" }, ...userHubs];
+    return updatedNote[0];
+  });
 
-    const notesByHubId = allNotes.reduce((acc, note) => {
-      if (!acc.has(note.hubId)) {
-        acc.set(note.hubId, []);
-      }
-      acc.get(note.hubId)!.push(note);
-      return acc;
-    }, new Map<number, NoteSummary[]>());
+const DeleteQuickNoteSchema = z.object({
+  id: z.number(),
+});
 
-    const hubsWithNotes = allHubs.map((hub) => ({
-      hub,
-      notes: notesByHubId.get(hub.id) || [],
-    }));
+export const deleteQuickNoteAction = protectedAction
+  .schema(DeleteQuickNoteSchema)
+  .action(async ({ ctx, parsedInput }) => {
+    const {
+      user: { id },
+    } = ctx;
 
-    return hubsWithNotes;
-  },
-);
+    await db
+      .delete(quickNote)
+      .where(and(eq(quickNote.id, parsedInput.id), eq(quickNote.userId, id)));
+
+    return { success: true };
+  });

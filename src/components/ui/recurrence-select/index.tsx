@@ -1,4 +1,5 @@
-import { ArrowRight02Icon, RepeatIcon } from "@hugeicons/react";
+import { ArrowRight02Icon, RepeatIcon } from "@hugeicons-pro/core-solid-rounded";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { CalendarDate } from "@internationalized/date";
 import * as React from "react";
 import { use, useMemo, useState } from "react";
@@ -23,7 +24,6 @@ import {
   getSelectItems,
   parseRruleText,
 } from "./utils";
-
 export const RecurrenceRuleSchema = z.object({
   freq: z.custom<Frequency>().optional(),
   interval: z.number().optional(),
@@ -40,13 +40,11 @@ const SelectLabel = () => {
   const rruleText = parseRruleText(value);
 
   return (
-    <div className="overflow-hidden w-fit">
-      <p className="first-letter:uppercase text-left  whitespace-nowrap">
+    <div className='overflow-hidden w-fit'>
+      <p className='first-letter:uppercase text-left  whitespace-nowrap'>
         <span>
           {rruleText.label}
-          {rruleText.auxLabel && (
-            <span className="text-muted-fg"> {rruleText.auxLabel}</span>
-          )}
+          {rruleText.auxLabel && <span className='text-muted-fg'> {rruleText.auxLabel}</span>}
         </span>
       </p>
     </div>
@@ -60,23 +58,12 @@ export const RecurrenceSelectContent = ({
   selectProps?: Omit<SelectFieldProps, "children">;
   popoverProps?: Omit<PopoverProps, "children">;
 }) => {
-  const {
-    rruleOptions,
-    setRruleOptions,
-    rrule,
-    setRrule,
-    selectedDate,
-    ends,
-    value,
-    onChange,
-  } = use(RecurrenceSelectContext);
+  const { rruleOptions, setRruleOptions, rrule, setRrule, selectedDate, ends, value, onChange } =
+    use(RecurrenceSelectContext);
 
   const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
 
-  const items = useMemo(
-    () => getSelectItems(selectedDate, value),
-    [selectedDate, value],
-  );
+  const items = useMemo(() => getSelectItems(selectedDate, value), [selectedDate, value]);
 
   const handleCustomRecurrence = (value: string) => {
     switch (value) {
@@ -111,7 +98,7 @@ export const RecurrenceSelectContent = ({
           dstart: selectedDate.toDate("UTC"),
         },
         ends,
-      }),
+      })
     );
 
     setRrule(rrule);
@@ -123,7 +110,7 @@ export const RecurrenceSelectContent = ({
     <>
       <div onKeyDown={(e) => e.stopPropagation()}>
         <Select
-          aria-label="Recurrence Select Main"
+          aria-label='Recurrence Select Main'
           selectedKey={value}
           onSelectionChange={(value) => {
             handleCustomRecurrence(value as string);
@@ -132,8 +119,8 @@ export const RecurrenceSelectContent = ({
           <Select.Trigger
             showArrow={true}
             prefix={
-              <div className="shrink-0">
-                <RepeatIcon size={16} className="shrink-0" />
+              <div className='shrink-0'>
+                <HugeiconsIcon icon={RepeatIcon} size={16} className='shrink-0' />
               </div>
             }
           >
@@ -152,60 +139,52 @@ export const RecurrenceSelectContent = ({
                   <Select.Option id={value} textValue={name}>
                     <DropdownLabel>
                       {name}
-                      {auxName && (
-                        <span className="text-muted-fg"> {auxName}</span>
-                      )}
+                      {auxName && <span className='text-muted-fg'> {auxName}</span>}
                     </DropdownLabel>
                   </Select.Option>
-                  {index === opt.length - 1 && sectionIndex !== 2 && (
-                    <Select.Separator />
-                  )}
+                  {index === opt.length - 1 && sectionIndex !== 2 && <Select.Separator />}
                 </React.Fragment>
-              )),
+              ))
             )}
           </Select.List>
         </Select>
       </div>
 
-      <Modal.Content
-        size="md"
-        isOpen={isCustomModalOpen}
-        onOpenChange={setIsCustomModalOpen}
-      >
+      <Modal.Content size='md' isOpen={isCustomModalOpen} onOpenChange={setIsCustomModalOpen}>
         <Modal.Header>
           <Modal.Title level={2}>Custom recurrence rule</Modal.Title>
           <Modal.Description>Set custom repeat pattern</Modal.Description>
         </Modal.Header>
-        <Modal.Body className="overflow-visible">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <p className="text-sm text-text-sub shrink-0 w-12">Every</p>
+        <Modal.Body className='overflow-visible'>
+          <div className='space-y-4'>
+            <div className='flex items-center gap-2'>
+              <p className='text-sm text-text-sub shrink-0 w-12'>Every</p>
               <IntervalInput />
               <FrequencySelect />
             </div>
             {rruleOptions.freq === Frequency.WEEKLY && (
-              <div className="flex items-center gap-2">
-                <p className="text-sm text-text-sub w-12 shrink-0">On</p>
+              <div className='flex items-center gap-2'>
+                <p className='text-sm text-text-sub w-12 shrink-0'>On</p>
                 <ByweekdayCheckboxGroup />
               </div>
             )}
             {rruleOptions.freq === Frequency.MONTHLY && (
-              <div className="flex items-center gap-2">
-                <p className="text-sm text-text-sub w-12 shrink-0">On</p>
+              <div className='flex items-center gap-2'>
+                <p className='text-sm text-text-sub w-12 shrink-0'>On</p>
                 <MonthOptionsSelect />
               </div>
             )}
-            <div className="flex flex-col gap-2">
-              <p className="text-sm text-text-sub">Ends</p>
+            <div className='flex flex-col gap-2'>
+              <p className='text-sm text-text-sub'>Ends</p>
               <EndsRadioGroup />
             </div>
           </div>
         </Modal.Body>
-        <Modal.Footer className="flex items-center justify-end gap-2 flex-row">
+        <Modal.Footer className='flex items-center justify-end gap-2 flex-row'>
           <Button
-            appearance="plain"
-            size="small"
-            className="text-muted-fg hover:text-current"
+            appearance='plain'
+            size='small'
+            className='text-muted-fg hover:text-current'
             onPress={() => {
               setIsCustomModalOpen(false);
               if (rrule === null) return;
@@ -219,17 +198,17 @@ export const RecurrenceSelectContent = ({
             Cancel
           </Button>
           <Button
-            size="small"
-            className="px-6 group"
-            type="button"
+            size='small'
+            className='px-6 group'
+            type='button'
             onPress={() => {
               saveCustomRecurrenceRule();
               setIsCustomModalOpen(false);
             }}
-            slot="close"
+            slot='close'
           >
             Save
-            <ArrowRight02Icon size={14} data-slot="icon" />
+            <HugeiconsIcon icon={ArrowRight02Icon} size={14} data-slot='icon' />
           </Button>
         </Modal.Footer>
       </Modal.Content>

@@ -27,24 +27,25 @@ export const CalendarView = memo(() => {
   return (
     <div
       className={cn(
+        "",
         "h-full grow flex flex-row overflow-hidden",
         "[--row-height:48px]",
-        "[--left-spacing:calc(var(--spacing)*4)]",
+        "[--left-spacing:calc(var(--spacing)*4)]"
       )}
     >
-      <div className="grow overflow-hidden flex flex-col">
+      <div className='grow overflow-hidden flex flex-col'>
         <CalendarHeader />
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode='wait'>
           <motion.div
             {...calendarAnimation}
             key={`${calendarView}-view`}
-            className="overflow-hidden h-full w-full grow bg-overlay rounded-lg"
+            className='overflow-hidden h-full w-full grow'
           >
-            {calendarView === "day" && <DayView key="day-view" />}
-            {calendarView === "weekday" && <DayView key="weekday-view" />}
-            {calendarView === "week" && <DayView key="week-view" />}
-            {calendarView === "month" && <MonthView key="month-view" />}
-            {calendarView === "agenda" && <AgendaView key="agenda-view" />}
+            {calendarView === "day" && <DayView key='day-view' />}
+            {calendarView === "weekday" && <DayView key='weekday-view' />}
+            {calendarView === "week" && <DayView key='week-view' />}
+            {calendarView === "month" && <MonthView key='month-view' />}
+            {calendarView === "agenda" && <AgendaView key='agenda-view' />}
           </motion.div>
         </AnimatePresence>
       </div>

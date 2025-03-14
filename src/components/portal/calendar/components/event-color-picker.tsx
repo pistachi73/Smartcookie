@@ -1,13 +1,9 @@
 "use client";
 
-import {
-  Button,
-  type PopoverContentProps,
-  Select,
-  type SelectProps,
-} from "@/components/ui";
+import { Button, type PopoverContentProps, Select, type SelectProps } from "@/components/ui";
 import { cn } from "@/lib/utils";
-import { Tick01Icon } from "@hugeicons/react";
+import { Tick01Icon } from "@hugeicons-pro/core-solid-rounded";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { ListBoxItem } from "react-aria-components";
 import {
   CALENDAR_EVENT_COLORS_ARRAY,
@@ -15,8 +11,7 @@ import {
   DEFAULT_EVENT_COLOR,
 } from "../utils";
 
-interface EventColorPickerProps<T extends object>
-  extends Omit<SelectProps<T>, "className"> {
+interface EventColorPickerProps<T extends object> extends Omit<SelectProps<T>, "className"> {
   selectedKey?: string;
   popoverProps?: Omit<PopoverContentProps, "children">;
 }
@@ -32,21 +27,21 @@ export const EventColorPicker = <T extends object>({
 
   return (
     <Select
-      className="w-10.5"
+      className='w-10.5'
       selectedKey={selectedKey}
       defaultSelectedKey={DEFAULT_EVENT_COLOR}
       {...props}
     >
       <Button
-        appearance="outline"
-        shape="square"
-        size="small"
-        className="data-hovered:bg-overlay-highlight"
+        appearance='outline'
+        shape='square'
+        size='small'
+        className='data-hovered:bg-overlay-highlight'
       >
         <div
           className={cn(
             "size-5 rounded-xs shrink-0 transition-colors brightness-150 ",
-            selectedColor?.className,
+            selectedColor?.className
           )}
         />
       </Button>
@@ -64,10 +59,10 @@ export const EventColorPicker = <T extends object>({
               <div
                 className={cn(
                   "size-7 rounded-xs shrink-0 flex items-center justify-center brightness-150 hover:brightness-125",
-                  className,
+                  className
                 )}
               >
-                {isSelected && <Tick01Icon size={20} />}
+                {isSelected && <HugeiconsIcon icon={Tick01Icon} size={20} />}
               </div>
             )}
           </ListBoxItem>

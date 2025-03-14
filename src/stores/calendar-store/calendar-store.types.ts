@@ -11,6 +11,7 @@ export type CalendarStore = CalendarState & CalendarActions;
 export type CalendarState = {
   // Internal
   _isHydrated: boolean;
+  sidebarOpen: boolean;
 
   hubs: Hub[];
   selectedDate: Temporal.PlainDate;
@@ -32,6 +33,8 @@ export type CalendarState = {
 export type CalendarActions = {
   // Internal
   _setHydrated: () => void;
+
+  toggleSidebar: () => void;
 
   selectDate: (date: Temporal.PlainDate) => void;
   setCalendarView: (calendarView: CalendarView) => void;

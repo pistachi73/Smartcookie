@@ -33,6 +33,7 @@ for (const table of [
   schema.hub,
   schema.event,
   schema.eventOccurrence,
+  schema.quickNote,
 ]) {
   await resetTable(db, table);
 }
@@ -43,6 +44,7 @@ async function main() {
     await seeds.user(db);
     await seeds.hub(db);
     await seeds.event(db);
+    await seeds.quickNotes(db);
     console.log("Seedin client!");
     await seeds.client(db);
   } catch (error) {

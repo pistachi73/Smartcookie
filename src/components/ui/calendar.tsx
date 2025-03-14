@@ -16,7 +16,8 @@ import {
 } from "react-aria-components";
 import { tv } from "tailwind-variants";
 
-import { ArrowLeft01Icon, ArrowRight01Icon } from "@hugeicons/react";
+import { ArrowLeft01Icon, ArrowRight01Icon } from "@hugeicons-pro/core-stroke-rounded";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Button } from "./button";
 import { composeTailwindRenderProps, focusRing } from "./primitive";
 
@@ -41,40 +42,31 @@ interface CalendarProps<T extends DateValue>
   className?: string;
 }
 
-const Calendar = <T extends DateValue>({
-  errorMessage,
-  className,
-  ...props
-}: CalendarProps<T>) => {
+const Calendar = <T extends DateValue>({ errorMessage, className, ...props }: CalendarProps<T>) => {
   return (
     <CalendarPrimitive
-      className={composeTailwindRenderProps(
-        className,
-        "max-w-[17.5rem] sm:max-w-[15.8rem]",
-      )}
+      className={composeTailwindRenderProps(className, "max-w-[17.5rem] sm:max-w-[15.8rem]")}
       {...props}
     >
       <CalendarHeader />
-      <CalendarGrid className="[&_td]:border-collapse [&_td]:px-0">
+      <CalendarGrid className='[&_td]:border-collapse [&_td]:px-0'>
         <CalendarGridHeader />
         <CalendarGridBody>
           {(date) => (
             <CalendarCell
               date={date}
-              className={composeRenderProps(
-                className,
-                (className, renderProps) =>
-                  cell({
-                    ...renderProps,
-                    className,
-                  }),
+              className={composeRenderProps(className, (className, renderProps) =>
+                cell({
+                  ...renderProps,
+                  className,
+                })
               )}
             />
           )}
         </CalendarGridBody>
       </CalendarGrid>
       {errorMessage && (
-        <Text slot="errorMessage" className="text-red-600 text-sm">
+        <Text slot='errorMessage' className='text-red-600 text-sm'>
           {errorMessage}
         </Text>
       )}
@@ -84,52 +76,45 @@ const Calendar = <T extends DateValue>({
 
 const calendarHeaderStyles = tv({
   slots: {
-    header: "flex w-full justify-center gap-1 px-1 pb-5 sm:pb-4",
-    heading: "mr-2 flex-1 text-left font-medium text-muted-fg sm:text-sm",
-    calendarGridHeaderCell: "font-semibold text-muted-fg text-sm lg:text-xs",
+    header: "flex w-full justify-center gap-1 px-1 pb-5 sm:pb-4 items-center",
+    heading: "mr-2 flex-1 text-left font-medium sm:text-base font-bold",
+    calendarGridHeaderCell: "font-semibold text-sm lg:text-sm",
   },
 });
 
 const { header, heading, calendarGridHeaderCell } = calendarHeaderStyles();
 
-const CalendarHeader = ({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) => {
+const CalendarHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => {
   const { direction } = useLocale();
 
   return (
-    <header
-      data-slot="calendar-header"
-      className={header({ className })}
-      {...props}
-    >
+    <header data-slot='calendar-header' className={header({ className })} {...props}>
       <Heading className={heading()} />
-      <div className="flex items-center gap-1">
+      <div className='flex items-center gap-1'>
         <Button
-          size="square-petite"
-          className="size-8 **:data-[slot=icon]:text-fg sm:size-7"
-          shape="circle"
-          appearance="plain"
-          slot="previous"
+          size='square-petite'
+          className='size-8 **:data-[slot=icon]:text-fg sm:size-7'
+          shape='circle'
+          appearance='plain'
+          slot='previous'
         >
           {direction === "rtl" ? (
-            <ArrowRight01Icon size={16} />
+            <HugeiconsIcon icon={ArrowRight01Icon} size={16} aria-hidden />
           ) : (
-            <ArrowLeft01Icon size={16} aria-hidden />
+            <HugeiconsIcon icon={ArrowLeft01Icon} size={16} aria-hidden />
           )}
         </Button>
         <Button
-          size="square-petite"
-          className="size-8 **:data-[slot=icon]:text-fg sm:size-7"
-          shape="circle"
-          appearance="plain"
-          slot="next"
+          size='square-petite'
+          className='size-8 **:data-[slot=icon]:text-fg sm:size-7'
+          shape='circle'
+          appearance='plain'
+          slot='next'
         >
           {direction === "rtl" ? (
-            <ArrowLeft01Icon size={16} />
+            <HugeiconsIcon icon={ArrowLeft01Icon} size={16} aria-hidden />
           ) : (
-            <ArrowRight01Icon size={16} />
+            <HugeiconsIcon icon={ArrowRight01Icon} size={16} aria-hidden />
           )}
         </Button>
       </div>
@@ -140,11 +125,7 @@ const CalendarHeader = ({
 const CalendarGridHeader = () => {
   return (
     <CalendarGridHeaderPrimitive>
-      {(day) => (
-        <CalendarHeaderCell className={calendarGridHeaderCell()}>
-          {day}
-        </CalendarHeaderCell>
-      )}
+      {(day) => <CalendarHeaderCell className={calendarGridHeaderCell()}>{day}</CalendarHeaderCell>}
     </CalendarGridHeaderPrimitive>
   );
 };

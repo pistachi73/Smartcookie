@@ -11,7 +11,13 @@ import { tv } from "tailwind-variants";
 
 import { cn } from "@/lib/utils";
 import { useMediaQuery } from "@/utils/use-media-query";
-import { ArrowDown01Icon, ArrowUp01Icon, MinusSignIcon, PlusSignIcon } from "@hugeicons/react";
+import {
+  ArrowDown01Icon,
+  ArrowUp01Icon,
+  MinusSignIcon,
+  PlusSignIcon,
+} from "@hugeicons-pro/core-stroke-rounded";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Description, FieldError, FieldGroup, type FieldGroupProps, Input, Label } from "./field";
 import { composeTailwindRenderProps } from "./primitive";
 
@@ -127,14 +133,14 @@ const StepperButton = ({
   const icon =
     emblemType === "chevron" ? (
       slot === "increment" ? (
-        <ArrowUp01Icon size={12} />
+        <HugeiconsIcon icon={ArrowUp01Icon} size={12} />
       ) : (
-        <ArrowDown01Icon size={12} />
+        <HugeiconsIcon icon={ArrowDown01Icon} size={12} />
       )
     ) : slot === "increment" ? (
-      <PlusSignIcon size={12} />
+      <HugeiconsIcon icon={PlusSignIcon} size={12} />
     ) : (
-      <MinusSignIcon size={12} />
+      <HugeiconsIcon icon={MinusSignIcon} size={12} />
     );
   return (
     <Button className={stepperButton({ className })} slot={slot} {...props}>

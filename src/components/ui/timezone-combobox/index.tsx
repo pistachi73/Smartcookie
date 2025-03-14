@@ -1,21 +1,13 @@
 import type { PgTimezone } from "@/data-access/pg";
 import { cn } from "@/lib/utils";
-import { Globe02Icon } from "@hugeicons/react";
+import { Globe02Icon } from "@hugeicons-pro/core-solid-rounded";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { getLocalTimeZone } from "@internationalized/date";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import {
-  ComboBox,
-  type ComboBoxListProps,
-  type ComboBoxProps,
-  DropdownLabel,
-} from "../";
+import { ComboBox, type ComboBoxListProps, type ComboBoxProps, DropdownLabel } from "../";
 import { getPgTimezonesAction } from "./actions";
-
-type TimezoneComboboxProps<T extends object> = Omit<
-  ComboBoxProps<T>,
-  "className" | "children"
-> & {
+type TimezoneComboboxProps<T extends object> = Omit<ComboBoxProps<T>, "className" | "children"> & {
   withIcon?: boolean;
   className?: {
     primitive?: string;
@@ -51,13 +43,13 @@ export const TimezoneCombobox = <T extends object>({
         acc[item.name] = item;
         return acc;
       }, {}),
-    [items],
+    [items]
   );
 
   return (
     <ComboBox
       onOpenChange={setIsOpen}
-      menuTrigger="focus"
+      menuTrigger='focus'
       isDisabled={isDisabled || isLoading}
       selectedKey={selectedKey}
       defaultSelectedKey={getLocalTimeZone()}
@@ -68,13 +60,13 @@ export const TimezoneCombobox = <T extends object>({
       <ComboBox.Input
         prefix={
           withIcon && (
-            <div className="flex items-center gap-2">
-              <Globe02Icon size={14} data-slot="icon" className="shrink-0" />
+            <div className='flex items-center gap-2'>
+              <HugeiconsIcon icon={Globe02Icon} size={14} data-slot='icon' className='shrink-0' />
               {selectedKey && (
                 <p
                   className={cn(
                     "text-muted-fg text-sm whitespace-nowrap",
-                    isFocused ? "hidden" : "flex h-full",
+                    isFocused ? "hidden" : "flex h-full"
                   )}
                 >
                   {itemsMap?.[selectedKey]?.displayoffset}
@@ -88,7 +80,7 @@ export const TimezoneCombobox = <T extends object>({
           fieldGroup: className?.fieldGroup,
           icon: isOpen ? "rotate-180 text-fg" : "text-muted-fg",
         }}
-        placeholder="Timezone"
+        placeholder='Timezone'
         onKeyDown={(e) => {
           if (e.key === "Escape") {
             e.stopPropagation();
@@ -110,9 +102,7 @@ export const TimezoneCombobox = <T extends object>({
             isDisabled={isDisabled}
           >
             <DropdownLabel>
-              <span className="text-muted-fg tabular-nums shrink-0 mr-2">
-                {item.displayoffset}
-              </span>
+              <span className='text-muted-fg tabular-nums shrink-0 mr-2'>{item.displayoffset}</span>
               {item.displayname}
             </DropdownLabel>
           </ComboBox.Option>

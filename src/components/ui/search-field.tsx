@@ -1,17 +1,22 @@
-"use client"
+"use client";
 
-import { IconSearch, IconX } from "justd-icons"
+import {
+  MultiplicationSignIcon,
+  Search01Icon,
+} from "@hugeicons-pro/core-stroke-rounded";
+import { HugeiconsIcon } from "@hugeicons/react";
+
 import {
   SearchField as SearchFieldPrimitive,
   type SearchFieldProps as SearchFieldPrimitiveProps,
   type ValidationResult,
-} from "react-aria-components"
-import { tv } from "tailwind-variants"
+} from "react-aria-components";
+import { tv } from "tailwind-variants";
 
-import { Button } from "./button"
-import { Description, FieldError, FieldGroup, Input, Label } from "./field"
-import { Loader } from "./loader"
-import { composeTailwindRenderProps } from "./primitive"
+import { Button } from "./button";
+import { Description, FieldError, FieldGroup, Input, Label } from "./field";
+import { Loader } from "./loader";
+import { composeTailwindRenderProps } from "./primitive";
 
 const searchFieldStyles = tv({
   slots: {
@@ -23,16 +28,21 @@ const searchFieldStyles = tv({
     ],
     input: "[&::-webkit-search-cancel-button]:hidden",
   },
-})
+});
 
-const { base, searchIcon, clearButton, input } = searchFieldStyles()
+const { base, searchIcon, clearButton, input } = searchFieldStyles();
 
-interface SearchFieldProps extends SearchFieldPrimitiveProps {
-  label?: string
-  placeholder?: string
-  description?: string
-  errorMessage?: string | ((validation: ValidationResult) => string)
-  isPending?: boolean
+interface SearchFieldProps
+  extends Omit<SearchFieldPrimitiveProps, "className"> {
+  label?: string;
+  placeholder?: string;
+  description?: string;
+  errorMessage?: string | ((validation: ValidationResult) => string);
+  isPending?: boolean;
+  className?: {
+    fieldGroup?: string;
+    input?: string;
+  };
 }
 
 const SearchField = ({
@@ -48,25 +58,41 @@ const SearchField = ({
     <SearchFieldPrimitive
       aria-label={placeholder ?? props["aria-label"] ?? "Search..."}
       {...props}
-      className={composeTailwindRenderProps(className, base())}
+      className={composeTailwindRenderProps(className?.fieldGroup, base())}
     >
       {label && <Label>{label}</Label>}
       <FieldGroup>
-        <IconSearch aria-hidden className={searchIcon()} />
-        <Input placeholder={placeholder ?? "Search..."} className={input()} />
+        <HugeiconsIcon
+          icon={Search01Icon}
+          aria-hidden
+          data-slot="icon"
+          className={searchIcon()}
+        />
+        <Input
+          placeholder={placeholder ?? "Search..."}
+          className={composeTailwindRenderProps(className?.input, input())}
+        />
         {isPending ? (
           <Loader variant="spin" />
         ) : (
-          <Button size="square-petite" appearance="plain" className={clearButton()}>
-            <IconX aria-hidden />
+          <Button
+            size="square-petite"
+            appearance="plain"
+            className={clearButton()}
+          >
+            <HugeiconsIcon
+              icon={MultiplicationSignIcon}
+              aria-hidden
+              data-slot="icon"
+            />
           </Button>
         )}
       </FieldGroup>
       {description && <Description>{description}</Description>}
       <FieldError>{errorMessage}</FieldError>
     </SearchFieldPrimitive>
-  )
-}
+  );
+};
 
-export type { SearchFieldProps }
-export { SearchField }
+export { SearchField };
+export type { SearchFieldProps };

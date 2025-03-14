@@ -7,7 +7,8 @@ import { DEFAULT_LOGIN_REDIRECT } from "@/app-config";
 import { cn } from "@/lib/utils";
 import { useAuthSettingsContextConsumer } from "./auth-settings-context";
 
-import { AppleIcon, GoogleIcon } from "@hugeicons/react";
+import { AppleIcon, GoogleIcon } from "@hugeicons-pro/core-solid-rounded";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { JSX } from "react";
 import { Button } from "../ui/";
 
@@ -24,12 +25,12 @@ const socialButtonMapping: Record<
   google: {
     label: "Continue with google",
     provider: "google",
-    icon: <GoogleIcon size={24} variant="solid" />,
+    icon: <HugeiconsIcon icon={GoogleIcon} size={24} />,
   },
   apple: {
     label: "Continue with Apple",
     provider: "apple",
-    icon: <AppleIcon size={24} variant="solid" />,
+    icon: <HugeiconsIcon icon={AppleIcon} size={24} />,
   },
 };
 
@@ -55,16 +56,13 @@ export const SocialButton = ({ provider, className }: SocialButtonProps) => {
 
   return (
     <Button
-      appearance="outline"
-      className={cn(
-        "flex w-full justify-between border text-sm sm:text-md",
-        className,
-      )}
-      type="button"
+      appearance='outline'
+      className={cn("flex w-full justify-between border text-sm sm:text-md", className)}
+      type='button'
       onPress={onClick}
     >
       {icon}
-      <span className="block w-full text-center">{label}</span>
+      <span className='block w-full text-center'>{label}</span>
     </Button>
   );
 };

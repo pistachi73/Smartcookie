@@ -6,10 +6,17 @@ import { cn } from "@/utils/classes";
 
 interface ProgressCircleProps extends Omit<ProgressBarProps, "className"> {
   className?: string;
+  strokeWidth?: number;
   ref?: React.RefObject<HTMLDivElement>;
 }
 
-const ProgressCircle = ({ className, ref, ...props }: ProgressCircleProps) => {
+const ProgressCircle = ({
+  className,
+  ref,
+  strokeWidth = 3,
+  "aria-label": ariaLabel,
+  ...props
+}: ProgressCircleProps) => {
   const c = "50%";
   const r = "calc(50% - 2px)";
   return (
@@ -21,13 +28,21 @@ const ProgressCircle = ({ className, ref, ...props }: ProgressCircleProps) => {
           fill='none'
           data-slot='icon'
         >
-          <circle cx={c} cy={c} r={r} strokeWidth={3} stroke='currentColor' strokeOpacity={0.25} />
+          <title>{ariaLabel}</title>
+          <circle
+            cx={c}
+            cy={c}
+            r={r}
+            strokeWidth={strokeWidth}
+            stroke='currentColor'
+            strokeOpacity={0.25}
+          />
           {!isIndeterminate ? (
             <circle
               cx={c}
               cy={c}
               r={r}
-              strokeWidth={3}
+              strokeWidth={strokeWidth}
               stroke='currentColor'
               pathLength={100}
               strokeDasharray='100 200'
@@ -41,7 +56,7 @@ const ProgressCircle = ({ className, ref, ...props }: ProgressCircleProps) => {
               cx={c}
               cy={c}
               r={r}
-              strokeWidth={3}
+              strokeWidth={strokeWidth}
               stroke='currentColor'
               pathLength={100}
               strokeDasharray='100 200'
