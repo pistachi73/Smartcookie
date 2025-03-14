@@ -1,6 +1,7 @@
 "use client";
 
 import type { NoteSummary } from "@/app/(portal)/quick-notes/types";
+import { noteFocusRegistry } from "@/components/portal/quick-notes/hooks/use-add-quick-note";
 import { useDeleteQuickNote } from "@/components/portal/quick-notes/hooks/use-delete-quick-note";
 import { useUpdateQuickNote } from "@/components/portal/quick-notes/hooks/use-update-quick-note";
 import { ProgressCircle } from "@/components/ui";
@@ -13,9 +14,10 @@ import { Delete01Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { format } from "date-fns";
 import { AnimatePresence, motion } from "motion/react";
-import { memo, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { Button, TextArea } from "react-aria-components";
 import { useShallow } from "zustand/react/shallow";
+
 interface NoteCardProps {
   note: NoteSummary;
   index?: number;
@@ -25,6 +27,7 @@ interface NoteCardProps {
 const NoteCardComponent = ({ note, index = 0, hubColor }: NoteCardProps) => {
   const [isEditingNote, setIsEditingNote] = useState(false);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  const focusCheckedRef = useRef(false);
 
   const { edittingHub, setEdittingHub } = useQuickNotesStore(
     useShallow((state) => ({
@@ -46,6 +49,16 @@ const NoteCardComponent = ({ note, index = 0, hubColor }: NoteCardProps) => {
       clientId: note.clientId,
       hubId: note.hubId || 0,
     });
+
+  // Check if this note needs focus when it mounts
+  useEffect(() => {
+    if (focusCheckedRef.current || !textAreaRef.current) return;
+    focusCheckedRef.current = true;
+
+    if (note.clientId && noteFocusRegistry.shouldFocus(note.clientId)) {
+      textAreaRef.current.focus();
+    }
+  }, [note.clientId]);
 
   const isDisabled = (edittingHub || 0) === note.hubId && !isEditingNote;
   const colorClasses = getCustomColorClasses(hubColor as CustomColor);

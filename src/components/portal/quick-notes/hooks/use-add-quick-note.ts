@@ -6,7 +6,7 @@ import { toast } from "sonner";
 // Match the exact type expected by the action
 interface AddQuickNoteData {
   content: string;
-  hubId: number; // Changed from number | null to number
+  hubId: number;
   updatedAt: string;
 }
 
@@ -16,6 +16,26 @@ interface MutationContext {
   clientId: string;
   hubId: number;
 }
+
+// Create a global registry for notes that need focus
+export const noteFocusRegistry = {
+  // Store clientIds that need focus
+  pendingFocus: new Set<string>(),
+
+  // Register a note for focus
+  register(clientId: string) {
+    this.pendingFocus.add(clientId);
+  },
+
+  // Check if a note needs focus and consume the focus request
+  shouldFocus(clientId: string) {
+    if (this.pendingFocus.has(clientId)) {
+      this.pendingFocus.delete(clientId);
+      return true;
+    }
+    return false;
+  },
+};
 
 export const useAddQuickNote = () => {
   const queryClient = useQueryClient();
@@ -36,6 +56,7 @@ export const useAddQuickNote = () => {
       // Create an optimistic note with a temporary ID and a clientId for animation stability
       const optimisticId = -Date.now(); // Use negative number to avoid collisions
       const clientId = `client-${Date.now()}`; // Stable ID for animations
+
       const optimisticNote: NoteSummary = {
         id: optimisticId,
         content: newNote.content,
@@ -43,6 +64,9 @@ export const useAddQuickNote = () => {
         hubId: newNote.hubId,
         clientId, // Add clientId for animation stability
       };
+
+      // Register this note for focus before updating the cache
+      noteFocusRegistry.register(clientId);
 
       // Optimistically update the hub-specific cache
       queryClient.setQueryData<NoteSummary[]>(["hub-notes", hubId], (old) => {
@@ -84,8 +108,6 @@ export const useAddQuickNote = () => {
           return note;
         });
       });
-
-      // toast.success("Note added successfully");
     },
   });
 };
