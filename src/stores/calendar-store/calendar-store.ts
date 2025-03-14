@@ -44,7 +44,7 @@ export const initCalendarStore = (
     calendarView,
   );
 
-  return {
+  const initState = {
     //Internal
     _isHydrated: initilData?._isHydrated || false,
     sidebarOpen: initilData?.sidebarOpen || true,
@@ -62,6 +62,10 @@ export const initCalendarStore = (
     cachedLayoutOccurrences: new Map<string, LayoutOccurrence[]>(),
     cachedUIOccurrences: new Map<number, UIOccurrence>(),
   };
+
+  console.log(initState);
+
+  return initState;
 };
 
 enableMapSet();
@@ -401,6 +405,7 @@ export const createCalendarStore = (
 
           getLayoutOccurrences: (dayKey) => {
             // Check cache first
+            console.log(get().cachedLayoutOccurrences, dayKey);
             const cachedValue = get().cachedLayoutOccurrences.get(dayKey);
             if (cachedValue) {
               return cachedValue;

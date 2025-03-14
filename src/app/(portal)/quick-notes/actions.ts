@@ -23,6 +23,7 @@ export const getHubsWithNotesAction = protectedAction.action(
         hub: {
           id: hub.id,
           name: hub.name,
+          color: hub.color,
         },
       })
       .from(quickNote)
@@ -31,7 +32,7 @@ export const getHubsWithNotesAction = protectedAction.action(
       .orderBy(desc(quickNote.updatedAt));
 
     const hubMap = new Map<number, Hub>();
-    hubMap.set(0, { id: 0, name: "General Notes" });
+    hubMap.set(0, { id: 0, name: "General Notes", color: "neutral" });
     res.forEach(({ hub }) => {
       if (hub && !hubMap.has(hub.id)) {
         hubMap.set(hub.id, hub);
@@ -65,11 +66,12 @@ export const getHubsAction = protectedAction.action(async ({ ctx }) => {
     .select({
       id: hub.id,
       name: hub.name,
+      color: hub.color,
     })
     .from(hub)
     .where(eq(hub.userId, id));
 
-  return [{ id: 0, name: "General Notes" }, ...hubs];
+  return [{ id: 0, name: "General Notes", color: "neutral" }, ...hubs] as Hub[];
 });
 
 export const getHubNotesAction = protectedAction
@@ -140,6 +142,7 @@ export const addQuickNoteAction = protectedAction
 const UpdateQuickNoteSchema = z.object({
   id: z.number(),
   content: z.string(),
+  updatedAt: z.string().optional(),
 });
 
 export const updateQuickNoteAction = protectedAction
@@ -149,13 +152,25 @@ export const updateQuickNoteAction = protectedAction
       user: { id },
     } = ctx;
 
+    const updateData: Record<string, unknown> = {
+      content: parsedInput.content,
+    };
+
+    // Only set updatedAt if explicitly provided
+    if (parsedInput.updatedAt) {
+      updateData.updatedAt = parsedInput.updatedAt;
+    }
+
     const updatedNote = await db
       .update(quickNote)
-      .set({
-        content: parsedInput.content,
-      })
+      .set(updateData)
       .where(and(eq(quickNote.id, parsedInput.id), eq(quickNote.userId, id)))
-      .returning();
+      .returning({
+        id: quickNote.id,
+        content: quickNote.content,
+        updatedAt: quickNote.updatedAt,
+        hubId: quickNote.hubId,
+      });
 
     return updatedNote[0];
   });

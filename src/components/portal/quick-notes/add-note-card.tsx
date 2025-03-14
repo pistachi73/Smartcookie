@@ -37,15 +37,11 @@ export const AddNoteCard = ({ hubId }: AddNoteCardProps) => {
   return (
     <Button
       size="square-petite"
-      appearance="plain"
+      appearance="outline"
+      shape="square"
       onPress={handleAddEmptyNote}
       isDisabled={isDisabled}
-      className={cn(
-        "rounded-lg border justify-center gap-2 font-medium text-primary group-hover:text-primary/80 border-primary/30 border-dashed p-3 flex items-center transition-colors group",
-        isDisabled
-          ? "bg-primary/5 opacity-70 cursor-not-allowed"
-          : "bg-primary/5 hover:bg-primary/10",
-      )}
+      className={cn()}
     >
       <HugeiconsIcon icon={NoteAddIconSolid} size={16} />
     </Button>

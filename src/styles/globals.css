@@ -58,6 +58,36 @@
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
 
+  /* Custom color variables for reuse across the application */
+  --color-custom-flamingo-bg: var(--custom-flamingo-bg);
+  --color-custom-tangerine-bg: var(--custom-tangerine-bg);
+  --color-custom-banana-bg: var(--custom-banana-bg);
+  --color-custom-sage-bg: var(--custom-sage-bg);
+  --color-custom-peacock-bg: var(--custom-peacock-bg);
+  --color-custom-blueberry-bg: var(--custom-blueberry-bg);
+  --color-custom-lavender-bg: var(--custom-lavender-bg);
+  --color-custom-grape-bg: var(--custom-grape-bg);
+  --color-custom-graphite-bg: var(--custom-graphite-bg);  
+  --color-custom-neutral-bg: var(--custom-neutral-bg);
+  --color-custom-sunshine-bg: var(--custom-sunshine-bg);
+  --color-custom-stone-bg: var(--custom-stone-bg);
+  --color-custom-slate-bg: var(--custom-slate-bg);
+
+  --color-custom-flamingo-border: var(--custom-flamingo-border);
+  --color-custom-tangerine-border: var(--custom-tangerine-border);
+  --color-custom-banana-border: var(--custom-banana-border);
+  --color-custom-sage-border: var(--custom-sage-border);
+  --color-custom-peacock-border: var(--custom-peacock-border);
+  --color-custom-blueberry-border: var(--custom-blueberry-border);
+  --color-custom-lavender-border: var(--custom-lavender-border);  
+  --color-custom-grape-border: var(--custom-grape-border);
+  --color-custom-graphite-border: var(--custom-graphite-border);
+  --color-custom-neutral-border: var(--custom-neutral-border);
+  --color-custom-sunshine-border: var(--custom-sunshine-border);
+  --color-custom-stone-border: var(--custom-stone-border);
+  --color-custom-slate-border: var(--custom-slate-border);
+
+  /* Legacy event color variables - kept for backward compatibility */
   --color-event-blue: var(--event-blue);
   --color-event-purple: var(--event-purple);
   --color-event-teal: var(--event-teal);
@@ -68,40 +98,7 @@
   --color-event-indigo: var(--event-indigo);
   --color-event-cyan: var(--event-cyan);
 
-
-  --color-event-flamingo-bg: var(--event-flamingo-bg);
-  --color-event-tangerine-bg: var(--event-tangerine-bg);
-  --color-event-banana-bg: var(--event-banana-bg);
-  --color-event-sage-bg: var(--event-sage-bg);
-  --color-event-peacock-bg: var(--event-peacock-bg);
-  --color-event-blueberry-bg: var(--event-blueberry-bg);
-  --color-event-lavender-bg: var(--event-lavender-bg);
-  --color-event-grape-bg: var(--event-grape-bg);
-  --color-event-graphite-bg: var(--event-graphite-bg);  
-  --color-event-neutral-bg: var(--event-neutral-bg);
-  --color-event-sunshine-bg: var(--event-sunshine-bg);
-  --color-event-stone-bg: var(--event-stone-bg);
-  --color-event-slate-bg: var(--event-slate-bg);
-
-  --color-event-flamingo-border: var(--event-flamingo-border);
-  --color-event-tangerine-border: var(--event-tangerine-border);
-  --color-event-banana-border: var(--event-banana-border);
-  --color-event-sage-border: var(--event-sage-border);
-  --color-event-peacock-border: var(--event-peacock-border);
-  --color-event-blueberry-border: var(--event-blueberry-border);
-  --color-event-lavender-border: var(--event-lavender-border);  
-  --color-event-grape-border: var(--event-grape-border);
-  --color-event-graphite-border: var(--event-graphite-border);
-  --color-event-neutral-border: var(--event-neutral-border);
-  --color-event-sunshine-border: var(--event-sunshine-border);
-  --color-event-stone-border: var(--event-stone-border);
-  --color-event-slate-border: var(--event-slate-border);
-
-
   --animate-password-input-div-down: password-input-div-down 250ms ease-out 0s 1 normal none running;
-
-
-
 
   @keyframes password-input-div-down {
     from {
@@ -119,83 +116,65 @@
 
 @layer base {
   :root {
-    --bg: oklch(1 0 0);
-    --fg: oklch(0.141 0.005 285.823);
-    
-    --primary: oklch(63.16% 0.2136 36.23);
-    --primary-fg: oklch(1 0 0);
-    
-    --secondary: oklch(0.92 0.004 286.32);
-    --secondary-fg: oklch(0.141 0.005 285.823);
-    
-    --overlay: oklch(1 0 0);
-    --overlay-fg: oklch(0.141 0.005 285.823);
-    
-    --accent: oklch(0.92 0.004 286.32);
-    --accent-fg: oklch(0.141 0.005 285.823);
-    
-    --muted: oklch(0.967 0.001 286.375);
-    --muted-fg: oklch(0.442 0.017 285.786);
-    
-    --success: oklch(0.596 0.145 163.225);
-    --success-fg: oklch(1 0 0);
-    
-    --warning: oklch(0.828 0.189 84.429);
-    --warning-fg: oklch(0.279 0.077 45.635);
-    
-    --danger: oklch(0.577 0.245 27.325);
-    --danger-fg: oklch(0.971 0.013 17.38);
-    
-    --border: oklch(0.911 0.006 286.286);
-    --input: oklch(0.871 0.006 286.286);
-    --ring: oklch(0.646 0.222 41.116);
-    
-    --navbar: oklch(0.967 0.001 286.375);
-    --navbar-fg: oklch(0.141 0.005 285.823);
-    
-    --sidebar: oklch(0.967 0.001 286.375);
-    --sidebar-fg: oklch(0.141 0.005 285.823);
-    
-    --chart-1: oklch(0.646 0.222 41.116);
-    --chart-2: oklch(0.75 0.183 55.934);
-    --chart-3: oklch(0.837 0.128 66.29);
-    --chart-4: oklch(0.901 0.076 70.697);
-    --chart-5: oklch(0.954 0.038 75.164);
-    
-    --radius-lg: 0.5rem;
-    --radius-xs: calc(var(--radius-lg) * 0.5);
-    --radius-sm: calc(var(--radius-lg) * 0.75);
-    --radius-md: calc(var(--radius-lg) * 0.9);
-    --radius-xl: calc(var(--radius-lg) * 1.25);
-    --radius-2xl: calc(var(--radius-lg) * 1.5);
-    --radius-3xl: calc(var(--radius-lg) * 2);
-    --radius-4xl: calc(var(--radius-lg) * 3);
-
-    --event-flamingo-bg: oklch(93% 0.05 36.23);
-    --event-tangerine-bg: oklch(93% 0.05 15);
-    --event-banana-bg: oklch(93% 0.04 75);
-    --event-sage-bg: oklch(93% 0.05 130);
-    --event-peacock-bg: oklch(93% 0.06 190);
-    --event-blueberry-bg: oklch(93% 0.05 240);
-    --event-lavender-bg: oklch(93% 0.04 270);
-    --event-grape-bg: oklch(93% 0.04 300);
-    --event-graphite-bg: oklch(90% 0.02 210);
-    --event-neutral-bg: oklch(93% 0.01 0);
+    /* Custom color definitions for light mode */
+    --custom-flamingo-bg: oklch(93% 0.05 36.23);
+    --custom-tangerine-bg: oklch(93% 0.05 15);
+    --custom-banana-bg: oklch(93% 0.04 75);
+    --custom-sage-bg: oklch(93% 0.05 130);
+    --custom-peacock-bg: oklch(93% 0.06 190);
+    --custom-blueberry-bg: oklch(93% 0.05 240);
+    --custom-lavender-bg: oklch(93% 0.04 270);
+    --custom-grape-bg: oklch(93% 0.04 300);
+    --custom-graphite-bg: oklch(90% 0.02 210);
+    --custom-neutral-bg: oklch(94% 0.01 250);  /* More grayish with slight blue undertone */
+    --custom-sunshine-bg: oklch(93% 0.04 60);
+    --custom-stone-bg: oklch(93% 0.01 30);
+    --custom-slate-bg: oklch(93% 0.01 240);
   
+    --custom-flamingo-border: oklch(55% 0.2136 36.23);  
+    --custom-tangerine-border: oklch(57% 0.22 15);      
+    --custom-banana-border: oklch(60% 0.18 75);      
+    --custom-sage-border: oklch(59% 0.20 130);     
+    --custom-peacock-border: oklch(56% 0.25 190);     
+    --custom-blueberry-border: oklch(55% 0.23 240);     
+    --custom-lavender-border: oklch(58% 0.16 270);     
+    --custom-grape-border: oklch(54% 0.19 300);     
+    --custom-graphite-border: oklch(47% 0.08 210);    
+    --custom-neutral-border: oklch(50% 0.06 250);  /* More grayish with slight blue undertone */
+    --custom-sunshine-border: oklch(58% 0.20 60);
+    --custom-stone-border: oklch(50% 0.05 30);
+    --custom-slate-border: oklch(47% 0.08 240);
 
-    --event-flamingo-border: oklch(55% 0.2136 36.23);  
-    --event-tangerine-border: oklch(57% 0.22 15);      
-    --event-banana-border: oklch(60% 0.18 75);      
-    --event-sage-border: oklch(59% 0.20 130);     
-    --event-peacock-border: oklch(56% 0.25 190);     
-    --event-blueberry-border: oklch(55% 0.23 240);     
-    --event-lavender-border: oklch(58% 0.16 270);     
-    --event-grape-border: oklch(54% 0.19 300);     
-    --event-graphite-border: oklch(47% 0.08 210);    
-    --event-neutral-border: oklch(50% 0.05 0); 
+    /* Legacy event color variables - kept for backward compatibility */
+    --event-flamingo-bg: var(--custom-flamingo-bg);
+    --event-tangerine-bg: var(--custom-tangerine-bg);
+    --event-banana-bg: var(--custom-banana-bg);
+    --event-sage-bg: var(--custom-sage-bg);
+    --event-peacock-bg: var(--custom-peacock-bg);
+    --event-blueberry-bg: var(--custom-blueberry-bg);
+    --event-lavender-bg: var(--custom-lavender-bg);
+    --event-grape-bg: var(--custom-grape-bg);
+    --event-graphite-bg: var(--custom-graphite-bg);
+    --event-neutral-bg: var(--custom-neutral-bg);
+    --event-sunshine-bg: var(--custom-sunshine-bg);
+    --event-stone-bg: var(--custom-stone-bg);
+    --event-slate-bg: var(--custom-slate-bg);
 
+    --event-flamingo-border: var(--custom-flamingo-border);
+    --event-tangerine-border: var(--custom-tangerine-border);
+    --event-banana-border: var(--custom-banana-border);
+    --event-sage-border: var(--custom-sage-border);
+    --event-peacock-border: var(--custom-peacock-border);
+    --event-blueberry-border: var(--custom-blueberry-border);
+    --event-lavender-border: var(--custom-lavender-border);
+    --event-grape-border: var(--custom-grape-border);
+    --event-graphite-border: var(--custom-graphite-border);
+    --event-neutral-border: var(--custom-neutral-border);
+    --event-sunshine-border: var(--custom-sunshine-border);
+    --event-stone-border: var(--custom-stone-border);
+    --event-slate-border: var(--custom-slate-border);
 
-    /* NEWW */
+    /* Other variables */
     --bg: oklch(1 0 0);
     --fg: oklch(0.141 0.005 285.823);
     
@@ -247,95 +226,74 @@
     --radius-2xl: calc(var(--radius-lg) * 1.5);
     --radius-3xl: calc(var(--radius-lg) * 2);
     --radius-4xl: calc(var(--radius-lg) * 3);
-
   }
   
   .dark {
-    --bg: oklch(0.171 0.005 285.823);
-    --fg: oklch(0.985 0 0);
-     
-    --primary: oklch(63.16% 0.20 36.23); /* Reduce chroma slightly for softer warmth */  
-    --primary-fg: oklch(98% 0 0); /* Use off-white instead of pure white */  
-    
-    --secondary: oklch(28% 0.01 248.08); /* Align with overlay hue */  
-    --secondary-fg: oklch(85% 0 0); /* Soft gray for hierarchy */  
+    /* Custom color definitions for dark mode */
+    --custom-grape-bg: oklch(32% 0.08 310);      /* Soft berry */
+    --custom-lavender-bg: oklch(36% 0.07 280);   /* Muted violet */
+    --custom-blueberry-bg: oklch(32% 0.10 245);  /* Faded sapphire */
+    --custom-peacock-bg: oklch(36% 0.10 195);    /* Subtle teal */
+    --custom-sage-bg: oklch(32% 0.07 155);       /* Dusky jade */
+    --custom-banana-bg: oklch(44% 0.10 100);     /* Dimmed lemon */
+    --custom-tangerine-bg: oklch(42% 0.08 40);   /* Shift hue toward primary (36.23°) */  
+    --custom-sunshine-bg: oklch(44% 0.08 75);    /* Align with banana for consistency */  
+    --custom-flamingo-bg: oklch(40% 0.08 36.23); /* Warm rose */
+    --custom-graphite-bg: oklch(28% 0.05 235);   /* Deep steel gray */
+    --custom-neutral-bg: oklch(34% 0.03 250);    /* Cool gray with slight blue undertone */
+    --custom-stone-bg: oklch(35% 0.01 0);        /* Warm gray (almost neutral) */
+    --custom-slate-bg: oklch(30% 0.01 0);        /* Cool gray */
 
-    --accent: oklch(35% 0.1 36.23); /* Echo primary hue for cohesion */  
-    --accent-fg: oklch(98% 0 0); /* Brighter than secondary-fg */ 
-    
-    --muted: oklch(0.21 0.006 285.885);
-    --muted-fg: oklch(75% 0.02 286.067); /* Lighten slightly */  
-    
+    /* Border colors with moderate contrast from backgrounds */
+    --custom-grape-border: oklch(58% 0.16 310);     /* Vibrant berry */
+    --custom-lavender-border: oklch(58% 0.16 285);  /* Vibrant violet */
+    --custom-blueberry-border: oklch(55% 0.18 250); /* Luminous sapphire */
+    --custom-peacock-border: oklch(58% 0.18 200);   /* Radiant teal */
+    --custom-sage-border: oklch(55% 0.16 160);      /* Fresh mint */
+    --custom-banana-border: oklch(62% 0.18 100);    /* Bright lemon */
+    --custom-tangerine-border: oklch(62% 0.18 45);  /* Bold amber */
+    --custom-sunshine-border: oklch(62% 0.18 110);  /* Golden radiance */
+    --custom-flamingo-border: oklch(62% 0.18 36.23);/* Warm rose */
+    --custom-graphite-border: oklch(50% 0.10 230);  /* Sharper steel gray */
+    --custom-neutral-border: oklch(58% 0.08 250);   /* Cool gray with slight blue undertone */
+    --custom-stone-border: oklch(55% 0.02 0);       /* Soft warm gray border */
+    --custom-slate-border: oklch(50% 0.02 0);       /* Soft cool gray border */
 
-  /* Darkened Overlays */
-  --overlay: oklch(20% 0.008 248.08);               /* Reduced lightness, softer chroma */
-  --overlay-fg: oklch(0.985 0 0);                   /* Unchanged for readability */
+    /* Legacy event color variables - kept for backward compatibility */
+    --event-grape-bg: var(--custom-grape-bg);
+    --event-lavender-bg: var(--custom-lavender-bg);
+    --event-blueberry-bg: var(--custom-blueberry-bg);
+    --event-peacock-bg: var(--custom-peacock-bg);
+    --event-sage-bg: var(--custom-sage-bg);
+    --event-banana-bg: var(--custom-banana-bg);
+    --event-tangerine-bg: var(--custom-tangerine-bg);
+    --event-sunshine-bg: var(--custom-sunshine-bg);
+    --event-flamingo-bg: var(--custom-flamingo-bg);
+    --event-graphite-bg: var(--custom-graphite-bg);
+    --event-neutral-bg: var(--custom-neutral-bg);
+    --event-stone-bg: var(--custom-stone-bg);
+    --event-slate-bg: var(--custom-slate-bg);
 
-  --overlay-highlight: oklch(20% 0.01 258.36);      /* Darker than original, retains subtle lift */
-  --overlay-elevated: oklch(22% 0.01 258.36);       /* Slightly darker than highlight */
-  --overlay-elevated-highlight: oklch(30% 0.011 257.61); /* Softer glow, reduced lightness */
-    
-    --success: oklch(0.596 0.145 163.225);
-    --success-fg: oklch(1 0 0);
-    
-    --warning: oklch(0.828 0.189 84.429);
-    --warning-fg: oklch(0.279 0.077 45.635);
-    
-    --danger: oklch(0.577 0.245 27.325);
-    --danger-fg: oklch(0.971 0.013 17.38);
-    
-    --border: oklch(0.32 0.013 285.805);
-    --input: oklch(0.290 0.013 285.805);
-    --ring: oklch(0.646 0.222 41.116);
-    
-    --navbar: oklch(0.170 0.006 285.885);
-    --navbar-fg: oklch(0.985 0 0);
-    
-    --sidebar: oklch(0.160 0.006 285.885);
-    --sidebar-fg: oklch(0.985 0 0);
-   
-    --chart-1: oklch(0.553 0.195 38.402);
-    --chart-2: oklch(0.705 0.213 47.604);
-    --chart-3: oklch(0.75 0.183 55.934);
-    --chart-4: oklch(0.837 0.128 66.29);
-    --chart-5: oklch(0.901 0.076 70.697);
+    --event-grape-border: var(--custom-grape-border);
+    --event-lavender-border: var(--custom-lavender-border);
+    --event-blueberry-border: var(--custom-blueberry-border);
+    --event-peacock-border: var(--custom-peacock-border);
+    --event-sage-border: var(--custom-sage-border);
+    --event-banana-border: var(--custom-banana-border);
+    --event-tangerine-border: var(--custom-tangerine-border);
+    --event-sunshine-border: var(--custom-sunshine-border);
+    --event-flamingo-border: var(--custom-flamingo-border);
+    --event-graphite-border: var(--custom-graphite-border);
+    --event-neutral-border: var(--custom-neutral-border);
+    --event-stone-border: var(--custom-stone-border);
+    --event-slate-border: var(--custom-slate-border);
 
-
-    --event-grape-bg: oklch(32% 0.08 310);      /* Soft berry */
-    --event-lavender-bg: oklch(36% 0.07 280);   /* Muted violet */
-    --event-blueberry-bg: oklch(32% 0.10 245);  /* Faded sapphire */
-    --event-peacock-bg: oklch(36% 0.10 195);    /* Subtle teal */
-    --event-sage-bg: oklch(32% 0.07 155);       /* Dusky jade */
-    --event-banana-bg: oklch(44% 0.10 100);     /* Dimmed lemon */
-    --event-tangerine-bg: oklch(42% 0.08 40); /* Shift hue toward primary (36.23°) */  
-    --event-sunshine-bg: oklch(44% 0.08 75); /* Align with banana for consistency */  
-    --event-graphite-bg: oklch(28% 0.05 235);   /* Deep steel gray */
-    --event-neutral-bg: oklch(32% 0.04 10);     /* Soft taupe */
-    --event-stone-bg: oklch(35% 0.01 0);       /* Warm gray (almost neutral) */
-    --event-slate-bg: oklch(30% 0.01 0);  
-
-    --event-grape-border: oklch(38% 0.08 310); /* Reduce lightness/chroma */  
-    --event-lavender-border: oklch(50% 0.13 285);  /* Vibrant violet */
-    --event-blueberry-border: oklch(46% 0.17 250);  /* Luminous sapphire */
-    --event-peacock-border: oklch(50% 0.17 200);  /* Radiant teal */
-    --event-sage-border: oklch(46% 0.13 160);  /* Fresh mint */
-    --event-banana-border: oklch(58% 0.14 100);  /* Bright lemon */
-    --event-tangerine-border: oklch(57% 0.17 45);  /* Bold amber */
-    --event-sunshine-border: oklch(58% 0.14 110);  /* Golden radiance */
-    --event-graphite-border: oklch(42% 0.08 230);  /* Sharper steel gray */
-    --event-neutral-border: oklch(45% 0.06 15);  /* Defined taupe */
-    --event-stone-border: oklch(45% 0.015 0);  /* Soft warm gray border */
-    --event-slate-border: oklch(40% 0.015 0);  /* Soft cool gray border */
-
-
-    /* NEWW */
+    /* Other variables */
     --bg: oklch(0.131 0.008 260);
     --fg: oklch(0.985 0 0);
     
-
     --primary: oklch(63.16% 0.20 36.23); /* Reduce chroma slightly for softer warmth */  
     --primary-fg: oklch(98% 0 0); /* Use off-white instead of pure white */  
-    
     
     --secondary: oklch(0.244 0.006 286.033);
     --secondary-fg: oklch(0.985 0 0);
@@ -350,7 +308,7 @@
     --overlay-fg: oklch(0.985 0 0);
 
     --overlay-highlight: oklch(0.20 0.006 260);      /* Aligned with bg hue, slightly lighter */
-    --overlay-elevated: oklch(0.250 0.006 260)      /* Slightly lighter than highlight */
+    --overlay-elevated: oklch(0.250 0.006 260);      /* Slightly lighter than highlight */
     --overlay-elevated-highlight: oklch(0.22 0.009 260); /* Brightest elevation, same hue */
     
     --success: oklch(0.596 0.145 163.225);
@@ -369,8 +327,6 @@
     --navbar: oklch(0.170 0.006 285.885);
     --navbar-fg: oklch(0.985 0 0);
     
-    /* --sidebar: oklch(0.160 0.006 285.885);
-    --sidebar-fg: oklch(0.985 0 0); */
     --sidebar: var(--bg);
     --sidebar-fg: var(--fg);
    

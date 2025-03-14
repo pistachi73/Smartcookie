@@ -1,4 +1,6 @@
 import { Tooltip } from "@/components/ui/tooltip";
+import type { CustomColor } from "@/lib/custom-colors";
+import { getCustomColorClasses } from "@/lib/custom-colors";
 import { cn } from "@/lib/utils";
 import { Folder02Icon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -11,17 +13,24 @@ type HubToggleProps = {
   isMinimized: boolean;
   onPress: () => void;
   icon?: typeof Folder02Icon;
+  color?: CustomColor;
 };
 
 const toggleStyles = tv({
-  base: "relative group px-3 h-10 w-full cursor-pointer rounded-lg border transition-colors justify-between",
+  base: "relative group cursor-pointer rounded-lg border transition-colors justify-between",
   variants: {
     isVisible: {
-      true: "bg-primary/15 border-primary/50",
+      true: "", // We'll apply color classes dynamically
       false: "bg-overlay-highlight border-transparent",
+    },
+    isMinimized: {
+      true: "size-10",
+      false: "px-3 h-10 w-full",
     },
   },
 });
+
+const dotStyles = "size-2.5 rounded-full border flex-shrink-0";
 
 export function HubToggle({
   label,
@@ -29,22 +38,48 @@ export function HubToggle({
   isMinimized,
   onPress,
   icon: Icon = Folder02Icon,
+  color,
 }: HubToggleProps) {
+  // Always get color classes regardless of visibility state
+  const colorClasses = color ? getCustomColorClasses(color) : null;
+  const showDot = !!colorClasses;
+
   if (isMinimized) {
     return (
       <Tooltip delay={0}>
         <Tooltip.Trigger
-          className={toggleStyles({ isVisible })}
+          className={cn(
+            toggleStyles({ isVisible, isMinimized }),
+            isVisible && colorClasses && [colorClasses.bg, colorClasses.border],
+            "relative flex items-center justify-center",
+          )}
           onPress={onPress}
         >
-          <HugeiconsIcon
-            icon={Icon}
-            size={18}
-            className={cn(
-              "transition-colors",
-              !isVisible && "text-muted-fg group-hover:text-secondary-fg",
+          <div className="relative">
+            {/* Icon */}
+            <HugeiconsIcon
+              icon={Icon}
+              size={18}
+              className={cn(
+                "transition-colors",
+                isVisible
+                  ? colorClasses?.text
+                  : "text-muted-fg group-hover:text-secondary-fg",
+              )}
+            />
+
+            {/* Color dot indicator (top right of icon) */}
+            {showDot && (
+              <div
+                className={cn(
+                  "absolute -top-1.5 -right-1.5 size-2.5 rounded-full border",
+                  colorClasses.dot,
+                  colorClasses.border,
+                )}
+                aria-hidden="true"
+              />
             )}
-          />
+          </div>
         </Tooltip.Trigger>
         <Tooltip.Content intent="inverse" placement="right">
           {label}
@@ -57,13 +92,27 @@ export function HubToggle({
     <Button
       type="button"
       onPress={onPress}
-      className={toggleStyles({ isVisible })}
+      className={cn(
+        toggleStyles({ isVisible, isMinimized }),
+        isVisible && colorClasses && [colorClasses.bg, colorClasses.border],
+        "flex items-center gap-2",
+      )}
       aria-pressed={isVisible}
     >
+      {/* Color dot indicator (left of text) */}
+      {showDot && (
+        <div
+          className={cn(dotStyles, colorClasses.dot, colorClasses.border)}
+          aria-hidden="true"
+        />
+      )}
+
       <h3
         className={cn(
-          "line-clamp-1 text-sm font-medium text-left transition-colors",
-          !isVisible && "text-muted-fg group-hover:text-secondary-fg",
+          "line-clamp-1 text-sm font-medium text-left transition-colors flex-grow",
+          isVisible
+            ? colorClasses?.text
+            : "text-muted-fg group-hover:text-secondary-fg",
         )}
       >
         {label}

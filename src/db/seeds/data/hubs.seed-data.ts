@@ -9,6 +9,7 @@ const hubs: Omit<InsertHub, "userId">[] = [
     scheduleType: "recurrent",
     defaultSessionPrice: 50,
     cancelationPolicyHours: 24,
+    color: "blueberry",
   },
   {
     id: 2,
@@ -18,6 +19,7 @@ const hubs: Omit<InsertHub, "userId">[] = [
     scheduleType: "on-demand",
     defaultSessionPrice: 40,
     cancelationPolicyHours: 48,
+    color: "lavender",
   },
   {
     id: 3,
@@ -27,6 +29,47 @@ const hubs: Omit<InsertHub, "userId">[] = [
     scheduleType: "recurrent",
     defaultSessionPrice: 60,
     cancelationPolicyHours: 24,
+    color: "sage",
+  },
+  {
+    id: 4,
+    name: "Music Lessons Hub",
+    description:
+      "Learn to play various musical instruments with professional musicians.",
+    scheduleType: "recurrent",
+    defaultSessionPrice: 55,
+    cancelationPolicyHours: 24,
+    color: "flamingo",
+  },
+  {
+    id: 5,
+    name: "Coding Bootcamp Hub",
+    description:
+      "Intensive programming courses for beginners and advanced students.",
+    scheduleType: "on-demand",
+    defaultSessionPrice: 70,
+    cancelationPolicyHours: 48,
+    color: "peacock",
+  },
+  {
+    id: 6,
+    name: "Art & Design Hub",
+    description:
+      "Express your creativity through various art forms and design techniques.",
+    scheduleType: "recurrent",
+    defaultSessionPrice: 45,
+    cancelationPolicyHours: 24,
+    color: "tangerine",
+  },
+  {
+    id: 7,
+    name: "Test Prep Hub",
+    description:
+      "Prepare for standardized tests with targeted strategies and practice.",
+    scheduleType: "on-demand",
+    defaultSessionPrice: 65,
+    cancelationPolicyHours: 48,
+    color: "grape",
   },
 ];
 

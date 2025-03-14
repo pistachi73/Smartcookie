@@ -1,0 +1,2 @@
+CREATE TYPE "public"."custom_color" AS ENUM('flamingo', 'tangerine', 'banana', 'sage', 'peacock', 'blueberry', 'lavender', 'grape', 'graphite', 'neutral', 'sunshine', 'stone', 'slate');--> statement-breakpoint
+ALTER TABLE "hub" ADD COLUMN "color" "custom_color" DEFAULT 'neutral' NOT NULL;

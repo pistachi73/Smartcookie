@@ -50,7 +50,11 @@ export const createQuickNotesStore = (initState: QuickNotesState) => {
             if (areAllVisible) {
               state.visibleHubs.clear();
             } else {
-              const allHubIds = Array.from(state.hubsMap.keys());
+              const allHubIds: number[] = [];
+              state.hubsMap.forEach((hub) => {
+                console.log(hub);
+                allHubIds.push(hub.id);
+              });
               state.visibleHubs = new Set(allHubIds);
             }
           });
@@ -87,7 +91,7 @@ export const createQuickNotesStore = (initState: QuickNotesState) => {
       {
         name: "quick-notes-store",
         storage: superjsonStorage,
-        partialize: ({ edittingHub, ...rest }) => ({
+        partialize: ({ edittingHub, hubsMap, ...rest }) => ({
           ...rest,
         }),
         onRehydrateStorage: () => {

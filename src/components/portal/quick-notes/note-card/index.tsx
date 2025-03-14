@@ -4,8 +4,11 @@ import type { NoteSummary } from "@/app/(portal)/quick-notes/types";
 import { useDeleteQuickNote } from "@/components/portal/quick-notes/hooks/use-delete-quick-note";
 import { useUpdateQuickNote } from "@/components/portal/quick-notes/hooks/use-update-quick-note";
 import { ProgressCircle } from "@/components/ui";
+import type { CustomColor } from "@/lib/custom-colors";
+import { getCustomColorClasses } from "@/lib/custom-colors";
 import { cn } from "@/lib/utils";
 import { useQuickNotesStore } from "@/providers/quick-notes-store-provider";
+import "@github/relative-time-element";
 import { Delete01Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { format } from "date-fns";
@@ -13,13 +16,13 @@ import { AnimatePresence, motion } from "motion/react";
 import { memo, useRef, useState } from "react";
 import { Button, TextArea } from "react-aria-components";
 import { useShallow } from "zustand/react/shallow";
-
 interface NoteCardProps {
   note: NoteSummary;
   index?: number;
+  hubColor?: CustomColor;
 }
 
-const NoteCardComponent = ({ note, index = 0 }: NoteCardProps) => {
+const NoteCardComponent = ({ note, index = 0, hubColor }: NoteCardProps) => {
   const [isEditingNote, setIsEditingNote] = useState(false);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -34,6 +37,7 @@ const NoteCardComponent = ({ note, index = 0 }: NoteCardProps) => {
     useUpdateQuickNote({
       noteId: note.id,
       initialContent: note.content,
+      hubId: note.hubId || 0,
     });
 
   const { isDeleting, deleteProgress, handleDeletePress, handleDeleteRelease } =
@@ -44,6 +48,7 @@ const NoteCardComponent = ({ note, index = 0 }: NoteCardProps) => {
     });
 
   const isDisabled = (edittingHub || 0) === note.hubId && !isEditingNote;
+  const colorClasses = getCustomColorClasses(hubColor as CustomColor);
 
   const onFocus = () => {
     setIsEditingNote(true);
@@ -60,13 +65,16 @@ const NoteCardComponent = ({ note, index = 0 }: NoteCardProps) => {
   return (
     <div
       className={cn(
-        "flex flex-col gap-2 p-4 bg-overlay-highlight rounded-lg border-1 border-border relative transition duration-250",
+        "flex flex-col gap-2 bg-overlay-highlight rounded-lg border-1 border-border relative transition duration-250",
         isDisabled && "opacity-50",
-        isEditingNote && "brightness-125 border-primary/50",
+        isEditingNote
+          ? `brightness-125 ${colorClasses.border}`
+          : "hover:bg-overlay-elevated-highlight/80",
       )}
     >
       <div className="absolute top-0 right-0 z-10">
         <Button
+          excludeFromTabOrder
           isDisabled={note.id < 0}
           onPressStart={handleDeletePress}
           onPressEnd={handleDeleteRelease}
@@ -108,14 +116,24 @@ const NoteCardComponent = ({ note, index = 0 }: NoteCardProps) => {
         value={content}
         onFocus={onFocus}
         onBlur={onBlur}
-        // autoFocus
-        className="field-sizing-content resize-none pr-5 text-base"
+        placeholder="Write something..."
+        className={cn(
+          "placeholder:text-muted-fg/40 field-sizing-content resize-none text-base",
+          "p-3 pr-8",
+        )}
         onChange={(e) => handleContentChange(e.target.value)}
       />
-      <div className="flex justify-between items-center">
-        <p className="text-muted-fg/50 text-sm">
+      <div className="flex justify-between items-center p-4 pt-0 pb-3">
+        {/* @ts-ignore */}
+        <relative-time
+          className="text-muted-fg/50 text-sm"
+          datetime={new Date(note.updatedAt).toISOString()}
+          format="relative"
+        >
           {format(note.updatedAt, "MMM d, yyyy")}
-        </p>
+          {/* @ts-ignore */}
+        </relative-time>
+
         {isSaving && (
           <span className="text-xs text-muted-fg/50">Saving...</span>
         )}
@@ -133,6 +151,7 @@ export const NoteCard = memo(NoteCardComponent, (prevProps, nextProps) => {
   return (
     prevProps.note.id === nextProps.note.id &&
     prevProps.note.content === nextProps.note.content &&
-    prevProps.note.updatedAt === nextProps.note.updatedAt
+    prevProps.note.updatedAt === nextProps.note.updatedAt &&
+    prevProps.hubColor === nextProps.hubColor
   );
 });

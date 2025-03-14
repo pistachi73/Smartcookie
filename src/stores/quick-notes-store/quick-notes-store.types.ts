@@ -5,7 +5,7 @@ export type QuickNote = Pick<
   DBQuickNote,
   "id" | "hubId" | "content" | "updatedAt"
 >;
-export type Hub = Pick<DBHub, "name" | "id">;
+export type Hub = Pick<DBHub, "name" | "id" | "color">;
 
 export type QuickNotesStore = QuickNotesState & QuickNotesActions;
 

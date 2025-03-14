@@ -1,4 +1,7 @@
 import { Heading } from "@/components/ui";
+import type { CustomColor } from "@/lib/custom-colors";
+import { getCustomColorClasses } from "@/lib/custom-colors";
+import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "motion/react";
 import { AddNoteCard } from "./add-note-card";
@@ -46,15 +49,28 @@ export const HubNotesStack = ({ hubId }: HubNotesStackProps) => {
 
   if (!hub) return null;
 
+  const colorClasses = getCustomColorClasses(hub.color as CustomColor);
+
   return (
     <div className="flex flex-col gap-3 w-[320px] h-full shrink-0 bg-bg/  p-3 ">
       <div className="sticky top-2 z-10 backdrop-blur-sm flex gap-2">
         <Heading
           level={4}
-          className="w-full p-2.5 bg-primary/10 rounded-lg text-sm font-semibold text-primary flex items-center justify-between"
+          className={cn(
+            "w-full p-2.5 rounded-lg text-sm font-semibold flex items-center justify-between",
+            colorClasses.bg,
+            colorClasses.text,
+          )}
         >
           <span className="truncate">{hub.name}</span>
-          <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full">
+          <span
+            className={cn(
+              "text-xs px-2 py-0.5 rounded-full",
+              "bg-fg/10 dark:bg-fg/20",
+              colorClasses.text,
+              "font-medium",
+            )}
+          >
             {notes?.length || 0}
           </span>
         </Heading>
@@ -90,7 +106,7 @@ export const HubNotesStack = ({ hubId }: HubNotesStackProps) => {
                 exit="exit"
                 className="will-change-transform origin-top"
               >
-                <NoteCard note={note} index={index} />
+                <NoteCard note={note} index={index} hubColor={hub.color} />
               </motion.div>
             ))
           ) : (

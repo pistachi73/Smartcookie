@@ -11,6 +11,22 @@ export const scheduleTypeEnum = pgEnum("schedule_type", [
   "recurrent",
 ]);
 
+export const customColorEnum = pgEnum("custom_color", [
+  "flamingo",
+  "tangerine",
+  "banana",
+  "sage",
+  "peacock",
+  "blueberry",
+  "lavender",
+  "grape",
+  "graphite",
+  "neutral",
+  "sunshine",
+  "stone",
+  "slate",
+]);
+
 export const hub = pgTable("hub", {
   id: serial().primaryKey(),
   userId: uuid()
@@ -21,6 +37,7 @@ export const hub = pgTable("hub", {
   scheduleType: scheduleTypeEnum().notNull(),
   defaultSessionPrice: integer().notNull(),
   cancelationPolicyHours: integer().notNull(),
+  color: customColorEnum("color").default("neutral").notNull(),
 });
 
 export type InsertHub = typeof hub.$inferInsert;

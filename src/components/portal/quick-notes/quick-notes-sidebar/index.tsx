@@ -1,6 +1,7 @@
 "use client";
 
 import { Button, Heading, SearchField, Separator } from "@/components/ui";
+import type { CustomColor } from "@/lib/custom-colors";
 import { cn } from "@/lib/utils";
 import { useQuickNotesStore } from "@/providers/quick-notes-store-provider";
 import { ViewIcon, ViewOffSlashIcon } from "@hugeicons-pro/core-solid-rounded";
@@ -32,9 +33,6 @@ export const QuickNotesSidebar = () => {
     }),
   );
 
-  //   const areAllHubsVisible = useQuickNotesStore(
-  //     ({ visibleHubs, hubs }) => hubs?.length === visibleHubs.size,
-  //   );
   const toggleAllHubsVisibility = useQuickNotesStore(
     (state) => state.toggleAllHubsVisibility,
   );
@@ -48,16 +46,11 @@ export const QuickNotesSidebar = () => {
   return (
     <div
       className={cn(
-        "transition-all duration-300 border-r h-full bg-overlay shrink-0",
-        isMinimized ? "w-auto" : "w-[300px]",
+        "transition-all duration-150 border-r h-full bg-overlay shrink-0",
+        isMinimized ? "w-[72px]" : "w-[300px]",
       )}
     >
-      <div
-        className={cn(
-          "flex items-center",
-          isMinimized ? "p-2" : "p-4 justify-between",
-        )}
-      >
+      <div className={cn("flex items-center p-4 justify-between")}>
         {!isMinimized && (
           <Heading level={2} className="text-lg font-medium text-nowrap">
             Quick Notes
@@ -69,7 +62,7 @@ export const QuickNotesSidebar = () => {
           appearance="plain"
           intent="secondary"
           onPress={() => setIsMinimized((isMinimized) => !isMinimized)}
-          className="size-8"
+          className="size-10"
         >
           <HugeiconsIcon
             icon={ArrowLeft01Icon}
@@ -103,13 +96,14 @@ export const QuickNotesSidebar = () => {
         />
 
         <div className="flex flex-col gap-y-2 mt-8">
-          {filteredData?.map(({ name, id }) => (
+          {filteredData?.map((hub) => (
             <HubToggle
-              key={id}
-              label={name}
-              isVisible={visibleHubs.has(id)}
+              key={hub.id}
+              label={hub.name}
+              isVisible={visibleHubs.has(hub.id)}
               isMinimized={isMinimized}
-              onPress={() => toggleHub(id)}
+              onPress={() => toggleHub(hub.id)}
+              color={hub.color as CustomColor}
             />
           ))}
         </div>
