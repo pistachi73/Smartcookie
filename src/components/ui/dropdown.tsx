@@ -1,7 +1,8 @@
 "use client";
 
 import { cn } from "@/utils/classes";
-import { IconCheck } from "justd-icons";
+import { Tick02Icon } from "@hugeicons-pro/core-stroke-rounded";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Collection,
   Header,
@@ -50,7 +51,8 @@ const dropdownItemStyles = tv({
 const dropdownSectionStyles = tv({
   slots: {
     section: "col-span-full grid grid-cols-[auto_1fr]",
-    header: "col-span-full px-2.5 py-1 font-medium text-muted-fg text-sm sm:text-xs",
+    header:
+      "col-span-full px-2.5 py-1 font-medium text-muted-fg text-sm sm:text-xs",
   },
 });
 
@@ -60,7 +62,10 @@ interface DropdownSectionProps<T> extends SectionProps<T> {
   title?: string;
 }
 
-const DropdownSection = <T extends object>({ className, ...props }: DropdownSectionProps<T>) => {
+const DropdownSection = <T extends object>({
+  className,
+  ...props
+}: DropdownSectionProps<T>) => {
   return (
     <ListBoxSection className={section({ className })}>
       {"title" in props && <Header className={header()}>{props.title}</Header>}
@@ -73,19 +78,30 @@ type DropdownItemProps = ListBoxItemProps;
 
 const DropdownItem = ({ className, ...props }: DropdownItemProps) => {
   const textValue =
-    props.textValue || (typeof props.children === "string" ? props.children : undefined);
+    props.textValue ||
+    (typeof props.children === "string" ? props.children : undefined);
   return (
     <ListBoxItemPrimitive
       textValue={textValue}
       className={composeRenderProps(className, (className, renderProps) =>
-        dropdownItemStyles({ ...renderProps, className })
+        dropdownItemStyles({ ...renderProps, className }),
       )}
       {...props}
     >
       {composeRenderProps(props.children, (children, { isSelected }) => (
         <>
-          {isSelected && <IconCheck className='-mx-0.5 mr-2' data-slot='checked-icon' />}
-          {typeof children === "string" ? <DropdownLabel>{children}</DropdownLabel> : children}
+          {isSelected && (
+            <HugeiconsIcon
+              icon={Tick02Icon}
+              data-slot="checked-icon"
+              className="-mx-0.5 mr-2"
+            />
+          )}
+          {typeof children === "string" ? (
+            <DropdownLabel>{children}</DropdownLabel>
+          ) : (
+            children
+          )}
         </>
       ))}
     </ListBoxItemPrimitive>
@@ -111,8 +127,8 @@ const DropdownItemDetails = ({
 
   return (
     <div
-      data-slot='dropdown-item-details'
-      className='col-start-2 flex flex-col gap-y-1'
+      data-slot="dropdown-item-details"
+      className="col-start-2 flex flex-col gap-y-1"
       {...restProps}
     >
       {label && (
@@ -143,19 +159,29 @@ interface MenuLabelProps extends TextProps {
 }
 
 const DropdownLabel = ({ className, ref, ...props }: MenuLabelProps) => (
-  <Text slot='label' ref={ref} className={cn("col-start-2", className)} {...props} />
+  <Text
+    slot="label"
+    ref={ref}
+    className={cn("col-start-2", className)}
+    {...props}
+  />
 );
 
 const DropdownSeparator = ({ className, ...props }: SeparatorProps) => (
   <Separator
-    orientation='horizontal'
+    orientation="horizontal"
     className={cn("-mx-1 col-span-full my-1 h-px bg-border", className)}
     {...props}
   />
 );
 
-const DropdownKeyboard = ({ className, ...props }: React.ComponentProps<typeof Keyboard>) => {
-  return <Keyboard className={cn("absolute right-2 pl-2", className)} {...props} />;
+const DropdownKeyboard = ({
+  className,
+  ...props
+}: React.ComponentProps<typeof Keyboard>) => {
+  return (
+    <Keyboard className={cn("absolute right-2 pl-2", className)} {...props} />
+  );
 };
 
 /**
@@ -172,4 +198,8 @@ export {
   dropdownItemStyles,
   dropdownSectionStyles,
 };
-export type { DropdownItemDetailProps, DropdownItemProps, DropdownSectionProps };
+export type {
+  DropdownItemDetailProps,
+  DropdownItemProps,
+  DropdownSectionProps,
+};

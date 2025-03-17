@@ -1,6 +1,7 @@
 "use client";
 
-import { IconCheck, IconHamburger } from "justd-icons";
+import { Menu01Icon, Tick02Icon } from "@hugeicons-pro/core-stroke-rounded";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type {
   ListBoxItemProps as ListBoxItemPrimitiveProps,
   ListBoxProps,
@@ -20,11 +21,14 @@ const listBoxStyles = tv({
   base: "flex max-h-96 w-full min-w-56 flex-col gap-y-1 overflow-y-auto rounded-xl border p-1 shadow-lg outline-hidden [scrollbar-width:thin] [&::-webkit-scrollbar]:size-0.5",
 });
 
-const ListBox = <T extends object>({ className, ...props }: ListBoxProps<T>) => (
+const ListBox = <T extends object>({
+  className,
+  ...props
+}: ListBoxProps<T>) => (
   <ListBoxPrimitive
     {...props}
     className={composeRenderProps(className, (className, renderProps) =>
-      listBoxStyles({ ...renderProps, className })
+      listBoxStyles({ ...renderProps, className }),
     )}
   />
 );
@@ -51,11 +55,16 @@ const listBoxItemStyles = tv({
   },
 });
 
-interface ListBoxItemProps<T extends object> extends ListBoxItemPrimitiveProps<T> {
+interface ListBoxItemProps<T extends object>
+  extends ListBoxItemPrimitiveProps<T> {
   className?: string;
 }
 
-const Item = <T extends object>({ children, className, ...props }: ListBoxItemProps<T>) => {
+const Item = <T extends object>({
+  children,
+  className,
+  ...props
+}: ListBoxItemProps<T>) => {
   const textValue = typeof children === "string" ? children : undefined;
 
   return (
@@ -66,28 +75,30 @@ const Item = <T extends object>({ children, className, ...props }: ListBoxItemPr
         listBoxItemStyles({
           ...renderProps,
           className,
-        })
+        }),
       )}
     >
       {(values) => (
-        <div className='flex items-center gap-2'>
+        <div className="flex items-center gap-2">
           <>
             {values.allowsDragging && (
-              <IconHamburger
+              <HugeiconsIcon
+                icon={Menu01Icon}
+                data-slot="icon"
                 className={cn(
                   "size-4 shrink-0 text-muted-fg transition",
                   values.isFocused && "text-fg",
                   values.isDragging && "text-fg",
-                  values.isSelected && "text-accent-fg/70"
+                  values.isSelected && "text-accent-fg/70",
                 )}
               />
             )}
-            <div className='flex flex-col'>
+            <div className="flex flex-col">
               {typeof children === "function" ? children(values) : children}
 
               {values.isSelected && (
-                <span className='absolute top-3 right-2 animate-in lg:top-2.5'>
-                  <IconCheck />
+                <span className="absolute top-3 right-2 animate-in lg:top-2.5">
+                  <HugeiconsIcon icon={Tick02Icon} data-slot="icon" />
                 </span>
               )}
             </div>
@@ -100,21 +111,30 @@ const Item = <T extends object>({ children, className, ...props }: ListBoxItemPr
 
 type ListBoxPickerProps<T> = ListBoxProps<T>;
 
-const ListBoxPicker = <T extends object>({ className, ...props }: ListBoxPickerProps<T>) => {
+const ListBoxPicker = <T extends object>({
+  className,
+  ...props
+}: ListBoxPickerProps<T>) => {
   return (
     <ListBoxPrimitive
       className={composeTailwindRenderProps(
         className,
-        "grid max-h-72 grid-cols-[auto_1fr] overflow-auto p-1 outline-hidden *:[[role='group']+[role=group]]:mt-4 *:[[role='group']+[role=separator]]:mt-1"
+        "grid max-h-72 grid-cols-[auto_1fr] overflow-auto p-1 outline-hidden *:[[role='group']+[role=group]]:mt-4 *:[[role='group']+[role=separator]]:mt-1",
       )}
       {...props}
     />
   );
 };
 
-const Section = ({ className, ...props }: React.ComponentProps<typeof DropdownSection>) => {
+const Section = ({
+  className,
+  ...props
+}: React.ComponentProps<typeof DropdownSection>) => {
   return (
-    <DropdownSection className={cn(className, "[&_.lbi:last-child]:-mb-1.5 gap-y-1")} {...props} />
+    <DropdownSection
+      className={cn(className, "[&_.lbi:last-child]:-mb-1.5 gap-y-1")}
+      {...props}
+    />
   );
 };
 

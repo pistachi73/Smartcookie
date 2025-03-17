@@ -9,10 +9,8 @@ import type { CustomColor } from "@/lib/custom-colors";
 import { getCustomColorClasses } from "@/lib/custom-colors";
 import { cn } from "@/lib/utils";
 import { useQuickNotesStore } from "@/providers/quick-notes-store-provider";
-import "@github/relative-time-element";
 import { Delete01Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { format } from "date-fns";
 import { AnimatePresence, motion } from "motion/react";
 import { memo, useEffect, useRef, useState } from "react";
 import { Button, TextArea } from "react-aria-components";
@@ -78,7 +76,7 @@ const NoteCardComponent = ({ note, index = 0, hubColor }: NoteCardProps) => {
   return (
     <div
       className={cn(
-        "flex flex-col gap-2 bg-overlay-highlight rounded-lg border-1 border-border relative transition duration-250",
+        "flex flex-col bg-overlay-highlight rounded-lg border-1 border-border relative transition duration-250",
         isDisabled && "opacity-50",
         isEditingNote
           ? `brightness-125 ${colorClasses.border}`
@@ -132,21 +130,11 @@ const NoteCardComponent = ({ note, index = 0, hubColor }: NoteCardProps) => {
         placeholder="Write something..."
         className={cn(
           "placeholder:text-muted-fg/40 field-sizing-content resize-none text-base",
-          "p-3 pr-8",
+          "p-3 pr-8 pb-2",
         )}
         onChange={(e) => handleContentChange(e.target.value)}
       />
-      <div className="flex justify-between items-center p-4 pt-0 pb-3">
-        {/* @ts-ignore */}
-        <relative-time
-          className="text-muted-fg/50 text-sm"
-          datetime={new Date(note.updatedAt).toISOString()}
-          format="relative"
-        >
-          {format(note.updatedAt, "MMM d, yyyy")}
-          {/* @ts-ignore */}
-        </relative-time>
-
+      <div className="flex justify-between items-center p-3 pt-0 pb-3 min-h-7">
         {isSaving && (
           <span className="text-xs text-muted-fg/50">Saving...</span>
         )}

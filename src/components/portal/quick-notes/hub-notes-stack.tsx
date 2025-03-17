@@ -2,6 +2,8 @@ import { Heading } from "@/components/ui";
 import type { CustomColor } from "@/lib/custom-colors";
 import { getCustomColorClasses } from "@/lib/custom-colors";
 import { cn } from "@/lib/utils";
+import { NoteIcon } from "@hugeicons-pro/core-solid-rounded";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "motion/react";
 import { AddNoteCard } from "./add-note-card";
@@ -42,7 +44,7 @@ const cardVariants = {
 
 export const HubNotesStack = ({ hubId }: HubNotesStackProps) => {
   const { data: hubs } = useQuery(quickNotesHubsQueryOptions);
-  const { data: notes, isLoading } = useHubNotes(hubId);
+  const { data: notes, isLoading, isPending } = useHubNotes(hubId);
 
   const hub = hubs?.find((h) => h.id === hubId);
   const hasNotes = !!notes?.length;
@@ -76,7 +78,6 @@ export const HubNotesStack = ({ hubId }: HubNotesStackProps) => {
         </Heading>
         <AddNoteCard hubId={hub.id} />
       </div>
-
       <div className="h-full flex flex-col gap-3 relative">
         <AnimatePresence mode="popLayout" initial={false}>
           {isLoading ? (
@@ -111,12 +112,33 @@ export const HubNotesStack = ({ hubId }: HubNotesStackProps) => {
             ))
           ) : (
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
-              className="flex items-center justify-center h-32 text-muted-fg text-sm italic"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 30,
+                duration: 0.4,
+              }}
+              className=" bg-overlay-highlight rounded-lg h-auto flex flex-col items-center py-8 px-4 text-center"
             >
-              No notes yet
+              <div
+                className={cn(
+                  "w-12 h-12 mb-3 rounded-full flex items-center justify-center",
+                  colorClasses.bg,
+                  "bg-opacity-20 dark:bg-opacity-30",
+                )}
+              >
+                <HugeiconsIcon
+                  icon={NoteIcon}
+                  size={24}
+                  className={colorClasses.text}
+                />
+              </div>
+              <p className="font-medium mb-1">No notes in this hub</p>
+              <p className="text-muted-fg text-xs mb-4">
+                Create your first note to get started
+              </p>
             </motion.div>
           )}
         </AnimatePresence>

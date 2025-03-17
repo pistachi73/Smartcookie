@@ -17,11 +17,12 @@ type HubToggleProps = {
 };
 
 const toggleStyles = tv({
-  base: "relative group cursor-pointer rounded-lg border transition-colors justify-between",
+  base: "ring-offset-overlay relative group cursor-pointer rounded-lg transition-colors justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
   variants: {
     isVisible: {
       true: "", // We'll apply color classes dynamically
-      false: "bg-overlay-highlight border-transparent",
+      false:
+        "bg-overlay-highlight border-transparent focus-visible:ring-primary",
     },
     isMinimized: {
       true: "size-10",
@@ -50,7 +51,8 @@ export function HubToggle({
         <Tooltip.Trigger
           className={cn(
             toggleStyles({ isVisible, isMinimized }),
-            isVisible && colorClasses && [colorClasses.bg, colorClasses.border],
+            colorClasses?.ring ?? "focus-visible:ring-primary",
+            isVisible && [colorClasses?.bg ?? "bg-overlay-elevated-highlight"],
             "relative flex items-center justify-center",
           )}
           onPress={onPress}
@@ -94,7 +96,8 @@ export function HubToggle({
       onPress={onPress}
       className={cn(
         toggleStyles({ isVisible, isMinimized }),
-        isVisible && colorClasses && [colorClasses.bg, colorClasses.border],
+        colorClasses?.ring ?? "focus-visible:ring-primary",
+        isVisible && (colorClasses?.bg ?? "bg-overlay-elevated-highlight"),
         "flex items-center gap-2",
       )}
       aria-pressed={isVisible}

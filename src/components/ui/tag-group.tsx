@@ -2,7 +2,6 @@
 
 import React from "react";
 
-import { IconX } from "justd-icons";
 import type {
   TagGroupProps as TagGroupPrimitiveProps,
   TagListProps,
@@ -18,6 +17,8 @@ import {
 import { tv } from "tailwind-variants";
 
 import { cn } from "@/utils/classes";
+import { MultiplicationSignIcon } from "@hugeicons-pro/core-stroke-rounded";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { badgeIntents, badgeShapes, badgeStyles } from "./badge";
 import { Description, Label } from "./field";
 import { composeTailwindRenderProps, focusStyles } from "./primitive";
@@ -113,7 +114,7 @@ const TagGroup = ({ children, ref, ...props }: TagGroupProps) => {
           shape: props.shape || "square",
         }}
       >
-        {props.label && <Label className='mb-1'>{props.label}</Label>}
+        {props.label && <Label className="mb-1">{props.label}</Label>}
         {children}
         {props.description && <Description>{props.description}</Description>}
       </TagGroupContext.Provider>
@@ -121,7 +122,10 @@ const TagGroup = ({ children, ref, ...props }: TagGroupProps) => {
   );
 };
 
-const TagList = <T extends object>({ className, ...props }: TagListProps<T>) => {
+const TagList = <T extends object>({
+  className,
+  ...props
+}: TagListProps<T>) => {
   return (
     <TagListPrimitive
       {...props}
@@ -146,7 +150,8 @@ interface TagProps extends TagPrimitiveProps {
 }
 
 const Tag = ({ className, intent, shape, ...props }: TagProps) => {
-  const textValue = typeof props.children === "string" ? props.children : undefined;
+  const textValue =
+    typeof props.children === "string" ? props.children : undefined;
   const groupContext = React.useContext(TagGroupContext);
 
   return (
@@ -173,10 +178,10 @@ const Tag = ({ className, intent, shape, ...props }: TagProps) => {
             {props.children as React.ReactNode}
             {allowsRemoving && (
               <Button
-                slot='remove'
-                className='-mr-0.5 grid size-3.5 place-content-center rounded focus:outline-none focus-visible:ring-1 focus-visible:ring-primary [&>[data-slot=icon]]:size-3 [&>[data-slot=icon]]:shrink-0'
+                slot="remove"
+                className="-mr-0.5 grid size-3.5 place-content-center rounded focus:outline-none focus-visible:ring-1 focus-visible:ring-primary [&>[data-slot=icon]]:size-3 [&>[data-slot=icon]]:shrink-0"
               >
-                <IconX />
+                <HugeiconsIcon icon={MultiplicationSignIcon} data-slot="icon" />
               </Button>
             )}
           </>

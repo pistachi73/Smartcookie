@@ -5,7 +5,6 @@ import { MaxWidthWrapper } from "./max-width-wrapper";
 
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { AuthButton } from "./auth/auth-button";
-import { Button } from "./ui";
 import { ThemeSwitcher } from "./ui/theme-switcher";
 
 export const Header = () => {
@@ -17,13 +16,7 @@ export const Header = () => {
         <nav>Logo</nav>
         <div className="flex flex-row gap-2">
           <ThemeSwitcher />
-          {user ? (
-            <UserButton user={user} />
-          ) : (
-            <AuthButton asChild>
-              <Button className="2xl">Sign in</Button>
-            </AuthButton>
-          )}
+          {user ? <UserButton user={user} /> : <AuthButton>Sign in</AuthButton>}
         </div>
       </MaxWidthWrapper>
     </header>

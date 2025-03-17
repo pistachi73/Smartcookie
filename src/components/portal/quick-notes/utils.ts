@@ -1,4 +1,5 @@
 import {
+  getHubNotesAction,
   getHubsAction,
   getHubsWithNotesAction,
 } from "@/app/(portal)/quick-notes/actions";
@@ -19,3 +20,13 @@ export const quickNotesHubsQueryOptions = queryOptions({
     return data?.data;
   },
 });
+
+export const getHubNotesQueryOptions = (hubId: number) =>
+  queryOptions({
+    queryKey: ["hub-notes", hubId],
+    queryFn: async () => {
+      const data = await getHubNotesAction({ hubId });
+      console.log("getHubNotesQueryOptions", data);
+      return data?.data;
+    },
+  });

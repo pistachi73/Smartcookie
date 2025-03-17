@@ -2,7 +2,8 @@
 
 import { useEffect, useRef } from "react";
 
-import { IconX } from "justd-icons";
+import { MultiplicationSignIcon } from "@hugeicons-pro/core-stroke-rounded";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { HeadingProps } from "react-aria-components";
 import {
   Button as ButtonPrimitive,
@@ -27,24 +28,28 @@ const dialogStyles = tv({
       "isolate flex flex-1 flex-col overflow-auto px-4 sm:px-6",
       "max-h-[calc(var(--visual-viewport-height)-var(--visual-viewport-vertical-padding)-var(--dialog-header-height,0px)-var(--dialog-footer-height,0px))]",
     ],
-    footer: "isolate mt-auto flex flex-col-reverse justify-between gap-3 p-4 sm:flex-row sm:p-6",
+    footer:
+      "isolate mt-auto flex flex-col-reverse justify-between gap-3 p-4 sm:flex-row sm:p-6",
     closeIndicator:
       "close absolute top-1 right-1 z-50 grid size-8 place-content-center rounded-xl data-focused:bg-secondary data-hovered:bg-secondary data-focused:outline-hidden data-focus-visible:ring-1 data-focus-visible:ring-primary sm:top-2 sm:right-2 sm:size-7 sm:rounded-md",
   },
 });
 
-const { root, header, description, body, footer, closeIndicator } = dialogStyles();
+const { root, header, description, body, footer, closeIndicator } =
+  dialogStyles();
 
 const Dialog = ({
   role = "dialog",
   className,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive>) => {
-  return <DialogPrimitive role={role} className={root({ className })} {...props} />;
+  return (
+    <DialogPrimitive role={role} className={root({ className })} {...props} />
+  );
 };
 
 const Trigger = (props: React.ComponentProps<typeof ButtonPrimitive>) => (
-  <ButtonPrimitive slot='close' {...props} />
+  <ButtonPrimitive slot="close" {...props} />
 );
 
 type DialogHeaderProps = React.HTMLAttributes<HTMLDivElement> & {
@@ -65,7 +70,7 @@ const Header = ({ className, ...props }: DialogHeaderProps) => {
       for (const entry of entries) {
         header.parentElement?.style.setProperty(
           "--dialog-header-height",
-          `${entry.target.clientHeight}px`
+          `${entry.target.clientHeight}px`,
         );
       }
     });
@@ -75,10 +80,18 @@ const Header = ({ className, ...props }: DialogHeaderProps) => {
   }, []);
 
   return (
-    <div data-slot='dialog-header' ref={headerRef} className={header({ className })}>
+    <div
+      data-slot="dialog-header"
+      ref={headerRef}
+      className={header({ className })}
+    >
       {props.title && <Title>{props.title}</Title>}
       {props.description && <Description>{props.description}</Description>}
-      {!props.title && typeof props.children === "string" ? <Title {...props} /> : props.children}
+      {!props.title && typeof props.children === "string" ? (
+        <Title {...props} />
+      ) : (
+        props.children
+      )}
     </div>
   );
 };
@@ -101,7 +114,7 @@ interface DialogTitleProps extends Omit<HeadingProps, "level"> {
 }
 const Title = ({ level = 2, className, ref, ...props }: DialogTitleProps) => (
   <Heading
-    slot='title'
+    slot="title"
     level={level}
     ref={ref}
     className={titleStyles({ level, className })}
@@ -111,12 +124,22 @@ const Title = ({ level = 2, className, ref, ...props }: DialogTitleProps) => (
 
 type DialogDescriptionProps = React.ComponentProps<"div">;
 const Description = ({ className, ref, ...props }: DialogDescriptionProps) => (
-  <Text slot='description' className={description({ className })} ref={ref} {...props} />
+  <Text
+    slot="description"
+    className={description({ className })}
+    ref={ref}
+    {...props}
+  />
 );
 
 type DialogBodyProps = React.ComponentProps<"div">;
 const Body = ({ className, ref, ...props }: DialogBodyProps) => (
-  <div data-slot='dialog-body' ref={ref} className={body({ className })} {...props} />
+  <div
+    data-slot="dialog-body"
+    ref={ref}
+    className={body({ className })}
+    {...props}
+  />
 );
 
 type DialogFooterProps = React.ComponentProps<"div">;
@@ -134,7 +157,7 @@ const Footer = ({ className, ...props }: DialogFooterProps) => {
       for (const entry of entries) {
         footer.parentElement?.style.setProperty(
           "--dialog-footer-height",
-          `${entry.target.clientHeight}px`
+          `${entry.target.clientHeight}px`,
         );
       }
     });
@@ -145,12 +168,30 @@ const Footer = ({ className, ...props }: DialogFooterProps) => {
     };
   }, []);
   return (
-    <div ref={footerRef} data-slot='dialog-footer' className={footer({ className })} {...props} />
+    <div
+      ref={footerRef}
+      data-slot="dialog-footer"
+      className={footer({ className })}
+      {...props}
+    />
   );
 };
 
-const Close = ({ className, appearance = "outline", ref, ...props }: ButtonProps) => {
-  return <Button slot='close' className={className} ref={ref} appearance={appearance} {...props} />;
+const Close = ({
+  className,
+  appearance = "outline",
+  ref,
+  ...props
+}: ButtonProps) => {
+  return (
+    <Button
+      slot="close"
+      className={className}
+      ref={ref}
+      appearance={appearance}
+      {...props}
+    />
+  );
 };
 
 interface CloseButtonIndicatorProps extends ButtonProps {
@@ -171,11 +212,11 @@ const CloseIndicator = ({ className, ...props }: CloseButtonIndicatorProps) => {
     <ButtonPrimitive
       ref={buttonRef}
       {...(isMobile ? { autoFocus: true } : {})}
-      aria-label='Close'
-      slot='close'
+      aria-label="Close"
+      slot="close"
       className={closeIndicator({ className })}
     >
-      <IconX className='size-4' />
+      <HugeiconsIcon icon={MultiplicationSignIcon} data-slot="icon" size={16} />
     </ButtonPrimitive>
   ) : null;
 };

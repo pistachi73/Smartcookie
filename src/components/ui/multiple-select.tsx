@@ -2,7 +2,8 @@
 
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 
-import { IconChevronLgDown } from "justd-icons";
+import { ArrowDown01Icon } from "@hugeicons-pro/core-stroke-rounded";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { useFilter } from "react-aria";
 import type {
   ComboBoxProps as ComboBoxPrimitiveProps,
@@ -42,8 +43,14 @@ const multiSelectStyles = tv({
   },
 });
 
-const { multiSelectField, multiSelect, chevronButton, input, comboBox, comboBoxChild } =
-  multiSelectStyles();
+const {
+  multiSelectField,
+  multiSelect,
+  chevronButton,
+  input,
+  comboBox,
+  comboBoxChild,
+} = multiSelectStyles();
 
 interface SelectedKey {
   id: Key;
@@ -100,7 +107,7 @@ const MultipleSelect = <T extends SelectedKey>({
     (item: T, filterText: string) => {
       return !selectedKeys.includes(item.id) && contains(item.name, filterText);
     },
-    [contains, selectedKeys]
+    [contains, selectedKeys],
   );
 
   const accessibleList = useListData({
@@ -128,7 +135,7 @@ const MultipleSelect = <T extends SelectedKey>({
         onItemCleared?.(key);
       }
     },
-    [selectedItems, onItemCleared]
+    [selectedItems, onItemCleared],
   );
 
   const onSelectionChange = (id: Key | null) => {
@@ -187,7 +194,7 @@ const MultipleSelect = <T extends SelectedKey>({
         popLast();
       }
     },
-    [popLast, fieldState.inputValue]
+    [popLast, fieldState.inputValue],
   );
 
   useEffect(() => {
@@ -210,13 +217,13 @@ const MultipleSelect = <T extends SelectedKey>({
 
   return (
     <div className={multiSelectField({ className })}>
-      {props.label && <Label className='mb-1'>{props.label}</Label>}
+      {props.label && <Label className="mb-1">{props.label}</Label>}
       <div className={props.isDisabled ? "opacity-50" : ""}>
         <div ref={triggerRef} className={multiSelect({ className })}>
           <TagGroup
             shape={props.shape}
             intent={props.intent}
-            aria-label='Selected items'
+            aria-label="Selected items"
             id={tagGroupIdentifier}
             onRemove={onRemove}
           >
@@ -225,7 +232,8 @@ const MultipleSelect = <T extends SelectedKey>({
               className={cn(
                 selectedItems.items.length !== 0 && "px-1 py-1.5",
                 "[&_.jdt3lr2x]:last:-mr-1 gap-1.5 outline-hidden",
-                props.shape === "square" && "[&_.jdt3lr2x]:rounded-[calc(var(--radius-lg)-4px)]"
+                props.shape === "square" &&
+                  "[&_.jdt3lr2x]:rounded-[calc(var(--radius-lg)-4px)]",
               )}
             >
               {props.tag}
@@ -234,7 +242,7 @@ const MultipleSelect = <T extends SelectedKey>({
           <ComboBox
             {...props}
             allowsEmptyCollection
-            aria-label='Available items'
+            aria-label="Available items"
             className={comboBox()}
             items={accessibleList.items}
             selectedKey={fieldState.selectedKey}
@@ -258,35 +266,37 @@ const MultipleSelect = <T extends SelectedKey>({
 
               <VisuallyHidden>
                 <Button
-                  slot='remove'
-                  type='button'
-                  aria-label='Remove'
-                  appearance='plain'
-                  size='square-petite'
+                  slot="remove"
+                  type="button"
+                  aria-label="Remove"
+                  appearance="plain"
+                  size="square-petite"
                   ref={triggerButtonRef}
                 >
-                  <IconChevronLgDown />
+                  <HugeiconsIcon icon={ArrowDown01Icon} data-slot="icon" />
                 </Button>
               </VisuallyHidden>
             </div>
             <Popover.Picker
               isNonModal
-              className='max-w-none'
+              className="max-w-none"
               style={{ width: `${width}px` }}
               triggerRef={triggerRef}
-              trigger='ComboBox'
+              trigger="ComboBox"
             >
               <ListBox.Picker
-                className='grid-cols-none'
+                className="grid-cols-none"
                 renderEmptyState={() =>
                   renderEmptyState ? (
                     renderEmptyState(fieldState.inputValue)
                   ) : (
-                    <Description className='block p-3'>
+                    <Description className="block p-3">
                       {fieldState.inputValue ? (
                         <>
                           No results found for:{" "}
-                          <strong className='font-medium text-fg'>{fieldState.inputValue}</strong>
+                          <strong className="font-medium text-fg">
+                            {fieldState.inputValue}
+                          </strong>
                         </>
                       ) : (
                         "No options"
@@ -294,27 +304,36 @@ const MultipleSelect = <T extends SelectedKey>({
                     </Description>
                   )
                 }
-                selectionMode='multiple'
+                selectionMode="multiple"
               >
                 {children}
               </ListBox.Picker>
             </Popover.Picker>
           </ComboBox>
-          <div className='relative ml-auto flex items-center justify-center px-1' aria-hidden>
+          <div
+            className="relative ml-auto flex items-center justify-center px-1"
+            aria-hidden
+          >
             <button
-              type='button'
+              type="button"
               className={chevronButton()}
               onClick={() => triggerButtonRef.current?.click()}
               tabIndex={-1}
             >
-              <IconChevronLgDown className='size-4 peer/[data-open]:rotate-180' />
+              <HugeiconsIcon
+                icon={ArrowDown01Icon}
+                data-slot="icon"
+                className="size-4 peer/[data-open]:rotate-180"
+              />
             </button>
           </div>
         </div>
       </div>
       {props.description && <Description>{props.description}</Description>}
       {<FieldError>{errorMessage}</FieldError>}
-      {name && <input hidden name={name} value={selectedKeys.join(",")} readOnly />}
+      {name && (
+        <input hidden name={name} value={selectedKeys.join(",")} readOnly />
+      )}
     </div>
   );
 };

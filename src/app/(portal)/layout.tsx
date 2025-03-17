@@ -3,7 +3,9 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { currentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
-export default async function PortalLayout({ children }: { children: React.ReactNode }) {
+export default async function PortalLayout({
+  children,
+}: { children: React.ReactNode }) {
   const user = await currentUser();
 
   if (!user) {
@@ -12,8 +14,8 @@ export default async function PortalLayout({ children }: { children: React.React
 
   return (
     <SidebarProvider>
-      <AppSidebar collapsible='dock' />
-      <SidebarInset className='h-full'>{children}</SidebarInset>
+      <AppSidebar collapsible="dock" />
+      <SidebarInset className="h-full">{children}</SidebarInset>
     </SidebarProvider>
 
     // <div

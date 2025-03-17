@@ -1,6 +1,7 @@
 "use client";
 
-import { IconCheck, IconMinus } from "justd-icons";
+import { MinusSignIcon, Tick02Icon } from "@hugeicons-pro/core-stroke-rounded";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type {
   CheckboxGroupProps as CheckboxGroupPrimitiveProps,
   CheckboxProps as CheckboxPrimitiveProps,
@@ -31,7 +32,9 @@ const CheckboxGroup = ({ className, ...props }: CheckboxGroupProps) => {
     >
       <Label>{props.label}</Label>
       {props.children as React.ReactNode}
-      {props.description && <Description className='block'>{props.description}</Description>}
+      {props.description && (
+        <Description className="block">{props.description}</Description>
+      )}
       <FieldError>{props.errorMessage}</FieldError>
     </CheckboxGroupPrimitive>
   );
@@ -78,28 +81,41 @@ const Checkbox = ({ className, ...props }: CheckboxProps) => {
     <CheckboxPrimitive
       {...props}
       className={composeRenderProps(className, (className, renderProps) =>
-        checkboxStyles({ ...renderProps, className })
+        checkboxStyles({ ...renderProps, className }),
       )}
     >
       {({ isSelected, isIndeterminate, ...renderProps }) => (
-        <div className={cn("flex gap-x-2", props.description ? "items-start" : "items-center")}>
+        <div
+          className={cn(
+            "flex gap-x-2",
+            props.description ? "items-start" : "items-center",
+          )}
+        >
           <div
             className={boxStyles({
               ...renderProps,
               isSelected: isSelected || isIndeterminate,
             })}
           >
-            {isIndeterminate ? <IconMinus /> : isSelected ? <IconCheck /> : null}
+            {isIndeterminate ? (
+              <HugeiconsIcon icon={MinusSignIcon} data-slot="icon" />
+            ) : isSelected ? (
+              <HugeiconsIcon icon={Tick02Icon} data-slot="icon" />
+            ) : null}
           </div>
 
-          <div className='flex flex-col gap-1'>
+          <div className="flex flex-col gap-1">
             <>
               {props.label ? (
-                <Label className={cn(props.description && "text-sm/4")}>{props.label}</Label>
+                <Label className={cn(props.description && "text-sm/4")}>
+                  {props.label}
+                </Label>
               ) : (
                 (props.children as React.ReactNode)
               )}
-              {props.description && <Description>{props.description}</Description>}
+              {props.description && (
+                <Description>{props.description}</Description>
+              )}
             </>
           </div>
         </div>

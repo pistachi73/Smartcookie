@@ -20,6 +20,7 @@ export type QuickNotesState = {
 
 export type QuickNotesActions = {
   setHydrated: () => void;
+
   // Hub visibility
   toggleHubVisibility: (hubId: number) => void;
   toggleAllHubsVisibility: () => void;

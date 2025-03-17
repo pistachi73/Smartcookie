@@ -28,7 +28,12 @@ export default async function RootLayout({
   const { deviceType } = await getHeaders();
 
   return (
-    <html lang={"en-GB"} dir={"ltr"} className='h-full' suppressHydrationWarning>
+    <html
+      lang={"en-GB"}
+      dir={"ltr"}
+      className="h-full"
+      suppressHydrationWarning
+    >
       <ReactScan />
       <body className={`${sans.variable} font-sans h-full`}>
         <Providers>

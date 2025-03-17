@@ -1,34 +1,26 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Slot } from "@radix-ui/react-slot";
-import { useRouter } from "next/navigation";
+import { Link } from "react-aria-components";
+import { type ButtonProps, buttonStyles } from "../ui";
 
 type LoginButtonProps = {
   children: React.ReactNode;
   callbackUrl?: string;
-  asChild?: boolean;
   className?: string;
-};
+} & ButtonProps;
 
 export const AuthButton = ({
   children,
   callbackUrl,
-  asChild,
   className,
+  ...props
 }: LoginButtonProps) => {
-  const router = useRouter();
-
-  const onClick = () => {
-    const href = `/login/${callbackUrl ? `?callbackUrl=${callbackUrl}` : ""}`;
-    router.push(href);
-  };
-
-  const Comp = asChild ? Slot : "button";
+  const href = `/login/${callbackUrl ? `?callbackUrl=${callbackUrl}` : ""}`;
 
   return (
-    <Comp onClick={onClick} className={cn(className)}>
+    <Link href={href} className={cn(buttonStyles({ ...props, className }))}>
       {children}
-    </Comp>
+    </Link>
   );
 };
