@@ -4,7 +4,6 @@ import { immer } from "zustand/middleware/immer";
 import { createStore } from "zustand/vanilla";
 import { superjsonStorage } from "../superjson-storage";
 import type {
-  Hub,
   InitialQuickNotesStateData,
   QuickNotesState,
   QuickNotesStore,
@@ -13,16 +12,13 @@ import type {
 export const initQuickNotesStore = (
   initilData?: InitialQuickNotesStateData,
 ): QuickNotesState => {
-  const hubsMap = new Map<number, Hub>(
-    initilData?.hubs?.map((hub) => [hub.id || 0, hub]),
-  );
-
+  console.log({ initilData });
   return {
-    visibleHubs: new Set(),
+    visibleHubs: new Set(initilData?.visibleHubs || []),
     isHydrated: false,
     edittingHub: null,
     isFilterPanelOpen: false,
-    hubsMap,
+    hubIds: initilData?.hubIds || [],
   };
 };
 
@@ -46,16 +42,15 @@ export const createQuickNotesStore = (initState: QuickNotesState) => {
 
         toggleAllHubsVisibility: () => {
           set((state) => {
-            const areAllVisible = state.hubsMap.size === state.visibleHubs.size;
+            const areAllVisible =
+              state.hubIds.length === state.visibleHubs.size;
             if (areAllVisible) {
               state.visibleHubs.clear();
             } else {
-              const allHubIds: number[] = [];
-              state.hubsMap.forEach((hub) => {
-                console.log(hub);
-                allHubIds.push(hub.id);
-              });
-              state.visibleHubs = new Set(allHubIds);
+              state.visibleHubs = new Set([
+                ...state.visibleHubs,
+                ...state.hubIds,
+              ]);
             }
           });
         },
@@ -91,9 +86,26 @@ export const createQuickNotesStore = (initState: QuickNotesState) => {
       {
         name: "quick-notes-store",
         storage: superjsonStorage,
-        partialize: ({ edittingHub, hubsMap, ...rest }) => ({
+        partialize: ({ edittingHub, hubIds, isHydrated, ...rest }) => ({
           ...rest,
         }),
+        merge(persistedState, currentState) {
+          const visibleHubs = new Set([
+            ...currentState.visibleHubs,
+            ...((persistedState as any).visibleHubs || []),
+          ]);
+
+          console.log({
+            persistedState,
+            currentState,
+            visibleHubs,
+          });
+          return {
+            ...currentState,
+            ...(persistedState as any),
+            visibleHubs,
+          };
+        },
         onRehydrateStorage: () => {
           return async (state, error) => {
             if (!error) {

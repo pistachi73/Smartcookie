@@ -51,7 +51,7 @@ export function HubToggle({
         <Tooltip.Trigger
           className={cn(
             toggleStyles({ isVisible, isMinimized }),
-            colorClasses?.ring ?? "focus-visible:ring-primary",
+            colorClasses?.focusVisible ?? "focus-visible:ring-primary",
             isVisible && [colorClasses?.bg ?? "bg-overlay-elevated-highlight"],
             "relative flex items-center justify-center",
           )}
@@ -96,7 +96,7 @@ export function HubToggle({
       onPress={onPress}
       className={cn(
         toggleStyles({ isVisible, isMinimized }),
-        colorClasses?.ring ?? "focus-visible:ring-primary",
+        colorClasses?.focusVisible ?? "focus-visible:ring-primary",
         isVisible && (colorClasses?.bg ?? "bg-overlay-elevated-highlight"),
         "flex items-center gap-2",
       )}

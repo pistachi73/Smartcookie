@@ -13,7 +13,7 @@ export const HubStackList = () => {
 
   return (
     <div className="w-full h-full flex overflow-scroll relative">
-      <AnimatePresence mode="popLayout">
+      <AnimatePresence mode="popLayout" initial={false}>
         {Array.from(visibleHubs).map((hubId) => (
           <motion.div
             layout="position"

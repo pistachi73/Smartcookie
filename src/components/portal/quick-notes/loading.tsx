@@ -10,23 +10,29 @@ export const QuickNotesLoading = () => {
           "w-[300px]",
         )}
       >
-        <div className={cn("flex items-center p-4 justify-between")}>
+        <div className="p-4 h-[72px] flex items-center">
           <Skeleton className="h-6 w-3/4" />
         </div>
 
         <Separator orientation="horizontal" />
-
-        {Array.from({ length: 6 }).map((_, index) => (
-          <div key={index} className="p-4 pb-0 w-full">
-            <Skeleton className="h-12 w-full" />
-          </div>
-        ))}
+        <div className="p-4">
+          <Skeleton soft className="h-10 w-full" />
+        </div>
+        <div className="p-4 space-y-2 w-full">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <Skeleton
+              key={`hub-toggle-skeleton-${index}`}
+              soft
+              className="h-10 w-full"
+            />
+          ))}
+        </div>
       </div>
-      <div className="flex gap-5 p-3 overflow-scroll">
+      <div className="flex   overflow-scroll">
         {Array.from({ length: 3 }).map((_, index) => (
           <div
             key={`skeleton-hub-${index}`}
-            className=" pb-0 shrink-0 space-y-8 w-[320px]"
+            className=" pb-0 shrink-0 space-y-8 w-[320px] p-3"
           >
             <Skeleton className="h-12 w-full" />
             <div className="flex flex-col gap-4">

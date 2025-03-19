@@ -9,13 +9,23 @@ export const metadata = {
   description: "Manage your quick notes for courses and general information",
 };
 
-export default async function QuickNotesPage() {
+export default async function QuickNotesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ hubId: string | undefined }>;
+}) {
+  const params = await searchParams;
+  const hubId = params?.hubId !== undefined ? Number(params?.hubId) : undefined;
   const queryClient = getQueryClient();
-  await queryClient.prefetchQuery(quickNotesHubsQueryOptions);
+  const promises = [queryClient.prefetchQuery(quickNotesHubsQueryOptions)];
+
+  await Promise.all(promises);
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <QuickNotesStoreProvider>
+      <QuickNotesStoreProvider
+        initialVisibleHubs={hubId !== undefined ? [hubId] : undefined}
+      >
         <QuickNotes />
       </QuickNotesStoreProvider>
     </HydrationBoundary>

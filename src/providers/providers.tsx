@@ -2,7 +2,6 @@
 
 import { getQueryClient } from "@/utils/get-query-client";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { LazyMotion } from "motion/react";
 import { ThemeProvider } from "next-themes";
 import { useRouter } from "next/navigation";
@@ -35,7 +34,7 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
           </ThemeProvider>
         </I18nProvider>
       </RouterProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} position="top-right" /> */}
     </QueryClientProvider>
   );
 };

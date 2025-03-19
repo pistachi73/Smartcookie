@@ -18,10 +18,12 @@ export const QuickNotesStoreContext = createContext<
 
 export interface QuickNotesStoreProviderProps {
   children: ReactNode;
+  initialVisibleHubs?: number[];
 }
 
 export const QuickNotesStoreProvider = ({
   children,
+  initialVisibleHubs,
 }: QuickNotesStoreProviderProps) => {
   const { data: hubs } = useQuery(quickNotesHubsQueryOptions);
   const storeRef = useRef<QuickNotesStoreApi | undefined>(undefined);
@@ -30,6 +32,7 @@ export const QuickNotesStoreProvider = ({
     const initialState = initQuickNotesStore({
       hubIds: hubs?.map(({ id }) => id) || [],
       hubs: hubs || [],
+      visibleHubs: initialVisibleHubs || [],
     });
     storeRef.current = createQuickNotesStore(initialState);
   }

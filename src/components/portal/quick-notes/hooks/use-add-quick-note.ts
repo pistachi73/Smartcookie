@@ -27,6 +27,10 @@ export const noteFocusRegistry = {
     this.pendingFocus.add(clientId);
   },
 
+  clean() {
+    this.pendingFocus.clear();
+  },
+
   // Check if a note needs focus and consume the focus request
   shouldFocus(clientId: string) {
     if (this.pendingFocus.has(clientId)) {
@@ -37,8 +41,11 @@ export const noteFocusRegistry = {
   },
 };
 
-export const useAddQuickNote = () => {
+export const useAddQuickNote = (options?: {
+  cleanFocusRegisterOnAdd?: boolean;
+}) => {
   const queryClient = useQueryClient();
+  const { cleanFocusRegisterOnAdd = false } = options || {};
 
   return useMutation({
     mutationFn: addQuickNoteAction,
@@ -64,6 +71,11 @@ export const useAddQuickNote = () => {
         hubId: newNote.hubId,
         clientId, // Add clientId for animation stability
       };
+
+      // If the note is being added, clean the focus registry
+      if (cleanFocusRegisterOnAdd) {
+        noteFocusRegistry.clean();
+      }
 
       // Register this note for focus before updating the cache
       noteFocusRegistry.register(clientId);

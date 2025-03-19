@@ -32,6 +32,10 @@
     - Use modern state management solutions (e.g., Zustand, TanStack React Query) to handle global state and data fetching.
     - Implement validation using Zod for schema validation.
 
+    ### Unit testing
+    - Use jest and react-testing-library for unit testing
+    - Use pnpm for runing any test command and zsh terminal.
+
     ### Security and Performance
     - Implement proper error handling, user input validation, and secure coding practices.
     - Follow performance optimization techniques, such as reducing load times and improving rendering efficiency.
@@ -53,3 +57,4 @@
     4. **Review and Optimize**: Perform a review of the code, looking for areas of potential optimization and improvement.
     5. **Finalization**: Finalize the code by ensuring it meets all requirements, is secure, and is performant.
     
+    - Please use pnpm for running commands

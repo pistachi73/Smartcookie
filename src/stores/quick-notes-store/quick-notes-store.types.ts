@@ -15,7 +15,7 @@ export type QuickNotesState = {
   visibleHubs: Set<number>;
   isFilterPanelOpen: boolean;
 
-  hubsMap: Map<number, Hub>;
+  hubIds: number[];
 };
 
 export type QuickNotesActions = {
@@ -33,6 +33,7 @@ export type QuickNotesActions = {
 };
 
 export type InitialQuickNotesStateData = {
+  visibleHubs?: number[];
   hubIds: number[];
   hubs?: Hub[];
 };
