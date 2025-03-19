@@ -8,13 +8,13 @@ import {
   SidebarNav,
   SidebarTrigger,
 } from "@/components/ui";
-import { useSidebar } from "@/components/ui/sidebar";
+
 import { cn } from "@/utils/classes";
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
 import { getNavigationPathDetails } from "./utils/navigation-helpers";
 
-interface PortalNavProps {
+export interface PortalNavProps {
   className?: string;
   showSearchField?: boolean;
   actions?: React.ReactNode;
@@ -30,7 +30,6 @@ export const PortalNav = ({
   actions,
 }: PortalNavProps) => {
   const pathname = usePathname();
-  const state = useSidebar();
 
   // Memoize breadcrumbs calculation to avoid unnecessary recalculations
   const { breadcrumbs } = useMemo(

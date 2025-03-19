@@ -1,5 +1,5 @@
-import { deleteQuickNoteAction } from "@/app/(portal)/quick-notes/actions";
-import type { NoteSummary } from "@/app/(portal)/quick-notes/types";
+import { deleteQuickNoteAction } from "@/app/portal/quick-notes/actions";
+import type { NoteSummary } from "@/app/portal/quick-notes/types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";

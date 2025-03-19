@@ -1,4 +1,4 @@
-import CalendarPage from "@/app/(portal)/calendar/page";
+import CalendarPage from "@/app/portal/calendar/page";
 
 const Page = () => {
   return <CalendarPage />;

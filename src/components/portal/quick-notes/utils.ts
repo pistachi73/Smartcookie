@@ -2,7 +2,7 @@ import {
   getHubNotesAction,
   getHubsAction,
   getHubsWithNotesAction,
-} from "@/app/(portal)/quick-notes/actions";
+} from "@/app/portal/quick-notes/actions";
 import { queryOptions } from "@tanstack/react-query";
 
 export const quickNotesQueryOptions = queryOptions({

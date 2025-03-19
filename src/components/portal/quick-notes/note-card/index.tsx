@@ -1,6 +1,6 @@
 "use client";
 
-import type { NoteSummary } from "@/app/(portal)/quick-notes/types";
+import type { NoteSummary } from "@/app/portal/quick-notes/types";
 import { noteFocusRegistry } from "@/components/portal/quick-notes/hooks/use-add-quick-note";
 import { useDeleteQuickNote } from "@/components/portal/quick-notes/hooks/use-delete-quick-note";
 import { useUpdateQuickNote } from "@/components/portal/quick-notes/hooks/use-update-quick-note";

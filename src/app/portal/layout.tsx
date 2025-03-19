@@ -1,3 +1,4 @@
+import { PortalNav } from "@/components/portal/portal-nav";
 import AppSidebar from "@/components/portal/portal-sidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { currentUser } from "@/lib/auth";
@@ -15,7 +16,10 @@ export default async function PortalLayout({
   return (
     <SidebarProvider>
       <AppSidebar collapsible="dock" />
-      <SidebarInset className="h-full">{children}</SidebarInset>
+      <SidebarInset className="h-full flex-col">
+        <PortalNav />
+        <div className="h-full">{children}</div>
+      </SidebarInset>
     </SidebarProvider>
 
     // <div

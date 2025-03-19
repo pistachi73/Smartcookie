@@ -33,8 +33,9 @@
     - Implement validation using Zod for schema validation.
 
     ### Unit testing
-    - Use jest and react-testing-library for unit testing
+    - Use vitest and react-testing-library for unit testing
     - Use pnpm for runing any test command and zsh terminal.
+    - Use pnpm test:run for terminal commands
 
     ### Security and Performance
     - Implement proper error handling, user input validation, and secure coding practices.
