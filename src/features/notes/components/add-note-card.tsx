@@ -2,7 +2,6 @@
 
 import { useAddQuickNote } from "@/features/notes/hooks/use-add-quick-note";
 import { Button } from "@/shared/components/ui";
-import { cn } from "@/shared/lib/classes";
 import { NoteAddIcon as NoteAddIconSolid } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useCallback, useState } from "react";
@@ -41,7 +40,6 @@ export const AddNoteCard = ({ hubId }: AddNoteCardProps) => {
       shape="square"
       onPress={handleAddEmptyNote}
       isDisabled={isDisabled}
-      className={cn()}
     >
       <HugeiconsIcon icon={NoteAddIconSolid} size={16} />
     </Button>

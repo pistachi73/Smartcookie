@@ -21,16 +21,6 @@ const config = {
       "@hugeicons/react",
     ],
   },
-  modularizeImports: {
-    "@hugeicons/react": {
-      transform: "@hugeicons/react/dist/esm/icons/{{member}}",
-      preventFullImport: true,
-    },
-    "react-aria-components": {
-      transform: "react-aria-components/dist/esm/{{member}}",
-      preventFullImport: true,
-    },
-  },
   images: {
     remotePatterns: [
       {
