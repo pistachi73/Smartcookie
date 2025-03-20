@@ -1,7 +1,7 @@
-import CalendarPage from "@/app/portal/calendar/page";
+import { Calendar } from "@/features/calendar/components";
 
 const Page = () => {
-  return <CalendarPage />;
+  return <Calendar />;
 };
 
 export default Page;

@@ -1,6 +1,6 @@
 "use client";
 
-import { Link, buttonStyles } from "@/components/ui";
+import { Link, buttonStyles } from "@/shared/components/ui";
 import { ArrowLeft02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 

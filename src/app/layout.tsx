@@ -1,13 +1,12 @@
 import "@/styles/globals.css";
 import "@/styles/scrollbar.css";
 
-import { auth } from "@/auth-config";
-import { DeviceOnlyProvider } from "@/components/device-only/device-only-provider";
-import { ReactScan } from "@/components/react-scan";
-import { ToastNotification } from "@/components/toast-notification";
-import { Toast } from "@/components/ui";
-import { Providers } from "@/providers/providers";
-import { getHeaders } from "@/utils/get-headers";
+import { auth } from "@/core/config/auth-config";
+import { Providers } from "@/core/providers/providers";
+import { DeviceOnlyProvider } from "@/shared/components/layout/device-only/device-only-provider";
+import { ToastNotification } from "@/shared/components/layout/toast-notification";
+import { Toast } from "@/shared/components/ui";
+import { getHeaders } from "@/shared/lib/get-headers";
 import { SessionProvider } from "next-auth/react";
 import { sans } from "./fonts";
 
@@ -34,7 +33,7 @@ export default async function RootLayout({
       className="h-full"
       suppressHydrationWarning
     >
-      <ReactScan />
+      {/* <ReactScan /> */}
       <body className={`${sans.variable} font-sans h-full`}>
         <Providers>
           <SessionProvider session={session}>

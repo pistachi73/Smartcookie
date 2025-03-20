@@ -21,6 +21,10 @@ export const Tailwind = ({ children }: { children: any }) => {
             ],
           },
         },
+        separator: ":",
+        safelist: [],
+        experimental: {},
+        corePlugins: {},
       }}
     >
       {children}

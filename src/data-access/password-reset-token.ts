@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 
-import { TOKEN_LENGTH } from "@/app-config";
+import { TOKEN_LENGTH } from "@/core/config/app-config";
 import { db } from "@/db";
 import { type InsertPasswordResetToken, passwordResetToken } from "@/db/schema";
 import { generateRandomToken } from "./utils";

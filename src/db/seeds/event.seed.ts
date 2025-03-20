@@ -27,7 +27,6 @@ export default async function seed(db: DB) {
           eventOccurrences.map(async (occurrence) => {
             await db.insert(schema.eventOccurrence).values({
               eventId: insertedEvent.id,
-              timezone: insertedEvent.timezone,
               ...occurrence,
             });
           }),

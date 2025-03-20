@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 
 import { db } from "@/db";
 import { verificationToken } from "@/db/schema";
-import { sendVerificationEmail } from "@/lib/mail";
+import { sendVerificationEmail } from "@/shared/lib/mail";
 import crypto from "crypto";
 
 export const getVerificationTokenByToken = async (token: string) => {

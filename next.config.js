@@ -4,12 +4,32 @@
  */
 await import("./src/env.js");
 
+import bundleAnalyzer from "@next/bundle-analyzer";
+
 /** @type {import("next").NextConfig} */
 const config = {
   trailingSlash: true,
   reactStrictMode: false,
   experimental: {
     reactCompiler: true,
+
+    optimizePackageImports: [
+      "react-aria-components",
+      "date-fns",
+      "@hugeicons-pro/core-stroke-rounded",
+      "@hugeicons-pro/core-solid-rounded",
+      "@hugeicons/react",
+    ],
+  },
+  modularizeImports: {
+    "@hugeicons/react": {
+      transform: "@hugeicons/react/dist/esm/icons/{{member}}",
+      preventFullImport: true,
+    },
+    "react-aria-components": {
+      transform: "react-aria-components/dist/esm/{{member}}",
+      preventFullImport: true,
+    },
   },
   images: {
     remotePatterns: [
@@ -25,4 +45,8 @@ const config = {
   },
 };
 
-export default config;
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+});
+
+export default withBundleAnalyzer(config);

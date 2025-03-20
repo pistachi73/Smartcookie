@@ -1,5 +1,5 @@
-import { AuthModal } from "@/components/auth/auth-modal";
-import { AuthStoreProvider } from "@/providers/auth-store-provider";
+import { AuthModal } from "@/features/auth/components/auth-modal";
+import { AuthStoreProvider } from "@/features/auth/store/auth-store-provider";
 
 export default function Page() {
   return (

@@ -1,11 +1,10 @@
-import { VERCEL_HEADERS } from "@/app-config";
-import { getCalendarDataAction } from "@/components/portal/calendar/actions";
-import type { CalendarView } from "@/components/portal/calendar/calendar.types";
-import { CalendarStoreProvider } from "@/providers/calendar-store-provider";
-import type { InitialCalendarStateData } from "@/stores/calendar-store/calendar-store.types";
+import { VERCEL_HEADERS } from "@/core/config/app-config";
+import { getCalendarDataAction } from "@/features/calendar/actions";
+import { CalendarStoreProvider } from "@/features/calendar/store/calendar-store-provider";
+import type { InitialCalendarStateData } from "@/features/calendar/types/calendar-store.types";
+import type { CalendarView } from "@/features/calendar/types/calendar.types";
 import { Temporal } from "@js-temporal/polyfill";
 import { headers } from "next/headers";
-import { cache } from "react";
 
 const isCalendarView = (
   calendarView?: string,
@@ -31,7 +30,7 @@ const parseCalendarLayoutPathname = (
 } => {
   if (!pathname) return { skipHydration: false };
 
-  const [, , calendarView, yearOrEventId, month, day] = pathname.split("/");
+  const [, , , calendarView, yearOrEventId, month, day] = pathname.split("/");
 
   console.log(pathname, calendarView, yearOrEventId, month, day);
 
@@ -63,13 +62,9 @@ const parseCalendarLayoutPathname = (
   };
 };
 
-// Cache the calendar data fetch to prevent multiple fetches during re-renders
-const getCalendarData = cache(async () => {
-  return await getCalendarDataAction();
-});
-
 const CalendarLayout = async ({ children }: { children: React.ReactNode }) => {
-  const res = await getCalendarData();
+  const res = await getCalendarDataAction();
+
   const parsedHeaders = await headers();
 
   const { hubs, events, occurrences } = res?.data ?? {};

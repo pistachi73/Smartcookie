@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { twoFactorToken } from "@/db/schema";
-import { sendTwoFactorTokenEmail } from "@/lib/mail";
+import { sendTwoFactorTokenEmail } from "@/shared/lib/mail";
 import crypto from "crypto";
 import { eq } from "drizzle-orm";
 

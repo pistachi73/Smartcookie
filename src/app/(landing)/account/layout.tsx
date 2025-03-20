@@ -1,5 +1,5 @@
-import { NavigationButtons } from "@/components/account/navigation-buttons";
-import { MaxWidthWrapper } from "@/components/max-width-wrapper";
+import { NavigationButtons } from "@/features/account/components/navigation-buttons";
+import { MaxWidthWrapper } from "@/shared/components/layout/max-width-wrapper";
 
 const AccountLayout = ({ children }: { children: React.ReactNode }) => {
   return (

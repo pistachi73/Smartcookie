@@ -6,10 +6,10 @@ import {
   DEFAULT_LOGIN_REDIRECT,
   PRIVATE_ROUTES,
   VERCEL_HEADERS,
-} from "@/app-config";
-import { authConfig } from "@/auth-config";
+} from "@/core/config/app-config";
+import { authConfig } from "@/core/config/auth-config";
+import type { DeviceType } from "@/shared/components/layout/device-only/device-only-provider";
 import { NextResponse, userAgent } from "next/server";
-import type { DeviceType } from "./components/device-only/device-only-provider";
 
 const { auth } = NextAuth(authConfig);
 

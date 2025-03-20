@@ -1,8 +1,9 @@
-import { QuickNotes } from "@/components/portal/quick-notes";
-import { quickNotesHubsQueryOptions } from "@/components/portal/quick-notes/utils";
-import { QuickNotesStoreProvider } from "@/providers/quick-notes-store-provider";
-import { getQueryClient } from "@/utils/get-query-client";
+import { getQueryClient } from "@/shared/lib/get-query-client";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
+
+import { QuickNotes } from "@/features/notes/components";
+import { quickNotesHubsQueryOptions } from "@/features/notes/lib/quick-notes-query-options";
+import { QuickNotesStoreProvider } from "@/features/notes/store/quick-notes-store-provider";
 
 export const metadata = {
   title: "Quick Notes | Private Tutoring Manager",

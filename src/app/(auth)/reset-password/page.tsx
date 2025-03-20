@@ -1,5 +1,5 @@
-import { Auth } from "@/components/auth";
-import { AuthStoreProvider } from "@/providers/auth-store-provider";
+import { Auth } from "@/features/auth/components";
+import { AuthStoreProvider } from "@/features/auth/store/auth-store-provider";
 
 const NewPasswordPage = () => {
   return (
