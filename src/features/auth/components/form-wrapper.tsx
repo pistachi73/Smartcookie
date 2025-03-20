@@ -1,5 +1,6 @@
-import { Button, Card } from "@/shared/components/ui";
 import { cn } from "@/shared/lib/classes";
+import { Button } from "@/ui/button";
+import { Card } from "@/ui/card";
 import { ArrowLeft02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { motion } from "motion/react";

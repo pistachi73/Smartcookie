@@ -1,4 +1,4 @@
-import type { Temporal } from "@js-temporal/polyfill";
+import type { Temporal } from "temporal-polyfill";
 import { PreDraftEvent } from "../../pre-draft-event";
 
 import { useDragToCreateEvent } from "@/features/calendar/hooks/use-drag-to-create-event";

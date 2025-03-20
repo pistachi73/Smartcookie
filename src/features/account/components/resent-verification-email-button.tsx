@@ -1,7 +1,7 @@
 import { resendEmailVerificationEmailAction } from "@/features/auth/actions";
-import { Button } from "@/shared/components/ui/button";
 import { useSafeAction } from "@/shared/hooks/use-safe-action";
 import { cn } from "@/shared/lib/classes";
+import { Button } from "@/ui/button";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 

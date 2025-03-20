@@ -1,7 +1,7 @@
 "use client";
 
 import { useAddQuickNote } from "@/features/notes/hooks/use-add-quick-note";
-import { Button } from "@/shared/components/ui";
+import { Button } from "@/ui/button";
 import { NoteAddIcon as NoteAddIconSolid } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useCallback, useState } from "react";

@@ -5,13 +5,10 @@ import {
   CALENDAR_EVENT_COLORS_MAP,
   DEFAULT_EVENT_COLOR,
 } from "@/features/calendar/lib/utils";
-import {
-  Button,
-  type PopoverContentProps,
-  Select,
-  type SelectProps,
-} from "@/shared/components/ui";
 import { cn } from "@/shared/lib/classes";
+import { Button } from "@/ui/button";
+import type { PopoverContentProps } from "@/ui/popover";
+import { Select, type SelectProps } from "@/ui/select";
 import { Tick01Icon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ListBoxItem } from "react-aria-components";

@@ -1,6 +1,6 @@
 import { use } from "react";
 
-import { Toggle, ToggleGroup } from "../../";
+import { Toggle, ToggleGroup } from "../../toggle-group";
 import { RecurrenceSelectContext } from "../recurrence-select-context";
 import { daysOfWeekCheckboxes } from "../utils";
 
@@ -9,9 +9,9 @@ export const ByweekdayCheckboxGroup = () => {
   return (
     <ToggleGroup
       gap={1}
-      selectionMode='multiple'
+      selectionMode="multiple"
       selectedKeys={(rruleOptions.weeklyByweekday as number[]).map((v) => v)}
-      aria-label='Weekly recurrence days of week'
+      aria-label="Weekly recurrence days of week"
       onSelectionChange={(byweekday) => {
         console.log({ byweekday });
         if (byweekday.size === 0) return;
@@ -19,13 +19,15 @@ export const ByweekdayCheckboxGroup = () => {
         console.log({ values });
         setRruleOptions({
           ...rruleOptions,
-          weeklyByweekday: values.map((v) => Number.parseInt(v as string)).sort(),
+          weeklyByweekday: values
+            .map((v) => Number.parseInt(v as string))
+            .sort(),
         });
       }}
     >
       {daysOfWeekCheckboxes.map(({ id, label }) => (
         <Toggle
-          appearance='outline'
+          appearance="outline"
           key={id}
           id={id}
           className={"data-hovered:bg-overlay-elevated"}

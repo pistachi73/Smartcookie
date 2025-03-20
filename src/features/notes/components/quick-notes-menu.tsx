@@ -5,14 +5,16 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
-import { Button, buttonStyles } from "@/shared/components/ui/button";
-import { Popover } from "@/shared/components/ui/popover";
+import { Button, buttonStyles } from "@/ui/button";
+import { Popover } from "@/ui/popover";
 import { Button as RAButton } from "react-aria-components";
 import { useAddQuickNote } from "../hooks/use-add-quick-note";
 
-import { Link, Skeleton, Textarea } from "@/shared/components/ui";
 import { cn } from "@/shared/lib/classes";
 import { getCustomColorClasses } from "@/shared/lib/custom-colors";
+import { Link } from "@/ui/link";
+import { Skeleton } from "@/ui/skeleton";
+import { Textarea } from "@/ui/textarea";
 import {
   CheckmarkCircle01Icon,
   NoteAddIcon,
@@ -23,7 +25,8 @@ import {
   StickyNote02Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence } from "motion/react";
+import * as m from "motion/react-m";
 import { tv } from "tailwind-variants";
 import { quickNotesHubsQueryOptions } from "../lib/quick-notes-query-options";
 
@@ -134,7 +137,7 @@ export const QuickNotesMenu = () => {
       <Popover.Content className={"w-[400px]!"} showArrow={false}>
         <AnimatePresence mode="popLayout" initial={false}>
           {isAddingNote ? (
-            <motion.div
+            <m.div
               key="adding-note"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
@@ -198,9 +201,9 @@ export const QuickNotesMenu = () => {
                   Save note
                 </Button>
               </Popover.Footer>
-            </motion.div>
+            </m.div>
           ) : (
-            <motion.div
+            <m.div
               key="hub-selection"
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
@@ -267,7 +270,7 @@ export const QuickNotesMenu = () => {
                   View all notes
                 </Link>
               </Popover.Footer>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
       </Popover.Content>

@@ -4,18 +4,18 @@ import { noteFocusRegistry } from "@/features/notes/hooks/use-add-quick-note";
 import { useDeleteQuickNote } from "@/features/notes/hooks/use-delete-quick-note";
 import { useUpdateQuickNote } from "@/features/notes/hooks/use-update-quick-note";
 import { useQuickNotesStore } from "@/features/notes/store/quick-notes-store-provider";
-import { ProgressCircle } from "@/shared/components/ui";
 import { cn } from "@/shared/lib/classes";
 import type { CustomColor } from "@/shared/lib/custom-colors";
 import { getCustomColorClasses } from "@/shared/lib/custom-colors";
+import { ProgressCircle } from "@/ui/progress-circle";
 import { Delete01Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence } from "motion/react";
+import * as m from "motion/react-m";
 import { memo, useEffect, useRef, useState } from "react";
 import { Button, TextArea } from "react-aria-components";
 import { useShallow } from "zustand/react/shallow";
 import type { NoteSummary } from "../../types/quick-notes.types";
-
 interface NoteCardProps {
   note: NoteSummary;
   index?: number;
@@ -92,7 +92,7 @@ const NoteCardComponent = ({ note, index = 0, hubColor }: NoteCardProps) => {
           aria-label="Delete note"
           className={({ isDisabled }) =>
             cn(
-              "size-9 flex items-center justify-center text-muted-fg hover:bg-transparent!",
+              "size-9 z-20 flex items-center justify-center text-muted-fg hover:bg-transparent!",
               isDisabled && "opacity-50",
             )
           }
@@ -105,12 +105,12 @@ const NoteCardComponent = ({ note, index = 0, hubColor }: NoteCardProps) => {
         </Button>
         <AnimatePresence>
           {isDeleting && (
-            <motion.div
+            <m.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
               transition={{ duration: 0.2 }}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none"
             >
               <ProgressCircle
                 value={deleteProgress}
@@ -118,7 +118,7 @@ const NoteCardComponent = ({ note, index = 0, hubColor }: NoteCardProps) => {
                 aria-label="Deleting note"
                 className="size-8 text-danger"
               />
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
       </div>

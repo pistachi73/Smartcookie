@@ -1,7 +1,9 @@
 import { cn } from "@/shared/lib/classes";
 import { CalendarDate } from "@internationalized/date";
 import { use } from "react";
-import { DatePicker, NumberField, Radio, RadioGroup } from "../../";
+import { DatePicker } from "../../date-picker";
+import { NumberField } from "../../number-field";
+import { Radio, RadioGroup } from "../../radio";
 import { RecurrenceSelectContext } from "../recurrence-select-context";
 import { EndsEnum } from "../utils";
 

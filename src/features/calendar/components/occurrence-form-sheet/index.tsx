@@ -1,14 +1,12 @@
 "use client";
 
 import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
-import {
-  Button,
-  Form,
-  Menu,
-  ProgressCircle,
-  Sheet,
-} from "@/shared/components/ui";
 import { cn } from "@/shared/lib/classes";
+import { Button } from "@/ui/button";
+import { Form } from "@/ui/form";
+import { Menu } from "@/ui/menu";
+import { ProgressCircle } from "@/ui/progress-circle";
+import { Sheet } from "@/ui/sheet";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ArrowDown01Icon,

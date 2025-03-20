@@ -1,7 +1,8 @@
 "use client";
 
 import { useQuickNotesStore } from "@/features/notes/store/quick-notes-store-provider";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence } from "motion/react";
+import * as m from "motion/react-m";
 import { EmptyState } from "./empty-state";
 import { HubNotesStack } from "./hub-notes-stack";
 export const HubStackList = () => {
@@ -15,7 +16,7 @@ export const HubStackList = () => {
     <div className="w-full h-full flex overflow-scroll relative">
       <AnimatePresence mode="popLayout" initial={false}>
         {Array.from(visibleHubs).map((hubId) => (
-          <motion.div
+          <m.div
             layout="position"
             key={hubId}
             initial={{ opacity: 0, x: 5, scale: 0.99 }}
@@ -30,7 +31,7 @@ export const HubStackList = () => {
             className="h-full will-change-transform"
           >
             <HubNotesStack hubId={hubId} />
-          </motion.div>
+          </m.div>
         ))}
       </AnimatePresence>
     </div>

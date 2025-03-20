@@ -1,7 +1,7 @@
 import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
 import AppSidebar from "@/shared/components/layout/portal-sidebar";
-import { SidebarInset, SidebarProvider } from "@/shared/components/ui/sidebar";
 import { currentUser } from "@/shared/lib/auth";
+import { SidebarInset, SidebarProvider } from "@/ui/sidebar";
 import { redirect } from "next/navigation";
 
 export default async function PortalLayout({

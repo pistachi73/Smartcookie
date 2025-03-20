@@ -13,15 +13,14 @@ import { toast } from "sonner";
 import { regularSpring } from "@/shared/lib/animation";
 import { cn } from "@/shared/lib/classes";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { Button, buttonStyles } from "../button";
 import {
-  Button,
   ComboBox,
   type ComboBoxListProps,
   type ComboBoxProps,
-  DropdownLabel,
-  Link,
-  buttonStyles,
-} from "../";
+} from "../combo-box";
+import { DropdownLabel } from "../dropdown";
+import { Link } from "../link";
 
 type Participant = {
   id: number;

@@ -1,6 +1,6 @@
 "use client";
 
-import { ThemeSwitcher } from "@/shared/components/ui/theme-switcher";
+import { ThemeSwitcher } from "@/ui/theme-switcher";
 import { MaxWidthWrapper } from "./max-width-wrapper";
 
 import { AuthButton } from "@/features/auth/components/auth-button";

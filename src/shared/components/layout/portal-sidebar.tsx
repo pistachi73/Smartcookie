@@ -1,7 +1,7 @@
 "use client";
 
-import { ThemeSwitcher } from "@/shared/components/ui/theme-switcher";
 import { cn } from "@/shared/lib/classes";
+import { ThemeSwitcher } from "@/ui/theme-switcher";
 import { HugeiconsIcon } from "@hugeicons/react";
 
 import {
@@ -33,7 +33,7 @@ import {
   SidebarSection,
   SidebarSectionGroup,
   useSidebar,
-} from "@/shared/components/ui";
+} from "@/ui/sidebar";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 

@@ -1,7 +1,9 @@
 "use client";
-import { Card, Form, Switch } from "@/shared/components/ui";
 import { useCurrentUser } from "@/shared/hooks/use-current-user";
 import { useSafeAction } from "@/shared/hooks/use-safe-action";
+import { Card } from "@/ui/card";
+import { Form } from "@/ui/form";
+import { Switch } from "@/ui/switch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Fingerprint } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";

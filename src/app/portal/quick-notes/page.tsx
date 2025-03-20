@@ -1,7 +1,7 @@
 import { getQueryClient } from "@/shared/lib/get-query-client";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 
-import { QuickNotes } from "@/features/notes/components";
+import { QuickNotes } from "@/features/notes/components/quick-notes";
 import { quickNotesHubsQueryOptions } from "@/features/notes/lib/quick-notes-query-options";
 import { QuickNotesStoreProvider } from "@/features/notes/store/quick-notes-store-provider";
 

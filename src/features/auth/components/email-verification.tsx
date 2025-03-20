@@ -12,13 +12,11 @@ import { authSchema } from "../lib/validation";
 
 import { FormWrapper } from "./form-wrapper";
 
-import {
-  Button,
-  Form,
-  InputOTP,
-  Link,
-  ProgressCircle,
-} from "@/shared/components/ui";
+import { Button } from "@/ui/button";
+import { Form } from "@/ui/form";
+import { InputOTP } from "@/ui/input-otp";
+import { Link } from "@/ui/link";
+import { ProgressCircle } from "@/ui/progress-circle";
 import {
   registerAction,
   resendEmailVerificationEmailAction,

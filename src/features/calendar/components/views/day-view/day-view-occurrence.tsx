@@ -6,8 +6,8 @@ import {
 } from "@/features/calendar/lib/utils";
 import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
 import type { LayoutOccurrence } from "@/features/calendar/types/calendar.types";
-import { Popover } from "@/shared/components/ui";
 import { cn } from "@/shared/lib/classes";
+import { Popover } from "@/ui/popover";
 import { format } from "date-fns";
 import dynamic from "next/dynamic";
 import { memo, useEffect, useRef } from "react";

@@ -2,14 +2,14 @@
 
 import { getDayKeyFromDate } from "@/features/calendar/lib/utils";
 import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
-import { Popover } from "@/shared/components/ui";
 import { cn } from "@/shared/lib/classes";
 import { getWeekdayAbbrev } from "@/shared/lib/temporal/format";
+import { Popover } from "@/ui/popover";
 import { MultiplicationSignIcon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Temporal } from "@js-temporal/polyfill";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Button as AriaButton } from "react-aria-components";
+import { Temporal } from "temporal-polyfill";
 import { useShallow } from "zustand/react/shallow";
 import { MonthViewOccurrence } from "./month-view-occurrence";
 

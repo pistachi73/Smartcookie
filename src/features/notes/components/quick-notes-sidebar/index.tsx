@@ -1,14 +1,12 @@
 "use client";
 
 import { useQuickNotesStore } from "@/features/notes/store/quick-notes-store-provider";
-import {
-  Button,
-  Heading,
-  SearchField,
-  Separator,
-} from "@/shared/components/ui";
 import { cn } from "@/shared/lib/classes";
 import type { CustomColor } from "@/shared/lib/custom-colors";
+import { Button } from "@/ui/button";
+import { Heading } from "@/ui/heading";
+import { SearchField } from "@/ui/search-field";
+import { Separator } from "@/ui/separator";
 import { ViewIcon, ViewOffSlashIcon } from "@hugeicons-pro/core-solid-rounded";
 import {
   ArrowLeft01Icon,
@@ -18,6 +16,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useShallow } from "zustand/react/shallow";
+
 import { quickNotesHubsQueryOptions } from "../../lib/quick-notes-query-options";
 import { HubToggle } from "./hub-toggle";
 

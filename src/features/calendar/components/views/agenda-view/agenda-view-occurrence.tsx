@@ -1,7 +1,7 @@
 import { getCalendarColor } from "@/features/calendar/lib/utils";
 import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
-import { Popover } from "@/shared/components/ui";
 import { cn } from "@/shared/lib/classes";
+import { Popover } from "@/ui/popover";
 import { format } from "date-fns";
 import { useEffect } from "react";
 import { Button } from "react-aria-components";

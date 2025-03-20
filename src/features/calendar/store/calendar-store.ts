@@ -5,8 +5,8 @@ import type {
   LayoutOccurrence,
   UIOccurrence,
 } from "@/features/calendar/types/calendar.types";
-import { Temporal } from "@js-temporal/polyfill";
 import { enableMapSet } from "immer";
+import { Temporal } from "temporal-polyfill";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 

@@ -1,13 +1,10 @@
 import { getCalendarColor } from "@/features/calendar/lib/utils";
 import type { UIOccurrence } from "@/features/calendar/types/calendar.types";
-import {
-  Button,
-  Modal,
-  Popover,
-  type PopoverContentProps,
-} from "@/shared/components/ui";
-import { UserAvatar } from "@/shared/components/ui/user-avatar";
 import { cn } from "@/shared/lib/classes";
+import { Button } from "@/ui/button";
+import { Modal } from "@/ui/modal";
+import { Popover, type PopoverContentProps } from "@/ui/popover";
+import { UserAvatar } from "@/ui/user-avatar";
 import {
   ArrowRight02Icon,
   Clock01Icon,

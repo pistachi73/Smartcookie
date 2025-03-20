@@ -2,9 +2,9 @@
 import { Home, LogOut } from "lucide-react";
 import { signOut } from "next-auth/react";
 
-import { Menu } from "@/shared/components/ui/menu";
-import { UserAvatar } from "@/shared/components/ui/user-avatar";
 import { useCurrentUser } from "@/shared/hooks/use-current-user";
+import { Menu } from "@/ui/menu";
+import { UserAvatar } from "@/ui/user-avatar";
 
 export const UserButton = () => {
   const user = useCurrentUser();

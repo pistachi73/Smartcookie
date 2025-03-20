@@ -4,7 +4,7 @@ import { cn } from "@/shared/lib/classes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { buttonStyles } from "@/shared/components/ui";
+import { buttonStyles } from "@/ui/button";
 import { Home09Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 

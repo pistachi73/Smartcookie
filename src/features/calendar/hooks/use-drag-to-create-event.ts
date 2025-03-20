@@ -3,8 +3,8 @@ import {
   getSnapToNearest15MinutesIndex,
 } from "@/features/calendar/lib/utils";
 import type { DatedOccurrence } from "@/features/calendar/types/calendar.types";
-import { Temporal } from "@js-temporal/polyfill";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Temporal } from "temporal-polyfill";
 
 export const getTimeLabelFromSnapIndex = (snapIndex: number) => {
   const minutes = snapIndex * 15;

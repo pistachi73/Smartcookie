@@ -7,14 +7,14 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
 
-import { Button } from "@/shared/components/ui/button";
-import { Card } from "@/shared/components/ui/card";
-import { Form } from "@/shared/components/ui/form";
-import { TextField } from "@/shared/components/ui/text-field";
-import { UserAvatar } from "@/shared/components/ui/user-avatar";
 import { useCurrentUser } from "@/shared/hooks/use-current-user";
 import { useSafeAction } from "@/shared/hooks/use-safe-action";
 import { cn } from "@/shared/lib/classes";
+import { Button } from "@/ui/button";
+import { Card } from "@/ui/card";
+import { Form } from "@/ui/form";
+import { TextField } from "@/ui/text-field";
+import { UserAvatar } from "@/ui/user-avatar";
 import {
   AccountSetting02Icon,
   ImageAdd02Icon,

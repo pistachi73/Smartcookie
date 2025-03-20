@@ -1,5 +1,5 @@
-import { Temporal } from "@js-temporal/polyfill";
 import { useContext, useMemo } from "react";
+import { Temporal } from "temporal-polyfill";
 
 import {
   getCalendarColor,
@@ -14,7 +14,7 @@ import {
   CalendarStoreContext,
   useCalendarStore,
 } from "@/features/calendar/store/calendar-store-provider";
-import { Heading } from "@/shared/components/ui/heading";
+import { Heading } from "@/ui/heading";
 import {
   ArrowRight02Icon,
   Clock02Icon,

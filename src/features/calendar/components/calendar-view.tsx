@@ -3,8 +3,13 @@
 import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
 import { regularSpring } from "@/shared/lib/animation";
 import { cn } from "@/shared/lib/classes";
+import { AnimatePresence, motion } from "motion/react";
 import { memo } from "react";
 import type { CalendarStore } from "../types/calendar-store.types";
+import { CalendarHeader } from "./calendar-header";
+import { AgendaView } from "./views/agenda-view/agenda-view";
+import { DayView } from "./views/day-view/day-view";
+import { MonthView } from "./views/month-view/month-view";
 
 const calendarAnimation = {
   initial: { opacity: 0, x: -20 },
@@ -29,20 +34,20 @@ export const CalendarView = memo(() => {
       )}
     >
       <div className="grow overflow-hidden flex flex-col">
-        {/* <CalendarHeader /> */}
-        {/* <AnimatePresence mode="wait">
+        <CalendarHeader />
+        <AnimatePresence mode="wait">
           <motion.div
             {...calendarAnimation}
             key={`${calendarView}-view`}
             className="overflow-hidden h-full w-full grow"
-          > */}
-        {/* {calendarView === "day" && <DayView key="day-view" />} */}
-        {/* {calendarView === "weekday" && <DayView key="weekday-view" />}
+          >
+            {calendarView === "day" && <DayView key="day-view" />}
+            {calendarView === "weekday" && <DayView key="weekday-view" />}
             {calendarView === "week" && <DayView key="week-view" />}
             {calendarView === "month" && <MonthView key="month-view" />}
-            {calendarView === "agenda" && <AgendaView key="agenda-view" />} */}
-        {/* </motion.div>
-        </AnimatePresence> */}
+            {calendarView === "agenda" && <AgendaView key="agenda-view" />}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
-import { Badge } from "@/shared/components/ui";
 import { cn } from "@/shared/lib/classes";
+import { Badge } from "@/ui/badge";
 import { useCurrentTime } from "../../../hooks/use-current-time";
 
 export const HourColumn = () => {

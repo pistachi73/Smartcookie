@@ -5,8 +5,8 @@ import { auth } from "@/core/config/auth-config";
 import { Providers } from "@/core/providers/providers";
 import { DeviceOnlyProvider } from "@/shared/components/layout/device-only/device-only-provider";
 import { ToastNotification } from "@/shared/components/layout/toast-notification";
-import { Toast } from "@/shared/components/ui";
 import { getHeaders } from "@/shared/lib/get-headers";
+import { Toast } from "@/ui/toast";
 import { SessionProvider } from "next-auth/react";
 import { sans } from "./fonts";
 

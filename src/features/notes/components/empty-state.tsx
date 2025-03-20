@@ -1,7 +1,7 @@
 import { useQuickNotesStore } from "@/features/notes/store/quick-notes-store-provider";
 import { NoteAddIcon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { motion } from "motion/react";
+import * as m from "motion/react-m";
 import { memo, useCallback } from "react";
 import { Button } from "react-aria-components";
 
@@ -15,7 +15,7 @@ const EmptyStateComponent = () => {
   }, [toggleFilterPanel]);
 
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
@@ -37,7 +37,7 @@ const EmptyStateComponent = () => {
       >
         Open Sidebar
       </Button>
-    </motion.div>
+    </m.div>
   );
 };
 

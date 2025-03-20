@@ -2,7 +2,8 @@
 import { formatCalendarHeaderTitle } from "@/features/calendar/lib/utils";
 import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
 import type { CalendarView } from "@/features/calendar/types/calendar.types";
-import { Button, Select } from "@/shared/components/ui";
+import { Button } from "@/ui/button";
+import { Select } from "@/ui/select";
 import {
   ArrowLeft01Icon,
   ArrowRight01Icon,

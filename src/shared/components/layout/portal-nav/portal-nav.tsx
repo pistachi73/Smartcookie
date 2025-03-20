@@ -1,13 +1,10 @@
 "use client";
 
 import { UserButton } from "@/features/auth/components/user-button";
-import {
-  Breadcrumbs,
-  SearchField,
-  Separator,
-  SidebarNav,
-  SidebarTrigger,
-} from "@/shared/components/ui";
+import { Breadcrumbs } from "@/ui/breadcrumbs";
+import { SearchField } from "@/ui/search-field";
+import { Separator } from "@/ui/separator";
+import { SidebarNav, SidebarTrigger } from "@/ui/sidebar";
 
 import { cn } from "@/shared/lib/classes";
 import { usePathname } from "next/navigation";

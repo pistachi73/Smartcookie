@@ -3,8 +3,8 @@ import { getCalendarDataAction } from "@/features/calendar/actions";
 import { CalendarStoreProvider } from "@/features/calendar/store/calendar-store-provider";
 import type { InitialCalendarStateData } from "@/features/calendar/types/calendar-store.types";
 import type { CalendarView } from "@/features/calendar/types/calendar.types";
-import { Temporal } from "@js-temporal/polyfill";
 import { headers } from "next/headers";
+import { Temporal } from "temporal-polyfill";
 
 const isCalendarView = (
   calendarView?: string,

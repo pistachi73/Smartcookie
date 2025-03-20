@@ -1,13 +1,13 @@
 "use client";
-import { Button } from "@/shared/components/ui/button";
-import { Card } from "@/shared/components/ui/card";
-import { Form } from "@/shared/components/ui/form";
-import { PasswordFieldWithValidation } from "@/shared/components/ui/password-field-with-validation";
-import { TextField } from "@/shared/components/ui/text-field";
 import { useCurrentUser } from "@/shared/hooks/use-current-user";
 import { useSafeAction } from "@/shared/hooks/use-safe-action";
 import { regularSpring } from "@/shared/lib/animation";
 import { cn } from "@/shared/lib/classes";
+import { Button } from "@/ui/button";
+import { Card } from "@/ui/card";
+import { Form } from "@/ui/form";
+import { PasswordFieldWithValidation } from "@/ui/password-field-with-validation";
+import { TextField } from "@/ui/text-field";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ArrowDown01Icon,

@@ -3,8 +3,8 @@ import type {
   CalendarView,
   UIOccurrence,
 } from "@/features/calendar/types/calendar.types";
-import { Temporal } from "@js-temporal/polyfill";
-import { memoize } from "lodash";
+import memoize from "lodash/memoize";
+import { Temporal } from "temporal-polyfill";
 
 export const computeUIOccurrence = memoize(
   (occ: Occurrence, evt: Event): UIOccurrence => {

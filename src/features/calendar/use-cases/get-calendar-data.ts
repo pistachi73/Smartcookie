@@ -6,8 +6,8 @@ import {
   event,
   eventOccurrence,
 } from "@/db/schema";
-import { Temporal } from "@js-temporal/polyfill";
 import { and, asc, eq } from "drizzle-orm";
+import { Temporal } from "temporal-polyfill";
 
 export const getCalendarDataUseCase = async (userId: string) => {
   const [hubs, result] = await Promise.all([

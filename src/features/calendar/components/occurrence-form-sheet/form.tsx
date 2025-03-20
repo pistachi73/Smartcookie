@@ -1,19 +1,17 @@
 "use client";
 
-import { ParticipantsCombobox } from "@/shared/components/ui/participants-combobox";
-import { RecurrenceSelect } from "@/shared/components/ui/recurrence-select";
+import { ParticipantsCombobox } from "@/ui/participants-combobox";
+import { RecurrenceSelect } from "@/ui/recurrence-select";
 
 import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
-import {
-  DatePicker,
-  NumberField,
-  Select,
-  Switch,
-  TextField,
-  Textarea,
-} from "@/shared/components/ui";
-import { TimeCombobox } from "@/shared/components/ui/time-combobox";
-import { TimezoneCombobox } from "@/shared/components/ui/timezone-combobox";
+import { DatePicker } from "@/ui/date-picker";
+import { NumberField } from "@/ui/number-field";
+import { Select } from "@/ui/select";
+import { Switch } from "@/ui/switch";
+import { TextField } from "@/ui/text-field";
+import { Textarea } from "@/ui/textarea";
+import { TimeCombobox } from "@/ui/time-combobox";
+import { TimezoneCombobox } from "@/ui/timezone-combobox";
 import {
   ArrowRight02Icon,
   Folder02Icon,

@@ -1,5 +1,5 @@
-import { Temporal } from "@js-temporal/polyfill";
 import superjson from "superjson";
+import { Temporal } from "temporal-polyfill";
 import type { PersistStorage } from "zustand/middleware";
 
 superjson.registerCustom<Temporal.PlainDate, string>(

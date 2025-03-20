@@ -1,6 +1,6 @@
 "use client";
 
-import { Skeleton } from "@/shared/components/ui/skeleton";
+import { Skeleton } from "@/ui/skeleton";
 import { useEffect, useState } from "react";
 
 interface StoreLoadingProps {

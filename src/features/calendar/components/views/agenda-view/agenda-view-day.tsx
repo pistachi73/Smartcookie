@@ -3,8 +3,8 @@ import { getMonthAbbrev, getWeekday } from "@/shared/lib/temporal/format";
 
 import { getDayKeyFromDate } from "@/features/calendar/lib/utils";
 import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
-import type { Temporal } from "@js-temporal/polyfill";
 import { useEffect, useMemo } from "react";
+import type { Temporal } from "temporal-polyfill";
 import { useShallow } from "zustand/react/shallow";
 import { AgendaViewNoEvents } from "./agenda-view-no-events";
 import { AgendaViewOccurrence } from "./agenda-view-occurrence";

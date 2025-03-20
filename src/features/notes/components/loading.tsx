@@ -1,5 +1,6 @@
-import { Separator, Skeleton } from "@/shared/components/ui";
 import { cn } from "@/shared/lib/classes";
+import { Separator } from "@/ui/separator";
+import { Skeleton } from "@/ui/skeleton";
 
 export const QuickNotesLoading = () => {
   return (

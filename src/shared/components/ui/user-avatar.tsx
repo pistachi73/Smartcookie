@@ -1,4 +1,4 @@
-import { Avatar, type AvatarProps } from "@/shared/components/ui/avatar";
+import { Avatar, type AvatarProps } from "@/ui/avatar";
 import { useMemo } from "react";
 
 type UserAvatarProps = AvatarProps & {

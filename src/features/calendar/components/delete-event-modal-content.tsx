@@ -1,10 +1,6 @@
-import {
-  Button,
-  Modal,
-  type ModalContentProps,
-  Radio,
-  RadioGroup,
-} from "@/shared/components/ui";
+import { Button } from "@/ui/button";
+import { Modal, type ModalContentProps } from "@/ui/modal";
+import { Radio, RadioGroup } from "@/ui/radio";
 
 export const DeleteEventModalContent = (props: ModalContentProps) => {
   return (

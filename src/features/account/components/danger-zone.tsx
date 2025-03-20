@@ -1,7 +1,7 @@
 "use client";
-import { Button } from "@/shared/components/ui/button";
-import { Card } from "@/shared/components/ui/card";
-import { Modal } from "@/shared/components/ui/modal";
+import { Button } from "@/ui/button";
+import { Card } from "@/ui/card";
+import { Modal } from "@/ui/modal";
 
 import { useSafeAction } from "@/shared/hooks/use-safe-action";
 import { regularSpring } from "@/shared/lib/animation";

@@ -11,13 +11,11 @@ import { changePasswordAction } from "../actions";
 import { authSchema } from "../lib/validation";
 import { FormWrapper } from "./form-wrapper";
 
-import {
-  Button,
-  Form,
-  PasswordFieldWithValidation,
-  ProgressCircle,
-  TextField,
-} from "@/shared/components/ui";
+import { Button } from "@/ui/button";
+import { Form } from "@/ui/form";
+import { PasswordFieldWithValidation } from "@/ui/password-field-with-validation";
+import { ProgressCircle } from "@/ui/progress-circle";
+import { TextField } from "@/ui/text-field";
 
 const updatePasswordSchema = authSchema
   .pick({

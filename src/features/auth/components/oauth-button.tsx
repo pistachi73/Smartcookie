@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { DEFAULT_LOGIN_REDIRECT } from "@/core/config/app-config";
 import { cn } from "@/shared/lib/classes";
 
-import { Button } from "@/shared/components/ui";
+import { Button } from "@/ui/button";
 import { AppleIcon, GoogleIcon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { JSX } from "react";

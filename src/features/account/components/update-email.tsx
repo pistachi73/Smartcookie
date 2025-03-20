@@ -1,12 +1,12 @@
 "use client";
 
-import { Button } from "@/shared/components/ui/button";
-import { Card } from "@/shared/components/ui/card";
-import { Form } from "@/shared/components/ui/form";
-import { InputOTP } from "@/shared/components/ui/input-otp";
-import { TextField } from "@/shared/components/ui/text-field";
 import { useCurrentUser } from "@/shared/hooks/use-current-user";
 import { useSafeAction } from "@/shared/hooks/use-safe-action";
+import { Button } from "@/ui/button";
+import { Card } from "@/ui/card";
+import { Form } from "@/ui/form";
+import { InputOTP } from "@/ui/input-otp";
+import { TextField } from "@/ui/text-field";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { MailAtSign02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";

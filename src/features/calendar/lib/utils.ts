@@ -5,9 +5,9 @@ import type {
 import type { OccurrenceFormSchema } from "@/features/calendar/types/occurrence-form-schema";
 import { getEndOfWeek, getStartOfWeek } from "@/shared/lib/temporal/week";
 import { CalendarDate, CalendarDateTime, Time } from "@internationalized/date";
-import { Temporal } from "@js-temporal/polyfill";
 import { add } from "date-fns";
 import type { ReadonlyURLSearchParams } from "next/navigation";
+import { Temporal } from "temporal-polyfill";
 import type { z } from "zod";
 
 export const ROW_HEIGHT = 48;

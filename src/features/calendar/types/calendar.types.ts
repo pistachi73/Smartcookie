@@ -1,5 +1,5 @@
 import type { Event, Occurrence } from "@/db/schema";
-import type { Temporal } from "@js-temporal/polyfill";
+import type { Temporal } from "temporal-polyfill";
 
 export type CalendarView = "day" | "weekday" | "week" | "month" | "agenda";
 

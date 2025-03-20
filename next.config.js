@@ -12,7 +12,6 @@ const config = {
   reactStrictMode: false,
   experimental: {
     reactCompiler: true,
-
     optimizePackageImports: [
       "react-aria-components",
       "date-fns",

@@ -11,12 +11,10 @@ import { resetPasswordAction } from "../actions";
 import { authSchema } from "../lib/validation";
 import { FormWrapper } from "./form-wrapper";
 
-import {
-  Button,
-  Form,
-  ProgressCircle,
-  TextField,
-} from "@/shared/components/ui";
+import { Button } from "@/ui/button";
+import { Form } from "@/ui/form";
+import { ProgressCircle } from "@/ui/progress-circle";
+import { TextField } from "@/ui/text-field";
 
 const authResetPasswordSchema = authSchema.pick({
   email: true,

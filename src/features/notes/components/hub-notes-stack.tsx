@@ -1,17 +1,17 @@
-import { Heading } from "@/shared/components/ui";
+import { quickNotesHubsQueryOptions } from "@/features/notes/lib/quick-notes-query-options";
 import { cn } from "@/shared/lib/classes";
 import type { CustomColor } from "@/shared/lib/custom-colors";
 import { getCustomColorClasses } from "@/shared/lib/custom-colors";
+import { Heading } from "@/ui/heading";
 import { NoteIcon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useQuery } from "@tanstack/react-query";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence } from "motion/react";
+import * as m from "motion/react-m";
+import { useHubNotes } from "../hooks/use-hub-notes";
 import { AddNoteCard } from "./add-note-card";
 import { NoteCard } from "./note-card";
 import { SkeletonNoteCard } from "./note-card/skeleton-note-card";
-
-import { quickNotesHubsQueryOptions } from "@/features/notes/lib/quick-notes-query-options";
-import { useHubNotes } from "../hooks/use-hub-notes";
 
 interface HubNotesStackProps {
   hubId: number;
@@ -84,7 +84,7 @@ export const HubNotesStack = ({ hubId }: HubNotesStackProps) => {
           {isLoading ? (
             // Render skeleton cards while loading
             Array.from({ length: 4 }).map((_, index) => (
-              <motion.div
+              <m.div
                 key={`skeleton-${index}`}
                 custom={index}
                 variants={cardVariants}
@@ -94,11 +94,11 @@ export const HubNotesStack = ({ hubId }: HubNotesStackProps) => {
                 className="will-change-transform origin-top"
               >
                 <SkeletonNoteCard />
-              </motion.div>
+              </m.div>
             ))
           ) : hasNotes ? (
             notes?.map((note, index) => (
-              <motion.div
+              <m.div
                 layoutId={String(note.clientId || note.id)}
                 key={note.clientId || note.id}
                 custom={index}
@@ -109,10 +109,10 @@ export const HubNotesStack = ({ hubId }: HubNotesStackProps) => {
                 className="will-change-transform origin-top"
               >
                 <NoteCard note={note} index={index} hubColor={hub.color} />
-              </motion.div>
+              </m.div>
             ))
           ) : (
-            <motion.div
+            <m.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
@@ -140,7 +140,7 @@ export const HubNotesStack = ({ hubId }: HubNotesStackProps) => {
               <p className="text-muted-fg text-xs mb-4">
                 Create your first note to get started
               </p>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
       </div>

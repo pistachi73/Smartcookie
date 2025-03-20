@@ -4,7 +4,7 @@ import type {
   LayoutOccurrence,
   UIOccurrence,
 } from "@/features/calendar/types/calendar.types";
-import type { Temporal } from "@js-temporal/polyfill";
+import type { Temporal } from "temporal-polyfill";
 
 export type CalendarStore = CalendarState & CalendarActions;
 

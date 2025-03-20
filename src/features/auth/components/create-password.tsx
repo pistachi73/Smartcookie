@@ -10,12 +10,10 @@ import { useShallow } from "zustand/react/shallow";
 import { authSchema } from "../lib/validation";
 import { FormWrapper } from "./form-wrapper";
 
-import {
-  Button,
-  PasswordFieldWithValidation,
-  ProgressCircle,
-  TextField,
-} from "@/shared/components/ui";
+import { Button } from "@/ui/button";
+import { PasswordFieldWithValidation } from "@/ui/password-field-with-validation";
+import { ProgressCircle } from "@/ui/progress-circle";
+import { TextField } from "@/ui/text-field";
 import { registerAction } from "../actions";
 
 const createPasswordSchema = authSchema

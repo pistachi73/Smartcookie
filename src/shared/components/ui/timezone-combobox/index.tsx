@@ -10,9 +10,10 @@ import {
   ComboBox,
   type ComboBoxListProps,
   type ComboBoxProps,
-  DropdownLabel,
-} from "../";
+} from "../combo-box";
+import { DropdownLabel } from "../dropdown";
 import { getPgTimezonesAction } from "./actions";
+
 type TimezoneComboboxProps<T extends object> = Omit<
   ComboBoxProps<T>,
   "className" | "children"

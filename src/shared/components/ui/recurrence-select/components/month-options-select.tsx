@@ -4,7 +4,7 @@ import { getWeekdayCardinal } from "@/features/calendar/lib/calendar";
 import { getDayOfWeek } from "@internationalized/date";
 import { format } from "date-fns";
 import { RRule, Weekday } from "rrule";
-import { Select } from "../../";
+import { Select } from "../../select";
 import { RecurrenceSelectContext } from "../recurrence-select-context";
 
 export enum MonthlyOptionsEnum {

@@ -1,13 +1,11 @@
 import { useSafeAction } from "@/shared/hooks/use-safe-action";
 
 import { useAuthStore } from "@/features/auth/store/auth-store-provider";
-import {
-  Button,
-  Form,
-  Link,
-  ProgressCircle,
-  TextField,
-} from "@/shared/components/ui";
+import { Button } from "@/ui/button";
+import { Form } from "@/ui/form";
+import { Link } from "@/ui/link";
+import { ProgressCircle } from "@/ui/progress-circle";
+import { TextField } from "@/ui/text-field";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import type { z } from "zod";

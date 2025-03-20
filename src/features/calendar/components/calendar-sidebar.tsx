@@ -1,9 +1,11 @@
 "use client";
 
 import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
+import { Calendar } from "@/ui/calendar";
+import { ResizablePanelRoot } from "@/ui/resizable-panel";
 import { CalendarDate } from "@internationalized/date";
 import { useEffect, useState } from "react";
-import { Button } from "react-aria-components";
+import { Temporal } from "temporal-polyfill";
 import { useShallow } from "zustand/react/shallow";
 import { UpcomingEvents } from "./upcoming-events";
 
@@ -47,8 +49,7 @@ export const CalendarSidebar = () => {
         </div>
 
         <div className="sticky bottom-0 left-0 h-full w-full p-4 border-b">
-          <Button>Hello</Button>
-          {/* <ResizablePanelRoot value="calendar">
+          <ResizablePanelRoot value="calendar">
             <Calendar
               value={calendarValue}
               onChange={(date) => {
@@ -58,7 +59,7 @@ export const CalendarSidebar = () => {
               focusedValue={focusedDate}
               onFocusChange={setFocusedDate}
             />
-          </ResizablePanelRoot> */}
+          </ResizablePanelRoot>
         </div>
       </div>
     </div>

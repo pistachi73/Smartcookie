@@ -5,7 +5,7 @@ import { Moon02Icon, Sun03Icon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useTheme } from "next-themes";
 import { useCallback } from "react";
-import { Button } from "./";
+import { Button } from "./button";
 
 export function ThemeSwitcher({
   shape = "square",

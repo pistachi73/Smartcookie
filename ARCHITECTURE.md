@@ -81,7 +81,7 @@ import { SomeComponent } from "@/features/feature-name/components/some-component
 import { someFeatureUseCase } from "@/features/feature-name/use-cases/some-use-case";
 
 // Import from shared
-import { Button } from "@/shared/components/ui/button";
+import { Button } from "@/ui/button";
 
 // Import from shared use cases
 import { someSharedUseCase } from "@/shared/use-cases/some-use-case";

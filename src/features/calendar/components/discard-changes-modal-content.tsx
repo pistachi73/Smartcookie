@@ -1,4 +1,5 @@
-import { Button, Modal } from "@/shared/components/ui";
+import { Button } from "@/ui/button";
+import { Modal } from "@/ui/modal";
 
 export const DiscardChangesModalContent = ({
   isOpen,
