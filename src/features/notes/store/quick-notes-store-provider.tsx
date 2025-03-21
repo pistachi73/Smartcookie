@@ -33,7 +33,6 @@ export const QuickNotesStoreProvider = ({
   if (!storeRef.current) {
     const initialState = initQuickNotesStore({
       hubIds: hubs?.map(({ id }) => id) || [],
-      hubs: hubs || [],
       visibleHubs: initialVisibleHubs || [],
     });
     storeRef.current = createQuickNotesStore(initialState);

@@ -82,7 +82,6 @@ export const HubNotesStack = ({ hubId }: HubNotesStackProps) => {
       <div className="h-full flex flex-col gap-3 relative">
         <AnimatePresence mode="popLayout" initial={false}>
           {isLoading ? (
-            // Render skeleton cards while loading
             Array.from({ length: 4 }).map((_, index) => (
               <m.div
                 key={`skeleton-${index}`}
