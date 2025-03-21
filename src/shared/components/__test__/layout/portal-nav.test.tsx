@@ -1,5 +1,5 @@
+import { cleanup, render, screen } from "@/shared/lib/testing/test-utils";
 import { SidebarProvider } from "@/ui/sidebar";
-import { cleanup, render, screen } from "@testing-library/react";
 import { usePathname } from "next/navigation";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import {

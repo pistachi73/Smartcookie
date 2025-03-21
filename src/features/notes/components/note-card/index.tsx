@@ -115,7 +115,7 @@ const NoteCardComponent = ({ note, index = 0, hubColor }: NoteCardProps) => {
               <ProgressCircle
                 value={deleteProgress}
                 strokeWidth={2}
-                aria-label="Deleting note"
+                aria-label="Delete progress circle"
                 className="size-8 text-danger"
               />
             </m.div>

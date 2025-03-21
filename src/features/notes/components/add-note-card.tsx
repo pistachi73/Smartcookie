@@ -10,7 +10,7 @@ interface AddNoteCardProps {
   hubId: number;
 }
 
-const COOLDOWN_DURATION = 1000; // 1 second cooldown
+export const COOLDOWN_DURATION = 1000; // 1 second cooldown
 
 export const AddNoteCard = ({ hubId }: AddNoteCardProps) => {
   const { mutate: addNote } = useAddQuickNote();

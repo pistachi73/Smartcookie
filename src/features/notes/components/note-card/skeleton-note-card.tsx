@@ -8,7 +8,7 @@ export const SkeletonNoteCard = ({ className }: SkeletonNoteCardProps) => {
   return (
     <div
       className={cn(
-        "w-full p-3 rounded-lg border border-border bg-card shadow-sm",
+        "w-full p-3 rounded-lg border border-border-skeleton bg-card shadow-sm",
         className,
       )}
     >

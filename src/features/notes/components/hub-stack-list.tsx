@@ -5,9 +5,9 @@ import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";
 import { EmptyState } from "./empty-state";
 import { HubNotesStack } from "./hub-notes-stack";
+
 export const HubStackList = () => {
   const visibleHubs = useQuickNotesStore((state) => state.visibleHubs);
-
   const hasVisibleHubs = !!visibleHubs.size;
 
   if (!hasVisibleHubs) return <EmptyState />;

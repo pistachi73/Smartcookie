@@ -1,7 +1,6 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -40,7 +39,6 @@ const hubButtonStyles = tv({
 });
 
 export const QuickNotesMenu = () => {
-  const router = useRouter();
   const [isAddingNote, setIsAddingNote] = useState(false);
   const [selectedHub, setSelectedHub] = useState<number | null>(null);
   const [noteForm, setNoteForm] = useState<NoteFormState>({
@@ -152,6 +150,7 @@ export const QuickNotesMenu = () => {
               <Popover.Header className="pb-0!">
                 <Popover.Title className="flex items-center gap-2">
                   <Button
+                    aria-label="Back to hub selection"
                     appearance="plain"
                     shape="square"
                     onPress={resetMenu}
@@ -231,6 +230,7 @@ export const QuickNotesMenu = () => {
                 {isLoadingHubs
                   ? Array.from({ length: 9 }).map((_, index) => (
                       <Skeleton
+                        data-testid="hub-skeleton"
                         key={`hub-skeleton-${index}`}
                         className="w-full h-full"
                       />

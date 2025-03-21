@@ -1,8 +1,8 @@
 import {
   createQueryClientWrapper,
   createTestQueryClient,
-} from "@/shared/lib/testing";
-import { renderHook, waitFor } from "@testing-library/react";
+} from "@/shared/lib/testing/query-client-utils";
+import { renderHook, waitFor } from "@/shared/lib/testing/test-utils";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useHubNotes } from "../use-hub-notes";
 

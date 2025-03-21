@@ -12,6 +12,7 @@
   --font-mono: "Geist Mono", 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace';
 
   --color-border: var(--border);
+  --color-border-skeleton: var(--border-skeleton);
   --color-input: var(--input);
 
   --color-ring: var(--ring);
@@ -203,6 +204,7 @@
     --danger-fg: oklch(0.971 0.013 17.38);
     
     --border: oklch(0.911 0.006 286.286);
+    --border-skeleton: oklch(0.911 0.006 286.286, 0.5);
     --input: oklch(0.871 0.006 286.286);
     --ring: oklch(0.546 0.245 262.881);
     
@@ -321,6 +323,7 @@
     --danger-fg: oklch(0.971 0.013 17.38);
     
     --border: oklch(0.270 0.013 285.805);
+    --border-skeleton: oklch(0.270 0.013 285.805, 0.5);
     --input: oklch(0.320 0.013 285.805);
     --ring: oklch(0.646 0.222 41.116);
     

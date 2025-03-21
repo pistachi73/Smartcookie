@@ -45,7 +45,7 @@ const cardVariants = {
 
 export const HubNotesStack = ({ hubId }: HubNotesStackProps) => {
   const { data: hubs } = useQuery(quickNotesHubsQueryOptions);
-  const { data: notes, isLoading, isPending } = useHubNotes(hubId);
+  const { data: notes, isLoading } = useHubNotes(hubId);
 
   const hub = hubs?.find((h) => h.id === hubId);
   const hasNotes = !!notes?.length;

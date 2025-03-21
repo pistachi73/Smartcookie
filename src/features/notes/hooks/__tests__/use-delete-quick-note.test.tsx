@@ -2,9 +2,9 @@ import * as actions from "@/features/notes/actions";
 import {
   createQueryClientWrapper,
   createTestQueryClient,
-} from "@/shared/lib/testing";
+} from "@/shared/lib/testing/query-client-utils";
+import { act, renderHook } from "@/shared/lib/testing/test-utils";
 import type { QueryClient } from "@tanstack/react-query";
-import { act, renderHook } from "@testing-library/react";
 import { toast } from "sonner";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { DELETION_TIME_MS, useDeleteQuickNote } from "../use-delete-quick-note";

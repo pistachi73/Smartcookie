@@ -1,9 +1,9 @@
 import {
   createQueryClientWrapper,
   createTestQueryClient,
-} from "@/shared/lib/testing";
+} from "@/shared/lib/testing/query-client-utils";
+import { act, renderHook, waitFor } from "@/shared/lib/testing/test-utils";
 import type { QueryClient } from "@tanstack/react-query";
-import { act, renderHook, waitFor } from "@testing-library/react";
 import { toast } from "sonner";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { addQuickNoteAction } from "../../actions";
