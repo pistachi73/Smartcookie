@@ -3,43 +3,46 @@ import {
   createQueryClientWrapper,
   createTestQueryClient,
 } from "@/shared/lib/testing";
-// @ts-ignore - These imports are used in JSX and for typings but linter reports them as only used as types
+import type { QueryClient } from "@tanstack/react-query";
 import { act, renderHook } from "@testing-library/react";
+import { toast } from "sonner";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { useDeleteQuickNote } from "../use-delete-quick-note";
+import { DELETION_TIME_MS, useDeleteQuickNote } from "../use-delete-quick-note";
 
-// Mock the delete action
 vi.mock("@/features/notes/actions", () => ({
-  deleteQuickNoteAction: vi.fn().mockImplementation(async () => {
-    return { data: { success: true } };
-  }),
+  deleteQuickNoteAction: vi.fn().mockResolvedValue({ data: { success: true } }),
 }));
 
-// Mock requestAnimationFrame and cancelAnimationFrame
-global.requestAnimationFrame = vi.fn((callback) => {
-  setTimeout(() => callback(0), 0);
-  return 1; // Return a number for the handle
+vi.useFakeTimers();
+
+global.requestAnimationFrame = vi.fn((cb) => {
+  setTimeout(() => cb(0), 0);
+  return 1;
 });
 global.cancelAnimationFrame = vi.fn();
 
+vi.mock("sonner", () => ({
+  toast: { error: vi.fn() },
+}));
+
+const renderHookWithQueryClient = (queryClient: QueryClient) => {
+  return renderHook(() => useDeleteQuickNote({ noteId: 123, hubId: 456 }), {
+    wrapper: createQueryClientWrapper(queryClient),
+  });
+};
+
 describe("useDeleteQuickNote", () => {
   let queryClient: ReturnType<typeof createTestQueryClient>;
-
-  // Original note data for testing
-  const mockNotes = [
+  const initialMockNotes = [
     { id: 123, content: "Test note", hubId: 456, updatedAt: "2023-01-01" },
     { id: 124, content: "Another note", hubId: 456, updatedAt: "2023-01-02" },
   ];
 
   beforeEach(() => {
     queryClient = createTestQueryClient();
-
-    // Set up spies on the queryClient methods
     vi.spyOn(queryClient, "setQueryData");
-    vi.spyOn(queryClient, "getQueryData").mockReturnValue(mockNotes);
+    vi.spyOn(queryClient, "getQueryData").mockReturnValue(initialMockNotes);
     vi.spyOn(queryClient, "cancelQueries").mockResolvedValue(undefined);
-
-    // Reset mocks
     vi.clearAllMocks();
   });
 
@@ -48,17 +51,7 @@ describe("useDeleteQuickNote", () => {
   });
 
   it("should initialize with default state", () => {
-    const wrapper = createQueryClientWrapper(queryClient);
-
-    const { result } = renderHook(
-      () =>
-        useDeleteQuickNote({
-          noteId: 123,
-          hubId: 456,
-        }),
-      { wrapper },
-    );
-
+    const { result } = renderHookWithQueryClient(queryClient);
     expect(result.current.isDeleting).toBe(false);
     expect(result.current.deleteProgress).toBe(0);
     expect(typeof result.current.handleDeletePress).toBe("function");
@@ -66,96 +59,58 @@ describe("useDeleteQuickNote", () => {
   });
 
   it("should call cancelAnimationFrame on release", () => {
-    const wrapper = createQueryClientWrapper(queryClient);
-
-    const { result } = renderHook(
-      () =>
-        useDeleteQuickNote({
-          noteId: 123,
-          hubId: 456,
-        }),
-      { wrapper },
-    );
-
-    // First call handleDeletePress to start the animation
+    const { result } = renderHookWithQueryClient(queryClient);
     act(() => {
       result.current.handleDeletePress();
-    });
-
-    // Then call handleDeleteRelease to cancel the animation
-    act(() => {
       result.current.handleDeleteRelease();
     });
 
-    // Should have called cancelAnimationFrame
     expect(global.cancelAnimationFrame).toHaveBeenCalled();
   });
 
   it("should clean up animation on unmount", () => {
-    const wrapper = createQueryClientWrapper(queryClient);
+    const { result, unmount } = renderHookWithQueryClient(queryClient);
 
-    const { result, unmount } = renderHook(
-      () =>
-        useDeleteQuickNote({
-          noteId: 123,
-          hubId: 456,
-        }),
-      { wrapper },
-    );
-
-    // First call handleDeletePress to start the animation
     act(() => {
       result.current.handleDeletePress();
     });
-
-    // Unmount the component
     unmount();
 
-    // Should have called cancelAnimationFrame
     expect(global.cancelAnimationFrame).toHaveBeenCalled();
   });
 
-  // Instead of trying to test the animation completion,
-  // we'll test the mutation function directly
   it("should perform optimistic updates when deleting a note", async () => {
-    // Get a reference to the mutation function
     const deleteActionSpy = vi.spyOn(actions, "deleteQuickNoteAction");
-    const mutationFn = vi
-      .fn()
-      .mockImplementation(async ({ id }: { id: number }) => {
-        // This simulates what happens in the useMutation callback
-        await queryClient.cancelQueries({ queryKey: ["hub-notes", 456] });
+    const { result } = renderHookWithQueryClient(queryClient);
 
-        // Get current data
-        const previousData = queryClient.getQueryData<any[]>([
-          "hub-notes",
-          456,
-        ]);
+    await act(async () => {
+      result.current.handleDeletePress();
+      vi.advanceTimersByTime(DELETION_TIME_MS);
+    });
 
-        // Update optimistically
-        queryClient.setQueryData(
-          ["hub-notes", 456],
-          (old: any[] | undefined) =>
-            old ? old.filter((note) => note.id !== id) : old,
-        );
-
-        // Call the actual action
-        const result = await actions.deleteQuickNoteAction({ id });
-        return result;
-      });
-
-    // Execute the mutation directly
-    await mutationFn({ id: 123 });
-
-    // Verify the query was canceled
+    expect(deleteActionSpy).toHaveBeenCalledWith({ id: 123 });
     expect(queryClient.cancelQueries).toHaveBeenCalledWith({
       queryKey: ["hub-notes", 456],
     });
-
-    // Verify optimistic update happened
     expect(queryClient.setQueryData).toHaveBeenCalled();
+  });
 
-    // Verify the action was called
-    expect(deleteActionSpy).toHaveBeenCalledWith({ id: 123 });
+  it("should handle errors and roll back optimistic updates", async () => {
+    vi.mocked(actions.deleteQuickNoteAction).mockRejectedValueOnce(
+      new Error("Delete failed"),
+    );
+
+    const { result } = renderHookWithQueryClient(queryClient);
+
+    await act(async () => {
+      result.current.handleDeletePress();
+      vi.advanceTimersByTime(DELETION_TIME_MS);
+    });
+
+    expect(toast.error).toHaveBeenCalledWith("Failed to delete note");
+    expect(queryClient.setQueryData).toHaveBeenCalledWith(
+      ["hub-notes", 456],
+      initialMockNotes,
+    );
   });
 });

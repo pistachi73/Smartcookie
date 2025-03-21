@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
-const DELETION_TIME_MS = 500;
+export const DELETION_TIME_MS = 500;
 
 interface UseDeleteQuickNoteProps {
   noteId: number;

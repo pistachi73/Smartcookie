@@ -4,6 +4,10 @@ import { toast } from "sonner";
 
 import type { NoteSummary } from "../types/quick-notes.types";
 
+export type UseAddQuickNoteProps = {
+  cleanFocusRegisterOnAdd?: boolean;
+};
+
 // Match the exact type expected by the action
 interface AddQuickNoteData {
   content: string;
@@ -42,9 +46,7 @@ export const noteFocusRegistry = {
   },
 };
 
-export const useAddQuickNote = (options?: {
-  cleanFocusRegisterOnAdd?: boolean;
-}) => {
+export const useAddQuickNote = (options?: UseAddQuickNoteProps) => {
   const queryClient = useQueryClient();
   const { cleanFocusRegisterOnAdd = false } = options || {};
 

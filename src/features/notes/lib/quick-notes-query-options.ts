@@ -26,7 +26,6 @@ export const getHubNotesQueryOptions = (hubId: number) =>
     queryKey: ["hub-notes", hubId],
     queryFn: async () => {
       const data = await getHubNotesAction({ hubId });
-      console.log("getHubNotesQueryOptions", data);
       return data?.data;
     },
   });

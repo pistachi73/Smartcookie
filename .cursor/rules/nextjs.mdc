@@ -37,18 +37,18 @@ alwaysApply: false
     - Use modern state management solutions (e.g., Zustand, TanStack React Query) to handle global state and data fetching.
     - Implement validation using Zod for schema validation.
 
-    ### Unit testing
-    - Use vitest and react-testing-library for unit testing
+    ### Testing
+    - Write unit tests for components using Vitest and React Testing Library.
     - Use pnpm for runing any test command and zsh terminal.
     - Use pnpm test:run for terminal commands
+    - Don't use comments for tests
 
     ### Security and Performance
     - Implement proper error handling, user input validation, and secure coding practices.
     - Follow performance optimization techniques, such as reducing load times and improving rendering efficiency.
 
-    ### Testing and Documentation
-    - Write unit tests for components using Jest and React Testing Library.
-    - Provide clear and concise comments for complex logic.
+    ### Documentation
+    - Provide only comments for the complex logic. Use 
     - Use JSDoc comments for functions and components to improve IDE intellisense.
 
     ### Methodology

@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
-interface UseUpdateQuickNoteProps {
+export interface UseUpdateQuickNoteProps {
   noteId: number;
   initialContent: string;
   hubId: number;

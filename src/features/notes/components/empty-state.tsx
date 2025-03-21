@@ -1,19 +1,9 @@
-import { useQuickNotesStore } from "@/features/notes/store/quick-notes-store-provider";
 import { NoteAddIcon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as m from "motion/react-m";
-import { memo, useCallback } from "react";
-import { Button } from "react-aria-components";
+import { memo } from "react";
 
 const EmptyStateComponent = () => {
-  const toggleFilterPanel = useQuickNotesStore(
-    (state) => state.toggleFilterPanel,
-  );
-
-  const handleOpenSidebar = useCallback(() => {
-    toggleFilterPanel();
-  }, [toggleFilterPanel]);
-
   return (
     <m.div
       initial={{ opacity: 0, y: 10 }}
@@ -30,13 +20,6 @@ const EmptyStateComponent = () => {
       <p className="text-muted-fg text-center max-w-xs">
         Select a hub from the sidebar to view your notes or create new ones.
       </p>
-      <Button
-        onPress={handleOpenSidebar}
-        className="mt-4 px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-md transition-colors"
-        type="button"
-      >
-        Open Sidebar
-      </Button>
     </m.div>
   );
 };

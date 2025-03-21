@@ -12,7 +12,6 @@ import type {
 export const initQuickNotesStore = (
   initilData?: InitialQuickNotesStateData,
 ): QuickNotesState => {
-  console.log({ initilData });
   return {
     visibleHubs: new Set(initilData?.visibleHubs || []),
     isHydrated: false,
@@ -61,22 +60,6 @@ export const createQuickNotesStore = (initState: QuickNotesState) => {
           });
         },
 
-        setVisibleHubs: (hubIds: Set<number>) => {
-          set((state) => {
-            state.visibleHubs = hubIds;
-          });
-        },
-
-        toggleFilterPanel: () => {
-          set((state) => {
-            state.isFilterPanelOpen = !state.isFilterPanelOpen;
-          });
-        },
-        setFilterPanelOpen: (isOpen: boolean) => {
-          set((state) => {
-            state.isFilterPanelOpen = isOpen;
-          });
-        },
         setHydrated: () => {
           set((state) => {
             state.isHydrated = true;
@@ -95,11 +78,6 @@ export const createQuickNotesStore = (initState: QuickNotesState) => {
             ...((persistedState as any).visibleHubs || []),
           ]);
 
-          console.log({
-            persistedState,
-            currentState,
-            visibleHubs,
-          });
           return {
             ...currentState,
             ...(persistedState as any),
