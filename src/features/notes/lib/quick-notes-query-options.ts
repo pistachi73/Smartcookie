@@ -1,17 +1,5 @@
-import {
-  getHubNotesAction,
-  getHubsAction,
-  getHubsWithNotesAction,
-} from "@/features/notes/actions";
+import { getHubNotesAction, getHubsAction } from "@/features/notes/actions";
 import { queryOptions } from "@tanstack/react-query";
-
-export const quickNotesQueryOptions = queryOptions({
-  queryKey: ["quick-notes-data"],
-  queryFn: async () => {
-    const data = await getHubsWithNotesAction();
-    return data?.data;
-  },
-});
 
 export const quickNotesHubsQueryOptions = queryOptions({
   queryKey: ["quick-notes-hubs"],
