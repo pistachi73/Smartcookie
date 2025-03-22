@@ -7,33 +7,20 @@ import { Separator } from "@/ui/separator";
 import { SidebarNav, SidebarTrigger } from "@/ui/sidebar";
 
 import { cn } from "@/shared/lib/classes";
-import { usePathname } from "next/navigation";
-import { useMemo } from "react";
-import { getNavigationPathDetails } from "./navigation-helpers";
 
 export interface PortalNavProps {
   className?: string;
   showSearchField?: boolean;
   actions?: React.ReactNode;
+  breadcrumbs: { label: string; href: string }[];
 }
-
-export const Test = () => {
-  return <div>test</div>;
-};
 
 export const PortalNav = ({
   className,
   showSearchField = true,
   actions,
+  breadcrumbs,
 }: PortalNavProps) => {
-  const pathname = usePathname();
-
-  // Memoize breadcrumbs calculation to avoid unnecessary recalculations
-  const { breadcrumbs } = useMemo(
-    () => getNavigationPathDetails(pathname),
-    [pathname],
-  );
-
   return (
     <SidebarNav
       className={cn(
@@ -42,23 +29,18 @@ export const PortalNav = ({
       )}
     >
       <div className="flex items-center justify-between w-full h-full px-2">
-        {/* Left section with sidebar trigger and breadcrumbs */}
         <div className="flex items-center gap-x-4 flex-shrink-0">
           <SidebarTrigger className="-mx-2" appearance="plain" shape="square" />
           <Separator className="h-6" orientation="vertical" />
           <Breadcrumbs className="@md:flex hidden">
             {breadcrumbs.map((crumb) => (
-              <Breadcrumbs.Item
-                key={`${pathname}-${crumb.href}`}
-                href={crumb.href}
-              >
+              <Breadcrumbs.Item key={crumb.href} {...crumb}>
                 {crumb.label}
               </Breadcrumbs.Item>
             ))}
           </Breadcrumbs>
         </div>
 
-        {/* Middle section with search */}
         {showSearchField && (
           <div className="flex-1 max-w-md mx-4 hidden @md:block">
             <SearchField
@@ -70,7 +52,6 @@ export const PortalNav = ({
           </div>
         )}
 
-        {/* Right section with actions and user button */}
         <div className="flex items-center gap-x-2 flex-shrink-0">
           {actions}
           <UserButton />

@@ -4,6 +4,7 @@ import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { QuickNotes } from "@/features/notes/components/quick-notes";
 import { quickNotesHubsQueryOptions } from "@/features/notes/lib/quick-notes-query-options";
 import { QuickNotesStoreProvider } from "@/features/notes/store/quick-notes-store-provider";
+import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
 
 export const metadata = {
   title: "Quick Notes | Private Tutoring Manager",
@@ -27,6 +28,12 @@ export default async function QuickNotesPage({
       <QuickNotesStoreProvider
         initialVisibleHubs={hubId !== undefined ? [hubId] : undefined}
       >
+        <PortalNav
+          breadcrumbs={[
+            { label: "Portal", href: "/portal" },
+            { label: "Quick Notes", href: "/portal/quick-notes" },
+          ]}
+        />
         <QuickNotes />
       </QuickNotesStoreProvider>
     </HydrationBoundary>
