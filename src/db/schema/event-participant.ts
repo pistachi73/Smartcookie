@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
 import { boolean, index, primaryKey, serial } from "drizzle-orm/pg-core";
-import { client } from "./client";
 import { eventOccurrence } from "./event-occurrence";
+import { student } from "./student";
 import { pgTable } from "./utils";
 
 export const eventParticipant = pgTable(
@@ -12,7 +12,7 @@ export const eventParticipant = pgTable(
       .references(() => eventOccurrence.id, { onDelete: "cascade" }),
     participantId: serial()
       .notNull()
-      .references(() => client.id, { onDelete: "cascade" }),
+      .references(() => student.id, { onDelete: "cascade" }),
     attended: boolean().default(false),
   },
   (t) => ({
@@ -32,9 +32,9 @@ export const eventParticipantRelations = relations(
       fields: [eventParticipant.eventOccurrenceId],
       references: [eventOccurrence.id],
     }),
-    participant: one(client, {
+    participant: one(student, {
       fields: [eventParticipant.participantId],
-      references: [client.id],
+      references: [student.id],
     }),
   }),
 );

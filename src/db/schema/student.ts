@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
 import { integer, pgEnum, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { attendance } from "./attendance";
-import { clientHub } from "./client-hub";
+import { studentHub } from "./student-hub";
 import { pgTable } from "./utils";
 
 export const paymentFrequencyEnum = pgEnum("payment_frequency", [
@@ -15,7 +15,7 @@ export const timeInvestmentEnum = pgEnum("time_investment", [
   "high",
 ]);
 
-export const client = pgTable("client", {
+export const student = pgTable("student", {
   id: serial().primaryKey(),
   name: text().notNull(),
   email: text().notNull(),
@@ -31,10 +31,10 @@ export const client = pgTable("client", {
   awayUntil: timestamp({ mode: "date" }),
 });
 
-export type InsertClient = typeof client.$inferInsert;
-export type Client = typeof client.$inferSelect;
+export type InsertStudent = typeof student.$inferInsert;
+export type Student = typeof student.$inferSelect;
 
-export const clientRelations = relations(client, ({ many }) => ({
-  clientHub: many(clientHub),
+export const studentRelations = relations(student, ({ many }) => ({
+  studentHub: many(studentHub),
   attendances: many(attendance),
 }));

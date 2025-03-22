@@ -1,9 +1,9 @@
-const ClientsPage = () => {
+const StudentsPage = () => {
   return (
     <div className="flex h-full w-full flex-col items-center justify-center">
-      Clients
+      Students
     </div>
   );
 };
 
-export default ClientsPage;
+export default StudentsPage;

@@ -1,13 +1,13 @@
 import { boolean, integer, serial } from "drizzle-orm/pg-core";
-import { client, paymentFrequencyEnum } from "./client";
 import { hub } from "./hub";
+import { paymentFrequencyEnum, student } from "./student";
 import { pgTable } from "./utils";
 
 export const billing = pgTable("billing", {
   id: serial().primaryKey(),
-  clientId: serial()
+  studentId: serial()
     .notNull()
-    .references(() => client.id, { onDelete: "cascade" }),
+    .references(() => student.id, { onDelete: "cascade" }),
   hubId: serial()
     .notNull()
     .references(() => hub.id, { onDelete: "cascade" }),

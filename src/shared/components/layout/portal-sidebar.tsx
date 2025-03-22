@@ -120,8 +120,8 @@ const navigation = [
     iconActive: Folder02IconSolid,
   },
   {
-    label: "Clients",
-    href: "/portal/clients",
+    label: "Students",
+    href: "/portal/students",
     icon: UserGroupIcon,
     iconActive: UserGroupIconSolid,
   },

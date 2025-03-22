@@ -8,12 +8,11 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
-import { clientHub } from "./client-hub";
 import { event } from "./event";
 import { quickNote } from "./quick-note";
+import { studentHub } from "./student-hub";
 import { user } from "./user";
 import { pgTable } from "./utils";
-
 export const hubStatusEnum = pgEnum("hub_status", ["active", "inactive"]);
 
 export const customColorEnum = pgEnum("custom_color", [
@@ -62,7 +61,7 @@ export type InsertHub = typeof hub.$inferInsert;
 export type Hub = typeof hub.$inferSelect;
 
 export const hubRelations = relations(hub, ({ many }) => ({
-  clients: many(clientHub),
+  students: many(studentHub),
   sessions: many(event),
   quickNotes: many(quickNote),
 }));

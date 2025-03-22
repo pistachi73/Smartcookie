@@ -29,7 +29,7 @@ for (const table of [
   schema.twoFactorConirmation,
   schema.verificationToken,
   schema.passwordResetToken,
-  schema.client,
+  schema.student,
   schema.hub,
   schema.event,
   schema.eventOccurrence,
@@ -45,8 +45,8 @@ async function main() {
     await seeds.hub(db);
     await seeds.event(db);
     await seeds.quickNotes(db);
-    console.log("Seedin client!");
-    await seeds.client(db);
+    console.log("Seeding student!");
+    await seeds.student(db);
   } catch (error) {
     console.error("Error during seeding:", error);
     process.exit(1);

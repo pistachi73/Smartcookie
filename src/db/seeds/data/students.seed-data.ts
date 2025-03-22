@@ -1,10 +1,10 @@
-import type { InsertClient } from "@/db/schema";
+import type { InsertStudent } from "@/db/schema";
 
-type InsertClientExtended = InsertClient & {
+type InsertStudentExtended = InsertStudent & {
   hubs: number[];
 };
 
-const clients: Omit<InsertClientExtended, "salt">[] = [
+const students: Omit<InsertStudentExtended, "salt">[] = [
   {
     id: 1,
     name: "Alice Johnson",
@@ -98,4 +98,4 @@ const clients: Omit<InsertClientExtended, "salt">[] = [
   },
 ];
 
-export default clients;
+export default students;
