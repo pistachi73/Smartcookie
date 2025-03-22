@@ -15,7 +15,7 @@ export const UserButton = () => {
         <UserAvatar
           userImage={"https://avatar.iran.liara.run/public"}
           userName={user?.name}
-          size="extra-large"
+          size="large"
         />
       </Menu.Trigger>
       <Menu.Content placement="bottom end" popoverClassName="w-[300px]">
@@ -24,7 +24,7 @@ export const UserButton = () => {
             <UserAvatar
               userImage={user?.image}
               userName={user?.name}
-              size="large"
+              size="small"
             />
             <div className="overflow-hidden">
               <p className="text-md font-medium">{user?.name}</p>

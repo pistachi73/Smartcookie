@@ -5,50 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1737662179648,
-      "tag": "0000_secret_black_widow",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1738511218262,
-      "tag": "0001_peaceful_alex_power",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1738511237089,
-      "tag": "0002_brainy_goliath",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1739093599393,
-      "tag": "0003_spicy_tiger_shark",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1740077681812,
-      "tag": "0004_wealthy_slayback",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1741030761461,
-      "tag": "0005_yummy_bloodstrike",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1741946631917,
-      "tag": "0006_same_captain_britain",
+      "when": 1742647183303,
+      "tag": "0000_fancy_jack_flag",
       "breakpoints": true
     }
   ]
