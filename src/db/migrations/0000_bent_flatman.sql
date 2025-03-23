@@ -1,7 +1,7 @@
-CREATE TYPE "public"."payment_frequency" AS ENUM('one-time', 'monthly');--> statement-breakpoint
-CREATE TYPE "public"."time_investment" AS ENUM('low', 'medium', 'high');--> statement-breakpoint
 CREATE TYPE "public"."custom_color" AS ENUM('flamingo', 'tangerine', 'banana', 'sage', 'peacock', 'blueberry', 'lavender', 'grape', 'graphite', 'neutral', 'sunshine', 'stone', 'slate');--> statement-breakpoint
 CREATE TYPE "public"."hub_status" AS ENUM('active', 'inactive');--> statement-breakpoint
+CREATE TYPE "public"."payment_frequency" AS ENUM('one-time', 'monthly');--> statement-breakpoint
+CREATE TYPE "public"."time_investment" AS ENUM('low', 'medium', 'high');--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "account" (
 	"userId" uuid NOT NULL,
 	"type" text NOT NULL,
@@ -20,41 +20,18 @@ CREATE TABLE IF NOT EXISTS "account" (
 CREATE TABLE IF NOT EXISTS "attendance" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"attendance" boolean DEFAULT true,
-	"client_id" serial NOT NULL,
+	"student_id" serial NOT NULL,
 	"event_id" serial NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "billing" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"client_id" serial NOT NULL,
+	"student_id" serial NOT NULL,
 	"hub_id" serial NOT NULL,
 	"cost" integer NOT NULL,
 	"billing_type" "payment_frequency" NOT NULL,
 	"tentative" boolean DEFAULT true,
 	"invoice_sent" boolean DEFAULT false
-);
---> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "client" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"name" text NOT NULL,
-	"email" text NOT NULL,
-	"password" text NOT NULL,
-	"salt" text NOT NULL,
-	"image" text,
-	"payment_frequency" "payment_frequency" DEFAULT 'monthly',
-	"location" text,
-	"nationality" text,
-	"age" integer,
-	"time_investment" "time_investment" DEFAULT 'medium',
-	"job" text,
-	"away_until" timestamp
-);
---> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "client_hub" (
-	"id" serial PRIMARY KEY NOT NULL,
-	"client_id" serial NOT NULL,
-	"hub_id" serial NOT NULL,
-	CONSTRAINT "client_hub_clientId_hubId_unique" UNIQUE("client_id","hub_id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "event" (
@@ -95,9 +72,9 @@ CREATE TABLE IF NOT EXISTS "hub" (
 	"schedule" text NOT NULL,
 	"status" "hub_status" DEFAULT 'active' NOT NULL,
 	"color" "custom_color" DEFAULT 'neutral' NOT NULL,
-	"level" varchar(255) NOT NULL,
 	"start_date" timestamp NOT NULL,
-	"end_date" timestamp NOT NULL,
+	"end_date" timestamp,
+	"level" varchar(20),
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
@@ -117,6 +94,29 @@ CREATE TABLE IF NOT EXISTS "quick_note" (
 	"content" text NOT NULL,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "student" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"name" text NOT NULL,
+	"email" text NOT NULL,
+	"password" text NOT NULL,
+	"salt" text NOT NULL,
+	"image" text,
+	"payment_frequency" "payment_frequency" DEFAULT 'monthly',
+	"location" text,
+	"nationality" text,
+	"age" integer,
+	"time_investment" "time_investment" DEFAULT 'medium',
+	"job" text,
+	"away_until" timestamp
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "student_hub" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"student_id" serial NOT NULL,
+	"hub_id" serial NOT NULL,
+	CONSTRAINT "student_hub_studentId_hubId_unique" UNIQUE("student_id","hub_id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "two_factor_confirmation" (
@@ -161,7 +161,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "attendance" ADD CONSTRAINT "attendance_client_id_client_id_fk" FOREIGN KEY ("client_id") REFERENCES "public"."client"("id") ON DELETE cascade ON UPDATE no action;
+ ALTER TABLE "attendance" ADD CONSTRAINT "attendance_student_id_student_id_fk" FOREIGN KEY ("student_id") REFERENCES "public"."student"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -173,25 +173,13 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "billing" ADD CONSTRAINT "billing_client_id_client_id_fk" FOREIGN KEY ("client_id") REFERENCES "public"."client"("id") ON DELETE cascade ON UPDATE no action;
+ ALTER TABLE "billing" ADD CONSTRAINT "billing_student_id_student_id_fk" FOREIGN KEY ("student_id") REFERENCES "public"."student"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "billing" ADD CONSTRAINT "billing_hub_id_hub_id_fk" FOREIGN KEY ("hub_id") REFERENCES "public"."hub"("id") ON DELETE cascade ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- ALTER TABLE "client_hub" ADD CONSTRAINT "client_hub_client_id_client_id_fk" FOREIGN KEY ("client_id") REFERENCES "public"."client"("id") ON DELETE cascade ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- ALTER TABLE "client_hub" ADD CONSTRAINT "client_hub_hub_id_hub_id_fk" FOREIGN KEY ("hub_id") REFERENCES "public"."hub"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -221,7 +209,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "event_participant" ADD CONSTRAINT "event_participant_participant_id_client_id_fk" FOREIGN KEY ("participant_id") REFERENCES "public"."client"("id") ON DELETE cascade ON UPDATE no action;
+ ALTER TABLE "event_participant" ADD CONSTRAINT "event_participant_participant_id_student_id_fk" FOREIGN KEY ("participant_id") REFERENCES "public"."student"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -245,15 +233,27 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
+ ALTER TABLE "student_hub" ADD CONSTRAINT "student_hub_student_id_student_id_fk" FOREIGN KEY ("student_id") REFERENCES "public"."student"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "student_hub" ADD CONSTRAINT "student_hub_hub_id_hub_id_fk" FOREIGN KEY ("hub_id") REFERENCES "public"."hub"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
  ALTER TABLE "two_factor_confirmation" ADD CONSTRAINT "two_factor_confirmation_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "client_hub_client_id_index" ON "client_hub" USING btree ("client_id");--> statement-breakpoint
-CREATE INDEX IF NOT EXISTS "client_hub_hub_id_index" ON "client_hub" USING btree ("hub_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "event_participant_participant_id_index" ON "event_participant" USING btree ("participant_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "event_participant_event_occurrence_id_index" ON "event_participant" USING btree ("event_occurrence_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "user_id_idx" ON "hub" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "student_hub_student_id_index" ON "student_hub" USING btree ("student_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "student_hub_hub_id_index" ON "student_hub" USING btree ("hub_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "two_factor_confirmation_token_index" ON "two_factor_confirmation" USING btree ("token");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "user_email_index" ON "user" USING btree ("email");

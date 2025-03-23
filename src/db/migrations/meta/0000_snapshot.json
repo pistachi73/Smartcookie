@@ -1,5 +1,5 @@
 {
-  "id": "a7b55b21-7210-44bb-8410-c776e3246271",
+  "id": "e479d57f-eedf-4abb-a2e5-bcfc9e084e21",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -120,8 +120,8 @@
           "notNull": false,
           "default": true
         },
-        "client_id": {
-          "name": "client_id",
+        "student_id": {
+          "name": "student_id",
           "type": "serial",
           "primaryKey": false,
           "notNull": true
@@ -135,12 +135,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "attendance_client_id_client_id_fk": {
-          "name": "attendance_client_id_client_id_fk",
+        "attendance_student_id_student_id_fk": {
+          "name": "attendance_student_id_student_id_fk",
           "tableFrom": "attendance",
-          "tableTo": "client",
+          "tableTo": "student",
           "columnsFrom": [
-            "client_id"
+            "student_id"
           ],
           "columnsTo": [
             "id"
@@ -176,8 +176,8 @@
           "primaryKey": true,
           "notNull": true
         },
-        "client_id": {
-          "name": "client_id",
+        "student_id": {
+          "name": "student_id",
           "type": "serial",
           "primaryKey": false,
           "notNull": true
@@ -218,12 +218,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "billing_client_id_client_id_fk": {
-          "name": "billing_client_id_client_id_fk",
+        "billing_student_id_student_id_fk": {
+          "name": "billing_student_id_student_id_fk",
           "tableFrom": "billing",
-          "tableTo": "client",
+          "tableTo": "student",
           "columnsFrom": [
-            "client_id"
+            "student_id"
           ],
           "columnsTo": [
             "id"
@@ -247,195 +247,6 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "checkConstraints": {}
-    },
-    "public.client": {
-      "name": "client",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "email": {
-          "name": "email",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "password": {
-          "name": "password",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "salt": {
-          "name": "salt",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "image": {
-          "name": "image",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "payment_frequency": {
-          "name": "payment_frequency",
-          "type": "payment_frequency",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'monthly'"
-        },
-        "location": {
-          "name": "location",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "nationality": {
-          "name": "nationality",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "age": {
-          "name": "age",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "time_investment": {
-          "name": "time_investment",
-          "type": "time_investment",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'medium'"
-        },
-        "job": {
-          "name": "job",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "away_until": {
-          "name": "away_until",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {}
-    },
-    "public.client_hub": {
-      "name": "client_hub",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "client_id": {
-          "name": "client_id",
-          "type": "serial",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "hub_id": {
-          "name": "hub_id",
-          "type": "serial",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {
-        "client_hub_client_id_index": {
-          "name": "client_hub_client_id_index",
-          "columns": [
-            {
-              "expression": "client_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "client_hub_hub_id_index": {
-          "name": "client_hub_hub_id_index",
-          "columns": [
-            {
-              "expression": "hub_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "client_hub_client_id_client_id_fk": {
-          "name": "client_hub_client_id_client_id_fk",
-          "tableFrom": "client_hub",
-          "tableTo": "client",
-          "columnsFrom": [
-            "client_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "client_hub_hub_id_hub_id_fk": {
-          "name": "client_hub_hub_id_hub_id_fk",
-          "tableFrom": "client_hub",
-          "tableTo": "hub",
-          "columnsFrom": [
-            "hub_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "client_hub_clientId_hubId_unique": {
-          "name": "client_hub_clientId_hubId_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "client_id",
-            "hub_id"
-          ]
-        }
-      },
       "checkConstraints": {}
     },
     "public.event": {
@@ -676,10 +487,10 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "event_participant_participant_id_client_id_fk": {
-          "name": "event_participant_participant_id_client_id_fk",
+        "event_participant_participant_id_student_id_fk": {
+          "name": "event_participant_participant_id_student_id_fk",
           "tableFrom": "event_participant",
-          "tableTo": "client",
+          "tableTo": "student",
           "columnsFrom": [
             "participant_id"
           ],
@@ -752,12 +563,6 @@
           "notNull": true,
           "default": "'neutral'"
         },
-        "level": {
-          "name": "level",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
         "start_date": {
           "name": "start_date",
           "type": "timestamp",
@@ -768,7 +573,13 @@
           "name": "end_date",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
+        },
+        "level": {
+          "name": "level",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -939,6 +750,195 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "public.student": {
+      "name": "student",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "password": {
+          "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "salt": {
+          "name": "salt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "image": {
+          "name": "image",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "payment_frequency": {
+          "name": "payment_frequency",
+          "type": "payment_frequency",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'monthly'"
+        },
+        "location": {
+          "name": "location",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nationality": {
+          "name": "nationality",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "age": {
+          "name": "age",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "time_investment": {
+          "name": "time_investment",
+          "type": "time_investment",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'medium'"
+        },
+        "job": {
+          "name": "job",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "away_until": {
+          "name": "away_until",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "public.student_hub": {
+      "name": "student_hub",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "student_id": {
+          "name": "student_id",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hub_id": {
+          "name": "hub_id",
+          "type": "serial",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "student_hub_student_id_index": {
+          "name": "student_hub_student_id_index",
+          "columns": [
+            {
+              "expression": "student_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "student_hub_hub_id_index": {
+          "name": "student_hub_hub_id_index",
+          "columns": [
+            {
+              "expression": "hub_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "student_hub_student_id_student_id_fk": {
+          "name": "student_hub_student_id_student_id_fk",
+          "tableFrom": "student_hub",
+          "tableTo": "student",
+          "columnsFrom": [
+            "student_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "student_hub_hub_id_hub_id_fk": {
+          "name": "student_hub_hub_id_hub_id_fk",
+          "tableFrom": "student_hub",
+          "tableTo": "hub",
+          "columnsFrom": [
+            "hub_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "student_hub_studentId_hubId_unique": {
+          "name": "student_hub_studentId_hubId_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "student_id",
+            "hub_id"
+          ]
+        }
+      },
       "checkConstraints": {}
     },
     "public.two_factor_confirmation": {
@@ -1184,23 +1184,6 @@
     }
   },
   "enums": {
-    "public.payment_frequency": {
-      "name": "payment_frequency",
-      "schema": "public",
-      "values": [
-        "one-time",
-        "monthly"
-      ]
-    },
-    "public.time_investment": {
-      "name": "time_investment",
-      "schema": "public",
-      "values": [
-        "low",
-        "medium",
-        "high"
-      ]
-    },
     "public.custom_color": {
       "name": "custom_color",
       "schema": "public",
@@ -1226,6 +1209,23 @@
       "values": [
         "active",
         "inactive"
+      ]
+    },
+    "public.payment_frequency": {
+      "name": "payment_frequency",
+      "schema": "public",
+      "values": [
+        "one-time",
+        "monthly"
+      ]
+    },
+    "public.time_investment": {
+      "name": "time_investment",
+      "schema": "public",
+      "values": [
+        "low",
+        "medium",
+        "high"
       ]
     }
   },

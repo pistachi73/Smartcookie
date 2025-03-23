@@ -310,8 +310,8 @@
     --overlay-fg: oklch(0.985 0 0);
 
     --overlay-highlight: oklch(0.20 0.006 260);      /* Aligned with bg hue, slightly lighter */
-    --overlay-elevated: oklch(0.250 0.006 260);      /* Slightly lighter than highlight */
-    --overlay-elevated-highlight: oklch(0.22 0.009 260); /* Brightest elevation, same hue */
+    --overlay-elevated: oklch(0.22 0.009 260); /* Brightest elevation, same hue */
+    --overlay-elevated-highlight: oklch(0.250 0.006 260);      /* Slightly lighter than highlight */
     
     --success: oklch(0.596 0.145 163.225);
     --success-fg: oklch(1 0 0);

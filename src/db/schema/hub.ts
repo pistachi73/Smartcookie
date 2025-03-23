@@ -13,8 +13,8 @@ import { quickNote } from "./quick-note";
 import { studentHub } from "./student-hub";
 import { user } from "./user";
 import { pgTable } from "./utils";
-export const hubStatusEnum = pgEnum("hub_status", ["active", "inactive"]);
 
+export const hubStatusEnum = pgEnum("hub_status", ["active", "inactive"]);
 export const customColorEnum = pgEnum("custom_color", [
   "flamingo",
   "tangerine",
@@ -43,9 +43,9 @@ export const hub = pgTable(
     schedule: text().notNull(),
     status: hubStatusEnum("status").default("active").notNull(),
     color: customColorEnum("color").default("neutral").notNull(),
-    level: varchar({ length: 255 }).notNull(),
     startDate: timestamp({ mode: "string" }).notNull(),
-    endDate: timestamp({ mode: "string" }).notNull(),
+    endDate: timestamp({ mode: "string" }),
+    level: varchar({ length: 20 }),
     createdAt: timestamp({ mode: "string" }).defaultNow().notNull(),
     updatedAt: timestamp({ mode: "string" })
       .defaultNow()

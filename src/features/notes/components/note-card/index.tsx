@@ -79,8 +79,8 @@ const NoteCardComponent = ({ note, index = 0, hubColor }: NoteCardProps) => {
         "flex flex-col bg-overlay-highlight rounded-lg border-1 border-border relative transition duration-250",
         isDisabled && "opacity-50",
         isEditingNote
-          ? `brightness-125 ${colorClasses.border}`
-          : "hover:bg-overlay-elevated-highlight/80",
+          ? `${colorClasses.border} bg-overlay-elevated`
+          : "hover:bg-overlay-elevated",
       )}
     >
       <div className="absolute top-0 right-0 z-10">

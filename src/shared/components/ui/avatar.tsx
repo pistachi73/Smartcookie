@@ -1,4 +1,4 @@
-import { type VariantProps, tv } from "tailwind-variants"
+import { type VariantProps, tv } from "tailwind-variants";
 
 const avatar = tv({
   base: [
@@ -18,13 +18,13 @@ const avatar = tv({
       "extra-large": "size-12 *:size-12",
     },
   },
-})
+});
 
 interface AvatarProps extends VariantProps<typeof avatar> {
-  src?: string | null
-  initials?: string
-  alt?: string
-  className?: string
+  src?: string | null;
+  initials?: string;
+  alt?: string;
+  className?: string;
 }
 
 const Avatar = ({
@@ -37,14 +37,18 @@ const Avatar = ({
   ...props
 }: AvatarProps & React.ComponentPropsWithoutRef<"span">) => {
   return (
-    <span data-slot="avatar" {...props} className={avatar({ shape, size, className })}>
+    <span
+      data-slot="avatar"
+      {...props}
+      className={avatar({ shape, size, className })}
+    >
       {initials && (
         <svg
           className="size-full select-none fill-current p-[5%] font-medium text-[48px] uppercase"
           viewBox="0 0 100 100"
           aria-hidden={alt ? undefined : "true"}
         >
-          {alt && <title>{alt}</title>}
+          <title>{alt}</title>
           <text
             x="50%"
             y="50%"
@@ -59,8 +63,8 @@ const Avatar = ({
       )}
       {src && <img className="size-full" src={src} alt={alt} />}
     </span>
-  )
-}
+  );
+};
 
-export type { AvatarProps }
-export { Avatar }
+export { Avatar };
+export type { AvatarProps };

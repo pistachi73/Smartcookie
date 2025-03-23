@@ -1,73 +1,109 @@
 "use client";
 
-import type { Hub } from "@/db/schema";
+import { AvatarStack } from "@/shared/components/ui/avatar-stack";
 import { Badge } from "@/shared/components/ui/badge";
-import { Button } from "@/shared/components/ui/button";
 import { Card } from "@/shared/components/ui/card";
+import { Separator } from "@/shared/components/ui/separator";
+import { cn } from "@/shared/lib/classes";
 import {
-  CalendarIcon,
-  UserGroupIcon,
+  getCustomColorClasses,
+  hubCardColorStyleMap,
+} from "@/shared/lib/custom-colors";
+import {
+  Calendar01Icon,
+  Clock01Icon,
+  UserMultiple02Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 import { getHubDuration } from "../lib/utils";
+import type { Hub } from "../types/hub.types";
 
 interface HubCardProps {
   hub: Hub;
-  onSelect?: (hub: Hub) => void;
 }
 
-export function HubCard({ hub, onSelect }: HubCardProps) {
-  const { id, name, description, createdAt, status, startDate, endDate } = hub;
+export function HubCard({ hub }: HubCardProps) {
+  const {
+    id,
+    name,
+    description,
+    status,
+    startDate,
+    endDate,
+    schedule,
+    level,
+    studentsCount,
+    students,
+  } = hub;
 
-  const duration = getHubDuration(startDate, endDate);
+  const duration = endDate ? getHubDuration(startDate, endDate) : "unknown";
+  const colorClasses = getCustomColorClasses(hub.color, hubCardColorStyleMap);
 
   return (
-    <Link href={`/portal/hubs/${id}`} className="block h-full">
-      <Card className="group h-full transition-all rounded-none border-dashed hover:border-primary bg-transparent hover:bg-overlay-highlight">
+    <Link href={`/portal/hubs/${id}`} className="block h-full w-full">
+      <Card
+        className={cn(
+          "group h-full transition-all bg-overlay-highlight hover:bg-overlay-elevated",
+          "flex flex-col justify-between",
+          colorClasses.hover,
+        )}
+      >
         <Card.Header>
-          <div className="flex items-center gap-2 mb-2">
-            <Badge className="text-xs py-1" intent="primary">
-              {hub.level}
-            </Badge>
-            <Badge intent={status === "active" ? "success" : "secondary"}>
-              {status === "active" ? "Active" : "Inactive"}
-            </Badge>
+          <div className="flex items-center justify-between gap-2 mb-2">
+            <div className="flex items-center gap-2">
+              <Badge className="text-xs py-1" intent="primary">
+                {level}
+              </Badge>
+              <Badge intent={status === "active" ? "success" : "secondary"}>
+                {status === "active" ? "Active" : "Inactive"}
+              </Badge>
+            </div>
+            <p className="text-muted-fg flex items-center gap-1">
+              <HugeiconsIcon icon={UserMultiple02Icon} size={16} />
+              {studentsCount}
+            </p>
           </div>
-          <Card.Title level={3}>{name}</Card.Title>
-          <Card.Description>{description}</Card.Description>
+          <div className="flex items-center gap-2">
+            <div
+              className={cn("w-3 h-3 rounded-full", colorClasses.dot)}
+              title={`Color: ${hub.color}`}
+            />
+            <Card.Title level={2}>{name}</Card.Title>
+          </div>
+          <Card.Description className="text-base">
+            {description}
+          </Card.Description>
         </Card.Header>
 
-        <Card.Content className="border-t">
-          <div className="flex items-center gap-2">
-            <HugeiconsIcon icon={CalendarIcon} size={16} />
-            <p className="text-sm text-muted-foreground">{duration} weeks</p>
+        <Card.Content className="flex flex-col gap-5">
+          <AvatarStack
+            users={students}
+            maxAvatars={5}
+            className={{ avatar: "outline-overlay-highlight outline-2" }}
+          />
+
+          <Separator />
+          <div className="grid grid-cols-2 gap-2 text-muted-fg">
+            <p className="flex items-center gap-2">
+              <HugeiconsIcon
+                icon={Calendar01Icon}
+                size={20}
+                className="text-muted-fg shrink-0"
+              />
+
+              <span className="line-clamp-1">{schedule}</span>
+            </p>
+            <p className="flex items-center gap-2">
+              <HugeiconsIcon
+                icon={Clock01Icon}
+                size={20}
+                className="text-muted-fg shrink-0"
+              />
+              {duration === "unknown" ? "Unknown" : `${duration} weeks`}
+            </p>
           </div>
         </Card.Content>
-
-        <Card.Footer className="flex items-center justify-between">
-          <div className="flex items-center gap-1 text-sm">
-            <HugeiconsIcon
-              icon={UserGroupIcon}
-              size={16}
-              className="text-muted-foreground"
-            />
-            {/* <span>{membersCount} members</span> */}
-          </div>
-
-          {/* Use a regular div with onClick for the button */}
-          <div
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              if (onSelect) onSelect(hub);
-            }}
-          >
-            <Button intent="secondary" size="extra-small">
-              View Details
-            </Button>
-          </div>
-        </Card.Footer>
       </Card>
     </Link>
   );

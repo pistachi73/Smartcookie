@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import type { TooltipProps as TooltipPrimitiveProps } from "react-aria-components"
+import type { TooltipProps as TooltipPrimitiveProps } from "react-aria-components";
 import {
   Button,
   OverlayArrow,
   Tooltip as TooltipPrimitive,
   TooltipTrigger,
   composeRenderProps,
-} from "react-aria-components"
-import type { VariantProps } from "tailwind-variants"
-import { tv } from "tailwind-variants"
+} from "react-aria-components";
+import type { VariantProps } from "tailwind-variants";
+import { tv } from "tailwind-variants";
 
 const tooltipStyles = tv({
   base: [
@@ -17,7 +17,8 @@ const tooltipStyles = tv({
   ],
   variants: {
     intent: {
-      default: "bg-overlay text-overlay-fg [&_.arx]:fill-overlay [&_.arx]:stroke-border",
+      default:
+        "bg-overlay text-overlay-fg [&_.arx]:fill-overlay [&_.arx]:stroke-border",
       inverse:
         "border-transparent bg-fg text-bg [&_.arx]:fill-fg [&_.arx]:stroke-transparent dark:[&_.arx]:fill-white [&_.text-muted-fg]:text-bg/70 dark:[&_.text-muted-fg]:text-fg/70",
     },
@@ -37,16 +38,16 @@ const tooltipStyles = tv({
   defaultVariants: {
     intent: "default",
   },
-})
+});
 
-type TooltipProps = React.ComponentProps<typeof TooltipTrigger>
-const Tooltip = (props: TooltipProps) => <TooltipTrigger {...props} />
+type TooltipProps = React.ComponentProps<typeof TooltipTrigger>;
+const Tooltip = (props: TooltipProps) => <TooltipTrigger {...props} />;
 
 interface TooltipContentProps
   extends Omit<TooltipPrimitiveProps, "children">,
     VariantProps<typeof tooltipStyles> {
-  showArrow?: boolean
-  children: React.ReactNode
+  showArrow?: boolean;
+  children: React.ReactNode;
 }
 
 const Content = ({
@@ -76,17 +77,18 @@ const Content = ({
             viewBox="0 0 12 12"
             className="arx group-data-[placement=left]:-rotate-90 group-data-[placement=bottom]:rotate-180 group-data-[placement=right]:rotate-90 forced-colors:fill-[Canvas] forced-colors:stroke-[ButtonBorder]"
           >
+            <title>Tooltip arrow</title>
             <path d="M0 0 L6 6 L12 0" />
           </svg>
         </OverlayArrow>
       )}
       {children}
     </TooltipPrimitive>
-  )
-}
+  );
+};
 
-Tooltip.Trigger = Button
-Tooltip.Content = Content
+Tooltip.Trigger = Button;
+Tooltip.Content = Content;
 
-export type { TooltipProps, TooltipContentProps }
-export { Tooltip }
+export { Tooltip };
+export type { TooltipContentProps, TooltipProps };

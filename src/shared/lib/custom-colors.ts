@@ -123,30 +123,80 @@ export const colorStyleMap: Record<CustomColor, CustomColorClasses> = {
   },
 };
 
+export const hubCardColorStyleMap: Record<
+  CustomColor,
+  { hover: string; dot: string }
+> = {
+  flamingo: {
+    hover: "hover:border-[var(--custom-flamingo-border)]",
+    dot: "bg-[var(--custom-flamingo-bg)]",
+  },
+  tangerine: {
+    hover: "hover:border-[var(--custom-tangerine-border)]",
+    dot: "bg-[var(--custom-tangerine-bg)]",
+  },
+  banana: {
+    hover: "hover:border-[var(--custom-banana-border)]",
+    dot: "bg-[var(--custom-banana-bg)]",
+  },
+  sage: {
+    hover: "hover:border-[var(--custom-sage-border)]",
+    dot: "bg-[var(--custom-sage-bg)]",
+  },
+  peacock: {
+    hover: "hover:border-[var(--custom-peacock-border)]",
+    dot: "bg-[var(--custom-peacock-bg)]",
+  },
+  blueberry: {
+    hover: "hover:border-[var(--custom-blueberry-border)]",
+    dot: "bg-[var(--custom-blueberry-bg)]",
+  },
+  lavender: {
+    hover: "hover:border-[var(--custom-lavender-border)]",
+    dot: "bg-[var(--custom-lavender-bg)]",
+  },
+  grape: {
+    hover: "hover:border-[var(--custom-grape-border)]",
+    dot: "bg-[var(--custom-grape-bg)]",
+  },
+  graphite: {
+    hover: "hover:border-[var(--custom-graphite-border)]",
+    dot: "bg-[var(--custom-graphite-bg)]",
+  },
+  neutral: {
+    hover: "hover:border-[var(--custom-neutral-border)]",
+    dot: "bg-[var(--custom-neutral-bg)]",
+  },
+  sunshine: {
+    hover: "hover:border-[var(--custom-sunshine-border)]",
+    dot: "bg-[var(--custom-sunshine-bg)]",
+  },
+  stone: {
+    hover: "hover:border-[var(--custom-stone-border)]",
+    dot: "bg-[var(--custom-stone-bg)]",
+  },
+  slate: {
+    hover: "hover:border-[var(--custom-slate-border)]",
+    dot: "bg-[var(--custom-slate-bg)]",
+  },
+};
+
 /**
  * Get Tailwind classes for a custom color
  * @param color Custom color enum value
  * @returns Object with Tailwind classes for background, border, and text
  */
-export function getCustomColorClasses(color: CustomColor): CustomColorClasses {
+export function getCustomColorClasses<T>(
+  color: CustomColor,
+  colorMap: Record<CustomColor, T>,
+): T;
+export function getCustomColorClasses(color: CustomColor): CustomColorClasses;
+export function getCustomColorClasses<T>(
+  color: CustomColor,
+  colorMap?: Record<CustomColor, T>,
+): T | CustomColorClasses {
+  if (colorMap) {
+    return colorMap[color] || colorMap.neutral;
+  }
   return colorStyleMap[color] || colorStyleMap.neutral;
-}
-
-/**
- * Get background and border Tailwind classes for a custom color
- * @param color Custom color enum value
- * @returns String with Tailwind classes for background and border
- */
-export function getCustomColorStyle(color: CustomColor): string {
-  const classes = getCustomColorClasses(color);
-  return `${classes.bg} ${classes.border}`;
-}
-
-/**
- * Get text color Tailwind class for a custom color
- * @param color Custom color enum value
- * @returns String with Tailwind class for text color
- */
-export function getCustomTextColorClass(color: CustomColor): string {
-  return getCustomColorClasses(color).text;
 }
