@@ -10,11 +10,11 @@ import {
 } from "react-aria-components";
 import { tv } from "tailwind-variants";
 
-import { useMediaQuery } from "@/shared/hooks/use-media-query";
 import { cn } from "@/shared/lib/classes";
 import { Calendar01Icon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { DateDuration } from "@internationalized/date";
+import { useDeviceType } from "../layout/device-only/device-only-provider";
 import { Button } from "./button";
 import { Calendar } from "./calendar";
 import { DateInput } from "./date-field";
@@ -58,7 +58,8 @@ const DatePickerOverlay = ({
   range,
   ...props
 }: DatePickerOverlayProps) => {
-  const isMobile = useMediaQuery("(max-width: 600px)");
+  const { isMobile } = useDeviceType();
+
   return (
     <Popover.Content
       showArrow={false}
@@ -128,7 +129,7 @@ const DatePicker = <T extends DateValue>({
       {...props}
       className={composeTailwindRenderProps(className?.primitive, base())}
     >
-      {label && <Label>{label}</Label>}
+      {label && <Label isRequired={props.isRequired}>{label}</Label>}
       <FieldGroup className={cn("min-w-40", className?.fieldGroup)}>
         <DateInput className={datePickerInput()} />
         <DatePickerIcon />

@@ -13,7 +13,7 @@ export const HubStackList = () => {
   if (!hasVisibleHubs) return <EmptyState />;
 
   return (
-    <div className="w-full h-full flex overflow-scroll relative">
+    <div className="w-full h-full min-h-0 flex overflow-auto relative pb-12 shrink-0">
       <AnimatePresence mode="popLayout" initial={false}>
         {Array.from(visibleHubs).map((hubId) => (
           <m.div
@@ -28,7 +28,7 @@ export const HubStackList = () => {
               damping: 25,
               mass: 0.5,
             }}
-            className="h-full will-change-transform"
+            className="h-full will-change-transform pb-20"
           >
             <HubNotesStack hubId={hubId} />
           </m.div>

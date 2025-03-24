@@ -18,8 +18,8 @@ import {
 } from "react-aria-components";
 import { tv } from "tailwind-variants";
 
-import { useMediaQuery } from "@/shared/hooks/use-media-query";
 import { twMerge } from "tailwind-merge";
+import { useDeviceType } from "../layout/device-only/device-only-provider";
 import type {
   DialogBodyProps,
   DialogFooterProps,
@@ -128,7 +128,7 @@ const PopoverContent = ({
   className,
   ...props
 }: PopoverContentProps) => {
-  const isMobile = useMediaQuery("(max-width: 600px)");
+  const { isMobile } = useDeviceType();
   const popoverContext = useSlottedContext(PopoverContext)!;
   const isMenuTrigger = popoverContext?.trigger === "MenuTrigger";
   const isSubmenuTrigger = popoverContext?.trigger === "SubmenuTrigger";

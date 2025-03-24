@@ -1,6 +1,4 @@
-import type { Hub } from "@/db/schema";
-
-export type CustomColor = Hub["color"];
+import type { CustomColor } from "@/db/schema/shared";
 
 export interface CustomColorClasses {
   bg: string;
@@ -10,6 +8,8 @@ export interface CustomColorClasses {
   focusVisible: string;
   ring: string;
 }
+
+export const DEFAULT_CUSTOM_COLOR: CustomColor = "neutral";
 
 /**
  * Maps custom color enum values to Tailwind classes

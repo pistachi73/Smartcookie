@@ -1,6 +1,6 @@
+import type { CustomColor } from "@/db/schema/shared";
 import { quickNotesHubsQueryOptions } from "@/features/notes/lib/quick-notes-query-options";
 import { cn } from "@/shared/lib/classes";
-import type { CustomColor } from "@/shared/lib/custom-colors";
 import { getCustomColorClasses } from "@/shared/lib/custom-colors";
 import { Heading } from "@/ui/heading";
 import { NoteIcon } from "@hugeicons-pro/core-solid-rounded";
@@ -55,7 +55,7 @@ export const HubNotesStack = ({ hubId }: HubNotesStackProps) => {
   const colorClasses = getCustomColorClasses(hub.color as CustomColor);
 
   return (
-    <div className="flex flex-col gap-3 w-[320px] h-full shrink-0 bg-bg/  p-3 ">
+    <div className="flex flex-col gap-3 w-[320px] h-full shrink-0  p-3">
       <div className="sticky top-2 z-10 backdrop-blur-sm flex gap-2">
         <Heading
           level={4}
@@ -105,9 +105,9 @@ export const HubNotesStack = ({ hubId }: HubNotesStackProps) => {
                 initial="hidden"
                 animate="visible"
                 exit="exit"
-                className="will-change-transform origin-top"
+                className="will-change-transform origin-top "
               >
-                <NoteCard note={note} index={index} hubColor={hub.color} />
+                <NoteCard note={note} hubColor={hub.color} />
               </m.div>
             ))
           ) : (

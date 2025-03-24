@@ -88,17 +88,6 @@
   --color-custom-stone-border: var(--custom-stone-border);
   --color-custom-slate-border: var(--custom-slate-border);
 
-  /* Legacy event color variables - kept for backward compatibility */
-  --color-event-blue: var(--event-blue);
-  --color-event-purple: var(--event-purple);
-  --color-event-teal: var(--event-teal);
-  --color-event-green: var(--event-green);
-  --color-event-orange: var(--event-orange);
-  --color-event-red: var(--event-red);
-  --color-event-pink: var(--event-pink);
-  --color-event-indigo: var(--event-indigo);
-  --color-event-cyan: var(--event-cyan);
-
   --animate-password-input-div-down: password-input-div-down 250ms ease-out 0s 1 normal none running;
 
   @keyframes password-input-div-down {
@@ -145,35 +134,6 @@
     --custom-sunshine-border: oklch(58% 0.20 60);
     --custom-stone-border: oklch(50% 0.05 30);
     --custom-slate-border: oklch(47% 0.08 240);
-
-    /* Legacy event color variables - kept for backward compatibility */
-    --event-flamingo-bg: var(--custom-flamingo-bg);
-    --event-tangerine-bg: var(--custom-tangerine-bg);
-    --event-banana-bg: var(--custom-banana-bg);
-    --event-sage-bg: var(--custom-sage-bg);
-    --event-peacock-bg: var(--custom-peacock-bg);
-    --event-blueberry-bg: var(--custom-blueberry-bg);
-    --event-lavender-bg: var(--custom-lavender-bg);
-    --event-grape-bg: var(--custom-grape-bg);
-    --event-graphite-bg: var(--custom-graphite-bg);
-    --event-neutral-bg: var(--custom-neutral-bg);
-    --event-sunshine-bg: var(--custom-sunshine-bg);
-    --event-stone-bg: var(--custom-stone-bg);
-    --event-slate-bg: var(--custom-slate-bg);
-
-    --event-flamingo-border: var(--custom-flamingo-border);
-    --event-tangerine-border: var(--custom-tangerine-border);
-    --event-banana-border: var(--custom-banana-border);
-    --event-sage-border: var(--custom-sage-border);
-    --event-peacock-border: var(--custom-peacock-border);
-    --event-blueberry-border: var(--custom-blueberry-border);
-    --event-lavender-border: var(--custom-lavender-border);
-    --event-grape-border: var(--custom-grape-border);
-    --event-graphite-border: var(--custom-graphite-border);
-    --event-neutral-border: var(--custom-neutral-border);
-    --event-sunshine-border: var(--custom-sunshine-border);
-    --event-stone-border: var(--custom-stone-border);
-    --event-slate-border: var(--custom-slate-border);
 
     /* Other variables */
     --bg: oklch(1 0 0);
@@ -260,35 +220,6 @@
     --custom-neutral-border: oklch(58% 0.08 250);   /* Cool gray with slight blue undertone */
     --custom-stone-border: oklch(55% 0.02 0);       /* Soft warm gray border */
     --custom-slate-border: oklch(50% 0.02 0);       /* Soft cool gray border */
-
-    /* Legacy event color variables - kept for backward compatibility */
-    --event-grape-bg: var(--custom-grape-bg);
-    --event-lavender-bg: var(--custom-lavender-bg);
-    --event-blueberry-bg: var(--custom-blueberry-bg);
-    --event-peacock-bg: var(--custom-peacock-bg);
-    --event-sage-bg: var(--custom-sage-bg);
-    --event-banana-bg: var(--custom-banana-bg);
-    --event-tangerine-bg: var(--custom-tangerine-bg);
-    --event-sunshine-bg: var(--custom-sunshine-bg);
-    --event-flamingo-bg: var(--custom-flamingo-bg);
-    --event-graphite-bg: var(--custom-graphite-bg);
-    --event-neutral-bg: var(--custom-neutral-bg);
-    --event-stone-bg: var(--custom-stone-bg);
-    --event-slate-bg: var(--custom-slate-bg);
-
-    --event-grape-border: var(--custom-grape-border);
-    --event-lavender-border: var(--custom-lavender-border);
-    --event-blueberry-border: var(--custom-blueberry-border);
-    --event-peacock-border: var(--custom-peacock-border);
-    --event-sage-border: var(--custom-sage-border);
-    --event-banana-border: var(--custom-banana-border);
-    --event-tangerine-border: var(--custom-tangerine-border);
-    --event-sunshine-border: var(--custom-sunshine-border);
-    --event-flamingo-border: var(--custom-flamingo-border);
-    --event-graphite-border: var(--custom-graphite-border);
-    --event-neutral-border: var(--custom-neutral-border);
-    --event-stone-border: var(--custom-stone-border);
-    --event-slate-border: var(--custom-slate-border);
 
     /* Other variables */
     --bg: oklch(0.131 0.008 260);

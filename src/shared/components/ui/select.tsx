@@ -78,7 +78,15 @@ const List = <T extends object>({
   ...props
 }: ListProps<T>) => {
   return (
-    <PopoverContent className={className?.popover} {...popoverProps}>
+    <PopoverContent
+      {...popoverProps}
+      showArrow={false}
+      respectScreen={false}
+      className={composeTailwindRenderProps(
+        className?.popover,
+        "sm:min-w-(--trigger-width)",
+      )}
+    >
       <ListBox.Picker
         aria-label="items"
         items={items}

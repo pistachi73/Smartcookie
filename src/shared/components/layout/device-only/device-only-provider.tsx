@@ -23,6 +23,13 @@ export const SCREENS = {
   "2XL": 1536,
 } as const;
 
+export const MEDIA_QUERIES = {
+  SM: `(min-width: ${SCREENS.SM}px)`,
+  MD: `(min-width: ${SCREENS.MD}px)`,
+  LG: `(min-width: ${SCREENS.LG}px)`,
+  XL: `(min-width: ${SCREENS["2XL"]}px)`,
+} as const;
+
 const getIsMobileUsingViewport = (
   serverDeviceType: DeviceType,
   viewportWidth: number,

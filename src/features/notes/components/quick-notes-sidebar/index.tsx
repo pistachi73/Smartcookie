@@ -1,8 +1,8 @@
 "use client";
 
+import type { CustomColor } from "@/db/schema/shared";
 import { useQuickNotesStore } from "@/features/notes/store/quick-notes-store-provider";
 import { cn } from "@/shared/lib/classes";
-import type { CustomColor } from "@/shared/lib/custom-colors";
 import { Button } from "@/ui/button";
 import { Heading } from "@/ui/heading";
 import { SearchField } from "@/ui/search-field";

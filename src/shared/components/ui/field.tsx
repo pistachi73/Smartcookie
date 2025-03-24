@@ -43,8 +43,18 @@ const fieldStyles = tv({
 
 const { description, label, fieldError, input } = fieldStyles();
 
-const Label = ({ className, ...props }: LabelProps) => {
-  return <LabelPrimitive {...props} className={label({ className })} />;
+const Label = ({
+  className,
+  isRequired,
+  children,
+  ...props
+}: LabelProps & { isRequired?: boolean }) => {
+  return (
+    <LabelPrimitive {...props} className={label({ className })}>
+      {children}
+      {isRequired && <span className="text-danger">*</span>}
+    </LabelPrimitive>
+  );
 };
 
 interface DescriptionProps extends TextProps {

@@ -2,7 +2,6 @@ import type { InsertHub } from "@/db/schema";
 
 const hubs: Omit<InsertHub, "userId">[] = [
   {
-    id: 1,
     name: "Català A2 - Abat Oliba",
     description:
       "Everyday language, ERASMUS students living in BCN for 6 months.",
@@ -14,7 +13,6 @@ const hubs: Omit<InsertHub, "userId">[] = [
     endDate: new Date("2025-06-20").toISOString(),
   },
   {
-    id: 2,
     name: "Español A1 - UAB",
     description: "AULA A1, 3 students from Japan and Corea",
     schedule: "Mon - Fri from 9 to 11h",
@@ -25,7 +23,6 @@ const hubs: Omit<InsertHub, "userId">[] = [
     endDate: new Date("2025-05-01").toISOString(),
   },
   {
-    id: 3,
     name: "Español A2 - Bogi",
     description:
       "1to1, everyday language / 50min grammar class + 25min conversation class",
@@ -37,7 +34,6 @@ const hubs: Omit<InsertHub, "userId">[] = [
     endDate: new Date("2025-06-20").toISOString(),
   },
   {
-    id: 4,
     name: "Español B1 - Rabia",
     description: "Conversation class, 1to1, economy/politics/antropology",
     schedule: "Mon - Wed, mornings",

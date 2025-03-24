@@ -1,5 +1,5 @@
+import type { CustomColor } from "@/db/schema/shared";
 import { cn } from "@/shared/lib/classes";
-import type { CustomColor } from "@/shared/lib/custom-colors";
 import { getCustomColorClasses } from "@/shared/lib/custom-colors";
 import { Tooltip } from "@/ui/tooltip";
 import { Folder02Icon } from "@hugeicons-pro/core-solid-rounded";

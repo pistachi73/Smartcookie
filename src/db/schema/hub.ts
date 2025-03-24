@@ -10,26 +10,12 @@ import {
 } from "drizzle-orm/pg-core";
 import { event } from "./event";
 import { quickNote } from "./quick-note";
+import { customColorEnum } from "./shared";
 import { studentHub } from "./student-hub";
 import { user } from "./user";
 import { pgTable } from "./utils";
 
 export const hubStatusEnum = pgEnum("hub_status", ["active", "inactive"]);
-export const customColorEnum = pgEnum("custom_color", [
-  "flamingo",
-  "tangerine",
-  "banana",
-  "sage",
-  "peacock",
-  "blueberry",
-  "lavender",
-  "grape",
-  "graphite",
-  "neutral",
-  "sunshine",
-  "stone",
-  "slate",
-]);
 
 export const hub = pgTable(
   "hub",
@@ -39,9 +25,9 @@ export const hub = pgTable(
       .references(() => user.id, { onDelete: "cascade" })
       .notNull(),
     name: text().notNull(),
-    description: text().notNull(),
-    schedule: text().notNull(),
-    status: hubStatusEnum("status").default("active").notNull(),
+    description: text(),
+    schedule: text(),
+    status: hubStatusEnum("status").default("active"),
     color: customColorEnum("color").default("neutral").notNull(),
     startDate: timestamp({ mode: "string" }).notNull(),
     endDate: timestamp({ mode: "string" }),
@@ -59,6 +45,7 @@ export const hub = pgTable(
 
 export type InsertHub = typeof hub.$inferInsert;
 export type Hub = typeof hub.$inferSelect;
+export type HubStatus = (typeof hubStatusEnum.enumValues)[number];
 
 export const hubRelations = relations(hub, ({ many }) => ({
   students: many(studentHub),

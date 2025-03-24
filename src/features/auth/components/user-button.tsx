@@ -24,7 +24,7 @@ export const UserButton = () => {
             <UserAvatar
               userImage={user?.image}
               userName={user?.name}
-              size="small"
+              size="medium"
             />
             <div className="overflow-hidden">
               <p className="text-md font-medium">{user?.name}</p>

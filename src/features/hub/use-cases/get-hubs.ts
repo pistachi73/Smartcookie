@@ -45,7 +45,5 @@ export const getHubsUseCase = async ({
     .where(eq(hub.userId, userId))
     .groupBy(hub.id);
 
-  console.log(hubs[0]?.students);
-
   return hubs;
 };

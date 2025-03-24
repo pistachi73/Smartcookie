@@ -1,11 +1,11 @@
 "use client";
 
+import type { CustomColor } from "@/db/schema/shared";
 import { noteFocusRegistry } from "@/features/notes/hooks/use-add-quick-note";
 import { useDeleteQuickNote } from "@/features/notes/hooks/use-delete-quick-note";
 import { useUpdateQuickNote } from "@/features/notes/hooks/use-update-quick-note";
 import { useQuickNotesStore } from "@/features/notes/store/quick-notes-store-provider";
 import { cn } from "@/shared/lib/classes";
-import type { CustomColor } from "@/shared/lib/custom-colors";
 import { getCustomColorClasses } from "@/shared/lib/custom-colors";
 import { ProgressCircle } from "@/ui/progress-circle";
 import { Delete01Icon } from "@hugeicons-pro/core-stroke-rounded";
@@ -16,13 +16,13 @@ import { memo, useEffect, useRef, useState } from "react";
 import { Button, TextArea } from "react-aria-components";
 import { useShallow } from "zustand/react/shallow";
 import type { NoteSummary } from "../../types/quick-notes.types";
+
 interface NoteCardProps {
   note: NoteSummary;
-  index?: number;
-  hubColor?: CustomColor;
+  hubColor: CustomColor | null;
 }
 
-const NoteCardComponent = ({ note, index = 0, hubColor }: NoteCardProps) => {
+const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
   const [isEditingNote, setIsEditingNote] = useState(false);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const focusCheckedRef = useRef(false);

@@ -13,7 +13,7 @@ import {
 } from "react-aria-components";
 import { tv } from "tailwind-variants";
 
-import { useMediaQuery } from "@/shared/hooks/use-media-query";
+import { useDeviceType } from "../layout/device-only/device-only-provider";
 import { Button, type ButtonProps } from "./button";
 
 const dialogStyles = tv({
@@ -200,7 +200,7 @@ interface CloseButtonIndicatorProps extends ButtonProps {
 }
 
 const CloseIndicator = ({ className, ...props }: CloseButtonIndicatorProps) => {
-  const isMobile = useMediaQuery("(max-width: 600px)");
+  const { isMobile } = useDeviceType();
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
