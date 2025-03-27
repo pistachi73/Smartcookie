@@ -40,6 +40,7 @@ interface SearchFieldProps
   errorMessage?: string | ((validation: ValidationResult) => string);
   isPending?: boolean;
   className?: {
+    primitive?: string;
     fieldGroup?: string;
     input?: string;
   };
@@ -58,10 +59,10 @@ const SearchField = ({
     <SearchFieldPrimitive
       aria-label={placeholder ?? props["aria-label"] ?? "Search..."}
       {...props}
-      className={composeTailwindRenderProps(className?.fieldGroup, base())}
+      className={composeTailwindRenderProps(className?.primitive, base())}
     >
       {label && <Label>{label}</Label>}
-      <FieldGroup>
+      <FieldGroup className={className?.fieldGroup}>
         <HugeiconsIcon
           icon={Search01Icon}
           aria-hidden

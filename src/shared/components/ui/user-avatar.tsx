@@ -59,7 +59,7 @@ export const UserAvatar = ({
 
   return (
     <Avatar
-      className={`${className || ""} ${!userImage && initials ? avatarColorClass : ""}`}
+      className={`${className} ${!userImage && initials ? avatarColorClass : ""}`}
       src={userImage ?? undefined}
       initials={initials}
       alt={userName ?? undefined}

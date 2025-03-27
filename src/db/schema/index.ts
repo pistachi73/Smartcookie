@@ -7,6 +7,7 @@ export * from "./event-participant";
 export * from "./hub";
 export * from "./password-reset-token";
 export * from "./quick-note";
+export * from "./shared";
 export * from "./student";
 export * from "./student-hub";
 export * from "./two-factor-confirmation";

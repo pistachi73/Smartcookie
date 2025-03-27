@@ -1,12 +1,12 @@
 "use client";
 
-import { UserButton } from "@/features/auth/components/user-button";
 import { Breadcrumbs } from "@/ui/breadcrumbs";
-import { SearchField } from "@/ui/search-field";
 import { Separator } from "@/ui/separator";
-import { SidebarNav, SidebarTrigger } from "@/ui/sidebar";
 
+import { UserButton } from "@/features/auth/components/user-button";
 import { cn } from "@/shared/lib/classes";
+import { SearchField } from "../../ui/search-field";
+import { SidebarTrigger } from "../../ui/sidebar";
 
 export interface PortalNavProps {
   className?: string;
@@ -22,7 +22,7 @@ export const PortalNav = ({
   breadcrumbs,
 }: PortalNavProps) => {
   return (
-    <SidebarNav
+    <nav
       className={cn(
         "border-b h-14 sticky shrink-0 top-0 z-20 bg-background",
         className,
@@ -57,6 +57,6 @@ export const PortalNav = ({
           <UserButton />
         </div>
       </div>
-    </SidebarNav>
+    </nav>
   );
 };

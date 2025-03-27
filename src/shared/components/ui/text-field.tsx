@@ -71,6 +71,7 @@ const TextField = ({
     setIsPasswordVisible((prev) => !prev);
   };
 
+  console.log(errorMessage);
   return (
     <TextFieldPrimitive
       type={inputType}

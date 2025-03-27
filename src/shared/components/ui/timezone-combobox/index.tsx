@@ -105,7 +105,9 @@ export const TimezoneCombobox = <T extends object>({
 
       <ComboBox.List
         isOpen={isOpen}
-        className={cn("max-h-[300px]!", className?.overlay)}
+        className={{
+          popoverContent: cn("max-h-[300px]!", className?.overlay),
+        }}
         {...listProps}
         items={items}
       >

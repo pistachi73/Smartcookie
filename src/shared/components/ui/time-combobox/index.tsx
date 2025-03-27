@@ -149,7 +149,9 @@ export const TimeCombobox = <T extends TimeSelectOption>({
       <ComboBox.List
         items={items}
         isOpen={isOpen}
-        className={cn("w-50 max-h-[300px]!", className?.overlay)}
+        className={{
+          popoverContent: cn("w-50 max-h-[300px]!", className?.overlay),
+        }}
         {...listProps}
       >
         {({ label, difference, isDisabled }) => (

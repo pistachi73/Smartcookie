@@ -1,6 +1,6 @@
 import { boolean, integer, serial } from "drizzle-orm/pg-core";
 import { hub } from "./hub";
-import { paymentFrequencyEnum, student } from "./student";
+import { student } from "./student";
 import { pgTable } from "./utils";
 
 export const billing = pgTable("billing", {
@@ -12,7 +12,6 @@ export const billing = pgTable("billing", {
     .notNull()
     .references(() => hub.id, { onDelete: "cascade" }),
   cost: integer().notNull(),
-  billingType: paymentFrequencyEnum().notNull(),
   tentative: boolean().default(true),
   invoiceSent: boolean().default(false),
 });

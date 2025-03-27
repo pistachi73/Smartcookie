@@ -75,8 +75,14 @@ type ListBoxPickerProps<T extends object> = React.ComponentProps<
 >;
 
 interface ComboBoxListProps<T extends object>
-  extends ListBoxPickerProps<T>,
-    Omit<PopoverPrimitiveProps, "children" | "className" | "style"> {}
+  extends Omit<ListBoxPickerProps<T>, "className">,
+    Omit<PopoverPrimitiveProps, "children" | "className" | "style"> {
+  showArrow?: boolean;
+  className?: {
+    popoverContent?: string;
+    listBox?: string;
+  };
+}
 
 const ComboBoxList = <T extends object>({
   children,
@@ -84,6 +90,8 @@ const ComboBoxList = <T extends object>({
   isOpen,
   triggerRef,
   offset,
+  showArrow = false,
+  className,
   ...props
 }: ComboBoxListProps<T>) => {
   return (
@@ -94,8 +102,10 @@ const ComboBoxList = <T extends object>({
       placement={props.placement}
       offset={offset}
       triggerRef={triggerRef}
+      showArrow={showArrow}
+      className={className?.popoverContent}
     >
-      <ListBox.Picker items={items} {...props}>
+      <ListBox.Picker items={items} className={className?.listBox} {...props}>
         {children}
       </ListBox.Picker>
     </PopoverContent>

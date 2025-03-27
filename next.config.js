@@ -32,6 +32,10 @@ const config = {
       },
     ],
   },
+  webpack: (config, { isServer }) => {
+    config.optimization.sideEffects = true;
+    return config;
+  },
 };
 
 const withBundleAnalyzer = bundleAnalyzer({

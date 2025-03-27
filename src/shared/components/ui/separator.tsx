@@ -1,7 +1,10 @@
-"use client"
+"use client";
 
-import { Separator as Divider, type SeparatorProps as DividerProps } from "react-aria-components"
-import { tv } from "tailwind-variants"
+import {
+  Separator as Divider,
+  type SeparatorProps as DividerProps,
+} from "react-aria-components";
+import { tv } from "tailwind-variants";
 
 const separatorStyles = tv({
   base: "shrink-0 bg-border forced-colors:bg-[ButtonBorder]",
@@ -14,10 +17,10 @@ const separatorStyles = tv({
   defaultVariants: {
     orientation: "horizontal",
   },
-})
+});
 
 interface SeparatorProps extends DividerProps {
-  className?: string
+  className?: string;
 }
 
 const Separator = ({ className, ...props }: SeparatorProps) => {
@@ -29,8 +32,8 @@ const Separator = ({ className, ...props }: SeparatorProps) => {
         className: className,
       })}
     />
-  )
-}
+  );
+};
 
-export type { SeparatorProps }
-export { Separator }
+export { Separator };
+export type { SeparatorProps };

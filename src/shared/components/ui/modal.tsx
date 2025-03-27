@@ -155,4 +155,4 @@ Modal.Body = ModalBody;
 Modal.Close = ModalClose;
 Modal.Content = ModalContent;
 
-export { Modal };
+export { Modal, type ModalContentProps };

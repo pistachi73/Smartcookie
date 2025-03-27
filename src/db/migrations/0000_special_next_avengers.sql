@@ -1,7 +1,6 @@
-CREATE TYPE "public"."custom_color" AS ENUM('flamingo', 'tangerine', 'banana', 'sage', 'peacock', 'blueberry', 'lavender', 'grape', 'graphite', 'neutral', 'sunshine', 'stone', 'slate');--> statement-breakpoint
 CREATE TYPE "public"."hub_status" AS ENUM('active', 'inactive');--> statement-breakpoint
-CREATE TYPE "public"."payment_frequency" AS ENUM('one-time', 'monthly');--> statement-breakpoint
-CREATE TYPE "public"."time_investment" AS ENUM('low', 'medium', 'high');--> statement-breakpoint
+CREATE TYPE "public"."custom_color" AS ENUM('flamingo', 'tangerine', 'banana', 'sage', 'peacock', 'blueberry', 'lavender', 'grape', 'graphite', 'neutral', 'sunshine', 'stone', 'slate');--> statement-breakpoint
+CREATE TYPE "public"."student_status" AS ENUM('active', 'inactive');--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "account" (
 	"userId" uuid NOT NULL,
 	"type" text NOT NULL,
@@ -29,7 +28,6 @@ CREATE TABLE IF NOT EXISTS "billing" (
 	"student_id" serial NOT NULL,
 	"hub_id" serial NOT NULL,
 	"cost" integer NOT NULL,
-	"billing_type" "payment_frequency" NOT NULL,
 	"tentative" boolean DEFAULT true,
 	"invoice_sent" boolean DEFAULT false
 );
@@ -68,9 +66,9 @@ CREATE TABLE IF NOT EXISTS "hub" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"user_id" uuid NOT NULL,
 	"name" text NOT NULL,
-	"description" text NOT NULL,
-	"schedule" text NOT NULL,
-	"status" "hub_status" DEFAULT 'active' NOT NULL,
+	"description" text,
+	"schedule" text,
+	"status" "hub_status" DEFAULT 'active',
 	"color" "custom_color" DEFAULT 'neutral' NOT NULL,
 	"start_date" timestamp NOT NULL,
 	"end_date" timestamp,
@@ -98,18 +96,20 @@ CREATE TABLE IF NOT EXISTS "quick_note" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "student" (
 	"id" serial PRIMARY KEY NOT NULL,
+	"user_id" uuid NOT NULL,
 	"name" text NOT NULL,
 	"email" text NOT NULL,
-	"password" text NOT NULL,
-	"salt" text NOT NULL,
-	"image" text,
-	"payment_frequency" "payment_frequency" DEFAULT 'monthly',
+	"phone" text NOT NULL,
 	"location" text,
 	"nationality" text,
-	"age" integer,
-	"time_investment" "time_investment" DEFAULT 'medium',
 	"job" text,
-	"away_until" timestamp
+	"status" "student_status" DEFAULT 'active',
+	"birth_date" timestamp with time zone,
+	"mother_language" text,
+	"learning_language" text,
+	"image" text,
+	"interests" text,
+	"age" integer
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "student_hub" (
@@ -233,6 +233,12 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
+ ALTER TABLE "student" ADD CONSTRAINT "student_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
  ALTER TABLE "student_hub" ADD CONSTRAINT "student_hub_student_id_student_id_fk" FOREIGN KEY ("student_id") REFERENCES "public"."student"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
@@ -253,6 +259,9 @@ END $$;
 CREATE INDEX IF NOT EXISTS "event_participant_participant_id_index" ON "event_participant" USING btree ("participant_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "event_participant_event_occurrence_id_index" ON "event_participant" USING btree ("event_occurrence_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "user_id_idx" ON "hub" USING btree ("user_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "student_name_index" ON "student" USING btree ("name");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "student_email_index" ON "student" USING btree ("email");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "student_search_idx" ON "student" USING gin (to_tsvector('english', "name" || ' ' || "email"));--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "student_hub_student_id_index" ON "student_hub" USING btree ("student_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "student_hub_hub_id_index" ON "student_hub" USING btree ("hub_id");--> statement-breakpoint
 CREATE INDEX IF NOT EXISTS "two_factor_confirmation_token_index" ON "two_factor_confirmation" USING btree ("token");--> statement-breakpoint

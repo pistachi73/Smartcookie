@@ -8,14 +8,6 @@ import {
   Tick02Icon,
 } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
-import type {
-  ButtonProps,
-  MenuItemProps as MenuItemPrimitiveProps,
-  MenuProps as MenuPrimitiveProps,
-  MenuSectionProps as MenuSectionPrimitiveProps,
-  MenuTriggerProps as MenuTriggerPrimitiveProps,
-  PopoverProps,
-} from "react-aria-components";
 import {
   Button,
   Collection,
@@ -24,9 +16,16 @@ import {
   Menu as MenuPrimitive,
   MenuSection as MenuSectionPrimitive,
   MenuTrigger as MenuTriggerPrimitive,
-  SubmenuTrigger as SubmenuTriggerPrimitive,
   composeRenderProps,
 } from "react-aria-components";
+import type {
+  ButtonProps,
+  MenuItemProps as MenuItemPrimitiveProps,
+  MenuProps as MenuPrimitiveProps,
+  MenuSectionProps as MenuSectionPrimitiveProps,
+  MenuTriggerProps as MenuTriggerPrimitiveProps,
+  PopoverProps,
+} from "react-aria-components/";
 import { twMerge } from "tailwind-merge";
 import type { VariantProps } from "tailwind-variants";
 import {
@@ -58,11 +57,11 @@ const Menu = ({ respectScreen = true, ...props }: MenuProps) => {
   );
 };
 
-const MenuSubMenu = ({ delay = 0, ...props }) => (
-  <SubmenuTriggerPrimitive {...props} delay={delay}>
-    {props.children}
-  </SubmenuTriggerPrimitive>
-);
+// const MenuSubMenu = ({ delay = 0, ...props }) => (
+//   <SubmenuTriggerPrimitive {...props} delay={delay}>
+//     {props.children}
+//   </SubmenuTriggerPrimitive>
+// );
 
 interface MenuTriggerProps extends ButtonProps {
   className?: string;
@@ -269,7 +268,7 @@ Menu.Separator = MenuSeparator;
 Menu.ItemDetails = MenuItemDetails;
 Menu.Label = MenuLabel;
 Menu.Trigger = MenuTrigger;
-Menu.Submenu = MenuSubMenu;
+// Menu.Submenu = MenuSubMenu;
 
 export { Menu };
 export type {

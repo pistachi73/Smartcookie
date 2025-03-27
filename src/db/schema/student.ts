@@ -1,35 +1,53 @@
-import { relations } from "drizzle-orm";
-import { integer, pgEnum, serial, text, timestamp } from "drizzle-orm/pg-core";
+import { relations, sql } from "drizzle-orm";
+import {
+  index,
+  integer,
+  pgEnum,
+  serial,
+  text,
+  timestamp,
+  uuid,
+} from "drizzle-orm/pg-core";
 import { attendance } from "./attendance";
 import { studentHub } from "./student-hub";
+import { user } from "./user";
 import { pgTable } from "./utils";
 
-export const paymentFrequencyEnum = pgEnum("payment_frequency", [
-  "one-time",
-  "monthly",
+export const studentStatusEnum = pgEnum("student_status", [
+  "active",
+  "inactive",
 ]);
 
-export const timeInvestmentEnum = pgEnum("time_investment", [
-  "low",
-  "medium",
-  "high",
-]);
-
-export const student = pgTable("student", {
-  id: serial().primaryKey(),
-  name: text().notNull(),
-  email: text().notNull(),
-  password: text().notNull(),
-  salt: text().notNull(),
-  image: text(),
-  paymentFrequency: paymentFrequencyEnum().default("monthly"),
-  location: text(),
-  nationality: text(),
-  age: integer("age"),
-  timeInvestment: timeInvestmentEnum().default("medium"),
-  job: text(),
-  awayUntil: timestamp({ mode: "date" }),
-});
+export const student = pgTable(
+  "student",
+  {
+    id: serial().primaryKey(),
+    userId: uuid()
+      .references(() => user.id, { onDelete: "cascade" })
+      .notNull(),
+    name: text().notNull(),
+    email: text().notNull(),
+    phone: text().notNull(),
+    location: text(),
+    nationality: text(),
+    job: text(),
+    status: studentStatusEnum().default("active"),
+    birthDate: timestamp({ mode: "string", withTimezone: true }),
+    motherLanguage: text(),
+    learningLanguage: text(),
+    image: text(),
+    interests: text(),
+    age: integer(),
+  },
+  (table) => ({
+    nameIdx: index().on(table.name),
+    emailIdx: index().on(table.email),
+    searchIdx: index("student_search_idx").using(
+      "gin",
+      sql`to_tsvector('english', ${table.name} || ' ' || ${table.email})`,
+    ),
+  }),
+);
 
 export type InsertStudent = typeof student.$inferInsert;
 export type Student = typeof student.$inferSelect;

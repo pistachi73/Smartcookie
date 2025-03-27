@@ -141,13 +141,14 @@ const SidebarProvider = ({
       <div
         className={cn(
           "@container ",
-          "flex h-full w-full text-sidebar-fg",
+          "flex h-full w-full min-h-0 text-sidebar-fg",
           "group/sidebar-root has-data-[sidebar-intent=inset]:bg-sidebar dark:has-data-[sidebar-intent=inset]:bg-bg",
           "[--sidebar-width-dock:calc(var(--spacing)*16)]",
           "[--sidebar-width-mobile:18rem]",
           "[--sidebar-width:17rem]",
           "[--sidebar-border:var(--color-border)]",
           "[--sidebar-secondary:color-mix(in_oklab,var(--color-secondary)_60%,white_20%)]",
+          "[--sidebar-accent:color-mix(in_oklab,var(--color-accent)_60%,white_20%)]",
           className,
         )}
         ref={ref}
