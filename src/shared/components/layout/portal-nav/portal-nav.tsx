@@ -6,7 +6,7 @@ import { Separator } from "@/ui/separator";
 import { UserButton } from "@/features/auth/components/user-button";
 import { cn } from "@/shared/lib/classes";
 import { SearchField } from "../../ui/search-field";
-import { SidebarTrigger } from "../../ui/sidebar";
+import { SidebarTrigger } from "../../ui/sidebar/sidebar-trigger";
 
 export interface PortalNavProps {
   className?: string;

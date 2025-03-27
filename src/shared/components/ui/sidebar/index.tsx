@@ -1,164 +1,31 @@
 "use client";
 
-import {
-  createContext,
-  use,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
-
-import { useMediaQuery } from "@/shared/hooks/use-media-query";
 import { cn } from "@/shared/lib/classes";
-import {
-  ArrowDown01Icon,
-  Menu01Icon,
-  SidebarLeft01Icon,
-} from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
+import dynamic from "next/dynamic";
 import type {
-  ButtonProps,
-  DisclosureGroupProps,
-  DisclosureProps,
   LinkProps,
   LinkRenderProps,
   SeparatorProps as SidebarSeparatorProps,
 } from "react-aria-components";
 import {
-  Disclosure,
-  DisclosureGroup,
-  DisclosurePanel,
   Header,
-  Heading,
   Link,
   Separator,
   Text,
-  Button as Trigger,
   composeRenderProps,
 } from "react-aria-components";
 import { twJoin } from "tailwind-merge";
 import { tv } from "tailwind-variants";
-import { Badge } from "./badge";
-import { Button } from "./button";
-import { composeTailwindRenderProps } from "./primitive";
-import { Sheet } from "./sheet";
-import { Tooltip } from "./tooltip";
+import { Badge } from "../badge";
+import { Tooltip } from "../tooltip";
+import { useSidebar } from "./sidebar-provider";
 
-const SIDEBAR_COOKIE_NAME = "sidebar:state";
-const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
-type SidebarContextProps = {
-  state: "expanded" | "collapsed";
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  isOpenOnMobile: boolean;
-  setIsOpenOnMobile: (open: boolean) => void;
-  isMobile: boolean;
-  toggleSidebar: () => void;
-};
-
-const SidebarContext = createContext<SidebarContextProps | null>(null);
-
-const useSidebar = () => {
-  const context = use(SidebarContext);
-  if (!context) {
-    throw new Error("useSidebar must be used within a Sidebar.");
-  }
-
-  return context;
-};
-
-interface SidebarProviderProps extends React.ComponentProps<"div"> {
-  defaultOpen?: boolean;
-  isOpen?: boolean;
-  shortcut?: string;
-  onOpenChange?: (open: boolean) => void;
-}
-
-const SidebarProvider = ({
-  defaultOpen = true,
-  isOpen: openProp,
-  onOpenChange: setOpenProp,
-  className,
-  children,
-  shortcut = "b",
-  ref,
-  ...props
-}: SidebarProviderProps) => {
-  const isMobile = useMediaQuery("(max-width: 767px)");
-  const [openMobile, setOpenMobile] = useState(false);
-
-  const [internalOpenState, setInternalOpenState] = useState(defaultOpen);
-  const open = openProp ?? internalOpenState;
-  const setOpen = useCallback(
-    (value: boolean | ((value: boolean) => boolean)) => {
-      const openState = typeof value === "function" ? value(open) : value;
-
-      if (setOpenProp) {
-        setOpenProp(openState);
-      } else {
-        setInternalOpenState(openState);
-      }
-
-      document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
-    },
-    [setOpenProp, open],
-  );
-
-  const toggleSidebar = useCallback(() => {
-    return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open);
-  }, [isMobile, setOpen]);
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === shortcut && (event.metaKey || event.ctrlKey)) {
-        event.preventDefault();
-        toggleSidebar();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [toggleSidebar, shortcut]);
-
-  const state = open ? "expanded" : "collapsed";
-
-  const contextValue = useMemo<SidebarContextProps>(
-    () => ({
-      state,
-      open,
-      setOpen,
-      isMobile,
-      isOpenOnMobile: openMobile,
-      setIsOpenOnMobile: setOpenMobile,
-      toggleSidebar,
-    }),
-    [state, open, setOpen, isMobile, openMobile, toggleSidebar],
-  );
-
-  return (
-    <SidebarContext value={contextValue}>
-      <div
-        className={cn(
-          "@container ",
-          "flex h-full w-full min-h-0 text-sidebar-fg",
-          "group/sidebar-root has-data-[sidebar-intent=inset]:bg-sidebar dark:has-data-[sidebar-intent=inset]:bg-bg",
-          "[--sidebar-width-dock:calc(var(--spacing)*16)]",
-          "[--sidebar-width-mobile:18rem]",
-          "[--sidebar-width:17rem]",
-          "[--sidebar-border:var(--color-border)]",
-          "[--sidebar-secondary:color-mix(in_oklab,var(--color-secondary)_60%,white_20%)]",
-          "[--sidebar-accent:color-mix(in_oklab,var(--color-accent)_60%,white_20%)]",
-          className,
-        )}
-        ref={ref}
-        {...props}
-      >
-        {children}
-      </div>
-    </SidebarContext>
-  );
-};
+const DyamicSidebarMobileSheet = dynamic(
+  () => import("./sidebar-mobile-sheet"),
+  {
+    ssr: false,
+  },
+);
 
 const gap = tv({
   base: [
@@ -226,7 +93,7 @@ const Sidebar = ({
   className,
   ...props
 }: SidebarProps) => {
-  const { isMobile, state, isOpenOnMobile, setIsOpenOnMobile } = useSidebar();
+  const { isMobile, state } = useSidebar();
 
   if (collapsible === "none") {
     return (
@@ -244,24 +111,13 @@ const Sidebar = ({
 
   if (isMobile) {
     return (
-      <Sheet
-        isOpen={isOpenOnMobile}
-        onOpenChange={setIsOpenOnMobile}
+      <DyamicSidebarMobileSheet
+        closeButton={closeButton}
+        collapsible={collapsible}
+        intent={intent}
+        side={side}
         {...props}
-      >
-        <Sheet.Content
-          closeButton={closeButton}
-          aria-label="Sidebar"
-          data-sidebar-intent="default"
-          classNames={{
-            content: "w-(--sidebar-width-mobile) [&>button]:hidden",
-          }}
-          isFloat={intent === "float"}
-          side={side}
-        >
-          <Sheet.Body className="px-0 sm:px-0">{props.children}</Sheet.Body>
-        </Sheet.Content>
-      </Sheet>
+      />
     );
   }
 
@@ -312,7 +168,7 @@ const SidebarHeader = ({
   ref,
   ...props
 }: React.ComponentProps<"div">) => {
-  const { state } = use(SidebarContext)!;
+  const { state } = useSidebar();
   return (
     <div
       ref={ref}
@@ -582,127 +438,127 @@ const SidebarInset = ({
   );
 };
 
-type SidebarDisclosureGroupProps = DisclosureGroupProps;
-const SidebarDisclosureGroup = ({
-  allowsMultipleExpanded = true,
-  className,
-  ...props
-}: SidebarDisclosureGroupProps) => {
-  return (
-    <DisclosureGroup
-      data-sidebar-disclosure-group="true"
-      allowsMultipleExpanded={allowsMultipleExpanded}
-      className={composeTailwindRenderProps(
-        className,
-        "col-span-full flex flex-col gap-y-6",
-      )}
-      {...props}
-    />
-  );
-};
+// type SidebarDisclosureGroupProps = DisclosureGroupProps;
+// const SidebarDisclosureGroup = ({
+//   allowsMultipleExpanded = true,
+//   className,
+//   ...props
+// }: SidebarDisclosureGroupProps) => {
+//   return (
+//     <DisclosureGroup
+//       data-sidebar-disclosure-group="true"
+//       allowsMultipleExpanded={allowsMultipleExpanded}
+//       className={composeTailwindRenderProps(
+//         className,
+//         "col-span-full flex flex-col gap-y-6",
+//       )}
+//       {...props}
+//     />
+//   );
+// };
 
-interface SidebarDisclosureProps extends DisclosureProps {
-  ref?: React.Ref<HTMLDivElement>;
-}
-const SidebarDisclosure = ({
-  className,
-  ref,
-  ...props
-}: SidebarDisclosureProps) => {
-  const { state } = useSidebar();
-  return (
-    <Disclosure
-      ref={ref}
-      data-sidebar-disclosure="true"
-      className={composeTailwindRenderProps(
-        className,
-        cn(
-          "in-data-[sidebar-intent=fleet]:px-0 px-2.5",
-          state !== "collapsed" && "col-span-full",
-        ),
-      )}
-      {...props}
-    />
-  );
-};
+// interface SidebarDisclosureProps extends DisclosureProps {
+//   ref?: React.Ref<HTMLDivElement>;
+// }
+// const SidebarDisclosure = ({
+//   className,
+//   ref,
+//   ...props
+// }: SidebarDisclosureProps) => {
+//   const { state } = useSidebar();
+//   return (
+//     <Disclosure
+//       ref={ref}
+//       data-sidebar-disclosure="true"
+//       className={composeTailwindRenderProps(
+//         className,
+//         cn(
+//           "in-data-[sidebar-intent=fleet]:px-0 px-2.5",
+//           state !== "collapsed" && "col-span-full",
+//         ),
+//       )}
+//       {...props}
+//     />
+//   );
+// };
 
-const sidebarDisclosureTrigger = tv({
-  base: [
-    "group relative flex w-full cursor-pointer items-center overflow-hidden rounded-lg px-[calc(var(--spacing)*2.3)] py-[calc(var(--spacing)*1.3)] text-sidebar-fg/70 outline-hidden sm:text-sm/6",
-    "in-data-[sidebar-intent=fleet]:rounded-none in-data-[sidebar-intent=fleet]:py-2 in-data-[sidebar-intent=fleet]:**:data-[slot=chevron]:hidden",
-  ],
-  variants: {
-    collapsed: {
-      false: "col-span-full **:data-[slot=icon]:mr-2",
-      true: "size-9 justify-center p-0",
-    },
-    isActive: {
-      true: "bg-(--sidebar-accent) text-sidebar-fg",
-    },
-    isDisabled: {
-      true: "cursor-default opacity-50",
-    },
-  },
-});
+// const sidebarDisclosureTrigger = tv({
+//   base: [
+//     "group relative flex w-full cursor-pointer items-center overflow-hidden rounded-lg px-[calc(var(--spacing)*2.3)] py-[calc(var(--spacing)*1.3)] text-sidebar-fg/70 outline-hidden sm:text-sm/6",
+//     "in-data-[sidebar-intent=fleet]:rounded-none in-data-[sidebar-intent=fleet]:py-2 in-data-[sidebar-intent=fleet]:**:data-[slot=chevron]:hidden",
+//   ],
+//   variants: {
+//     collapsed: {
+//       false: "col-span-full **:data-[slot=icon]:mr-2",
+//       true: "size-9 justify-center p-0",
+//     },
+//     isActive: {
+//       true: "bg-(--sidebar-accent) text-sidebar-fg",
+//     },
+//     isDisabled: {
+//       true: "cursor-default opacity-50",
+//     },
+//   },
+// });
 
-interface SidebarDisclosureTriggerProps extends ButtonProps {
-  ref?: React.Ref<HTMLButtonElement>;
-}
-const SidebarDisclosureTrigger = ({
-  className,
-  ref,
-  ...props
-}: SidebarDisclosureTriggerProps) => {
-  const { state, isMobile } = useSidebar();
-  const collapsed = state === "collapsed" && !isMobile;
-  return (
-    <Heading level={3}>
-      <Trigger
-        ref={ref}
-        slot="trigger"
-        className={composeRenderProps(className, (className, renderProps) =>
-          sidebarDisclosureTrigger({
-            ...renderProps,
-            collapsed,
-            isActive:
-              renderProps.isPressed ||
-              renderProps.isFocusVisible ||
-              renderProps.isHovered,
-            className,
-          }),
-        )}
-        {...props}
-      >
-        {(values) => (
-          <>
-            {typeof props.children === "function"
-              ? props.children(values)
-              : props.children}
-            {state !== "collapsed" && (
-              <HugeiconsIcon
-                icon={ArrowDown01Icon}
-                data-slot="chevron"
-                className="z-10 ml-auto size-3.5 transition-transform group-aria-expanded:rotate-180"
-              />
-            )}
-          </>
-        )}
-      </Trigger>
-    </Heading>
-  );
-};
+// interface SidebarDisclosureTriggerProps extends ButtonProps {
+//   ref?: React.Ref<HTMLButtonElement>;
+// }
+// const SidebarDisclosureTrigger = ({
+//   className,
+//   ref,
+//   ...props
+// }: SidebarDisclosureTriggerProps) => {
+//   const { state, isMobile } = useSidebar();
+//   const collapsed = state === "collapsed" && !isMobile;
+//   return (
+//     <Heading level={3}>
+//       <Trigger
+//         ref={ref}
+//         slot="trigger"
+//         className={composeRenderProps(className, (className, renderProps) =>
+//           sidebarDisclosureTrigger({
+//             ...renderProps,
+//             collapsed,
+//             isActive:
+//               renderProps.isPressed ||
+//               renderProps.isFocusVisible ||
+//               renderProps.isHovered,
+//             className,
+//           }),
+//         )}
+//         {...props}
+//       >
+//         {(values) => (
+//           <>
+//             {typeof props.children === "function"
+//               ? props.children(values)
+//               : props.children}
+//             {state !== "collapsed" && (
+//               <HugeiconsIcon
+//                 icon={ArrowDown01Icon}
+//                 data-slot="chevron"
+//                 className="z-10 ml-auto size-3.5 transition-transform group-aria-expanded:rotate-180"
+//               />
+//             )}
+//           </>
+//         )}
+//       </Trigger>
+//     </Heading>
+//   );
+// };
 
-const SidebarDisclosurePanel = (
-  props: React.ComponentProps<typeof DisclosurePanel>,
-) => {
-  return (
-    <DisclosurePanel
-      data-sidebar-disclosure-panel="true"
-      className="col-span-full grid grid-cols-[auto_1fr] gap-y-0.5"
-      {...props}
-    />
-  );
-};
+// const SidebarDisclosurePanel = (
+//   props: React.ComponentProps<typeof DisclosurePanel>,
+// ) => {
+//   return (
+//     <DisclosurePanel
+//       data-sidebar-disclosure-panel="true"
+//       className="col-span-full grid grid-cols-[auto_1fr] gap-y-0.5"
+//       {...props}
+//     />
+//   );
+// };
 
 const SidebarSeparator = ({ className, ...props }: SidebarSeparatorProps) => {
   return (
@@ -714,44 +570,6 @@ const SidebarSeparator = ({ className, ...props }: SidebarSeparatorProps) => {
       )}
       {...props}
     />
-  );
-};
-
-const SidebarTrigger = ({
-  onPress,
-  children,
-  ...props
-}: React.ComponentProps<typeof Button>) => {
-  const { toggleSidebar } = useSidebar();
-  return (
-    <Button
-      aria-label={props["aria-label"] || "Toggle Sidebar"}
-      data-sidebar-trigger="true"
-      intent={props.intent || "primary"}
-      appearance={props.appearance || "plain"}
-      size={props.size || "square-petite"}
-      onPress={(event) => {
-        onPress?.(event);
-        toggleSidebar();
-      }}
-      {...props}
-    >
-      {children || (
-        <>
-          <HugeiconsIcon
-            icon={SidebarLeft01Icon}
-            data-slot="icon"
-            className="hidden md:inline"
-          />
-          <HugeiconsIcon
-            icon={Menu01Icon}
-            data-slot="icon"
-            className="inline md:hidden"
-          />
-          <span className="sr-only">Toggle Sidebar</span>
-        </>
-      )}
-    </Button>
   );
 };
 
@@ -837,25 +655,17 @@ const SidebarNav = ({
 };
 
 export type {
-  SidebarDisclosureGroupProps,
-  SidebarDisclosureProps,
-  SidebarDisclosureTriggerProps,
   SidebarItemProps,
   SidebarLabelProps,
   SidebarLinkProps,
   SidebarNavProps,
   SidebarProps,
-  SidebarProviderProps,
   SidebarSeparatorProps,
 };
 
 export {
   Sidebar,
   SidebarContent,
-  SidebarDisclosure,
-  SidebarDisclosureGroup,
-  SidebarDisclosurePanel,
-  SidebarDisclosureTrigger,
   SidebarFooter,
   SidebarHeader,
   SidebarInset,
@@ -863,11 +673,9 @@ export {
   SidebarLabel,
   SidebarLink,
   SidebarNav,
-  SidebarProvider,
   SidebarRail,
   SidebarSection,
   SidebarSectionGroup,
   SidebarSeparator,
-  SidebarTrigger,
   useSidebar,
 };

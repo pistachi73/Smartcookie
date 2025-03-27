@@ -33,7 +33,7 @@ import {
   SidebarSection,
   SidebarSectionGroup,
   useSidebar,
-} from "@/ui/sidebar";
+} from "@/ui/sidebar/index";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 

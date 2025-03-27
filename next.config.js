@@ -10,15 +10,9 @@ import bundleAnalyzer from "@next/bundle-analyzer";
 const config = {
   trailingSlash: true,
   reactStrictMode: false,
+
   experimental: {
     reactCompiler: true,
-    optimizePackageImports: [
-      "react-aria-components",
-      "date-fns",
-      "@hugeicons-pro/core-stroke-rounded",
-      "@hugeicons-pro/core-solid-rounded",
-      "@hugeicons/react",
-    ],
   },
   images: {
     remotePatterns: [
@@ -33,7 +27,7 @@ const config = {
     ],
   },
   webpack: (config, { isServer }) => {
-    config.optimization.sideEffects = true;
+    // config.optimization.sideEffects = true;
     return config;
   },
 };

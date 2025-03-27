@@ -20,7 +20,8 @@ export const getHubStudentsUseCase = async ({
       image: student.image,
     })
     .from(student)
-    .where(and(eq(student.hubId, hubId), eq(studentHub.userId, userId)));
+    .leftJoin(studentHub, eq(student.id, studentHub.studentId))
+    .where(and(eq(studentHub.hubId, hubId), eq(student.userId, userId)));
 
   return students;
 };
