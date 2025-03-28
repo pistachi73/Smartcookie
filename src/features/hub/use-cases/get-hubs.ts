@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import { hub, student, studentHub } from "@/db/schema";
 import { jsonAggregateObjects } from "@/shared/lib/query/json-aggregate-objects";
-import { eq, sql } from "drizzle-orm";
+import { asc, eq, sql } from "drizzle-orm";
 import { z } from "zod";
 
 const GetHubsSchema = z.object({
@@ -43,7 +43,8 @@ export const getHubsUseCase = async ({
     .leftJoin(studentHub, eq(hub.id, studentHub.hubId))
     .leftJoin(student, eq(studentHub.studentId, student.id))
     .where(eq(hub.userId, userId))
-    .groupBy(hub.id);
+    .orderBy(asc(sql`LOWER(${hub.name})`))
+    .groupBy(hub.id, hub.name);
 
   return hubs;
 };

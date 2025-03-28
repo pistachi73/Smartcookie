@@ -63,6 +63,7 @@ interface PhoneFieldProps
   onChange?: (value: string) => void;
   defaultCountry?: CountryCode;
   onCountryChange?: (country: CountryCode) => void;
+  onValidityChange?: (isValid: boolean) => void;
 }
 
 export const PhoneField = ({
@@ -70,6 +71,7 @@ export const PhoneField = ({
   onChange,
   defaultCountry = "ES" as CountryCode,
   onCountryChange,
+  onValidityChange,
   ...props
 }: PhoneFieldProps) => {
   // Detect initial country from the value
@@ -169,18 +171,24 @@ export const PhoneField = ({
       const fullNumber = `${countryData.prefix}${digitsOnly}`;
 
       // Validate phone number
+      let validationResult = false;
       try {
-        setIsValid(isValidPhoneNumber(fullNumber, selectedCountry));
+        validationResult = isValidPhoneNumber(fullNumber, selectedCountry);
+        setIsValid(validationResult);
       } catch (e) {
         setIsValid(false);
+        validationResult = false;
       }
+
+      // Notify parent about validity change
+      onValidityChange?.(validationResult);
 
       // Only call onChange if the value has changed
       if (fullNumber !== value) {
         onChange?.(fullNumber);
       }
     },
-    [allCountries, selectedCountry, value, onChange],
+    [allCountries, selectedCountry, value, onChange, onValidityChange],
   );
 
   // Handle country selection from dropdown
@@ -204,13 +212,24 @@ export const PhoneField = ({
           // Re-format display value
           const formatter = new AsYouType(newCountry);
           setDisplayValue(formatter.input(digitsOnly));
+
+          // Re-validate with new country code
+          let validationResult = false;
+          try {
+            validationResult = isValidPhoneNumber(fullNumber, newCountry);
+            setIsValid(validationResult);
+            onValidityChange?.(validationResult);
+          } catch (e) {
+            setIsValid(false);
+            onValidityChange?.(false);
+          }
         }
 
         // Notify about country change
         onCountryChange?.(newCountry);
       }
     },
-    [nationalNumber, allCountries, onChange, onCountryChange],
+    [nationalNumber, allCountries, onChange, onCountryChange, onValidityChange],
   );
 
   // Generate country prefix button
@@ -250,7 +269,9 @@ export const PhoneField = ({
       />
 
       <Select onSelectionChange={handleSelectionChange}>
-        <Select.Trigger className="sr-only">Select country</Select.Trigger>
+        <Select.Trigger className="sr-only hidden">
+          Select country
+        </Select.Trigger>
 
         <PopoverContent
           isOpen={isOpen}
@@ -258,7 +279,7 @@ export const PhoneField = ({
           triggerRef={triggerRef}
           showArrow={false}
           respectScreen={false}
-          className="sm:w-[200px] w-[200px]"
+          className="sm:w-[260px] w-[260px]"
         >
           <Virtualizer layout={layout}>
             <ListBox.Picker

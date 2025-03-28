@@ -27,7 +27,6 @@ export function StepProgress() {
       className="w-fit flex items-center justify-between border rounded-lg p-3 px-4 gap-4 bg-overlay"
     >
       {steps.map((step, stepIndex) => {
-        console.log(stepIndex);
         const isCurrentStep = currentStep === step.id;
         const isCompletedStep = currentStep > step.id;
         return (

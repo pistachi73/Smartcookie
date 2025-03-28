@@ -32,7 +32,7 @@ interface BaseTextFieldProps
     primitive?: string;
   };
   size?: FieldGroupProps["size"];
-  inputRef?: RefCallBack;
+  ref?: React.RefObject<HTMLInputElement> | RefCallBack;
 }
 
 interface RevealableTextFieldProps extends BaseTextFieldProps {
@@ -59,6 +59,7 @@ const TextField = ({
   isRevealable,
   type,
   size,
+  ref,
   ...props
 }: TextFieldProps) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -71,10 +72,10 @@ const TextField = ({
     setIsPasswordVisible((prev) => !prev);
   };
 
-  console.log(errorMessage);
   return (
     <TextFieldPrimitive
       type={inputType}
+      validationBehavior="aria"
       {...props}
       className={composeTailwindRenderProps(
         className?.primitive,
@@ -101,7 +102,11 @@ const TextField = ({
                 {prefix}
               </span>
             ) : null}
-            <Input placeholder={placeholder} className={className?.input} />
+            <Input
+              placeholder={placeholder}
+              className={className?.input}
+              ref={ref}
+            />
             {isRevealable ? (
               <ButtonPrimitive
                 type="button"

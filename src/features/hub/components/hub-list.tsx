@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/shared/components/ui/button";
+import { Button, buttonStyles } from "@/shared/components/ui/button";
 import { SearchField } from "@/shared/components/ui/search-field";
 import { Heading } from "@/ui/heading";
 import {
@@ -8,19 +8,11 @@ import {
   FolderSearchIcon,
 } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
-import dynamic from "next/dynamic";
 import { useCallback, useState } from "react";
+import { Link } from "react-aria-components";
 import { useHubs } from "../hooks/use-hubs";
 import { HubCard } from "./hub-card";
 import { HubCardSkeleton } from "./hub-card-skeleton";
-
-const CreateHubModal = dynamic(
-  () => import("./create-hub-modal").then((mod) => mod.CreateHubModal),
-  {
-    ssr: false,
-    loading: () => null,
-  },
-);
 
 export function HubList() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -50,15 +42,17 @@ export function HubList() {
               value={searchQuery}
               onChange={(value) => setSearchQuery(value)}
             />
-            <Button
-              intent="primary"
-              size="small"
-              shape="square"
-              onPress={handleOpenCreateModal}
+            <Link
+              className={buttonStyles({
+                intent: "primary",
+                size: "small",
+                shape: "square",
+              })}
+              href="/portal/hubs/new"
             >
               <HugeiconsIcon icon={FolderAddIcon} size={16} />
               New Hub
-            </Button>
+            </Link>
           </div>
         </div>
 
@@ -103,12 +97,6 @@ export function HubList() {
           </div>
         )}
       </div>
-
-      <CreateHubModal
-        isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
-        // onCreateHub={handleCreateHub}
-      />
     </>
   );
 }

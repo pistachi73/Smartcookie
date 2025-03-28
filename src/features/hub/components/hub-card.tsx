@@ -15,7 +15,8 @@ import {
   UserMultiple02Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
-import Link from "next/link";
+import { Link } from "react-aria-components";
+
 import { getHubDuration } from "../lib/utils";
 import type { Hub } from "../types/hub.types";
 
@@ -52,9 +53,11 @@ export function HubCard({ hub }: HubCardProps) {
         <Card.Header>
           <div className="flex items-center justify-between gap-2 mb-2">
             <div className="flex items-center gap-2">
-              <Badge className="text-xs py-1" intent="primary">
-                {level}
-              </Badge>
+              {level && (
+                <Badge className="text-xs py-1" intent="primary">
+                  {level}
+                </Badge>
+              )}
               <Badge intent={status === "active" ? "success" : "secondary"}>
                 {status === "active" ? "Active" : "Inactive"}
               </Badge>

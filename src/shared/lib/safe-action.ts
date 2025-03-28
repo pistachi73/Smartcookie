@@ -4,15 +4,13 @@ import { currentUser } from "./auth";
 
 export const actionClient = createSafeActionClient({
   handleServerError: (error) => {
-    console.log("error", error.message);
     if (error instanceof PublicError) {
-      console.error(error);
       throw error;
     }
 
-    console.error(error);
     throw new PublicError("Something went wrong");
   },
+  throwValidationErrors: true,
   defaultValidationErrorsShape: "flattened",
 });
 

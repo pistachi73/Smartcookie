@@ -27,7 +27,7 @@ export const student = pgTable(
       .notNull(),
     name: text().notNull(),
     email: text().notNull(),
-    phone: text().notNull(),
+    phone: text(),
     location: text(),
     nationality: text(),
     job: text(),

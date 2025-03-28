@@ -1,8 +1,8 @@
 "use client";
 
 import { cn } from "@/shared/lib/classes";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Link } from "react-aria-components";
 
 import { buttonStyles } from "@/ui/button";
 import { Home09Icon } from "@hugeicons-pro/core-stroke-rounded";

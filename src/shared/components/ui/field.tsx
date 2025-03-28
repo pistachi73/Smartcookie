@@ -19,6 +19,7 @@ import {
 } from "react-aria-components";
 import { tv } from "tailwind-variants";
 
+import { RefCallBack } from "react-hook-form";
 import { composeTailwindRenderProps, focusStyles } from "./primitive";
 
 interface FieldProps {
@@ -79,13 +80,20 @@ const Description = ({ ref, className, ...props }: DescriptionProps) => {
 interface FieldErrorProps extends FieldErrorPrimitiveProps {
   ref?: React.RefObject<HTMLElement>;
 }
-const FieldError = ({ className, ref, ...props }: FieldErrorProps) => {
+const FieldError = ({
+  className,
+  ref,
+  children,
+  ...props
+}: FieldErrorProps) => {
   return (
     <FieldErrorPrimitive
       ref={ref}
       {...props}
       className={composeTailwindRenderProps(className, fieldError())}
-    />
+    >
+      {children}
+    </FieldErrorPrimitive>
   );
 };
 
@@ -137,7 +145,7 @@ const FieldGroup = ({ className, size, ...props }: FieldGroupProps) => {
 };
 
 interface InputProps extends InputPrimitiveProps {
-  ref?: React.RefObject<HTMLInputElement>;
+  ref?: React.RefObject<HTMLInputElement> | RefCallBack;
 }
 const Input = ({ className, ref, ...props }: InputProps) => {
   return (

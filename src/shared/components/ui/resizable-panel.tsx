@@ -37,8 +37,9 @@ export function ResizablePanelRoot({
       }}
       transition={{ type: "spring", bounce: 0, duration: 0.5 }}
       style={{ overflow: "hidden", position: "relative" }}
+      className="w-full"
     >
-      <div ref={ref}>
+      <div ref={ref} className={"w-full"}>
         <PanelContext.Provider value={{ value }}>
           <div {...rest}>{children}</div>
         </PanelContext.Provider>
@@ -80,6 +81,7 @@ export function ResizablePanelContent({
               duration: 0.2,
             },
           }}
+          className={"w-full"}
         >
           <div {...rest}>{children}</div>
         </motion.div>

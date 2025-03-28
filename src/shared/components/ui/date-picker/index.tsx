@@ -80,6 +80,7 @@ const DatePicker = <T extends DateValue>({
 }: DatePickerProps<T>) => {
   return (
     <DatePickerPrimitive
+      validationBehavior="aria"
       {...props}
       className={composeTailwindRenderProps(className?.primitive, base())}
     >

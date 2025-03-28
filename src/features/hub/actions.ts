@@ -2,9 +2,9 @@
 
 import { protectedAction } from "@/shared/lib/safe-action";
 import {
-  CreateHubUseCaseSchema,
-  createHubUseCase,
-} from "./use-cases/create-hub";
+  addStudentUseCase,
+  addStudentUseCaseSchema,
+} from "./use-cases/add-student";
 import { getHubsUseCase } from "./use-cases/get-hubs";
 import { getUserStudentsUseCase } from "./use-cases/get-user-students";
 import {
@@ -42,22 +42,28 @@ export const getHubsAction = protectedAction.action(
   },
 );
 
-export const createHubAction = protectedAction
-  .schema(CreateHubUseCaseSchema.omit({ userId: true }))
-  .action(
-    async ({
-      ctx: {
-        user: { id },
-      },
-      parsedInput: { formData },
-    }) => {
-      const hub = await createHubUseCase({
-        userId: id,
-        formData,
-      });
-      return hub;
-    },
-  );
+// export const createHubAction = protectedAction
+//   .schema(CreateHubUseCaseSchema.omit({ userId: true }))
+//   .action(
+//     async ({
+//       ctx: {
+//         user: { id },
+//       },
+//       parsedInput: { hubInfo, studentIds, sessionIds },
+//     }) => {
+//       console.log("actiion");
+//       // console.log("actiion", hubInfo, studentIds, sessionIds);
+//       // const hub = await createHubUseCase({
+//       //   userId: id,
+//       //   hubInfo,
+//       //   studentIds,
+//       //   sessionIds,
+//       // });
+
+//       // console.log("hub", hub);
+//       // return hub;
+//     },
+//   );
 
 export const getUserStudentsAction = protectedAction.action(
   async ({
@@ -69,3 +75,17 @@ export const getUserStudentsAction = protectedAction.action(
     return students;
   },
 );
+
+export const addStudentAction = protectedAction
+  .schema(addStudentUseCaseSchema.omit({ userId: true }))
+  .action(
+    async ({
+      ctx: {
+        user: { id },
+      },
+      parsedInput: { formData },
+    }) => {
+      const student = await addStudentUseCase({ userId: id, formData });
+      return student;
+    },
+  );

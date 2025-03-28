@@ -98,6 +98,7 @@ const ComboBoxList = <T extends object>({
     <PopoverContent
       trigger="ComboBox"
       isOpen={isOpen}
+      respectScreen={false}
       isNonModal
       placement={props.placement}
       offset={offset}
