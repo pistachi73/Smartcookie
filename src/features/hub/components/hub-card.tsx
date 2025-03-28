@@ -12,6 +12,7 @@ import {
 import {
   Calendar01Icon,
   Clock01Icon,
+  HelpCircleIcon,
   UserMultiple02Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -74,36 +75,51 @@ export function HubCard({ hub }: HubCardProps) {
             />
             <Card.Title level={2}>{name}</Card.Title>
           </div>
-          <Card.Description className="text-base">
-            {description}
-          </Card.Description>
+          {description && (
+            <Card.Description className="text-base">
+              {description}
+            </Card.Description>
+          )}
         </Card.Header>
 
         <Card.Content className="flex flex-col gap-5">
-          <AvatarStack
-            users={students}
-            maxAvatars={5}
-            className={{ avatar: "outline-overlay-highlight outline-2" }}
-          />
+          {students.length > 0 ? (
+            <AvatarStack
+              users={students}
+              maxAvatars={5}
+              className={{ avatar: "outline-overlay-highlight outline-2" }}
+            />
+          ) : (
+            <p className="text-muted-fg/70 italic flex items-center gap-1">
+              <HugeiconsIcon icon={UserMultiple02Icon} size={16} />
+              No students yet
+            </p>
+          )}
 
           <Separator />
           <div className="grid grid-cols-2 gap-2 text-muted-fg">
             <p className="flex items-center gap-2">
               <HugeiconsIcon
                 icon={Calendar01Icon}
+                altIcon={HelpCircleIcon}
+                showAlt={!schedule}
                 size={20}
                 className="text-muted-fg shrink-0"
               />
 
-              <span className="line-clamp-1">{schedule}</span>
+              <span className="line-clamp-1">
+                {schedule ?? "Flexible schedule"}
+              </span>
             </p>
             <p className="flex items-center gap-2">
               <HugeiconsIcon
                 icon={Clock01Icon}
+                altIcon={HelpCircleIcon}
+                showAlt={duration === "unknown"}
                 size={20}
                 className="text-muted-fg shrink-0"
               />
-              {duration === "unknown" ? "Unknown" : `${duration} weeks`}
+              {duration === "unknown" ? "Open-ended" : `${duration} weeks`}
             </p>
           </div>
         </Card.Content>

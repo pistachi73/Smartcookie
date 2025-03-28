@@ -2,6 +2,7 @@
 
 import { Button, buttonStyles } from "@/shared/components/ui/button";
 import { SearchField } from "@/shared/components/ui/search-field";
+import { cn } from "@/shared/lib/classes";
 import { Heading } from "@/ui/heading";
 import {
   FolderAddIcon,
@@ -36,22 +37,28 @@ export function HubList() {
       <div className="@container bg-overlay h-full overflow-y-auto p-5 space-y-6">
         <div className="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
           <Heading level={1}>Manage hubs</Heading>
-          <div className="flex gap-4 items-center">
+          <div className="flex gap-2 sm:gap-4 items-center justify-end w-full sm:w-auto">
             <SearchField
               placeholder="Search hubs..."
               value={searchQuery}
               onChange={(value) => setSearchQuery(value)}
+              className={{
+                primitive: "flex-1 sm:flex-none",
+              }}
             />
             <Link
-              className={buttonStyles({
-                intent: "primary",
-                size: "small",
-                shape: "square",
-              })}
+              className={cn(
+                buttonStyles({
+                  intent: "primary",
+                  size: "small",
+                  shape: "square",
+                }),
+                "px-0 size-10 sm:h-10 sm:w-auto sm:px-4",
+              )}
               href="/portal/hubs/new"
             >
               <HugeiconsIcon icon={FolderAddIcon} size={16} />
-              New Hub
+              <span className="hidden sm:block">New Hub</span>
             </Link>
           </div>
         </div>
