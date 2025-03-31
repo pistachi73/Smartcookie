@@ -1,14 +1,12 @@
 "use client";
 
+import { useDeviceType } from "@/shared/components/layout/device-only/device-only-provider";
 import { Button } from "@/shared/components/ui/button";
 import { ComboBox } from "@/shared/components/ui/combo-box";
 import { Loader } from "@/shared/components/ui/loader";
 import { useCurrentUser } from "@/shared/hooks/use-current-user";
 import { cn } from "@/shared/lib/classes";
-import {
-  ArrowLeft02Icon,
-  UserAdd01Icon,
-} from "@hugeicons-pro/core-solid-rounded";
+import { UserAdd01Icon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import dynamic from "next/dynamic";
@@ -34,6 +32,7 @@ export type SelectStudent = {
 };
 
 export function StepStudents() {
+  const { isMobile } = useDeviceType();
   const queryClient = useQueryClient();
   const user = useCurrentUser();
   const addStudent = useHubFormStore((state) => state.addStudent);
@@ -167,13 +166,28 @@ export function StepStudents() {
 
         <SelectedStudentsTable />
 
-        <div className="flex justify-end w-full gap-4 shrink-0">
-          <Button appearance="plain" onPress={prevStep} shape="square">
-            <HugeiconsIcon icon={ArrowLeft02Icon} size={16} />
+        <div className="mb-0! h-30 w-full block sm:hidden" aria-hidden="true" />
+
+        <div
+          className={cn(
+            "flex flex-col-reverse fixed bottom-0 border-t left-0 bg-overlay p-4 w-full gap-2 ",
+            "sm:relative sm:p-0 sm:flex-row sm:justify-end sm:border-none",
+          )}
+        >
+          <Button
+            appearance="outline"
+            size={isMobile ? "small" : "medium"}
+            onPress={prevStep}
+            shape="square"
+          >
             Back
           </Button>
-
-          <Button onPress={nextStep} shape="square" className="px-6">
+          <Button
+            size={isMobile ? "small" : "medium"}
+            onPress={nextStep}
+            shape="square"
+            className="px-6"
+          >
             Continue
           </Button>
         </div>

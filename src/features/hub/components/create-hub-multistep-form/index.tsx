@@ -41,8 +41,8 @@ export function CreateHubMultistepForm() {
   const stepHeading = STEP_HEADING[currentStep];
 
   return (
-    <div className="h-full w-full bg-overlay pt-8">
-      <div className="w-full bg-overlay h-full overflow-y-auto flex flex-col items-center max-w-2xl mx-auto gap-6 px-2">
+    <div className="h-full w-full bg-overlay overflow-y-auto pt-8 pb-4 px-4">
+      <div className="w-full bg-overlay h-full flex flex-col items-center max-w-2xl mx-auto gap-6 px-2">
         <StepProgress />
 
         <div className="flex flex-col items-center gap-6 w-full ">

@@ -1,18 +1,17 @@
 "use client";
 
-import {
-  Menu01Icon,
-  SidebarLeft01Icon,
-} from "@hugeicons-pro/core-stroke-rounded";
+import { Menu02Icon } from "@hugeicons-pro/core-solid-rounded";
+import { SidebarLeft01Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Button } from "../button";
+import { Button, type ButtonProps } from "../button";
 import { useSidebar } from "./sidebar-provider";
 
 export const SidebarTrigger = ({
   onPress,
   children,
+  className,
   ...props
-}: React.ComponentProps<typeof Button>) => {
+}: ButtonProps) => {
   const { toggleSidebar } = useSidebar();
   return (
     <Button
@@ -31,12 +30,12 @@ export const SidebarTrigger = ({
         <>
           <HugeiconsIcon
             icon={SidebarLeft01Icon}
-            data-slot="icon"
+            size={16}
             className="hidden md:inline"
           />
           <HugeiconsIcon
-            icon={Menu01Icon}
-            data-slot="icon"
+            icon={Menu02Icon}
+            size={20}
             className="inline md:hidden"
           />
           <span className="sr-only">Toggle Sidebar</span>

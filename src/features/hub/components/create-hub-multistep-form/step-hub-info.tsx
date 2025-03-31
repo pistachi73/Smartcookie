@@ -6,9 +6,8 @@ import { DatePicker } from "@/shared/components/ui/date-picker/index";
 import { Form } from "@/shared/components/ui/form";
 import { TextField } from "@/shared/components/ui/text-field";
 import { Textarea } from "@/shared/components/ui/textarea";
+import { cn } from "@/shared/lib/classes";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight02Icon } from "@hugeicons-pro/core-solid-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import type { z } from "zod";
 import { hubInfoSchema } from "../../lib/schemas";
@@ -29,140 +28,146 @@ export function StepHubInfo() {
 
   // Handle form submission
   const onSubmit = (data: z.infer<typeof hubInfoSchema>) => {
-    const { hasEndDate, ...rest } = data;
-    setHubInfo(rest);
+    setHubInfo(data);
     nextStep();
   };
 
   return (
-    <Form
-      id="step-form"
-      onSubmit={handleSubmit(onSubmit)}
-      className="w-full space-y-4"
-    >
-      <div className="flex gap-2">
-        <Controller
-          name="name"
-          control={control}
-          render={({ field, fieldState }) => (
-            <TextField
-              label="Name"
-              placeholder="My Hub"
-              isRequired
-              isInvalid={fieldState.invalid}
-              errorMessage={fieldState.error?.message}
-              className={{
-                primitive: "flex-1 w-full",
-              }}
-              {...field}
-            />
-          )}
-        />
-        <Controller
-          name="color"
-          control={control}
-          render={({ field: { onChange, value } }) => (
-            <div className="mt-6.5">
-              <CustomColorPicker
-                selectedKey={value}
-                onSelectionChange={onChange}
-                aria-label="Hub color picker"
+    <>
+      <Form
+        id="step-form"
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-full space-y-4"
+      >
+        <div className="flex gap-2">
+          <Controller
+            name="name"
+            control={control}
+            render={({ field, fieldState }) => (
+              <TextField
+                label="Name"
+                placeholder="My Hub"
+                isRequired
+                isInvalid={fieldState.invalid}
+                errorMessage={fieldState.error?.message}
+                className={{
+                  primitive: "flex-1 w-full",
+                }}
+                {...field}
               />
-            </div>
-          )}
-        />
-      </div>
-
-      <div className="flex flex-col sm:flex-row gap-4">
-        <Controller
-          name="startDate"
-          control={control}
-          render={({ field: { onChange, value }, fieldState }) => (
-            <DatePicker
-              label="Start Date"
-              isRequired
-              className={{
-                primitive: "flex-1",
-              }}
-              value={value}
-              onChange={onChange}
-              validationBehavior="aria"
-              isInvalid={fieldState.invalid}
-              errorMessage={fieldState.error?.message}
-            />
-          )}
-        />
-        <Controller
-          name="endDate"
-          control={control}
-          render={({ field: { onChange, value }, fieldState }) => (
-            <DatePicker
-              label="End Date"
-              className={{
-                primitive: "flex-1",
-              }}
-              value={value}
-              onChange={onChange}
-              minValue={startDate}
-              isInvalid={fieldState.invalid}
-              errorMessage={fieldState.error?.message}
-            />
-          )}
-        />
-      </div>
-
-      <Controller
-        name="description"
-        control={control}
-        render={({ field, fieldState }) => (
-          <Textarea
-            label="Description"
-            placeholder="This hub is for..."
-            errorMessage={fieldState.error?.message}
-            description="Briefly describe what this hub is about"
-            {...field}
+            )}
           />
-        )}
-      />
+          <Controller
+            name="color"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <div className="mt-6.5">
+                <CustomColorPicker
+                  selectedKey={value}
+                  onSelectionChange={onChange}
+                  aria-label="Hub color picker"
+                />
+              </div>
+            )}
+          />
+        </div>
 
-      <div className="flex flex-col sm:flex-row gap-4">
+        <div className="flex flex-col sm:flex-row gap-4">
+          <Controller
+            name="startDate"
+            control={control}
+            render={({ field: { onChange, value }, fieldState }) => (
+              <DatePicker
+                label="Start Date"
+                isRequired
+                className={{
+                  primitive: "flex-1",
+                }}
+                value={value}
+                onChange={onChange}
+                validationBehavior="aria"
+                isInvalid={fieldState.invalid}
+                errorMessage={fieldState.error?.message}
+              />
+            )}
+          />
+          <Controller
+            name="endDate"
+            control={control}
+            render={({ field: { onChange, value }, fieldState }) => (
+              <DatePicker
+                label="End Date"
+                className={{
+                  primitive: "flex-1",
+                }}
+                value={value}
+                onChange={onChange}
+                minValue={startDate}
+                isInvalid={fieldState.invalid}
+                errorMessage={fieldState.error?.message}
+              />
+            )}
+          />
+        </div>
+
         <Controller
-          name="level"
+          name="description"
           control={control}
           render={({ field, fieldState }) => (
-            <TextField
-              label="Level"
-              placeholder="Beginner"
+            <Textarea
+              label="Description"
+              placeholder="This hub is for..."
               errorMessage={fieldState.error?.message}
-              description="Max 20 characters"
-              maxLength={20}
-              className={{ primitive: "flex-1" }}
+              description="Briefly describe what this hub is about"
               {...field}
             />
           )}
         />
-        <Controller
-          name="schedule"
-          control={control}
-          render={({ field, fieldState }) => (
-            <TextField
-              label="Schedule"
-              placeholder="Weekly on Mondays"
-              errorMessage={fieldState.error?.message}
-              description="Optional schedule information"
-              className={{ primitive: "flex-1" }}
-              {...field}
-            />
-          )}
-        />
-      </div>
 
-      <div className="flex justify-end w-full">
-        <Button type="submit" shape="square" className="px-6">
-          Continue
-          <HugeiconsIcon icon={ArrowRight02Icon} size={16} data-slot="icon" />
-        </Button>
-      </div>
-    </Form>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <Controller
+            name="level"
+            control={control}
+            render={({ field, fieldState }) => (
+              <TextField
+                label="Level"
+                placeholder="Beginner"
+                errorMessage={fieldState.error?.message}
+                description="Max 20 characters"
+                maxLength={20}
+                className={{ primitive: "flex-1" }}
+                {...field}
+              />
+            )}
+          />
+          <Controller
+            name="schedule"
+            control={control}
+            render={({ field, fieldState }) => (
+              <TextField
+                label="Schedule"
+                placeholder="Weekly on Mondays"
+                errorMessage={fieldState.error?.message}
+                description="Optional schedule information"
+                className={{ primitive: "flex-1" }}
+                {...field}
+              />
+            )}
+          />
+        </div>
+
+        <div className="mb-0! h-20 w-full block sm:hidden" aria-hidden="true" />
+        <div
+          className={cn(
+            "flex flex-col fixed bottom-0 border-t left-0 bg-overlay p-4 w-full",
+            "sm:relative sm:p-0 sm:flex-row sm:justify-end sm:border-none",
+          )}
+        >
+          <Button type="submit" shape="square" className="px-6">
+            Continue
+          </Button>
+        </div>
+      </Form>
+    </>
   );
 }

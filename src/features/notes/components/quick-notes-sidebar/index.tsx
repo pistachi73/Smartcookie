@@ -80,7 +80,7 @@ export const QuickNotesSidebar = () => {
       <Separator orientation="horizontal" />
 
       {!isMinimized && (
-        <div className="p-4 pb-0">
+        <div className="p-4 pb-0 mb-2">
           <SearchField
             placeholder="Search hubs..."
             className={{ input: "text-sm" }}
@@ -90,7 +90,7 @@ export const QuickNotesSidebar = () => {
         </div>
       )}
 
-      <div className="p-4 pb-0 w-full">
+      <div className="p-4 pt-2 pb-2 w-full overflow-auto h-full">
         <HubToggle
           label={allHubsVisible ? "Hide All Hubs" : "Show All Hubs"}
           icon={allHubsVisible ? ViewOffSlashIcon : ViewIcon}
@@ -99,7 +99,7 @@ export const QuickNotesSidebar = () => {
           onPress={toggleAllHubsVisibility}
         />
 
-        <div className="flex flex-col gap-y-2 mt-8">
+        <div className="flex flex-col gap-y-2 mt-8 ">
           {filteredData?.map((hub) => (
             <HubToggle
               key={hub.id}

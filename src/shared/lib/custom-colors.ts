@@ -18,7 +18,7 @@ export const DEFAULT_CUSTOM_COLOR: CustomColor = "neutral";
  */
 export const colorStyleMap: Record<CustomColor, CustomColorClasses> = {
   flamingo: {
-    bg: "bg-[var(--custom-flamingo-bg)]/75",
+    bg: "bg-[var(--custom-flamingo-bg)]",
     border: "border-[var(--custom-flamingo-border)]",
     text: "text-fg dark:text-fg",
     dot: "bg-[var(--custom-flamingo-bg)]/90",
@@ -26,7 +26,7 @@ export const colorStyleMap: Record<CustomColor, CustomColorClasses> = {
     ring: "ring-[var(--custom-flamingo-border)]/20",
   },
   tangerine: {
-    bg: "bg-[var(--custom-tangerine-bg)]/75",
+    bg: "bg-[var(--custom-tangerine-bg)]",
     border: "border-[var(--custom-tangerine-border)]",
     text: "text-fg dark:text-fg",
     dot: "bg-[var(--custom-tangerine-bg)]/90",
@@ -34,7 +34,7 @@ export const colorStyleMap: Record<CustomColor, CustomColorClasses> = {
     ring: "ring-[var(--custom-tangerine-border)]/20",
   },
   banana: {
-    bg: "bg-[var(--custom-banana-bg)]/75",
+    bg: "bg-[var(--custom-banana-bg)]",
     border: "border-[var(--custom-banana-border)]",
     text: "text-fg dark:text-fg",
     dot: "bg-[var(--custom-banana-bg)]/90",
@@ -42,7 +42,7 @@ export const colorStyleMap: Record<CustomColor, CustomColorClasses> = {
     ring: "ring-[var(--custom-banana-border)]/20",
   },
   sage: {
-    bg: "bg-[var(--custom-sage-bg)]/75",
+    bg: "bg-[var(--custom-sage-bg)]",
     border: "border-[var(--custom-sage-border)]",
     text: "text-fg dark:text-fg",
     dot: "bg-[var(--custom-sage-bg)]/90",
@@ -50,7 +50,7 @@ export const colorStyleMap: Record<CustomColor, CustomColorClasses> = {
     ring: "ring-[var(--custom-sage-border)]/20",
   },
   peacock: {
-    bg: "bg-[var(--custom-peacock-bg)]/75",
+    bg: "bg-[var(--custom-peacock-bg)]",
     border: "border-[var(--custom-peacock-border)]",
     text: "text-fg dark:text-fg",
     dot: "bg-[var(--custom-peacock-bg)]/90",
@@ -58,7 +58,7 @@ export const colorStyleMap: Record<CustomColor, CustomColorClasses> = {
     ring: "ring-[var(--custom-peacock-border)]/20",
   },
   blueberry: {
-    bg: "bg-[var(--custom-blueberry-bg)]/75",
+    bg: "bg-[var(--custom-blueberry-bg)]",
     border: "border-[var(--custom-blueberry-border)]",
     text: "text-fg dark:text-fg",
     dot: "bg-[var(--custom-blueberry-bg)]/90",
@@ -66,7 +66,7 @@ export const colorStyleMap: Record<CustomColor, CustomColorClasses> = {
     ring: "ring-[var(--custom-blueberry-border)]/20",
   },
   lavender: {
-    bg: "bg-[var(--custom-lavender-bg)]/75",
+    bg: "bg-[var(--custom-lavender-bg)]",
     border: "border-[var(--custom-lavender-border)]",
     text: "text-fg dark:text-fg",
     dot: "bg-[var(--custom-lavender-bg)]/90",
@@ -74,7 +74,7 @@ export const colorStyleMap: Record<CustomColor, CustomColorClasses> = {
     ring: "ring-[var(--custom-lavender-border)]/20",
   },
   grape: {
-    bg: "bg-[var(--custom-grape-bg)]/75",
+    bg: "bg-[var(--custom-grape-bg)]",
     border: "border-[var(--custom-grape-border)]",
     text: "text-fg dark:text-fg",
     dot: "bg-[var(--custom-grape-bg)]/90",
@@ -82,7 +82,7 @@ export const colorStyleMap: Record<CustomColor, CustomColorClasses> = {
     ring: "ring-[var(--custom-grape-border)]/20",
   },
   graphite: {
-    bg: "bg-[var(--custom-graphite-bg)]/75",
+    bg: "bg-[var(--custom-graphite-bg)]",
     border: "border-[var(--custom-graphite-border)]",
     text: "text-fg dark:text-fg",
     dot: "bg-[var(--custom-graphite-bg)]/90",
@@ -90,7 +90,7 @@ export const colorStyleMap: Record<CustomColor, CustomColorClasses> = {
     ring: "ring-[var(--custom-graphite-border)]/20",
   },
   neutral: {
-    bg: "bg-[var(--custom-neutral-bg)]/75",
+    bg: "bg-[var(--custom-neutral-bg)]",
     border: "border-[var(--custom-neutral-border)]",
     text: "text-fg dark:text-fg",
     dot: "bg-[var(--custom-neutral-bg)]/90",
@@ -98,7 +98,7 @@ export const colorStyleMap: Record<CustomColor, CustomColorClasses> = {
     ring: "ring-[var(--custom-neutral-border)]/20",
   },
   sunshine: {
-    bg: "bg-[var(--custom-sunshine-bg)]/75",
+    bg: "bg-[var(--custom-sunshine-bg)]",
     border: "border-[var(--custom-sunshine-border)]",
     text: "text-fg dark:text-fg",
     dot: "bg-[var(--custom-sunshine-bg)]/90",
@@ -106,7 +106,7 @@ export const colorStyleMap: Record<CustomColor, CustomColorClasses> = {
     ring: "ring-[var(--custom-sunshine-border)]/20",
   },
   stone: {
-    bg: "bg-[var(--custom-stone-bg)]/75",
+    bg: "bg-[var(--custom-stone-bg)]",
     border: "border-[var(--custom-stone-border)]",
     text: "text-fg dark:text-fg",
     dot: "bg-[var(--custom-stone-bg)]/90",
@@ -114,7 +114,7 @@ export const colorStyleMap: Record<CustomColor, CustomColorClasses> = {
     ring: "ring-[var(--custom-stone-border)]/20",
   },
   slate: {
-    bg: "bg-[var(--custom-slate-bg)]/75",
+    bg: "bg-[var(--custom-slate-bg)]",
     border: "border-[var(--custom-slate-border)]",
     text: "text-fg dark:text-fg",
     dot: "bg-[var(--custom-slate-bg)]/90",

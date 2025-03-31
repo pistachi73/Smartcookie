@@ -36,7 +36,7 @@ export const AddNoteCard = ({ hubId }: AddNoteCardProps) => {
   return (
     <Button
       size="square-petite"
-      appearance="outline"
+      intent="secondary"
       shape="square"
       onPress={handleAddEmptyNote}
       isDisabled={isDisabled}

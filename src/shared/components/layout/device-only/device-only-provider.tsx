@@ -41,20 +41,6 @@ const getIsMobileUsingViewport = (
         ? "tablet"
         : "desktop";
 
-  const isLandscape = window.matchMedia("(orientation: landscape").matches;
-
-  if (serverDeviceType === "mobile" && isLandscape) {
-    return {
-      deviceType: "mobile",
-    };
-  }
-
-  if (serverDeviceType === "tablet" && isLandscape) {
-    return {
-      deviceType: "tablet",
-    };
-  }
-
   return { deviceType };
 };
 
