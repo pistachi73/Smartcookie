@@ -11,7 +11,7 @@ import {
 } from "./utils";
 
 import { cn } from "@/shared/lib/classes";
-import { Clock01Icon } from "@hugeicons-pro/core-solid-rounded";
+import { Clock01Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ComboBox,

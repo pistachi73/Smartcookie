@@ -1,0 +1,17 @@
+/* Focus Effects for Note Cards */
+
+/* Set the stack container as a context for the focus effects */
+.hub-notes-stack {
+  position: relative;
+}
+
+/* When any note-card in a hub is focused, dim other cards */
+#hub-notes-stack:focus-within .note-card {
+  opacity: 0.5;
+  transition: opacity 0.25s ease;
+}
+
+/* But keep the focused card fully opaque with higher specificity */
+#hub-notes-stack:focus-within .note-card:focus-within {
+  opacity: 1 !important; /* Use !important to ensure it overrides any other opacity settings */
+}

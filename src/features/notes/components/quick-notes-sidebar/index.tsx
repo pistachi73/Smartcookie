@@ -50,7 +50,7 @@ export const QuickNotesSidebar = () => {
   return (
     <div
       className={cn(
-        "border-r h-full bg-overlay shrink-0",
+        "border-r h-full shrink-0",
         isMinimized ? "w-auto" : "w-[300px]",
       )}
     >

@@ -18,7 +18,9 @@ import { DropdownItemDetails, DropdownSection } from "./dropdown";
 import { composeTailwindRenderProps } from "./primitive";
 
 const listBoxStyles = tv({
-  base: "flex max-h-96 w-full min-w-56 flex-col gap-y-1 overflow-y-auto rounded-xl border p-1 shadow-lg outline-hidden [scrollbar-width:thin] [&::-webkit-scrollbar]:size-0.5",
+  base: [
+    "flex max-h-96 w-full min-w-56 flex-col gap-y-1 overflow-y-auto rounded-xl border p-1 shadow-lg outline-hidden [scrollbar-width:thin] [&::-webkit-scrollbar]:size-0.5",
+  ],
 });
 
 const ListBox = <T extends object>({

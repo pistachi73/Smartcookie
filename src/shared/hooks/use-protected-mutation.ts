@@ -60,9 +60,9 @@ export class AuthenticationError extends Error {
 export function useProtectedMutation<
   TInput,
   TOutput,
-  TError = Error | ValidationError<TInput> | AuthenticationError,
   TContext = unknown,
-  TVariables = unknown,
+  TVariables = TInput,
+  TError = Error | ValidationError<TInput> | AuthenticationError,
 >({
   schema,
   mutationFn,
@@ -104,6 +104,7 @@ export function useProtectedMutation<
         userId: user.id,
       });
     },
+
     onError: (error, variables, context) => {
       if (error instanceof AuthenticationError) {
         toast.error("You must be logged in to do this");

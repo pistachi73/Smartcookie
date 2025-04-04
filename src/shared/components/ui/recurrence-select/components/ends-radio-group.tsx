@@ -22,18 +22,18 @@ export const EndsRadioGroup = () => {
           content: "ml-4",
         }}
       >
-        <Radio value={EndsEnum.ENDS_NEVER} className="h-10 items-center">
-          <p className="w-20 text-base text-muted-fg">Never</p>
+        {/* <Radio value={EndsEnum.ENDS_NEVER} className="h-10 items-center flex">
+          <p className="w-16 sm:w-20 text-base text-muted-fg">Never</p>
+        </Radio> */}
+        <Radio value={EndsEnum.ENDS_ON} className="h-10 items-center flex">
+          <p className="w-16 sm:w-20 text-base text-muted-fg">On</p>
         </Radio>
-        <Radio value={EndsEnum.ENDS_ON} className="h-10 items-center">
-          <p className="w-20 text-base text-muted-fg">On</p>
-        </Radio>
-        <Radio value={EndsEnum.ENDS_AFTER} className="h-10 items-center">
-          <p className="w-20 text-base text-muted-fg">After</p>
+        <Radio value={EndsEnum.ENDS_AFTER} className="h-10 items-center flex">
+          <p className="w-16 sm:w-20 text-base text-muted-fg">After</p>
         </Radio>
       </RadioGroup>
       <div className="flex flex-col gap-2">
-        <div className="h-8" />
+        {/* <div className="h-8 flex-1" /> */}
         <DatePicker
           value={
             rruleOptions?.until
@@ -60,7 +60,7 @@ export const EndsRadioGroup = () => {
           }}
           className={{
             fieldGroup: cn(
-              "text-sm w-32 ",
+              "text-sm sm:w-32 ",
               ends === EndsEnum.ENDS_ON && "hover:bg-overlay-elevated",
             ),
           }}
@@ -88,7 +88,7 @@ export const EndsRadioGroup = () => {
             className={{
               input: "text-sm",
               fieldGroup: cn(
-                "w-16 ",
+                "w-30 sm:w-16 ",
                 ends === EndsEnum.ENDS_AFTER && "hover:bg-overlay-elevated",
               ),
             }}

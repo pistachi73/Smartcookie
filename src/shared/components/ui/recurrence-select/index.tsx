@@ -57,7 +57,13 @@ const SelectLabel = () => {
   );
 };
 
-export const RecurrenceSelectContent = () => {
+type RecurrenceSelectContentProps = {
+  label?: string;
+};
+
+export const RecurrenceSelectContent = ({
+  label,
+}: RecurrenceSelectContentProps) => {
   const {
     rruleOptions,
     setRruleOptions,
@@ -91,7 +97,7 @@ export const RecurrenceSelectContent = () => {
         setRruleOptions({
           ...rruleOptions,
           ...convertRRuleOptionsToCustom(rrule.options),
-          dstart: selectedDate.toDate("UTC"),
+          dstart: selectedDate?.toDate("UTC"),
         });
 
         setRrule(rrule);
@@ -106,7 +112,7 @@ export const RecurrenceSelectContent = () => {
       convertCustomToRRuleOptions({
         rruleOptions: {
           ...rruleOptions,
-          dstart: selectedDate.toDate("UTC"),
+          dstart: selectedDate?.toDate("UTC"),
         },
         ends,
       }),
@@ -126,6 +132,7 @@ export const RecurrenceSelectContent = () => {
           onSelectionChange={(value) => {
             handleCustomRecurrence(value as string);
           }}
+          label={label}
         >
           <Select.Trigger
             prefix={
@@ -142,10 +149,10 @@ export const RecurrenceSelectContent = () => {
           </Select.Trigger>
           <Select.List
             popoverProps={{
-              placement: "left top",
+              placement: "bottom",
               offset: 8,
             }}
-            className={{ popover: "max-h-[400px]" }}
+            className={{ popover: "max-h-[400px] w-[var(--trigger-width)]" }}
           >
             {items.map(({ items: opt }, sectionIndex) =>
               opt.map(({ name, value, auxName }, index) => (
@@ -172,6 +179,7 @@ export const RecurrenceSelectContent = () => {
         size="md"
         isOpen={isCustomModalOpen}
         onOpenChange={setIsCustomModalOpen}
+        isBlurred
       >
         <Modal.Header>
           <Modal.Title level={2}>Custom recurrence rule</Modal.Title>
@@ -213,7 +221,7 @@ export const RecurrenceSelectContent = () => {
               setRruleOptions({
                 ...rruleOptions,
                 ...convertRRuleOptionsToCustom(rrule.options),
-                dstart: selectedDate.toDate("UTC"),
+                dstart: selectedDate?.toDate("UTC"),
               });
             }}
           >
@@ -242,28 +250,20 @@ export const RecurrenceSelect = ({
   selectedDate,
   onChange,
   value,
-  children,
+  contentProps,
 }: {
   selectedDate: CalendarDate;
   onChange: (rrule: string | undefined) => void;
   value?: string;
-  children?: React.ReactNode;
+  contentProps?: RecurrenceSelectContentProps;
 }) => {
   return (
-    <>
-      <RecurrenceSelectContextProvider
-        selectedDate={selectedDate}
-        onChange={onChange}
-        value={value}
-      >
-        <RecurrenceSelectContent />
-      </RecurrenceSelectContextProvider>
-      {/* <Modal>
-        <Button>open</Button>
-        <Modal.Content classNames={{ overlay: "z-2000", content: "z-20000" }}>
-          diasodaso
-        </Modal.Content>
-      </Modal> */}
-    </>
+    <RecurrenceSelectContextProvider
+      selectedDate={selectedDate}
+      onChange={onChange}
+      value={value}
+    >
+      <RecurrenceSelectContent {...contentProps} />
+    </RecurrenceSelectContextProvider>
   );
 };

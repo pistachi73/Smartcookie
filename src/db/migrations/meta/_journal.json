@@ -8,6 +8,27 @@
       "when": 1742974419529,
       "tag": "0000_special_next_avengers",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1743504420017,
+      "tag": "0001_polite_doomsday",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1743515362284,
+      "tag": "0002_futuristic_sunset_bain",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1743694277419,
+      "tag": "0003_previous_eternals",
+      "breakpoints": true
     }
   ]
 }

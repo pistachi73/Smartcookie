@@ -55,13 +55,15 @@ export const RecurrenceSelectContextProvider = ({
     return RRule.fromString(value);
   });
 
-  const [ends, setEnds] = useState<EndsEnum>(
-    rrule?.options.until
-      ? EndsEnum.ENDS_ON
-      : rrule?.options.count
-        ? EndsEnum.ENDS_AFTER
-        : EndsEnum.ENDS_NEVER,
-  );
+  const [ends, setEnds] = useState<EndsEnum>(() => {
+    if (rrule?.options.count) {
+      return EndsEnum.ENDS_AFTER;
+    }
+    if (rrule?.options.until || selectedDate) {
+      return EndsEnum.ENDS_ON;
+    }
+    return EndsEnum.ENDS_NEVER;
+  });
 
   const [rruleOptions, setRruleOptions] = useState<CustomRruleOptions>(() => {
     const { options } = rrule ?? {};

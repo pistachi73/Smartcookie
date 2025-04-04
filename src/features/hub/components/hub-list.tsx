@@ -30,7 +30,6 @@ type SortOption = {
 };
 
 export function HubList() {
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const { data: hubs, isLoading } = useHubs();
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption["key"]>("name");
@@ -81,17 +80,13 @@ export function HubList() {
     });
   }, [hubs, searchQuery, sortBy]);
 
-  const handleOpenCreateModal = useCallback(() => {
-    setIsCreateModalOpen(true);
-  }, []);
-
   const handleSortChange = useCallback((key: SortOption["key"]) => {
     setSortBy(key);
   }, []);
 
   return (
     <>
-      <div className="@container bg-overlay h-full overflow-y-auto p-5 space-y-6">
+      <div className="@container bg-bg h-full overflow-y-auto p-5 space-y-6">
         <div className="flex flex-col @2xl:flex-row justify-between gap-4 items-start @2xl:items-center">
           <Heading level={1}>Manage hubs</Heading>
           <div className="flex gap-2 items-center justify-end w-full @2xl:w-auto">
@@ -187,14 +182,18 @@ export function HubList() {
                 ? "Try adjusting your search query or create a new hub."
                 : "Create your first hub to start organizing your content."}
             </p>
-            <Button
-              intent="primary"
-              size="small"
-              shape="square"
-              onPress={handleOpenCreateModal}
+            <Link
+              className={cn(
+                buttonStyles({
+                  intent: "primary",
+                  size: "small",
+                  shape: "square",
+                }),
+              )}
+              href="/portal/hubs/new"
             >
               {searchQuery ? "Create New Hub" : "Create Your First Hub"}
-            </Button>
+            </Link>
           </div>
         ) : (
           <div className="grid grid-cols-1 @2xl:grid-cols-2 @4xl:grid-cols-3 gap-4">

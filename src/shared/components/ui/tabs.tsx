@@ -2,7 +2,8 @@
 
 import { useId } from "react";
 
-import { LayoutGroup, motion } from "motion/react";
+import { LayoutGroup } from "motion/react";
+import * as m from "motion/react-m";
 import type {
   TabListProps as TabListPrimitiveProps,
   TabPanelProps as TabPanelPrimitiveProps,
@@ -54,7 +55,7 @@ const tabListStyles = tv({
   base: "flex forced-color-adjust-none",
   variants: {
     orientation: {
-      horizontal: "flex-row gap-x-5 border-border border-b",
+      horizontal: "flex-row gap-x-2 w-fit p-1 rounded-lg bg-overlay-highlight",
       vertical: "flex-col items-start gap-y-4 border-l",
     },
   },
@@ -86,7 +87,7 @@ const tabStyles = tv({
   base: [
     "relative flex cursor-default items-center whitespace-nowrap rounded-full font-medium text-sm outline-hidden transition data-hovered:text-fg *:data-[slot=icon]:mr-2 *:data-[slot=icon]:size-4",
     "group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:py-0 group-data-[orientation=vertical]/tabs:pr-2 group-data-[orientation=vertical]/tabs:pl-4",
-    "group-data-[orientation=horizontal]/tabs:pb-3",
+    "group-data-[orientation=horizontal]/tabs:p-2 group-data-[orientation=horizontal]/tabs:px-3",
   ],
   variants: {
     isSelected: {
@@ -102,6 +103,9 @@ const tabStyles = tv({
 
 interface TabProps extends TabPrimitiveProps {
   ref?: React.RefObject<HTMLButtonElement>;
+  children:
+    | React.ReactNode
+    | ((props: { isSelected: boolean }) => React.ReactNode);
 }
 const Tab = ({ children, ref, ...props }: TabProps) => {
   return (
@@ -119,13 +123,13 @@ const Tab = ({ children, ref, ...props }: TabProps) => {
     >
       {({ isSelected }) => (
         <>
-          {children as React.ReactNode}
+          {typeof children === "function" ? children({ isSelected }) : children}
           {isSelected && (
-            <motion.span
+            <m.span
               className={cn(
-                "absolute rounded bg-fg",
+                "rounded bg-accent w-full",
                 // horizontal
-                "group-data-[orientation=horizontal]/tabs:-bottom-px group-data-[orientation=horizontal]/tabs:inset-x-0 group-data-[orientation=horizontal]/tabs:h-0.5 group-data-[orientation=horizontal]/tabs:w-full",
+                "group-data-[orientation=horizontal]/tabs:absolute group-data-[orientation=horizontal]/tabs:-z-10 group-data-[orientation=horizontal]/tabs:-translate-1/2 group-data-[orientation=horizontal]/tabs:left-1/2 group-data-[orientation=horizontal]/tabs:inset-y-1/2  group-data-[orientation=horizontal]/tabs:h-full group-data-[orientation=horizontal]/tabs:w-full",
                 // vertical
                 "group-data-[orientation=vertical]/tabs:left-0 group-data-[orientation=vertical]/tabs:h-[calc(100%-10%)] group-data-[orientation=vertical]/tabs:w-0.5 group-data-[orientation=vertical]/tabs:transform",
               )}

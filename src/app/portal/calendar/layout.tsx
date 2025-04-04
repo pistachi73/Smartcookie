@@ -3,9 +3,9 @@ import { getCalendarDataAction } from "@/features/calendar/actions";
 import { CalendarStoreProvider } from "@/features/calendar/store/calendar-store-provider";
 import type { InitialCalendarStateData } from "@/features/calendar/types/calendar-store.types";
 import type { CalendarView } from "@/features/calendar/types/calendar.types";
+import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
 import { headers } from "next/headers";
 import { Temporal } from "temporal-polyfill";
-
 const isCalendarView = (
   calendarView?: string,
 ): calendarView is CalendarView => {
@@ -90,6 +90,18 @@ const CalendarLayout = async ({ children }: { children: React.ReactNode }) => {
       initialCalendarStore={storeProps.initialCalendarStore}
       skipHydration={storeProps.skipHydration}
     >
+      <PortalNav
+        breadcrumbs={[
+          {
+            label: "Home",
+            href: "/portal",
+          },
+          {
+            label: "Calendar",
+            href: "/portal/calendar",
+          },
+        ]}
+      />
       {children}
     </CalendarStoreProvider>
   );

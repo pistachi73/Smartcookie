@@ -10,13 +10,12 @@ export const ByweekdayCheckboxGroup = () => {
     <ToggleGroup
       gap={1}
       selectionMode="multiple"
+      className="flex-1 flex-wrap"
       selectedKeys={(rruleOptions.weeklyByweekday as number[]).map((v) => v)}
       aria-label="Weekly recurrence days of week"
       onSelectionChange={(byweekday) => {
-        console.log({ byweekday });
         if (byweekday.size === 0) return;
         const values = Array.from(byweekday);
-        console.log({ values });
         setRruleOptions({
           ...rruleOptions,
           weeklyByweekday: values
@@ -30,7 +29,8 @@ export const ByweekdayCheckboxGroup = () => {
           appearance="outline"
           key={id}
           id={id}
-          className={"data-hovered:bg-overlay-elevated"}
+          size="square-petite"
+          className={"data-hovered:bg-overlay-elevated size-10"}
         >
           {label}
         </Toggle>

@@ -1,7 +1,13 @@
 import { HubList } from "@/features/hub/components/hub-list";
+import { getHubsQueryOptions } from "@/features/hub/hooks/use-hubs";
 import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
+import { getQueryClient } from "@/shared/lib/get-query-client";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 
-const HubsPage = () => {
+const HubsPage = async () => {
+  const queryClient = getQueryClient();
+  await queryClient.prefetchQuery(getHubsQueryOptions);
+
   return (
     <>
       <PortalNav
@@ -10,7 +16,9 @@ const HubsPage = () => {
           { label: "Hubs", href: "/portal/hubs" },
         ]}
       />
-      <HubList />
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <HubList />
+      </HydrationBoundary>
     </>
   );
 };

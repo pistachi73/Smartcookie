@@ -1,6 +1,11 @@
 import type { CustomColor } from "@/db/schema/shared";
 import { DEFAULT_CUSTOM_COLOR } from "@/shared/lib/custom-colors";
-import { CalendarDate, getLocalTimeZone, today } from "@internationalized/date";
+import {
+  type CalendarDate,
+  Time,
+  getLocalTimeZone,
+  today,
+} from "@internationalized/date";
 import { z } from "zod";
 import type { HubStatus } from "../../../db/schema/hub";
 
@@ -75,3 +80,71 @@ export const CreateHubUseCaseSchema = z.object({
   studentIds: z.array(z.number()).optional(),
   sessionIds: z.array(z.number()).optional(),
 });
+
+export const GetHubByIdUseCaseSchema = z.object({
+  hubId: z.number(),
+});
+
+export const GetHubSessionsUseCaseSchema = z.object({
+  userId: z.string(),
+  hubId: z.number(),
+});
+
+const UpdateSessionNoteOrderSchema = z.object({
+  noteId: z.number(),
+  order: z.number(),
+});
+
+export const UpdateSessionNoteInputSchema = z.object({
+  noteId: z.number(),
+  source: z.object({
+    sessionId: z.number(),
+    position: z.enum(["past", "present", "future"]),
+  }),
+  target: z.object({
+    sessionId: z.number(),
+    position: z.enum(["past", "present", "future"]),
+  }),
+});
+
+export const UpdateSessionNoteSchema = z.array(UpdateSessionNoteInputSchema);
+
+export const GetSessionNotesUseCaseSchema = z.object({
+  sessionId: z.number(),
+});
+
+export const AddSessionUseCaseSchema = z.object({
+  userId: z.string(),
+  hubId: z.number(),
+  startTime: z.string(),
+  endTime: z.string(),
+});
+
+export const AddSessionNoteUseCaseSchema = z.object({
+  sessionId: z.number(),
+  content: z.string().min(1, "Content is required"),
+  position: z.enum(["past", "present", "future"]),
+});
+
+export const DeleteSessionNoteUseCaseSchema = z.object({
+  userId: z.string(),
+  noteId: z.number(),
+  sessionId: z.number(),
+});
+
+export const SessionFormSchema = z.object({
+  date: z.custom<CalendarDate>(),
+  startTime: z.custom<Time>(),
+  endTime: z.custom<Time>(),
+  rrule: z.string().optional(),
+});
+
+export const SerializedSessionFormSchema = z.object({
+  startDate: z.string(),
+  endDate: z.string(),
+});
+
+export type SessionFormValues = z.infer<typeof SessionFormSchema>;
+export type SerializedSessionFormValues = z.infer<
+  typeof SerializedSessionFormSchema
+>;

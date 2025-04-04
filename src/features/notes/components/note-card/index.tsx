@@ -4,7 +4,6 @@ import type { CustomColor } from "@/db/schema/shared";
 import { noteFocusRegistry } from "@/features/notes/hooks/use-add-quick-note";
 import { useDeleteQuickNote } from "@/features/notes/hooks/use-delete-quick-note";
 import { useUpdateQuickNote } from "@/features/notes/hooks/use-update-quick-note";
-import { useQuickNotesStore } from "@/features/notes/store/quick-notes-store-provider";
 import { cn } from "@/shared/lib/classes";
 import { getCustomColorClasses } from "@/shared/lib/custom-colors";
 import { ProgressCircle } from "@/ui/progress-circle";
@@ -14,8 +13,8 @@ import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";
 import { memo, useEffect, useRef, useState } from "react";
 import { Button, TextArea } from "react-aria-components";
-import { useShallow } from "zustand/react/shallow";
 import type { NoteSummary } from "../../types/quick-notes.types";
+import "./note-card.css";
 
 interface NoteCardProps {
   note: NoteSummary;
@@ -26,13 +25,6 @@ const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
   const [isEditingNote, setIsEditingNote] = useState(false);
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const focusCheckedRef = useRef(false);
-
-  const { edittingHub, setEdittingHub } = useQuickNotesStore(
-    useShallow((state) => ({
-      edittingHub: state.edittingHub,
-      setEdittingHub: state.setEdittingHub,
-    })),
-  );
 
   const { content, isUnsaved, isSaving, handleContentChange } =
     useUpdateQuickNote({
@@ -58,29 +50,25 @@ const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
     }
   }, [note.clientId]);
 
-  const isDisabled = (edittingHub || 0) === note.hubId && !isEditingNote;
   const colorClasses = getCustomColorClasses(hubColor as CustomColor);
 
   const onFocus = () => {
     setIsEditingNote(true);
-    setEdittingHub(note.hubId);
   };
 
   const onBlur = () => {
     setIsEditingNote(false);
-    setEdittingHub(null);
   };
 
   if (!note) return null;
 
   return (
     <div
+      data-hub-id={note.hubId}
       className={cn(
         "flex flex-col bg-overlay-highlight rounded-lg border-1 border-border relative transition duration-250",
-        isDisabled && "opacity-50",
-        isEditingNote
-          ? `${colorClasses.border} bg-overlay-elevated`
-          : "hover:bg-overlay-elevated",
+        "note-card focus-within:opacity-100! hover:bg-overlay-elevated",
+        isEditingNote && `${colorClasses.border} bg-overlay-elevated`,
       )}
     >
       <div className="absolute top-0 right-0 z-10">

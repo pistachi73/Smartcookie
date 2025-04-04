@@ -34,6 +34,8 @@ for (const table of [
   schema.event,
   schema.eventOccurrence,
   schema.quickNote,
+  schema.session,
+  schema.sessionNote,
 ]) {
   await resetTable(db, table);
 }
@@ -45,8 +47,8 @@ async function main() {
     await seeds.hub(db);
     await seeds.event(db);
     await seeds.quickNotes(db);
-    console.log("Seeding student!");
     await seeds.student(db);
+    await seeds.session(db);
   } catch (error) {
     console.error("Error during seeding:", error);
     process.exit(1);

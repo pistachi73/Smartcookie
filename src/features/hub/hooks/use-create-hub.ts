@@ -4,6 +4,7 @@ import { toast } from "sonner";
 
 import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 
+import type { Hub } from "@/db/schema";
 import { CreateHubUseCaseSchema } from "../lib/schemas";
 import { useHubFormStore } from "../store/hub-form-store";
 import { createHubUseCase } from "../use-cases/create-hub.use-case";
@@ -21,6 +22,13 @@ export function useCreateHub() {
         userId,
       });
     },
+
+    onMutate: async (input) => {
+      await queryClient.cancelQueries({ queryKey: ["hubs"] });
+      const previousData = queryClient.getQueryData<Hub[]>(["hubs"]);
+      return { previousData };
+    },
+
     onSuccess: () => {
       toast.success("Hub created successfully");
       queryClient.invalidateQueries({ queryKey: ["hubs"] });

@@ -25,7 +25,7 @@ export const PortalNav = ({
   return (
     <SidebarNav
       className={cn(
-        "border-b h-14 sticky shrink-0 top-0 z-20 bg-background",
+        "border-b h-14 sticky shrink-0 top-0 z-20 bg-overlay",
         className,
       )}
     >
@@ -47,19 +47,20 @@ export const PortalNav = ({
           </Breadcrumbs>
         </div>
 
-        {showSearchField && (
-          <div className="flex-1 max-w-md mx-4 hidden md:block">
-            <SearchField
-              placeholder="Search..."
-              className={{
-                fieldGroup: "w-full",
-              }}
-            />
-          </div>
-        )}
-
         <div className="flex items-center gap-x-2 flex-shrink-0">
           {actions}
+
+          {showSearchField && (
+            <div className="flex-1 max-w-md hidden md:block">
+              <SearchField
+                placeholder="Search..."
+                className={{
+                  fieldGroup: "w-full",
+                }}
+              />
+            </div>
+          )}
+
           <UserButton />
         </div>
       </div>

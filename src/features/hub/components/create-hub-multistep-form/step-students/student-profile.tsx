@@ -1,4 +1,5 @@
 import { UserAvatar } from "@/shared/components/ui/user-avatar";
+import { cn } from "@/shared/lib/classes";
 import { Tick02Icon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as m from "motion/react-m";
@@ -8,14 +9,16 @@ export const StudentProfile = ({
   email,
   image,
   isSelected,
+  className,
 }: {
   name: string;
   email: string;
   image: string | null;
   isSelected?: boolean;
+  className?: string;
 }) => {
   return (
-    <div className="flex items-center gap-2">
+    <div className={cn("flex items-center gap-2", className)}>
       <div className="relative size-8">
         <UserAvatar userImage={image} userEmail={email} userName={name} />
 
