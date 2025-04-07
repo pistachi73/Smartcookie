@@ -45,10 +45,11 @@ export const DraggableSessionNote = ({
       {...dragProps}
       className={cn(
         "group relative flex flex-row items-center gap-1",
-        "p-2 rounded-lg bg-overlay-elevated transition-all duration-200 not-last:mb-1",
+        "p-2 rounded-lg  transition-all duration-200 not-last:mb-1",
         "focus-visible:border-primary focus-visible:bg-primary/10",
         "cursor-grab",
-        "border border-transparent hover:border-fg/50",
+        "border dark:border-transparent hover:border-fg/30",
+        "bg-overlay dark:bg-overlay-elevated",
         isDragging && "opacity-40 cursor-grabbing scale-95",
       )}
     >
@@ -63,7 +64,7 @@ export const DraggableSessionNote = ({
           className="shrink-0"
         />
       </span>
-      <p className="text-base pr-4 overflow-hidden">{note.content}</p>
+      <p className="text-sm pr-4 overflow-hidden">{note.content}</p>
       <DeleteProgressButton
         pressDuration={400}
         className={{

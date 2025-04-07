@@ -1,5 +1,7 @@
 import type { CustomColor } from "@/db/schema/shared";
 import { DEFAULT_CUSTOM_COLOR } from "@/shared/lib/custom-colors";
+import { serializedDateValue } from "@/shared/lib/serialize-react-aria/serialize-date-value";
+import { serializedTime } from "@/shared/lib/serialize-react-aria/serialize-time";
 import {
   type CalendarDate,
   Time,
@@ -132,16 +134,50 @@ export const DeleteSessionNoteUseCaseSchema = z.object({
   sessionId: z.number(),
 });
 
-export const SessionFormSchema = z.object({
-  date: z.custom<CalendarDate>(),
-  startTime: z.custom<Time>(),
-  endTime: z.custom<Time>(),
+export const SessionFormSchema = z
+  .object({
+    date: z.custom<CalendarDate>(),
+    startTime: z.custom<Time>(),
+    endTime: z.custom<Time>(),
+    rrule: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.endTime && data.startTime && data.endTime < data.startTime) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["endTime"],
+        message: "End time must be after start time",
+      });
+    }
+
+    if (!data.startTime) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["startTime"],
+        message: "Start time is required",
+      });
+    }
+
+    if (!data.endTime) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["endTime"],
+        message: "End time is required",
+      });
+    }
+  });
+
+export const SerializedSessionFormSchema = z.object({
+  date: serializedDateValue,
+  startTime: serializedTime,
+  endTime: serializedTime,
   rrule: z.string().optional(),
 });
 
-export const SerializedSessionFormSchema = z.object({
-  startDate: z.string(),
-  endDate: z.string(),
+export const AddSessionsUseCaseSchema = z.object({
+  formData: SerializedSessionFormSchema,
+  hubEndsOn: z.string().nullable().optional(),
+  userId: z.string(),
 });
 
 export type SessionFormValues = z.infer<typeof SessionFormSchema>;

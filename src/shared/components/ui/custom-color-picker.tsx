@@ -14,7 +14,11 @@ import { ListBoxItem } from "react-aria-components";
 export const CUSTOM_COLORS_MAP = new Map([
   [
     "flamingo",
-    { id: "flamingo", name: "Flamingo", className: "bg-custom-flamingo-bg" },
+    {
+      id: "flamingo",
+      name: "Flamingo",
+      className: "bg-custom-flamingo-bg",
+    },
   ],
   [
     "tangerine",
@@ -95,7 +99,7 @@ export const CustomColorPicker = <T extends object>({
       >
         <div
           className={cn(
-            "size-5 rounded-xs shrink-0 transition-colors brightness-150",
+            "size-5 rounded-xs shrink-0 transition-colors",
             selectedColor?.className,
           )}
         />
@@ -113,7 +117,7 @@ export const CustomColorPicker = <T extends object>({
             {({ isSelected }) => (
               <div
                 className={cn(
-                  "size-7 rounded-xs shrink-0 flex items-center justify-center brightness-150 hover:brightness-125",
+                  "size-7 rounded-xs shrink-0 flex items-center justify-center hover:brightness-110",
                   className,
                 )}
               >

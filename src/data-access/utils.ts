@@ -49,9 +49,9 @@ export async function createTransaction<T extends typeof db>(
 
 export const parseDateWithTimezone = (
   date: Column,
-  timestamp: Column,
   as: string,
+  timestamp?: Column,
 ) =>
-  sql<string>`trim(both '"' from to_json(${date}::timestamptz at time zone ${timestamp})::text)`.as(
+  sql<string>`trim(both '"' from to_json(${date}::timestamptz at time zone ${timestamp ?? "UTC"})::text)`.as(
     as,
   );

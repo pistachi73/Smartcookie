@@ -5,7 +5,7 @@ import { cn } from "@/shared/lib/classes";
 import {
   ArrowDown01Icon,
   Calendar03Icon,
-  Tick02Icon,
+  Tick01Icon,
   TimeScheduleIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -32,13 +32,18 @@ export const Session = ({ session, position }: SessionProps) => {
   });
 
   return (
-    <div className="border rounded-lg flex-1 mb-2 sm:mb-4">
+    <div
+      className={cn(
+        "border rounded-lg flex-1 mb-2 sm:mb-4 shadow-sm transition-shadow",
+        isExpanded && "shadow-md",
+      )}
+    >
       <MotionRAButton
         layout
         className={cn(
           "group rounded-lg cursor-pointer w-full flex flex-row items-center justify-between p-2 sm:p-1 sm:pr-4",
-          "transition-colors duration-200 hover:bg-overlay border-b border-transparent",
-          isExpanded && "border-border bg-overlay rounded-b-none",
+          "transition-colors duration-200 dark:hover:bg-overlay-highlight ",
+          isExpanded && "bg-bg dark:bg-overlay-highlight rounded-b-none",
         )}
         onPress={() => setIsExpanded(!isExpanded)}
       >
@@ -46,27 +51,29 @@ export const Session = ({ session, position }: SessionProps) => {
           <m.div
             layout
             className={cn(
-              "hidden sm:flex group-hover:bg-overlay-elevated-highlight transition-colors flex-col items-center justify-center size-14 bg-overlay rounded-sm",
-              isExpanded && "bg-overlay-elevated-highlight",
+              "hidden sm:flex transition-colors flex-col items-center justify-center size-12 bg-bg dark:bg-overlay-highlight rounded-sm",
+              isExpanded && "bg-overlay-highlight dark:bg-overlay-elevated",
             )}
           >
-            <p className="text-sm text-muted-fg">
+            <p className="text-xs text-muted-fg">
               {format(session.startTime, "EEE")}
             </p>
-            <p className="text-lg font-semibold">
+            <p className="text-base font-semibold">
               {format(session.startTime, "d")}
             </p>
           </m.div>
           <div
             className={cn(
               "sm:hidden flex items-center justify-center shrink-0",
-              "size-8 rounded-full bg-primary",
-              session.status === "completed" && "bg-green-900 text-green-200",
-              session.status === "upcoming" && "bg-blue-900/50 text-blue-100",
+              "size-8 rounded-full bg-primary border",
+              session.status === "completed" &&
+                "bg-green-400 text-green-950 border-green-700 dark:bg-green-900 dark:text-green-200",
+              session.status === "upcoming" &&
+                "bg-blue-400 text-blue-950 border-blue-700 dark:bg-blue-900/50 dark:text-blue-100",
             )}
           >
             <HugeiconsIcon
-              icon={Tick02Icon}
+              icon={Tick01Icon}
               altIcon={TimeScheduleIcon}
               showAlt={session.status === "upcoming"}
               size={16}

@@ -1,27 +1,37 @@
 "use client";
 
 import { Breadcrumbs } from "@/ui/breadcrumbs";
-import { Separator } from "@/ui/separator";
 
 import { UserButton } from "@/features/auth/components/user-button";
 import { cn } from "@/shared/lib/classes";
-import { SearchField } from "../../ui/search-field";
+import {
+  ArrowLeft02Icon,
+  Search01Icon,
+} from "@hugeicons-pro/core-solid-rounded";
+import { Notification01Icon } from "@hugeicons-pro/core-stroke-rounded";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Button } from "../../ui/button";
+import { FieldGroup, Input } from "../../ui/field";
+import { Keyboard } from "../../ui/keyboard";
 import { SidebarNav } from "../../ui/sidebar";
-import { SidebarTrigger } from "../../ui/sidebar/sidebar-trigger";
+import { Skeleton } from "../../ui/skeleton";
 
 export interface PortalNavProps {
   className?: string;
   showSearchField?: boolean;
-  actions?: React.ReactNode;
-  breadcrumbs: { label: string; href: string }[];
+  breadcrumbs: (
+    | { label: string; href: string; icon?: typeof ArrowLeft02Icon }
+    | "skeleton"
+  )[];
 }
 
 export const PortalNav = ({
   className,
   showSearchField = true,
-  actions,
   breadcrumbs,
 }: PortalNavProps) => {
+  const lastUrl = document.referrer;
+
   return (
     <SidebarNav
       className={cn(
@@ -31,36 +41,75 @@ export const PortalNav = ({
     >
       <div className="flex items-center justify-between w-full h-full gap-8">
         <div className="flex items-center gap-x-4 flex-shrink-0">
-          <SidebarTrigger
-            className="size-10"
-            appearance="plain"
-            shape="square"
-            // size="square-petite"
-          />
-          <Separator className="h-6 hidden md:block" orientation="vertical" />
           <Breadcrumbs className="@md:flex hidden">
-            {breadcrumbs.map((crumb) => (
-              <Breadcrumbs.Item key={crumb.href} {...crumb}>
-                {crumb.label}
+            {lastUrl && (
+              <Breadcrumbs.Item key={lastUrl} href={lastUrl} separator="slash">
+                <HugeiconsIcon
+                  icon={ArrowLeft02Icon}
+                  data-slot="icon"
+                  size={16}
+                />
               </Breadcrumbs.Item>
-            ))}
+            )}
+            {breadcrumbs.map((crumb) => {
+              if (crumb === "skeleton") {
+                return (
+                  <Breadcrumbs.Item
+                    key={crumb}
+                    className="flex items-center gap-x-2 w-20 h-6"
+                  >
+                    <Skeleton className="w-24 h-5" />
+                  </Breadcrumbs.Item>
+                );
+              }
+
+              return (
+                <Breadcrumbs.Item
+                  key={crumb.href}
+                  {...crumb}
+                  className="flex items-center gap-x-2"
+                >
+                  {crumb.icon && (
+                    <HugeiconsIcon
+                      icon={crumb.icon}
+                      data-slot="icon"
+                      size={16}
+                      className="inline"
+                    />
+                  )}
+                  {crumb.label}
+                </Breadcrumbs.Item>
+              );
+            })}
           </Breadcrumbs>
         </div>
 
-        <div className="flex items-center gap-x-2 flex-shrink-0">
-          {actions}
-
+        <div className="flex items-center gap-x-3">
           {showSearchField && (
-            <div className="flex-1 max-w-md hidden md:block">
-              <SearchField
-                placeholder="Search..."
-                className={{
-                  fieldGroup: "w-full",
-                }}
-              />
+            <div className="hidden md:block">
+              <FieldGroup className="pl-3 pr-2 w-[300px] max-w-[400px]">
+                <HugeiconsIcon
+                  icon={Search01Icon}
+                  data-slot="icon"
+                  size={14}
+                  className="inline text-muted-fg"
+                />
+                <Input placeholder="Search..." className="text-sm w-full" />
+                <Keyboard
+                  keys="⌘+K"
+                  className="border bg-muted rounded-sm items-center text-sm"
+                />
+              </FieldGroup>
             </div>
           )}
-
+          <Button
+            appearance="outline"
+            size="square-petite"
+            shape="square"
+            className="size-10"
+          >
+            <HugeiconsIcon icon={Notification01Icon} size={16} />
+          </Button>
           <UserButton />
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { getHubsAction } from "../actions";
 
 export const getHubsQueryOptions = {
@@ -10,5 +10,5 @@ export const getHubsQueryOptions = {
 };
 
 export const useHubs = () => {
-  return useQuery(getHubsQueryOptions);
+  return useSuspenseQuery(getHubsQueryOptions);
 };

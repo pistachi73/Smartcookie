@@ -4,10 +4,10 @@ import { Skeleton } from "@/ui/skeleton";
 
 export const QuickNotesLoading = () => {
   return (
-    <div className="min-h-0 h-full flex bg-overlay w-full overflow-hidden">
+    <div className="min-h-0 h-full flex bg-bg w-full overflow-hidden">
       <div
         className={cn(
-          "transition-all duration-150 border-r h-full bg-overlay shrink-0",
+          "transition-all duration-150 border-r h-full bg-bg shrink-0",
           "w-[300px]",
         )}
       >

@@ -5,7 +5,7 @@ import { Skeleton } from "@/shared/components/ui/skeleton";
 
 export function HubCardSkeleton() {
   return (
-    <Card className="h-full w-full bg-transparent border-border">
+    <Card className="h-full w-full bg-overlay border-border">
       <Card.Header>
         <div className="flex items-center gap-2 mb-2">
           <Skeleton className="h-5 w-12" />

@@ -1,6 +1,6 @@
-import { Urbanist } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 
-export const sans = Urbanist({
+export const sans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
 });

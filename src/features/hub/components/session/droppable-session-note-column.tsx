@@ -68,8 +68,8 @@ export const DroppableSessionNoteColumn = ({
       className={cn(
         "relative p-1 rounded-lg  border border-transparent",
         "transition-colors overflow-hidden duration-200",
-        "focus-visible:border-primary focus-visible:bg-primary/10",
-        isDropTarget && "border-primary bg-primary/10",
+        "focus-visible:border-primary focus-visible:bg-primary-tint",
+        isDropTarget && "border-primary/30 bg-primary-tint",
       )}
     >
       {children}

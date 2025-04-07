@@ -3,6 +3,10 @@ import { getHubByIdQueryOptions } from "@/features/hub/hooks/use-hub-by-id";
 import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
 import { currentUser } from "@/shared/lib/auth";
 import { getQueryClient } from "@/shared/lib/get-query-client";
+import {
+  Folder02Icon,
+  FolderLibraryIcon,
+} from "@hugeicons-pro/core-solid-rounded";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { redirect } from "next/navigation";
 
@@ -33,13 +37,19 @@ const HubPage = async ({ params }: HubPageProps) => {
     redirect("/portal/hubs");
   }
 
+  await new Promise((resolve) => setTimeout(resolve, 3000));
+
   return (
     <>
       <PortalNav
         breadcrumbs={[
           { label: "Portal", href: "/portal" },
-          { label: "Hubs", href: "/portal/hubs" },
-          { label: hub.name, href: `/portal/hubs/${hubId}` },
+          { label: "Hubs", href: "/portal/hubs", icon: FolderLibraryIcon },
+          {
+            label: hub.name,
+            href: `/portal/hubs/${hubId}`,
+            icon: Folder02Icon,
+          },
         ]}
       />
       <HydrationBoundary state={dehydrate(queryClient)}>

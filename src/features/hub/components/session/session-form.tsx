@@ -1,24 +1,45 @@
 "use client";
 
 import { DatePicker } from "@/shared/components/ui/date-picker";
-import { Label } from "@/shared/components/ui/field";
+import { Label, fieldStyles } from "@/shared/components/ui/field";
 import { RecurrenceSelect } from "@/shared/components/ui/recurrence-select";
 import { TimeCombobox } from "@/shared/components/ui/time-combobox";
+import { cn } from "@/shared/lib/classes";
 import { ArrowRight02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
+import { parseDateTime } from "@internationalized/date";
+import {
+  Controller,
+  type UseFormReturn,
+  useFormState,
+  useWatch,
+} from "react-hook-form";
 import type { z } from "zod";
 import type { SessionFormSchema } from "../../lib/schemas";
 
 interface SessionFormProps {
   form: UseFormReturn<z.infer<typeof SessionFormSchema>>;
+  minDate?: string;
+  maxDate?: string | null;
 }
 
-export function SessionForm({ form }: SessionFormProps) {
+export function SessionForm({ form, minDate, maxDate }: SessionFormProps) {
   const [date, startTime] = useWatch({
     control: form.control,
     name: ["date", "startTime"],
   });
+
+  const formState = useFormState({
+    control: form.control,
+  });
+
+  const endStartTimeError =
+    formState.errors.startTime?.message || formState.errors.endTime?.message;
+
+  const maxCalendarDate = maxDate ? parseDateTime(maxDate) : undefined;
+  const minCalendarDate = minDate ? parseDateTime(minDate) : undefined;
+
+  console.log({ maxCalendarDate, minCalendarDate });
 
   return (
     <div className="space-y-4">
@@ -41,6 +62,8 @@ export function SessionForm({ form }: SessionFormProps) {
               placement: "bottom",
               offset: 8,
             }}
+            minValue={minCalendarDate}
+            maxValue={maxCalendarDate}
           />
         )}
       />
@@ -51,12 +74,16 @@ export function SessionForm({ form }: SessionFormProps) {
           <Controller
             control={form.control}
             name="startTime"
-            render={({ field: { onChange, value, ...restField } }) => (
+            render={({
+              field: { onChange, value, ...restField },
+              fieldState: { invalid },
+            }) => (
               <TimeCombobox
                 {...restField}
                 value={value}
                 onChange={onChange}
                 withIcon
+                isInvalid={invalid}
                 className={{
                   input: "text-sm",
                   fieldGroup: "hover:bg-overlay-highlight",
@@ -74,12 +101,16 @@ export function SessionForm({ form }: SessionFormProps) {
           <Controller
             control={form.control}
             name="endTime"
-            render={({ field: { onChange, value, ...restField } }) => (
+            render={({
+              field: { onChange, value, ...restField },
+              fieldState: { invalid },
+            }) => (
               <TimeCombobox
                 {...restField}
                 value={value}
                 onChange={onChange}
                 minValue={startTime}
+                isInvalid={invalid}
                 className={{
                   input: "text-sm",
                   fieldGroup: "hover:bg-overlay-highlight",
@@ -92,6 +123,7 @@ export function SessionForm({ form }: SessionFormProps) {
             )}
           />
         </div>
+        <p className={cn(fieldStyles().fieldError())}>{endStartTimeError}</p>
       </div>
       <Controller
         control={form.control}
@@ -101,6 +133,8 @@ export function SessionForm({ form }: SessionFormProps) {
             value={value}
             onChange={onChange}
             selectedDate={date}
+            minDate={minCalendarDate}
+            maxDate={maxCalendarDate}
             contentProps={{
               label: "Recurrence",
             }}

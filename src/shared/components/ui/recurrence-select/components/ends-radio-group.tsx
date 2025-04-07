@@ -8,9 +8,15 @@ import { RecurrenceSelectContext } from "../recurrence-select-context";
 import { EndsEnum } from "../utils";
 
 export const EndsRadioGroup = () => {
-  const { setRruleOptions, rruleOptions, selectedDate, ends, setEnds } = use(
-    RecurrenceSelectContext,
-  );
+  const {
+    setRruleOptions,
+    rruleOptions,
+    selectedDate,
+    ends,
+    setEnds,
+    minDate,
+    maxDate,
+  } = use(RecurrenceSelectContext);
   return (
     <div className="flex flex-row mt-2">
       <RadioGroup
@@ -69,6 +75,8 @@ export const EndsRadioGroup = () => {
             placement: "right top",
           }}
           isDateUnavailable={(date) => date.compare(selectedDate) < 0}
+          minValue={minDate}
+          maxValue={maxDate}
         />
 
         <div className="flex items-center gap-2">

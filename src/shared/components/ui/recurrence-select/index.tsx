@@ -3,7 +3,7 @@ import {
   RepeatIcon,
 } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
-import type { CalendarDate } from "@internationalized/date";
+import type { CalendarDate, CalendarDateTime } from "@internationalized/date";
 import * as React from "react";
 import { use, useMemo, useState } from "react";
 import { Frequency, RRule, type Weekday } from "rrule";
@@ -251,17 +251,23 @@ export const RecurrenceSelect = ({
   onChange,
   value,
   contentProps,
+  minDate,
+  maxDate,
 }: {
   selectedDate: CalendarDate;
   onChange: (rrule: string | undefined) => void;
   value?: string;
   contentProps?: RecurrenceSelectContentProps;
+  minDate?: CalendarDateTime;
+  maxDate?: CalendarDateTime;
 }) => {
   return (
     <RecurrenceSelectContextProvider
       selectedDate={selectedDate}
       onChange={onChange}
       value={value}
+      minDate={minDate}
+      maxDate={maxDate}
     >
       <RecurrenceSelectContent {...contentProps} />
     </RecurrenceSelectContextProvider>

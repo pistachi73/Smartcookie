@@ -3,10 +3,10 @@ import { Button } from "@/shared/components/ui/button";
 import { Heading } from "@/shared/components/ui/heading";
 import { regularSpring } from "@/shared/lib/animation";
 import { cn } from "@/shared/lib/classes";
-import { Tick04Icon } from "@hugeicons-pro/core-solid-rounded";
 import {
   Add01Icon,
-  TimeScheduleIcon,
+  Clock05Icon,
+  Tick01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { LayoutGroup } from "motion/react";
@@ -27,10 +27,9 @@ export function SessionsList({ hubId }: { hubId: number }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: sessions } = useHubSessions({ hubId });
   const { isMobile } = useDeviceType();
-
   return (
     <>
-      <div className="py-4 ">
+      <div className="py-2">
         <div className="flex flex-row items-center justify-between mb-6">
           <Heading level={2}>Sessions timeline</Heading>
           <Button
@@ -63,25 +62,28 @@ export function SessionsList({ hubId }: { hubId: number }) {
                       layout
                       className={cn(
                         "w-1 h-2.5 shrink-0",
-                        index === 0 ? "bg-transparent" : "bg-overlay-elevated",
+                        index === 0
+                          ? "bg-transparent"
+                          : "bg-bg dark:bg-overlay-highlight",
                       )}
                     />
 
                     <m.div
                       layout
                       className={cn(
-                        "flex items-center justify-center shrink-0",
+                        "flex items-center justify-center shrink-0 border",
                         "size-8 rounded-full bg-primary",
                         session.status === "completed" &&
-                          "bg-green-900 text-green-200",
+                          "bg-green-400 text-green-950 border-green-700 dark:bg-green-900 dark:text-green-200",
                         session.status === "upcoming" &&
-                          "bg-blue-900/70 text-blue-100",
+                          "bg-blue-400 text-blue-950 border-blue-700 dark:bg-blue-900/50 dark:text-blue-100",
                       )}
                     >
                       <HugeiconsIcon
-                        icon={Tick04Icon}
-                        altIcon={TimeScheduleIcon}
+                        icon={Tick01Icon}
+                        altIcon={Clock05Icon}
                         showAlt={session.status === "upcoming"}
+                        strokeWidth={1.5}
                         size={16}
                       />
                     </m.div>
@@ -91,10 +93,10 @@ export function SessionsList({ hubId }: { hubId: number }) {
                         layout: regularSpring,
                       }}
                       className={cn(
-                        "w-1 h-[calc(100%+10rem)] bg-overlay-elevated",
+                        "w-1 h-[calc(100%+10rem)]",
                         index === sessions.length - 1
                           ? "bg-transparent"
-                          : "bg-overlay-elevated",
+                          : "bg-bg dark:bg-overlay-highlight",
                       )}
                     />
                   </m.div>
@@ -112,6 +114,7 @@ export function SessionsList({ hubId }: { hubId: number }) {
       <DynamicSessionFormModal
         isOpen={isModalOpen}
         onOpenChange={setIsModalOpen}
+        hubId={hubId}
       />
     </>
   );

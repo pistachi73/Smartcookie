@@ -40,7 +40,7 @@ export function StudentsList() {
 
   const hubId = params.hubId as string;
 
-  const { data: hub } = useHubById(user.id, Number(hubId));
+  const { data: hub } = useHubById(Number(hubId));
   const students = hub?.students;
 
   return (

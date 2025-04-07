@@ -46,7 +46,7 @@ export function HubCard({ hub }: HubCardProps) {
     <Link href={`/portal/hubs/${id}`} className="block h-full w-full">
       <Card
         className={cn(
-          "group h-full transition-all bg-overlay-highlight hover:bg-overlay-elevated",
+          "shadow-sm hover:shadow-md group h-full transition-all duration-300 bg-overlay dark:hover:bg-overlay-highlight",
           "flex flex-col justify-between",
           colorClasses.hover,
         )}
@@ -73,10 +73,12 @@ export function HubCard({ hub }: HubCardProps) {
               className={cn("w-3 h-3 rounded-full", colorClasses.dot)}
               title={`Color: ${hub.color}`}
             />
-            <Card.Title level={2}>{name}</Card.Title>
+            <Card.Title level={2} className="text-lg!">
+              {name}
+            </Card.Title>
           </div>
           {description && (
-            <Card.Description className="text-base">
+            <Card.Description className="text-sm">
               {description}
             </Card.Description>
           )}
@@ -87,17 +89,17 @@ export function HubCard({ hub }: HubCardProps) {
             <AvatarStack
               users={students}
               maxAvatars={5}
-              className={{ avatar: "outline-overlay-highlight outline-2" }}
+              className={{ avatar: "outline-overlay outline-2" }}
             />
           ) : (
-            <p className="text-muted-fg/70 italic flex items-center gap-1">
+            <p className="text-muted-fg/70 italic flex items-center gap-1 text-sm">
               <HugeiconsIcon icon={UserMultiple02Icon} size={16} />
               No students yet
             </p>
           )}
 
           <Separator />
-          <div className="grid grid-cols-2 gap-2 text-muted-fg">
+          <div className="grid grid-cols-2 gap-2 text-muted-fg text-sm">
             <p className="flex items-center gap-2">
               <HugeiconsIcon
                 icon={Calendar01Icon}

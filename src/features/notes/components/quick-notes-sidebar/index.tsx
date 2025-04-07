@@ -50,11 +50,11 @@ export const QuickNotesSidebar = () => {
   return (
     <div
       className={cn(
-        "border-r h-full shrink-0",
+        "border-r h-full overflow-hidden min-h-0 flex flex-col shrink-0",
         isMinimized ? "w-auto" : "w-[300px]",
       )}
     >
-      <div className={cn("flex items-center p-4 justify-between")}>
+      <div className={cn("flex items-center px-4  py-2 justify-between")}>
         {!isMinimized && (
           <Heading level={2} className="text-lg font-medium text-nowrap">
             Quick Notes
@@ -90,16 +90,24 @@ export const QuickNotesSidebar = () => {
         </div>
       )}
 
-      <div className="p-4 pt-2 pb-2 w-full overflow-auto h-full">
+      <div className="p-4 pt-2 w-full h-full overflow-y-scroll">
         <HubToggle
           label={allHubsVisible ? "Hide All Hubs" : "Show All Hubs"}
           icon={allHubsVisible ? ViewOffSlashIcon : ViewIcon}
           isVisible={allHubsVisible}
           isMinimized={isMinimized}
           onPress={toggleAllHubsVisibility}
+          prefix={
+            <HugeiconsIcon
+              icon={ViewIcon}
+              altIcon={ViewOffSlashIcon}
+              showAlt={allHubsVisible}
+              size={16}
+            />
+          }
         />
 
-        <div className="flex flex-col gap-y-2 mt-8 ">
+        <div className="flex flex-col gap-y-2 mt-8">
           {filteredData?.map((hub) => (
             <HubToggle
               key={hub.id}

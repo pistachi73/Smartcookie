@@ -2,6 +2,7 @@
 import { formatCalendarHeaderTitle } from "@/features/calendar/lib/utils";
 import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
 import type { CalendarView } from "@/features/calendar/types/calendar.types";
+import { Heading } from "@/shared/components/ui/heading";
 import { Button } from "@/ui/button";
 import { Select } from "@/ui/select";
 import {
@@ -40,12 +41,12 @@ export const CalendarHeader = () => {
   );
 
   return (
-    <div className="w-full flex flex-row items-center justify-between p-4 gap-6 border-b">
+    <div className="w-full flex flex-row items-center justify-between p-4 py-3 gap-6 border-b">
       <div className="flex flex-row items-center gap-3">
         <Button
           appearance="plain"
           shape="square"
-          className="size-10 p-0 text-muted-fg hover:text-current"
+          className="size-9 p-0 text-muted-fg hover:text-current"
           onPress={() => {
             toggleSidebar();
           }}
@@ -54,16 +55,16 @@ export const CalendarHeader = () => {
           <HugeiconsIcon icon={SidebarLeft01Icon} size={18} />
         </Button>
 
-        <h2 className="text-2xl font-semibold text-ellipsis line-clamp-1">
+        <Heading level={2} className="text-ellipsis line-clamp-1">
           {title}
-        </h2>
+        </Heading>
       </div>
 
       <div className="flex flex-row gap-2">
         <div className="flex">
           <Button
             appearance="plain"
-            className="size-10 p-0 text-muted-fg hover:text-current"
+            className="size-9 p-0 text-muted-fg hover:text-current"
             onPress={() => {
               onNavigation(-1);
             }}
@@ -72,7 +73,7 @@ export const CalendarHeader = () => {
           </Button>
           <Button
             appearance="plain"
-            className="size-10 p-0 text-muted-fg hover:text-current"
+            className="size-9 p-0 text-muted-fg hover:text-current"
             onPress={() => {
               onNavigation(1);
             }}
@@ -89,7 +90,7 @@ export const CalendarHeader = () => {
         >
           <Select.Trigger
             showArrow
-            className="min-w-[60px] w-fit px-4 hover:bg-secondary"
+            className="min-w-[60px] h-9 w-fit px-4 hover:bg-secondary"
           />
           <Select.List
             className={{
@@ -133,12 +134,9 @@ export const CalendarHeader = () => {
           size="small"
           shape="square"
           onPress={onToday}
+          className="h-9"
         >
           Today
-        </Button>
-
-        <Button size="small" shape="square" className={"shrink-0"}>
-          Add Event
         </Button>
       </div>
     </div>

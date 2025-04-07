@@ -80,7 +80,7 @@ const buttonStyles = tv({
     intent: "primary",
     appearance: "solid",
     size: "medium",
-    shape: "circle",
+    shape: "square",
   },
 });
 

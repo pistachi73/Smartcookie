@@ -60,16 +60,9 @@ const sidebar = tv({
         "right-0 group-data-[sidebar-collapsible=hidden]/sidebar-container:right-[calc(var(--sidebar-width)*-1)]",
     },
     intent: {
-      float:
-        "bg-bg p-2 group-data-[sidebar-collapsible=dock]/sidebar-container:w-[calc(var+theme(spacing.4)+2px)]",
-      inset: [
-        "bg-sidebar p-2 group-data-[sidebar-collapsible=dock]/sidebar-container:w-[calc(var(--sidebar-width-dock)+theme(spacing.2)+2px)] dark:bg-bg",
-      ],
-      fleet: [
-        "group-data-[sidebar-collapsible=dock]/sidebar-container:w-(--sidebar-width-dock)",
-        "**:data-sidebar-disclosure:gap-y-0 **:data-sidebar-section:gap-y-0 **:data-sidebar-disclosure:px-0 **:data-sidebar-section:px-0",
-        "group-data-[sidebar-side=left]/sidebar-container:border-r group-data-[sidebar-side=right]/sidebar-container:border-l",
-      ],
+      float: "",
+      inset: "",
+      fleet: "",
       default: [
         "group-data-[sidebar-collapsible=dock]/sidebar-container:w-(--sidebar-width-dock) group-data-[sidebar-side=left]/sidebar-container:border-(--sidebar-border)",
         "group-data-[sidebar-side=left]/sidebar-container:border-r group-data-[sidebar-side=right]/sidebar-container:border-l",
@@ -143,11 +136,7 @@ const Sidebar = ({
       >
         <div
           data-sidebar="default"
-          className={twJoin(
-            "flex h-full w-full flex-col text-sidebar-fg",
-            "group-data-[sidebar-intent=inset]/sidebar-container:bg-sidebar dark:group-data-[sidebar-intent=inset]/sidebar-container:bg-bg",
-            "group-data-[sidebar-intent=float]/sidebar-container:rounded-lg group-data-[sidebar-intent=float]/sidebar-container:border group-data-[sidebar-intent=float]/sidebar-container:border-(--sidebar-border) group-data-[sidebar-intent=float]/sidebar-container:bg-sidebar group-data-[sidebar-intent=float]/sidebar-container:shadow-xs",
-          )}
+          className={twJoin("flex h-full w-full flex-col text-sidebar-fg")}
         >
           {props.children}
         </div>
@@ -221,24 +210,6 @@ const SidebarFooter = ({
   );
 };
 
-const SidebarContent = ({
-  className,
-  ...props
-}: React.ComponentProps<"div">) => {
-  const { state } = useSidebar();
-  return (
-    <div
-      data-sidebar-content="true"
-      className={cn(
-        "flex min-h-0 flex-1 scroll-mb-96 flex-col overflow-auto *:data-sidebar-section:border-l-0",
-        state === "collapsed" && "items-center",
-        className,
-      )}
-      {...props}
-    />
-  );
-};
-
 const SidebarSectionGroup = ({
   className,
   ...props
@@ -286,8 +257,7 @@ const SidebarSection = ({
 
 const sidebarItemStyles = tv({
   base: [
-    "transition-colors group h-10 relative col-span-full cursor-pointer overflow-hidden rounded-lg px-[calc(var(--spacing)*2.3)] py-[calc(var(--spacing)*1.3)] text-muted-fg outline-hidden sm:text-sm/6",
-    "in-data-[sidebar-intent=fleet]:rounded-none",
+    "font-semibild transition-colors group h-10 relative col-span-full cursor-pointer overflow-hidden rounded-lg px-[calc(var(--spacing)*2.3)] py-[calc(var(--spacing)*1.3)] text-muted-fg outline-hidden sm:text-sm/6",
   ],
   variants: {
     collapsed: {
@@ -431,136 +401,11 @@ const SidebarInset = ({
   return (
     <main
       ref={ref}
-      className={cn(
-        "bg-bg relative flex h-full w-full overflow-hidden",
-        className,
-      )}
+      className={cn("relative flex h-full w-full overflow-hidden", className)}
       {...props}
     />
   );
 };
-
-// type SidebarDisclosureGroupProps = DisclosureGroupProps;
-// const SidebarDisclosureGroup = ({
-//   allowsMultipleExpanded = true,
-//   className,
-//   ...props
-// }: SidebarDisclosureGroupProps) => {
-//   return (
-//     <DisclosureGroup
-//       data-sidebar-disclosure-group="true"
-//       allowsMultipleExpanded={allowsMultipleExpanded}
-//       className={composeTailwindRenderProps(
-//         className,
-//         "col-span-full flex flex-col gap-y-6",
-//       )}
-//       {...props}
-//     />
-//   );
-// };
-
-// interface SidebarDisclosureProps extends DisclosureProps {
-//   ref?: React.Ref<HTMLDivElement>;
-// }
-// const SidebarDisclosure = ({
-//   className,
-//   ref,
-//   ...props
-// }: SidebarDisclosureProps) => {
-//   const { state } = useSidebar();
-//   return (
-//     <Disclosure
-//       ref={ref}
-//       data-sidebar-disclosure="true"
-//       className={composeTailwindRenderProps(
-//         className,
-//         cn(
-//           "in-data-[sidebar-intent=fleet]:px-0 px-2.5",
-//           state !== "collapsed" && "col-span-full",
-//         ),
-//       )}
-//       {...props}
-//     />
-//   );
-// };
-
-// const sidebarDisclosureTrigger = tv({
-//   base: [
-//     "group relative flex w-full cursor-pointer items-center overflow-hidden rounded-lg px-[calc(var(--spacing)*2.3)] py-[calc(var(--spacing)*1.3)] text-sidebar-fg/70 outline-hidden sm:text-sm/6",
-//     "in-data-[sidebar-intent=fleet]:rounded-none in-data-[sidebar-intent=fleet]:py-2 in-data-[sidebar-intent=fleet]:**:data-[slot=chevron]:hidden",
-//   ],
-//   variants: {
-//     collapsed: {
-//       false: "col-span-full **:data-[slot=icon]:mr-2",
-//       true: "size-9 justify-center p-0",
-//     },
-//     isActive: {
-//       true: "bg-(--sidebar-accent) text-sidebar-fg",
-//     },
-//     isDisabled: {
-//       true: "cursor-default opacity-50",
-//     },
-//   },
-// });
-
-// interface SidebarDisclosureTriggerProps extends ButtonProps {
-//   ref?: React.Ref<HTMLButtonElement>;
-// }
-// const SidebarDisclosureTrigger = ({
-//   className,
-//   ref,
-//   ...props
-// }: SidebarDisclosureTriggerProps) => {
-//   const { state, isMobile } = useSidebar();
-//   const collapsed = state === "collapsed" && !isMobile;
-//   return (
-//     <Heading level={3}>
-//       <Trigger
-//         ref={ref}
-//         slot="trigger"
-//         className={composeRenderProps(className, (className, renderProps) =>
-//           sidebarDisclosureTrigger({
-//             ...renderProps,
-//             collapsed,
-//             isActive:
-//               renderProps.isPressed ||
-//               renderProps.isFocusVisible ||
-//               renderProps.isHovered,
-//             className,
-//           }),
-//         )}
-//         {...props}
-//       >
-//         {(values) => (
-//           <>
-//             {typeof props.children === "function"
-//               ? props.children(values)
-//               : props.children}
-//             {state !== "collapsed" && (
-//               <HugeiconsIcon
-//                 icon={ArrowDown01Icon}
-//                 data-slot="chevron"
-//                 className="z-10 ml-auto size-3.5 transition-transform group-aria-expanded:rotate-180"
-//               />
-//             )}
-//           </>
-//         )}
-//       </Trigger>
-//     </Heading>
-//   );
-// };
-
-// const SidebarDisclosurePanel = (
-//   props: React.ComponentProps<typeof DisclosurePanel>,
-// ) => {
-//   return (
-//     <DisclosurePanel
-//       data-sidebar-disclosure-panel="true"
-//       className="col-span-full grid grid-cols-[auto_1fr] gap-y-0.5"
-//       {...props}
-//     />
-//   );
-// };
 
 const SidebarSeparator = ({ className, ...props }: SidebarSeparatorProps) => {
   return (
@@ -667,7 +512,6 @@ export type {
 
 export {
   Sidebar,
-  SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarInset,

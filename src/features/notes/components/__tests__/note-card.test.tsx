@@ -74,7 +74,7 @@ describe("NoteCard", () => {
   });
 
   it("renders the note content", () => {
-    render(<NoteCard note={mockNote} />);
+    render(<NoteCard note={mockNote} hubColor={"banana"} />);
     expect(screen.getByText(mockNote.content)).toBeInTheDocument();
   });
 
@@ -86,7 +86,7 @@ describe("NoteCard", () => {
       handleContentChange: mockHandleContentChange,
     });
 
-    render(<NoteCard note={mockNote} />);
+    render(<NoteCard note={mockNote} hubColor={"banana"} />);
     expect(screen.getByText("Saving...")).toBeInTheDocument();
   });
 
@@ -98,12 +98,12 @@ describe("NoteCard", () => {
       handleContentChange: mockHandleContentChange,
     });
 
-    render(<NoteCard note={mockNote} />);
+    render(<NoteCard note={mockNote} hubColor={"banana"} />);
     expect(screen.getByText("Unsaved")).toBeInTheDocument();
   });
 
   it("calls handleContentChange when content changes", () => {
-    render(<NoteCard note={mockNote} />);
+    render(<NoteCard note={mockNote} hubColor={"banana"} />);
 
     // Use container query to get the specific textarea in this test
     const textarea = screen.getByRole("textbox");
@@ -114,7 +114,7 @@ describe("NoteCard", () => {
   });
 
   it("calls setEdittingHub with hubId on focus and null on blur", () => {
-    render(<NoteCard note={mockNote} />);
+    render(<NoteCard note={mockNote} hubColor={"banana"} />);
 
     const textarea = screen.getByRole("textbox");
 
@@ -126,7 +126,7 @@ describe("NoteCard", () => {
   });
 
   it("calls press handlers when delete button is pressed", async () => {
-    render(<NoteCard note={mockNote} />);
+    render(<NoteCard note={mockNote} hubColor={"banana"} />);
 
     const deleteButton = screen.getByRole("button", { name: "Delete note" });
 
@@ -145,7 +145,7 @@ describe("NoteCard", () => {
       handleDeleteRelease: mockHandleDeleteRelease,
     });
 
-    render(<NoteCard note={mockNote} />);
+    render(<NoteCard note={mockNote} hubColor={"banana"} />);
 
     const progressCircle = screen.getByRole("progressbar");
     expect(progressCircle).toHaveAttribute("aria-valuenow", "50");

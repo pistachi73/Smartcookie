@@ -65,6 +65,7 @@ export const NoteCardList = ({ hubId, hubColor }: NoteCardListProps) => {
         ) : hasNotes ? (
           notes?.map((note, index) => (
             <m.div
+              layout
               // layoutId={String(note.clientId || note.id)}
               key={note.clientId || note.id}
               custom={index}
@@ -83,7 +84,7 @@ export const NoteCardList = ({ hubId, hubColor }: NoteCardListProps) => {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className=" bg-overlay-highlight rounded-lg h-auto flex flex-col items-center py-8 px-4 text-center"
+            className=" bg-overlay border  shadow-sm dark:bg-overlay-highlight rounded-lg h-auto flex flex-col items-center py-8 px-4 text-center"
           >
             <div
               className={cn(

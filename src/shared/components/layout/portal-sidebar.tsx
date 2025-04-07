@@ -7,7 +7,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Calendar03Icon,
   DashboardSquare01Icon,
-  Folder02Icon,
+  FolderLibraryIcon,
   Invoice03Icon,
   NoteIcon,
   UserGroupIcon,
@@ -16,7 +16,7 @@ import {
 import {
   Calendar03Icon as Calendar03IconSolid,
   DashboardSquare01Icon as DashboardSquare01IconSolid,
-  Folder02Icon as Folder02IconSolid,
+  FolderLibraryIcon as FolderLibraryIconSolid,
   Invoice03Icon as Invoice03IconSolid,
   NoteIcon as NoteIconSolid,
   UserGroupIcon as UserGroupIconSolid,
@@ -25,17 +25,19 @@ import {
 import { UserButton } from "@/features/auth/components/user-button";
 import {
   Sidebar,
-  SidebarContent,
   SidebarFooter,
   SidebarHeader,
-  SidebarItem,
   SidebarLabel,
-  SidebarSection,
+  SidebarRail,
   SidebarSectionGroup,
   useSidebar,
 } from "@/ui/sidebar/index";
+import { SidebarContent } from "@/ui/sidebar/sidebar-content";
+import { SidebarItem } from "@/ui/sidebar/sidebar-item";
+import { SidebarSection } from "@/ui/sidebar/sidebar-section";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { SidebarTrigger } from "../ui/sidebar/sidebar-trigger";
 
 export default function AppSidebar(
   props: React.ComponentProps<typeof Sidebar>,
@@ -46,25 +48,35 @@ export default function AppSidebar(
     <Sidebar {...props}>
       <SidebarHeader
         className={cn(
-          "flex h-14 flex-row items-center border-b gap-x-2 py-0",
+          "flex h-14 flex-row items-center justify-between border-b gap-x-2 py-0",
           state.state === "collapsed" &&
             "flex items-center justify-center w-full",
         )}
       >
-        <div className="relative h-6 w-3 shrink-0">
-          <Image
-            src="/Logo.svg"
-            alt="SmartCookie"
-            fill
-            className="rounded-full"
-          />
+        <div className="w-full flex flex-row items-center sm:justify-start justify-center gap-x-2">
+          <div className="relative h-8 w-4 shrink-0">
+            <Image
+              src="/Logo.svg"
+              alt="SmartCookie"
+              fill
+              className="rounded-full"
+            />
+          </div>
+          <SidebarLabel className="font-bold text-lg">SmartCookie</SidebarLabel>
         </div>
-        <SidebarLabel className="font-medium">SmartCookie</SidebarLabel>
+        {state.state !== "collapsed" && (
+          <SidebarTrigger
+            className="size-8"
+            appearance="plain"
+            size="square-petite"
+            shape="square"
+          />
+        )}
       </SidebarHeader>
 
-      <SidebarContent>
+      <SidebarContent className="mt-4">
         <SidebarSectionGroup>
-          <SidebarSection>
+          <SidebarSection title="Main">
             {navigation.map((item) => {
               const isCurrent = pathname.includes(item.href);
               return (
@@ -88,6 +100,7 @@ export default function AppSidebar(
               );
             })}
           </SidebarSection>
+          {/* <SidebarSection title="Courses"></SidebarSection> */}
         </SidebarSectionGroup>
       </SidebarContent>
 
@@ -95,6 +108,7 @@ export default function AppSidebar(
         <UserButton />
         <ThemeSwitcher />
       </SidebarFooter>
+      <SidebarRail />
     </Sidebar>
   );
 }
@@ -116,8 +130,8 @@ const navigation = [
   {
     label: "Hubs",
     href: "/portal/hubs",
-    icon: Folder02Icon,
-    iconActive: Folder02IconSolid,
+    icon: FolderLibraryIcon,
+    iconActive: FolderLibraryIconSolid,
   },
   {
     label: "Students",

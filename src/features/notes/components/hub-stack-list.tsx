@@ -13,7 +13,7 @@ export const HubStackList = () => {
   if (!hasVisibleHubs) return <EmptyState />;
 
   return (
-    <div className="w-full h-full min-h-0 flex overflow-auto relative pb-12 shrink-0">
+    <div className="w-full h-full min-h-0 flex flex-1 overflow-auto relative pb-12 shrink-0 bg-bg">
       <AnimatePresence mode="popLayout" initial={false}>
         {Array.from(visibleHubs).map((hubId) => (
           <m.div

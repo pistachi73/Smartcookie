@@ -10,7 +10,7 @@ import type { ReadonlyURLSearchParams } from "next/navigation";
 import { Temporal } from "temporal-polyfill";
 import type { z } from "zod";
 
-export const ROW_HEIGHT = 48;
+export const ROW_HEIGHT = 72;
 export const TIMESLOT_HEIGHT = ROW_HEIGHT / 4;
 const CALENDAR_START_HOUR = 0; // Adjust based on your calendar's start hour
 const CALENDAR_END_HOUR = 24; // Adjust based on your calendar's end hour
@@ -252,63 +252,63 @@ export const CALENDAR_EVENT_COLORS_ARRAY = [
   {
     id: "stone",
     name: "Stone",
-    className: "bg-event-stone-bg border-event-stone-border ",
+    className: "bg-custom-stone-bg-tint border-custom-stone-bg-shade ",
   },
   {
     id: "slate",
     name: "Slate",
-    className: "bg-event-slate-bg border-event-slate-border ",
+    className: "bg-custom-slate-bg-tint border-custom-slate-bg-shade ",
   },
   {
     id: "neutral",
     name: "Neutral",
-    className: "bg-event-neutral-bg border-event-neutral-border ",
+    className: "bg-custom-neutral-bg-tint border-custom-neutral-bg-shade ",
   },
   // Warm → Cool progression
   {
     id: "tangerine",
     name: "Tangerine",
-    className: "bg-event-tangerine-bg border-event-tangerine-border ",
+    className: "bg-custom-tangerine-bg-tint border-custom-tangerine-bg-shade ",
   },
   {
     id: "sunshine",
     name: "Sunshine",
-    className: "bg-event-sunshine-bg border-event-sunshine-border ",
+    className: "bg-custom-sunshine-bg-tint border-custom-sunshine-bg-shade ",
   },
   {
     id: "banana",
     name: "Banana",
-    className: "bg-event-banana-bg border-event-banana-border ",
+    className: "bg-custom-banana-bg-tint border-custom-banana-bg-shade ",
   },
   {
     id: "sage",
     name: "Sage",
-    className: "bg-event-sage-bg border-event-sage-border ",
+    className: "bg-custom-sage-bg-tint border-custom-sage-bg-shade ",
   },
   {
     id: "peacock",
     name: "Peacock",
-    className: "bg-event-peacock-bg border-event-peacock-border ",
+    className: "bg-custom-peacock-bg-tint border-custom-peacock-bg-shade ",
   },
   {
     id: "graphite",
     name: "Graphite",
-    className: "bg-event-graphite-bg border-event-graphite-border ",
+    className: "bg-custom-graphite-bg-tint border-custom-graphite-bg-shade ",
   },
   {
     id: "blueberry",
     name: "Blueberry",
-    className: "bg-event-blueberry-bg border-event-blueberry-border ",
+    className: "bg-custom-blueberry-bg-tint border-custom-blueberry-bg-shade ",
   },
   {
     id: "lavender",
     name: "Lavender",
-    className: "bg-event-lavender-bg border-event-lavender-border ",
+    className: "bg-custom-lavender-bg-tint border-custom-lavender-bg-shade ",
   },
   {
     id: "grape",
     name: "Grape",
-    className: "bg-event-grape-bg border-event-grape-border ",
+    className: "bg-custom-grape-bg-tint border-custom-grape-bg-shade ",
   },
 ];
 

@@ -67,8 +67,10 @@ const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
       data-hub-id={note.hubId}
       className={cn(
         "flex flex-col bg-overlay-highlight rounded-lg border-1 border-border relative transition duration-250",
-        "note-card focus-within:opacity-100! hover:bg-overlay-elevated",
-        isEditingNote && `${colorClasses.border} bg-overlay-elevated`,
+        "note-card focus-within:opacity-100! ",
+        isEditingNote && `${colorClasses.border} dark:bg-overlay-elevated`,
+        "bg-overlay shadow-sm",
+        "dark:bg-overlay-highlight dark:hover:bg-overlay-elevated",
       )}
     >
       <div className="absolute top-0 right-0 z-10">
@@ -117,7 +119,7 @@ const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
         onBlur={onBlur}
         placeholder="Write something..."
         className={cn(
-          "placeholder:text-muted-fg/40 field-sizing-content resize-none text-base",
+          "placeholder:text-muted-fg/40 field-sizing-content resize-none text-sm",
           "p-3 pr-8 pb-2",
         )}
         onChange={(e) => handleContentChange(e.target.value)}

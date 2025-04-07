@@ -27,7 +27,7 @@ export const useUpdateQuickNote = ({
   const { mutate, isPending: isSaving } = useMutation({
     mutationKey: ["updateQuickNote", noteId],
     mutationFn: updateQuickNoteAction,
-    onMutate: async (): Promise<MutationContext> => {
+    onMutate: async (variables): Promise<MutationContext> => {
       setIsUnsaved(true);
 
       // Cancel any outgoing refetches for this hub
@@ -38,6 +38,20 @@ export const useUpdateQuickNote = ({
         "hub-notes",
         hubId,
       ]);
+
+      queryClient.setQueryData<NoteSummary[]>(["hub-notes", hubId], (old) => {
+        if (!old) return old;
+
+        return old.map((note) => {
+          if (note.id === noteId) {
+            return {
+              ...note,
+              content: variables.content,
+            };
+          }
+          return note;
+        });
+      });
 
       return { previousData };
     },

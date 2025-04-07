@@ -1,5 +1,6 @@
 "use server";
 
+import { parseDateWithTimezone } from "@/data-access/utils";
 import { db } from "@/db";
 import { hub, quickNote, student, studentHub } from "@/db/schema";
 import type { GetHubByIdUseCaseSchema } from "@/features/hub/lib/schemas";
@@ -25,8 +26,8 @@ export const getHubByIdUseCase = async ({
       schedule: hub.schedule,
       level: hub.level,
       status: hub.status,
-      startDate: hub.startDate,
-      endDate: hub.endDate,
+      startDate: parseDateWithTimezone(hub.startDate, "startDate"),
+      endDate: parseDateWithTimezone(hub.endDate, "endDate"),
       color: hub.color,
       students: jsonAggregateObjects<
         {

@@ -14,15 +14,19 @@ type HubToggleProps = {
   onPress: () => void;
   icon?: typeof Folder02Icon;
   color?: CustomColor;
+  prefix?: React.ReactNode | "dot";
 };
 
 const toggleStyles = tv({
-  base: "ring-offset-overlay relative group cursor-pointer rounded-lg transition-colors justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+  base: [
+    "border  relative group cursor-pointer rounded-lg transition-all justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+    "flex items-center gap-2 hover:shadow-sm",
+    "ring-offset-bg dark:ring-offset-overlay",
+  ],
   variants: {
     isVisible: {
       true: "", // We'll apply color classes dynamically
-      false:
-        "bg-overlay-highlight border-transparent focus-visible:ring-primary",
+      false: "bg-overlay dark:bg-overlay-highlight focus-visible:ring-primary",
     },
     isMinimized: {
       true: "size-10",
@@ -40,10 +44,12 @@ export function HubToggle({
   onPress,
   icon: Icon = Folder02Icon,
   color,
+  prefix = "dot",
 }: HubToggleProps) {
   // Always get color classes regardless of visibility state
-  const colorClasses = color ? getCustomColorClasses(color) : null;
-  const showDot = !!colorClasses;
+  const toggleColor = color ?? "neutral";
+  const colorClasses = getCustomColorClasses(toggleColor);
+  const showDot = prefix === "dot";
 
   if (isMinimized) {
     return (
@@ -53,6 +59,7 @@ export function HubToggle({
             toggleStyles({ isVisible, isMinimized }),
             colorClasses?.focusVisible ?? "focus-visible:ring-primary",
             isVisible && [colorClasses?.bg ?? "bg-overlay-elevated-highlight"],
+            isVisible && [colorClasses?.border ?? "border-primary"],
             "relative flex items-center justify-center",
           )}
           onPress={onPress}
@@ -98,23 +105,25 @@ export function HubToggle({
         toggleStyles({ isVisible, isMinimized }),
         colorClasses?.focusVisible ?? "focus-visible:ring-primary",
         isVisible && (colorClasses?.bg ?? "bg-overlay-elevated-highlight"),
-        "flex items-center gap-2",
+        isVisible && (colorClasses?.border ?? "border-primary"),
       )}
       aria-pressed={isVisible}
     >
       {/* Color dot indicator (left of text) */}
-      {showDot && (
+      {showDot ? (
         <div
           className={cn(dotStyles, colorClasses.dot, colorClasses.border)}
           aria-hidden="true"
         />
+      ) : (
+        prefix
       )}
 
       <h3
         className={cn(
           "line-clamp-1 text-sm font-medium text-left transition-colors flex-grow",
           isVisible
-            ? colorClasses?.text
+            ? `${colorClasses?.text}`
             : "text-muted-fg group-hover:text-secondary-fg",
         )}
       >

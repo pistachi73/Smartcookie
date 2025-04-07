@@ -1,7 +1,10 @@
 "use client";
 
 import { cn } from "@/shared/lib/classes";
-import { ArrowRight01Icon } from "@hugeicons-pro/core-stroke-rounded";
+import {
+  ArrowRight01Icon,
+  SolidLine01Icon,
+} from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { createContext, use } from "react";
 import type {
@@ -14,7 +17,6 @@ import {
   Breadcrumbs as BreadcrumbsPrimitive,
 } from "react-aria-components";
 import { Link } from "./link";
-import { composeTailwindRenderProps } from "./primitive";
 
 type BreadcrumbsContextProps = { separator?: "chevron" | "slash" | boolean };
 const BreadcrumbsProvider = createContext<BreadcrumbsContextProps>({
@@ -51,17 +53,22 @@ const BreadcrumbsItem = ({
   separator = contextSeparator ?? separator;
   const separatorValue = separator === true ? "chevron" : separator;
 
+  console.log({ props }, props.isDisabled);
+
   return (
-    <Breadcrumb
-      {...props}
-      className={composeTailwindRenderProps(
-        className,
-        "flex items-center gap-2 text-sm",
-      )}
-    >
+    <Breadcrumb {...props} className={"flex items-center gap-2 text-sm"}>
       {({ isCurrent }) => (
         <>
-          <Link href={href} {...props} />
+          <Link
+            href={href}
+            {...props}
+            className={cn(
+              isCurrent
+                ? "text-fg font-medium opacity-100!"
+                : "text-muted-fg hover:text-fg",
+              className,
+            )}
+          />
           {!isCurrent && separator !== false && (
             <Separator separator={separatorValue} />
           )}
@@ -79,7 +86,13 @@ const Separator = ({
       {separator === "chevron" && (
         <HugeiconsIcon icon={ArrowRight01Icon} data-slot="icon" />
       )}
-      {separator === "slash" && <span className="text-muted-fg">/</span>}
+      {separator === "slash" && (
+        <HugeiconsIcon
+          icon={SolidLine01Icon}
+          data-slot="icon"
+          className="rotate-90"
+        />
+      )}
     </span>
   );
 };

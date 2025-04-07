@@ -2,34 +2,30 @@
 
 import { AddNoteCard } from "@/features/notes/components/add-note-card";
 import { NoteCardList } from "@/features/notes/components/note-card-list";
+import { useDeviceType } from "@/shared/components/layout/device-only/device-only-provider";
 import { Heading } from "@/shared/components/ui/heading";
 import { Tabs } from "@/shared/components/ui/tabs";
 import { cn } from "@/shared/lib/classes";
 import {
   CalendarIcon as CalendarIconSolid,
   Comment01Icon as Comment01IconSolid,
+  NoteIcon as NoteIconSolid,
   UserMultiple02Icon as UserMultiple02IconSolid,
 } from "@hugeicons-pro/core-solid-rounded";
 import {
+  ArrowLeft02Icon,
   CalendarIcon,
   Comment01Icon,
+  NoteAddIcon,
+  NoteIcon,
   UserMultiple02Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import * as m from "motion/react-m";
+import Link from "next/link";
+import { useMemo } from "react";
 import { useHubById } from "../hooks/use-hub-by-id";
-import { CourseCard } from "./course-card";
 import { SessionsList } from "./session/session-list";
-
-const mockCourse = {
-  id: "A1",
-  title: "Introduction to Web Development",
-  status: "Active",
-  description:
-    "Learn the basics of HTML, CSS, and JavaScript to build responsive websites. This comprehensive course covers everything from basic syntax to advanced layout techniques. Students will build multiple projects and create a portfolio website.",
-  schedule: "Mon, Wed, Fri",
-  duration: "8 weeks",
-  level: "Beginner",
-};
 
 const tabs: {
   id: string;
@@ -55,39 +51,64 @@ const tabs: {
     altIcon: Comment01IconSolid,
     label: "Feedback",
   },
+  {
+    id: "quick-notes",
+    icon: NoteIcon,
+    altIcon: NoteIconSolid,
+    label: "Quick Notes",
+  },
 ];
 
+const MotionTabPanel = m.create(Tabs.Panel);
+
 export function HubDashboard({ hubId }: { hubId: number }) {
+  const { down } = useDeviceType();
   const { data: hub } = useHubById(hubId);
 
   if (!hub) return null;
 
-  return (
-    <div className="min-h-0 h-full bg-bg overflow-auto">
-      <div className="min-h-0 h-full grid grid-cols-1 lg:grid-cols-[3fr_1fr]">
-        {/* Main Content - Takes up 2 columns */}
-        <div className="">
-          {/* Course Info Card */}
-          <div className="p-5  rounded-lg ">
-            <CourseCard />
-          </div>
+  const isDownLg = useMemo(() => down("LG"), [down]);
 
-          <Tabs
-            aria-label="Recipe App"
-            className={"p-4"}
-            defaultSelectedKey={"sessions"}
-          >
-            <Tabs.List className={"sticky top-0"}>
-              {tabs.map((tab) => (
-                <Tabs.Tab key={tab.id} id={tab.id}>
+  console.log({ isDownLg });
+
+  return (
+    <div className="h-full overflow-auto flex flex-col">
+      <div className="shrink-0 overflow-auto p-6 border-b space-y-4 bg-bg">
+        <Link
+          href="/portal/hubs"
+          className="flex items-center gap-2 text-sm text-muted-fg"
+        >
+          <HugeiconsIcon icon={ArrowLeft02Icon} size={16} />
+          Back to courses
+        </Link>
+        <Heading level={1} className="font-bold">
+          {hub.name}
+        </Heading>
+      </div>
+      <div className="lg:flex-1 flex flex-col lg:flex-row bg-overlay">
+        <Tabs
+          aria-label="Hub Dashboard"
+          defaultSelectedKey={"sessions"}
+          className="flex-1"
+        >
+          <Tabs.List className={"sticky top-0 px-4 pt-3 bg-overlay z-20"}>
+            {tabs.map((tab) => {
+              if (tab.id === "quick-notes" && !isDownLg) return null;
+              return (
+                <Tabs.Tab key={tab.id} id={tab.id} className="px-2 ">
                   {({ isSelected }) => {
                     return (
-                      <p className="flex items-center gap-2">
+                      <p
+                        className={cn(
+                          "flex items-center gap-2",
+                          isSelected && "text-primary",
+                        )}
+                      >
                         <HugeiconsIcon
                           icon={tab.icon}
                           altIcon={tab.altIcon}
                           showAlt={isSelected}
-                          className={cn(isSelected && "text-primary")}
+                          strokeWidth={!isSelected ? 1.5 : undefined}
                           size={16}
                         />
                         {tab.label}
@@ -95,29 +116,50 @@ export function HubDashboard({ hubId }: { hubId: number }) {
                     );
                   }}
                 </Tabs.Tab>
-              ))}
-            </Tabs.List>
-            <Tabs.Panel id="students" className={"p-4 pt-0"}>
-              students
+              );
+            })}
+          </Tabs.List>
+          <Tabs.Panel id="students" className={"p-4 pt-0"}>
+            students
+          </Tabs.Panel>
+          <Tabs.Panel id="sessions" className={"px-2 sm:px-5 pt-0"}>
+            <SessionsList hubId={hubId} />
+          </Tabs.Panel>
+          <Tabs.Panel id="feedback" className={"p-4 pt-0"}>
+            Discover curated meal plans to simplify your weekly cooking.
+          </Tabs.Panel>
+          {isDownLg && (
+            <Tabs.Panel id="quick-notes" className={"p-4 py-2 "}>
+              <div className="flex flex-row items-center justify-between mb-6">
+                <Heading level={2}>Quick Notes</Heading>
+                <AddNoteCard hubId={hubId} size="small" intent="primary">
+                  <HugeiconsIcon icon={NoteAddIcon} size={16} />
+                  Add note
+                </AddNoteCard>
+              </div>
+              <NoteCardList hubId={Number(hubId)} hubColor={hub.color} />
             </Tabs.Panel>
-            <Tabs.Panel id="sessions" className={"sm:px-2 pt-0"}>
-              <SessionsList hubId={hubId} />
-            </Tabs.Panel>
-            <Tabs.Panel id="feedback" className={"p-4 pt-0"}>
-              Discover curated meal plans to simplify your weekly cooking.
-            </Tabs.Panel>
-          </Tabs>
-        </div>
-
-        {/* Sidebar - Takes up 1 column */}
-        <div className="h-full min-h-0 space-y-6 p-4">
-          {/* Quick Notes Section */}
-          <div className="flex flex-row items-center justify-between gap-2">
-            <Heading level={4}>Quick Notes</Heading>
-            <AddNoteCard hubId={hubId} appearance="plain" />
+          )}
+        </Tabs>
+        {!isDownLg && (
+          <div className="w-full lg:w-[350px]">
+            {/* Quick Notes Section */}
+            <div className="border-t lg:border-t-0 lg:border-l sticky top-0 z-20 bg-overlay h-12 px-4 border-b flex flex-row items-center justify-between gap-2">
+              <Heading level={2} className="text-base! font-medium!">
+                Quick Notes
+              </Heading>
+              <AddNoteCard
+                hubId={hubId}
+                appearance="plain"
+                size="square-petite"
+                className="size-9"
+              />
+            </div>
+            <div className="lg:border-l h-full p-3">
+              <NoteCardList hubId={Number(hubId)} hubColor={hub.color} />
+            </div>
           </div>
-          <NoteCardList hubId={Number(hubId)} hubColor={hub.color} />
-        </div>
+        )}
       </div>
     </div>
   );

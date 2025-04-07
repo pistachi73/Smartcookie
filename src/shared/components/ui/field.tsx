@@ -31,7 +31,7 @@ interface FieldProps {
   "aria-labelledby"?: TextFieldPrimitiveProps["aria-labelledby"];
 }
 
-const fieldStyles = tv({
+export const fieldStyles = tv({
   slots: {
     description: "text-pretty text-muted-fg text-sm/6",
     label: "w-fit cursor-default font-medium text-secondary-fg text-sm",

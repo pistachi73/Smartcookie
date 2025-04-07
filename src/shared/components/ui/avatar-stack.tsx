@@ -54,7 +54,6 @@ export const AvatarStack = <TUser extends User>({
   spacing = "normal",
   size = "medium",
   className,
-  isTestEnv = false,
 }: AvatarStackProps<TUser>) => {
   const { visibleUsers, overflowUsers, hasOverflow } = useMemo(() => {
     if (users.length <= maxAvatars) {

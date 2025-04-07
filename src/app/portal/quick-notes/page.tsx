@@ -5,6 +5,7 @@ import { QuickNotes } from "@/features/notes/components/quick-notes";
 import { quickNotesHubsQueryOptions } from "@/features/notes/lib/quick-notes-query-options";
 import { QuickNotesStoreProvider } from "@/features/notes/store/quick-notes-store-provider";
 import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
+import { NoteIcon } from "@hugeicons-pro/core-solid-rounded";
 
 export const metadata = {
   title: "Quick Notes | Private Tutoring Manager",
@@ -31,7 +32,11 @@ export default async function QuickNotesPage({
         <PortalNav
           breadcrumbs={[
             { label: "Portal", href: "/portal" },
-            { label: "Quick Notes", href: "/portal/quick-notes" },
+            {
+              label: "Quick Notes",
+              href: "/portal/quick-notes",
+              icon: NoteIcon,
+            },
           ]}
         />
         <QuickNotes />

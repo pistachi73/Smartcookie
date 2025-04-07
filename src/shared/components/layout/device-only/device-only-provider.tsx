@@ -1,6 +1,13 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 export type DeviceSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
 export type DeviceType = "mobile" | "tablet" | "desktop";
 
@@ -11,6 +18,8 @@ const DeviceTypeContext = createContext<
       deviceType: DeviceType;
       isMobile: boolean;
       isTablet: boolean;
+      up: (breakpoint: Breakpoint) => boolean;
+      down: (breakpoint: Breakpoint) => boolean;
     }
   | undefined
 >(undefined);
@@ -22,6 +31,8 @@ export const SCREENS = {
   XL: 1280,
   "2XL": 1536,
 } as const;
+
+type Breakpoint = keyof typeof SCREENS;
 
 export const MEDIA_QUERIES = {
   SM: `(min-width: ${SCREENS.SM}px)`,
@@ -51,12 +62,15 @@ export const DeviceOnlyProvider = ({
   const [deviceTypeState, setDeviceType] =
     useState<DeviceType>(serverDeviceType);
 
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth) {
+        setWindowWidth(window.innerWidth);
         const { deviceType } = getIsMobileUsingViewport(
           serverDeviceType,
-          window.innerWidth,
+          windowWidth,
         );
 
         setDeviceType(deviceType);
@@ -65,7 +79,7 @@ export const DeviceOnlyProvider = ({
 
     const { deviceType } = getIsMobileUsingViewport(
       serverDeviceType,
-      window.innerWidth,
+      windowWidth,
     );
 
     setDeviceType(deviceType);
@@ -73,15 +87,31 @@ export const DeviceOnlyProvider = ({
     window.addEventListener("resize", handleResize);
 
     return () => window.removeEventListener("resize", handleResize);
-  }, [serverDeviceType]);
+  }, [serverDeviceType, windowWidth]);
+
+  const up = useCallback(
+    (breakpoint: Breakpoint) => {
+      return windowWidth >= SCREENS[breakpoint];
+    },
+    [windowWidth],
+  );
+
+  const down = useCallback(
+    (breakpoint: Breakpoint) => {
+      return windowWidth < SCREENS[breakpoint];
+    },
+    [windowWidth],
+  );
 
   const value = useMemo(
     () => ({
       deviceType: deviceTypeState,
       isMobile: deviceTypeState === "mobile",
       isTablet: deviceTypeState === "tablet",
+      up,
+      down,
     }),
-    [deviceTypeState],
+    [deviceTypeState, up, down],
   );
   return (
     <DeviceTypeContext.Provider value={value}>

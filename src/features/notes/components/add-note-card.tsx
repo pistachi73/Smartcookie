@@ -1,7 +1,7 @@
 "use client";
 
 import { useAddQuickNote } from "@/features/notes/hooks/use-add-quick-note";
-import { Button, ButtonProps } from "@/ui/button";
+import { Button, type ButtonProps } from "@/ui/button";
 import { NoteAddIcon as NoteAddIconSolid } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useCallback, useState } from "react";
@@ -12,7 +12,11 @@ interface AddNoteCardProps extends ButtonProps {
 
 export const COOLDOWN_DURATION = 1000; // 1 second cooldown
 
-export const AddNoteCard = ({ hubId, ...props }: AddNoteCardProps) => {
+export const AddNoteCard = ({
+  hubId,
+  children = <HugeiconsIcon icon={NoteAddIconSolid} size={16} />,
+  ...props
+}: AddNoteCardProps) => {
   const { mutate: addNote } = useAddQuickNote();
   const [isDisabled, setIsDisabled] = useState(false);
 
@@ -37,12 +41,13 @@ export const AddNoteCard = ({ hubId, ...props }: AddNoteCardProps) => {
     <Button
       size="square-petite"
       intent="secondary"
+      appearance="outline"
       shape="square"
       onPress={handleAddEmptyNote}
       isDisabled={isDisabled}
       {...props}
     >
-      <HugeiconsIcon icon={NoteAddIconSolid} size={16} />
+      {children}
     </Button>
   );
 };

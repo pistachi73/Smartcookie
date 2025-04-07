@@ -8,7 +8,7 @@ export const QuickNotes = () => {
   const isHydrated = useQuickNotesStore((state) => state.isHydrated);
 
   return isHydrated ? (
-    <div className="min-h-0 h-full flex  w-full overflow-hidden">
+    <div className="min-h-0 h-full flex  w-full overflow-hidden bg-bg">
       <QuickNotesSidebar />
       <HubStackList />
     </div>

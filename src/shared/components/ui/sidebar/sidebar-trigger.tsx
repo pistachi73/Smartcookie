@@ -9,7 +9,6 @@ import { useSidebar } from "./sidebar-provider";
 export const SidebarTrigger = ({
   onPress,
   children,
-  className,
   ...props
 }: ButtonProps) => {
   const { toggleSidebar } = useSidebar();

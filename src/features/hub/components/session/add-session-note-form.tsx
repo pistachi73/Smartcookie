@@ -68,7 +68,7 @@ export const AddSessionNoteForm = ({
         onKeyDown={handleTextAreaKeyDown}
         onBlur={handleRemoveAddingNote}
         className={cn(
-          "flex-1 text-base p-2 border field-sizing-content resize-none border-dashed  rounded-lg bg-overlay-elevated-highlight",
+          "flex-1 text-sm p-2 border field-sizing-content resize-none border-dashed  rounded-lg bg-overlay-elevated-highlight",
           "focus-visible:border-primary",
         )}
         placeholder="Type and press enter..."

@@ -1,4 +1,8 @@
-import { CalendarDate, getDayOfWeek } from "@internationalized/date";
+import {
+  CalendarDate,
+  type CalendarDateTime,
+  getDayOfWeek,
+} from "@internationalized/date";
 import { createContext, useState } from "react";
 import { RRule } from "rrule";
 import {
@@ -17,6 +21,8 @@ type RecurrenceSelectContextType = {
   rrule: RRule | null;
   setRrule: React.Dispatch<React.SetStateAction<RRule | null>>;
   onChange: (rrule?: string) => void;
+  minDate?: CalendarDateTime;
+  maxDate?: CalendarDateTime;
 };
 
 export const RecurrenceSelectContext =
@@ -37,6 +43,8 @@ type RecurrenceSelectProviderProps = {
   selectedDate: CalendarDate;
   onChange: (rrule: string | undefined) => void;
   value?: string;
+  minDate?: CalendarDateTime;
+  maxDate?: CalendarDateTime;
 };
 
 export const RecurrenceSelectContextProvider = ({
@@ -44,6 +52,8 @@ export const RecurrenceSelectContextProvider = ({
   selectedDate,
   onChange,
   value = PrefefinedRecurrencesEnum.NO_RECURRENCE,
+  minDate,
+  maxDate,
 }: RecurrenceSelectProviderProps) => {
   const [rrule, setRrule] = useState<RRule | null>(() => {
     if (
@@ -96,6 +106,8 @@ export const RecurrenceSelectContextProvider = ({
     setRrule,
     value,
     onChange,
+    minDate,
+    maxDate,
   };
 
   return (
