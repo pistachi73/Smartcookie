@@ -1,4 +1,4 @@
-import { useDeviceType } from "@/shared/components/layout/device-only/device-only-provider";
+import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
 import { Button } from "@/shared/components/ui/button";
 import { Heading } from "@/shared/components/ui/heading";
 import { regularSpring } from "@/shared/lib/animation";
@@ -26,7 +26,8 @@ const DynamicSessionFormModal = dynamic(
 export function SessionsList({ hubId }: { hubId: number }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: sessions } = useHubSessions({ hubId });
-  const { isMobile } = useDeviceType();
+  const { down } = useViewport();
+  const isMobile = down("sm");
   return (
     <>
       <div className="py-2">

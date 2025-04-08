@@ -36,6 +36,9 @@ const cell = tv({
     isDisabled: {
       true: "text-muted-fg/70 forced-colors:text-[GrayText]",
     },
+    isUnavailable: {
+      true: "text-muted-fg/70 forced-colors:text-[GrayText]",
+    },
   },
 });
 
@@ -54,7 +57,8 @@ const Calendar = <T extends DateValue>({
     <CalendarPrimitive
       className={composeTailwindRenderProps(
         className,
-        "max-w-[17.5rem] sm:max-w-[15.8rem]",
+        // "max-w-[17.5rem] sm:max-w-[15.8rem]",
+        "p-1",
       )}
       {...props}
     >

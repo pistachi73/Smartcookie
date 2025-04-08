@@ -176,6 +176,8 @@ export const SerializedSessionFormSchema = z.object({
 
 export const AddSessionsUseCaseSchema = z.object({
   formData: SerializedSessionFormSchema,
+  hubId: z.number(),
+  hubStartsOn: z.string(),
   hubEndsOn: z.string().nullable().optional(),
   userId: z.string(),
 });

@@ -13,7 +13,7 @@ import {
 } from "react-aria-components";
 import { tv } from "tailwind-variants";
 
-import { useDeviceType } from "../layout/device-only/device-only-provider";
+import { useViewport } from "../layout/viewport-context/viewport-context";
 import { Button, type ButtonProps } from "./button";
 
 const dialogStyles = tv({
@@ -200,7 +200,8 @@ interface CloseButtonIndicatorProps extends ButtonProps {
 }
 
 const CloseIndicator = ({ className, ...props }: CloseButtonIndicatorProps) => {
-  const { isMobile } = useDeviceType();
+  const { down } = useViewport();
+  const isMobile = down("sm");
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {

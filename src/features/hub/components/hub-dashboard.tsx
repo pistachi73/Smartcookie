@@ -2,13 +2,15 @@
 
 import { AddNoteCard } from "@/features/notes/components/add-note-card";
 import { NoteCardList } from "@/features/notes/components/note-card-list";
-import { useDeviceType } from "@/shared/components/layout/device-only/device-only-provider";
+import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
+import ViewportOnly from "@/shared/components/layout/viewport-context/viewport-only";
 import { Heading } from "@/shared/components/ui/heading";
 import { Tabs } from "@/shared/components/ui/tabs";
 import { cn } from "@/shared/lib/classes";
 import {
   CalendarIcon as CalendarIconSolid,
   Comment01Icon as Comment01IconSolid,
+  DashboardBrowsingIcon as DashboardBrowsingIconSolid,
   NoteIcon as NoteIconSolid,
   UserMultiple02Icon as UserMultiple02IconSolid,
 } from "@hugeicons-pro/core-solid-rounded";
@@ -16,12 +18,12 @@ import {
   ArrowLeft02Icon,
   CalendarIcon,
   Comment01Icon,
+  DashboardBrowsingIcon,
   NoteAddIcon,
   NoteIcon,
   UserMultiple02Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
-import * as m from "motion/react-m";
 import Link from "next/link";
 import { useMemo } from "react";
 import { useHubById } from "../hooks/use-hub-by-id";
@@ -33,6 +35,12 @@ const tabs: {
   icon: typeof UserMultiple02Icon;
   altIcon: typeof UserMultiple02IconSolid;
 }[] = [
+  {
+    id: "overview",
+    icon: DashboardBrowsingIcon,
+    altIcon: DashboardBrowsingIconSolid,
+    label: "Overview",
+  },
   {
     id: "students",
     icon: UserMultiple02Icon,
@@ -59,20 +67,16 @@ const tabs: {
   },
 ];
 
-const MotionTabPanel = m.create(Tabs.Panel);
-
 export function HubDashboard({ hubId }: { hubId: number }) {
-  const { down } = useDeviceType();
+  const { down } = useViewport();
   const { data: hub } = useHubById(hubId);
 
   if (!hub) return null;
 
-  const isDownLg = useMemo(() => down("LG"), [down]);
-
-  console.log({ isDownLg });
+  const isDownLg = useMemo(() => down("lg"), [down]);
 
   return (
-    <div className="h-full overflow-auto flex flex-col">
+    <div className="h-full overflow-auto flex flex-col lg:*:text-red-100">
       <div className="shrink-0 overflow-auto p-6 border-b space-y-4 bg-bg">
         <Link
           href="/portal/hubs"
@@ -128,7 +132,7 @@ export function HubDashboard({ hubId }: { hubId: number }) {
           <Tabs.Panel id="feedback" className={"p-4 pt-0"}>
             Discover curated meal plans to simplify your weekly cooking.
           </Tabs.Panel>
-          {isDownLg && (
+          <ViewportOnly down="lg">
             <Tabs.Panel id="quick-notes" className={"p-4 py-2 "}>
               <div className="flex flex-row items-center justify-between mb-6">
                 <Heading level={2}>Quick Notes</Heading>
@@ -139,7 +143,7 @@ export function HubDashboard({ hubId }: { hubId: number }) {
               </div>
               <NoteCardList hubId={Number(hubId)} hubColor={hub.color} />
             </Tabs.Panel>
-          )}
+          </ViewportOnly>
         </Tabs>
         {!isDownLg && (
           <div className="w-full lg:w-[350px]">

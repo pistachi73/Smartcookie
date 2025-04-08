@@ -8,8 +8,8 @@ import {
   VERCEL_HEADERS,
 } from "@/core/config/app-config";
 import { authConfig } from "@/core/config/auth-config";
-import type { DeviceType } from "@/shared/components/layout/device-only/device-only-provider";
 import { NextResponse, userAgent } from "next/server";
+import type { DeviceType } from "./shared/components/layout/viewport-context/types";
 
 const { auth } = NextAuth(authConfig);
 
@@ -17,8 +17,7 @@ export default auth((req) => {
   const {
     device: { type },
   } = userAgent(req);
-  const deviceType: DeviceType =
-    type === "mobile" ? "mobile" : type === "tablet" ? "tablet" : "desktop";
+  const deviceType: DeviceType | "string" = (type as DeviceType) || "desktop";
 
   const requestHeaders = new Headers(req.headers);
 

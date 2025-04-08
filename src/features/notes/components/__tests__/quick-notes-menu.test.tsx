@@ -1,3 +1,4 @@
+import setMockViewport from "@/shared/components/layout/viewport-context/test-utils/setMockViewport";
 import {
   cleanup,
   fireEvent,
@@ -82,7 +83,7 @@ describe("QuickNotesMenu", () => {
   ] as const;
 
   beforeEach(() => {
-    vi.resetAllMocks();
+    setMockViewport("xl");
 
     // Mock the useQuery hook for hubs data
     (useQuery as any).mockReturnValue({
@@ -211,6 +212,9 @@ describe("QuickNotesMenu", () => {
   });
 
   it("should not save note when content is empty", () => {
+    // Clear any previous mock calls
+    mockMutateAsync.mockClear();
+
     render(<QuickNotesMenu />);
 
     openPopover();
@@ -218,6 +222,14 @@ describe("QuickNotesMenu", () => {
     saveNote();
 
     expect(mockMutateAsync).not.toHaveBeenCalled();
+
+    // The form should still be in note entry state since saving didn't occur
+    expect(screen.getByRole("textbox")).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        name: `Add note to ${mockHubs[0].name}`,
+      }),
+    ).toBeInTheDocument();
   });
 
   it("should reset form state after saving a note", () => {

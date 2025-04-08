@@ -14,7 +14,7 @@ import { cn } from "@/shared/lib/classes";
 import { Calendar01Icon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import type { DateDuration } from "@internationalized/date";
-import { useDeviceType } from "../layout/device-only/device-only-provider";
+import { useViewport } from "../layout/viewport-context/viewport-context";
 import { Button } from "./button";
 import { Calendar } from "./calendar";
 import { DateInput } from "./date-field";
@@ -58,7 +58,8 @@ const DatePickerOverlay = ({
   range,
   ...props
 }: DatePickerOverlayProps) => {
-  const { isMobile } = useDeviceType();
+  const { down } = useViewport();
+  const isMobile = down("sm");
 
   return (
     <Popover.Content

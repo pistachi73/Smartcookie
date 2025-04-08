@@ -98,9 +98,9 @@ export const DeviceOnlyProvider = ({
 
   const down = useCallback(
     (breakpoint: Breakpoint) => {
-      return windowWidth < SCREENS[breakpoint];
+      return window.innerWidth < SCREENS[breakpoint];
     },
-    [windowWidth],
+    [window.innerWidth],
   );
 
   const value = useMemo(

@@ -1,6 +1,6 @@
 "use client";
 
-import { useDeviceType } from "@/shared/components/layout/device-only/device-only-provider";
+import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
 import { Button } from "@/shared/components/ui/button";
 import { ComboBox } from "@/shared/components/ui/combo-box";
 import { Loader } from "@/shared/components/ui/loader";
@@ -32,7 +32,9 @@ export type SelectStudent = {
 };
 
 export function StepStudents() {
-  const { isMobile } = useDeviceType();
+  const { down } = useViewport();
+  const isMobile = down("sm");
+
   const queryClient = useQueryClient();
   const user = useCurrentUser();
   const addStudent = useHubFormStore((state) => state.addStudent);

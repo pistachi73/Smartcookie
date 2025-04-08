@@ -3,11 +3,11 @@
 import { DatePicker } from "@/shared/components/ui/date-picker";
 import { Label, fieldStyles } from "@/shared/components/ui/field";
 import { RecurrenceSelect } from "@/shared/components/ui/recurrence-select";
-import { TimeCombobox } from "@/shared/components/ui/time-combobox";
+import { TimeField } from "@/shared/components/ui/time-field";
 import { cn } from "@/shared/lib/classes";
 import { ArrowRight02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { parseDateTime } from "@internationalized/date";
+import { type CalendarDate, parseDateTime } from "@internationalized/date";
 import {
   Controller,
   type UseFormReturn,
@@ -39,8 +39,6 @@ export function SessionForm({ form, minDate, maxDate }: SessionFormProps) {
   const maxCalendarDate = maxDate ? parseDateTime(maxDate) : undefined;
   const minCalendarDate = minDate ? parseDateTime(minDate) : undefined;
 
-  console.log({ maxCalendarDate, minCalendarDate });
-
   return (
     <div className="space-y-4">
       <Controller
@@ -55,9 +53,6 @@ export function SessionForm({ form, minDate, maxDate }: SessionFormProps) {
             validationBehavior="aria"
             isInvalid={invalid}
             errorMessage={error?.message}
-            className={{
-              fieldGroup: "hover:bg-overlay-highlight",
-            }}
             overlayProps={{
               placement: "bottom",
               offset: 8,
@@ -78,24 +73,18 @@ export function SessionForm({ form, minDate, maxDate }: SessionFormProps) {
               field: { onChange, value, ...restField },
               fieldState: { invalid },
             }) => (
-              <TimeCombobox
+              <TimeField
                 {...restField}
                 value={value}
                 onChange={onChange}
-                withIcon
+                hourCycle={24}
                 isInvalid={invalid}
-                className={{
-                  input: "text-sm",
-                  fieldGroup: "hover:bg-overlay-highlight",
-                }}
-                listProps={{
-                  placement: "bottom",
-                  offset: 8,
-                }}
+                className="flex-1"
+                aria-label="Start time"
               />
             )}
           />
-          <div className="size-10 shrink-0 flex items-center justify-center bg-overlay-elevated text-muted-fg rounded-lg">
+          <div className="size-10 shrink-0 flex items-center justify-center bg-overlay-highlight text-muted-fg rounded-lg">
             <HugeiconsIcon icon={ArrowRight02Icon} size={16} />
           </div>
           <Controller
@@ -105,20 +94,15 @@ export function SessionForm({ form, minDate, maxDate }: SessionFormProps) {
               field: { onChange, value, ...restField },
               fieldState: { invalid },
             }) => (
-              <TimeCombobox
+              <TimeField
                 {...restField}
                 value={value}
                 onChange={onChange}
-                minValue={startTime}
+                hourCycle={24}
                 isInvalid={invalid}
-                className={{
-                  input: "text-sm",
-                  fieldGroup: "hover:bg-overlay-highlight",
-                }}
-                listProps={{
-                  placement: "bottom",
-                  offset: 8,
-                }}
+                minValue={startTime}
+                className="flex-1"
+                aria-label="End time"
               />
             )}
           />
@@ -133,11 +117,12 @@ export function SessionForm({ form, minDate, maxDate }: SessionFormProps) {
             value={value}
             onChange={onChange}
             selectedDate={date}
+            label="Recurrence"
+            onStartDateChange={(date) =>
+              form.setValue("date", date as CalendarDate)
+            }
             minDate={minCalendarDate}
             maxDate={maxCalendarDate}
-            contentProps={{
-              label: "Recurrence",
-            }}
           />
         )}
       />

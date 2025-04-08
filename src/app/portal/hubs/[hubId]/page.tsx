@@ -37,8 +37,6 @@ const HubPage = async ({ params }: HubPageProps) => {
     redirect("/portal/hubs");
   }
 
-  await new Promise((resolve) => setTimeout(resolve, 3000));
-
   return (
     <>
       <PortalNav

@@ -1,32 +1,45 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import type { Frequency } from "rrule";
+import type { SetRruleOptions } from "../utils";
 
 import { Select } from "../../select";
-import { RecurrenceSelectContext } from "../recurrence-select-context";
 import { getFrequencyItems } from "../utils";
 
-export const FrequencySelect = () => {
-  const { setRruleOptions, rruleOptions } = use(RecurrenceSelectContext);
+type FrequencySelectProps = {
+  setRruleOptions: SetRruleOptions;
+  interval?: number;
+  freq?: Frequency;
+};
+
+export const FrequencySelect = ({
+  setRruleOptions,
+  interval,
+  freq,
+}: FrequencySelectProps) => {
   const [frequencyItems, setFrequencyItems] = useState(getFrequencyItems(1));
 
   useEffect(() => {
-    setFrequencyItems(getFrequencyItems(rruleOptions?.interval ?? 1));
-  }, [rruleOptions.interval]);
+    setFrequencyItems(getFrequencyItems(interval || 1));
+  }, [interval]);
 
   return (
     <Select
       onSelectionChange={(freq) => {
-        setRruleOptions({
-          ...rruleOptions,
+        setRruleOptions((prev) => ({
+          ...prev,
           freq: freq as Frequency,
-        });
+        }));
       }}
-      selectedKey={rruleOptions.freq}
+      selectedKey={freq}
       className={"w-full"}
       aria-label="Recurrence frequency"
       validationBehavior="aria"
     >
-      <Select.Trigger className="w-fit hover:bg-overlay-elevated" showArrow />
+      <Select.Trigger
+        data-testid="frequency-select-trigger"
+        className="w-fit hover:bg-overlay-elevated"
+        showArrow
+      />
 
       <Select.List
         className={{ popover: "min-w-[var(--trigger-width)] rounded-md" }}

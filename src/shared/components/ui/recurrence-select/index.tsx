@@ -3,273 +3,248 @@ import {
   RepeatIcon,
 } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
-import type { CalendarDate, CalendarDateTime } from "@internationalized/date";
-import * as React from "react";
-import { use, useMemo, useState } from "react";
-import { Frequency, RRule, type Weekday } from "rrule";
-import { z } from "zod";
+import {
+  type CalendarDate,
+  getDayOfWeek,
+  getLocalTimeZone,
+  today,
+} from "@internationalized/date";
+import { useCallback, useEffect, useState } from "react";
+import { Frequency, RRule } from "rrule";
 import { Button } from "../button";
-import { DropdownLabel } from "../dropdown";
+import { Label } from "../field";
 import { Modal } from "../modal";
-import { Select } from "../select";
+import { BymonthdaySelect } from "./components/bymonthday-select";
 import { ByweekdayCheckboxGroup } from "./components/byweekday-checkbox-group";
 import { EndsRadioGroup } from "./components/ends-radio-group";
 import { FrequencySelect } from "./components/frequency-select";
 import { IntervalInput } from "./components/interval-input";
-import { MonthOptionsSelect } from "./components/month-options-select";
+import { StartDaySelect } from "./components/start-day-select";
 import {
-  RecurrenceSelectContext,
-  RecurrenceSelectContextProvider,
-} from "./recurrence-select-context";
-import {
-  PrefefinedRecurrencesEnum,
+  type CustomRruleOptions,
+  EndsEnum,
   convertCustomToRRuleOptions,
-  convertRRuleOptionsToCustom,
-  getSelectItems,
   parseRruleText,
 } from "./utils";
-export const RecurrenceRuleSchema = z.object({
-  freq: z.custom<Frequency>().optional(),
-  interval: z.number().optional(),
-  byweekday: z.array(z.custom<Weekday>()).optional(),
-  count: z.number().optional(),
-  until: z.custom<Date>().optional(),
-});
 
-export type RecurrenceRule = z.infer<typeof RecurrenceRuleSchema>;
-
-const SelectLabel = () => {
-  const { value } = use(RecurrenceSelectContext);
-
+const ModalTrigger = ({ value }: { value?: string }) => {
   const rruleText = parseRruleText(value);
 
   return (
-    <div className="overflow-hidden w-fit">
-      <p className="first-letter:uppercase text-left  whitespace-nowrap">
-        <span>
-          {rruleText.label}
-          {rruleText.auxLabel && (
-            <span className="text-muted-fg"> {rruleText.auxLabel}</span>
-          )}
-        </span>
+    <Button
+      className="overflow-hidden w-full justify-start pr-2"
+      appearance="outline"
+      size="small"
+    >
+      <div className="shrink-0">
+        <HugeiconsIcon icon={RepeatIcon} size={16} className="shrink-0" />
+      </div>
+      <p className="first-letter:uppercase text-left  whitespace-nowrap truncate">
+        {rruleText.label}
+        {rruleText.auxLabel && (
+          <span className="ml-[0.5ch] text-muted-fg ">
+            {rruleText.auxLabel}
+          </span>
+        )}
       </p>
-    </div>
+    </Button>
   );
 };
 
-type RecurrenceSelectContentProps = {
-  label?: string;
-};
-
-export const RecurrenceSelectContent = ({
+export const RecurrenceSelect = ({
+  onChange,
+  value,
+  minDate,
+  maxDate,
   label,
-}: RecurrenceSelectContentProps) => {
-  const {
-    rruleOptions,
-    setRruleOptions,
-    rrule,
-    setRrule,
-    selectedDate,
-    ends,
-    value,
-    onChange,
-  } = use(RecurrenceSelectContext);
-
-  const [isCustomModalOpen, setIsCustomModalOpen] = useState(false);
-
-  const items = useMemo(
-    () => getSelectItems(selectedDate, value),
-    [selectedDate, value],
+  selectedDate = today(getLocalTimeZone()),
+  onStartDateChange,
+}: {
+  selectedDate?: CalendarDate;
+  onChange: (rrule: string | undefined) => void;
+  value?: string;
+  label?: string;
+  minDate?: CalendarDate;
+  maxDate?: CalendarDate;
+  onStartDateChange?: (date: CalendarDate | null) => void;
+}) => {
+  const [rrule, setRrule] = useState<RRule | null>(
+    value ? RRule.fromString(value) : null,
   );
 
-  const handleCustomRecurrence = (value: string) => {
-    switch (value) {
-      case PrefefinedRecurrencesEnum.NO_RECURRENCE:
-        setRrule(null);
-        onChange(value);
-        break;
-      case PrefefinedRecurrencesEnum.CUSTOM:
-        setIsCustomModalOpen(true);
-        break;
-      default: {
-        const rrule = RRule.fromString(value);
-
-        setRruleOptions({
-          ...rruleOptions,
-          ...convertRRuleOptionsToCustom(rrule.options),
-          dstart: selectedDate?.toDate("UTC"),
-        });
-
-        setRrule(rrule);
-        onChange(value);
-        break;
-      }
+  const [ends, setEnds] = useState<EndsEnum>(() => {
+    if (rrule?.options.count) {
+      return EndsEnum.ENDS_AFTER;
     }
-  };
+    if (rrule?.options.until || selectedDate) {
+      return EndsEnum.ENDS_ON;
+    }
+    return EndsEnum.ENDS_NEVER;
+  });
 
-  const saveCustomRecurrenceRule = () => {
+  const [rruleOptions, setRruleOptions] = useState<CustomRruleOptions>(() => {
+    const { options } = rrule ?? {};
+
+    return {
+      dstart: options?.dtstart || selectedDate.toDate("UTC"),
+      freq: options?.freq || RRule.WEEKLY,
+      interval: options?.interval || 1,
+      byweekday:
+        options?.freq === RRule.WEEKLY
+          ? options?.byweekday || undefined
+          : [getDayOfWeek(selectedDate, "en-GB")],
+      monthlyByweekday:
+        options?.freq === RRule.MONTHLY
+          ? options?.byweekday || undefined
+          : [getDayOfWeek(selectedDate, "en-GB")],
+      bymonthday: options?.bymonthday || [selectedDate.day],
+      until: options?.until || selectedDate.toDate("UTC"),
+      count: options?.count || 1,
+    };
+  });
+
+  const saveCustomRecurrenceRule = useCallback(() => {
     const rrule = new RRule(
       convertCustomToRRuleOptions({
-        rruleOptions: {
-          ...rruleOptions,
-          dstart: selectedDate?.toDate("UTC"),
-        },
+        rruleOptions,
         ends,
       }),
     );
 
     setRrule(rrule);
     onChange(rrule.toString());
-    setIsCustomModalOpen(false);
-  };
+  }, [onChange, rruleOptions, ends]);
+
+  useEffect(() => {
+    if (!selectedDate) {
+      return;
+    }
+
+    const selectedDateTime = selectedDate?.toDate("UTC").getTime();
+    const dstartTime = rruleOptions?.dstart?.getTime();
+
+    if (selectedDateTime === dstartTime) {
+      return;
+    }
+
+    setRruleOptions({
+      ...rruleOptions,
+      dstart: selectedDate?.toDate("UTC"),
+    });
+
+    if (value) {
+      saveCustomRecurrenceRule();
+    }
+  }, [selectedDate, saveCustomRecurrenceRule, rruleOptions, value]);
 
   return (
-    <>
-      <div onKeyDown={(e) => e.stopPropagation()}>
-        <Select
-          aria-label="Recurrence Select Main"
-          selectedKey={value}
-          onSelectionChange={(value) => {
-            handleCustomRecurrence(value as string);
-          }}
-          label={label}
-        >
-          <Select.Trigger
-            prefix={
-              <div className="shrink-0">
-                <HugeiconsIcon
-                  icon={RepeatIcon}
-                  size={16}
-                  className="shrink-0"
+    <div className="group flex w-full flex-col gap-y-1.5">
+      {label && <Label>{label}</Label>}
+      <Modal>
+        <ModalTrigger value={value} />
+        <Modal.Content size="md" isBlurred isDismissable={false}>
+          <Modal.Header>
+            <Modal.Title level={2}>Custom recurrence rule</Modal.Title>
+            <Modal.Description>Set custom repeat pattern</Modal.Description>
+          </Modal.Header>
+          <Modal.Body className="overflow-visible">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <p className="text-sm text-text-sub shrink-0 w-12 font-medium">
+                  Start
+                </p>
+                <StartDaySelect
+                  setRruleOptions={setRruleOptions}
+                  startDate={rruleOptions.dstart}
+                  minDate={minDate}
+                  maxDate={maxDate}
+                  onStartDateChange={onStartDateChange}
                 />
               </div>
-            }
-          >
-            <SelectLabel />
-          </Select.Trigger>
-          <Select.List
-            popoverProps={{
-              placement: "bottom",
-              offset: 8,
-            }}
-            className={{ popover: "max-h-[400px] w-[var(--trigger-width)]" }}
-          >
-            {items.map(({ items: opt }, sectionIndex) =>
-              opt.map(({ name, value, auxName }, index) => (
-                <React.Fragment key={value}>
-                  <Select.Option id={value} textValue={name}>
-                    <DropdownLabel>
-                      {name}
-                      {auxName && (
-                        <span className="text-muted-fg"> {auxName}</span>
-                      )}
-                    </DropdownLabel>
-                  </Select.Option>
-                  {index === opt.length - 1 && sectionIndex !== 2 && (
-                    <Select.Separator />
-                  )}
-                </React.Fragment>
-              )),
-            )}
-          </Select.List>
-        </Select>
-      </div>
-
-      <Modal.Content
-        size="md"
-        isOpen={isCustomModalOpen}
-        onOpenChange={setIsCustomModalOpen}
-        isBlurred
-      >
-        <Modal.Header>
-          <Modal.Title level={2}>Custom recurrence rule</Modal.Title>
-          <Modal.Description>Set custom repeat pattern</Modal.Description>
-        </Modal.Header>
-        <Modal.Body className="overflow-visible">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <p className="text-sm text-text-sub shrink-0 w-12">Every</p>
-              <IntervalInput />
-              <FrequencySelect />
-            </div>
-            {rruleOptions.freq === Frequency.WEEKLY && (
               <div className="flex items-center gap-2">
-                <p className="text-sm text-text-sub w-12 shrink-0">On</p>
-                <ByweekdayCheckboxGroup />
+                <p className="text-sm text-text-sub shrink-0 w-12 font-medium">
+                  Every
+                </p>
+                <IntervalInput
+                  setRruleOptions={setRruleOptions}
+                  interval={rruleOptions.interval}
+                />
+                <FrequencySelect
+                  setRruleOptions={setRruleOptions}
+                  freq={rruleOptions.freq}
+                  interval={rruleOptions.interval}
+                />
               </div>
-            )}
-            {rruleOptions.freq === Frequency.MONTHLY && (
-              <div className="flex items-center gap-2">
-                <p className="text-sm text-text-sub w-12 shrink-0">On</p>
-                <MonthOptionsSelect />
+              {rruleOptions.freq === Frequency.WEEKLY && (
+                <div className="flex items-center gap-2">
+                  <p className="text-sm text-text-sub w-12 font-medium shrink-0">
+                    On
+                  </p>
+                  <ByweekdayCheckboxGroup
+                    setRruleOptions={setRruleOptions}
+                    byweekday={rruleOptions.byweekday}
+                  />
+                </div>
+              )}
+              {rruleOptions.freq === Frequency.MONTHLY && (
+                <div className="flex items-start gap-2">
+                  <div className="w-12 h-10 shrink-0 flex items-center">
+                    <p className="text-sm font-medium">On</p>
+                  </div>
+                  <BymonthdaySelect
+                    setRruleOptions={setRruleOptions}
+                    bymonthday={rruleOptions.bymonthday}
+                  />
+                </div>
+              )}
+              <div className="flex flex-col gap-2">
+                <p className="text-sm text-text-sub  font-medium">Ends</p>
+                <EndsRadioGroup
+                  setRruleOptions={setRruleOptions}
+                  ends={ends}
+                  setEnds={setEnds}
+                  minDate={minDate}
+                  maxDate={maxDate}
+                  until={rruleOptions.until}
+                  count={rruleOptions.count}
+                />
               </div>
-            )}
-            <div className="flex flex-col gap-2">
-              <p className="text-sm text-text-sub">Ends</p>
-              <EndsRadioGroup />
             </div>
-          </div>
-        </Modal.Body>
-        <Modal.Footer className="flex items-center justify-end gap-2 flex-row">
-          <Button
-            appearance="plain"
-            size="small"
-            className="text-muted-fg hover:text-current"
-            onPress={() => {
-              setIsCustomModalOpen(false);
-              if (rrule === null) return;
-              setRruleOptions({
-                ...rruleOptions,
-                ...convertRRuleOptionsToCustom(rrule.options),
-                dstart: selectedDate?.toDate("UTC"),
-              });
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            size="small"
-            className="px-6 group"
-            type="button"
-            onPress={() => {
-              saveCustomRecurrenceRule();
-              setIsCustomModalOpen(false);
-            }}
-            slot="close"
-          >
-            Save
-            <HugeiconsIcon icon={ArrowRight02Icon} size={14} data-slot="icon" />
-          </Button>
-        </Modal.Footer>
-      </Modal.Content>
-    </>
-  );
-};
-
-export const RecurrenceSelect = ({
-  selectedDate,
-  onChange,
-  value,
-  contentProps,
-  minDate,
-  maxDate,
-}: {
-  selectedDate: CalendarDate;
-  onChange: (rrule: string | undefined) => void;
-  value?: string;
-  contentProps?: RecurrenceSelectContentProps;
-  minDate?: CalendarDateTime;
-  maxDate?: CalendarDateTime;
-}) => {
-  return (
-    <RecurrenceSelectContextProvider
-      selectedDate={selectedDate}
-      onChange={onChange}
-      value={value}
-      minDate={minDate}
-      maxDate={maxDate}
-    >
-      <RecurrenceSelectContent {...contentProps} />
-    </RecurrenceSelectContextProvider>
+          </Modal.Body>
+          <Modal.Footer className="flex items-center justify-end gap-2 flex-row">
+            <Button
+              appearance="plain"
+              size="small"
+              className="text-muted-fg hover:text-current"
+              // onPress={() => {
+              //   if (rrule === null) return;
+              //   setRruleOptions({
+              //     ...rruleOptions,
+              //     ...convertRRuleOptionsToCustom(rrule.options),
+              //     dstart: selectedDate?.toDate("UTC"),
+              //   });
+              // }}
+              slot="close"
+            >
+              Cancel
+            </Button>
+            <Button
+              size="small"
+              className="px-6 group"
+              type="button"
+              onPress={saveCustomRecurrenceRule}
+              slot="close"
+            >
+              Save
+              <HugeiconsIcon
+                icon={ArrowRight02Icon}
+                size={14}
+                data-slot="icon"
+              />
+            </Button>
+          </Modal.Footer>
+        </Modal.Content>
+      </Modal>
+    </div>
   );
 };

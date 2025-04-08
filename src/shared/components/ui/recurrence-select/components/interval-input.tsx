@@ -1,19 +1,25 @@
-import { use } from "react";
 import { NumberField } from "../../number-field";
-import { RecurrenceSelectContext } from "../recurrence-select-context";
+import type { SetRruleOptions } from "../utils";
 
-export const IntervalInput = () => {
-  const { setRruleOptions, rruleOptions } = use(RecurrenceSelectContext);
+type IntervalInputProps = {
+  setRruleOptions: SetRruleOptions;
+  interval?: number;
+};
+
+export const IntervalInput = ({
+  setRruleOptions,
+  interval,
+}: IntervalInputProps) => {
   return (
     <NumberField
       onChange={(interval) => {
-        setRruleOptions({
-          ...rruleOptions,
+        setRruleOptions((prev) => ({
+          ...prev,
           interval: Number.isNaN(interval) ? 1 : interval,
-        });
+        }));
       }}
       size="small"
-      value={rruleOptions.interval}
+      value={interval}
       defaultValue={1}
       className={{
         fieldGroup: "hover:bg-overlay-elevated",

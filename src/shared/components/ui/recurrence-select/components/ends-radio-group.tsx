@@ -1,28 +1,38 @@
 import { cn } from "@/shared/lib/classes";
 import { CalendarDate } from "@internationalized/date";
-import { use } from "react";
+import type { Options } from "rrule";
 import { DatePicker } from "../../date-picker";
 import { NumberField } from "../../number-field";
 import { Radio, RadioGroup } from "../../radio";
-import { RecurrenceSelectContext } from "../recurrence-select-context";
-import { EndsEnum } from "../utils";
+import { EndsEnum, type SetRruleOptions } from "../utils";
 
-export const EndsRadioGroup = () => {
-  const {
-    setRruleOptions,
-    rruleOptions,
-    selectedDate,
-    ends,
-    setEnds,
-    minDate,
-    maxDate,
-  } = use(RecurrenceSelectContext);
+type EndsRadioGroupProps = {
+  setRruleOptions: SetRruleOptions;
+  ends: EndsEnum;
+  setEnds: React.Dispatch<React.SetStateAction<EndsEnum>>;
+  minDate?: CalendarDate;
+  maxDate?: CalendarDate;
+  until?: Options["until"];
+  count?: Options["count"];
+};
+
+export const EndsRadioGroup = ({
+  setRruleOptions,
+  ends,
+  setEnds,
+  minDate,
+  maxDate,
+  until,
+  count,
+}: EndsRadioGroupProps) => {
   return (
     <div className="flex flex-row mt-2">
       <RadioGroup
+        aria-label="Recurrence ending"
         value={ends}
-        onChange={(ends) => {
-          setEnds(ends as EndsEnum);
+        onChange={(value) => {
+          const ends = value as EndsEnum;
+          setEnds(ends);
         }}
         className={{
           content: "ml-4",
@@ -31,42 +41,57 @@ export const EndsRadioGroup = () => {
         {/* <Radio value={EndsEnum.ENDS_NEVER} className="h-10 items-center flex">
           <p className="w-16 sm:w-20 text-base text-muted-fg">Never</p>
         </Radio> */}
-        <Radio value={EndsEnum.ENDS_ON} className="h-10 items-center flex">
-          <p className="w-16 sm:w-20 text-base text-muted-fg">On</p>
+        <Radio
+          data-testid="ends-on-radio"
+          value={EndsEnum.ENDS_ON}
+          className="h-10 items-center flex"
+        >
+          <p
+            className={cn(
+              "w-16 sm:w-20 text-sm text-muted-fg",
+              ends === EndsEnum.ENDS_ON && "text-fg",
+            )}
+          >
+            On
+          </p>
         </Radio>
-        <Radio value={EndsEnum.ENDS_AFTER} className="h-10 items-center flex">
-          <p className="w-16 sm:w-20 text-base text-muted-fg">After</p>
+        <Radio
+          data-testid="ends-after-radio"
+          value={EndsEnum.ENDS_AFTER}
+          className="h-10 items-center flex"
+        >
+          <p
+            className={cn(
+              "w-16 sm:w-20 text-sm text-muted-fg",
+              ends === EndsEnum.ENDS_AFTER && "text-fg",
+            )}
+          >
+            After
+          </p>
         </Radio>
       </RadioGroup>
       <div className="flex flex-col gap-2">
         {/* <div className="h-8 flex-1" /> */}
         <DatePicker
+          aria-label="Ends on date"
           value={
-            rruleOptions?.until
+            until
               ? new CalendarDate(
-                  rruleOptions?.until?.getFullYear(),
-                  rruleOptions?.until?.getMonth() + 1,
-                  rruleOptions?.until?.getDate(),
+                  until?.getFullYear(),
+                  until?.getMonth() + 1,
+                  until?.getDate(),
                 )
-              : selectedDate
+              : undefined
           }
           onChange={(untilDate) => {
-            setRruleOptions({
-              ...rruleOptions,
+            setRruleOptions((prev) => ({
+              ...prev,
               until: untilDate ? untilDate?.toDate("UTC") : undefined,
-            });
-          }}
-          onBlur={() => {
-            if (!rruleOptions.until) {
-              setRruleOptions({
-                ...rruleOptions,
-                until: selectedDate.toDate("UTC"),
-              });
-            }
+            }));
           }}
           className={{
             fieldGroup: cn(
-              "text-sm sm:w-32 ",
+              "text-sm",
               ends === EndsEnum.ENDS_ON && "hover:bg-overlay-elevated",
             ),
           }}
@@ -74,22 +99,25 @@ export const EndsRadioGroup = () => {
           overlayProps={{
             placement: "right top",
           }}
-          isDateUnavailable={(date) => date.compare(selectedDate) < 0}
+          isDateUnavailable={(date) =>
+            !!(minDate && date.compare(minDate) < 0) ||
+            !!(maxDate && date.compare(maxDate) > 0)
+          }
           minValue={minDate}
           maxValue={maxDate}
         />
 
         <div className="flex items-center gap-2">
           <NumberField
-            onChange={(count) => {
-              setRruleOptions({
-                ...rruleOptions,
-                count: Number.isNaN(count) ? 1 : count,
-              });
-            }}
-            value={rruleOptions.count}
-            defaultValue={1}
             aria-label="Ends after x days"
+            onChange={(count) => {
+              setRruleOptions((prev) => ({
+                ...prev,
+                count: Number.isNaN(count) ? 1 : count,
+              }));
+            }}
+            value={count ?? undefined}
+            defaultValue={1}
             step={1}
             minValue={1}
             maxValue={99}
@@ -108,7 +136,7 @@ export const EndsRadioGroup = () => {
               ends !== EndsEnum.ENDS_AFTER && "opacity-50",
             )}
           >
-            time{rruleOptions.count === 1 ? "" : "s"}
+            time{count === 1 ? "" : "s"}
           </span>
         </div>
       </div>

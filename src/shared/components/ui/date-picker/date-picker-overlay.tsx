@@ -3,7 +3,7 @@
 import { cn } from "@/shared/lib/classes";
 import type { DateDuration } from "@internationalized/date";
 import type { DialogProps } from "react-aria-components";
-import { useDeviceType } from "../../layout/device-only/device-only-provider";
+import { useViewport } from "../../layout/viewport-context/viewport-context";
 import { Calendar } from "../calendar";
 import { Popover, type PopoverProps } from "../popover";
 import { RangeCalendar } from "../range-calendar";
@@ -26,8 +26,8 @@ const DatePickerOverlay = ({
   range,
   ...props
 }: DatePickerOverlayProps) => {
-  const { isMobile } = useDeviceType();
-
+  const { down } = useViewport();
+  const isMobile = down("sm");
   return (
     <Popover.Content
       showArrow={false}

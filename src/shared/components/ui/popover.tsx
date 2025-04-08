@@ -19,7 +19,7 @@ import {
 import { tv } from "tailwind-variants";
 
 import { twMerge } from "tailwind-merge";
-import { useDeviceType } from "../layout/device-only/device-only-provider";
+import { useViewport } from "../layout/viewport-context/viewport-context";
 import type {
   DialogBodyProps,
   DialogFooterProps,
@@ -128,7 +128,8 @@ const PopoverContent = ({
   className,
   ...props
 }: PopoverContentProps) => {
-  const { isMobile } = useDeviceType();
+  const { down } = useViewport();
+  const isMobile = down("sm");
   const popoverContext = useSlottedContext(PopoverContext)!;
   const isMenuTrigger = popoverContext?.trigger === "MenuTrigger";
   const isSubmenuTrigger = popoverContext?.trigger === "SubmenuTrigger";

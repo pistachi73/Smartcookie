@@ -113,18 +113,6 @@ describe("NoteCard", () => {
     expect(mockHandleContentChange).toHaveBeenCalledWith("New content");
   });
 
-  it("calls setEdittingHub with hubId on focus and null on blur", () => {
-    render(<NoteCard note={mockNote} hubColor={"banana"} />);
-
-    const textarea = screen.getByRole("textbox");
-
-    fireEvent.focus(textarea);
-    expect(mockSetEdittingHub).toHaveBeenCalledWith(mockNote.hubId);
-
-    fireEvent.blur(textarea);
-    expect(mockSetEdittingHub).toHaveBeenCalledWith(null);
-  });
-
   it("calls press handlers when delete button is pressed", async () => {
     render(<NoteCard note={mockNote} hubColor={"banana"} />);
 

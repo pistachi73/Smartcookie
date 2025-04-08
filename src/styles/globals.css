@@ -265,7 +265,7 @@
     --border: oklch(0.87 0.008 286.286);
     --border-skeleton: oklch(0.911 0.006 286.286 / 0.4);
     --input: oklch(0.871 0.006 286.286);
-    --ring: oklch(0.546 0.245 262.881);
+    --ring: oklch(0.646 0.222 36.23);
     
     --navbar: oklch(0.967 0.001 286.375);
     --navbar-fg: oklch(0.141 0.005 285.823);
@@ -392,7 +392,7 @@
     --border: oklch(0.270 0.013 285.805);
     --border-skeleton: oklch(0.270 0.013 285.805 / 0.4);
     --input: oklch(0.320 0.013 285.805);
-    --ring: oklch(0.646 0.222 41.116);
+    --ring: oklch(0.646 0.222 36.23);
     
     --navbar: oklch(0.170 0.006 285.885);
     --navbar-fg: oklch(0.985 0 0);
