@@ -34,7 +34,7 @@ export const Session = ({ session, position }: SessionProps) => {
   return (
     <div
       className={cn(
-        "border rounded-lg flex-1 mb-2 sm:mb-4 shadow-sm transition-shadow",
+        "border rounded-lg flex-1 mb-2 sm:mb-4 shadow-sm bg-overlay transition-shadow",
         isExpanded && "shadow-md",
       )}
     >

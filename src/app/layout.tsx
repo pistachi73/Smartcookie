@@ -3,7 +3,6 @@ import "@/styles/scrollbar.css";
 
 import { auth } from "@/core/config/auth-config";
 import { Providers } from "@/core/providers/providers";
-import { DeviceOnlyProvider } from "@/shared/components/layout/device-only/device-only-provider";
 import { ToastNotification } from "@/shared/components/layout/toast-notification";
 import { getSsrViewport } from "@/shared/components/layout/viewport-context/utils";
 import { ViewportProvider } from "@/shared/components/layout/viewport-context/viewport-context";
@@ -39,15 +38,13 @@ export default async function RootLayout({
       <body className={`${sans.variable} font-sans h-full`}>
         <Providers>
           <SessionProvider session={session}>
-            <DeviceOnlyProvider deviceType={deviceType}>
-              <ViewportProvider ssrViewport={ssrViewport}>
-                {children}
-                {authModal}
-                <Toast />
-                {/* <Toaster /> */}
-                <ToastNotification />
-              </ViewportProvider>
-            </DeviceOnlyProvider>
+            <ViewportProvider ssrViewport={ssrViewport}>
+              {children}
+              {authModal}
+              <Toast />
+              {/* <Toaster /> */}
+              <ToastNotification />
+            </ViewportProvider>
           </SessionProvider>
         </Providers>
       </body>

@@ -1,7 +1,6 @@
 "use client";
 
 import { cn } from "@/shared/lib/classes";
-import { ThemeSwitcher } from "@/ui/theme-switcher";
 import { HugeiconsIcon } from "@hugeicons/react";
 
 import {
@@ -38,6 +37,7 @@ import { SidebarSection } from "@/ui/sidebar/sidebar-section";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { SidebarTrigger } from "../ui/sidebar/sidebar-trigger";
+import { ThemeSwitcher } from "../ui/theme-switcher";
 
 export default function AppSidebar(
   props: React.ComponentProps<typeof Sidebar>,

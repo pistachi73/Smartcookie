@@ -19,10 +19,9 @@ export const addSessionUseCase = async (
 
   if (rruleStr) {
     const rrule = rrulestr(rruleStr);
+    const dstart = rrule.options.dtstart;
     const rruleStartsOn = new Date(hubStartsOn);
-    const rruleEndsOn = hubEndsOn
-      ? new Date(hubEndsOn)
-      : addMonths(rruleStartsOn, 6);
+    const rruleEndsOn = hubEndsOn ? new Date(hubEndsOn) : addMonths(dstart, 6);
 
     const rruleDates = rrule.between(rruleStartsOn, rruleEndsOn, true);
 

@@ -51,6 +51,15 @@ export const AddSessionNoteForm = ({
       handleRemoveAddingNote();
     }
   };
+
+  const handleBlur = () => {
+    if (noteContent.trim()) {
+      formRef.current?.dispatchEvent(new Event("submit", { bubbles: true }));
+    } else {
+      handleRemoveAddingNote();
+    }
+  };
+
   return (
     <m.form
       layout
@@ -66,7 +75,7 @@ export const AddSessionNoteForm = ({
         value={noteContent}
         onChange={(e) => setNoteContent(e.target.value)}
         onKeyDown={handleTextAreaKeyDown}
-        onBlur={handleRemoveAddingNote}
+        onBlur={handleBlur}
         className={cn(
           "flex-1 text-sm p-2 border field-sizing-content resize-none border-dashed  rounded-lg bg-overlay-elevated-highlight",
           "focus-visible:border-primary",

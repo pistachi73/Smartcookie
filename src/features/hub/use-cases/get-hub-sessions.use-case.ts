@@ -24,8 +24,7 @@ export const getHubSessions = async ({
     })
     .from(session)
     .where(and(eq(session.hubId, hubId), eq(session.userId, userId)))
-    .orderBy(asc(session.startTime))
-    .groupBy(session.id);
+    .orderBy(asc(session.startTime));
 
   const sessionsWithDuration = sessions.map((session) => {
     const endTime = new Date(session.endTime);

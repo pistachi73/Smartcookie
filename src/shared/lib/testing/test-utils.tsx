@@ -1,4 +1,3 @@
-import { DeviceOnlyProvider } from "@/shared/components/layout/device-only/device-only-provider";
 import { type QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { type RenderOptions, render } from "@testing-library/react";
 import type { ReactElement } from "react";
@@ -17,11 +16,7 @@ export function TestProviders({ children, queryClient }: TestProvidersProps) {
 
   // Ensure browser APIs are mocked at the component level as well
 
-  return (
-    <QueryClientProvider client={client}>
-      <DeviceOnlyProvider deviceType={"desktop"}>{children}</DeviceOnlyProvider>
-    </QueryClientProvider>
-  );
+  return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
 }
 
 /**

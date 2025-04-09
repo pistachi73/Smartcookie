@@ -53,8 +53,6 @@ const BreadcrumbsItem = ({
   separator = contextSeparator ?? separator;
   const separatorValue = separator === true ? "chevron" : separator;
 
-  console.log({ props }, props.isDisabled);
-
   return (
     <Breadcrumb {...props} className={"flex items-center gap-2 text-sm"}>
       {({ isCurrent }) => (

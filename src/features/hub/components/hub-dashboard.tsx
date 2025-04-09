@@ -68,7 +68,7 @@ const tabs: {
 ];
 
 export function HubDashboard({ hubId }: { hubId: number }) {
-  const { down } = useViewport();
+  const { down, currentViewport } = useViewport();
   const { data: hub } = useHubById(hubId);
 
   if (!hub) return null;
@@ -76,7 +76,7 @@ export function HubDashboard({ hubId }: { hubId: number }) {
   const isDownLg = useMemo(() => down("lg"), [down]);
 
   return (
-    <div className="h-full overflow-auto flex flex-col lg:*:text-red-100">
+    <div className="h-full overflow-auto flex flex-col">
       <div className="shrink-0 overflow-auto p-6 border-b space-y-4 bg-bg">
         <Link
           href="/portal/hubs"

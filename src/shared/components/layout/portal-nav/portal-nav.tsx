@@ -1,6 +1,7 @@
 "use client";
 
 import { Breadcrumbs } from "@/ui/breadcrumbs";
+import { useEffect, useState } from "react";
 
 import { UserButton } from "@/features/auth/components/user-button";
 import { cn } from "@/shared/lib/classes";
@@ -30,7 +31,11 @@ export const PortalNav = ({
   showSearchField = true,
   breadcrumbs,
 }: PortalNavProps) => {
-  const lastUrl = document.referrer;
+  const [lastUrl, setLastUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    setLastUrl(document.referrer);
+  }, []);
 
   return (
     <SidebarNav
@@ -42,15 +47,17 @@ export const PortalNav = ({
       <div className="flex items-center justify-between w-full h-full gap-8">
         <div className="flex items-center gap-x-4 flex-shrink-0">
           <Breadcrumbs className="@md:flex hidden">
-            {lastUrl && (
-              <Breadcrumbs.Item key={lastUrl} href={lastUrl} separator="slash">
-                <HugeiconsIcon
-                  icon={ArrowLeft02Icon}
-                  data-slot="icon"
-                  size={16}
-                />
-              </Breadcrumbs.Item>
-            )}
+            <Breadcrumbs.Item
+              key="back"
+              href={lastUrl || "#"}
+              separator="slash"
+            >
+              <HugeiconsIcon
+                icon={ArrowLeft02Icon}
+                data-slot="icon"
+                size={16}
+              />
+            </Breadcrumbs.Item>
             {breadcrumbs.map((crumb) => {
               if (crumb === "skeleton") {
                 return (
