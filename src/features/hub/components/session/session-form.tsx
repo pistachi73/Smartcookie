@@ -121,8 +121,8 @@ export function SessionForm({ form, minDate, maxDate }: SessionFormProps) {
             onStartDateChange={(date) =>
               form.setValue("date", date as CalendarDate)
             }
-            minDate={minCalendarDate}
-            maxDate={maxCalendarDate}
+            minDate={minCalendarDate as unknown as CalendarDate}
+            maxDate={maxCalendarDate as unknown as CalendarDate}
           />
         )}
       />

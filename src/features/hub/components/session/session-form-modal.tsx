@@ -64,6 +64,8 @@ export const SessionFormModal = ({
 
     const res = await addSessions({
       sessions,
+      hubId,
+      userId: "1",
     });
 
     // if (res.success) {
