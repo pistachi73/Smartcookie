@@ -100,6 +100,7 @@ export const RecurrenceSelect = ({
       bymonthday: options?.bymonthday || [selectedDate.day],
       until: options?.until || selectedDate.toDate("UTC"),
       count: options?.count || 1,
+      tzid: getLocalTimeZone(),
     };
   });
 

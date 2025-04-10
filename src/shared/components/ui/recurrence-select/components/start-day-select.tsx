@@ -1,4 +1,5 @@
 import { CalendarDate } from "@internationalized/date";
+import { datetime } from "rrule";
 import { DatePicker } from "../../date-picker";
 import type { SetRruleOptions } from "../utils";
 
@@ -32,7 +33,9 @@ export const StartDaySelect = ({
       onChange={(startDate) => {
         setRruleOptions((prev) => ({
           ...prev,
-          dstart: startDate ? startDate?.toDate("UTC") : null,
+          dstart: startDate
+            ? datetime(startDate.year, startDate.month, startDate.day)
+            : null,
         }));
         onStartDateChange?.(startDate);
       }}

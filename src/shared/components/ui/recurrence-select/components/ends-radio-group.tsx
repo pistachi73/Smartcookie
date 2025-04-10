@@ -1,6 +1,6 @@
 import { cn } from "@/shared/lib/classes";
 import { CalendarDate } from "@internationalized/date";
-import type { Options } from "rrule";
+import { type Options, datetime } from "rrule";
 import { DatePicker } from "../../date-picker";
 import { NumberField } from "../../number-field";
 import { Radio, RadioGroup } from "../../radio";
@@ -86,7 +86,9 @@ export const EndsRadioGroup = ({
           onChange={(untilDate) => {
             setRruleOptions((prev) => ({
               ...prev,
-              until: untilDate ? untilDate?.toDate("UTC") : undefined,
+              until: untilDate
+                ? datetime(untilDate.year, untilDate.month, untilDate.day)
+                : undefined,
             }));
           }}
           className={{

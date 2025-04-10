@@ -52,6 +52,7 @@ export type CustomRruleOptions = {
   bymonthday: number[];
   until?: Options["until"] | null;
   count?: Options["count"] | null;
+  tzid?: Options["tzid"] | null;
 };
 
 export const convertCustomToRRuleOptions = ({
