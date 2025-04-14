@@ -14,14 +14,16 @@ export function ThemeSwitcher({
   ...props
 }: React.ComponentProps<typeof Button>) {
   const isMounted = useIsMounted();
-
-  if (!isMounted) return null;
   const { theme, setTheme } = useTheme();
 
   const toggleTheme = useCallback(() => {
     const nextTheme = theme === "light" ? "dark" : "light";
     setTheme(nextTheme);
   }, [theme, setTheme]);
+
+  if (!isMounted()) {
+    return null;
+  }
 
   return (
     <Button

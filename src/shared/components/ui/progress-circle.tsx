@@ -20,7 +20,7 @@ const ProgressCircle = ({
   const c = "50%";
   const r = "calc(50% - 2px)";
   return (
-    <ProgressBar {...props} ref={ref}>
+    <ProgressBar {...props} ref={ref} aria-label={ariaLabel}>
       {({ percentage, isIndeterminate }) => (
         <svg
           className={cn("size-4 shrink-0", className)}

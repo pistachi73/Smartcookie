@@ -2,7 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
-import { DeleteSessionNoteUseCaseSchema } from "../../lib/schemas";
+import { DeleteSessionNoteUseCaseSchema } from "../../lib/session-notes.schema";
 import type { SessionNotesMap } from "../../types/session.types";
 import { deleteSessionNoteUseCase } from "../../use-cases/session-notes.use-case";
 
@@ -15,11 +15,8 @@ export function useDeleteSessionNote() {
   const queryClient = useQueryClient();
 
   return useProtectedMutation({
-    schema: DeleteSessionNoteUseCaseSchema.omit({ userId: true }),
-    mutationFn: (input, { userId }) => {
-      console.log({ input, userId });
-      return deleteSessionNoteUseCase({ ...input, userId });
-    },
+    schema: DeleteSessionNoteUseCaseSchema,
+    mutationFn: deleteSessionNoteUseCase,
     onMutate: async (input): Promise<MutationContext> => {
       await queryClient.cancelQueries({
         queryKey: ["session-notes", input.sessionId],

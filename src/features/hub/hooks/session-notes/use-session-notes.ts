@@ -1,13 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
-import { getSessionNotesUseCase } from "../../use-cases/session-notes/get-session-notes.use-case";
+import { getSessionNotesUseCase } from "../../use-cases/session-notes.use-case";
+
+export const createSessionNotesQueryOptions = (sessionId: number) => {
+  return {
+    queryKey: ["session-notes", sessionId],
+    queryFn: () => getSessionNotesUseCase({ sessionId }),
+  };
+};
 
 export const useSessionNotes = ({
   sessionId,
-  enabled,
 }: { sessionId: number; enabled?: boolean }) => {
-  return useQuery({
-    queryKey: ["session-notes", sessionId],
-    queryFn: () => getSessionNotesUseCase({ sessionId }),
-    enabled,
-  });
+  return useQuery(createSessionNotesQueryOptions(sessionId));
 };

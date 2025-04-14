@@ -70,7 +70,7 @@ const buttonStyles = tv({
     },
     isDisabled: {
       false: "cursor-pointer forced-colors:data-disabled:text-[GrayText]",
-      true: "inset-shadow-none cursor-default border-0 opacity-50 ring-0 dark:inset-ring-0 forced-colors:data-disabled:text-[GrayText]",
+      true: "inset-shadow-none cursor-default border-transparent opacity-50 ring-0 dark:inset-ring-0 forced-colors:data-disabled:text-[GrayText]",
     },
     isPending: {
       true: "cursor-default opacity-50",

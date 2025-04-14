@@ -36,6 +36,7 @@ export const getHubsAction = protectedAction.action(
       user: { id },
     },
   }) => {
+    console.log("getHubsAction", id);
     const hubs = await getHubsUseCase({ userId: id });
 
     return hubs;

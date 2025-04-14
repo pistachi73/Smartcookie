@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import { integer, pgEnum, serial, timestamp, uuid } from "drizzle-orm/pg-core";
+import { attendance } from "./attendance";
 import { hub } from "./hub";
 import { sessionNote } from "./session-note";
 import { user } from "./user";
@@ -8,6 +9,7 @@ import { pgTable } from "./utils";
 export const sessionStatusEnum = pgEnum("session_status", [
   "upcoming",
   "completed",
+  "cancelled",
 ]);
 
 export const session = pgTable("session", {
@@ -38,6 +40,7 @@ export const sessionRelations = relations(session, ({ one, many }) => ({
     references: [user.id],
   }),
   notes: many(sessionNote),
+  attendance: many(attendance),
 }));
 
 export type InsertSession = typeof session.$inferInsert;

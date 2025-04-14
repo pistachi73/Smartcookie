@@ -4,8 +4,8 @@ import { DragDropVerticalIcon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useRef } from "react";
 import { useButton, useDrag } from "react-aria";
-import { useDeleteSessionNote } from "../../hooks/session-notes/use-delete-session-note";
-import type { SessionNote } from "../../types/session.types";
+import { useDeleteSessionNote } from "../../../hooks/session-notes/use-delete-session-note";
+import type { SessionNote } from "../../../types/session.types";
 type DraggableSessionNoteProps = {
   note: SessionNote;
   sessionId: number;
@@ -36,7 +36,6 @@ export const DraggableSessionNote = ({
   );
 
   const onDelete = () => {
-    console.log({ noteId: note.id, sessionId });
     handleDelete({ noteId: note.id, sessionId });
   };
 

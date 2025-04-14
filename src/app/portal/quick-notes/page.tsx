@@ -1,5 +1,8 @@
-import { getQueryClient } from "@/shared/lib/get-query-client";
-import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
+import {
+  HydrationBoundary,
+  QueryClient,
+  dehydrate,
+} from "@tanstack/react-query";
 
 import { QuickNotes } from "@/features/notes/components/quick-notes";
 import { quickNotesHubsQueryOptions } from "@/features/notes/lib/quick-notes-query-options";
@@ -17,30 +20,34 @@ export default async function QuickNotesPage({
 }: {
   searchParams: Promise<{ hubId: string | undefined }>;
 }) {
+  const queryClient = new QueryClient();
   const params = await searchParams;
   const hubId = params?.hubId !== undefined ? Number(params?.hubId) : undefined;
-  const queryClient = getQueryClient();
-  const promises = [queryClient.prefetchQuery(quickNotesHubsQueryOptions)];
 
-  await Promise.all(promises);
+  await queryClient.prefetchQuery({
+    ...quickNotesHubsQueryOptions,
+    staleTime: 1000 * 60 * 60 * 24,
+  });
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
+    <>
+      <PortalNav
+        breadcrumbs={[
+          { label: "Portal", href: "/portal" },
+          {
+            label: "Quick Notes",
+            href: "/portal/quick-notes",
+            icon: NoteIcon,
+          },
+        ]}
+      />
       <QuickNotesStoreProvider
         initialVisibleHubs={hubId !== undefined ? [hubId] : undefined}
       >
-        <PortalNav
-          breadcrumbs={[
-            { label: "Portal", href: "/portal" },
-            {
-              label: "Quick Notes",
-              href: "/portal/quick-notes",
-              icon: NoteIcon,
-            },
-          ]}
-        />
-        <QuickNotes />
+        <HydrationBoundary state={dehydrate(queryClient)}>
+          <QuickNotes />
+        </HydrationBoundary>
       </QuickNotesStoreProvider>
-    </HydrationBoundary>
+    </>
   );
 }

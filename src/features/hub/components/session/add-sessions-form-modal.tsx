@@ -8,26 +8,28 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Time, getLocalTimeZone, today } from "@internationalized/date";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import type { z } from "zod";
 import { useAddSessions } from "../../hooks/session/use-add-sessions";
+import { useCheckSessionConflicts } from "../../hooks/session/use-check-session-conflicts";
 import { useHubById } from "../../hooks/use-hub-by-id";
 import { calculateRecurrentSessions } from "../../lib/calculate-recurrent-sessions";
 import { SessionFormSchema } from "../../lib/schemas";
-import { SessionForm } from "./session-form";
+import { useSessionStore } from "../../store/session-store";
+import { AddSessionsForm } from "./add-sessions-form";
+import {
+  SessionConflictModalContent,
+  SessionConflictWarning,
+} from "./session-conflict-modal-content";
 
-type SessionFormModalProps = {
-  isOpen: boolean;
-  onOpenChange: (isOpen: boolean) => void;
+type AddSessionsFormModalProps = {
   hubId: number;
 };
 
-export const SessionFormModal = ({
-  isOpen,
-  onOpenChange,
-  hubId,
-}: SessionFormModalProps) => {
+export const AddSessionsFormModal = ({ hubId }: AddSessionsFormModalProps) => {
+  const isAddModalOpen = useSessionStore((state) => state.isAddModalOpen);
+  const setIsAddModalOpen = useSessionStore((state) => state.setIsAddModalOpen);
   const { data: hub } = useHubById(hubId);
   const [isConflictModalOpen, setIsConflictModalOpen] = useState(false);
 
@@ -50,9 +52,27 @@ export const SessionFormModal = ({
     name: ["rrule"],
   });
 
-  const { mutateAsync: addSessions, data, isPending } = useAddSessions();
+  // Watch all changes
+  useEffect(() => {
+    const subscription = form.watch((value, { type }) => {
+      if (type === "change") {
+        resetConflicts();
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [form.watch]);
+
+  const { mutateAsync: addSessions, isPending: isAddingSessions } =
+    useAddSessions();
+  const {
+    mutateAsync: checkSessionConflicts,
+    reset: resetConflicts,
+    data: conflictsData,
+    isPending: isCheckingConflicts,
+  } = useCheckSessionConflicts();
 
   const onSubmit = async (data: z.infer<typeof SessionFormSchema>) => {
+    console.log(data.rrule);
     const sessions = calculateRecurrentSessions({
       date: serializeDateValue(data.date),
       startTime: serializeTime(data.startTime),
@@ -62,21 +82,25 @@ export const SessionFormModal = ({
       hubStartsOn: hub.startDate,
     });
 
-    const res = await addSessions({
+    const { success } = await checkSessionConflicts({
       sessions,
-      hubId,
-      userId: "1",
     });
 
-    // if (res.success) {
-    //   handleOpenChange(false);
-    // }
+    if (!success) return;
+
+    await addSessions({
+      hubId,
+      sessions,
+    });
+
+    handleOpenChange(false);
   };
 
   const handleOpenChange = (open: boolean) => {
-    onOpenChange(open);
+    setIsAddModalOpen(open);
     if (!open) {
       setTimeout(() => {
+        resetConflicts();
         form.reset();
       }, 200);
     }
@@ -86,14 +110,18 @@ export const SessionFormModal = ({
 
   return (
     <>
-      <Modal.Content size="md" isOpen={isOpen} onOpenChange={handleOpenChange}>
+      <Modal.Content
+        size="md"
+        isOpen={isAddModalOpen}
+        onOpenChange={handleOpenChange}
+      >
         <Modal.Header
           title="Add Session"
           description="Add a session and notes to track your progress."
         />
         <Form onSubmit={form.handleSubmit(onSubmit)}>
-          <Modal.Body className="pb-1">
-            <SessionForm
+          <Modal.Body className="pb-1 space-y-4">
+            <AddSessionsForm
               form={form}
               minDate={hub?.startDate}
               maxDate={hub?.endDate}
@@ -118,79 +146,64 @@ export const SessionFormModal = ({
                 </div>
               </div>
             )}
-            {data && !data?.success && data?.overlappingSessions && (
-              <div className="flex items-start gap-2 p-3 mt-4 text-sm bg-danger/20 border border-danger rounded-md">
-                <HugeiconsIcon
-                  icon={Alert02Icon}
-                  size={20}
-                  className="shrink-0 text-danger/80"
-                />
-                <div className="space-y-1">
-                  <p className="font-medium text-danger/80">
-                    Session time conflict detected
-                  </p>
-                  <Button
-                    appearance="plain"
-                    size="small"
-                    className="mt-1 text-danger/80 hover:text-danger"
-                    onPress={() => setIsConflictModalOpen(true)}
-                  >
-                    View conflicts
-                  </Button>
-                </div>
-              </div>
+            {conflictsData && !conflictsData?.success && (
+              <SessionConflictWarning
+                setIsConflictModalOpen={setIsConflictModalOpen}
+              />
+              // <div className="flex items-center flex-wrap gap-2 p-3 mt-4 justify-between text-sm bg-danger/20 border border-danger rounded-md">
+              //   <div className="flex items-center gap-2">
+              //     <HugeiconsIcon
+              //       icon={Alert02Icon}
+              //       size={20}
+              //       className="shrink-0 text-danger/80"
+              //     />
+              //     <p className="font-medium text-danger/80">
+              //       Session time conflict detected
+              //     </p>
+              //   </div>
+              //   {!!conflictsData?.overlappingSessions.length && (
+              //     <Button
+              //       appearance="outline"
+              //       size="small"
+              //       className="text-danger/80 hover:text-danger border-danger/50 bg-overlay/50 px-2 py-1"
+              //       onPress={() => setIsConflictModalOpen(true)}
+              //     >
+              //       View conflicts
+              //     </Button>
+              //   )}
+              // </div>
             )}
           </Modal.Body>
           <Modal.Footer>
-            <Modal.Close size="small">Cancel</Modal.Close>
-            <Button type="submit" shape="square" size="small" className="px-6">
-              {isPending && (
+            <Modal.Close size="small" isDisabled={isAddingSessions}>
+              Cancel
+            </Modal.Close>
+            <Button
+              type="submit"
+              shape="square"
+              size="small"
+              className="px-6"
+              isPending={isAddingSessions || isCheckingConflicts}
+            >
+              {(isAddingSessions || isCheckingConflicts) && (
                 <ProgressCircle
                   isIndeterminate
                   aria-label="Adding session..."
                 />
               )}
-              Add Session
+              {isCheckingConflicts || isAddingSessions
+                ? "Adding session..."
+                : "Add Session"}
             </Button>
           </Modal.Footer>
         </Form>
       </Modal.Content>
 
-      <Modal.Content
-        size="md"
-        isOpen={isConflictModalOpen}
-        onOpenChange={setIsConflictModalOpen}
-      >
-        <Modal.Header
-          title="Session Conflicts"
-          description="The following sessions overlap with your scheduled time"
-        />
-        <Modal.Body>
-          {data?.overlappingSessions?.map((conflictPair, index) => (
-            <div key={index} className="p-3 border rounded-md mb-2">
-              <p className="font-medium">
-                {new Date(conflictPair.s1.startTime).toLocaleDateString()}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                {new Date(conflictPair.s1.startTime).toLocaleTimeString()} -{" "}
-                {new Date(conflictPair.s1.endTime).toLocaleTimeString()}
-              </p>
-              {conflictPair.s1.hubName && (
-                <p className="mt-1">{conflictPair.s1.hubName}</p>
-              )}
-            </div>
-          ))}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            appearance="outline"
-            size="small"
-            onPress={() => setIsConflictModalOpen(false)}
-          >
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal.Content>
+      <SessionConflictModalContent
+        isConflictModalOpen={isConflictModalOpen}
+        setIsConflictModalOpen={setIsConflictModalOpen}
+        conflictsData={conflictsData}
+      />
     </>
   );
 };

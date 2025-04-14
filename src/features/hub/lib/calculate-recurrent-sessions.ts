@@ -4,9 +4,6 @@ import { serializedTime } from "@/shared/lib/serialize-react-aria/serialize-time
 import { addMinutes, addMonths } from "date-fns";
 import { datetime, rrulestr } from "rrule";
 import { z } from "zod";
-import { AddSessionsUseCaseSchema } from "./schemas";
-
-export const CalculateRecurrentSessionsSchema = AddSessionsUseCaseSchema;
 
 const calculateRecurrentSessionsInputSchema = z.object({
   hubStartsOn: z.string(),
@@ -17,19 +14,22 @@ const calculateRecurrentSessionsInputSchema = z.object({
   rruleStr: z.string().optional(),
 });
 
-export const calculateRecurrentSessions = ({
-  hubEndsOn,
-  hubStartsOn,
-  startTime,
-  endTime,
-  rruleStr,
-  date,
-}: z.infer<typeof calculateRecurrentSessionsInputSchema>) => {
+export const calculateRecurrentSessions = (
+  data: z.infer<typeof calculateRecurrentSessionsInputSchema>,
+) => {
+  const parsedData = calculateRecurrentSessionsInputSchema.safeParse(data);
+
+  if (!parsedData.success) {
+    return [];
+  }
+
+  const { hubEndsOn, hubStartsOn, startTime, endTime, rruleStr, date } =
+    parsedData.data;
+
   const sessions: Omit<InsertSession, "hubId" | "userId">[] = [];
   const durationInMinutes =
     (endTime.hour - startTime.hour) * 60 + endTime.minute - startTime.minute;
 
-  console.log(rruleStr);
   if (rruleStr) {
     const hubStartsOnDate = new Date(hubStartsOn);
     const hubEndsOnDate = hubEndsOn ? new Date(hubEndsOn) : undefined;

@@ -1,15 +1,19 @@
 import { HubList } from "@/features/hub/components/hub-list";
-import { SkeletonHubList } from "@/features/hub/components/skeleton-hub-list";
 import { getHubsQueryOptions } from "@/features/hub/hooks/use-hubs";
 import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
-import { getQueryClient } from "@/shared/lib/get-query-client";
 import { FolderLibraryIcon } from "@hugeicons-pro/core-solid-rounded";
-import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
-import { Suspense } from "react";
+import {
+  HydrationBoundary,
+  QueryClient,
+  dehydrate,
+} from "@tanstack/react-query";
 
 const HubsPage = async () => {
-  const queryClient = getQueryClient();
-  queryClient.prefetchQuery(getHubsQueryOptions);
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    ...getHubsQueryOptions,
+    staleTime: 1000 * 60 * 60 * 24,
+  });
 
   return (
     <>
@@ -20,9 +24,7 @@ const HubsPage = async () => {
         ]}
       />
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <Suspense fallback={<SkeletonHubList />}>
-          <HubList />
-        </Suspense>
+        <HubList />
       </HydrationBoundary>
     </>
   );

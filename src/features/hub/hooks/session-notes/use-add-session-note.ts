@@ -3,9 +3,9 @@ import { toast } from "sonner";
 
 import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 
-import { AddSessionNoteUseCaseSchema } from "../../lib/schemas";
+import { CreateSessionNoteUseCaseSchema } from "../../lib/session-notes.schema";
 import type { SessionNote, SessionNotesMap } from "../../types/session.types";
-import { addSessionNoteUseCase } from "../../use-cases/session-notes/add-session-note.use-case";
+import { addSessionNoteUseCase } from "../../use-cases/session-notes.use-case";
 
 interface MutationContext {
   previousData: SessionNotesMap | undefined;
@@ -17,7 +17,7 @@ export function useAddSessionNote() {
   const queryClient = useQueryClient();
 
   return useProtectedMutation({
-    schema: AddSessionNoteUseCaseSchema,
+    schema: CreateSessionNoteUseCaseSchema,
     mutationFn: addSessionNoteUseCase,
     onMutate: async (input): Promise<MutationContext> => {
       await queryClient.cancelQueries({

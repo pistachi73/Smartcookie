@@ -1,13 +1,8 @@
 "use client";
 
-import { DatePicker } from "@/shared/components/ui/date-picker";
-import { Label, fieldStyles } from "@/shared/components/ui/field";
-import { RecurrenceSelect } from "@/shared/components/ui/recurrence-select";
-import { TimeField } from "@/shared/components/ui/time-field";
-import { cn } from "@/shared/lib/classes";
 import { ArrowRight02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { type CalendarDate, parseDateTime } from "@internationalized/date";
+import { parseDateTime } from "@internationalized/date";
 import {
   Controller,
   type UseFormReturn,
@@ -15,18 +10,56 @@ import {
   useWatch,
 } from "react-hook-form";
 import type { z } from "zod";
-import type { SessionFormSchema } from "../../lib/schemas";
 
-interface SessionFormProps {
-  form: UseFormReturn<z.infer<typeof SessionFormSchema>>;
+import type { SessionStatus } from "@/db/schema/session";
+import { ToggleGroup } from "@/shared/components/ui/toggle-group";
+import { cn } from "@/shared/lib/classes";
+import { DatePicker } from "@/ui/date-picker";
+import { Label, fieldStyles } from "@/ui/field";
+import { TimeField } from "@/ui/time-field";
+import { Toggle } from "@/ui/toggle";
+
+import type { UpdateSessionFormSchema } from "../../lib/sessions.schema";
+
+const sessionStatusOptions: {
+  id: SessionStatus;
+  label: string;
+  className: string;
+}[] = [
+  {
+    id: "completed",
+    label: "Completed",
+    className:
+      "data-selected:bg-green-200 data-selected:text-green-900 data-selected:inset-ring-green-700 dark:data-selected:bg-green-950 dark:data-selected:text-green-100 dark:data-selected:inset-ring-green-700",
+  },
+  {
+    id: "upcoming",
+    label: "Upcoming",
+    className:
+      "data-selected:bg-blue-200 data-selected:text-blue-900 data-selected:inset-ring-blue-700 dark:data-selected:bg-blue-950 dark:data-selected:text-blue-100 dark:data-selected:inset-ring-blue-700",
+  },
+  {
+    id: "cancelled",
+    label: "Cancelled",
+    className:
+      "data-selected:bg-danger/10 data-selected:text-danger data-selected:inset-ring-danger dark:data-selected:bg-danger/40 dark:data-selected:text-danger-fg dark:data-selected:inset-ring-danger",
+  },
+];
+
+interface UpdateSessionsFormProps {
+  form: UseFormReturn<z.infer<typeof UpdateSessionFormSchema>>;
   minDate?: string;
   maxDate?: string | null;
 }
 
-export function SessionForm({ form, minDate, maxDate }: SessionFormProps) {
-  const [date, startTime] = useWatch({
+export function UpdateSessionsForm({
+  form,
+  minDate,
+  maxDate,
+}: UpdateSessionsFormProps) {
+  const [startTime] = useWatch({
     control: form.control,
-    name: ["date", "startTime"],
+    name: ["startTime"],
   });
 
   const formState = useFormState({
@@ -109,23 +142,42 @@ export function SessionForm({ form, minDate, maxDate }: SessionFormProps) {
         </div>
         <p className={cn(fieldStyles().fieldError())}>{endStartTimeError}</p>
       </div>
-      <Controller
-        control={form.control}
-        name="rrule"
-        render={({ field: { onChange, value } }) => (
-          <RecurrenceSelect
-            value={value}
-            onChange={onChange}
-            selectedDate={date}
-            label="Recurrence"
-            onStartDateChange={(date) =>
-              form.setValue("date", date as CalendarDate)
-            }
-            minDate={minCalendarDate as unknown as CalendarDate}
-            maxDate={maxCalendarDate as unknown as CalendarDate}
-          />
-        )}
-      />
+
+      <div className="flex flex-col gap-1.5">
+        <Label isRequired={true}>Status</Label>
+
+        <Controller
+          control={form.control}
+          name="status"
+          render={({ field }) => (
+            <ToggleGroup
+              gap={1}
+              selectionMode="single"
+              className="flex-1 flex-wrap"
+              selectedKeys={[field.value]}
+              aria-label="Session status"
+              onSelectionChange={(value) => {
+                const status = Array.from(value)[0];
+                field.onChange(status);
+              }}
+            >
+              {sessionStatusOptions.map(({ id, label, className }) => (
+                <Toggle
+                  appearance="outline"
+                  key={id}
+                  id={id}
+                  className={cn(
+                    "data-hovered:bg-overlay-elevated flex-1",
+                    className,
+                  )}
+                >
+                  {label}
+                </Toggle>
+              ))}
+            </ToggleGroup>
+          )}
+        />
+      </div>
     </div>
   );
 }

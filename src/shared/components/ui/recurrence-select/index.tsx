@@ -10,7 +10,7 @@ import {
   today,
 } from "@internationalized/date";
 import { useCallback, useEffect, useState } from "react";
-import { Frequency, RRule } from "rrule";
+import { Frequency, RRule, datetime } from "rrule";
 import { Button } from "../button";
 import { Label } from "../field";
 import { Modal } from "../modal";
@@ -104,37 +104,52 @@ export const RecurrenceSelect = ({
     };
   });
 
-  const saveCustomRecurrenceRule = useCallback(() => {
-    const rrule = new RRule(
-      convertCustomToRRuleOptions({
-        rruleOptions,
+  const saveCustomRecurrenceRule = useCallback(
+    (options?: CustomRruleOptions) => {
+      console.log({
+        rruleOptions: options || rruleOptions,
         ends,
-      }),
-    );
+      });
+      const rrule = new RRule(
+        convertCustomToRRuleOptions({
+          rruleOptions: options || rruleOptions,
+          ends,
+        }),
+      );
 
-    setRrule(rrule);
-    onChange(rrule.toString());
-  }, [onChange, rruleOptions, ends]);
+      console.log(rrule.options.dtstart);
+
+      setRrule(rrule);
+      onChange(rrule.toString());
+    },
+    [onChange, rruleOptions, ends],
+  );
 
   useEffect(() => {
     if (!selectedDate) {
       return;
     }
 
-    const selectedDateTime = selectedDate?.toDate("UTC").getTime();
+    const selectedDateDate = datetime(
+      selectedDate.year,
+      selectedDate.month,
+      selectedDate.day,
+    );
     const dstartTime = rruleOptions?.dstart?.getTime();
 
-    if (selectedDateTime === dstartTime) {
+    if (selectedDateDate.getTime() === dstartTime) {
       return;
     }
 
-    setRruleOptions({
+    const options = {
       ...rruleOptions,
-      dstart: selectedDate?.toDate("UTC"),
-    });
+      dstart: selectedDateDate,
+    };
+
+    setRruleOptions(options);
 
     if (value) {
-      saveCustomRecurrenceRule();
+      saveCustomRecurrenceRule(options);
     }
   }, [selectedDate, saveCustomRecurrenceRule, rruleOptions, value]);
 
@@ -233,7 +248,7 @@ export const RecurrenceSelect = ({
               size="small"
               className="px-6 group"
               type="button"
-              onPress={saveCustomRecurrenceRule}
+              onPress={() => saveCustomRecurrenceRule()}
               slot="close"
             >
               Save

@@ -31,5 +31,12 @@ export default async function seed(db: DB) {
         ...note,
       });
     });
+
+    session.attendance.forEach(async (attendance, index) => {
+      await db.insert(schema.attendance).values({
+        ...attendance,
+        sessionId: s.id,
+      });
+    });
   });
 }

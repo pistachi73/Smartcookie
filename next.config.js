@@ -13,7 +13,13 @@ const config = {
 
   experimental: {
     reactCompiler: true,
+    optimizePackageImports: [
+      "@hugeicons/react",
+      "@hugeicons-pro/core-solid-rounded",
+      "@hugeicons-pro/core-outline-rounded",
+    ],
   },
+
   images: {
     remotePatterns: [
       {
@@ -27,7 +33,8 @@ const config = {
     ],
   },
   webpack: (config, { isServer }) => {
-    // config.optimization.sideEffects = true;
+    config.optimization.sideEffects = true;
+    config.optimization.usedExports = true;
     return config;
   },
 };

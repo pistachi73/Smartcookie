@@ -6,8 +6,8 @@ import { cn } from "@/shared/lib/classes";
 
 import { regularSpring } from "@/shared/lib/animation";
 import * as m from "motion/react-m";
-import { useUpdateSessionNote } from "../../hooks/session-notes/use-update-session-note";
-import type { SessionNote } from "../../types/session.types";
+import { useUpdateSessionNote } from "../../../hooks/session-notes/use-update-session-note";
+import type { SessionNote } from "../../../types/session.types";
 export const DroppableSessionNoteColumn = ({
   children,
   sessionId,

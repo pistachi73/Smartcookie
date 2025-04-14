@@ -8,7 +8,8 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { AnimatePresence, type Variants } from "motion/react";
 import * as m from "motion/react-m";
 import { useState } from "react";
-import type { SessionNote } from "../../types/session.types";
+import { useSessionNotes } from "../../../hooks/session-notes/use-session-notes";
+import type { SessionNote } from "../../../types/session.types";
 import { AddSessionNoteForm } from "./add-session-note-form";
 import { DraggableSessionNote } from "./draggable-session-note";
 import { DroppableSessionNoteColumn } from "./droppable-session-note-column";
@@ -32,7 +33,6 @@ const variants: Variants = {
 type SessionNoteColumnProps<T extends SessionNotePosition> = {
   position: T;
   sessionId: number;
-  notes?: SessionNote[];
 };
 
 const headerMap: Record<SessionNotePosition, string> = {
@@ -43,10 +43,15 @@ const headerMap: Record<SessionNotePosition, string> = {
 
 export const SessionNoteColumn = <T extends SessionNotePosition>({
   position,
-  notes,
   sessionId,
 }: SessionNoteColumnProps<T>) => {
   const [isAddingNote, setIsAddingNote] = useState(false);
+
+  const { data: sessionNotes } = useSessionNotes({
+    sessionId,
+  });
+
+  const notes = (sessionNotes?.[position] ?? []) as SessionNote[];
 
   return (
     <DroppableSessionNoteColumn sessionId={sessionId} position={position}>

@@ -4,7 +4,7 @@ import { serializedDateValue } from "@/shared/lib/serialize-react-aria/serialize
 import { serializedTime } from "@/shared/lib/serialize-react-aria/serialize-time";
 import {
   type CalendarDate,
-  Time,
+  type Time,
   getLocalTimeZone,
   today,
 } from "@internationalized/date";
@@ -97,41 +97,11 @@ const UpdateSessionNoteOrderSchema = z.object({
   order: z.number(),
 });
 
-export const UpdateSessionNoteInputSchema = z.object({
-  noteId: z.number(),
-  source: z.object({
-    sessionId: z.number(),
-    position: z.enum(["past", "present", "future"]),
-  }),
-  target: z.object({
-    sessionId: z.number(),
-    position: z.enum(["past", "present", "future"]),
-  }),
-});
-
-export const UpdateSessionNoteSchema = z.array(UpdateSessionNoteInputSchema);
-
-export const GetSessionNotesUseCaseSchema = z.object({
-  sessionId: z.number(),
-});
-
 export const AddSessionUseCaseSchema = z.object({
   userId: z.string(),
   hubId: z.number(),
   startTime: z.string(),
   endTime: z.string(),
-});
-
-export const AddSessionNoteUseCaseSchema = z.object({
-  sessionId: z.number(),
-  content: z.string().min(1, "Content is required"),
-  position: z.enum(["past", "present", "future"]),
-});
-
-export const DeleteSessionNoteUseCaseSchema = z.object({
-  userId: z.string(),
-  noteId: z.number(),
-  sessionId: z.number(),
 });
 
 export const SessionFormSchema = z
@@ -142,7 +112,7 @@ export const SessionFormSchema = z
     rrule: z.string().optional(),
   })
   .superRefine((data, ctx) => {
-    if (data.endTime && data.startTime && data.endTime < data.startTime) {
+    if (data.endTime && data.startTime && data.endTime <= data.startTime) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["endTime"],
@@ -172,17 +142,6 @@ export const SerializedSessionFormSchema = z.object({
   startTime: serializedTime,
   endTime: serializedTime,
   rrule: z.string().optional(),
-});
-
-export const AddSessionsUseCaseSchema = z.object({
-  sessions: z.array(
-    z.object({
-      startTime: z.string(),
-      endTime: z.string(),
-    }),
-  ),
-  hubId: z.number(),
-  userId: z.string(),
 });
 
 export type SessionFormValues = z.infer<typeof SessionFormSchema>;

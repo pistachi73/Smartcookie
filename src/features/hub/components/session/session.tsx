@@ -1,138 +1,200 @@
+import { Button } from "@/shared/components/ui/button";
 import { Heading } from "@/shared/components/ui/heading";
 import { Separator } from "@/shared/components/ui/separator";
 import { regularSpring } from "@/shared/lib/animation";
 import { cn } from "@/shared/lib/classes";
+import { getQueryClient } from "@/shared/lib/get-query-client";
 import {
   ArrowDown01Icon,
-  Calendar03Icon,
-  Tick01Icon,
-  TimeScheduleIcon,
+  Clock01Icon,
+  PropertyEditIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { format } from "date-fns";
 import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";
-import { useState } from "react";
-import { Button as RAButton } from "react-aria-components";
-import { useSessionNotes } from "../../hooks/session-notes/use-session-notes";
+import dynamic from "next/dynamic";
+import { useCallback, useState } from "react";
+import { createSessionNotesQueryOptions } from "../../hooks/session-notes/use-session-notes";
+import { useSessionStore } from "../../store/session-store";
 import type { HubSession } from "../../types/hub.types";
-import { SessionNoteColumn } from "./session-note-column";
+import { SessionBubble } from "./session-bubble";
+import { SessionNoteColumn } from "./session-notes/session-note-column";
+
+const DynamicUpdateSessionFormModal = dynamic(
+  () =>
+    import("./update-session-form-modal").then(
+      (mod) => mod.UpdateSessionFormModal,
+    ),
+  {
+    ssr: false,
+  },
+);
+
+export const DesktopSessionBubble = ({
+  session,
+  index,
+  totalSessions,
+}: { index: number; session: HubSession; totalSessions: number }) => {
+  return (
+    <m.div
+      layout
+      transition={{
+        layout: regularSpring,
+      }}
+      className={cn(
+        "flex  justify-center relative",
+        "before:content-[''] before:absolute before:top-0 before:left-1/2 before:-translate-x-1/2 before:w-1 before:h-2.5 before:shrink-0",
+        "after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-1 after:h-[calc(100%-var(--spacing)*9.5)]",
+        index === 0
+          ? "before:bg-transparent"
+          : "before:bg-bg dark:before:bg-overlay-highlight",
+        index === totalSessions - 1
+          ? "after:bg-transparent"
+          : "after:bg-bg dark:after:bg-overlay-highlight",
+      )}
+    >
+      <SessionBubble session={session} className="mt-2.5 z-10" />
+    </m.div>
+  );
+};
 
 type SessionProps = {
+  hubId: number;
   session: HubSession;
   position: number;
 };
 
-const MotionRAButton = m.create(RAButton);
-
-export const Session = ({ session, position }: SessionProps) => {
+export const Session = ({ session, position, hubId }: SessionProps) => {
+  const queryClient = getQueryClient();
   const [isExpanded, setIsExpanded] = useState(false);
-  const { data: sessionNotes } = useSessionNotes({
-    sessionId: session.id,
-  });
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+
+  const isEditingMode = useSessionStore((store) => store.isEditingMode);
+
+  const prefecthSesionNotes = useCallback(() => {
+    queryClient.prefetchQuery({
+      ...createSessionNotesQueryOptions(session.id),
+      staleTime: 60000,
+    });
+  }, [queryClient, session.id]);
+
+  const onEditSession = useCallback(() => {
+    setIsUpdateModalOpen(true);
+  }, []);
 
   return (
-    <div
-      className={cn(
-        "border rounded-lg flex-1 mb-2 sm:mb-4 shadow-sm bg-overlay transition-shadow",
-        isExpanded && "shadow-md",
-      )}
-    >
-      <MotionRAButton
-        layout
+    <>
+      <div
         className={cn(
-          "group rounded-lg cursor-pointer w-full flex flex-row items-center justify-between p-2 sm:p-1 sm:pr-4",
-          "transition-colors duration-200 dark:hover:bg-overlay-highlight ",
-          isExpanded && "bg-bg dark:bg-overlay-highlight rounded-b-none",
+          "border rounded-lg flex-1 mb-2 sm:mb-4 shadow-sm bg-overlay transition-shadow",
+          isExpanded && "shadow-md",
         )}
-        onPress={() => setIsExpanded(!isExpanded)}
       >
-        <div className="flex flex-row items-center gap-4">
-          <m.div
-            layout
-            className={cn(
-              "hidden sm:flex transition-colors flex-col items-center justify-center size-12 bg-bg dark:bg-overlay-highlight rounded-sm",
-              isExpanded && "bg-overlay-highlight dark:bg-overlay-elevated",
-            )}
-          >
-            <p className="text-xs text-muted-fg">
-              {format(session.startTime, "EEE")}
-            </p>
-            <p className="text-base font-semibold">
-              {format(session.startTime, "d")}
-            </p>
-          </m.div>
-          <div
-            className={cn(
-              "sm:hidden flex items-center justify-center shrink-0",
-              "size-8 rounded-full bg-primary border",
-              session.status === "completed" &&
-                "bg-green-400 text-green-950 border-green-700 dark:bg-green-900 dark:text-green-200",
-              session.status === "upcoming" &&
-                "bg-blue-400 text-blue-950 border-blue-700 dark:bg-blue-900/50 dark:text-blue-100",
-            )}
-          >
-            <HugeiconsIcon
-              icon={Tick01Icon}
-              altIcon={TimeScheduleIcon}
-              showAlt={session.status === "upcoming"}
-              size={16}
-              strokeWidth={1.5}
-            />
-          </div>
-          <Heading level={3} className="text-sm font-medium">
-            Session {position}
-          </Heading>
-          <Separator orientation="vertical" className="h-4" />
-          <p className="text-sm text-muted-fg flex flex-row items-center gap-1">
-            <HugeiconsIcon
-              icon={Calendar03Icon}
-              size={14}
-              className="hidden sm:block"
-            />
-            {format(session.startTime, "EEE, MMM d, yyyy")}
-          </p>
-        </div>
-
-        <HugeiconsIcon
-          icon={ArrowDown01Icon}
+        <m.div
+          layout
+          role="button"
+          tabIndex={0}
+          onClick={() => setIsExpanded(!isExpanded)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              setIsExpanded(!isExpanded);
+            }
+          }}
           className={cn(
-            "transition-transform duration-200",
-            isExpanded && "rotate-180",
+            "group rounded-lg cursor-pointer w-full flex flex-row items-center justify-between p-2 sm:p-1 sm:pr-4",
+            "transition-colors duration-200 dark:hover:bg-overlay-highlight ",
+            "focus-visible:ring-2 focus-visible:ring-primary",
+            isExpanded && "bg-bg dark:bg-overlay-highlight rounded-b-none",
           )}
-          size={16}
-        />
-      </MotionRAButton>
+          onHoverStart={prefecthSesionNotes}
+          onFocus={prefecthSesionNotes}
+        >
+          <div className="flex flex-row items-center gap-4">
+            <m.div
+              layout
+              className={cn(
+                "hidden sm:flex transition-colors flex-col items-center justify-center size-12 bg-bg dark:bg-overlay-highlight rounded-sm",
+                isExpanded && "bg-overlay-highlight dark:bg-overlay-elevated",
+              )}
+            >
+              <p className="text-xs text-muted-fg">
+                {format(session.startTime, "MMM")}
+              </p>
+              <p className="text-base font-semibold">
+                {format(session.startTime, "dd")}
+              </p>
+            </m.div>
 
-      <AnimatePresence>
-        {isExpanded && (
-          <m.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={regularSpring}
-            className="overflow-hidden"
-          >
-            <div className="p-2 flex flex-col sm:grid sm:grid-rows-1 sm:grid-cols-3">
-              <SessionNoteColumn
-                position="past"
-                notes={sessionNotes?.past}
-                sessionId={session.id}
+            <SessionBubble session={session} className="flex sm:hidden" />
+
+            <Heading level={3} className="text-sm font-medium">
+              Session {position}
+            </Heading>
+            <Separator orientation="vertical" className="h-4" />
+            <p className="text-sm text-muted-fg flex flex-row items-center gap-1">
+              <HugeiconsIcon
+                icon={Clock01Icon}
+                size={14}
+                className="hidden sm:block"
               />
-              <SessionNoteColumn
-                position="present"
-                notes={sessionNotes?.present}
-                sessionId={session.id}
-              />
-              <SessionNoteColumn
-                position="future"
-                notes={sessionNotes?.future}
-                sessionId={session.id}
+              {format(session.startTime, "HH:mm")} -{" "}
+              {format(session.endTime, "HH:mm")}
+            </p>
+          </div>
+
+          <div className="flex items-center gap-1">
+            {isEditingMode && (
+              <div className="flex gap-1 items-center">
+                <Button
+                  appearance="plain"
+                  size="square-petite"
+                  className="size-9"
+                  onPress={onEditSession}
+                >
+                  <HugeiconsIcon icon={PropertyEditIcon} size={16} />
+                </Button>
+              </div>
+            )}
+            <div className="size-9 flex items-center justify-center">
+              <HugeiconsIcon
+                icon={ArrowDown01Icon}
+                className={cn(
+                  "transition-transform duration-200",
+                  isExpanded && "rotate-180",
+                )}
+                size={16}
               />
             </div>
-          </m.div>
-        )}
-      </AnimatePresence>
-    </div>
+          </div>
+        </m.div>
+
+        <AnimatePresence>
+          {isExpanded && (
+            <m.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={regularSpring}
+              className="overflow-hidden"
+            >
+              <div className="p-2 flex flex-col sm:grid sm:grid-rows-1 sm:grid-cols-3">
+                <SessionNoteColumn position="past" sessionId={session.id} />
+                <SessionNoteColumn position="present" sessionId={session.id} />
+                <SessionNoteColumn position="future" sessionId={session.id} />
+              </div>
+            </m.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      <DynamicUpdateSessionFormModal
+        isOpen={isUpdateModalOpen}
+        setIsOpen={setIsUpdateModalOpen}
+        session={session}
+        hubId={hubId}
+      />
+    </>
   );
 };

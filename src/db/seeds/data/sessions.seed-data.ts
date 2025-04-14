@@ -1,8 +1,13 @@
-import type { InsertSession, InsertSessionNote } from "@/db/schema";
+import type {
+  InsertAttendance,
+  InsertSession,
+  InsertSessionNote,
+} from "@/db/schema";
 
 const sessions: {
   session: Omit<InsertSession, "userId" | "hubId">;
   notes: Omit<InsertSessionNote, "userId" | "sessionId">[];
+  attendance: Omit<InsertAttendance, "id" | "sessionId">[];
 }[] = [
   {
     session: {
@@ -29,6 +34,10 @@ const sessions: {
         content:
           "Prepare materials for next session focusing on basic conversation",
       },
+    ],
+    attendance: [
+      { studentId: 1, status: "present" },
+      { studentId: 2, status: "present" },
     ],
   },
   {
@@ -59,6 +68,10 @@ const sessions: {
         content: "Create flashcards for new vocabulary words",
       },
     ],
+    attendance: [
+      { studentId: 1, status: "present" },
+      { studentId: 2, status: "absent" },
+    ],
   },
   {
     session: {
@@ -88,6 +101,10 @@ const sessions: {
         content: "Prepare exercises for irregular verb conjugations",
       },
     ],
+    attendance: [
+      { studentId: 1, status: "present" },
+      { studentId: 2, status: "absent" },
+    ],
   },
   {
     session: {
@@ -115,6 +132,10 @@ const sessions: {
         position: "future",
         content: "Create a list of most common irregular verbs for practice",
       },
+    ],
+    attendance: [
+      { studentId: 1, status: "present" },
+      { studentId: 2, status: "absent" },
     ],
   },
   {
@@ -145,6 +166,10 @@ const sessions: {
         content: "Prepare materials for past tense with irregular verbs",
       },
     ],
+    attendance: [
+      { studentId: 1, status: "present" },
+      { studentId: 2, status: "present" },
+    ],
   },
   {
     session: {
@@ -172,6 +197,10 @@ const sessions: {
         position: "future",
         content: "Create a comprehensive review of all tenses covered",
       },
+    ],
+    attendance: [
+      { studentId: 1, status: "present" },
+      { studentId: 2, status: "present" },
     ],
   },
 ];

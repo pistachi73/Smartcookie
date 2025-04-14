@@ -1,6 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { addSessionUseCase } from "../../use-cases/session.use-case";
+import { AddSessionsUseCaseSchema } from "../../lib/sessions.schema";
+import { addSessionsUseCase } from "../../use-cases/sessions.use-case";
 
 export const useAddSessions = ({
   onSuccess,
@@ -8,9 +10,9 @@ export const useAddSessions = ({
   onSuccess?: () => void;
 } = {}) => {
   const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: addSessionUseCase,
-
+  return useProtectedMutation({
+    schema: AddSessionsUseCaseSchema,
+    mutationFn: (data) => addSessionsUseCase(data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: ["hub-sessions", variables.hubId],

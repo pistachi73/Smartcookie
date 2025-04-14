@@ -1,30 +1,41 @@
 import { relations } from "drizzle-orm";
-import { boolean, serial } from "drizzle-orm/pg-core";
-import { event } from "./event";
+import { integer, pgEnum, serial, timestamp } from "drizzle-orm/pg-core";
+import { session } from "./session";
 import { student } from "./student";
 import { pgTable } from "./utils";
 
+export const attendanceStatusEnum = pgEnum("attendance_status", [
+  "present",
+  "absent",
+]);
+
 export const attendance = pgTable("attendance", {
   id: serial().primaryKey(),
-  attendance: boolean().default(true),
-  studentId: serial()
+  studentId: integer()
     .notNull()
     .references(() => student.id, { onDelete: "cascade" }),
-  eventId: serial()
+  sessionId: integer()
     .notNull()
-    .references(() => event.id, { onDelete: "cascade" }),
+    .references(() => session.id, { onDelete: "cascade" }),
+  status: attendanceStatusEnum().default("present").notNull(),
+  createdAt: timestamp({ mode: "string" }).defaultNow().notNull(),
+  updatedAt: timestamp({ mode: "string" })
+    .defaultNow()
+    .$onUpdate(() => new Date().toISOString())
+    .notNull(),
 });
-
-export type InsertAttendance = typeof attendance.$inferInsert;
-export type Attendance = typeof attendance.$inferSelect;
 
 export const attendanceRelations = relations(attendance, ({ one }) => ({
   student: one(student, {
     fields: [attendance.studentId],
     references: [student.id],
   }),
-  event: one(event, {
-    fields: [attendance.eventId],
-    references: [event.id],
+  session: one(session, {
+    fields: [attendance.sessionId],
+    references: [session.id],
   }),
 }));
+
+export type InsertAttendance = typeof attendance.$inferInsert;
+export type Attendance = typeof attendance.$inferSelect;
+export type AttendanceStatus = (typeof attendanceStatusEnum.enumValues)[number];

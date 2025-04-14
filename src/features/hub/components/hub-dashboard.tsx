@@ -27,7 +27,9 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 import { useMemo } from "react";
 import { useHubById } from "../hooks/use-hub-by-id";
+import { HubOverview } from "./hub-overview";
 import { SessionsList } from "./session/session-list";
+import { Students } from "./students/students";
 
 const tabs: {
   id: string;
@@ -92,7 +94,7 @@ export function HubDashboard({ hubId }: { hubId: number }) {
       <div className="lg:flex-1 flex flex-col lg:flex-row bg-overlay">
         <Tabs
           aria-label="Hub Dashboard"
-          defaultSelectedKey={"sessions"}
+          defaultSelectedKey={"overview"}
           className="flex-1"
         >
           <Tabs.List className={"sticky top-0 px-4 pt-3 bg-overlay z-20"}>
@@ -123,8 +125,11 @@ export function HubDashboard({ hubId }: { hubId: number }) {
               );
             })}
           </Tabs.List>
-          <Tabs.Panel id="students" className={"p-4 pt-0"}>
-            students
+          <Tabs.Panel id="overview" className={"p-4 pt-0"}>
+            <HubOverview hubId={hubId} />
+          </Tabs.Panel>
+          <Tabs.Panel id="students" className={"px-2 sm:px-5 pt-0"}>
+            <Students hubId={hubId} />
           </Tabs.Panel>
           <Tabs.Panel id="sessions" className={"px-2 sm:px-5 pt-0"}>
             <SessionsList hubId={hubId} />

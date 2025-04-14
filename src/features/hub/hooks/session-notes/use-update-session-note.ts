@@ -3,11 +3,11 @@ import { toast } from "sonner";
 import type { z } from "zod";
 
 import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
-import { UpdateSessionNoteInputSchema } from "../../lib/schemas";
+import { UpdateSessionNoteUseCaseSchema } from "../../lib/session-notes.schema";
 import type { SessionNotesMap } from "../../types/session.types";
-import { updateSessionNoteUseCase } from "../../use-cases/session-notes/update-session-note.use-case";
+import { updateSessionNoteUseCase } from "../../use-cases/session-notes.use-case";
 
-type UpdateNoteSessionData = z.infer<typeof UpdateSessionNoteInputSchema>;
+type UpdateNoteSessionData = z.infer<typeof UpdateSessionNoteUseCaseSchema>;
 
 type OptimisticContext = {
   sourcePreviousNotes: SessionNotesMap | undefined;
@@ -22,43 +22,41 @@ export function useUpdateSessionNote() {
     Awaited<ReturnType<typeof updateSessionNoteUseCase>>,
     OptimisticContext
   >({
-    schema: UpdateSessionNoteInputSchema,
+    schema: UpdateSessionNoteUseCaseSchema,
     mutationFn: updateSessionNoteUseCase,
     onMutate: async (variables) => {
-      const request = variables as UpdateNoteSessionData;
-
       // Cancel any outgoing refetches for both source and target
       await Promise.all([
         queryClient.cancelQueries({
-          queryKey: ["session-notes", request.source.sessionId],
+          queryKey: ["session-notes", variables.source.sessionId],
         }),
         queryClient.cancelQueries({
-          queryKey: ["session-notes", request.target.sessionId],
+          queryKey: ["session-notes", variables.target.sessionId],
         }),
       ]);
 
       // Snapshot the previous values
       const sourcePreviousNotes = queryClient.getQueryData<SessionNotesMap>([
         "session-notes",
-        request.source.sessionId,
+        variables.source.sessionId,
       ]);
 
       const targetPreviousNotes = queryClient.getQueryData<SessionNotesMap>([
         "session-notes",
-        request.target.sessionId,
+        variables.target.sessionId,
       ]);
 
       // Optimistically update both source and target
       if (sourcePreviousNotes) {
         queryClient.setQueryData<SessionNotesMap>(
-          ["session-notes", request.source.sessionId],
+          ["session-notes", variables.source.sessionId],
           (old) => {
             if (!old) return old;
             const updatedNotes = { ...old };
             // Remove the note from the source position
-            updatedNotes[request.source.position] = old[
-              request.source.position
-            ].filter((note) => note.id !== request.noteId);
+            updatedNotes[variables.source.position] = old[
+              variables.source.position
+            ].filter((note) => note.id !== variables.noteId);
             return updatedNotes;
           },
         );
@@ -66,22 +64,22 @@ export function useUpdateSessionNote() {
 
       if (targetPreviousNotes) {
         queryClient.setQueryData<SessionNotesMap>(
-          ["session-notes", request.target.sessionId],
+          ["session-notes", variables.target.sessionId],
           (old) => {
             if (!old) return old;
             const updatedNotes = { ...old };
             // Find the note in the source notes
             const noteToMove = sourcePreviousNotes?.[
-              request.source.position
-            ].find((note) => note.id === request.noteId);
+              variables.source.position
+            ].find((note) => note.id === variables.noteId);
             if (noteToMove) {
               // Add the note to the target position with updated values
-              updatedNotes[request.target.position] = [
-                ...(old[request.target.position] || []),
+              updatedNotes[variables.target.position] = [
+                ...(old[variables.target.position] || []),
                 {
                   ...noteToMove,
-                  sessionId: request.target.sessionId,
-                  position: request.target.position,
+                  sessionId: variables.target.sessionId,
+                  position: variables.target.position,
                 },
               ];
             }

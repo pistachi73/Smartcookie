@@ -49,7 +49,7 @@ const checkboxStyles = tv({
   },
 });
 
-const boxStyles = tv({
+export const boxStyles = tv({
   base: "flex size-4 shrink-0 items-center justify-center rounded border border-input text-bg transition *:data-[slot=icon]:size-3",
   variants: {
     isSelected: {
@@ -104,20 +104,22 @@ const Checkbox = ({ className, ...props }: CheckboxProps) => {
             ) : null}
           </div>
 
-          <div className="flex flex-col gap-1">
-            <>
-              {props.label ? (
-                <Label className={cn(props.description && "text-sm/4")}>
-                  {props.label}
-                </Label>
-              ) : (
-                (props.children as React.ReactNode)
-              )}
-              {props.description && (
-                <Description>{props.description}</Description>
-              )}
-            </>
-          </div>
+          {props.label || props.children ? (
+            <div className="flex flex-col gap-1">
+              <>
+                {props.label ? (
+                  <Label className={cn(props.description && "text-sm/4")}>
+                    {props.label}
+                  </Label>
+                ) : (
+                  (props.children as React.ReactNode)
+                )}
+                {props.description && (
+                  <Description>{props.description}</Description>
+                )}
+              </>
+            </div>
+          ) : null}
         </div>
       )}
     </CheckboxPrimitive>
