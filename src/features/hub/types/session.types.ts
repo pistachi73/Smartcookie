@@ -1,5 +1,5 @@
 import type { SessionNotePosition } from "@/db/schema";
-import type { getSessionNotesUseCase } from "../use-cases/session-notes/get-session-notes.use-case";
+import type { getSessionNotesUseCase } from "../use-cases/session-notes.use-case";
 
 export type SessionNote = Awaited<
   ReturnType<typeof getSessionNotesUseCase>
