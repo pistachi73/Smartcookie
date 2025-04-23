@@ -1,46 +1,23 @@
 import { getCalendarColor } from "@/features/calendar/lib/utils";
-import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
+import type { LayoutCalendarSession } from "@/features/calendar/types/calendar.types";
 import { cn } from "@/shared/lib/classes";
 import { Popover, type PopoverContentProps } from "@/ui/popover";
 import { format } from "date-fns";
-import { useEffect } from "react";
 import { Button } from "react-aria-components";
-import { useShallow } from "zustand/react/shallow";
-import { EventOccurrencePopover } from "../../event-occurrence-popover-content";
-
-const useMonthViewOccurrence = (occurrenceId: number) =>
-  useCalendarStore(
-    useShallow((store) => ({
-      uiOccurrence: store.getUIOccurrence(occurrenceId),
-      cacheUIOccurrence: store.cacheUIOccurrence,
-    })),
-  );
+import { SessionPopover } from "../../session-popover-content";
 
 export const MonthViewOccurrence = ({
-  occurrenceId,
+  session,
   className,
   popoverProps,
   onEditPress,
 }: {
-  occurrenceId: number;
+  session: LayoutCalendarSession;
   className?: string;
   popoverProps?: Omit<PopoverContentProps, "children">;
   onEditPress?: () => void;
 }) => {
-  const { uiOccurrence, cacheUIOccurrence } =
-    useMonthViewOccurrence(occurrenceId);
-
-  // If we have a UI occurrence, cache it for future use
-  // Use useEffect to cache the UI occurrence to avoid state updates during render
-  useEffect(() => {
-    if (uiOccurrence) {
-      cacheUIOccurrence(occurrenceId, uiOccurrence);
-    }
-  }, [occurrenceId, uiOccurrence, cacheUIOccurrence]);
-
-  if (!uiOccurrence) return null;
-
-  const color = getCalendarColor(uiOccurrence.color);
+  const color = getCalendarColor(session.hub?.color);
   const isEditing = false; // We can implement this later if needed
 
   return (
@@ -55,16 +32,16 @@ export const MonthViewOccurrence = ({
         )}
       >
         <p className="truncate font-semibold leading-tight">
-          {uiOccurrence.title ? uiOccurrence.title : "Untitled"}
+          {session.hub?.name || "Untitled"}
         </p>
 
         <p className={cn("text-current/70")}>
-          {format(uiOccurrence.startTime, "HH:mm")}
+          {format(session.startTime, "HH:mm")}
         </p>
       </Button>
 
-      <EventOccurrencePopover
-        occurrence={uiOccurrence}
+      <SessionPopover
+        session={session}
         onEditPress={onEditPress}
         popoverProps={{
           placement: "top",

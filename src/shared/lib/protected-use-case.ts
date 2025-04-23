@@ -2,9 +2,11 @@ import { PublicError } from "@/shared/services/errors";
 import type { z } from "zod";
 import { currentUser } from "./auth";
 
-export function withAuthentication<TData, TResult>(
-  useCase: (data: TData, userId: string) => Promise<TResult>,
-) {
+export function withAuthentication<TData, TResult>({
+  useCase,
+}: {
+  useCase: (data: TData, userId: string) => Promise<TResult>;
+}) {
   return async (data: TData): Promise<TResult> => {
     // Get authenticated user
     const authenticatedUser = await currentUser();
@@ -53,5 +55,21 @@ export function withValidationAndAuth<TSchema extends z.ZodType, TResult>({
     }
 
     return useCase(parseResult.data, authenticatedUser.id);
+  };
+}
+
+export function withAuthenticationNoInput<TResult>({
+  useCase,
+}: {
+  useCase: (userId: string) => Promise<TResult>;
+}) {
+  return async (): Promise<TResult> => {
+    const authenticatedUser = await currentUser();
+
+    if (!authenticatedUser || !authenticatedUser.id) {
+      throw new PublicError("Not authenticated");
+    }
+
+    return useCase(authenticatedUser.id);
   };
 }

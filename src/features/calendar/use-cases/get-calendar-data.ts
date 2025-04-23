@@ -3,11 +3,56 @@ import { db } from "@/db";
 import {
   type Event,
   type Occurrence,
+  attendance,
   event,
   eventOccurrence,
+  hub,
+  session,
+  student,
 } from "@/db/schema";
+import { withValidationAndAuth } from "@/shared/lib/protected-use-case";
+import { jsonAggregateObjects } from "@/shared/lib/query/json-aggregate-objects";
 import { and, asc, eq } from "drizzle-orm";
 import { Temporal } from "temporal-polyfill";
+import { z } from "zod";
+
+export const getCalendarSessionsUseCase = withValidationAndAuth({
+  schema: z.object({}),
+  useCase: async (userId) => {
+    const sessions = await db
+      .select({
+        id: session.id,
+        startTime: session.startTime,
+        endTime: session.endTime,
+        students: jsonAggregateObjects<
+          {
+            id: number;
+            name: string;
+            email: string;
+            image: string | null;
+          }[]
+        >({
+          id: student.id,
+          name: student.name,
+          email: student.email,
+          image: student.image,
+        }).as("students"),
+        hub: {
+          id: hub.id,
+          name: hub.name,
+          color: hub.color,
+        },
+      })
+      .from(session)
+      .leftJoin(attendance, eq(attendance.sessionId, session.id))
+      .leftJoin(student, eq(attendance.studentId, student.id))
+      .leftJoin(hub, eq(session.hubId, hub.id))
+      .where(eq(session.userId, userId))
+      .groupBy(session.id, hub.id);
+
+    return sessions;
+  },
+});
 
 export const getCalendarDataUseCase = async (userId: string) => {
   const [hubs, result] = await Promise.all([

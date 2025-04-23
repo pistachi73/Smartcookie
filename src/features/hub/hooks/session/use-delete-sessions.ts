@@ -14,6 +14,9 @@ export const useDeleteSession = ({ hubId }: { hubId: number }) => {
       queryClient.invalidateQueries({
         queryKey: ["hub-sessions", hubId],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["hub-students", hubId],
+      });
       toast.success("Sessions deleted successfully");
     },
     onError: (error) => {

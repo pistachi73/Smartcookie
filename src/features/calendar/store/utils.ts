@@ -71,11 +71,16 @@ export const getDatesForCalendarView = (
       return [date];
 
     case "week": {
-      // Start from Sunday of the week (assuming Sunday is day 0)
-      const dayOfWeek = date.dayOfWeek === 7 ? 0 : date.dayOfWeek; // Convert ISO day (1-7) to 0-6
-      start = date.subtract({ days: dayOfWeek });
-      // End on Saturday
+      // Start from Monday (ISO day 1)
+      const dayOfWeek = date.dayOfWeek;
+      start = date.subtract({ days: dayOfWeek - 1 });
+      // End on Sunday
       end = start.add({ days: 6 });
+
+      console.log({
+        start: start.day,
+        end: end.day,
+      });
       break;
     }
 
@@ -105,11 +110,11 @@ export const getDatesForCalendarView = (
       // Get the day of week for the first day (1-7, where 1 is Monday and 7 is Sunday)
       const firstDayOfWeek = firstDayOfMonth.dayOfWeek;
 
-      // Calculate how many days to go back to reach the previous Sunday
-      // If it's already Sunday (7), we don't need to go back
-      const daysToSubtract = firstDayOfWeek === 7 ? 0 : firstDayOfWeek;
+      // Calculate how many days to go back to reach the previous Monday
+      // If it's already Monday (1), we don't need to go back
+      const daysToSubtract = firstDayOfWeek === 1 ? 0 : firstDayOfWeek - 1;
 
-      // Start from the Sunday before or on the first day of the month
+      // Start from the Monday before or on the first day of the month
       start = firstDayOfMonth.subtract({ days: daysToSubtract });
 
       // Get the last day of the month
@@ -120,11 +125,11 @@ export const getDatesForCalendarView = (
       // Get the day of week for the last day
       const lastDayOfWeek = lastDayOfMonth.dayOfWeek;
 
-      // Calculate how many days to add to reach the next Saturday
-      // If it's already Saturday (6), we don't need to add any days
-      const daysToAdd = lastDayOfWeek === 6 ? 0 : 6 - lastDayOfWeek;
+      // Calculate how many days to add to reach the next Sunday
+      // If it's already Sunday (7), we don't need to add any days
+      const daysToAdd = lastDayOfWeek === 7 ? 0 : 7 - lastDayOfWeek;
 
-      // End on the Saturday after or on the last day of the month
+      // End on the Sunday after or on the last day of the month
       end = lastDayOfMonth.add({ days: daysToAdd });
 
       // Calculate total days to ensure we have complete weeks (multiple of 7)

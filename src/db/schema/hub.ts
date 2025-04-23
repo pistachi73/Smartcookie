@@ -8,6 +8,7 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
+import { attendance } from "./attendance";
 import { event } from "./event";
 import { quickNote } from "./quick-note";
 import { customColorEnum } from "./shared";
@@ -51,4 +52,5 @@ export const hubRelations = relations(hub, ({ many }) => ({
   students: many(studentHub),
   sessions: many(event),
   quickNotes: many(quickNote),
+  attendance: many(attendance),
 }));

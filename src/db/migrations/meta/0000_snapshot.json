@@ -1,5 +1,5 @@
 {
-  "id": "5118af03-fd4d-40c0-af5a-ea5ff70179ad",
+  "id": "90d14566-ff1b-4082-9904-347fb5367054",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -113,24 +113,45 @@
           "primaryKey": true,
           "notNull": true
         },
-        "attendance": {
-          "name": "attendance",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": true
-        },
         "student_id": {
           "name": "student_id",
-          "type": "serial",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
-        "event_id": {
-          "name": "event_id",
-          "type": "serial",
+        "session_id": {
+          "name": "session_id",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
+        },
+        "hub_id": {
+          "name": "hub_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "attendance_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'present'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -148,12 +169,25 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "attendance_event_id_event_id_fk": {
-          "name": "attendance_event_id_event_id_fk",
+        "attendance_session_id_session_id_fk": {
+          "name": "attendance_session_id_session_id_fk",
           "tableFrom": "attendance",
-          "tableTo": "event",
+          "tableTo": "session",
           "columnsFrom": [
-            "event_id"
+            "session_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "attendance_hub_id_hub_id_fk": {
+          "name": "attendance_hub_id_hub_id_fk",
+          "tableFrom": "attendance",
+          "tableTo": "hub",
+          "columnsFrom": [
+            "hub_id"
           ],
           "columnsTo": [
             "id"
@@ -745,6 +779,173 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
+    "public.session": {
+      "name": "session",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "hub_id": {
+          "name": "hub_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "start_time": {
+          "name": "start_time",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "end_time": {
+          "name": "end_time",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "session_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'upcoming'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "session_hub_id_hub_id_fk": {
+          "name": "session_hub_id_hub_id_fk",
+          "tableFrom": "session",
+          "tableTo": "hub",
+          "columnsFrom": [
+            "hub_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "session_user_id_user_id_fk": {
+          "name": "session_user_id_user_id_fk",
+          "tableFrom": "session",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "public.session_note": {
+      "name": "session_note",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "session_id": {
+          "name": "session_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "position": {
+          "name": "position",
+          "type": "session_note_position",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'present'"
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "session_note_session_id_session_id_fk": {
+          "name": "session_note_session_id_session_id_fk",
+          "tableFrom": "session_note",
+          "tableTo": "session",
+          "columnsFrom": [
+            "session_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "session_note_user_id_user_id_fk": {
+          "name": "session_note_user_id_user_id_fk",
+          "tableFrom": "session_note",
+          "tableTo": "user",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
     "public.student": {
       "name": "student",
       "schema": "",
@@ -777,7 +978,7 @@
           "name": "phone",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "location": {
           "name": "location",
@@ -1247,12 +1448,38 @@
     }
   },
   "enums": {
+    "public.attendance_status": {
+      "name": "attendance_status",
+      "schema": "public",
+      "values": [
+        "present",
+        "absent"
+      ]
+    },
     "public.hub_status": {
       "name": "hub_status",
       "schema": "public",
       "values": [
         "active",
         "inactive"
+      ]
+    },
+    "public.session_status": {
+      "name": "session_status",
+      "schema": "public",
+      "values": [
+        "upcoming",
+        "completed",
+        "cancelled"
+      ]
+    },
+    "public.session_note_position": {
+      "name": "session_note_position",
+      "schema": "public",
+      "values": [
+        "past",
+        "present",
+        "future"
       ]
     },
     "public.custom_color": {

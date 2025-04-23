@@ -21,9 +21,9 @@ export function ThemeSwitcher({
     setTheme(nextTheme);
   }, [theme, setTheme]);
 
-  if (!isMounted()) {
-    return null;
-  }
+  // if (!isMounted()) {
+  //   return null;
+  // }
 
   return (
     <Button

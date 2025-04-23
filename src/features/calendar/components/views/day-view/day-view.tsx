@@ -1,8 +1,6 @@
 "use client";
-import { getCurrentTimezone } from "@/features/calendar/lib/utils";
 import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
 import { cn } from "@/shared/lib/classes";
-import { useMemo } from "react";
 import { DayColumn } from "./day-column";
 import { HourColumn } from "./hour-column";
 import { HourRowsColumn } from "./hour-rows-column";
@@ -10,11 +8,6 @@ import { HourRowsColumn } from "./hour-rows-column";
 export const DayView = () => {
   const selectedDate = useCalendarStore((store) => store.selectedDate);
   const visibleDates = useCalendarStore((store) => store.visibleDates);
-
-  const timezoneOffsetHours = useMemo(
-    () => getCurrentTimezone().offsetHours,
-    [],
-  );
 
   return (
     <div className="flex flex-col h-full relative overflow-hidden ">
@@ -31,7 +24,7 @@ export const DayView = () => {
                 className={cn(
                   "flex-1 w-full rounded-lg p-2",
                   "flex items-center justify-center",
-                  "text-xs  uppercase",
+                  "text-xs  uppercase tabular-nums",
                   isSelected
                     ? "text-current bg-overlay-highlight font-semibold"
                     : "text-muted-fg ",

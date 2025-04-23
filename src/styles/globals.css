@@ -247,7 +247,7 @@
     --overlay: oklch(100% 0.006 250);
     --overlay-highlight: oklch(92.5% 1.1% 250);
     
-    --accent: oklch(0.92 0.004 286.32);
+    --accent: oklch(0.94   0.004 286.32);
     --accent-fg: oklch(0.141 0.005 285.823);
 
     --muted: oklch(0.967 0.001 286.375);
@@ -316,9 +316,9 @@
     --custom-graphite-bg-shade: oklch(34% 0.05 220);   /* Lighter steel gray */
 
     /* Sage */
-    --custom-sage-bg: oklch(32% 0.07 155);       /* More pronounced jade */
-    --custom-sage-bg-tint: oklch(18% 0.09 155);       /* Darker jade */
-    --custom-sage-bg-shade: oklch(38% 0.07 155);       /* Lighter jade */
+    --custom-sage-bg: oklch(32% 0.1 155);       /* More pronounced jade */
+    --custom-sage-bg-tint: oklch(32% 0.09 155);          /* Darker jade */
+    --custom-sage-bg-shade: oklch(18% 0.07 155);       /* Lighter jade */
 
     /* Banana */
     --custom-banana-bg: oklch(44% 0.1 100);     /* More vibrant lemon */
@@ -359,7 +359,7 @@
     --primary: oklch(63.16% 0.20 36.23); /* Base primary color */
     --primary-fg: oklch(98% 0 0); /* Text color on primary background */
     --primary-shade: oklch(53.16% 0.22 36.23); /* Darker variant for hover/active states */
-    --primary-tint: oklch(18% 0.08 36.23); /* Lighter variant for backgrounds/accents */
+    --primary-tint: oklch(8% 0.18 36.23); /* Lighter variant for backgrounds/accents */
 
     --secondary: oklch(0.244 0.006 286.033);
     --secondary-fg: oklch(0.985 0 0);

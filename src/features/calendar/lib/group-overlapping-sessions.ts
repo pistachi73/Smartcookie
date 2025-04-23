@@ -1,27 +1,28 @@
-import type { Occurrence } from "@/db/schema";
 import type {
-  LayoutOccurrence,
+  CalendarSession,
+  LayoutCalendarSession,
   TimeBoundary,
 } from "@/features/calendar/types/calendar.types";
 import Heap from "heap-js";
 import memoize from "lodash/memoize";
 
-export const groupOverlappingOccurrences = memoize(
-  (occurrences: Occurrence[]): LayoutOccurrence[] => {
-    if (occurrences.length === 0) {
+export const groupOverlappingSessions = memoize(
+  (sessions: CalendarSession[]): LayoutCalendarSession[] => {
+    console.log("groupOverlappingSessions sessions", sessions);
+    if (sessions.length === 0) {
       return [];
     }
 
-    const timeBoundaries: TimeBoundary[] = occurrences.flatMap((occurrence) => [
+    const timeBoundaries: TimeBoundary[] = sessions.flatMap((session) => [
       {
-        time: new Date(occurrence.startTime).getTime(),
+        time: new Date(session.startTime).getTime(),
         type: "start",
-        occurrenceId: occurrence.id,
+        sessionId: session.id,
       },
       {
-        time: new Date(occurrence.endTime).getTime(),
+        time: new Date(session.endTime).getTime(),
         type: "end",
-        occurrenceId: occurrence.id,
+        sessionId: session.id,
       },
     ]);
 
@@ -30,10 +31,10 @@ export const groupOverlappingOccurrences = memoize(
       return a.type === "end" ? -1 : 1; // 'end' comes before 'start' if times are equal
     });
 
-    const occurrencesMap = new Map<number, Occurrence>(
-      occurrences.map((occurrence) => [occurrence.id, occurrence]),
+    const sessionsMap = new Map<number, CalendarSession>(
+      sessions.map((session) => [session.id, session]),
     );
-    const groups: LayoutOccurrence[][] = [];
+    const groups: LayoutCalendarSession[][] = [];
     const activeEvents: Set<number> = new Set();
 
     // Heap to keep track of active columns sorted by endTime
@@ -51,14 +52,14 @@ export const groupOverlappingOccurrences = memoize(
     const availableColumnsHeap = new Heap<number>((a, b) => a - b);
 
     let maxColumns = 0;
-    let currentGroup: LayoutOccurrence[] = [];
+    let currentGroup: LayoutCalendarSession[] = [];
 
     timeBoundaries.forEach((timeBoundary) => {
-      const occurrence = occurrencesMap.get(timeBoundary.occurrenceId);
-      if (!occurrence) return;
+      const session = sessionsMap.get(timeBoundary.sessionId);
+      if (!session) return;
 
       if (timeBoundary.type === "start") {
-        activeEvents.add(occurrence.id);
+        activeEvents.add(session.id);
 
         // Release all columns that have ended before the current event's start time
         while (
@@ -79,25 +80,25 @@ export const groupOverlappingOccurrences = memoize(
         }
 
         activeColumnsHeap.push({
-          endTime: new Date(occurrence.endTime).getTime(),
+          endTime: new Date(session.endTime).getTime(),
           columnIndex: assignedColumn,
         });
 
         currentGroup.push({
-          occurrenceId: occurrence.id,
+          ...session,
           columnIndex: assignedColumn,
           totalColumns: maxColumns,
         });
       } else {
-        activeEvents.delete(occurrence.id);
+        activeEvents.delete(session.id);
       }
 
       // If no active events, push the current group and reset
       if (activeEvents.size === 0) {
         // Set totalColumns for the group
         const totalCols = maxColumns;
-        currentGroup.forEach((occ) => {
-          occ.totalColumns = totalCols;
+        currentGroup.forEach((session) => {
+          session.totalColumns = totalCols;
         });
         // Clear the heaps for the next group
         activeColumnsHeap.removeAll();
@@ -111,9 +112,9 @@ export const groupOverlappingOccurrences = memoize(
     return groups.flat();
   },
   // Custom resolver function that creates a cache key based on occurrence IDs
-  (occurrences: Occurrence[]) => {
-    return occurrences
-      .map((o) => o.id)
+  (sessions: CalendarSession[]) => {
+    return sessions
+      .map((s) => s.id)
       .sort((a, b) => a - b)
       .join(",");
   },

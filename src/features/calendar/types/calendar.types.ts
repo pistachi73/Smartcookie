@@ -1,15 +1,27 @@
 import type { Event, Occurrence } from "@/db/schema";
 import type { Temporal } from "temporal-polyfill";
+import type { getCalendarSessionsUseCase } from "../use-cases";
 
 export type CalendarView = "day" | "weekday" | "week" | "month" | "agenda";
+
+export type CalendarSession = Awaited<
+  ReturnType<typeof getCalendarSessionsUseCase>
+>[number];
+
+export type DatedCalendarSession = Omit<
+  CalendarSession,
+  "startTime" | "endTime"
+> & {
+  startTime: Temporal.ZonedDateTime;
+  endTime: Temporal.ZonedDateTime;
+};
 
 export type DatedOccurrence = Omit<Occurrence, "startTime" | "endTime"> & {
   startTime: Temporal.ZonedDateTime;
   endTime: Temporal.ZonedDateTime;
 };
 
-export type LayoutOccurrence = {
-  occurrenceId: number;
+export type LayoutCalendarSession = CalendarSession & {
   columnIndex: number;
   totalColumns: number;
 };
@@ -17,10 +29,10 @@ export type LayoutOccurrence = {
 export type TimeBoundary = {
   time: number;
   type: "start" | "end";
-  occurrenceId: number;
+  sessionId: number;
 };
 
-export type DailyOccurrences = Map<string, LayoutOccurrence[]>;
+export type DailySessions = Map<string, LayoutCalendarSession[]>;
 
 export type UIOccurrence = Omit<
   Event,

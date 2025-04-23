@@ -20,7 +20,7 @@ export const StudentProfile = ({
   return (
     <div className={cn("flex items-center gap-2", className)}>
       <div className="relative size-8">
-        <UserAvatar userImage={image} userEmail={email} userName={name} />
+        <UserAvatar userImage={image} userName={name} />
 
         {isSelected && (
           <m.div
@@ -33,8 +33,8 @@ export const StudentProfile = ({
             transition={{
               type: "spring",
               stiffness: 200,
-              damping: 15,
-              mass: 0.1,
+              damping: 20,
+              mass: 0.5,
             }}
           >
             <HugeiconsIcon icon={Tick02Icon} size={16} />
@@ -42,8 +42,8 @@ export const StudentProfile = ({
         )}
       </div>
       <div>
-        <p className="text-base font-medium">{name}</p>
-        <p className="text-sm text-muted-fg">{email}</p>
+        <p className="text-sm font-medium">{name}</p>
+        <p className="text-xs text-muted-fg line-clamp-1">{email}</p>
       </div>
     </div>
   );

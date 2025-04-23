@@ -1,25 +1,10 @@
 import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
-import { getEndOfMonth, getStartOfMonth } from "@/shared/lib/temporal/month";
-import { useShallow } from "zustand/react/shallow";
 import { MonthViewCell } from "./month-view-cell";
 
 export const MonthView = () => {
-  const selectedDate = useCalendarStore(
-    useShallow((store) => store.selectedDate),
-  );
-
-  const startOfMonth = getStartOfMonth(selectedDate);
-  const endOfMonth = getEndOfMonth(selectedDate);
-
-  // Get the day index of the start of the month (0 = Sunday, 6 = Saturday)
-  // Convert to Monday-based (0 = Monday, 6 = Sunday)
-  const prefixDays =
-    startOfMonth.dayOfWeek === 0 ? 6 : startOfMonth.dayOfWeek - 1;
-  const totalDays = endOfMonth.day - startOfMonth.day + 1;
-
-  // Calculate start and end of the calendar view
-  const startCalendar = startOfMonth.subtract({ days: prefixDays });
-  const rows = Math.ceil((totalDays + prefixDays) / 7);
+  const selectedDate = useCalendarStore((store) => store.selectedDate);
+  const visibleDates = useCalendarStore((store) => store.visibleDates);
+  const rows = Math.floor(visibleDates.length / 7);
 
   return (
     <div role="grid" className="h-full w-full flex flex-col grow">
@@ -41,23 +26,20 @@ export const MonthView = () => {
           tabIndex={0}
           className="flex flex-row w-full border-calendar-border basis-full overflow-hidden"
         >
-          {Array.from({ length: 7 }).map((_, dayIndex) => {
-            const date = startCalendar.add({
-              days: rowIndex * 7 + dayIndex,
-            });
+          {visibleDates
+            .slice(rowIndex * 7, (rowIndex + 1) * 7)
+            .map((date, dayIndex) => {
+              const isCurrentMonth = date.month === selectedDate.month;
 
-            const isCurrentMonth = date.month === selectedDate.month;
-
-            return (
-              <MonthViewCell
-                key={`month-cell-${dayIndex}`}
-                date={date}
-                dayIndex={dayIndex}
-                rowIndex={rowIndex}
-                isCurrentMonth={isCurrentMonth}
-              />
-            );
-          })}
+              return (
+                <MonthViewCell
+                  key={`month-cell-${dayIndex}`}
+                  date={date}
+                  dayIndex={dayIndex}
+                  isCurrentMonth={isCurrentMonth}
+                />
+              );
+            })}
         </div>
       ))}
     </div>

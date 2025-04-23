@@ -94,7 +94,7 @@ export function HubDashboard({ hubId }: { hubId: number }) {
       <div className="lg:flex-1 flex flex-col lg:flex-row bg-overlay">
         <Tabs
           aria-label="Hub Dashboard"
-          defaultSelectedKey={"overview"}
+          defaultSelectedKey={"students"}
           className="flex-1"
         >
           <Tabs.List className={"sticky top-0 px-4 pt-3 bg-overlay z-20"}>
@@ -128,10 +128,10 @@ export function HubDashboard({ hubId }: { hubId: number }) {
           <Tabs.Panel id="overview" className={"p-4 pt-0"}>
             <HubOverview hubId={hubId} />
           </Tabs.Panel>
-          <Tabs.Panel id="students" className={"px-2 sm:px-5 pt-0"}>
+          <Tabs.Panel id="students" className={"px-2 sm:px-5 pt-0 py-2"}>
             <Students hubId={hubId} />
           </Tabs.Panel>
-          <Tabs.Panel id="sessions" className={"px-2 sm:px-5 pt-0"}>
+          <Tabs.Panel id="sessions" className={"px-2 sm:px-5 pt-0 py-2"}>
             <SessionsList hubId={hubId} />
           </Tabs.Panel>
           <Tabs.Panel id="feedback" className={"p-4 pt-0"}>

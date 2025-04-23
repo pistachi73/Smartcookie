@@ -4,66 +4,38 @@ import {
   calculateOccurrenceTop,
   getCalendarColor,
 } from "@/features/calendar/lib/utils";
-import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
-import type { LayoutOccurrence } from "@/features/calendar/types/calendar.types";
+import type { LayoutCalendarSession } from "@/features/calendar/types/calendar.types";
 import { cn } from "@/shared/lib/classes";
 import { Popover } from "@/ui/popover";
 import { format } from "date-fns";
 import dynamic from "next/dynamic";
-import { memo, useEffect, useRef } from "react";
+import { memo } from "react";
 import { Button } from "react-aria-components";
-import { useShallow } from "zustand/react/shallow";
 
 const LazyPopoverContent = dynamic(() =>
-  import("../../event-occurrence-popover-content").then(
-    (mod) => mod.EventOccurrencePopover,
-  ),
+  import("../../session-popover-content").then((mod) => mod.SessionPopover),
 );
 
-export const DayViewOccurrence = memo(
-  ({ occurrenceId, columnIndex, totalColumns }: LayoutOccurrence) => {
-    const { uiOccurrence, cacheUIOccurrence } = useCalendarStore(
-      useShallow((state) => ({
-        uiOccurrence: state.getUIOccurrence(occurrenceId),
-        cacheUIOccurrence: state.cacheUIOccurrence,
-      })),
-    );
+export const DayViewSession = memo(
+  ({ session }: { session: LayoutCalendarSession }) => {
+    if (!session) return null;
 
-    const hasUpdatedCacheRef = useRef(false);
+    const startTimeDate = new Date(session.startTime);
+    const endTimeDate = new Date(session.endTime);
 
-    useEffect(() => {
-      hasUpdatedCacheRef.current = false;
-
-      return () => {
-        hasUpdatedCacheRef.current = false;
-      };
-    }, [occurrenceId]);
-
-    useEffect(() => {
-      if (uiOccurrence && !hasUpdatedCacheRef.current) {
-        cacheUIOccurrence(occurrenceId, uiOccurrence);
-        hasUpdatedCacheRef.current = true;
-      }
-    }, [occurrenceId, uiOccurrence, cacheUIOccurrence]);
-
-    if (!uiOccurrence) return null;
-
-    const heightPx = calculateOccurrenceHeight(
-      uiOccurrence.startTime,
-      uiOccurrence.endTime,
-    );
+    const heightPx = calculateOccurrenceHeight(startTimeDate, endTimeDate);
 
     const topPx = calculateOccurrenceTop({
-      hours: uiOccurrence.startTime.getHours(),
-      minutes: uiOccurrence.startTime.getMinutes(),
+      hours: startTimeDate.getHours(),
+      minutes: startTimeDate.getMinutes(),
     });
 
-    const startTimeLabel = format(uiOccurrence.startTime, "HH:mm");
-    const endTimeLabel = format(uiOccurrence.endTime, "HH:mm");
-    const eventColor = getCalendarColor(uiOccurrence.color);
+    const startTimeLabel = format(startTimeDate, "HH:mm");
+    const endTimeLabel = format(endTimeDate, "HH:mm");
+    const eventColor = getCalendarColor(session.hub?.color);
 
-    const widthPercentage = 100 / totalColumns;
-    const isShortEvent = heightPx / PIXELS_PER_15_MINUTES <= 4;
+    const widthPercentage = 100 / session.totalColumns;
+    const isShortEvent = heightPx / PIXELS_PER_15_MINUTES <= 2;
     const isEditing = false;
 
     return (
@@ -77,7 +49,7 @@ export const DayViewOccurrence = memo(
             top: `${topPx}px`,
             height: `${heightPx}px`,
             width: `${widthPercentage}%`,
-            left: `${columnIndex * widthPercentage}%`,
+            left: `${session.columnIndex * widthPercentage}%`,
           }}
         >
           <div
@@ -97,7 +69,7 @@ export const DayViewOccurrence = memo(
               )}
             >
               <p className="truncate font-semibold leading-tight text-xs">
-                {uiOccurrence.title ? uiOccurrence.title : "Untitled"}
+                {session.hub?.name ? session.hub.name : "Untitled"}
               </p>
 
               <p
@@ -116,7 +88,7 @@ export const DayViewOccurrence = memo(
           </div>
         </Button>
 
-        <LazyPopoverContent occurrence={uiOccurrence} />
+        <LazyPopoverContent session={session} />
       </Popover>
     );
   },

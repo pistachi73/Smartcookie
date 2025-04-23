@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { type VariantProps, tv } from "tailwind-variants";
 
 const avatar = tv({
@@ -19,6 +20,15 @@ const avatar = tv({
     },
   },
 });
+
+// Define image sizes for different avatar sizes
+const avatarSizes = {
+  "extra-small": { width: 20, height: 20 },
+  small: { width: 24, height: 24 },
+  medium: { width: 32, height: 32 },
+  large: { width: 40, height: 40 },
+  "extra-large": { width: 48, height: 48 },
+};
 
 interface AvatarProps extends VariantProps<typeof avatar> {
   src?: string | null;
@@ -44,7 +54,7 @@ const Avatar = ({
     >
       {initials && (
         <svg
-          className="size-full select-none fill-current p-[5%] font-medium text-[48px] uppercase"
+          className="size-full select-none fill-current p-[5%] font-medium text-[40px] uppercase"
           viewBox="0 0 100 100"
           aria-hidden={alt ? undefined : "true"}
         >
@@ -61,7 +71,15 @@ const Avatar = ({
           </text>
         </svg>
       )}
-      {src && <img className="size-full" src={src} alt={alt} />}
+      {src && (
+        <Image
+          className="size-full"
+          src={src}
+          alt={alt}
+          width={avatarSizes[size].width}
+          height={avatarSizes[size].height}
+        />
+      )}
     </span>
   );
 };

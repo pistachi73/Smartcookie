@@ -128,55 +128,55 @@ export const hubCardColorStyleMap: Record<
   { hover: string; dot: string }
 > = {
   flamingo: {
-    hover: "hover:border-[var(--custom-flamingo-border)]",
+    hover: "hover:border-[var(--custom-flamingo-bg-shade)]",
     dot: "bg-[var(--custom-flamingo-bg)]",
   },
   tangerine: {
-    hover: "hover:border-[var(--custom-tangerine-border)]",
+    hover: "hover:border-[var(--custom-tangerine-bg-shade)]",
     dot: "bg-[var(--custom-tangerine-bg)]",
   },
   banana: {
-    hover: "hover:border-[var(--custom-banana-border)]",
+    hover: "hover:border-[var(--custom-banana-bg-shade)]",
     dot: "bg-[var(--custom-banana-bg)]",
   },
   sage: {
-    hover: "hover:border-[var(--custom-sage-border)]",
+    hover: "hover:border-[var(--custom-sage-bg-shade)]",
     dot: "bg-[var(--custom-sage-bg)]",
   },
   peacock: {
-    hover: "hover:border-[var(--custom-peacock-border)]",
+    hover: "hover:border-[var(--custom-peacock-bg-shade)]",
     dot: "bg-[var(--custom-peacock-bg)]",
   },
   blueberry: {
-    hover: "hover:border-[var(--custom-blueberry-border)]",
+    hover: "hover:border-[var(--custom-blueberry-bg-shade)]",
     dot: "bg-[var(--custom-blueberry-bg)]",
   },
   lavender: {
-    hover: "hover:border-[var(--custom-lavender-border)]",
+    hover: "hover:border-[var(--custom-lavender-bg-shade)]",
     dot: "bg-[var(--custom-lavender-bg)]",
   },
   grape: {
-    hover: "hover:border-[var(--custom-grape-border)]",
+    hover: "hover:border-[var(--custom-grape-bg-shade)]",
     dot: "bg-[var(--custom-grape-bg)]",
   },
   graphite: {
-    hover: "hover:border-[var(--custom-graphite-border)]",
+    hover: "hover:border-[var(--custom-graphite-bg-shade)]",
     dot: "bg-[var(--custom-graphite-bg)]",
   },
   neutral: {
-    hover: "hover:border-[var(--custom-neutral-border)]",
+    hover: "hover:border-[var(--custom-neutral-bg-shade)]",
     dot: "bg-[var(--custom-neutral-bg)]",
   },
   sunshine: {
-    hover: "hover:border-[var(--custom-sunshine-border)]",
+    hover: "hover:border-[var(--custom-sunshine-bg-shade)]",
     dot: "bg-[var(--custom-sunshine-bg)]",
   },
   stone: {
-    hover: "hover:border-[var(--custom-stone-border)]",
+    hover: "hover:border-[var(--custom-stone-bg-shade)]",
     dot: "bg-[var(--custom-stone-bg)]",
   },
   slate: {
-    hover: "hover:border-[var(--custom-slate-border)]",
+    hover: "hover:border-[var(--custom-slate-bg-shade)]",
     dot: "bg-[var(--custom-slate-bg)]",
   },
 };

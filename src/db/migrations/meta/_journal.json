@@ -5,43 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1742974419529,
-      "tag": "0000_special_next_avengers",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1743504420017,
-      "tag": "0001_polite_doomsday",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1743515362284,
-      "tag": "0002_futuristic_sunset_bain",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1743694277419,
-      "tag": "0003_previous_eternals",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1744471905258,
-      "tag": "0004_modern_princess_powerful",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1744636971728,
-      "tag": "0005_simple_the_order",
+      "when": 1744884485708,
+      "tag": "0000_rare_shadow_king",
       "breakpoints": true
     }
   ]

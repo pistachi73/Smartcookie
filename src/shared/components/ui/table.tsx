@@ -49,13 +49,13 @@ const useTableContext = () => React.useContext(TableContext);
 const Table = ({ children, className, ...props }: TableProps) => {
   return (
     <TableContext.Provider value={props}>
-      <div className="border shadow-xs rounded-lg relative w-full overflow-auto **:data-[slot=table-resizable-container]:overflow-auto">
+      <div className="relative w-full overflow-auto **:data-[slot=table-resizable-container]:overflow-auto">
         {props.allowResize ? (
           <ResizableTableContainer>
             <TablePrimitive
               {...props}
               className={twMerge(
-                "table w-full min-w-full caption-bottom border-spacing-0 text-sm outline-hidden [--table-selected-bg:color-mix(in_oklab,var(--color-primary)_5%,white_90%)] **:data-drop-target:border **:data-drop-target:border-primary dark:[--table-selected-bg:color-mix(in_oklab,var(--color-primary)_25%,black_70%)]",
+                "table w-full min-w-full caption-bottom border-spacing-y-0 border-collapse text-sm outline-hidden [--table-selected-bg:color-mix(in_oklab,var(--color-primary)_5%,white_90%)] **:data-drop-target:border **:data-drop-target:border-primary dark:[--table-selected-bg:color-mix(in_oklab,var(--color-primary)_25%,black_70%)]",
                 className,
               )}
             >
@@ -66,7 +66,7 @@ const Table = ({ children, className, ...props }: TableProps) => {
           <TablePrimitive
             {...props}
             className={twMerge(
-              "table w-full min-w-full caption-bottom border-spacing-0 text-sm outline-hidden [--table-selected-bg:color-mix(in_oklab,var(--color-primary)_5%,white_90%)] **:data-drop-target:border **:data-drop-target:border-primary dark:[--table-selected-bg:color-mix(in_oklab,var(--color-primary)_25%,black_70%)]",
+              "table w-full min-w-full caption-bottom border-spacing-y-0 border-collapse text-sm outline-hidden [--table-selected-bg:color-mix(in_oklab,var(--color-primary)_5%,white_90%)] **:data-drop-target:border **:data-drop-target:border-primary dark:[--table-selected-bg:color-mix(in_oklab,var(--color-primary)_25%,black_70%)]",
               className,
             )}
           >
@@ -94,7 +94,7 @@ const TableBody = <T extends object>(props: TableBodyProps<T>) => (
   <TableBodyPrimitive
     data-slot="table-body"
     {...props}
-    className={twMerge("[&_.tr:last-child]:border-0")}
+    // className={twMerge("[&_.tr:last-child]:border-0")}
   />
 );
 
@@ -103,7 +103,7 @@ interface TableCellProps extends CellProps {
 }
 
 const cellStyles = tv({
-  base: "group whitespace-nowrap px-3 py-3 outline-hidden",
+  base: "group whitespace-nowrap px-3 py-3.5 outline-hidden ",
   variants: {
     allowResize: {
       true: "overflow-hidden truncate",
@@ -196,12 +196,17 @@ const TableHeader = <T extends object>({
     <TableHeaderPrimitive
       data-slot="table-header"
       ref={ref}
-      className={twMerge("border-b", className)}
+      className={twMerge(
+        "bg-bg dark:bg-overlay-highlight text-muted-fg  p-1 px-2 text-xs border-spacing-2",
+        "[&_th:first-child]:rounded-l-xl",
+        "[&_th:last-child]:rounded-r-xl",
+        className,
+      )}
       {...props}
     >
       {allowsDragging && <Column className="w-0" />}
       {selectionBehavior === "toggle" && (
-        <Column className="w-0 pl-4">
+        <Column className="w-0 pl-4 pr-2">
           {selectionMode === "multiple" && <Checkbox slot="selection" />}
         </Column>
       )}
@@ -231,7 +236,7 @@ const TableRow = <T extends object>({
       id={id}
       {...props}
       className={twMerge(
-        "tr group relative cursor-default border-b bg-bg selected:bg-(--table-selected-bg) text-muted-fg outline-hidden ring-primary selected:hover:bg-(--table-selected-bg)/70 focus:ring-0 focus-visible:ring-1 dark:selected:hover:bg-[color-mix(in_oklab,var(--color-primary)_30%,black_70%)]",
+        "tr group relative cursor-default border-b outline-2 bg-overlay data-[selected]:bg-(--table-selected-bg) outline-hidden ring-primary data-[selected]:hover:bg-(--table-selected-bg)/70 focus:ring-0 focus-visible:ring-1 dark:data-[selected]:hover:bg-[color-mix(in_oklab,var(--color-primary)_30%,black_70%)]",
         "href" in props
           ? "cursor-pointer hover:bg-secondary/50 hover:text-secondary-fg"
           : "",
@@ -252,7 +257,7 @@ const TableRow = <T extends object>({
         <Cell className="pl-4">
           <span
             aria-hidden
-            className="absolute inset-y-0 left-0 hidden h-full w-0.5 bg-primary group-selected:block"
+            className="absolute inset-y-0 left-0 hidden h-full w-0.5 bg-primary group-data-[selected]:block"
           />
           <Checkbox slot="selection" />
         </Cell>

@@ -8,7 +8,7 @@ import { Select } from "@/ui/select";
 import {
   ArrowLeft01Icon,
   ArrowRight01Icon,
-  SidebarLeft01Icon,
+  SidebarRight01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useShallow } from "zustand/react/shallow";
@@ -43,18 +43,6 @@ export const CalendarHeader = () => {
   return (
     <div className="w-full flex flex-row items-center justify-between p-4 py-3 gap-6 border-b">
       <div className="flex flex-row items-center gap-3">
-        <Button
-          appearance="plain"
-          shape="square"
-          className="size-9 p-0 text-muted-fg hover:text-current"
-          onPress={() => {
-            toggleSidebar();
-          }}
-          aria-label="Toggle sidebar"
-        >
-          <HugeiconsIcon icon={SidebarLeft01Icon} size={18} />
-        </Button>
-
         <Heading level={2} className="text-ellipsis line-clamp-1">
           {title}
         </Heading>
@@ -137,6 +125,18 @@ export const CalendarHeader = () => {
           className="h-9"
         >
           Today
+        </Button>
+        <Button
+          appearance="outline"
+          shape="square"
+          size="square-petite"
+          className="size-9"
+          onPress={() => {
+            toggleSidebar();
+          }}
+          aria-label="Toggle sidebar"
+        >
+          <HugeiconsIcon icon={SidebarRight01Icon} size={18} data-slot="icon" />
         </Button>
       </div>
     </div>

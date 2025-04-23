@@ -1,4 +1,7 @@
+CREATE TYPE "public"."attendance_status" AS ENUM('present', 'absent');--> statement-breakpoint
 CREATE TYPE "public"."hub_status" AS ENUM('active', 'inactive');--> statement-breakpoint
+CREATE TYPE "public"."session_status" AS ENUM('upcoming', 'completed', 'cancelled');--> statement-breakpoint
+CREATE TYPE "public"."session_note_position" AS ENUM('past', 'present', 'future');--> statement-breakpoint
 CREATE TYPE "public"."custom_color" AS ENUM('flamingo', 'tangerine', 'banana', 'sage', 'peacock', 'blueberry', 'lavender', 'grape', 'graphite', 'neutral', 'sunshine', 'stone', 'slate');--> statement-breakpoint
 CREATE TYPE "public"."student_status" AS ENUM('active', 'inactive');--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "account" (
@@ -18,9 +21,12 @@ CREATE TABLE IF NOT EXISTS "account" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "attendance" (
 	"id" serial PRIMARY KEY NOT NULL,
-	"attendance" boolean DEFAULT true,
-	"student_id" serial NOT NULL,
-	"event_id" serial NOT NULL
+	"student_id" integer NOT NULL,
+	"session_id" integer NOT NULL,
+	"hub_id" integer NOT NULL,
+	"status" "attendance_status" DEFAULT 'present' NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "billing" (
@@ -94,12 +100,32 @@ CREATE TABLE IF NOT EXISTS "quick_note" (
 	"updated_at" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "session" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"hub_id" integer NOT NULL,
+	"user_id" uuid NOT NULL,
+	"start_time" timestamp with time zone NOT NULL,
+	"end_time" timestamp with time zone NOT NULL,
+	"status" "session_status" DEFAULT 'upcoming' NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "session_note" (
+	"id" serial PRIMARY KEY NOT NULL,
+	"session_id" integer NOT NULL,
+	"user_id" uuid NOT NULL,
+	"position" "session_note_position" DEFAULT 'present' NOT NULL,
+	"content" text NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "student" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"user_id" uuid NOT NULL,
 	"name" text NOT NULL,
 	"email" text NOT NULL,
-	"phone" text NOT NULL,
+	"phone" text,
 	"location" text,
 	"nationality" text,
 	"job" text,
@@ -167,7 +193,13 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "attendance" ADD CONSTRAINT "attendance_event_id_event_id_fk" FOREIGN KEY ("event_id") REFERENCES "public"."event"("id") ON DELETE cascade ON UPDATE no action;
+ ALTER TABLE "attendance" ADD CONSTRAINT "attendance_session_id_session_id_fk" FOREIGN KEY ("session_id") REFERENCES "public"."session"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "attendance" ADD CONSTRAINT "attendance_hub_id_hub_id_fk" FOREIGN KEY ("hub_id") REFERENCES "public"."hub"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -228,6 +260,30 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "quick_note" ADD CONSTRAINT "quick_note_hub_id_hub_id_fk" FOREIGN KEY ("hub_id") REFERENCES "public"."hub"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "session" ADD CONSTRAINT "session_hub_id_hub_id_fk" FOREIGN KEY ("hub_id") REFERENCES "public"."hub"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "session" ADD CONSTRAINT "session_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "session_note" ADD CONSTRAINT "session_note_session_id_session_id_fk" FOREIGN KEY ("session_id") REFERENCES "public"."session"("id") ON DELETE cascade ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "session_note" ADD CONSTRAINT "session_note_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

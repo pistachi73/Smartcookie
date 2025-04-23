@@ -29,7 +29,7 @@ const dropdownItemStyles = tv({
       true: "text-muted-fg forced-colors:text-[GrayText]",
     },
     isSelected: {
-      true: "bg-primary-tint text-fg",
+      true: "bg-primary-tint hover:bg-primary-tint/70",
     },
     isFocused: {
       false: "data-danger:text-danger",

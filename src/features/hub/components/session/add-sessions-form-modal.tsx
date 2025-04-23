@@ -1,15 +1,15 @@
 import { Button } from "@/shared/components/ui/button";
 import { Form } from "@/shared/components/ui/form";
 import { Modal } from "@/shared/components/ui/modal";
+import { Note } from "@/shared/components/ui/note";
 import { ProgressCircle } from "@/shared/components/ui/progress-circle";
 import { serializeDateValue } from "@/shared/lib/serialize-react-aria/serialize-date-value";
 import { serializeTime } from "@/shared/lib/serialize-react-aria/serialize-time";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Alert02Icon } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 import { Time, getLocalTimeZone, today } from "@internationalized/date";
 import { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
+import { toast } from "sonner";
 import type { z } from "zod";
 import { useAddSessions } from "../../hooks/session/use-add-sessions";
 import { useCheckSessionConflicts } from "../../hooks/session/use-check-session-conflicts";
@@ -72,7 +72,6 @@ export const AddSessionsFormModal = ({ hubId }: AddSessionsFormModalProps) => {
   } = useCheckSessionConflicts();
 
   const onSubmit = async (data: z.infer<typeof SessionFormSchema>) => {
-    console.log(data.rrule);
     const sessions = calculateRecurrentSessions({
       date: serializeDateValue(data.date),
       startTime: serializeTime(data.startTime),
@@ -82,11 +81,17 @@ export const AddSessionsFormModal = ({ hubId }: AddSessionsFormModalProps) => {
       hubStartsOn: hub.startDate,
     });
 
+    console.log({ sessions });
+
     const { success } = await checkSessionConflicts({
       sessions,
     });
 
     if (!success) return;
+    if (!sessions.length) {
+      toast.error("No sessions to add");
+      return;
+    }
 
     await addSessions({
       hubId,
@@ -128,23 +133,16 @@ export const AddSessionsFormModal = ({ hubId }: AddSessionsFormModalProps) => {
             />
 
             {showRecurrenceWarning && (
-              <div className="flex items-start gap-2 p-3 mt-4 text-sm bg-warning/20 border border-warning rounded-md">
-                <HugeiconsIcon
-                  icon={Alert02Icon}
-                  size={20}
-                  className="shrink-0 text-warning-fg/80"
-                />
+              <Note intent="warning">
                 <div className="space-y-1">
-                  <p className="font-medium text-warning-fg/80">
-                    Recurrence limitation
-                  </p>
-                  <p className="text-sm text-warning-fg/80">
+                  <p className="font-medium">Recurrence limitation</p>
+                  <p className="text-sm opacity-80">
                     Since this hub doesn't have an end date, recurring sessions
                     will be calculated for a maximum of 6 months from the start
                     date.
                   </p>
                 </div>
-              </div>
+              </Note>
             )}
             {conflictsData && !conflictsData?.success && (
               <SessionConflictWarning

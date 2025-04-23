@@ -4,7 +4,6 @@ import { useCalendarStore } from "@/features/calendar/store/calendar-store-provi
 import { regularSpring } from "@/shared/lib/animation";
 import { cn } from "@/shared/lib/classes";
 import { memo } from "react";
-import type { CalendarStore } from "../types/calendar-store.types";
 import { CalendarHeader } from "./calendar-header";
 import { AgendaView } from "./views/agenda-view/agenda-view";
 import { DayView } from "./views/day-view/day-view";
@@ -17,16 +16,12 @@ const calendarAnimation = {
   transition: regularSpring,
 };
 
-// Create a stable selector function outside the component
-const calendarViewSelector = (state: CalendarStore) => state.calendarView;
-
 export const CalendarView = memo(() => {
-  const calendarView = useCalendarStore(calendarViewSelector);
+  const calendarView = useCalendarStore((state) => state.calendarView);
 
   return (
     <div
       className={cn(
-        "",
         "h-full grow flex flex-row overflow-hidden",
         "[--row-height:72px]",
         "[--left-spacing:calc(var(--spacing)*4)]",

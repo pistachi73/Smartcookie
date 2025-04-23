@@ -7,7 +7,7 @@ import { z } from "zod";
 
 const calculateRecurrentSessionsInputSchema = z.object({
   hubStartsOn: z.string(),
-  hubEndsOn: z.string().optional(),
+  hubEndsOn: z.string().optional().nullable(),
   date: serializedDateValue,
   startTime: serializedTime,
   endTime: serializedTime,

@@ -1,7 +1,9 @@
 "use server";
 
+import { addAttendance } from "@/data-access/attendance.data-access";
+import { createTransaction } from "@/data-access/utils";
 import { db } from "@/db";
-import { type InsertSession, hub, session } from "@/db/schema";
+import { type InsertSession, hub, session, studentHub } from "@/db/schema";
 import { withValidationAndAuth } from "@/shared/lib/protected-use-case";
 import { differenceInMinutes, endOfDay, startOfDay } from "date-fns";
 import { and, asc, between, eq, inArray, notInArray } from "drizzle-orm";
@@ -58,22 +60,40 @@ export const getSessionsByHubIdUseCase = withValidationAndAuth({
 export const addSessionsUseCase = withValidationAndAuth({
   schema: AddSessionsUseCaseSchema,
   useCase: async (data, userId) => {
-    const { sessions, hubId } = data;
+    await createTransaction(async (trx) => {
+      const { sessions, hubId } = data;
 
-    const toAddSessions: InsertSession[] = sessions.map((s) => ({
-      ...s,
-      userId,
-      hubId,
-    }));
+      const toAddSessions: InsertSession[] = sessions.map((s) => ({
+        ...s,
+        userId,
+        hubId,
+      }));
 
-    const addedSessions = await db
-      .insert(session)
-      .values(toAddSessions)
-      .returning();
+      const [addedSessions, hubStudents] = await Promise.all([
+        trx.insert(session).values(toAddSessions).returning({
+          id: session.id,
+        }),
+        trx
+          .select({
+            studentId: studentHub.studentId,
+          })
+          .from(studentHub)
+          .where(eq(studentHub.hubId, hubId)),
+      ]);
 
-    if (!addedSessions.length) {
-      throw new Error("Failed to add sessions");
-    }
+      if (!addedSessions.length) {
+        throw new Error("Failed to add sessions");
+      }
+
+      await addAttendance(
+        {
+          sessionIds: addedSessions.map((s) => s.id),
+          studentIds: hubStudents.map((hs) => hs.studentId),
+          hubId,
+        },
+        trx,
+      );
+    });
 
     return true;
   },

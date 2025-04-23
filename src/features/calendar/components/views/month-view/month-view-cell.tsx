@@ -1,22 +1,20 @@
 "use client";
 
-import { getDayKeyFromDate } from "@/features/calendar/lib/utils";
+import { useCalendarDay } from "@/features/calendar/hooks/use-calendar-sessions";
 import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
 import { cn } from "@/shared/lib/classes";
 import { getWeekdayAbbrev } from "@/shared/lib/temporal/format";
 import { Popover } from "@/ui/popover";
 import { MultiplicationSignIcon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button as AriaButton } from "react-aria-components";
-import { Temporal } from "temporal-polyfill";
-import { useShallow } from "zustand/react/shallow";
+import type { Temporal } from "temporal-polyfill";
 import { MonthViewOccurrence } from "./month-view-occurrence";
 
 type MonthCalendarDayCellProps = {
   date: Temporal.PlainDate;
   dayIndex: number;
-  rowIndex: number;
   isCurrentMonth: boolean;
 };
 
@@ -28,20 +26,13 @@ export const MonthViewCell = ({
   date,
   isCurrentMonth,
 }: MonthCalendarDayCellProps) => {
-  const dayKey = useMemo(() => getDayKeyFromDate(date), [date]);
+  const { sessions } = useCalendarDay(date);
 
-  const { selectedDate, layoutOccurrences, updateLayoutCache } =
-    useCalendarStore(
-      useShallow((store) => ({
-        selectedDate: store.selectedDate,
-        layoutOccurrences: store.getLayoutOccurrences(dayKey),
-        updateLayoutCache: store.updateLayoutCache,
-      })),
-    );
+  const selectedDate = useCalendarStore((store) => store.selectedDate);
 
   const sessionsContainerRef = useRef<HTMLDivElement>(null);
 
-  const totalOccurrences = layoutOccurrences?.length ?? 0;
+  const totalOccurrences = sessions?.length ?? 0;
 
   const [visibleOccurrences, setVisibleOccurrences] =
     useState<number>(totalOccurrences);
@@ -70,15 +61,8 @@ export const MonthViewCell = ({
     };
   }, []);
 
-  useEffect(() => {
-    // Update the cache outside of render
-    if (layoutOccurrences) {
-      updateLayoutCache(dayKey, layoutOccurrences);
-    }
-  }, [dayKey, layoutOccurrences, updateLayoutCache]);
-
-  const isToday = date.day === Temporal.Now.plainDateISO().day;
-  const isSelectedDate = date.day === selectedDate.day;
+  const isSelectedDate =
+    date.day === selectedDate.day && date.month === selectedDate.month;
 
   return (
     <div
@@ -87,26 +71,27 @@ export const MonthViewCell = ({
         isCurrentMonth ? "" : "bg-lines-pattern",
         dayIndex === 0 && "border-l-0",
         dayIndex === 6 && "border-r-0",
-        isSelectedDate && "bg-primary/10  text-light",
+        isSelectedDate && "bg-primary-tint  text-light",
       )}
     >
-      <span
-        className={cn(
-          "text-xs font-medium size-5 rounded-full flex items-center justify-center",
-          isCurrentMonth ? "text-current" : "text-muted-fg",
-          isToday && "bg-primary text-light",
-        )}
-      >
-        {date.day}
-      </span>
+      <div className="w-full flex items-start px-1">
+        <p
+          className={cn(
+            "w-full text-xs font-medium tabular-nums",
+            isCurrentMonth ? "text-current" : "text-muted-fg",
+          )}
+        >
+          {date.day.toString().padStart(2, "0")}
+        </p>
+      </div>
       <div
         ref={sessionsContainerRef}
-        className="mt-1 overflow-hidden grow p-1 w-full space-y-1"
+        className="overflow-hidden grow p-1 w-full space-y-1"
       >
-        {layoutOccurrences?.slice(0, visibleOccurrences).map((occurrence) => (
+        {sessions?.slice(0, visibleOccurrences).map((session) => (
           <MonthViewOccurrence
-            key={`event-ocurrence-${occurrence.occurrenceId}`}
-            occurrenceId={occurrence.occurrenceId}
+            key={`month-session-${session.id}`}
+            session={session}
           />
         ))}
 
@@ -138,10 +123,10 @@ export const MonthViewCell = ({
                 </p>
               </Popover.Header>
               <Popover.Body className="space-y-1 w-full pb-4">
-                {layoutOccurrences?.map((occurrence) => (
+                {sessions?.map((session) => (
                   <MonthViewOccurrence
-                    key={`event-ocurrence-${occurrence.occurrenceId}`}
-                    occurrenceId={occurrence.occurrenceId}
+                    key={`month-session-${session.id}`}
+                    session={session}
                     className="text-sm h-7 px-2 w-full"
                     popoverProps={{
                       offset: 30,

@@ -6,20 +6,11 @@ import { ResizablePanelRoot } from "@/ui/resizable-panel";
 import { CalendarDate } from "@internationalized/date";
 import { useEffect, useState } from "react";
 import { Temporal } from "temporal-polyfill";
-import { useShallow } from "zustand/react/shallow";
 import { UpcomingEvents } from "./upcoming-events";
 
-const useCalendarSidebar = () =>
-  useCalendarStore(
-    useShallow((store) => ({
-      hubs: store.hubs,
-      selectedDate: store.selectedDate,
-      selectDate: store.selectDate,
-    })),
-  );
-
 export const CalendarSidebar = () => {
-  const { selectDate, selectedDate } = useCalendarSidebar();
+  const selectedDate = useCalendarStore((store) => store.selectedDate);
+  const selectDate = useCalendarStore((store) => store.selectDate);
 
   const [calendarValue, setCalendarValue] = useState<CalendarDate | undefined>(
     selectedDate
@@ -42,7 +33,7 @@ export const CalendarSidebar = () => {
   }, [selectedDate]);
 
   return (
-    <div className="min-h-0  shrink-0  relative overflow-y-auto border-r">
+    <div className="min-h-0  shrink-0  relative overflow-y-auto border-l">
       <div className="flex flex-col relative">
         <div className="border-b p-4">
           <UpcomingEvents />

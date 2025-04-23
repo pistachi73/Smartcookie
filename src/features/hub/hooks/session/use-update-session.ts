@@ -17,6 +17,9 @@ export const useUpdateSession = () => {
       queryClient.invalidateQueries({
         queryKey: ["hub-sessions", variables.hubId],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["hub-students", variables.hubId],
+      });
     },
     onError: (error) => {
       toast.error(

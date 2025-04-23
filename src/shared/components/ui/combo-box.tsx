@@ -130,6 +130,7 @@ const ComboBoxInput = ({
   ...props
 }: ComboBoxInputProps) => {
   const context = useSlottedContext(ComboBoxContext)!;
+
   return (
     <FieldGroup
       className={cn("relative pl-0", prefix && "pl-3.5", className?.fieldGroup)}

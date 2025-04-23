@@ -3,31 +3,29 @@ import { useMemo } from "react";
 
 // Using custom color CSS variables from globals.css
 const AVATAR_COLORS = [
-  "bg-[var(--color-custom-flamingo-bg)] text-[var(--fg)]",
-  "bg-[var(--color-custom-tangerine-bg)] text-[var(--fg)]",
-  "bg-[var(--color-custom-banana-bg)] text-[var(--fg)]",
-  "bg-[var(--color-custom-sage-bg)] text-[var(--fg)]",
-  "bg-[var(--color-custom-peacock-bg)] text-[var(--fg)]",
-  "bg-[var(--color-custom-blueberry-bg)] text-[var(--fg)]",
-  "bg-[var(--color-custom-lavender-bg)] text-[var(--fg)]",
-  "bg-[var(--color-custom-grape-bg)] text-[var(--fg)]",
-  "bg-[var(--color-custom-graphite-bg)] text-[var(--fg)]",
-  "bg-[var(--color-custom-sunshine-bg)] text-[var(--fg)]",
-  "bg-[var(--color-custom-neutral-bg)] text-[var(--fg)]",
+  "bg-[var(--color-custom-flamingo-bg)] text-[var(--fg)]/70",
+  "bg-[var(--color-custom-tangerine-bg)] text-[var(--fg)]/70",
+  "bg-[var(--color-custom-banana-bg)] text-[var(--fg)]/70",
+  "bg-[var(--color-custom-sage-bg)] text-[var(--fg)]/70",
+  "bg-[var(--color-custom-peacock-bg)] text-[var(--fg)]/70",
+  "bg-[var(--color-custom-blueberry-bg)] text-[var(--fg)]/70",
+  "bg-[var(--color-custom-lavender-bg)] text-[var(--fg)]/70",
+  "bg-[var(--color-custom-grape-bg)] text-[var(--fg)]/70",
+  "bg-[var(--color-custom-graphite-bg)] text-[var(--fg)]/70",
+  "bg-[var(--color-custom-sunshine-bg)] text-[var(--fg)]/70",
+  "bg-[var(--color-custom-neutral-bg)] text-[var(--fg)]/70",
 ];
 
 export interface UserAvatarProps extends AvatarProps {
   className?: string;
   userImage?: string | null;
   userName?: string | null;
-  userEmail?: string | null;
 }
 
 export const UserAvatar = ({
   className,
   userImage,
   userName,
-  userEmail,
   ...props
 }: UserAvatarProps) => {
   const initials = useMemo(() => {

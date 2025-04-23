@@ -5,7 +5,7 @@ import { Heading } from "./heading";
 const card = tv({
   slots: {
     root: [
-      "xrkr xkd2 rounded-lg border bg-bg text-fg shadow-xs has-[table]:overflow-hidden **:data-[slot=table-header]:bg-muted/50 has-[table]:**:data-[slot=card-footer]:border-t **:[table]:overflow-hidden",
+      "xrkr xkd2 rounded-lg border bg-overlay text-fg shadow-xs has-[table]:overflow-hidden **:data-[slot=table-header]:bg-muted/50 has-[table]:**:data-[slot=card-footer]:border-t **:[table]:overflow-hidden",
     ],
     header: "flex flex-col gap-y-1 px-6 py-5",
     title: "font-semibold leading-none tracking-tight sm:leading-6",

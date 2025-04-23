@@ -107,14 +107,14 @@ export const AvatarStack = <TUser extends User>({
           <Tooltip delay={100} closeDelay={100}>
             <Tooltip.Trigger data-testid="overflow-avatar">
               <Avatar
-                className="bg-overlay-elevated outline-overlay"
+                className="bg-overlay-highlight dark:bg-overlay-elevated-highlight outline-overlay"
                 initials={`+${overflowCount}`}
                 size={size}
               />
             </Tooltip.Trigger>
             <Tooltip.Content className="space-y-2 max-w-xs px-3 py-2">
               {overflowUsers.map((user) => (
-                <div key={user.id} className="flex items-center gap-1.5 py-1">
+                <div key={user.id} className="flex items-center gap-1.5">
                   <UserAvatar
                     className={cn(
                       "bg-overlay-elevated-highlight",

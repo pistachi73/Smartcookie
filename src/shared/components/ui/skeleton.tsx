@@ -13,8 +13,8 @@ const Skeleton = ({ ref, soft = true, className, ...props }: SkeletonProps) => {
       className={twMerge(
         "shrink-0 animate-pulse rounded-lg",
         soft
-          ? "bg-overlay-highlight dark:bg-overlay"
-          : "bg-overlay dark:bg-overlay-highlight",
+          ? "bg-overlay-highlight dark:bg-overlay-highlight"
+          : "bg-overlay dark:bg-overlay-elevated",
         className,
       )}
       {...props}

@@ -32,3 +32,5 @@ export const studentHubRelations = relations(studentHub, ({ one }) => ({
     references: [hub.id],
   }),
 }));
+
+export type InsertStudentHub = typeof studentHub.$inferInsert;

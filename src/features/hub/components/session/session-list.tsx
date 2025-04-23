@@ -60,8 +60,8 @@ export function SessionsList({ hubId }: { hubId: number }) {
 
   return (
     <>
-      <div className="py-2 min-h-0">
-        <div className="flex flex-row items-center justify-between mb-6 flex-wrap gap-3">
+      <div className="min-h-0">
+        <div className="flex flex-row items-center justify-between mb-8 flex-wrap gap-3">
           <Heading level={2}>Sessions timeline</Heading>
           <div className="flex gap-2  sm:flex-row justify-between sm:justify-end flex-1">
             <Switch

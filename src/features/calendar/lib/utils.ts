@@ -3,9 +3,8 @@ import type {
   DatedOccurrence,
 } from "@/features/calendar/types/calendar.types";
 import type { OccurrenceFormSchema } from "@/features/calendar/types/occurrence-form-schema";
-import { getEndOfWeek, getStartOfWeek } from "@/shared/lib/temporal/week";
 import { CalendarDate, CalendarDateTime, Time } from "@internationalized/date";
-import { add } from "date-fns";
+import { add, addDays, endOfWeek, format, startOfWeek } from "date-fns";
 import type { ReadonlyURLSearchParams } from "next/navigation";
 import { Temporal } from "temporal-polyfill";
 import type { z } from "zod";
@@ -22,48 +21,55 @@ export const formatCalendarHeaderTitle = (
   date: Temporal.PlainDate,
   calendarType: CalendarView,
 ) => {
-  // Common format options
-  const formatOptions = {
-    day: { day: "numeric" } as const,
-    month: { month: "long" } as const,
-    year: { year: "numeric" } as const,
-  };
-
-  // Format date parts
-  const formatDate = (date: Temporal.PlainDate) => ({
-    day: date.toLocaleString("en-US", formatOptions.day),
-    month: date.toLocaleString("en-US", formatOptions.month),
-    year: date.toLocaleString("en-US", formatOptions.year),
-  });
-
-  const { day, month, year } = formatDate(date);
+  // Convert Temporal date to JavaScript Date
+  const jsDate = new Date(date.year, date.month - 1, date.day);
 
   switch (calendarType) {
     case "day":
-      return `${day} ${month}, ${year}`;
+      return format(jsDate, "d MMMM, yyyy");
 
     case "week": {
-      const startOfWeek = getStartOfWeek(date);
-      const endOfWeek = getEndOfWeek(date);
-      const startDate = formatDate(startOfWeek);
-      const endDate = formatDate(endOfWeek);
+      const weekStart = startOfWeek(jsDate, { weekStartsOn: 1 });
+      const weekEnd = endOfWeek(jsDate, { weekStartsOn: 1 });
 
-      return `${startDate.day} ${startDate.month} - ${endDate.day} ${endDate.month}, ${year}`;
+      // If start and end dates are in same month and year
+      if (
+        weekStart.getMonth() === weekEnd.getMonth() &&
+        weekStart.getFullYear() === weekEnd.getFullYear()
+      ) {
+        return `${format(weekStart, "d")} - ${format(weekEnd, "d MMMM, yyyy")}`;
+      }
+
+      // If start and end dates are in same year but different months
+      if (weekStart.getFullYear() === weekEnd.getFullYear()) {
+        return `${format(weekStart, "d MMMM")} - ${format(weekEnd, "d MMMM, yyyy")}`;
+      }
+
+      // Different years
+      return `${format(weekStart, "d MMMM, yyyy")} - ${format(weekEnd, "d MMMM, yyyy")}`;
     }
 
     case "month":
-      return `${month} ${year}`;
+      return format(jsDate, "MMMM yyyy");
 
     case "agenda": {
-      const rangeEndDate = date.add({ days: 14 });
+      const rangeEndDate = addDays(jsDate, 14);
 
       // If same month, just show one month
-      if (date.month === rangeEndDate.month) {
-        return `${month} ${year}`;
+      if (
+        jsDate.getMonth() === rangeEndDate.getMonth() &&
+        jsDate.getFullYear() === rangeEndDate.getFullYear()
+      ) {
+        return format(jsDate, "MMMM yyyy");
       }
 
-      const endDateFormat = formatDate(rangeEndDate);
-      return `${month} ${year} - ${endDateFormat.month} ${endDateFormat.year}`;
+      // If different month but same year
+      if (jsDate.getFullYear() === rangeEndDate.getFullYear()) {
+        return `${format(jsDate, "MMMM")} - ${format(rangeEndDate, "MMMM yyyy")}`;
+      }
+
+      // Different years
+      return `${format(jsDate, "MMMM yyyy")} - ${format(rangeEndDate, "MMMM yyyy")}`;
     }
 
     default:
@@ -252,63 +258,63 @@ export const CALENDAR_EVENT_COLORS_ARRAY = [
   {
     id: "stone",
     name: "Stone",
-    className: "bg-custom-stone-bg-tint border-custom-stone-bg-shade ",
+    className: "bg-custom-stone-bg border-custom-stone-bg-shade ",
   },
   {
     id: "slate",
     name: "Slate",
-    className: "bg-custom-slate-bg-tint border-custom-slate-bg-shade ",
+    className: "bg-custom-slate-bg border-custom-slate-bg-shade",
   },
   {
     id: "neutral",
     name: "Neutral",
-    className: "bg-custom-neutral-bg-tint border-custom-neutral-bg-shade ",
+    className: "bg-custom-neutral-bg border-custom-neutral-bg-shade ",
   },
   // Warm → Cool progression
   {
     id: "tangerine",
     name: "Tangerine",
-    className: "bg-custom-tangerine-bg-tint border-custom-tangerine-bg-shade ",
+    className: "bg-custom-tangerine-bg border-custom-tangerine-bg-shade ",
   },
   {
     id: "sunshine",
     name: "Sunshine",
-    className: "bg-custom-sunshine-bg-tint border-custom-sunshine-bg-shade ",
+    className: "bg-custom-sunshine-bg border-custom-sunshine-bg-shade ",
   },
   {
     id: "banana",
     name: "Banana",
-    className: "bg-custom-banana-bg-tint border-custom-banana-bg-shade ",
+    className: "bg-custom-banana-bg border-custom-banana-bg-shade ",
   },
   {
     id: "sage",
     name: "Sage",
-    className: "bg-custom-sage-bg-tint border-custom-sage-bg-shade ",
+    className: "bg-custom-sage-bg border-custom-sage-bg-shade ",
   },
   {
     id: "peacock",
     name: "Peacock",
-    className: "bg-custom-peacock-bg-tint border-custom-peacock-bg-shade ",
+    className: "bg-custom-peacock-bg border-custom-peacock-bg-shade ",
   },
   {
     id: "graphite",
     name: "Graphite",
-    className: "bg-custom-graphite-bg-tint border-custom-graphite-bg-shade ",
+    className: "bg-custom-graphite-bg border-custom-graphite-bg-shade ",
   },
   {
     id: "blueberry",
     name: "Blueberry",
-    className: "bg-custom-blueberry-bg-tint border-custom-blueberry-bg-shade ",
+    className: "bg-custom-blueberry-bg border-custom-blueberry-bg-shade ",
   },
   {
     id: "lavender",
     name: "Lavender",
-    className: "bg-custom-lavender-bg-tint border-custom-lavender-bg-shade ",
+    className: "bg-custom-lavender-bg border-custom-lavender-bg-shade ",
   },
   {
     id: "grape",
     name: "Grape",
-    className: "bg-custom-grape-bg-tint border-custom-grape-bg-shade ",
+    className: "bg-custom-grape-bg border-custom-grape-bg-shade ",
   },
 ];
 

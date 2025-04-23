@@ -12,10 +12,16 @@ export const useAddSessions = ({
   const queryClient = useQueryClient();
   return useProtectedMutation({
     schema: AddSessionsUseCaseSchema,
-    mutationFn: (data) => addSessionsUseCase(data),
+    mutationFn: (data) => {
+      console.log({ data });
+      return addSessionsUseCase(data);
+    },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({
         queryKey: ["hub-sessions", variables.hubId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["hub-students", variables.hubId],
       });
       toast.success("Session added successfully");
       onSuccess?.();

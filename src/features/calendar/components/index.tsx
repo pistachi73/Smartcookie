@@ -1,9 +1,8 @@
 "use client";
 
 import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
-import { Loader } from "@/ui/loader";
-import dynamic from "next/dynamic";
 import { CalendarSidebar } from "./calendar-sidebar";
+import { CalendarSkeleton } from "./calendar-skeleton";
 import { CalendarView } from "./calendar-view";
 
 import { buttonStyles } from "@/shared/components/ui/button";
@@ -14,20 +13,13 @@ import { PlusSignIcon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Link } from "react-aria-components";
 
-const LazyEventOccurrenceFormSheet = dynamic(() =>
-  import("./occurrence-form-sheet").then((mod) => mod.EventOccurrenceFormSheet),
-);
-
 export const Calendar = () => {
   const _isHydrated = useCalendarStore((state) => state._isHydrated);
   const sidebarOpen = useCalendarStore((store) => store.sidebarOpen);
 
-  if (!_isHydrated)
-    return (
-      <div className="h-full w-full bg-bg flex items-center justify-center rounded-xl">
-        <Loader />
-      </div>
-    );
+  if (!_isHydrated) {
+    return <CalendarSkeleton />;
+  }
 
   return (
     <>
@@ -66,11 +58,10 @@ export const Calendar = () => {
           </div>
         </div>
         <div className="h-full min-h-0 flex-1 flex bg-overlay">
-          {sidebarOpen && <CalendarSidebar />}
           <CalendarView />
+          {sidebarOpen && <CalendarSidebar />}
         </div>
       </div>
-      <LazyEventOccurrenceFormSheet />
     </>
   );
 };

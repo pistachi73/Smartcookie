@@ -13,7 +13,7 @@ export const UserButton = () => {
     <Menu>
       <Menu.Trigger>
         <UserAvatar
-          userImage={"https://avatar.iran.liara.run/public"}
+          userImage={user?.image}
           userName={user?.name}
           size="large"
         />

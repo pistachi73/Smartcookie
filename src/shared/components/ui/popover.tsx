@@ -139,7 +139,7 @@ const PopoverContent = ({
   const effectiveOffset = isSubmenuTrigger ? offset - 5 : offset;
   return isMobile && respectScreen ? (
     <ModalOverlay
-      className="fixed top-0 left-0 isolate z-50 h-(--visual-viewport-height) w-full bg-overlay/10 [--visual-viewport-vertical-padding:16px]"
+      className="fixed top-0 left-0 isolate z-50 h-(--visual-viewport-height) w-full bg-fg/15 dark:bg-bg/40  [--visual-viewport-vertical-padding:16px]"
       {...props}
       isDismissable
     >
