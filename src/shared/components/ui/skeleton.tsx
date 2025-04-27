@@ -11,10 +11,10 @@ const Skeleton = ({ ref, soft = true, className, ...props }: SkeletonProps) => {
       data-slot="skeleton"
       ref={ref}
       className={twMerge(
-        "shrink-0 animate-pulse rounded-lg",
+        "shrink-0 animate-pulse rounded-lg will-change-[opacity]",
         soft
-          ? "bg-overlay-highlight dark:bg-overlay-highlight"
-          : "bg-overlay dark:bg-overlay-elevated",
+          ? "bg-bg dark:bg-overlay-highlight"
+          : "bg-overlay-highlight dark:bg-overlay-elevated",
         className,
       )}
       {...props}

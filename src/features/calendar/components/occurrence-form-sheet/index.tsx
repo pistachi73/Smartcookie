@@ -1,6 +1,5 @@
 "use client";
 
-import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
 import { cn } from "@/shared/lib/classes";
 import { Button } from "@/ui/button";
 import { Form } from "@/ui/form";
@@ -18,7 +17,6 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useCallback, useState } from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import type { z } from "zod";
-import { useShallow } from "zustand/react/shallow";
 import {
   OccurrenceFormSchema,
   serializeOcurrenceFormData,
@@ -32,11 +30,6 @@ const isValidFiniteNumber = (input: unknown): boolean =>
 
 export const EventOccurrenceFormSheet = () => {
   const [isDiscardModalOpen, setIsDiscardModalOpen] = useState(false);
-  const { removeOccurrences } = useCalendarStore(
-    useShallow((store) => ({
-      removeOccurrences: store.removeOccurrences,
-    })),
-  );
 
   // const { createEvent, editNonRecurrentEvent, isFormDisabled } =
   //   useSubmitOccurrenceForm();
@@ -49,10 +42,10 @@ export const EventOccurrenceFormSheet = () => {
   const closeEditSidebar = useCallback(() => {
     setIsDiscardModalOpen(false);
     // setEdittedOccurrenceId(undefined);
-    removeOccurrences(-1, { silent: true });
+    // removeOccurrences(-1, { silent: true });
     form.reset(defaultformData);
     window.history.pushState(null, "", "/calendar");
-  }, [form.reset, removeOccurrences]);
+  }, [form.reset]);
 
   const onClose = useCallback(() => {
     const isDirty = form.formState.isDirty;

@@ -3,7 +3,6 @@
 import { ParticipantsCombobox } from "@/ui/participants-combobox";
 import { RecurrenceSelect } from "@/ui/recurrence-select";
 
-import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
 import { DatePicker } from "@/ui/date-picker";
 import { NumberField } from "@/ui/number-field";
 import { Select } from "@/ui/select";
@@ -17,23 +16,12 @@ import {
   Folder02Icon,
 } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { CalendarDate, toCalendarDate } from "@internationalized/date";
 import { useRef } from "react";
 import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
 import type { z } from "zod";
-import { useShallow } from "zustand/react/shallow";
 import type { OccurrenceFormSchema } from "../../types/occurrence-form-schema";
 import { EventColorPicker } from "../event-color-picker";
 import { useEventFormOverrides } from "./use-event-form-overrides";
-
-const useEventOccurrenceForm = () =>
-  useCalendarStore(
-    useShallow((store) => ({
-      hubs: store.hubs,
-      selectedDate: store.selectedDate,
-      updateOccurrences: store.updateOccurrences,
-    })),
-  );
 
 export const EventOccurrenceForm = ({
   form,
@@ -42,7 +30,6 @@ export const EventOccurrenceForm = ({
   form: UseFormReturn<z.infer<typeof OccurrenceFormSchema>>;
   isDisabled: boolean;
 }) => {
-  const { hubs, updateOccurrences, selectedDate } = useEventOccurrenceForm();
   const timeComboboxTriggerRef = useRef<HTMLDivElement>(null);
   const timezoneComboboxTriggerRef = useRef<HTMLDivElement>(null);
   const colorSwatchTriggerRef = useRef<HTMLDivElement>(null);
@@ -126,7 +113,6 @@ export const EventOccurrenceForm = ({
   //   return () => subscription.unsubscribe();
   // }, [form.watch]);
 
-  const hubItems = hubs?.map((hub) => ({ id: hub.id, name: hub.name }));
   return (
     <div className="space-y-5">
       <div className="space-y-1.5 rounded-2xl ">
@@ -157,13 +143,16 @@ export const EventOccurrenceForm = ({
                   placement: "left top",
                   offset: 8,
                 }}
-                items={hubItems}
+                items={[]}
               >
-                {(item) => (
+                <Select.Option id="1" textValue="Hub 1">
+                  Hub 1
+                </Select.Option>
+                {/* {(item) => (
                   <Select.Option id={item.id} textValue={item.name}>
                     {item.name}
                   </Select.Option>
-                )}
+                )} */}
               </Select.List>
             </Select>
           )}
@@ -328,19 +317,7 @@ export const EventOccurrenceForm = ({
           control={form.control}
           name="recurrenceRule"
           render={({ field: { onChange, value } }) => (
-            <RecurrenceSelect
-              value={value}
-              onChange={onChange}
-              selectedDate={
-                date
-                  ? toCalendarDate(date)
-                  : new CalendarDate(
-                      selectedDate.year,
-                      selectedDate.month,
-                      selectedDate.day,
-                    )
-              }
-            />
+            <RecurrenceSelect value={value} onChange={onChange} />
           )}
         />
       </div>

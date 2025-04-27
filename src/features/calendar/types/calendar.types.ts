@@ -1,11 +1,11 @@
 import type { Event, Occurrence } from "@/db/schema";
 import type { Temporal } from "temporal-polyfill";
-import type { getCalendarSessionsUseCase } from "../use-cases";
+import type { getCalendarSessionsByDateRange } from "../use-cases/calendar.use-case";
 
 export type CalendarView = "day" | "weekday" | "week" | "month" | "agenda";
 
 export type CalendarSession = Awaited<
-  ReturnType<typeof getCalendarSessionsUseCase>
+  ReturnType<typeof getCalendarSessionsByDateRange>
 >[number];
 
 export type DatedCalendarSession = Omit<

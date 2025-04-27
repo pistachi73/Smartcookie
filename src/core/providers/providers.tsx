@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { I18nProvider, RouterProvider } from "react-aria-components";
 
 import { getQueryClient } from "@/shared/lib/get-query-client";
-
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 const loadFeatures = () =>
   import("./animationFeatures.js").then((res) => res.default);
 
@@ -35,7 +35,7 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
           </ThemeProvider>
         </I18nProvider>
       </RouterProvider>
-      {/* <ReactQueryDevtools initialIsOpen={false} position="top-right" /> */}
+      <ReactQueryDevtools initialIsOpen={true} position="right" />
     </QueryClientProvider>
   );
 };

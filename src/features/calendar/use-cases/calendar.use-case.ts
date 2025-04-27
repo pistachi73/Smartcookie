@@ -1,55 +1,74 @@
 "use server";
 
 import { db } from "@/db";
-import { attendance, hub, session, student } from "@/db/schema";
+import { session } from "@/db/schema";
 import { withValidationAndAuth } from "@/shared/lib/protected-use-case";
-import { jsonAggregateObjects } from "@/shared/lib/query/json-aggregate-objects";
 import { and, between, eq } from "drizzle-orm";
 import { GetCalendarSessionsByDateRangeSchema } from "../lib/calendar.schema";
 import { groupOverlappingSessions } from "../lib/group-overlapping-sessions";
 import { organizeSessionsByDay } from "../lib/organize-sessions-by-day";
 
+export const getCalendarSessionsByDateRange = async (
+  startDate: string,
+  endDate: string,
+  userId: string,
+) => {
+  const sess = await db.query.session.findMany({
+    where: and(
+      eq(session.userId, userId),
+      between(session.startTime, startDate, endDate),
+    ),
+    columns: {
+      id: true,
+      startTime: true,
+      endTime: true,
+    },
+    with: {
+      hub: {
+        columns: {
+          id: true,
+          name: true,
+          color: true,
+        },
+      },
+      attendance: {
+        columns: {},
+        with: {
+          student: {
+            columns: {
+              id: true,
+              name: true,
+              email: true,
+              image: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const formattedSessions = sess.map((s) => {
+    const { attendance, ...rest } = s;
+    return {
+      ...rest,
+      students: attendance.map((a) => a.student),
+    };
+  });
+
+  return formattedSessions;
+};
+
 export const getCalendarSessionsByDateRangeUseCase = withValidationAndAuth({
   schema: GetCalendarSessionsByDateRangeSchema,
   useCase: async ({ startDate, endDate }, userId) => {
-    console.log("startDate", startDate);
-    console.log("endDate", endDate);
-    const sessions = await db
-      .select({
-        id: session.id,
-        startTime: session.startTime,
-        endTime: session.endTime,
-        students: jsonAggregateObjects<
-          {
-            id: number;
-            name: string;
-            email: string;
-            image: string | null;
-          }[]
-        >({
-          id: student.id,
-          name: student.name,
-          email: student.email,
-          image: student.image,
-        }).as("students"),
-        hub: {
-          id: hub.id,
-          name: hub.name,
-          color: hub.color,
-        },
-      })
-      .from(session)
-      .leftJoin(attendance, eq(attendance.sessionId, session.id))
-      .leftJoin(student, eq(attendance.studentId, student.id))
-      .leftJoin(hub, eq(session.hubId, hub.id))
-      .where(
-        and(
-          eq(session.userId, userId),
-          between(session.startTime, startDate, endDate),
-        ),
-      )
-      .groupBy(session.id, hub.id);
+    const sess = await getCalendarSessionsByDateRange(
+      startDate,
+      endDate,
+      userId,
+    );
 
-    return organizeSessionsByDay(groupOverlappingSessions(sessions));
+    console.log("sess students", sess[0]?.students.length, sess[0]?.students);
+
+    return organizeSessionsByDay(groupOverlappingSessions(sess));
   },
 });

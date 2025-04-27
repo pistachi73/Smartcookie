@@ -112,6 +112,7 @@ interface DatePickerProps<T extends DateValue>
   className?: {
     primitive?: string;
     fieldGroup?: string;
+    input?: string;
   };
   errorMessage?: string | ((validation: ValidationResult) => string);
   overlayProps?: DatePickerOverlayProps;
@@ -132,7 +133,9 @@ const DatePicker = <T extends DateValue>({
     >
       {label && <Label isRequired={props.isRequired}>{label}</Label>}
       <FieldGroup className={cn("min-w-40", className?.fieldGroup)}>
-        <DateInput className={datePickerInput()} />
+        <DateInput
+          className={datePickerInput({ className: className?.input })}
+        />
         <DatePickerIcon />
       </FieldGroup>
       {description && <Description>{description}</Description>}

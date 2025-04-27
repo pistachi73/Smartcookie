@@ -1,7 +1,6 @@
 "use client";
 
 import { AvatarStack } from "@/shared/components/ui/avatar-stack";
-import { Badge } from "@/shared/components/ui/badge";
 import { Card } from "@/shared/components/ui/card";
 import { Separator } from "@/shared/components/ui/separator";
 import { cn } from "@/shared/lib/classes";
@@ -18,6 +17,7 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Link } from "react-aria-components";
 
+import { Badge } from "@/shared/components/ui/badge";
 import { getHubDuration } from "../lib/utils";
 import type { Hub } from "../types/hub.types";
 
@@ -52,30 +52,30 @@ export function HubCard({ hub }: HubCardProps) {
         )}
       >
         <Card.Header>
-          <div className="flex items-center justify-between gap-2 mb-2">
-            <div className="flex items-center gap-2">
-              {level && (
-                <Badge className="text-xs py-1" intent="primary">
-                  {level}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2">
+                {level && (
+                  <Badge className="text-xs py-1" intent="primary">
+                    {level}
+                  </Badge>
+                )}
+                <Badge intent={status === "active" ? "success" : "secondary"}>
+                  {status === "active" ? "Active" : "Inactive"}
                 </Badge>
-              )}
-              <Badge intent={status === "active" ? "success" : "secondary"}>
-                {status === "active" ? "Active" : "Inactive"}
-              </Badge>
+              </div>
+              <p className="text-muted-fg flex items-center gap-1">
+                <HugeiconsIcon icon={UserMultiple02Icon} size={16} />
+                {studentsCount}
+              </p>
             </div>
-            <p className="text-muted-fg flex items-center gap-1">
-              <HugeiconsIcon icon={UserMultiple02Icon} size={16} />
-              {studentsCount}
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <div
-              className={cn("w-3 h-3 rounded-full", colorClasses.dot)}
-              title={`Color: ${hub.color}`}
-            />
-            <Card.Title level={2} className="text-lg!">
-              {name}
-            </Card.Title>
+            <div className="flex items-center gap-2">
+              <div
+                className={cn("w-3 h-3 rounded-full", colorClasses.dot)}
+                title={`Color: ${hub.color}`}
+              />
+              <Card.Title>{name}</Card.Title>
+            </div>
           </div>
           {description && (
             <Card.Description className="text-sm">

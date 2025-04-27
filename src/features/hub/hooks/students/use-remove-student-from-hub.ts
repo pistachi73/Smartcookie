@@ -18,6 +18,10 @@ export const useRemoveStudentFromHub = () => {
       queryClient.invalidateQueries({
         queryKey: ["hub-students", variables.hubId],
       });
+
+      queryClient.invalidateQueries({
+        queryKey: ["calendar-sessions"],
+      });
     },
   });
 };

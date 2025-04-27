@@ -8,13 +8,18 @@ import { HourMarker } from "./hour-marker";
 export const DayColumn = ({ date }: { date: Temporal.PlainDate }) => {
   const { sessions } = useCalendarDay(date);
 
+  console.log("day sessions", sessions);
+
   return (
     <div className={cn("h-full w-full relative")}>
       <DragToCreateEvent date={date} />
       <HourMarker date={date} />
 
       {sessions?.map((session) => (
-        <DayViewSession key={`session-${session.id}`} session={session} />
+        <DayViewSession
+          key={`calendar-session-${session.id}`}
+          session={session}
+        />
       ))}
     </div>
   );

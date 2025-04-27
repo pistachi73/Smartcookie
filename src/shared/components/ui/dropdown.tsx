@@ -21,7 +21,7 @@ import { Keyboard } from "./keyboard";
 
 const dropdownItemStyles = tv({
   base: [
-    "col-span-full grid grid-cols-[auto_1fr_1.5rem_0.5rem_auto] has-data-[slot=dropdown-item-details]:**:data-[slot=checked-icon]:mt-[1.5px] supports-[grid-template-columns:subgrid]:grid-cols-subgrid",
+    "col-span-full grid grid-cols-[auto_1fr_1.5rem_0.5rem_auto] has-data-[slot=dropdown-item-details]:**:data-[slot=checked-icon]:mt-[1.5px] supports-[grid-template-columns:subgrid]:grid-cols-subgrid items-center",
     "group relative cursor-default select-none rounded-[calc(var(--radius-lg)-1px)] px-[calc(var(--spacing)*2.3)] py-1.5 forced-color:text-[Highlight] text-base text-fg outline-0 forced-color-adjust-none sm:text-sm/6 forced-colors:text-[LinkText]",
   ],
   variants: {
@@ -84,7 +84,10 @@ const DropdownItem = ({
     <ListBoxItemPrimitive
       textValue={textValue}
       className={composeRenderProps(className, (className, renderProps) =>
-        dropdownItemStyles({ ...renderProps, className }),
+        dropdownItemStyles({
+          ...renderProps,
+          className,
+        }),
       )}
       {...props}
     >
@@ -93,6 +96,7 @@ const DropdownItem = ({
           {showTick && isSelected && (
             <HugeiconsIcon
               icon={Tick02Icon}
+              size={16}
               data-slot="checked-icon"
               className="-mx-0.5 mr-2"
             />

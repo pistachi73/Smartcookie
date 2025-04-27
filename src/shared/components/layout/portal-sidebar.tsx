@@ -5,18 +5,18 @@ import { HugeiconsIcon } from "@hugeicons/react";
 
 import {
   Calendar03Icon,
+  Comment01Icon,
   DashboardSquare01Icon,
   FolderLibraryIcon,
-  Invoice03Icon,
   NoteIcon,
   UserGroupIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
 
 import {
   Calendar03Icon as Calendar03IconSolid,
+  Comment01Icon as Comment01IconSolid,
   DashboardSquare01Icon as DashboardSquare01IconSolid,
   FolderLibraryIcon as FolderLibraryIconSolid,
-  Invoice03Icon as Invoice03IconSolid,
   NoteIcon as NoteIconSolid,
   UserGroupIcon as UserGroupIconSolid,
 } from "@hugeicons-pro/core-solid-rounded";
@@ -145,10 +145,16 @@ const navigation = [
     icon: NoteIcon,
     iconActive: NoteIconSolid,
   },
+  // {
+  //   label: "Billing",
+  //   href: "/portal/billing",
+  //   icon: Invoice03Icon,
+  //   iconActive: Invoice03IconSolid,
+  // },
   {
-    label: "Billing",
-    href: "/portal/billing",
-    icon: Invoice03Icon,
-    iconActive: Invoice03IconSolid,
+    label: "Feedback",
+    href: "/portal/feedback",
+    icon: Comment01Icon,
+    iconActive: Comment01IconSolid,
   },
 ];

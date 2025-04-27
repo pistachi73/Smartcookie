@@ -31,6 +31,8 @@ export const SessionPopover = ({
 
   const color = getCalendarColor(session.hub?.color);
 
+  console.log("session", session);
+
   return (
     <Popover.Content
       className={cn("sm:w-[300px]", popoverClassName)}
