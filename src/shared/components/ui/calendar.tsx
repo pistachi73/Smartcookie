@@ -132,7 +132,7 @@ const CalendarHeader = ({
           size="square-petite"
           className="size-8 **:data-[slot=icon]:text-fg sm:size-7"
           shape="circle"
-          appearance="plain"
+          intent="plain"
           slot="previous"
         >
           {direction === "rtl" ? (
@@ -145,7 +145,7 @@ const CalendarHeader = ({
           size="square-petite"
           className="size-8 **:data-[slot=icon]:text-fg sm:size-7"
           shape="circle"
-          appearance="plain"
+          intent="plain"
           slot="next"
         >
           {direction === "rtl" ? (

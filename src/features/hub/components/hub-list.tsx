@@ -116,8 +116,7 @@ export function HubList() {
 
             <Menu>
               <Button
-                intent="secondary"
-                appearance="outline"
+                intent="outline"
                 size="small"
                 shape="square"
                 className="px-0 size-10 @2xl:h-10 @2xl:w-auto @2xl:px-4"

@@ -92,7 +92,7 @@ const DatePickerOverlay = ({
 const DatePickerIcon = () => (
   <Button
     size="square-petite"
-    appearance="plain"
+    intent="plain"
     className={cn(datePickerIcon(), "aspect-square shrink-0")}
   >
     <HugeiconsIcon

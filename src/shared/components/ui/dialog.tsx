@@ -179,7 +179,7 @@ const Footer = ({ className, ...props }: DialogFooterProps) => {
 
 const Close = ({
   className,
-  appearance = "outline",
+  intent = "outline",
   ref,
   ...props
 }: ButtonProps) => {
@@ -188,7 +188,7 @@ const Close = ({
       slot="close"
       className={className}
       ref={ref}
-      appearance={appearance}
+      intent={intent}
       {...props}
     />
   );

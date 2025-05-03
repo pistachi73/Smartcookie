@@ -51,7 +51,7 @@ export const CalendarHeader = () => {
       <div className="flex flex-row gap-2">
         <div className="flex">
           <Button
-            appearance="plain"
+            intent="plain"
             className="size-9 p-0 text-muted-fg hover:text-current"
             onPress={() => {
               onNavigation(-1);
@@ -60,7 +60,7 @@ export const CalendarHeader = () => {
             <HugeiconsIcon icon={ArrowLeft01Icon} size={18} />
           </Button>
           <Button
-            appearance="plain"
+            intent="plain"
             className="size-9 p-0 text-muted-fg hover:text-current"
             onPress={() => {
               onNavigation(1);
@@ -118,7 +118,7 @@ export const CalendarHeader = () => {
           </Select.List>
         </Select>
         <Button
-          appearance="outline"
+          intent="outline"
           size="small"
           shape="square"
           onPress={onToday}
@@ -127,7 +127,7 @@ export const CalendarHeader = () => {
           Today
         </Button>
         <Button
-          appearance="outline"
+          intent="outline"
           shape="square"
           size="square-petite"
           className="size-9"

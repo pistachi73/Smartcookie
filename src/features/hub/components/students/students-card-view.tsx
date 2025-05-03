@@ -40,16 +40,11 @@ const StudentCard = ({
           image={student.image}
         />
         <Menu>
-          <Button
-            appearance="outline"
-            size="square-petite"
-            className={"size-7"}
-          >
+          <Button intent="outline" size="square-petite" className={"size-7"}>
             <HugeiconsIcon icon={MoreVerticalIcon} data-slot="icon" size={18} />
           </Button>
           <Menu.Content aria-label="Actions" placement="left top">
             <Menu.Item href={`/portal/students/${student.id}`}>View</Menu.Item>
-            <Menu.Separator />
             <Menu.Item
               isDanger
               onAction={() => handleRemoveStudent(student.id)}

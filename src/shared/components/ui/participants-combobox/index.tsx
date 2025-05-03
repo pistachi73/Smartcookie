@@ -184,7 +184,7 @@ export const ParticipantsCombobox = <T extends Participant>({
             className={cn(
               buttonStyles({
                 size: "small",
-                appearance: "plain",
+                intent: "plain",
               }),
               "min-w-0 rounded-lg font-normal",
             )}
@@ -240,7 +240,7 @@ export const SelectedParticipant = ({
         </div>
         <div className="group-hover:opacity-100 transition-opacity opacity-0">
           <Button
-            appearance="plain"
+            intent="plain"
             size="small"
             shape="square"
             className="p-0 size-7"
@@ -253,7 +253,7 @@ export const SelectedParticipant = ({
             )}
           </Button>
           <Button
-            appearance="plain"
+            intent="plain"
             size="square-petite"
             shape="square"
             className="p-0 size-7"
@@ -275,7 +275,7 @@ export const SelectedParticipant = ({
             <div className="flex items-center gap-1 pb-2">
               <p className="text-text-sub text-xs">{participant.email}</p>
               <Button
-                appearance="plain"
+                intent="plain"
                 size="small"
                 slot="close"
                 className="text-muted-fg hover:bg-transparent p-0 h-auto"

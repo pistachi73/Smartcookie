@@ -69,7 +69,7 @@ export const StudentsListView = ({ hubId }: { hubId: number }) => {
                 <div className="flex justify-end">
                   <Menu>
                     <Button
-                      appearance="outline"
+                      intent="outline"
                       size="square-petite"
                       className={"size-7"}
                     >

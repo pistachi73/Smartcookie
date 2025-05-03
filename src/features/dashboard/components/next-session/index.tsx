@@ -74,7 +74,7 @@ export const NextSession = () => {
         <Link
           href={`/portal/hubs/${hub?.id}`}
           className={buttonStyles({
-            appearance: "outline",
+            intent: "outline",
             size: "extra-small",
           })}
         >
@@ -94,7 +94,7 @@ export const NextSession = () => {
               )}
             />
             <Heading level={2} className="truncate">
-              {hub?.name} 2121
+              {hub?.name}
             </Heading>
           </div>
 

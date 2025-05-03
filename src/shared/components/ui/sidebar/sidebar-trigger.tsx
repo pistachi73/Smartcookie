@@ -16,8 +16,7 @@ export const SidebarTrigger = ({
     <Button
       aria-label={props["aria-label"] || "Toggle Sidebar"}
       data-sidebar-trigger="true"
-      intent={props.intent || "primary"}
-      appearance={props.appearance || "plain"}
+      intent={props.intent || "plain"}
       size={props.size || "square-petite"}
       onPress={(event) => {
         onPress?.(event);

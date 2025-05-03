@@ -148,7 +148,7 @@ export const Session = ({ session, position, hubId }: SessionProps) => {
             {isEditingMode && (
               <div className="flex gap-1 items-center">
                 <Button
-                  appearance="plain"
+                  intent="plain"
                   size="square-petite"
                   className="size-9"
                   onPress={onEditSession}

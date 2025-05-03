@@ -1,0 +1,47 @@
+import * as schema from "@/db/schema";
+import type { DB } from "@/db/seed";
+import { eq } from "drizzle-orm";
+import questionsSeedData from "./data/questions.seed-data";
+
+export default async function seed(db: DB) {
+  const user = await db.query.user.findFirst({
+    where: eq(schema.user.email, "oscarpulido98@gmail.com"),
+  });
+  if (!user) throw new Error("User not found!");
+
+  // Create questions
+  const questions = await db
+    .insert(schema.questions)
+    .values(
+      questionsSeedData.map((question) => ({
+        userId: user.id,
+        ...question,
+      })),
+    )
+    .returning();
+
+  if (!questions.length) throw new Error("Questions not found!");
+
+  const [sT] = await db
+    .insert(schema.surveyTemplates)
+    .values({
+      userId: user.id,
+      title: "Survey Template",
+      description: "Survey Template Description",
+    })
+    .returning();
+
+  if (!sT) throw new Error("Survey template not found!");
+
+  console.log();
+
+  // Create survey template questions
+  const surTempQuest = questions.map((question, index) => ({
+    surveyTemplateId: sT.id,
+    questionId: question.id,
+    order: index + 1,
+    required: true,
+  }));
+
+  await db.insert(schema.surveyTemplateQuestions).values(surTempQuest);
+}

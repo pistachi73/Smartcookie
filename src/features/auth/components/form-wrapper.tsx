@@ -68,7 +68,7 @@ export const FormWrapper = ({
               backButtonOnClick?.();
             }}
             size="extra-small"
-            appearance="plain"
+            intent="plain"
             type="button"
             className="text-sm"
           >
@@ -78,9 +78,7 @@ export const FormWrapper = ({
         )}
       </div>
       <Card.Header className="px-0 py-6">
-        <Card.Title level={1} tracking="tighter">
-          {header}
-        </Card.Title>
+        <Card.Title>{header}</Card.Title>
         <Card.Description>{subHeader}</Card.Description>
       </Card.Header>
       <Card.Content className={cn("px-0 py-4", className)}>

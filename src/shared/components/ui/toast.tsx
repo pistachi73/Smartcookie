@@ -82,7 +82,7 @@ const Toast = ({ ...props }: ToasterProps) => {
             className:
               "hover:border-secondary-fg/10 hover:bg-secondary/90 self-start absolute bottom-4 left-4 justify-self-start",
             size: "extra-small",
-            appearance: "outline",
+            intent: "outline",
           }),
           actionButton: buttonStyles({
             className: "absolute bottom-4 right-4 self-end justify-self-end",

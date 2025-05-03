@@ -137,7 +137,7 @@ export const EventOccurrenceFormSheet = () => {
         </Sheet.Body>
         <Sheet.Footer className="sticky bottom-0 border-t flex items-center justify-end gap-2 p-4!">
           <Button
-            appearance="plain"
+            intent="plain"
             size="small"
             onPress={onClose}
             isDisabled={isFormDisabled}

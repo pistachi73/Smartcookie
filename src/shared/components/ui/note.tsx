@@ -1,6 +1,7 @@
 import {
   AlertCircleIcon,
   CheckmarkCircle01Icon,
+  IdeaIcon,
   InformationCircleIcon,
 } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -28,6 +29,9 @@ const noteStyles = tv({
         "border-success/20 bg-success/50 text-emerald-900 leading-4 **:data-[slot=icon]:text-success [&_a]:text-emerald-600",
         "dark:bg-success/10 dark:text-emerald-200 dark:**:data-[slot=icon]:text-emerald-400 dark:[&_a]:text-emerald-50",
       ],
+      tip: [
+        "bg-sky-500/5 text-sky-700 group-hover:bg-sky-500/25 dark:bg-sky-500/10 dark:text-sky-300 dark:group-hover:bg-sky-500/20",
+      ],
     },
   },
   defaultVariants: {
@@ -52,6 +56,7 @@ const Note = ({
     warning: AlertCircleIcon,
     danger: AlertCircleIcon,
     success: CheckmarkCircle01Icon,
+    tip: IdeaIcon,
     default: null,
   };
 

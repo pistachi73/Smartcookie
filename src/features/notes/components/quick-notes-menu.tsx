@@ -124,7 +124,6 @@ export const QuickNotesMenu = () => {
   return (
     <Popover onOpenChange={handleOpenChange} isOpen={isPopoverOpen}>
       <Button
-        appearance="solid"
         intent="secondary"
         size="square-petite"
         className="flex items-center gap-2 fixed bottom-4 right-4"
@@ -151,7 +150,7 @@ export const QuickNotesMenu = () => {
                 <Popover.Title className="flex items-center gap-2">
                   <Button
                     aria-label="Back to hub selection"
-                    appearance="plain"
+                    intent="plain"
                     shape="square"
                     onPress={resetMenu}
                     className="size-8"
@@ -257,7 +256,7 @@ export const QuickNotesMenu = () => {
               <Popover.Footer className="py-2! border-t border-border ">
                 <Link
                   className={buttonStyles({
-                    appearance: "plain",
+                    intent: "plain",
                     shape: "square",
                   })}
                   href="/portal/quick-notes"

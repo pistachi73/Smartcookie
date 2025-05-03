@@ -110,7 +110,7 @@ export const PortalNav = ({
             </div>
           )}
           <Button
-            appearance="outline"
+            intent="outline"
             size="square-petite"
             shape="square"
             className="size-10"

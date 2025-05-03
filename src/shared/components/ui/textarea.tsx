@@ -15,12 +15,6 @@ import { composeTailwindRenderProps, focusStyles } from "./primitive";
 const textareaStyles = tv({
   extend: focusStyles,
   base: "min-h-10 flex-1 field-sizing-content resize-none w-full min-w-0 rounded-lg border border-input px-2.5 py-2 text-base shadow-xs outline-hidden transition-colors duration-200 data-disabled:opacity-50",
-  variants: {
-    isExpanded: {
-      true: "min-h-26!",
-      false: "h-full",
-    },
-  },
 });
 
 interface TextareaProps extends Omit<TextFieldPrimitiveProps, "className"> {
@@ -59,7 +53,6 @@ const Textarea = ({
           (className, renderProps) =>
             textareaStyles({
               ...renderProps,
-              isExpanded: Boolean(props.value || renderProps.isFocused),
               className,
             }),
         )}

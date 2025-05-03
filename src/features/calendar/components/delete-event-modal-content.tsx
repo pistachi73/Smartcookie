@@ -25,7 +25,7 @@ export const DeleteEventModalContent = (props: ModalContentProps) => {
       </Modal.Body>
       <Modal.Footer className="mt-6 flex justify-end gap-2">
         <Button
-          appearance="plain"
+          intent="plain"
           size="small"
           slot="close"
           className="text-muted-fg hover:text-current"

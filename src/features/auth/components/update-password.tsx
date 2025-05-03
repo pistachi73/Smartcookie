@@ -126,7 +126,7 @@ export const UpdatePassword = () => {
             Update
           </Button>
           <Button
-            appearance="plain"
+            intent="plain"
             onPress={() => {
               setStep("LANDING");
             }}

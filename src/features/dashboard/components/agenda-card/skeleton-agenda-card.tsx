@@ -29,13 +29,13 @@ export const SkeletonAgendaCard = () => {
           <Link
             href="/portal/calendar"
             className={buttonStyles({
-              appearance: "outline",
+              intent: "outline",
               size: "extra-small",
             })}
           >
             See all
           </Link>
-          <Button appearance="outline" size="square-petite" className="size-8">
+          <Button intent="outline" size="square-petite" className="size-8">
             <HugeiconsIcon icon={Settings01Icon} size={14} strokeWidth={2} />
           </Button>
         </div>
@@ -43,7 +43,7 @@ export const SkeletonAgendaCard = () => {
       <Card.Content className="space-y-4">
         <div className="flex flex-row items-center justify-between gap-2 p-1 bg-bg dark:bg-overlay-highlight rounded-lg">
           <Button
-            appearance="plain"
+            intent="plain"
             size="square-petite"
             className={"size-7 bg-overlay dark:bg-overlay-elevated"}
           >
@@ -53,7 +53,7 @@ export const SkeletonAgendaCard = () => {
             {format(now, "dd MMM yyyy")}
           </p>
           <Button
-            appearance="plain"
+            intent="plain"
             size="square-petite"
             className={"size-7 bg-overlay  dark:bg-overlay-elevated"}
           >

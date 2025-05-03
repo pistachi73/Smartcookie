@@ -16,7 +16,7 @@ export function StepNavigation() {
   return (
     <div className="flex justify-end w-full gap-4 shrink-0">
       {!isFirstStep && (
-        <Button appearance="plain" onPress={prevStep} shape="square">
+        <Button intent="plain" onPress={prevStep} shape="square">
           <HugeiconsIcon icon={ArrowLeft02Icon} size={16} />
           Back
         </Button>

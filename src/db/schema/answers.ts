@@ -1,0 +1,38 @@
+import { relations } from "drizzle-orm";
+import { index, integer, serial, text } from "drizzle-orm/pg-core";
+import { questions } from "./questions";
+import { surveyResponses } from "./survey-responses";
+import { pgTable } from "./utils";
+
+export const answers = pgTable(
+  "answers",
+  {
+    id: serial().primaryKey(),
+    questionId: integer().references(() => questions.id, {
+      onDelete: "cascade",
+    }),
+    surveyResponseId: integer().references(() => surveyResponses.id, {
+      onDelete: "cascade",
+    }),
+    value: text().notNull(),
+    additionalComment: text(),
+  },
+  (t) => ({
+    questionIdIdx: index().on(t.questionId),
+    surveyResponseIdIdx: index().on(t.surveyResponseId),
+  }),
+);
+
+export const answersRelations = relations(answers, ({ one }) => ({
+  question: one(questions, {
+    fields: [answers.questionId],
+    references: [questions.id],
+  }),
+  surveyResponse: one(surveyResponses, {
+    fields: [answers.surveyResponseId],
+    references: [surveyResponses.id],
+  }),
+}));
+
+export type InsertAnswer = typeof answers.$inferInsert;
+export type Answer = typeof answers.$inferSelect;

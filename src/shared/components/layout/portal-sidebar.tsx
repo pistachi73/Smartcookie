@@ -37,7 +37,6 @@ import { SidebarSection } from "@/ui/sidebar/sidebar-section";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { SidebarTrigger } from "../ui/sidebar/sidebar-trigger";
-import { ThemeSwitcher } from "../ui/theme-switcher";
 
 export default function AppSidebar(
   props: React.ComponentProps<typeof Sidebar>,
@@ -67,7 +66,7 @@ export default function AppSidebar(
         {state.state !== "collapsed" && (
           <SidebarTrigger
             className="size-8"
-            appearance="plain"
+            intent="plain"
             size="square-petite"
             shape="square"
           />
@@ -106,7 +105,7 @@ export default function AppSidebar(
 
       <SidebarFooter>
         <UserButton />
-        <ThemeSwitcher />
+        {/* <ThemeSwitcher /> */}
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

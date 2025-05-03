@@ -62,9 +62,8 @@ export const SelectedStudentsTable = () => {
                   image={image ?? null}
                 />
                 <Button
-                  intent="danger"
                   size="square-petite"
-                  appearance="plain"
+                  intent="plain"
                   shape="square"
                   onPress={() => onStudentRemove(id)}
                 >

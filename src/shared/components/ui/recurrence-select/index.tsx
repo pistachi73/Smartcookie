@@ -33,7 +33,7 @@ const ModalTrigger = ({ value }: { value?: string }) => {
   return (
     <Button
       className="overflow-hidden w-full justify-start pr-2"
-      appearance="outline"
+      intent="outline"
       size="small"
     >
       <div className="shrink-0">
@@ -229,7 +229,7 @@ export const RecurrenceSelect = ({
           </Modal.Body>
           <Modal.Footer className="flex items-center justify-end gap-2 flex-row">
             <Button
-              appearance="plain"
+              intent="plain"
               size="small"
               className="text-muted-fg hover:text-current"
               // onPress={() => {

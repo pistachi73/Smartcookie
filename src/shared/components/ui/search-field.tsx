@@ -76,11 +76,7 @@ const SearchField = ({
         {isPending ? (
           <Loader variant="spin" />
         ) : (
-          <Button
-            size="square-petite"
-            appearance="plain"
-            className={clearButton()}
-          >
+          <Button size="square-petite" intent="plain" className={clearButton()}>
             <HugeiconsIcon
               icon={MultiplicationSignIcon}
               aria-hidden

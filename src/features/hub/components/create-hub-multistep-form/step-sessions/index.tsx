@@ -98,7 +98,7 @@ export function StepSessions() {
 
         <div className="flex justify-end w-full gap-4 shrink-0">
           <Button
-            appearance="plain"
+            intent="plain"
             onPress={prevStep}
             shape="square"
             isDisabled={isPending}

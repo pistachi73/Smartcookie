@@ -238,7 +238,7 @@ export const PhoneField = ({
     return (
       <Button
         size="small"
-        appearance="plain"
+        intent="plain"
         className="flex items-center gap-1 px-1.5 outline-none"
         onPress={() => setIsOpen(!isOpen)}
         ref={triggerRef}

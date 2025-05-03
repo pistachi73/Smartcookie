@@ -12,7 +12,7 @@ export const BackToHomePageButton = () => {
       className={(renderProps) =>
         buttonStyles({
           ...renderProps,
-          appearance: "plain",
+          intent: "plain",
           size: "small",
           className: "absolute top-4 left-4",
         })

@@ -24,7 +24,7 @@ export function CourseCard() {
         </div>
         <Button
           size="square-petite"
-          appearance="plain"
+          intent="plain"
           shape="square"
           className="absolute top-1 right-1 size-9"
         >

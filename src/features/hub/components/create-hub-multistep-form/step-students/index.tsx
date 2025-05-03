@@ -177,7 +177,7 @@ export function StepStudents() {
           )}
         >
           <Button
-            appearance="outline"
+            intent="outline"
             size={isMobile ? "small" : "medium"}
             onPress={prevStep}
             shape="square"

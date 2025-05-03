@@ -1,4 +1,8 @@
 import type { InsertSession, InsertSessionNote } from "@/db/schema";
+import { addDays, addHours, addMinutes } from "date-fns";
+
+const today = new Date();
+today.setHours(10, 0, 0, 0); // Set to 10:00 AM
 
 const sessions: {
   session: Omit<InsertSession, "userId" | "hubId">;
@@ -6,8 +10,8 @@ const sessions: {
 }[] = [
   {
     session: {
-      startTime: new Date("2024-02-01T10:00:00").toISOString(),
-      endTime: new Date("2024-02-01T11:00:00").toISOString(),
+      startTime: today.toISOString(),
+      endTime: addHours(today, 1).toISOString(),
       status: "completed",
     },
     notes: [
@@ -33,8 +37,8 @@ const sessions: {
   },
   {
     session: {
-      startTime: new Date("2024-02-15T10:00:00").toISOString(),
-      endTime: new Date("2024-02-15T11:15:00").toISOString(),
+      startTime: addDays(today, 1).toISOString(),
+      endTime: addMinutes(addDays(today, 1), 75).toISOString(),
       status: "completed",
     },
     notes: [
@@ -62,8 +66,8 @@ const sessions: {
   },
   {
     session: {
-      startTime: new Date("2024-03-01T09:00:00").toISOString(),
-      endTime: new Date("2024-03-01T11:00:00").toISOString(),
+      startTime: addDays(today, 3).toISOString(),
+      endTime: addHours(addDays(today, 3), 2).toISOString(),
       status: "completed",
     },
     notes: [
@@ -91,8 +95,8 @@ const sessions: {
   },
   {
     session: {
-      startTime: new Date("2024-03-15T10:00:00").toISOString(),
-      endTime: new Date("2024-03-15T11:15:00").toISOString(),
+      startTime: addDays(today, 4).toISOString(),
+      endTime: addMinutes(addDays(today, 4), 75).toISOString(),
     },
     notes: [
       {
@@ -119,8 +123,8 @@ const sessions: {
   },
   {
     session: {
-      startTime: new Date("2024-04-01T13:45:00").toISOString(),
-      endTime: new Date("2024-04-01T15:00:00").toISOString(),
+      startTime: addDays(today, 6).toISOString(),
+      endTime: addMinutes(addDays(today, 6), 75).toISOString(),
     },
     notes: [
       {
@@ -148,8 +152,8 @@ const sessions: {
   },
   {
     session: {
-      startTime: new Date("2024-04-15T13:45:00").toISOString(),
-      endTime: new Date("2024-04-15T15:00:00").toISOString(),
+      startTime: addDays(today, 7).toISOString(),
+      endTime: addMinutes(addDays(today, 7), 75).toISOString(),
     },
     notes: [
       {
@@ -173,6 +177,55 @@ const sessions: {
         content: "Create a comprehensive review of all tenses covered",
       },
     ],
+  },
+  {
+    session: {
+      startTime: addDays(today, 8).toISOString(),
+      endTime: addHours(addDays(today, 8), 1).toISOString(),
+    },
+    notes: [],
+  },
+  {
+    session: {
+      startTime: addDays(today, 9).toISOString(),
+      endTime: addMinutes(addDays(today, 9), 90).toISOString(),
+    },
+    notes: [],
+  },
+  {
+    session: {
+      startTime: addDays(today, 10).toISOString(),
+      endTime: addHours(addDays(today, 10), 1).toISOString(),
+    },
+    notes: [],
+  },
+  {
+    session: {
+      startTime: addDays(today, 11).toISOString(),
+      endTime: addMinutes(addDays(today, 11), 75).toISOString(),
+    },
+    notes: [],
+  },
+  {
+    session: {
+      startTime: addDays(today, 12).toISOString(),
+      endTime: addHours(addDays(today, 12), 1).toISOString(),
+    },
+    notes: [],
+  },
+  {
+    session: {
+      startTime: addDays(today, 13).toISOString(),
+      endTime: addMinutes(addDays(today, 13), 90).toISOString(),
+    },
+    notes: [],
+  },
+  {
+    session: {
+      startTime: addDays(today, 14).toISOString(),
+      endTime: addHours(addDays(today, 14), 1).toISOString(),
+    },
+    notes: [],
   },
 ];
 

@@ -108,7 +108,7 @@ export const MonthViewCell = ({
               className="w-[300px] relative overflow-visible"
             >
               <Popover.Close
-                appearance="plain"
+                intent="plain"
                 size="square-petite"
                 className="absolute top-1 right-1 size-8 shrink-0"
               >

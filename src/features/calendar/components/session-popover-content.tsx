@@ -91,7 +91,7 @@ export const SessionPopover = ({
       </Popover.Body>
       <Popover.Footer className="flex items-center justify-end gap-2">
         <Modal>
-          <Button appearance="plain" size="small">
+          <Button intent="plain" size="small">
             Delete
           </Button>
           <DeleteEventModalContent />

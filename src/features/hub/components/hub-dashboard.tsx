@@ -159,7 +159,7 @@ export function HubDashboard({ hubId }: { hubId: number }) {
               </Heading>
               <AddNoteCard
                 hubId={hubId}
-                appearance="plain"
+                intent="plain"
                 size="square-petite"
                 className="size-9"
               />

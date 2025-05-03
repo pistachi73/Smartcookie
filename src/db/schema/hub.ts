@@ -13,6 +13,7 @@ import { event } from "./event";
 import { quickNote } from "./quick-note";
 import { customColorEnum } from "./shared";
 import { studentHub } from "./student-hub";
+import { surveys } from "./surveys";
 import { user } from "./user";
 import { pgTable } from "./utils";
 
@@ -53,4 +54,5 @@ export const hubRelations = relations(hub, ({ many }) => ({
   sessions: many(event),
   quickNotes: many(quickNote),
   attendance: many(attendance),
+  surveys: many(surveys),
 }));

@@ -63,8 +63,7 @@ export const QuickNotesSidebar = () => {
         <Button
           size="square-petite"
           shape="square"
-          appearance="plain"
-          intent="secondary"
+          intent="plain"
           onPress={() => setIsMinimized((isMinimized) => !isMinimized)}
           className="size-10"
         >

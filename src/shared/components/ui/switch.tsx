@@ -44,7 +44,7 @@ const Switch = ({ children, className, size, ref, ...props }: SwitchProps) => {
         <>
           <span
             className={cn(
-              "mr-2 cursor-pointer rounded-full border-2 border-transparent bg-(--switch) transition duration-200 [--switch:color-mix(in_oklab,var(--color-muted)_90%,black_10%)] group-data-disabled:cursor-default group-data-selected:bg-primary group-data-disabled:opacity-50 group-data-focused:ring-4 group-data-focused:ring-primary/20 group-data-invalid:ring-danger/20 dark:[--switch:color-mix(in_oklab,var(--color-muted)_85%,white_15%)]",
+              "cursor-pointer rounded-full border-2 border-transparent bg-(--switch) transition duration-200 [--switch:color-mix(in_oklab,var(--color-muted)_90%,black_10%)] group-data-disabled:cursor-default group-data-selected:bg-primary group-data-disabled:opacity-50 group-data-focused:ring-4 group-data-focused:ring-primary/20 group-data-invalid:ring-danger/20 dark:[--switch:color-mix(in_oklab,var(--color-muted)_85%,white_15%)]",
               "h-[calc(var(--spacing)*var(--dimension))] w-[calc(var(--spacing)*(var(--dimension)+3))]",
             )}
           >

@@ -141,11 +141,7 @@ const ComboBoxInput = ({
         className={cn(prefix && "pl-2 w-full", className?.input)}
         placeholder={props?.placeholder}
       />
-      <Button
-        size="square-petite"
-        appearance="plain"
-        className={chevronButton()}
-      >
+      <Button size="square-petite" intent="plain" className={chevronButton()}>
         {!context?.inputValue && showArrow && (
           <HugeiconsIcon
             icon={ArrowDown01Icon}

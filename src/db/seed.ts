@@ -36,6 +36,12 @@ for (const table of [
   schema.quickNote,
   schema.session,
   schema.sessionNote,
+  schema.surveyTemplateQuestions,
+  schema.surveyTemplates,
+  schema.surveys,
+  schema.answers,
+  schema.questions,
+  schema.surveyResponses,
 ]) {
   await resetTable(db, table);
 }
@@ -49,6 +55,7 @@ async function main() {
     await seeds.quickNotes(db);
     await seeds.student(db);
     await seeds.session(db);
+    await seeds.surveys(db);
   } catch (error) {
     console.error("Error during seeding:", error);
     process.exit(1);

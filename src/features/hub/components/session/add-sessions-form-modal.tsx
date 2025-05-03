@@ -161,7 +161,7 @@ export const AddSessionsFormModal = ({ hubId }: AddSessionsFormModalProps) => {
               //   </div>
               //   {!!conflictsData?.overlappingSessions.length && (
               //     <Button
-              //       appearance="outline"
+              //       intent="outline"
               //       size="small"
               //       className="text-danger/80 hover:text-danger border-danger/50 bg-overlay/50 px-2 py-1"
               //       onPress={() => setIsConflictModalOpen(true)}

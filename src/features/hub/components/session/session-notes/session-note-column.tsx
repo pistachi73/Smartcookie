@@ -72,7 +72,7 @@ export const SessionNoteColumn = <T extends SessionNotePosition>({
           </span>
         </Heading>
         <Button
-          appearance="plain"
+          intent="plain"
           size="square-petite"
           shape="square"
           className="size-6"

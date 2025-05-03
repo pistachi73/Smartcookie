@@ -10,6 +10,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { attendance } from "./attendance";
 import { studentHub } from "./student-hub";
+import { surveyResponses } from "./survey-responses";
 import { user } from "./user";
 import { pgTable } from "./utils";
 
@@ -55,4 +56,5 @@ export type Student = typeof student.$inferSelect;
 export const studentRelations = relations(student, ({ many }) => ({
   studentHub: many(studentHub),
   attendances: many(attendance),
+  surveyResponses: many(surveyResponses),
 }));

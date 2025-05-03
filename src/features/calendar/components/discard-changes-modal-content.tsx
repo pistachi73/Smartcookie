@@ -19,7 +19,7 @@ export const DiscardChangesModalContent = ({
       </Modal.Header>
       <Modal.Footer className="flex justify-end gap-2">
         <Button
-          appearance="plain"
+          intent="plain"
           size="small"
           slot="close"
           className="text-text-sub"
