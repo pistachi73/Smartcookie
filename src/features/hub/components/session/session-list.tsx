@@ -24,7 +24,6 @@ const DynamicAddSessionsFormModal = dynamic(
     ssr: false,
   },
 );
-
 const DynamicDeleteSessionsModal = dynamic(
   () =>
     import("./delete-sessions-modal-content").then(

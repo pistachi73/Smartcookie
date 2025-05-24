@@ -1,16 +1,7 @@
 "use client";
 
 import { Keyboard as KeyboardPrimitive } from "react-aria-components";
-import { tv } from "tailwind-variants";
-
-const keyboardStyles = tv({
-  slots: {
-    base: "hidden text-current/70 group-data-focused:text-fg group-data-hovered:text-fg group-data-disabled:opacity-50 group-data-focused:opacity-90 lg:inline-flex lg:inline-flex forced-colors:group-data-focused:text-[HighlightText]",
-    kbd: "flex min-w-[2ch] text-xs rounded text-center font-sans text-xs px-1 py-0.5",
-  },
-});
-
-const { base, kbd } = keyboardStyles();
+import { twMerge } from "tailwind-merge";
 
 interface KeyboardProps extends React.HTMLAttributes<HTMLElement> {
   keys: string | string[];
@@ -23,16 +14,24 @@ interface KeyboardProps extends React.HTMLAttributes<HTMLElement> {
 const Keyboard = ({ keys, classNames, className, ...props }: KeyboardProps) => {
   return (
     <KeyboardPrimitive
-      className={base({ className: classNames?.base ?? className })}
+      className={twMerge(
+        "hidden font-mono text-current group-hover:text-fg group-focus:text-fg group-focus:opacity-90 group-disabled:opacity-50 lg:inline-flex forced-colors:group-focus:text-[HighlightText] forced-colors:group-focus:text-[HighlightText]",
+        classNames?.base,
+      )}
       {...props}
     >
-      <kbd
-        className={kbd({
-          className: classNames?.kbd,
-        })}
-      >
-        {Array.isArray(keys) ? keys.join("+") : keys}
-      </kbd>
+      {(Array.isArray(keys) ? keys : keys.split("")).map((char, index) => (
+        <kbd
+          key={index}
+          className={twMerge(
+            "tracking-widest",
+            index > 0 && char.length > 1 && "pl-1",
+            classNames?.kbd,
+          )}
+        >
+          {char}
+        </kbd>
+      ))}
     </KeyboardPrimitive>
   );
 };

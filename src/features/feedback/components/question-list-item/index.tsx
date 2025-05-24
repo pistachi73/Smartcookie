@@ -14,10 +14,11 @@ import {
   MoreVerticalIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { DragPreview, useButton, useDrag } from "react-aria";
 import { Button as RAButton } from "react-aria-components";
 import { useCreateSurveyFormStore } from "../../store/create-survey-multistep-form.store";
+import { DeleteQuestionModal } from "../delete-question-modal";
 import { QuestionTypeBadge } from "../question-type-badge";
 
 const baseQuestionItemClasses = "relative flex flex-row gap-4 p-5";
@@ -51,6 +52,7 @@ export const NotDraggableQuestionListItem = ({
 }: QuestionListItemProps) => {
   const params = useParams();
   const { createHrefWithParams } = useNavigateWithParams();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const { questionId } = params;
 
@@ -61,53 +63,68 @@ export const NotDraggableQuestionListItem = ({
   );
 
   return (
-    <Link
-      key={`question-${question.id}`}
-      href={href}
-      className={cn(baseQuestionItemClasses, "group", {
-        "bg-primary-tint": isActive,
-        "before:absolute before:inset-0 before:z-10 before:w-[3px] before:h-full before:bg-primary":
-          isActive,
-      })}
-    >
-      <div className="w-full flex justify-between items-center ">
-        <div className="flex-1 flex items-center gap-3">
-          <QuestionTypeBadge type={question.type} />
-          <div className="space-y-0.5">
-            <p className="font-medium text-sm text-balance">{question.title}</p>
-            <p className="tabular-nums text-muted-fg text-xs">
-              {question.answerCount} responses
-            </p>
+    <>
+      <Link
+        key={`question-${question.id}`}
+        href={href}
+        className={cn(baseQuestionItemClasses, "group", {
+          "bg-primary-tint": isActive,
+          "before:absolute before:inset-0 before:z-10 before:w-[3px] before:h-full before:bg-primary":
+            isActive,
+        })}
+      >
+        <div className="w-full flex justify-between items-center ">
+          <div className="flex-1 flex items-center gap-3">
+            <QuestionTypeBadge type={question.type} />
+            <div className="space-y-0.5">
+              <p className="font-medium text-sm text-balance">
+                {question.title}
+              </p>
+              <p className="tabular-nums text-muted-fg text-xs">
+                {question.answerCount} responses
+              </p>
+            </div>
           </div>
+          <Menu>
+            <Button
+              intent="plain"
+              shape="square"
+              size="square-petite"
+              className={
+                "sm:opacity-0 group-hover:opacity-100 size-8 data-pressed:opacity-100"
+              }
+            >
+              <HugeiconsIcon icon={MoreVerticalIcon} size={18} />
+            </Button>
+            <Menu.Content placement="bottom end">
+              <Menu.Item className="gap-1">
+                <HugeiconsIcon
+                  icon={BubbleChatEditIcon}
+                  size={16}
+                  data-slot="icon"
+                />
+                <Menu.Label>Edit</Menu.Label>
+              </Menu.Item>
+              <Menu.Separator />
+              <Menu.Item
+                isDanger
+                className="gap-1"
+                onAction={() => setIsDeleteModalOpen(true)}
+              >
+                <HugeiconsIcon icon={Delete01Icon} size={16} data-slot="icon" />
+                <Menu.Label>Delete</Menu.Label>
+              </Menu.Item>
+            </Menu.Content>
+          </Menu>
         </div>
-        <Menu>
-          <Button
-            intent="plain"
-            shape="square"
-            size="square-petite"
-            className={
-              "sm:opacity-0 group-hover:opacity-100 size-8 data-pressed:opacity-100"
-            }
-          >
-            <HugeiconsIcon icon={MoreVerticalIcon} size={18} />
-          </Button>
-          <Menu.Content placement="bottom end">
-            <Menu.Item className="gap-1">
-              <HugeiconsIcon
-                icon={BubbleChatEditIcon}
-                size={16}
-                data-slot="icon"
-              />
-              <Menu.Label>Edit</Menu.Label>
-            </Menu.Item>
-            <Menu.Item className="gap-1">
-              <HugeiconsIcon icon={Delete01Icon} size={16} data-slot="icon" />
-              <Menu.Label>Delete</Menu.Label>
-            </Menu.Item>
-          </Menu.Content>
-        </Menu>
-      </div>
-    </Link>
+      </Link>
+
+      <DeleteQuestionModal
+        isOpen={isDeleteModalOpen}
+        onOpenChange={setIsDeleteModalOpen}
+        question={question}
+      />
+    </>
   );
 };
 

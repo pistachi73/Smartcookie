@@ -33,7 +33,7 @@ export const CalendarSidebar = () => {
   }, [selectedDate]);
 
   return (
-    <div className="min-h-0  shrink-0  relative overflow-y-auto border-l">
+    <div className="min-h-0  shrink-0  relative overflow-y-auto border-r bg-bg">
       <div className="flex flex-col relative">
         <div className="border-b p-4">
           <UpcomingEvents />

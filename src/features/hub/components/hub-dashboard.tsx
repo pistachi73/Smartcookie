@@ -27,6 +27,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 import { useMemo } from "react";
 import { useHubById } from "../hooks/use-hub-by-id";
+import { CourseFeedback } from "./feedback";
 import { HubOverview } from "./hub-overview";
 import { SessionsList } from "./session/session-list";
 import { Students } from "./students/students";
@@ -70,7 +71,7 @@ const tabs: {
 ];
 
 export function HubDashboard({ hubId }: { hubId: number }) {
-  const { down, currentViewport } = useViewport();
+  const { down } = useViewport();
   const { data: hub } = useHubById(hubId);
 
   if (!hub) return null;
@@ -94,7 +95,7 @@ export function HubDashboard({ hubId }: { hubId: number }) {
       <div className="lg:flex-1 flex flex-col lg:flex-row bg-overlay">
         <Tabs
           aria-label="Hub Dashboard"
-          defaultSelectedKey={"students"}
+          defaultSelectedKey={"feedback"}
           className="flex-1"
         >
           <Tabs.List className={"sticky top-0 px-4 pt-3 bg-overlay z-20"}>
@@ -135,7 +136,7 @@ export function HubDashboard({ hubId }: { hubId: number }) {
             <SessionsList hubId={hubId} />
           </Tabs.Panel>
           <Tabs.Panel id="feedback" className={"p-4 pt-0"}>
-            Discover curated meal plans to simplify your weekly cooking.
+            <CourseFeedback hubId={hubId} />
           </Tabs.Panel>
           <ViewportOnly down="lg">
             <Tabs.Panel id="quick-notes" className={"p-4 py-2 "}>

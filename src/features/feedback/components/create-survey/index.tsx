@@ -10,7 +10,7 @@ import {
 } from "@hugeicons-pro/core-solid-rounded";
 import { ArrowLeft02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useCreateSurveyFormStore } from "../../store/create-survey-multistep-form.store";
 import { StepInfo } from "./step-info";
 import { StepPreview } from "./step-preview";
@@ -32,12 +32,12 @@ const STEP_CONTENT = {
 } as const;
 
 export const CreateSurvey = () => {
-  const router = useRouter();
   const { createHrefWithParams } = useNavigateWithParams();
   const backHref = createHrefWithParams("/portal/feedback");
 
   const currentStep = useCreateSurveyFormStore((state) => state.currentStep);
   const totalSteps = useCreateSurveyFormStore((state) => state.totalSteps);
+  const reset = useCreateSurveyFormStore((state) => state.reset);
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -58,17 +58,14 @@ export const CreateSurvey = () => {
     { id: 3, name: "Preview", icon: BubbleChatPreviewIcon },
   ];
 
+  useEffect(() => {
+    return () => {
+      reset();
+    };
+  }, [reset]);
+
   return (
     <div className="flex flex-col gap-6">
-      {/* <Link
-        intent="secondary"
-        href={backHref}
-        className={"flex items-center gap-1.5 text-sm mb-4"}
-      >
-        <HugeiconsIcon icon={ArrowLeft02Icon} size={18} data-slot="icon" />
-        Back
-      </Link> */}
-
       <Link
         intent="secondary"
         href={backHref}

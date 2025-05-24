@@ -73,3 +73,27 @@ export function withAuthenticationNoInput<TResult>({
     return useCase(authenticatedUser.id);
   };
 }
+
+/**
+ * Wraps a use case function with Zod schema validation only (no authentication)
+ *
+ * @example
+ * const mySchema = z.object({ ... });
+ * const myUseCaseImpl = async (data: z.infer<typeof mySchema>) => { ... };
+ * export const myUseCase = withValidationOnly(mySchema, myUseCaseImpl);
+ */
+export function withValidationOnly<TSchema extends z.ZodType, TResult>({
+  schema,
+  useCase,
+}: {
+  schema: TSchema;
+  useCase: (data: z.infer<TSchema>) => Promise<TResult>;
+}) {
+  return async (data: z.infer<TSchema>): Promise<TResult> => {
+    const parseResult = schema.safeParse(data);
+    if (!parseResult.success) {
+      throw new Error("Validation failed", { cause: parseResult.error });
+    }
+    return useCase(parseResult.data);
+  };
+}

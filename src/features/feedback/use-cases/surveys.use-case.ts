@@ -2,14 +2,16 @@
 
 import { db } from "@/db";
 import {
+  type InsertSurveyTemplateQuestion,
   surveyResponses,
+  surveyTemplateQuestions,
   surveyTemplates,
   surveys as surveysTable,
 } from "@/db/schema";
 import { withValidationAndAuth } from "@/shared/lib/protected-use-case";
 import { and, asc, count, desc, eq, sql } from "drizzle-orm";
 import { cache } from "react";
-import { GetSurveysSchema } from "../lib/surveys.schema";
+import { CreateSurveySchema, GetSurveysSchema } from "../lib/surveys.schema";
 
 const buildSearchCondition = (q?: string) => {
   if (!q || q.trim() === "") {
@@ -90,5 +92,37 @@ export const getSurveysUseCase = withValidationAndAuth({
       pageSize,
       totalPages: Math.ceil(totalCount / pageSize),
     };
+  },
+});
+
+export const createSurveyUseCase = withValidationAndAuth({
+  schema: CreateSurveySchema,
+  useCase: async ({ title, description, questions }, userId) => {
+    await db.transaction(async (tx) => {
+      const [surveyTemplate] = await tx
+        .insert(surveyTemplates)
+        .values({
+          title,
+          description,
+          userId,
+        })
+        .returning({ id: surveyTemplates.id });
+
+      if (!surveyTemplate) {
+        tx.rollback();
+        return;
+      }
+
+      const toInsertQuestions: InsertSurveyTemplateQuestion[] = questions.map(
+        (question, index) => ({
+          surveyTemplateId: surveyTemplate.id,
+          questionId: question.id,
+          order: index + 1,
+          required: question.required,
+        }),
+      );
+
+      await tx.insert(surveyTemplateQuestions).values(toInsertQuestions);
+    });
   },
 });

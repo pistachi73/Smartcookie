@@ -2,19 +2,42 @@
 
 import { Button } from "@/shared/components/ui/button";
 import { Card } from "@/shared/components/ui/card";
-import {
-  ArrowLeft02Icon,
-  ArrowRight02Icon,
-} from "@hugeicons-pro/core-stroke-rounded";
+import { ProgressCircle } from "@/shared/components/ui/progress-circle";
+import useNavigateWithParams from "@/shared/hooks/use-navigate-with-params";
+import { ArrowLeft02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { useCreateSurvey } from "../../hooks/surveys/use-create-survey";
 import { useCreateSurveyFormStore } from "../../store/create-survey-multistep-form.store";
 import { QuestionTypeBadge } from "../question-type-badge";
 
 export function StepPreview() {
+  const router = useRouter();
+  const { createHrefWithParams } = useNavigateWithParams();
   const surveyInfo = useCreateSurveyFormStore((state) => state.surveyInfo);
   const questions = useCreateSurveyFormStore((state) => state.questions);
-  const nextStep = useCreateSurveyFormStore((state) => state.nextStep);
   const prevStep = useCreateSurveyFormStore((state) => state.prevStep);
+
+  const { mutate: createSurvey, isPending } = useCreateSurvey({
+    onSuccess: () => {
+      router.push(createHrefWithParams("/portal/feedback/"));
+    },
+  });
+
+  const handleCreateSurvey = () => {
+    if (!surveyInfo.title || !surveyInfo.description) {
+      toast.error("Title and description are required");
+      return;
+    }
+
+    createSurvey({
+      title: surveyInfo.title,
+      description: surveyInfo.description,
+      questions,
+    });
+  };
+
   return (
     <div className="flex flex-col gap-4">
       <Card>
@@ -48,7 +71,7 @@ export function StepPreview() {
             //         </span>
             //       )}
             //     </h3>
-            //   </div>
+            //   </div>5
             // </div>
           ))}
         </Card.Content>
@@ -60,9 +83,15 @@ export function StepPreview() {
           Back
         </Button>
 
-        <Button onPress={nextStep} isDisabled={questions.length === 0}>
+        <Button
+          onPress={handleCreateSurvey}
+          isDisabled={questions.length === 0}
+          isPending={isPending}
+        >
+          {isPending && (
+            <ProgressCircle isIndeterminate aria-label="Creating..." />
+          )}
           Create Survey
-          <HugeiconsIcon icon={ArrowRight02Icon} size={16} data-slot="icon" />
         </Button>
       </div>
     </div>

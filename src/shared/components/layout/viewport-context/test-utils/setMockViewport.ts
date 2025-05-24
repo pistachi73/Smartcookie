@@ -13,7 +13,6 @@ vi.mock("../viewport-context", async (importOriginal) => {
 
 const setMockViewport = (viewport: Viewport) => {
   const returnValue = createViewportHelpers(viewport);
-  console.log("returnValue", returnValue);
   vi.mocked(useViewport).mockReturnValue(returnValue);
 };
 

@@ -61,7 +61,6 @@ const Toast = ({ ...props }: ToasterProps) => {
             "text-[0.925rem] not-has-data-description:**:data-title:font-normal!",
             "has-data-description:**:data-title:font-medium [&:has([data-description])_[data-title]]:text-sm!",
             "has-data-[slot=icon]:**:data-content:pl-0",
-            "has-data-button:*:data-content:mb-10",
             "has-data-button:**:data-close-button:hidden! flex w-full rounded-xl p-4",
             "inset-ring-1 inset-ring-current/10 backdrop-blur-3xl",
           ),
@@ -85,8 +84,8 @@ const Toast = ({ ...props }: ToasterProps) => {
             intent: "outline",
           }),
           actionButton: buttonStyles({
-            className: "absolute bottom-4 right-4 self-end justify-self-end",
             size: "extra-small",
+            intent: "plain",
           }),
           closeButton:
             "*:[svg]:size-12 size-6! rounded-md! [--gray1:transparent] [--gray4:transparent] [--gray5:transparent] [--gray12:current] [--toast-close-button-start:full] [--toast-close-button-end:-6px] [--toast-close-button-transform:translate(-75%,60%)] absolute",

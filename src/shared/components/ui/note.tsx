@@ -1,3 +1,4 @@
+import { cn } from "@/shared/lib/classes";
 import {
   AlertCircleIcon,
   CheckmarkCircle01Icon,
@@ -40,9 +41,14 @@ const noteStyles = tv({
 });
 
 interface NoteProps
-  extends React.HtmlHTMLAttributes<HTMLDivElement>,
+  extends Omit<React.HtmlHTMLAttributes<HTMLDivElement>, "className">,
     VariantProps<typeof noteStyles> {
   indicator?: boolean;
+  className?: {
+    container?: string;
+    icon?: string;
+    content?: string;
+  };
 }
 
 const Note = ({
@@ -63,8 +69,11 @@ const Note = ({
   const IconComponent = iconMap[intent] || null;
 
   return (
-    <div className={noteStyles({ intent, className })} {...props}>
-      <div className="flex grow items-start">
+    <div
+      className={noteStyles({ intent, className: className?.container })}
+      {...props}
+    >
+      <div className={cn("flex grow items-start", className?.icon)}>
         {IconComponent && indicator && (
           <div className="shrink-0">
             <HugeiconsIcon
@@ -74,7 +83,9 @@ const Note = ({
             />
           </div>
         )}
-        <div className="text-pretty">{props.children}</div>
+        <div className={cn("text-pretty", className?.content)}>
+          {props.children}
+        </div>
       </div>
     </div>
   );

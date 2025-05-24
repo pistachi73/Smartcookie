@@ -11,5 +11,10 @@ export const GetSurveysSchema = z.object({
 export const CreateSurveySchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
-  questions: z.array(z.number()),
+  questions: z.array(
+    z.object({
+      id: z.number(),
+      required: z.boolean(),
+    }),
+  ),
 });
