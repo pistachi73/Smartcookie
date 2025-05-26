@@ -44,8 +44,8 @@ export default function FeedbackLayout({
         />
         <div className="h-full grid grid-cols-[minmax(450px,1fr)_3fr] overflow-hidden">
           {sidebar}
-          <section className="overflow-y-auto">
-            <div className="max-w-xl mx-auto w-full p-6 pt-8">{details}</div>
+          <section className="overflow-y-auto ">
+            <div className="max-w-2xl mx-auto p-6 pt-8 w-full">{details}</div>
           </section>
         </div>
       </div>

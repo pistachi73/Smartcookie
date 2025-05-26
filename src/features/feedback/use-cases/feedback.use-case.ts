@@ -3,7 +3,7 @@
 import { db } from "@/db";
 import { answers, questions } from "@/db/schema";
 import { withValidationAndAuth } from "@/shared/lib/protected-use-case";
-import { and, asc, count, desc, eq, sql } from "drizzle-orm";
+import { and, count, desc, eq, sql } from "drizzle-orm";
 import { cache } from "react";
 import { GetQuestionsSchema } from "../lib/questions.schema";
 
@@ -40,36 +40,37 @@ export const getQuestionsUseCase = withValidationAndAuth({
         ? and(userCondition, buildSearchCondition(q))
         : userCondition;
 
-    // Get the questions with pagination and sorting
+    // Get the questions with pagination and sorting using JOIN for better performance
     const [questionResults, totalCount] = await Promise.all([
-      db.query.questions.findMany({
-        where: whereCondition,
-        extras: {
-          answerCount: sql<number>`(
-          SELECT COUNT(*) 
-          FROM ${answers} 
-          WHERE ${answers.questionId} = ${questions.id}
-        )`.as("answerCount"),
-        },
-        columns: {
-          id: true,
-          title: true,
-          description: true,
-          type: true,
-          enableAdditionalComment: true,
-          createdAt: true,
-        },
-        limit: pageSize,
-        offset: (page - 1) * pageSize,
-        orderBy:
+      db
+        .select({
+          id: questions.id,
+          title: questions.title,
+          description: questions.description,
+          type: questions.type,
+          enableAdditionalComment: questions.enableAdditionalComment,
+          createdAt: questions.createdAt,
+          answerCount: sql<number>`COALESCE(COUNT(${answers.id}), 0)`.as(
+            "answerCount",
+          ),
+        })
+        .from(questions)
+        .leftJoin(answers, eq(questions.id, answers.questionId))
+        .where(whereCondition)
+        .groupBy(questions.id)
+        .limit(pageSize)
+        .offset((page - 1) * pageSize)
+        .orderBy(
           sortBy === "alphabetical"
             ? desc(questions.title)
             : sortBy === "response-count"
-              ? asc(sql`"answerCount"`)
+              ? desc(sql`COALESCE(COUNT(${answers.id}), 0)`)
               : desc(questions.createdAt),
-      }),
+        ),
       getCachedQuestionCount(userId, q),
     ]);
+
+    console.log("questionResults", questionResults);
 
     return {
       questions: questionResults,

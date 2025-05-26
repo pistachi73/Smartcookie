@@ -33,7 +33,7 @@ const tabs: {
     id: "surveys",
     icon: NewsIcon,
     altIcon: NewsIconSolid,
-    label: "Surveys",
+    label: "Templates",
   },
 ];
 

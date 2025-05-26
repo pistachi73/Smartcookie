@@ -28,15 +28,17 @@ export const questionTypeIconMap: Record<
 > = {
   rating: { icon: RankingIcon, label: "Rating" },
   text: { icon: TextIcon, label: "Text" },
-  boolean: { icon: ThumbsUpIcon, label: "Boolean" },
+  boolean: { icon: ThumbsUpIcon, label: "Yes/No" },
 };
 
 export const QuestionTypeBadge = ({
   type,
   label = false,
+  className,
 }: {
   type: QuestionType;
   label?: boolean | string;
+  className?: string;
 }) => {
   const { icon, label: labelText } = questionTypeIconMap[type];
   return (
@@ -44,6 +46,7 @@ export const QuestionTypeBadge = ({
       className={questionTypeStyles({
         type,
         withLabel: Boolean(label),
+        className,
       })}
     >
       <HugeiconsIcon icon={icon} size={16} />
