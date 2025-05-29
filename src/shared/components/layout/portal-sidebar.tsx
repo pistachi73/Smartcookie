@@ -85,13 +85,17 @@ export default function AppSidebar(
                   isCurrent={isCurrent}
                   href={item.href}
                   badge={item?.badge}
+                  className={cn("group")}
                 >
                   <HugeiconsIcon
                     icon={item.icon}
                     altIcon={item.iconActive}
                     showAlt={isCurrent}
                     size={18}
-                    className={cn(isCurrent && "text-primary")}
+                    className={cn(
+                      "group-hover:rotate-6 group-hover:scale-105 transition-transform",
+                      isCurrent && "text-primary",
+                    )}
                     data-slot="icon"
                   />
                   <SidebarLabel>{item.label}</SidebarLabel>

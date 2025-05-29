@@ -109,6 +109,7 @@ const RadioToggleGroup = ({
   gap = 2,
   size = "medium",
   orientation = "horizontal",
+  isRequired,
   ...props
 }: RadioToggleGroupProps) => {
   return (
@@ -131,7 +132,7 @@ const RadioToggleGroup = ({
         )}
         {...props}
       >
-        {label && <Label>{label}</Label>}
+        {label && <Label isRequired={isRequired}>{label}</Label>}
         <div
           className={radioToggleGroupStyles({
             gap,

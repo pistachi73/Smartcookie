@@ -50,7 +50,7 @@ export const QuickNotesSidebar = () => {
   return (
     <div
       className={cn(
-        "border-r h-full overflow-hidden min-h-0 flex flex-col shrink-0",
+        "border-r h-full overflow-hidden min-h-0 flex flex-col shrink-0 bg-bg",
         isMinimized ? "w-auto" : "w-[300px]",
       )}
     >

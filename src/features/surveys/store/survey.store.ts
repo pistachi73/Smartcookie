@@ -4,6 +4,7 @@ import { createStore } from "zustand/vanilla";
 
 type SurveyResponseData = {
   id?: number;
+  surveyTemplateId?: number;
   studentId?: number;
   email?: string;
 };

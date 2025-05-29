@@ -126,8 +126,10 @@ const TextField = ({
               <span data-slot="suffix">{suffix}</span>
             ) : null}
           </FieldGroup>
-          {description && <Description>{description}</Description>}
-          <FieldError>{errorMessage}</FieldError>
+          {errorMessage && <FieldError>{errorMessage}</FieldError>}
+          {description && !errorMessage && (
+            <Description>{description}</Description>
+          )}
         </>
       ) : (
         props.children

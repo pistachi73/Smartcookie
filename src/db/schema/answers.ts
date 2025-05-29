@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { index, integer, serial, text } from "drizzle-orm/pg-core";
+import { index, integer, serial, text, timestamp } from "drizzle-orm/pg-core";
 import { questions } from "./questions";
 import { surveyResponses } from "./survey-responses";
 import { pgTable } from "./utils";
@@ -16,6 +16,7 @@ export const answers = pgTable(
     }),
     value: text().notNull(),
     additionalComment: text(),
+    answeredAt: timestamp({ mode: "string", withTimezone: true }).defaultNow(),
   },
   (t) => ({
     questionIdIdx: index().on(t.questionId),

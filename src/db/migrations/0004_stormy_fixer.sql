@@ -1,0 +1,1 @@
+ALTER TABLE "survey_templates" ADD COLUMN "total_responses" integer DEFAULT 0;

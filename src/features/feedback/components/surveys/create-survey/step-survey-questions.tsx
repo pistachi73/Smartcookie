@@ -25,9 +25,9 @@ import {
   type DroppableCollectionRootDropEvent,
   isTextDropItem,
 } from "react-aria-components";
-import { useCreateSurveyFormStore } from "../../store/create-survey-multistep-form.store";
-import type { FeedbackQuestion } from "../question-list-item";
-import { QuestionTypeBadge } from "../question-type-badge";
+import { useCreateSurveyFormStore } from "../../../store/create-survey-multistep-form.store";
+import type { FeedbackQuestion } from "../../questions/question-list-item";
+import { QuestionTypeBadge } from "../../questions/question-type-badge";
 
 export function StepSurveyQuestions() {
   const searchParams = useSearchParams();

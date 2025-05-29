@@ -1,0 +1,1 @@
+ALTER TABLE "answers" ADD COLUMN "total_answer_count" integer DEFAULT 0;

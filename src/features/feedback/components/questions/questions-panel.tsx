@@ -3,10 +3,10 @@
 import { Separator } from "@/shared/components/ui/separator";
 import { useSearchParams } from "next/navigation";
 import React from "react";
-import { useQuestions } from "../hooks/use-questions";
-import type { SortBy } from "../lib/questions.schema";
+import { useQuestions } from "../../hooks/use-questions";
+import type { SortBy } from "../../lib/questions.schema";
+import { SidebarPanel } from "../sidebar-panel";
 import { QuestionListItem } from "./question-list-item";
-import { SidebarPanel } from "./sidebar-panel";
 import { SkeletonQuestionListItem } from "./skeleton-question-list-item";
 
 export const QuestionsPanel = () => {
@@ -16,8 +16,11 @@ export const QuestionsPanel = () => {
     (searchParams.get("sortBy") as SortBy) || "alphabetical";
   const q = searchParams.get("q") || "";
 
+  // Guard against invalid page numbers from URL
+  const validPage = Number.isInteger(page) && page > 0 ? page : 1;
+
   const { data, isLoadingQuestions, isLoading } = useQuestions({
-    page,
+    page: validPage,
     sortBy,
     q,
   });

@@ -73,6 +73,7 @@ export const SurveyPresentation = ({ surveyId }: SurveyPresentationProps) => {
       email: data.email,
       id: res.data?.id,
       studentId: res.data?.studentId,
+      surveyTemplateId: survey?.id,
     });
   };
 

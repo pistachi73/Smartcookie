@@ -1,10 +1,10 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useSurveys } from "../hooks/surveys/use-surveys";
-import type { SortBy } from "../lib/questions.schema";
-import { SidebarPanel } from "./sidebar-panel";
-import { SkeletonQuestionListItem } from "./skeleton-question-list-item";
+import { useSurveys } from "../../hooks/surveys/use-surveys";
+import type { SortBy } from "../../lib/questions.schema";
+import { SkeletonQuestionListItem } from "../questions/skeleton-question-list-item";
+import { SidebarPanel } from "../sidebar-panel";
 import { SurveyListItem } from "./survey-list-item";
 
 export const SurveysPanel = () => {
@@ -14,8 +14,11 @@ export const SurveysPanel = () => {
     (searchParams.get("sortBy") as SortBy) || "alphabetical";
   const q = searchParams.get("q") || "";
 
+  // Guard against invalid page numbers from URL
+  const validPage = Number.isInteger(page) && page > 0 ? page : 1;
+
   const { data, isLoadingSurveys } = useSurveys({
-    page,
+    page: validPage,
     sortBy,
     q,
   });

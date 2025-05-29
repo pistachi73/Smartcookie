@@ -17,6 +17,11 @@ const questionsSeedData: Omit<InsertQuestion, "userId">[] = [
     type: "text",
     enableAdditionalComment: false,
   },
+  {
+    title: "Are you satisfied with the classes?",
+    type: "boolean",
+    enableAdditionalComment: false,
+  },
 ];
 
 export default questionsSeedData;

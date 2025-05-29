@@ -11,7 +11,11 @@ import {
 import { withValidationAndAuth } from "@/shared/lib/protected-use-case";
 import { and, asc, count, desc, eq, sql } from "drizzle-orm";
 import { cache } from "react";
-import { CreateSurveySchema, GetSurveysSchema } from "../lib/surveys.schema";
+import {
+  CreateSurveySchema,
+  DeleteSurveySchema,
+  GetSurveysSchema,
+} from "../lib/surveys.schema";
 
 const buildSearchCondition = (q?: string) => {
   if (!q || q.trim() === "") {
@@ -52,7 +56,7 @@ export const getSurveysUseCase = withValidationAndAuth({
           title: surveyTemplates.title,
           description: surveyTemplates.description,
           updatedAt: surveyTemplates.updatedAt,
-          responsesCount: count(surveyResponses.id).as("responsesCount"),
+          totalResponses: surveyTemplates.totalResponses,
         })
         .from(surveyTemplates)
         .leftJoin(
@@ -84,6 +88,8 @@ export const getSurveysUseCase = withValidationAndAuth({
         ),
       getCachedSurveysCount(userId, q),
     ]);
+
+    console.log(surveys);
 
     return {
       surveys,
@@ -124,5 +130,16 @@ export const createSurveyUseCase = withValidationAndAuth({
 
       await tx.insert(surveyTemplateQuestions).values(toInsertQuestions);
     });
+  },
+});
+
+export const deleteSurveyUseCase = withValidationAndAuth({
+  schema: DeleteSurveySchema,
+  useCase: async ({ id }, userId) => {
+    await db
+      .delete(surveyTemplates)
+      .where(
+        and(eq(surveyTemplates.id, id), eq(surveyTemplates.userId, userId)),
+      );
   },
 });

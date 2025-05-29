@@ -14,9 +14,11 @@ export const useUpdateQuestion = ({
     schema: UpdateQuestionFormSchema,
     mutationFn: (data) => updateQuestionUseCase(data),
 
-    onSuccess: () => {
+    onSuccess: (_, data) => {
       toast.success("Question updated successfully");
       queryClient.invalidateQueries({ queryKey: ["feedback", "questions"] });
+      queryClient.invalidateQueries({ queryKey: ["question", data.id] });
+
       onSuccess?.();
     },
     onError: () => {

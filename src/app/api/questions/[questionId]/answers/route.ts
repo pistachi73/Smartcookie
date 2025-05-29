@@ -1,0 +1,21 @@
+import { getQuestionAnswersUseCase } from "@/features/feedback/use-cases/questions.use-case";
+import { NextResponse } from "next/server";
+
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ questionId: string }> },
+) {
+  const { questionId } = await params;
+  const { searchParams } = new URL(request.url);
+
+  const dateFrom = searchParams.get("dateFrom");
+  const dateTo = searchParams.get("dateTo");
+
+  const data = await getQuestionAnswersUseCase({
+    id: Number.parseInt(questionId),
+    dateFrom: dateFrom ? new Date(dateFrom) : undefined,
+    dateTo: dateTo ? new Date(dateTo) : undefined,
+  });
+
+  return NextResponse.json(data);
+}

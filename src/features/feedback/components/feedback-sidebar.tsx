@@ -14,8 +14,9 @@ import {
 } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { QuestionsPanel } from "./questions-panel";
-import { SurveysPanel } from "./surveys-panel";
+import { useEffect } from "react";
+import { QuestionsPanel } from "./questions/questions-panel";
+import { SurveysPanel } from "./surveys/surveys-panel";
 
 const tabs: {
   id: string;
@@ -45,11 +46,23 @@ export const FeedbackSidebar = () => {
   const tab =
     (searchParams.get("tab") as "questions" | "surveys") || "questions";
 
+  // Guard against invalid tab values from URL
+  const validTab = tab === "questions" || tab === "surveys" ? tab : "questions";
+
+  // Redirect if tab is invalid
+  useEffect(() => {
+    if (validTab !== tab) {
+      router.push(
+        createHrefWithParams(pathname, { tab: validTab, page: null }),
+      );
+    }
+  }, [validTab, tab, router, pathname, createHrefWithParams]);
+
   return (
     <div className="h-full border-r overflow-hidden">
       <Tabs
         className={"relative h-full overflow-hidden gap-0"}
-        selectedKey={tab}
+        selectedKey={validTab}
         onSelectionChange={(key) => {
           router.push(
             createHrefWithParams(pathname, { tab: key as string, page: null }),

@@ -22,10 +22,10 @@ import {
   ArrowRight01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { CalendarDate } from "@internationalized/date";
+import type { CalendarDate } from "@internationalized/date";
 import { use } from "react";
 import { useDateFormatter } from "react-aria";
-import { CalendarState } from "react-stately";
+import type { CalendarState } from "react-stately";
 import { Button } from "./button";
 import { composeTailwindRenderProps, focusRing } from "./primitive";
 import { Select } from "./select";
@@ -268,5 +268,5 @@ const SelectYear = ({ state }: { state: CalendarState }) => {
 Calendar.Header = CalendarHeader;
 Calendar.GridHeader = CalendarGridHeader;
 
-export { Calendar };
+export { Calendar, CalendarGridHeader, CalendarHeader };
 export type { CalendarProps };

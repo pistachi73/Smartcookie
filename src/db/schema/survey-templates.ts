@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { serial, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { integer, serial, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { surveyTemplateQuestions } from "./survey-template-questions";
 import { surveys } from "./surveys";
 import { user } from "./user";
@@ -12,6 +12,7 @@ export const surveyTemplates = pgTable("survey_templates", {
     .notNull(),
   title: text().notNull(),
   description: text(),
+  totalResponses: integer().default(0),
   createdAt: timestamp({ mode: "string" }).defaultNow().notNull(),
   updatedAt: timestamp({ mode: "string" })
     .defaultNow()

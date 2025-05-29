@@ -1,6 +1,6 @@
 "use client";
 import { Link } from "@/shared/components/ui/link";
-import { useParams, usePathname } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import type { getQuestionsUseCase } from "../../use-cases/feedback.use-case";
 
 import { Button } from "@/shared/components/ui/button";
@@ -18,10 +18,8 @@ import { useRef, useState } from "react";
 import { DragPreview, useButton, useDrag } from "react-aria";
 import { Button as RAButton } from "react-aria-components";
 import { useCreateSurveyFormStore } from "../../store/create-survey-multistep-form.store";
-import { DeleteQuestionModal } from "../delete-question-modal";
-import { QuestionTypeBadge } from "../question-type-badge";
-
-const baseQuestionItemClasses = "relative flex flex-row gap-4 p-5";
+import { DeleteQuestionModal } from "./delete-question-modal";
+import { QuestionTypeBadge } from "./question-type-badge";
 
 export type FeedbackQuestion = Awaited<
   ReturnType<typeof getQuestionsUseCase>
@@ -51,6 +49,7 @@ export const NotDraggableQuestionListItem = ({
   question,
 }: QuestionListItemProps) => {
   const params = useParams();
+  const router = useRouter();
   const { createHrefWithParams } = useNavigateWithParams();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -59,65 +58,76 @@ export const NotDraggableQuestionListItem = ({
   const isActive = Number(questionId) === question.id;
 
   const href = createHrefWithParams(
-    isActive ? "/portal/feedback" : `/portal/feedback/questions/${question.id}`,
+    `/portal/feedback/questions/${question.id}`,
+  );
+
+  const editHref = createHrefWithParams(
+    `/portal/feedback/questions/${question.id}/edit`,
   );
 
   return (
     <>
-      <Link
-        key={`question-${question.id}`}
-        href={href}
-        className={cn(baseQuestionItemClasses, "group", {
-          "bg-primary-tint": isActive,
-          "before:absolute before:inset-0 before:z-10 before:w-[3px] before:h-full before:bg-primary":
-            isActive,
-        })}
+      <div
+        className={cn(
+          "relative flex w-full items-center justify-between gap-4 group transition-colors hover:bg-muted pr-4",
+          {
+            "bg-primary-tint/70 hover:bg-primary-tint/70": isActive,
+            "before:absolute before:inset-0 before:z-10 before:w-[3px] before:h-full before:bg-primary":
+              isActive,
+          },
+        )}
       >
-        <div className="w-full flex justify-between items-center ">
-          <div className="flex-1 flex items-center gap-3">
-            <QuestionTypeBadge type={question.type} />
-            <div className="space-y-0.5">
-              <p className="font-medium text-sm text-balance">
-                {question.title}
-              </p>
-              <p className="tabular-nums text-muted-fg text-xs">
-                {question.answerCount} responses
-              </p>
+        <Link
+          key={`question-${question.id}`}
+          href={href}
+          className={cn("p-4 pr-0 group flex-1", {})}
+        >
+          <div className="w-full flex justify-between items-center ">
+            <div className="flex-1 flex items-center gap-3">
+              <QuestionTypeBadge type={question.type} />
+              <div className="space-y-0.5">
+                <p className="font-medium text-sm text-balance">
+                  {question.title}
+                </p>
+                <p className="tabular-nums text-muted-fg text-xs">
+                  {question.answerCount} responses
+                </p>
+              </div>
             </div>
           </div>
-          <Menu>
-            <Button
-              intent="plain"
-              shape="square"
-              size="square-petite"
-              className={
-                "sm:opacity-0 group-hover:opacity-100 size-8 data-pressed:opacity-100"
-              }
+        </Link>
+        <Menu>
+          <Button
+            intent="plain"
+            shape="square"
+            size="square-petite"
+            className={
+              "sm:opacity-0 group-hover:opacity-100 size-8 data-pressed:opacity-100"
+            }
+          >
+            <HugeiconsIcon icon={MoreVerticalIcon} size={18} />
+          </Button>
+          <Menu.Content placement="bottom end">
+            <Menu.Item className="gap-1" onAction={() => router.push(editHref)}>
+              <HugeiconsIcon
+                icon={BubbleChatEditIcon}
+                size={16}
+                data-slot="icon"
+              />
+              <Menu.Label>Edit</Menu.Label>
+            </Menu.Item>
+            <Menu.Separator />
+            <Menu.Item
+              isDanger
+              className="gap-1"
+              onAction={() => setIsDeleteModalOpen(true)}
             >
-              <HugeiconsIcon icon={MoreVerticalIcon} size={18} />
-            </Button>
-            <Menu.Content placement="bottom end">
-              <Menu.Item className="gap-1">
-                <HugeiconsIcon
-                  icon={BubbleChatEditIcon}
-                  size={16}
-                  data-slot="icon"
-                />
-                <Menu.Label>Edit</Menu.Label>
-              </Menu.Item>
-              <Menu.Separator />
-              <Menu.Item
-                isDanger
-                className="gap-1"
-                onAction={() => setIsDeleteModalOpen(true)}
-              >
-                <HugeiconsIcon icon={Delete01Icon} size={16} data-slot="icon" />
-                <Menu.Label>Delete</Menu.Label>
-              </Menu.Item>
-            </Menu.Content>
-          </Menu>
-        </div>
-      </Link>
+              <HugeiconsIcon icon={Delete01Icon} size={16} data-slot="icon" />
+              <Menu.Label>Delete</Menu.Label>
+            </Menu.Item>
+          </Menu.Content>
+        </Menu>
+      </div>
 
       <DeleteQuestionModal
         isOpen={isDeleteModalOpen}
@@ -163,8 +173,7 @@ const DraggableQuestionItem = ({ question }: QuestionListItemProps) => {
       <div
         key={`question-${question.id}`}
         className={cn(
-          baseQuestionItemClasses,
-          "w-full pr-4 inset-ring-2  transition-colors items-center inset-ring-transparent focus-visible:inset-ring-primary",
+          "flex py-4 w-full gap-3 pl-4 pr-4 inset-ring-2  transition-colors items-center inset-ring-transparent focus-visible:inset-ring-primary",
           isDragging || isSelectedIndex >= 0
             ? "bg-bg dark:bg-overlay-highlight"
             : "cursor-grab",

@@ -1,6 +1,7 @@
 import { useCurrentUser } from "@/shared/hooks/use-current-user";
 import { useQuery } from "@tanstack/react-query";
 import type { SortBy } from "../lib/questions.schema";
+import { GetQuestionsSchema } from "../lib/questions.schema";
 import type { getQuestionsUseCase } from "../use-cases/feedback.use-case";
 
 type UseQuestionsProps = {
@@ -21,11 +22,31 @@ export const useQuestions = ({
   const result = useQuery({
     queryKey: ["feedback", "questions", user!.id, page, pageSize, sortBy, q],
     queryFn: async () => {
+      // Validate parameters before making the API call
+      const validationResult = GetQuestionsSchema.safeParse({
+        page,
+        pageSize,
+        sortBy,
+        q,
+      });
+
+      if (!validationResult.success) {
+        return {
+          questions: [],
+          totalCount: 0,
+          page,
+          pageSize,
+          totalPages: 1,
+        };
+      }
+
+      const validatedParams = validationResult.data;
+
       const params = new URLSearchParams({
-        page: page.toString(),
-        pageSize: pageSize.toString(),
-        sortBy: sortBy,
-        q: q,
+        page: validatedParams.page.toString(),
+        pageSize: validatedParams.pageSize.toString(),
+        sortBy: validatedParams.sortBy,
+        q: validatedParams.q || "",
       });
 
       const response = await fetch(`/api/questions?${params.toString()}`, {
@@ -48,8 +69,8 @@ export const useQuestions = ({
         questions: [],
         page,
         pageSize,
-        totalPages: previousData.totalPages,
-        totalCount: previousData.totalCount,
+        totalPages: previousData?.totalPages,
+        totalCount: previousData?.totalCount,
       };
     },
   });

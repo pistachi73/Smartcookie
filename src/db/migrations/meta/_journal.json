@@ -8,6 +8,34 @@
       "when": 1746091186159,
       "tag": "0000_tiny_wrecker",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1748276673641,
+      "tag": "0001_mushy_prima",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1748277053765,
+      "tag": "0002_skinny_retro_girl",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1748277353559,
+      "tag": "0003_futuristic_mad_thinker",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1748443164037,
+      "tag": "0004_stormy_fixer",
+      "breakpoints": true
     }
   ]
 }

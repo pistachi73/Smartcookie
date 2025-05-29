@@ -38,6 +38,9 @@ export const SurveyQuestion = ({ question, step }: SurveyQuestionProps) => {
   const surveyResponseId = useSurveyStore(
     (state) => state.surveyResponseData?.id,
   );
+  const surveyTemplateId = useSurveyStore(
+    (state) => state.surveyResponseData?.surveyTemplateId,
+  );
   const resetSurvey = useSurveyStore((state) => state.resetSurvey);
 
   const questionConfig = getQuestionConfig(question.type);
@@ -70,7 +73,7 @@ export const SurveyQuestion = ({ question, step }: SurveyQuestionProps) => {
   const onSubmit = (data: z.infer<typeof schema>) => {
     setResponse(question.id, data[String(question.id)]);
     if (isLastQuestion) {
-      if (!surveyResponseId) {
+      if (!surveyResponseId || !surveyTemplateId) {
         form.setError(String(question.id), {
           message: "Unexpected error, please try again",
         });
@@ -80,6 +83,7 @@ export const SurveyQuestion = ({ question, step }: SurveyQuestionProps) => {
       submitSurvey({
         surveyResponseId,
         responses,
+        surveyTemplateId,
       });
     } else {
       goToNextStep();

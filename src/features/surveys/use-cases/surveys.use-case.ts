@@ -4,13 +4,15 @@ import { db } from "@/db";
 import {
   type InsertAnswer,
   answers,
+  questions,
   surveyTemplateQuestions,
+  surveyTemplates,
   surveys,
 } from "@/db/schema";
 import { student } from "@/db/schema/student";
 import { surveyResponses } from "@/db/schema/survey-responses";
 import { withValidationOnly } from "@/shared/lib/protected-use-case";
-import { and, asc, eq } from "drizzle-orm";
+import { and, asc, eq, sql } from "drizzle-orm";
 import { z } from "zod";
 import { SubmitSurveySchema } from "../lib/survey.schema";
 
@@ -116,7 +118,7 @@ export const checkStudentHasSurveyAccessUseCase = withValidationOnly({
 
 export const submitSurveyUseCase = withValidationOnly({
   schema: SubmitSurveySchema,
-  useCase: async ({ surveyResponseId, responses }) => {
+  useCase: async ({ surveyResponseId, surveyTemplateId, responses }) => {
     // Filter out empty/undefined responses
     const filteredResponses = Object.entries(responses).filter(
       ([, value]) => value !== "" && value !== undefined,
@@ -151,6 +153,12 @@ export const submitSurveyUseCase = withValidationOnly({
       }),
     );
 
+    const questionIds = [
+      ...new Set(
+        toInsertAnswers.map((a) => a.questionId).filter(Boolean) as number[],
+      ),
+    ];
+
     await db.transaction(async (tx) => {
       await Promise.all([
         tx
@@ -158,6 +166,16 @@ export const submitSurveyUseCase = withValidationOnly({
           .set({ completed: true, completedAt: new Date().toISOString() })
           .where(eq(surveyResponses.id, surveyResponseId)),
         tx.insert(answers).values(toInsertAnswers),
+        tx
+          .update(surveyTemplates)
+          .set({ totalResponses: sql`${surveyTemplates.totalResponses} + 1` })
+          .where(eq(surveyTemplates.id, surveyTemplateId)),
+        ...questionIds.map((questionId) =>
+          tx
+            .update(questions)
+            .set({ totalAnswers: sql`${questions.totalAnswers} + 1` })
+            .where(eq(questions.id, questionId)),
+        ),
       ]);
     });
 

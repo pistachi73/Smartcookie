@@ -1,4 +1,4 @@
-import { QuestionDetails } from "@/features/feedback/components/question-details";
+import { QuestionDetails } from "@/features/feedback/components/questions/question-details";
 import isNumber from "lodash/isNumber";
 import { redirect } from "next/navigation";
 

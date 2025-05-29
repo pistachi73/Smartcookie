@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db";
-import { answers, questions } from "@/db/schema";
+import { questions } from "@/db/schema";
 import { withValidationAndAuth } from "@/shared/lib/protected-use-case";
 import { and, count, desc, eq, sql } from "drizzle-orm";
 import { cache } from "react";
@@ -40,7 +40,7 @@ export const getQuestionsUseCase = withValidationAndAuth({
         ? and(userCondition, buildSearchCondition(q))
         : userCondition;
 
-    // Get the questions with pagination and sorting using JOIN for better performance
+    // Get the questions with pagination and sorting using cached totalAnswers
     const [questionResults, totalCount] = await Promise.all([
       db
         .select({
@@ -49,23 +49,19 @@ export const getQuestionsUseCase = withValidationAndAuth({
           description: questions.description,
           type: questions.type,
           enableAdditionalComment: questions.enableAdditionalComment,
-          createdAt: questions.createdAt,
-          answerCount: sql<number>`COALESCE(COUNT(${answers.id}), 0)`.as(
-            "answerCount",
-          ),
+          updatedAt: questions.updatedAt,
+          answerCount: questions.totalAnswers,
         })
         .from(questions)
-        .leftJoin(answers, eq(questions.id, answers.questionId))
         .where(whereCondition)
-        .groupBy(questions.id)
         .limit(pageSize)
         .offset((page - 1) * pageSize)
         .orderBy(
           sortBy === "alphabetical"
             ? desc(questions.title)
             : sortBy === "response-count"
-              ? desc(sql`COALESCE(COUNT(${answers.id}), 0)`)
-              : desc(questions.createdAt),
+              ? desc(questions.totalAnswers)
+              : desc(questions.updatedAt),
         ),
       getCachedQuestionCount(userId, q),
     ]);

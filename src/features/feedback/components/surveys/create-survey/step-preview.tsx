@@ -8,9 +8,9 @@ import { ArrowLeft02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { useCreateSurvey } from "../../hooks/surveys/use-create-survey";
-import { useCreateSurveyFormStore } from "../../store/create-survey-multistep-form.store";
-import { QuestionTypeBadge } from "../question-type-badge";
+import { useCreateSurvey } from "../../../hooks/surveys/use-create-survey";
+import { useCreateSurveyFormStore } from "../../../store/create-survey-multistep-form.store";
+import { QuestionTypeBadge } from "../../questions/question-type-badge";
 
 export function StepPreview() {
   const router = useRouter();

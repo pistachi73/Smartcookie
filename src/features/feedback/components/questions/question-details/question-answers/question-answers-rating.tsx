@@ -1,13 +1,8 @@
-import {
-  StarIcon,
-  UserMultiple03Icon,
-} from "@hugeicons-pro/core-solid-rounded";
+import { StarIcon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
-import type { getQuestionByIdUseCase } from "../../use-cases/questions.use-case";
-
-type Answer = NonNullable<
-  Awaited<ReturnType<typeof getQuestionByIdUseCase>>
->["answers"][number];
+import type { Answer } from "../../../../types/answer.types";
+import { QuestionNoAnswers } from "./question-no-answers";
+import { DataCard, ResponseCard } from "./shared-cards";
 
 type QuestionAnswersRatingProps = {
   answers: Answer[];
@@ -19,33 +14,11 @@ export const QuestionAnswersRating = ({
   // Filter valid rating answers (1-10) and ensure surveyResponse exists
   const validAnswers = answers.filter((answer) => {
     const rating = Number.parseInt(answer.value, 10);
-    return (
-      !Number.isNaN(rating) &&
-      rating >= 1 &&
-      rating <= 10 &&
-      answer.surveyResponse
-    );
+    return !Number.isNaN(rating) && rating >= 1 && rating <= 10;
   });
 
   if (validAnswers.length === 0) {
-    return (
-      <div className="text-center py-16">
-        <div className="relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 to-orange-500/10 rounded-full blur-2xl" />
-          <div className="relative size-20 mx-auto bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-900/30 dark:to-orange-900/30 rounded-full flex items-center justify-center mb-4">
-            <HugeiconsIcon
-              icon={StarIcon}
-              size={32}
-              className="text-amber-600 dark:text-amber-400"
-            />
-          </div>
-        </div>
-        <h3 className="text-lg font-semibold mb-2">No ratings yet</h3>
-        <p className="text-sm text-muted-fg">
-          Be the first to rate this question!
-        </p>
-      </div>
-    );
+    return <QuestionNoAnswers type="rating" />;
   }
 
   // Calculate rating distribution
@@ -68,40 +41,23 @@ export const QuestionAnswersRating = ({
     <div className="space-y-4">
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="border rounded-xl p-4 bg-overlay">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
-              <HugeiconsIcon
-                icon={StarIcon}
-                size={20}
-                className="text-yellow-500 dark:text-yellow-400"
-              />
-            </div>
-            <div>
-              <p className="text-sm text-muted-fg">Average</p>
-              <p className="text-2xl font-bold">
-                {averageRating.toFixed(1)}
-                <span className="text-sm text-muted-fg font-normal">/10</span>
-              </p>
-            </div>
-          </div>
-        </div>
+        <ResponseCard totalResponses={totalResponses} />
 
-        <div className=" border rounded-xl p-4 bg-overlay">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary-tint dark:bg-yellow-900/30 rounded-lg">
-              <HugeiconsIcon
-                icon={UserMultiple03Icon}
-                size={20}
-                className="text-primary"
-              />
-            </div>
-            <div>
-              <p className="text-sm text-muted-fg">Total Responses</p>
-              <p className="text-2xl font-bold">{totalResponses}</p>
-            </div>
-          </div>
-        </div>
+        <DataCard
+          iconProps={{
+            icon: StarIcon,
+          }}
+          label="Average"
+          value={
+            <>
+              {averageRating.toFixed(1)}
+              <span className="text-sm text-muted-fg font-normal">/10</span>
+            </>
+          }
+          className={{
+            icon: "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-500",
+          }}
+        />
       </div>
 
       <div className="border rounded-2xl p-6 bg-overlay">

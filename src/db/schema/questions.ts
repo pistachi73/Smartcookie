@@ -2,6 +2,7 @@ import { relations, sql } from "drizzle-orm";
 import {
   boolean,
   index,
+  integer,
   pgEnum,
   serial,
   text,
@@ -30,6 +31,7 @@ export const questions = pgTable(
     description: text(),
     type: questionTypeEnum().notNull().default("text"),
     enableAdditionalComment: boolean().notNull().default(false),
+    totalAnswers: integer().notNull().default(0),
     createdAt: timestamp({ mode: "string", withTimezone: true })
       .defaultNow()
       .notNull(),

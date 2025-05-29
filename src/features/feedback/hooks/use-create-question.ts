@@ -1,7 +1,7 @@
 import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { newQuestionFormSchema } from "../lib/questions.schema";
+import { QuestionFormSchema } from "../lib/questions.schema";
 import { createQuestionUseCase } from "../use-cases/questions.use-case";
 
 export const useCreateQuestion = ({
@@ -11,7 +11,7 @@ export const useCreateQuestion = ({
 }) => {
   const queryClient = useQueryClient();
   return useProtectedMutation({
-    schema: newQuestionFormSchema,
+    schema: QuestionFormSchema,
     mutationFn: (data) => createQuestionUseCase(data),
 
     onSuccess: () => {

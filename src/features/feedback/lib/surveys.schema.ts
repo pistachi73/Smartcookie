@@ -18,3 +18,7 @@ export const CreateSurveySchema = z.object({
     }),
   ),
 });
+
+export const DeleteSurveySchema = z.object({
+  id: z.number(),
+});
