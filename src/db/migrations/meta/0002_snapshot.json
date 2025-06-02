@@ -1,6 +1,6 @@
 {
-  "id": "2878b59b-87a7-4b3f-9dcd-a5b4ed1501c6",
-  "prevId": "496a4292-0bbb-4753-8285-262d916871fb",
+  "id": "021557e8-5a1b-4687-be67-0fd24e2c7f0d",
+  "prevId": "bf423b33-99ab-4597-abf4-302c1feabc46",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -136,13 +136,6 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
-        },
-        "total_answer_count": {
-          "name": "total_answer_count",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "default": 0
         },
         "answered_at": {
           "name": "answered_at",
@@ -859,6 +852,13 @@
           "notNull": true,
           "default": false
         },
+        "total_answers": {
+          "name": "total_answers",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp with time zone",
@@ -1456,6 +1456,19 @@
           "notNull": false,
           "default": false
         },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "started_at": {
+          "name": "started_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
         "completed_at": {
           "name": "completed_at",
           "type": "timestamp with time zone",
@@ -1560,7 +1573,8 @@
           "name": "order",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": 0
         }
       },
       "indexes": {
@@ -1619,7 +1633,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -1654,6 +1668,20 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "total_responses": {
+          "name": "total_responses",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "average_response_time": {
+          "name": "average_response_time",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
         },
         "created_at": {
           "name": "created_at",

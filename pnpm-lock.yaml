@@ -31,8 +31,8 @@ importers:
         specifier: ^1.0.4
         version: 1.0.5(react@19.1.0)
       '@internationalized/date':
-        specifier: ^3.6.0
-        version: 3.7.0
+        specifier: ^3.8.1
+        version: 3.8.1
       '@neondatabase/serverless':
         specifier: ^0.10.1
         version: 0.10.4
@@ -1469,9 +1469,6 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@internationalized/date@3.7.0':
-    resolution: {integrity: sha512-VJ5WS3fcVx0bejE/YHfbDKR/yawZgKqn/if+oEeLqNwBtPzVB06olkfcnojTmEMX+gTpH+FlQ69SHNitJ8/erQ==}
-
   '@internationalized/date@3.8.1':
     resolution: {integrity: sha512-PgVE6B6eIZtzf9Gu5HvJxRK3ufUFz9DhspELuhW/N0GuMGMTLvPQNRkHP2hTuP9lblOk+f+1xi96sPiPXANXAA==}
 
@@ -1535,8 +1532,8 @@ packages:
     bundledDependencies:
       - '@libsql/libsql-wasm-experimental'
 
-  '@libsql/core@0.15.7':
-    resolution: {integrity: sha512-hW1++8iKAEnb7Y3EZ2zXRR+1K0MKdRT7SLaNgFkfwz6CmiIBY3sYN7VSftNS7IR6xKRvFBpoz10CC63NoFGkaQ==}
+  '@libsql/core@0.15.8':
+    resolution: {integrity: sha512-oX2fQqDbZkaBUvFMGvJq1Jh+mVzJrgNbEwK6Wzvp91z3uMe9iaIIXgO8yxB72RpUf7BqzjiKHjEiRXytfTdbUw==}
 
   '@neondatabase/serverless@0.10.4':
     resolution: {integrity: sha512-2nZuh3VUO9voBauuh+IGYRhGU/MskWHt1IuZvHcJw6GLjDgtqj/KViKo7SIrLdGLdot7vFbiRRw+BgEy3wT9HA==}
@@ -3367,8 +3364,8 @@ packages:
   '@types/node@22.13.10':
     resolution: {integrity: sha512-I6LPUvlRH+O6VRUqYOcMudhaIdUVWfsjnZavnsraHvpBwaEyMN29ry+0UVJhImYL16xsscu0aske3yA+uPOWfw==}
 
-  '@types/node@22.15.21':
-    resolution: {integrity: sha512-EV/37Td6c+MgKAbkcLG6vqZ2zEYHD7bvSrzqqs2RIhbA6w3x+Dqz8MZM3sP6kGTeLrdoOgKZe+Xja7tUB2DNkQ==}
+  '@types/node@22.15.29':
+    resolution: {integrity: sha512-LNdjOkUDlU1RZb8e1kOIUpN1qQUlzGkEtbVNo53vbrwDg5om6oduhm4SiUaPW5ASTXhAiP0jInWG8Qx9fVlOeQ==}
 
   '@types/pg@8.11.6':
     resolution: {integrity: sha512-/2WmmBXHLsfRqzfHW7BNZ8SbYzE8OSk7i3WjFYvfgRHj7S1xj+16Je5fUKv3lVdVzk/zn9TXOqf+avFCFIE0yQ==}
@@ -6375,10 +6372,6 @@ snapshots:
   '@img/sharp-win32-x64@0.34.2':
     optional: true
 
-  '@internationalized/date@3.7.0':
-    dependencies:
-      '@swc/helpers': 0.5.15
-
   '@internationalized/date@3.8.1':
     dependencies:
       '@swc/helpers': 0.5.15
@@ -6459,10 +6452,10 @@ snapshots:
 
   '@libsql/client-wasm@0.15.7':
     dependencies:
-      '@libsql/core': 0.15.7
+      '@libsql/core': 0.15.8
       js-base64: 3.7.7
 
-  '@libsql/core@0.15.7':
+  '@libsql/core@0.15.8':
     dependencies:
       js-base64: 3.7.7
 
@@ -6617,7 +6610,7 @@ snapshots:
 
   '@react-aria/calendar@3.7.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
-      '@internationalized/date': 3.7.0
+      '@internationalized/date': 3.8.1
       '@react-aria/i18n': 3.12.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@react-aria/interactions': 3.24.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@react-aria/live-announcer': 3.4.1
@@ -6768,7 +6761,7 @@ snapshots:
 
   '@react-aria/datepicker@3.14.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
-      '@internationalized/date': 3.7.0
+      '@internationalized/date': 3.8.1
       '@internationalized/number': 3.6.0
       '@internationalized/string': 3.2.5
       '@react-aria/focus': 3.20.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -6994,7 +6987,7 @@ snapshots:
 
   '@react-aria/i18n@3.12.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
-      '@internationalized/date': 3.7.0
+      '@internationalized/date': 3.8.1
       '@internationalized/message': 3.1.6
       '@internationalized/number': 3.6.0
       '@internationalized/string': 3.2.5
@@ -7901,7 +7894,7 @@ snapshots:
 
   '@react-stately/calendar@3.7.1(react@19.1.0)':
     dependencies:
-      '@internationalized/date': 3.7.0
+      '@internationalized/date': 3.8.1
       '@react-stately/utils': 3.10.5(react@19.1.0)
       '@react-types/calendar': 3.6.1(react@19.1.0)
       '@react-types/shared': 3.29.1(react@19.1.0)
@@ -8013,7 +8006,7 @@ snapshots:
 
   '@react-stately/datepicker@3.13.0(react@19.1.0)':
     dependencies:
-      '@internationalized/date': 3.7.0
+      '@internationalized/date': 3.8.1
       '@internationalized/string': 3.2.5
       '@react-stately/form': 3.1.2(react@19.1.0)
       '@react-stately/overlays': 3.6.14(react@19.1.0)
@@ -8414,7 +8407,7 @@ snapshots:
 
   '@react-types/calendar@3.6.1(react@19.1.0)':
     dependencies:
-      '@internationalized/date': 3.7.0
+      '@internationalized/date': 3.8.1
       '@react-types/shared': 3.29.1(react@19.1.0)
       react: 19.1.0
 
@@ -8458,7 +8451,7 @@ snapshots:
 
   '@react-types/datepicker@3.11.0(react@19.1.0)':
     dependencies:
-      '@internationalized/date': 3.7.0
+      '@internationalized/date': 3.8.1
       '@react-types/calendar': 3.6.1(react@19.1.0)
       '@react-types/overlays': 3.8.13(react@19.1.0)
       '@react-types/shared': 3.29.1(react@19.1.0)
@@ -9023,7 +9016,7 @@ snapshots:
     dependencies:
       undici-types: 6.20.0
 
-  '@types/node@22.15.21':
+  '@types/node@22.15.29':
     dependencies:
       undici-types: 6.21.0
     optional: true
@@ -9036,7 +9029,7 @@ snapshots:
 
   '@types/pg@8.15.2':
     dependencies:
-      '@types/node': 22.15.21
+      '@types/node': 22.15.29
       pg-protocol: 1.10.0
       pg-types: 4.0.2
     optional: true

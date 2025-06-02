@@ -1,15 +1,17 @@
-import { Button } from "@/shared/components/ui/button";
-import { Card } from "@/shared/components/ui/card";
-import { Menu } from "@/shared/components/ui/menu";
+import dynamic from "next/dynamic";
+import { useState } from "react";
+
+import { StudentProfile } from "@/shared/components/students/student-profile";
+
+import { Button } from "@/ui/button";
+import { Card } from "@/ui/card";
+import { Menu } from "@/ui/menu";
+import { Separator } from "@/ui/separator";
 import { MoreVerticalIcon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 
-import { Separator } from "@/shared/components/ui/separator";
-import dynamic from "next/dynamic";
-import { useState } from "react";
 import { useStudentsByHubId } from "../../hooks/students/use-students-by-hub-id";
 import type { getStudentsByHubIdUseCase } from "../../use-cases/students.use-case";
-import { StudentProfile } from "../create-hub-multistep-form/step-students/student-profile";
 import { AttendanceBar } from "./attendance-bar";
 
 const DynamicRemoveStudentModal = dynamic(

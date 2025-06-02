@@ -14,10 +14,12 @@ export const surveyTemplateQuestions = pgTable(
       })
       .notNull(),
     questionId: integer()
-      .references(() => questions.id)
+      .references(() => questions.id, {
+        onDelete: "cascade",
+      })
       .notNull(),
     required: boolean().notNull().default(true),
-    order: integer().notNull(),
+    order: integer().notNull().default(0),
   },
   (t) => ({
     surveyTemplateIdIdx: index().on(t.surveyTemplateId),

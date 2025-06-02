@@ -33,7 +33,9 @@ export const PageHeader = ({
           <HugeiconsIcon icon={icon} size={20} className="text-primary" />
         </div>
         <div className="flex flex-col">
-          <Heading level={1}>{title}</Heading>
+          <Heading level={1} tracking="tight">
+            {title}
+          </Heading>
           {subTitle && (
             <span className="text-muted-fg text-sm">{subTitle}</span>
           )}

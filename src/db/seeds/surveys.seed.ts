@@ -33,14 +33,12 @@ export default async function seed(db: DB) {
 
   if (!sT) throw new Error("Survey template not found!");
 
-  console.log();
-
-  // Create survey template questions
+  // Create survey template questions with fractional ordering
   const surTempQuest = questions.map((question, index) => ({
     surveyTemplateId: sT.id,
     questionId: question.id,
-    order: index + 1,
     required: true,
+    order: index + 1,
   }));
 
   await db.insert(schema.surveyTemplateQuestions).values(surTempQuest);

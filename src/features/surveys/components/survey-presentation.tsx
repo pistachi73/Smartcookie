@@ -74,6 +74,7 @@ export const SurveyPresentation = ({ surveyId }: SurveyPresentationProps) => {
       id: res.data?.id,
       studentId: res.data?.studentId,
       surveyTemplateId: survey?.id,
+      startedAt: res.data?.startedAt || new Date().toISOString(),
     });
   };
 

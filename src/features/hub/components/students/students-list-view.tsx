@@ -1,7 +1,7 @@
+import { StudentProfile } from "@/shared/components/students/student-profile";
 import { Button } from "@/shared/components/ui/button";
 import { Menu } from "@/shared/components/ui/menu";
 import { Table } from "@/shared/components/ui/table";
-import { UserAvatar } from "@/shared/components/ui/user-avatar";
 import { MoreHorizontalIcon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import dynamic from "next/dynamic";
@@ -53,11 +53,7 @@ export const StudentsListView = ({ hubId }: { hubId: number }) => {
           {({ id, name, email, image, completedSessions, presentSessions }) => (
             <Table.Row key={`${id}-${name}`}>
               <Table.Cell className="flex items-center gap-3">
-                <UserAvatar userImage={image} userName={name} size="medium" />
-                <div>
-                  <p className="text-sm font-medium">{name}</p>
-                  <p className="text-xs text-muted-fg">{email}</p>
-                </div>
+                <StudentProfile name={name} email={email} image={image} />
               </Table.Cell>
               <Table.Cell>
                 <AttendanceBar

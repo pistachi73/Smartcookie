@@ -13,6 +13,7 @@ export const surveyTemplates = pgTable("survey_templates", {
   title: text().notNull(),
   description: text(),
   totalResponses: integer().default(0),
+  averageResponseTime: integer().default(0),
   createdAt: timestamp({ mode: "string" }).defaultNow().notNull(),
   updatedAt: timestamp({ mode: "string" })
     .defaultNow()

@@ -7,6 +7,7 @@ import {
   timestamp,
   uuid,
 } from "drizzle-orm/pg-core";
+import { answers } from "./answers";
 import { student } from "./student";
 import { surveys } from "./surveys";
 import { pgTable } from "./utils";
@@ -22,6 +23,8 @@ export const surveyResponses = pgTable(
       .references(() => student.id, { onDelete: "cascade" })
       .notNull(),
     completed: boolean().default(false),
+    createdAt: timestamp({ mode: "string", withTimezone: true }).defaultNow(),
+    startedAt: timestamp({ mode: "string", withTimezone: true }),
     completedAt: timestamp({ mode: "string", withTimezone: true }),
   },
   (t) => ({
@@ -32,7 +35,7 @@ export const surveyResponses = pgTable(
 
 export const surveyResponsesRelations = relations(
   surveyResponses,
-  ({ one }) => ({
+  ({ one, many }) => ({
     survey: one(surveys, {
       fields: [surveyResponses.surveyId],
       references: [surveys.id],
@@ -41,6 +44,7 @@ export const surveyResponsesRelations = relations(
       fields: [surveyResponses.studentId],
       references: [student.id],
     }),
+    answers: many(answers),
   }),
 );
 

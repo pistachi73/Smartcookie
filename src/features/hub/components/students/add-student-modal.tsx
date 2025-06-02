@@ -1,8 +1,11 @@
-import { Button } from "@/shared/components/ui/button";
-import { ComboBox } from "@/shared/components/ui/combo-box";
-import { Form } from "@/shared/components/ui/form";
-import { Modal } from "@/shared/components/ui/modal";
-import { ProgressCircle } from "@/shared/components/ui/progress-circle";
+import { StudentProfile } from "@/shared/components/students/student-profile";
+
+import { Button } from "@/ui/button";
+import { ComboBox } from "@/ui/combo-box";
+import { Form } from "@/ui/form";
+import { Modal } from "@/ui/modal";
+import { ProgressCircle } from "@/ui/progress-circle";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import type { z } from "zod";
@@ -10,7 +13,6 @@ import { useAddStudentToHub } from "../../hooks/students/use-add-student-to-hub"
 import { useStudentsByHubId } from "../../hooks/students/use-students-by-hub-id";
 import { useStudentsByUserId } from "../../hooks/students/use-students-by-user-id";
 import { AddStudentFormSchema } from "../../lib/students.schema";
-import { StudentProfile } from "../create-hub-multistep-form/step-students/student-profile";
 
 type AddStudentModalProps = {
   hubId: number;
@@ -105,7 +107,6 @@ export const AddStudentModal = ({
                         id={item.id}
                         textValue={item.name}
                         className={"flex gap-3"}
-                        showTick={false}
                       >
                         <StudentProfile
                           name={item.name}

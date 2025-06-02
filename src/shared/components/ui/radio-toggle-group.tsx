@@ -246,9 +246,15 @@ const RadioToggle = ({
       )}
       {...props}
     >
-      {props.children as React.ReactNode}
-      {description && (
-        <Description className="block">{description}</Description>
+      {(values) => (
+        <>
+          {typeof props.children === "function"
+            ? props.children(values)
+            : props.children}
+          {description && (
+            <Description className="block">{description}</Description>
+          )}
+        </>
       )}
     </RadioPrimitive>
   );

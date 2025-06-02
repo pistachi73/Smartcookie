@@ -1,14 +1,22 @@
 import { twMerge } from "tailwind-merge";
 
-const Card = ({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) => {
+type CardProps = React.HTMLAttributes<HTMLDivElement> & {
+  spacing?: "sm" | "md" | "lg";
+};
+
+const Card = ({ className, spacing = "md", ...props }: CardProps) => {
+  const spacingClasses = {
+    sm: "[--card-spacing:theme(spacing.4)]",
+    md: "[--card-spacing:theme(spacing.6)]",
+    lg: "[--card-spacing:theme(spacing.8)]",
+  };
+
   return (
     <div
       data-slot="card"
       className={twMerge(
-        "group/card flex flex-col gap-(--card-spacing) rounded-lg border bg-overlay  py-(--card-spacing) text-fg shadow-xs [--card-spacing:theme(spacing.6)] has-[table]:overflow-hidden **:data-[slot=table-header]:bg-muted/50 has-[table]:**:data-[slot=card-footer]:border-t **:[table]:overflow-hidden",
+        "group/card flex flex-col gap-(--card-spacing) rounded-lg border bg-overlay  py-(--card-spacing) text-fg shadow-xs has-[table]:overflow-hidden **:data-[slot=table-header]:bg-muted/50 has-[table]:**:data-[slot=card-footer]:border-t **:[table]:overflow-hidden",
+        spacingClasses[spacing],
         className,
       )}
       {...props}

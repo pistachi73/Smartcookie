@@ -12,16 +12,16 @@ import {
   composeRenderProps,
 } from "react-aria-components";
 
-import { ArrowDown01Icon } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { tv } from "tailwind-variants";
 import {
+  DropdownDescription,
   DropdownItem,
-  DropdownItemDetails,
   DropdownLabel,
   DropdownSection,
   DropdownSeparator,
-} from "./dropdown";
+} from "@/ui/dropdown";
+import { ArrowDown01Icon } from "@hugeicons-pro/core-stroke-rounded";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { tv } from "tailwind-variants";
 import { Description, FieldError, Label } from "./field";
 import { ListBox } from "./list-box";
 import { PopoverContent, type PopoverContentProps } from "./popover";
@@ -51,10 +51,14 @@ const Select = <T extends object>({
         "group flex w-full flex-col gap-y-1.5",
       )}
     >
-      {label && <Label>{label}</Label>}
-      {children as React.ReactNode}
-      {description && <Description>{description}</Description>}
-      <FieldError>{errorMessage}</FieldError>
+      {(values) => (
+        <>
+          {label && <Label>{label}</Label>}
+          {typeof children === "function" ? children(values) : children}
+          {description && <Description>{description}</Description>}
+          <FieldError>{errorMessage}</FieldError>
+        </>
+      )}
     </SelectPrimitive>
   );
 };
@@ -151,11 +155,17 @@ const SelectTrigger = ({
   );
 };
 
-Select.OptionDetails = DropdownItemDetails;
-Select.Option = DropdownItem;
-Select.Label = DropdownLabel;
-Select.Separator = DropdownSeparator;
-Select.Section = DropdownSection;
+const SelectSection = DropdownSection;
+const SelectSeparator = DropdownSeparator;
+const SelectLabel = DropdownLabel;
+const SelectDescription = DropdownDescription;
+const SelectOption = DropdownItem;
+
+Select.Description = SelectDescription;
+Select.Option = SelectOption;
+Select.Label = SelectLabel;
+Select.Separator = SelectSeparator;
+Select.Section = SelectSection;
 Select.Trigger = SelectTrigger;
 Select.List = List;
 

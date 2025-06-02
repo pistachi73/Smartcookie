@@ -5,7 +5,6 @@ export const getHubsQueryOptions = {
   queryKey: ["hubs"],
   queryFn: async () => {
     const res = await getHubsAction();
-    console.log({ res: res?.data });
     return res?.data;
   },
 };

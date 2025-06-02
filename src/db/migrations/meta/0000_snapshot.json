@@ -1,5 +1,5 @@
 {
-  "id": "9151cd50-5957-4d2b-922c-f6fa934bdba8",
+  "id": "e91f1362-48b9-4a43-998c-6eba735df9d4",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -136,6 +136,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "answered_at": {
+          "name": "answered_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
         }
       },
       "indexes": {
@@ -845,6 +852,13 @@
           "notNull": true,
           "default": false
         },
+        "total_answers": {
+          "name": "total_answers",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp with time zone",
@@ -1442,6 +1456,12 @@
           "notNull": false,
           "default": false
         },
+        "started_at": {
+          "name": "started_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
         "completed_at": {
           "name": "completed_at",
           "type": "timestamp with time zone",
@@ -1546,7 +1566,8 @@
           "name": "order",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": 0
         }
       },
       "indexes": {
@@ -1640,6 +1661,20 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "total_responses": {
+          "name": "total_responses",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "average_response_time": {
+          "name": "average_response_time",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
         },
         "created_at": {
           "name": "created_at",

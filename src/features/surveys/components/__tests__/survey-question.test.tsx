@@ -90,7 +90,11 @@ describe("SurveyQuestion", () => {
   it("should call submit survey when the text input is valid and it's the final question", async () => {
     mockStore.setState({
       responses: {},
-      surveyResponseData: { id: 123 },
+      surveyResponseData: {
+        id: 123,
+        surveyTemplateId: 1,
+        startedAt: new Date().toISOString(),
+      },
       totalQuestions: 3,
     });
 
@@ -104,6 +108,8 @@ describe("SurveyQuestion", () => {
       expect(mockMutateSubmit).toHaveBeenCalledWith({
         surveyResponseId: 123,
         responses: {},
+        surveyTemplateId: 1,
+        startedAt: expect.any(String),
       });
     });
   });
@@ -112,7 +118,11 @@ describe("SurveyQuestion", () => {
     const mockResponses = {
       [textQuestion.id]: "test",
     };
-    const mockResponseData = { id: 123 };
+    const mockResponseData = {
+      id: 123,
+      surveyTemplateId: 1,
+      startedAt: new Date().toISOString(),
+    };
     mockStore.setState({
       responses: mockResponses,
       surveyResponseData: mockResponseData,
@@ -126,7 +136,56 @@ describe("SurveyQuestion", () => {
       expect(mockMutateSubmit).toHaveBeenCalledWith({
         surveyResponseId: mockResponseData.id,
         responses: mockResponses,
+        surveyTemplateId: mockResponseData.surveyTemplateId,
+        startedAt: mockResponseData.startedAt,
       });
     });
   });
+
+  it.each([
+    {
+      field: "surveyResponseId",
+      mockResponseData: {
+        surveyTemplateId: 1,
+        startedAt: new Date().toISOString(),
+      },
+    },
+    {
+      field: "startedAt",
+      mockResponseData: {
+        id: 123,
+        surveyTemplateId: 1,
+      },
+    },
+    {
+      field: "surveyTemplateId",
+      mockResponseData: {
+        id: 123,
+        startedAt: new Date().toISOString(),
+      },
+    },
+  ])(
+    "should not call onSubmit if $field is missing",
+    async ({ mockResponseData }) => {
+      const mockResponses = {
+        [textQuestion.id]: "test",
+      };
+      mockStore.setState({
+        responses: mockResponses,
+        surveyResponseData: mockResponseData,
+        totalQuestions: 1,
+      });
+
+      render(<SurveyQuestion question={textQuestion} step={1} />);
+      const submitButton = screen.getByRole("button");
+      fireEvent.click(submitButton);
+
+      expect(mockMutateSubmit).not.toHaveBeenCalled();
+      await waitFor(() => {
+        expect(
+          screen.getByText("Unexpected error, please try again"),
+        ).toBeInTheDocument();
+      });
+    },
+  );
 });

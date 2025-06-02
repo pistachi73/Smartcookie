@@ -16,7 +16,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { QuestionsPanel } from "./questions/questions-panel";
-import { SurveysPanel } from "./surveys/surveys-panel";
+import { SurveysPanel } from "./survey-templates/surveys-panel";
 
 const tabs: {
   id: string;

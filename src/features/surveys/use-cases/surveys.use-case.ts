@@ -108,17 +108,32 @@ export const checkStudentHasSurveyAccessUseCase = withValidationOnly({
       };
     }
 
+    const startedAt = new Date().toISOString();
+    //Set survey resopnse startedAt
+    await db
+      .update(surveyResponses)
+      .set({ startedAt })
+      .where(eq(surveyResponses.id, response.id));
+
     return {
       success: true,
       message: "Student has survey access",
-      data: response,
+      data: {
+        ...response,
+        startedAt,
+      },
     };
   },
 });
 
 export const submitSurveyUseCase = withValidationOnly({
   schema: SubmitSurveySchema,
-  useCase: async ({ surveyResponseId, surveyTemplateId, responses }) => {
+  useCase: async ({
+    surveyResponseId,
+    surveyTemplateId,
+    responses,
+    startedAt,
+  }) => {
     // Filter out empty/undefined responses
     const filteredResponses = Object.entries(responses).filter(
       ([, value]) => value !== "" && value !== undefined,
@@ -159,6 +174,10 @@ export const submitSurveyUseCase = withValidationOnly({
       ),
     ];
 
+    const responseTimeInMilliseconds = Math.round(
+      new Date().getTime() - new Date(startedAt).getTime(),
+    );
+
     await db.transaction(async (tx) => {
       await Promise.all([
         tx
@@ -168,17 +187,44 @@ export const submitSurveyUseCase = withValidationOnly({
         tx.insert(answers).values(toInsertAnswers),
         tx
           .update(surveyTemplates)
-          .set({ totalResponses: sql`${surveyTemplates.totalResponses} + 1` })
+          .set({
+            totalResponses: sql`${surveyTemplates.totalResponses} + 1`,
+            averageResponseTime: sql`(${surveyTemplates.averageResponseTime} * ${surveyTemplates.totalResponses} + ${responseTimeInMilliseconds}) / (${surveyTemplates.totalResponses} + 1)`,
+          })
           .where(eq(surveyTemplates.id, surveyTemplateId)),
         ...questionIds.map((questionId) =>
           tx
             .update(questions)
-            .set({ totalAnswers: sql`${questions.totalAnswers} + 1` })
+            .set({
+              totalAnswers: sql`${questions.totalAnswers} + 1`,
+            })
             .where(eq(questions.id, questionId)),
         ),
       ]);
     });
 
     return { success: true };
+  },
+});
+
+export const getSurveyResponsesUseCase = withValidationOnly({
+  schema: z.object({
+    surveyId: z.string(),
+    studentId: z.number(),
+  }),
+  useCase: async ({ surveyId, studentId }) => {
+    const responses = await db.query.surveyResponses.findMany({
+      where: and(
+        eq(surveyResponses.surveyId, surveyId),
+        eq(surveyResponses.studentId, studentId),
+      ),
+      with: {
+        answers: {
+          with: {
+            question: true,
+          },
+        },
+      },
+    });
   },
 });

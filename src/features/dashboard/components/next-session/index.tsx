@@ -1,6 +1,6 @@
 "use client";
 
-import { StudentProfile } from "@/features/hub/components/create-hub-multistep-form/step-students/student-profile";
+import { StudentProfile } from "@/shared/components/students/student-profile";
 import { AvatarStack } from "@/shared/components/ui/avatar-stack";
 import { buttonStyles } from "@/shared/components/ui/button";
 import { Heading } from "@/shared/components/ui/heading";

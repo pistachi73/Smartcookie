@@ -35,12 +35,11 @@ export const SurveyQuestion = ({ question, step }: SurveyQuestionProps) => {
   const totalQuestions = useSurveyStore((state) => state.totalQuestions);
   const goToNextStep = useSurveyStore((state) => state.goToNextStep);
   const responses = useSurveyStore((state) => state.responses);
-  const surveyResponseId = useSurveyStore(
-    (state) => state.surveyResponseData?.id,
+
+  const surveyResponseData = useSurveyStore(
+    (state) => state.surveyResponseData,
   );
-  const surveyTemplateId = useSurveyStore(
-    (state) => state.surveyResponseData?.surveyTemplateId,
-  );
+
   const resetSurvey = useSurveyStore((state) => state.resetSurvey);
 
   const questionConfig = getQuestionConfig(question.type);
@@ -73,7 +72,12 @@ export const SurveyQuestion = ({ question, step }: SurveyQuestionProps) => {
   const onSubmit = (data: z.infer<typeof schema>) => {
     setResponse(question.id, data[String(question.id)]);
     if (isLastQuestion) {
-      if (!surveyResponseId || !surveyTemplateId) {
+      const {
+        id: surveyResponseId,
+        surveyTemplateId,
+        startedAt,
+      } = surveyResponseData;
+      if (!surveyResponseId || !surveyTemplateId || !startedAt) {
         form.setError(String(question.id), {
           message: "Unexpected error, please try again",
         });
@@ -84,6 +88,7 @@ export const SurveyQuestion = ({ question, step }: SurveyQuestionProps) => {
         surveyResponseId,
         responses,
         surveyTemplateId,
+        startedAt,
       });
     } else {
       goToNextStep();

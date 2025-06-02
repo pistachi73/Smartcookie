@@ -66,8 +66,6 @@ export const getQuestionsUseCase = withValidationAndAuth({
       getCachedQuestionCount(userId, q),
     ]);
 
-    console.log("questionResults", questionResults);
-
     return {
       questions: questionResults,
       totalCount,

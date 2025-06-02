@@ -9,7 +9,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
-import { useCreateQuestion } from "../../hooks/use-create-question";
+import { useCreateQuestion } from "../../hooks/questions/use-create-question";
 import { QuestionFormSchema } from "../../lib/questions.schema";
 import { QuestionForm } from "./question-form";
 

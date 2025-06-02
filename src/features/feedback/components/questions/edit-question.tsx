@@ -6,19 +6,20 @@ import { useNavigateWithParams } from "@/shared/hooks/use-navigate-with-params";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
-import { useQuestion } from "../../hooks/use-question";
-import { useUpdateQuestion } from "../../hooks/use-update-question";
+import { useUpdateQuestion } from "../../hooks/questions/use-update-question";
+import { questionQueryOptions } from "../../lib/questions-query-options";
 import {
   QuestionFormSchema,
   type UpdateQuestionFormSchema,
 } from "../../lib/questions.schema";
+import { FeedbackLoading } from "../shared/feedback-loading";
+import { FeedbackNotFound } from "../shared/feedback-not-found";
 import { QuestionForm } from "./question-form";
-import { QuestionLoading } from "./question-loading";
-import { QuestionNotFound } from "./question-not-found";
 
 interface EditQuestionProps {
   questionId: number;
@@ -28,10 +29,8 @@ export const EditQuestion = ({ questionId }: EditQuestionProps) => {
   const router = useRouter();
   const { createHrefWithParams } = useNavigateWithParams();
 
-  const questionQuery = useQuestion(questionId);
+  const questionQuery = useQuery(questionQueryOptions(questionId));
   const question = questionQuery.data;
-
-  console.log(question);
 
   const form = useForm<z.infer<typeof QuestionFormSchema>>({
     resolver: zodResolver(QuestionFormSchema),
@@ -74,11 +73,16 @@ export const EditQuestion = ({ questionId }: EditQuestionProps) => {
   };
 
   if (questionQuery.isLoading) {
-    return <QuestionLoading />;
+    return <FeedbackLoading title="Loading question..." />;
   }
 
   if (!question) {
-    return <QuestionNotFound />;
+    return (
+      <FeedbackNotFound
+        title="Question not found"
+        description="This question seems to have vanished into thin air!"
+      />
+    );
   }
 
   return (

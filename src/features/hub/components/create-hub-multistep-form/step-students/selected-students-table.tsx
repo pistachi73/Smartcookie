@@ -1,10 +1,11 @@
 "use client";
 
-import { Badge } from "@/shared/components/ui/badge";
-import { Button } from "@/shared/components/ui/button";
-import { Heading } from "@/shared/components/ui/heading";
+import { StudentProfile } from "@/shared/components/students/student-profile";
 import { useCurrentUser } from "@/shared/hooks/use-current-user";
 import { cn } from "@/shared/lib/classes";
+import { Badge } from "@/ui/badge";
+import { Button } from "@/ui/button";
+import { Heading } from "@/ui/heading";
 import {
   Delete01Icon,
   UserMultiple02Icon,
@@ -13,7 +14,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useQueryClient } from "@tanstack/react-query";
 import type { SelectStudent } from ".";
 import { useHubFormStore } from "../../../store/hub-form-store";
-import { StudentProfile } from "./student-profile";
+
 export const SelectedStudentsTable = () => {
   const user = useCurrentUser();
   const students = useHubFormStore((state) => state.students);

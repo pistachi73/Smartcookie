@@ -55,13 +55,20 @@ export const questionTypeRegistry: Record<QuestionType, QuestionTypeConfig> = {
   rating: {
     Component: QuestionRating,
     generateSchema: (question: Question) => {
-      const baseRatingSchema = z.string().regex(/^(?:[1-9]|10)$/, {
-        message: "Please select a valid rating (1-10).",
-      });
       if (question.required) {
-        return baseRatingSchema.min(1, { message: "This field is required." });
+        return z
+          .string()
+          .regex(/^(?:[1-9]|10)$/, {
+            message: "Please select a valid rating (1-10).",
+          })
+          .min(1, { message: "This field is required." });
       }
-      return baseRatingSchema.optional();
+      return z.union([
+        z.literal(""),
+        z.string().regex(/^(?:[1-9]|10)$/, {
+          message: "Please select a valid rating (1-10).",
+        }),
+      ]);
     },
   },
 };

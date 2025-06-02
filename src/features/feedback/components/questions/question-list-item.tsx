@@ -17,7 +17,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useRef, useState } from "react";
 import { DragPreview, useButton, useDrag } from "react-aria";
 import { Button as RAButton } from "react-aria-components";
-import { useCreateSurveyFormStore } from "../../store/create-survey-multistep-form.store";
+import { useSurveyTemplateFormStore } from "../../store/survey-template-form.store";
 import { DeleteQuestionModal } from "./delete-question-modal";
 import { QuestionTypeBadge } from "./question-type-badge";
 
@@ -31,14 +31,18 @@ type QuestionListItemProps = {
 
 export const QuestionListItem = ({ question }: QuestionListItemProps) => {
   const pathname = usePathname();
-  const createSurveyStep = useCreateSurveyFormStore(
+  const createSurveyStep = useSurveyTemplateFormStore(
     (state) => state.currentStep,
   );
 
-  const isSurveyStep =
-    createSurveyStep === 2 && pathname === "/portal/feedback/surveys/new/";
+  const isInSurveyForm =
+    pathname.includes("/portal/feedback/surveys/new") ||
+    (pathname.includes("/portal/feedback/surveys/") &&
+      pathname.includes("/edit"));
 
-  return isSurveyStep ? (
+  const isSurveyFormStep = isInSurveyForm && createSurveyStep === 2;
+
+  return isSurveyFormStep ? (
     <DraggableQuestionItem question={question} />
   ) : (
     <NotDraggableQuestionListItem question={question} />
@@ -142,11 +146,11 @@ const DraggableQuestionItem = ({ question }: QuestionListItemProps) => {
   const preview = useRef(null);
   const dragButtonRef = useRef(null);
 
-  const isSelectedIndex = useCreateSurveyFormStore((state) =>
+  const isSelectedIndex = useSurveyTemplateFormStore((state) =>
     state.questions.findIndex((q) => q.id === question.id),
   );
-  const addQuestion = useCreateSurveyFormStore((state) => state.addQuestion);
-  const removeQuestion = useCreateSurveyFormStore(
+  const addQuestion = useSurveyTemplateFormStore((state) => state.addQuestion);
+  const removeQuestion = useSurveyTemplateFormStore(
     (state) => state.removeQuestion,
   );
 

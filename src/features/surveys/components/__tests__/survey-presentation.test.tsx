@@ -249,6 +249,8 @@ describe("SurveyPresentation", () => {
       email: "test@example.com",
       id: 1,
       studentId: 123,
+      surveyTemplateId: mockSurveyData.id,
+      startedAt: expect.any(String),
     });
   });
 

@@ -46,20 +46,27 @@ export const getHubSurveysUseCase = withValidationAndAuth({
 
 export const getSurveyTemplatesUseCase = withAuthenticationNoInput({
   useCase: async (userId) => {
-    const templates = await db.query.surveyTemplates.findMany({
-      where: eq(surveyTemplates.userId, userId),
-      columns: {
-        id: true,
-        title: true,
-        description: true,
-      },
-      extras: {
-        questionCount: sql<number>`(
-          SELECT COUNT(*) FROM ${surveyTemplateQuestions}
-          WHERE ${surveyTemplateQuestions.surveyTemplateId} = ${surveyTemplates.id}
-        )`.as("questionCount"),
-      },
-    });
+    const templates = await db
+      .select({
+        id: surveyTemplates.id,
+        title: surveyTemplates.title,
+        description: surveyTemplates.description,
+        questionCount: sql<number>`COUNT(${surveyTemplateQuestions.id})`.as(
+          "questionCount",
+        ),
+      })
+      .from(surveyTemplates)
+      .leftJoin(
+        surveyTemplateQuestions,
+        eq(surveyTemplates.id, surveyTemplateQuestions.surveyTemplateId),
+      )
+      .where(eq(surveyTemplates.userId, userId))
+      .groupBy(
+        surveyTemplates.id,
+        surveyTemplates.title,
+        surveyTemplates.description,
+      );
+
     return templates;
   },
 });
@@ -67,7 +74,7 @@ export const getSurveyTemplatesUseCase = withAuthenticationNoInput({
 export const createHubSurveyUseCase = withValidationAndAuth({
   schema: createHubSurveySchema,
   useCase: async ({ hubId, surveyTemplateId }, userId) => {
-    await db.transaction(async (tx) => {
+    return await db.transaction(async (tx) => {
       const students = await tx
         .select({ id: student.id })
         .from(student)
@@ -75,9 +82,10 @@ export const createHubSurveyUseCase = withValidationAndAuth({
         .where(and(eq(studentHub.hubId, hubId), eq(student.userId, userId)));
 
       if (students.length === 0) {
-        throw new Error("No students found for this hub", {
-          cause: "cause",
-        });
+        return {
+          success: false,
+          message: "No students found for this hub",
+        };
       }
 
       const [survey] = await tx
@@ -91,7 +99,10 @@ export const createHubSurveyUseCase = withValidationAndAuth({
 
       if (!survey) {
         tx.rollback();
-        return;
+        return {
+          success: false,
+          message: "Failed to create survey",
+        };
       }
 
       const toAddSurveyResponses: InsertSurveyResponse[] = students.map(
@@ -102,6 +113,11 @@ export const createHubSurveyUseCase = withValidationAndAuth({
       );
 
       await tx.insert(surveyResponses).values(toAddSurveyResponses);
+
+      return {
+        success: true,
+        message: "Survey created successfully",
+      };
     });
   },
 });

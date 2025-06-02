@@ -169,11 +169,11 @@ export const QuestionForm = ({
       />
 
       {/* Additional Options Section */}
-      <div className="rounded-lg border">
+      <div className="rounded-lg border border-input">
         <Heading level={4} className="px-4 py-3 text-sm">
           Additional Options
         </Heading>
-        <Separator />
+        <Separator className="border-input" />
         <Controller
           control={form.control}
           name="enableAdditionalComment"

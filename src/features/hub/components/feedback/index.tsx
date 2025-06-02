@@ -7,11 +7,14 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useState } from "react";
 import { useHubSurveys } from "../../hooks/feedback/use-hub-surveys";
-import { CreateHubSurveyModal } from "./create-hub-survey-modal";
+import { useHubById } from "../../hooks/use-hub-by-id";
+import { InitSurveyFromHubSheet } from "./init-survey-from-hub-sheet";
 
 export const CourseFeedback = ({ hubId }: { hubId: number }) => {
   const { data } = useHubSurveys(hubId);
-  const [isNewSurveyModalOpen, setIsNewSurveyModalOpen] = useState(false);
+  const { data: hub } = useHubById(hubId);
+
+  const [isInitSurveySheetOpen, setIsInitSurveySheetOpen] = useState(false);
   const noSurveys = data?.length === 0;
 
   return (
@@ -23,7 +26,7 @@ export const CourseFeedback = ({ hubId }: { hubId: number }) => {
             shape="square"
             intent="primary"
             onPress={() => {
-              setIsNewSurveyModalOpen(true);
+              setIsInitSurveySheetOpen(true);
             }}
           >
             <HugeiconsIcon
@@ -49,10 +52,11 @@ export const CourseFeedback = ({ hubId }: { hubId: number }) => {
           )}
         </div>
       </div>
-      <CreateHubSurveyModal
-        open={isNewSurveyModalOpen}
-        onOpenChange={setIsNewSurveyModalOpen}
+      <InitSurveyFromHubSheet
+        isOpen={isInitSurveySheetOpen}
+        onOpenChange={setIsInitSurveySheetOpen}
         hubId={hubId}
+        hubName={hub?.name ?? ""}
       />
     </>
   );

@@ -1,10 +1,10 @@
 import { useParams } from "next/navigation";
 
-import { Card } from "@/shared/components/ui/card";
-import { Heading } from "@/shared/components/ui/heading";
+import { StudentProfile } from "@/shared/components/students/student-profile";
 import { useCurrentUser } from "@/shared/hooks/use-current-user";
+import { Card } from "@/ui/card";
+import { Heading } from "@/ui/heading";
 import { useHubById } from "../hooks/use-hub-by-id";
-import { StudentProfile } from "./create-hub-multistep-form/step-students/student-profile";
 
 interface Student {
   id: string;

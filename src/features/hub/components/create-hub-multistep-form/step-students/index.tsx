@@ -1,6 +1,7 @@
 "use client";
 
 import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
+import { StudentProfile } from "@/shared/components/students/student-profile";
 import { Button } from "@/shared/components/ui/button";
 import { ComboBox } from "@/shared/components/ui/combo-box";
 import { Loader } from "@/shared/components/ui/loader";
@@ -14,7 +15,6 @@ import { useState } from "react";
 import { getUserStudentsAction } from "../../../actions";
 import { useHubFormStore } from "../../../store/hub-form-store";
 import { SelectedStudentsTable } from "./selected-students-table";
-import { StudentProfile } from "./student-profile";
 
 const DynamicCreateStudentModal = dynamic(
   () => import("./create-student-modal").then((mod) => mod.CreateStudentModal),

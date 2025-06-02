@@ -1,9 +1,10 @@
 "use client";
 
 import { Separator } from "@/shared/components/ui/separator";
+import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import React from "react";
-import { useQuestions } from "../../hooks/use-questions";
+import { questionsQueryOptions } from "../../lib/questions-query-options";
 import type { SortBy } from "../../lib/questions.schema";
 import { SidebarPanel } from "../sidebar-panel";
 import { QuestionListItem } from "./question-list-item";
@@ -19,11 +20,15 @@ export const QuestionsPanel = () => {
   // Guard against invalid page numbers from URL
   const validPage = Number.isInteger(page) && page > 0 ? page : 1;
 
-  const { data, isLoadingQuestions, isLoading } = useQuestions({
-    page: validPage,
-    sortBy,
-    q,
-  });
+  const { data, isLoading, isPlaceholderData, isFetching } = useQuery(
+    questionsQueryOptions({
+      page: validPage,
+      sortBy,
+      q,
+    }),
+  );
+
+  const isLoadingQuestions = isLoading || isPlaceholderData;
 
   const questions = data?.questions || [];
   const totalQuestions = data?.totalCount || 0;

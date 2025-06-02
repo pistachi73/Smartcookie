@@ -2,7 +2,7 @@ import { Heading } from "@/shared/components/ui/heading";
 import { Modal } from "@/shared/components/ui/modal";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { Button } from "react-aria-components";
-import { useCreateSurvey } from "../../hooks/feedback/use-create-survey";
+import { useInitSurvey } from "../../hooks/feedback/use-init-survey";
 import { useSurveyTemplates } from "../../hooks/feedback/use-survey-templates";
 
 type NewSurveyModalProps = {
@@ -17,8 +17,7 @@ export const CreateHubSurveyModal = ({
   hubId,
 }: NewSurveyModalProps) => {
   const { data: surveyTemplates, isPending } = useSurveyTemplates();
-  const { mutate: createSurvey } = useCreateSurvey({
-    hubId,
+  const { mutate: initSurvey } = useInitSurvey({
     onSuccess: () => {
       onOpenChange(false);
     },
@@ -40,7 +39,7 @@ export const CreateHubSurveyModal = ({
                 key={`survey-template-${template.id}`}
                 className="p-4 rounded-lg bg-bg border text-left w-full hover:border-primary hover:bg-primary-tint transition-colors cursor-pointer"
                 onPress={() =>
-                  createSurvey({
+                  initSurvey({
                     hubId,
                     surveyTemplateId: template.id,
                   })
