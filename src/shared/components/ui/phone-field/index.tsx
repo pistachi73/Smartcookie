@@ -193,7 +193,7 @@ export const PhoneField = ({
 
   // Handle country selection from dropdown
   const handleSelectionChange = useCallback(
-    (key: Key) => {
+    (key: Key | null) => {
       if (key) {
         const newCountry = key.toString() as CountryCode;
         setSelectedCountry(newCountry);
@@ -292,7 +292,6 @@ export const PhoneField = ({
                   id={country.code}
                   textValue={country.name}
                   className="flex items-center gap-2"
-                  showTick={false}
                 >
                   <span className="mr-1">{country.flag}</span>
                   <span>{country.name}</span>
