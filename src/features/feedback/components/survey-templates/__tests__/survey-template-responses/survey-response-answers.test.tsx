@@ -1,7 +1,7 @@
 import { cleanup, render, screen } from "@/shared/lib/testing/test-utils";
 import { useQueries } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { SurveyResponseAnswers } from "../../survey-responses/survey-response-answers";
+import { SurveyTemplateResponseAnswers } from "../../survey-template-responses/survey-template-response-answers";
 
 vi.mock("@tanstack/react-query", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@tanstack/react-query")>();
@@ -116,7 +116,7 @@ describe("SurveyResponseAnswers", () => {
         { data: mockSurveyResponseAnswers },
       ] as any);
 
-      render(<SurveyResponseAnswers {...defaultProps} />);
+      render(<SurveyTemplateResponseAnswers {...defaultProps} />);
 
       expect(screen.getByText("No responses found")).toBeInTheDocument();
     });
@@ -127,7 +127,7 @@ describe("SurveyResponseAnswers", () => {
         { data: null },
       ] as any);
 
-      render(<SurveyResponseAnswers {...defaultProps} />);
+      render(<SurveyTemplateResponseAnswers {...defaultProps} />);
 
       expect(screen.getByText("No responses found")).toBeInTheDocument();
     });
@@ -138,7 +138,7 @@ describe("SurveyResponseAnswers", () => {
         { data: null },
       ] as any);
 
-      render(<SurveyResponseAnswers {...defaultProps} />);
+      render(<SurveyTemplateResponseAnswers {...defaultProps} />);
 
       expect(screen.getByText("No responses found")).toBeInTheDocument();
     });
@@ -153,7 +153,7 @@ describe("SurveyResponseAnswers", () => {
     });
 
     it("renders all question types correctly", () => {
-      render(<SurveyResponseAnswers {...defaultProps} />);
+      render(<SurveyTemplateResponseAnswers {...defaultProps} />);
 
       expect(screen.getByText("8/10")).toBeInTheDocument();
       expect(screen.getByText("Yes")).toBeInTheDocument();
@@ -164,17 +164,17 @@ describe("SurveyResponseAnswers", () => {
     });
 
     it("renders rating question with stars correctly", () => {
-      render(<SurveyResponseAnswers {...defaultProps} />);
+      render(<SurveyTemplateResponseAnswers {...defaultProps} />);
       expect(screen.getByText("8/10")).toBeInTheDocument();
     });
 
     it("renders boolean question with thumbs up", () => {
-      render(<SurveyResponseAnswers {...defaultProps} />);
+      render(<SurveyTemplateResponseAnswers {...defaultProps} />);
       expect(screen.getByText("Yes")).toBeInTheDocument();
     });
 
     it("renders text question response", () => {
-      render(<SurveyResponseAnswers {...defaultProps} />);
+      render(<SurveyTemplateResponseAnswers {...defaultProps} />);
 
       expect(
         screen.getByText("Great service, very satisfied!"),
@@ -205,7 +205,7 @@ describe("SurveyResponseAnswers", () => {
         { data: customAnswers },
       ] as any);
 
-      render(<SurveyResponseAnswers {...defaultProps} />);
+      render(<SurveyTemplateResponseAnswers {...defaultProps} />);
 
       expect(screen.getByText(expected)).toBeInTheDocument();
     });
@@ -233,7 +233,7 @@ describe("SurveyResponseAnswers", () => {
         { data: customAnswers },
       ] as any);
 
-      render(<SurveyResponseAnswers {...defaultProps} />);
+      render(<SurveyTemplateResponseAnswers {...defaultProps} />);
 
       expect(screen.getByText(expected)).toBeInTheDocument();
     });
@@ -258,7 +258,7 @@ describe("SurveyResponseAnswers", () => {
         { data: answersWithMissing },
       ] as any);
 
-      render(<SurveyResponseAnswers {...defaultProps} />);
+      render(<SurveyTemplateResponseAnswers {...defaultProps} />);
 
       expect(screen.getAllByText("Not answered")).toHaveLength(3);
     });
@@ -287,7 +287,7 @@ describe("SurveyResponseAnswers", () => {
         { data: answersWithMissing },
       ] as any);
 
-      render(<SurveyResponseAnswers {...defaultProps} />);
+      render(<SurveyTemplateResponseAnswers {...defaultProps} />);
 
       expect(
         screen.getAllByText("Question added after response completion"),
@@ -321,7 +321,7 @@ describe("SurveyResponseAnswers", () => {
           { data: answersWithInvalidValue },
         ] as any);
 
-        render(<SurveyResponseAnswers {...defaultProps} />);
+        render(<SurveyTemplateResponseAnswers {...defaultProps} />);
 
         expect(screen.getAllByText("Not answered")).toHaveLength(4);
       },
@@ -347,7 +347,7 @@ describe("SurveyResponseAnswers", () => {
           { data: answersWithInvalidRating },
         ] as any);
 
-        render(<SurveyResponseAnswers {...defaultProps} />);
+        render(<SurveyTemplateResponseAnswers {...defaultProps} />);
 
         expect(screen.getAllByText("Not answered")).toHaveLength(4);
       },
@@ -366,7 +366,7 @@ describe("SurveyResponseAnswers", () => {
         { data: answersWithNullCompletedAt },
       ] as any);
 
-      render(<SurveyResponseAnswers {...defaultProps} />);
+      render(<SurveyTemplateResponseAnswers {...defaultProps} />);
 
       expect(screen.getByText("8/10")).toBeInTheDocument();
     });
@@ -389,7 +389,7 @@ describe("SurveyResponseAnswers", () => {
         { data: answersWithNullQuestion },
       ] as any);
 
-      render(<SurveyResponseAnswers {...defaultProps} />);
+      render(<SurveyTemplateResponseAnswers {...defaultProps} />);
 
       expect(screen.getAllByText("Not answered")).toHaveLength(4);
     });
@@ -405,7 +405,7 @@ describe("SurveyResponseAnswers", () => {
         { data: mockSurveyResponseAnswers },
       ] as any);
 
-      render(<SurveyResponseAnswers {...defaultProps} />);
+      render(<SurveyTemplateResponseAnswers {...defaultProps} />);
 
       expect(screen.queryByTestId(/question-badge-/)).not.toBeInTheDocument();
     });
@@ -488,7 +488,7 @@ describe("SurveyResponseAnswers", () => {
         { data: answersInDifferentOrder },
       ] as any);
 
-      render(<SurveyResponseAnswers {...defaultProps} />);
+      render(<SurveyTemplateResponseAnswers {...defaultProps} />);
 
       const container = document.querySelector(".p-4.space-y-4");
       const questionContainers = container?.querySelectorAll(
@@ -565,7 +565,7 @@ describe("SurveyResponseAnswers", () => {
         { data: partialAnswers },
       ] as any);
 
-      render(<SurveyResponseAnswers {...defaultProps} />);
+      render(<SurveyTemplateResponseAnswers {...defaultProps} />);
 
       const container = document.querySelector(".p-4.space-y-4");
       const questionContainers = container?.querySelectorAll(
@@ -588,7 +588,10 @@ describe("SurveyResponseAnswers", () => {
       ] as any);
 
       render(
-        <SurveyResponseAnswers surveyResponseId={123} surveyTemplateId={456} />,
+        <SurveyTemplateResponseAnswers
+          surveyResponseId={123}
+          surveyTemplateId={456}
+        />,
       );
 
       expect(useQueries).toHaveBeenCalledWith({

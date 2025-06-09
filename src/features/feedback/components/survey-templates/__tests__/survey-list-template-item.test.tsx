@@ -7,7 +7,7 @@ import {
 } from "@/shared/lib/testing/test-utils";
 import { useParams } from "next/navigation";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { SurveyListItem } from "../survey-list-item";
+import { SurveyTemplateListItem } from "../survey-template-list-item";
 
 mockNextNavigation();
 
@@ -40,7 +40,7 @@ describe("SurveyListItem", () => {
 
   describe("Basic rendering", () => {
     it("renders survey information correctly", () => {
-      render(<SurveyListItem survey={mockSurvey} />);
+      render(<SurveyTemplateListItem surveyTemplate={mockSurvey} />);
 
       expect(
         screen.getByText("Customer Satisfaction Survey"),
@@ -53,7 +53,9 @@ describe("SurveyListItem", () => {
 
     it("renders survey without description", () => {
       const surveyWithoutDescription = { ...mockSurvey, description: null };
-      render(<SurveyListItem survey={surveyWithoutDescription} />);
+      render(
+        <SurveyTemplateListItem surveyTemplate={surveyWithoutDescription} />,
+      );
 
       expect(
         screen.getByText("Customer Satisfaction Survey"),
@@ -67,7 +69,7 @@ describe("SurveyListItem", () => {
   describe("Active state", () => {
     it("detects active survey correctly", () => {
       vi.mocked(useParams).mockReturnValue({ surveyId: "1" });
-      render(<SurveyListItem survey={mockSurvey} />);
+      render(<SurveyTemplateListItem surveyTemplate={mockSurvey} />);
 
       expect(screen.getByTestId("survey-list-item")).toHaveAttribute(
         "data-selected",
@@ -77,7 +79,7 @@ describe("SurveyListItem", () => {
 
     it("detects inactive survey correctly", () => {
       vi.mocked(useParams).mockReturnValue({ surveyId: "2" });
-      render(<SurveyListItem survey={mockSurvey} />);
+      render(<SurveyTemplateListItem surveyTemplate={mockSurvey} />);
 
       expect(screen.getByTestId("survey-list-item")).toHaveAttribute(
         "data-selected",
@@ -87,7 +89,7 @@ describe("SurveyListItem", () => {
   });
 
   it("creates view link", () => {
-    render(<SurveyListItem survey={mockSurvey} />);
+    render(<SurveyTemplateListItem surveyTemplate={mockSurvey} />);
 
     const viewLink = screen.getByRole("link");
     expect(viewLink).toHaveAttribute(
@@ -98,7 +100,7 @@ describe("SurveyListItem", () => {
 
   describe("Menu interactions", () => {
     it("shows menu button", () => {
-      render(<SurveyListItem survey={mockSurvey} />);
+      render(<SurveyTemplateListItem surveyTemplate={mockSurvey} />);
 
       const menuButton = screen.getByRole("button");
       expect(menuButton).toBeInTheDocument();
@@ -109,7 +111,7 @@ describe("SurveyListItem", () => {
     });
 
     it("has edit link in menu", () => {
-      render(<SurveyListItem survey={mockSurvey} />);
+      render(<SurveyTemplateListItem surveyTemplate={mockSurvey} />);
 
       const menuButton = screen.getByRole("button");
       fireEvent.click(menuButton);
@@ -124,7 +126,7 @@ describe("SurveyListItem", () => {
     });
 
     it("opens delete modal when delete is clicked", () => {
-      render(<SurveyListItem survey={mockSurvey} />);
+      render(<SurveyTemplateListItem surveyTemplate={mockSurvey} />);
 
       const menuButton = screen.getByRole("button");
       fireEvent.click(menuButton);

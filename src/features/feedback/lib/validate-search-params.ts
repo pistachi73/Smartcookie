@@ -1,5 +1,5 @@
+import type { SortBy } from "@/data-access/questions/schemas";
 import type { ReadonlyURLSearchParams } from "next/navigation";
-import type { SortBy } from "./questions.schema";
 
 export interface ValidatedSearchParams {
   page: number;

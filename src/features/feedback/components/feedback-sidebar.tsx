@@ -16,7 +16,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { QuestionsPanel } from "./questions/questions-panel";
-import { SurveysPanel } from "./survey-templates/surveys-panel";
+import { SurveyTemplatesPanel } from "./survey-templates/survey-template-panel";
 
 const tabs: {
   id: string;
@@ -102,7 +102,7 @@ export const FeedbackSidebar = () => {
           <QuestionsPanel />
         </Tabs.Panel>
         <Tabs.Panel id="surveys" className={"overflow-hidden h-full"}>
-          <SurveysPanel />
+          <SurveyTemplatesPanel />
         </Tabs.Panel>
       </Tabs>
     </div>

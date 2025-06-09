@@ -1,4 +1,4 @@
-import type { getSurveyTemplateResponsesUseCase } from "@/features/feedback/use-cases/survey-templates.use-case";
+import type { getSurveyTemplateResponses } from "@/data-access/survey-response/queries";
 import {
   cleanup,
   fireEvent,
@@ -8,7 +8,7 @@ import {
 } from "@/shared/lib/testing/test-utils";
 import { useQuery } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { SurveyResponses } from "../../survey-responses/index";
+import { SurveyTemplateResponses } from "../../survey-template-responses/index";
 
 vi.mock("@tanstack/react-query", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@tanstack/react-query")>();
@@ -18,8 +18,8 @@ vi.mock("@tanstack/react-query", async (importOriginal) => {
   };
 });
 
-vi.mock("../../survey-responses/survey-response", () => ({
-  SurveyResponse: vi.fn(
+vi.mock("../../survey-template-responses/survey-template-response", () => ({
+  SurveyTemplateResponse: vi.fn(
     ({ response, isOpen, handleToggle, surveyTemplateId }) => (
       <div data-testid={`survey-response-${response.id}`}>
         <button
@@ -35,14 +35,14 @@ vi.mock("../../survey-responses/survey-response", () => ({
   ),
 }));
 
-vi.mock("../../survey-responses/survey-no-responses", () => ({
-  SurveyNoResponses: vi.fn(() => (
+vi.mock("../../survey-template-responses/survey-template-no-responses", () => ({
+  SurveyTemplateNoResponses: vi.fn(() => (
     <div data-testid="survey-no-responses">No responses available</div>
   )),
 }));
 
 const mockResponsesData: Awaited<
-  ReturnType<typeof getSurveyTemplateResponsesUseCase>
+  ReturnType<typeof getSurveyTemplateResponses>
 > = {
   responses: [
     {
@@ -106,7 +106,7 @@ describe("SurveyResponses", () => {
         error: null,
       } as any);
 
-      render(<SurveyResponses {...defaultProps} />);
+      render(<SurveyTemplateResponses {...defaultProps} />);
 
       expect(screen.getByLabelText("Loading responses...")).toBeInTheDocument();
       //Loading component and also the text component
@@ -120,7 +120,7 @@ describe("SurveyResponses", () => {
         error: null,
       } as any);
 
-      render(<SurveyResponses {...defaultProps} />);
+      render(<SurveyTemplateResponses {...defaultProps} />);
 
       expect(screen.queryByText("Survey Responses")).not.toBeInTheDocument();
       expect(
@@ -137,7 +137,7 @@ describe("SurveyResponses", () => {
         error: new Error("Network error"),
       } as any);
 
-      render(<SurveyResponses {...defaultProps} />);
+      render(<SurveyTemplateResponses {...defaultProps} />);
 
       expect(screen.getByText("Error loading responses")).toBeInTheDocument();
       expect(screen.getByText("Please try again later.")).toBeInTheDocument();
@@ -151,7 +151,7 @@ describe("SurveyResponses", () => {
         error: new Error("Network error"),
       } as any);
 
-      render(<SurveyResponses {...defaultProps} />);
+      render(<SurveyTemplateResponses {...defaultProps} />);
 
       expect(screen.queryByText("Survey Responses")).not.toBeInTheDocument();
       expect(
@@ -168,7 +168,7 @@ describe("SurveyResponses", () => {
         error: null,
       } as any);
 
-      render(<SurveyResponses {...defaultProps} />);
+      render(<SurveyTemplateResponses {...defaultProps} />);
 
       expect(screen.getByTestId("survey-no-responses")).toBeInTheDocument();
       expect(screen.getByText("No responses available")).toBeInTheDocument();
@@ -181,7 +181,7 @@ describe("SurveyResponses", () => {
         error: null,
       } as any);
 
-      render(<SurveyResponses {...defaultProps} />);
+      render(<SurveyTemplateResponses {...defaultProps} />);
 
       expect(screen.getByText("Survey Responses")).toBeInTheDocument();
     });
@@ -193,7 +193,7 @@ describe("SurveyResponses", () => {
         error: null,
       } as any);
 
-      render(<SurveyResponses {...defaultProps} />);
+      render(<SurveyTemplateResponses {...defaultProps} />);
 
       expect(screen.queryByTestId("survey-response-1")).not.toBeInTheDocument();
     });
@@ -209,7 +209,7 @@ describe("SurveyResponses", () => {
     });
 
     it("renders all survey responses", () => {
-      render(<SurveyResponses {...defaultProps} />);
+      render(<SurveyTemplateResponses {...defaultProps} />);
 
       expect(screen.getByTestId("survey-response-1")).toBeInTheDocument();
       expect(screen.getByTestId("survey-response-2")).toBeInTheDocument();
@@ -217,7 +217,7 @@ describe("SurveyResponses", () => {
     });
 
     it("passes correct props to each SurveyResponse", () => {
-      render(<SurveyResponses {...defaultProps} />);
+      render(<SurveyTemplateResponses {...defaultProps} />);
 
       expect(screen.getByText("John Doe - Closed")).toBeInTheDocument();
       expect(screen.getByText("Jane Smith - Closed")).toBeInTheDocument();
@@ -227,7 +227,7 @@ describe("SurveyResponses", () => {
     });
 
     it("does not render no responses component when responses exist", () => {
-      render(<SurveyResponses {...defaultProps} />);
+      render(<SurveyTemplateResponses {...defaultProps} />);
 
       expect(
         screen.queryByTestId("survey-no-responses"),
@@ -245,7 +245,7 @@ describe("SurveyResponses", () => {
     });
 
     it("opens response when toggle is clicked", async () => {
-      render(<SurveyResponses {...defaultProps} />);
+      render(<SurveyTemplateResponses {...defaultProps} />);
 
       const toggleButton = screen.getByTestId("toggle-1");
       fireEvent.click(toggleButton);
@@ -256,7 +256,7 @@ describe("SurveyResponses", () => {
     });
 
     it("closes response when toggle is clicked again", async () => {
-      render(<SurveyResponses {...defaultProps} />);
+      render(<SurveyTemplateResponses {...defaultProps} />);
 
       const toggleButton = screen.getByTestId("toggle-1");
 
@@ -272,7 +272,7 @@ describe("SurveyResponses", () => {
     });
 
     it("only allows one response to be open at a time", async () => {
-      render(<SurveyResponses {...defaultProps} />);
+      render(<SurveyTemplateResponses {...defaultProps} />);
 
       const toggle1 = screen.getByTestId("toggle-1");
       const toggle2 = screen.getByTestId("toggle-2");
@@ -290,7 +290,7 @@ describe("SurveyResponses", () => {
     });
 
     it("handles multiple toggle interactions correctly", async () => {
-      render(<SurveyResponses {...defaultProps} />);
+      render(<SurveyTemplateResponses {...defaultProps} />);
 
       const toggle1 = screen.getByTestId("toggle-1");
       const toggle2 = screen.getByTestId("toggle-2");
@@ -323,7 +323,7 @@ describe("SurveyResponses", () => {
         error: null,
       } as any);
 
-      render(<SurveyResponses surveyTemplateId={999} />);
+      render(<SurveyTemplateResponses surveyTemplateId={999} />);
 
       expect(useQuery).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -339,7 +339,7 @@ describe("SurveyResponses", () => {
         error: null,
       } as any);
 
-      render(<SurveyResponses surveyTemplateId={456} />);
+      render(<SurveyTemplateResponses surveyTemplateId={456} />);
 
       expect(screen.getAllByText("Survey Template ID: 456")).toHaveLength(3);
     });
@@ -355,7 +355,7 @@ describe("SurveyResponses", () => {
     });
 
     it("renders responses in correct order", () => {
-      render(<SurveyResponses {...defaultProps} />);
+      render(<SurveyTemplateResponses {...defaultProps} />);
 
       const responses = screen.getAllByTestId(/survey-response-/);
       expect(responses).toHaveLength(3);
@@ -378,7 +378,7 @@ describe("SurveyResponses", () => {
         error: null,
       } as any);
 
-      render(<SurveyResponses {...defaultProps} />);
+      render(<SurveyTemplateResponses {...defaultProps} />);
 
       expect(screen.getByTestId("survey-response-1")).toBeInTheDocument();
       expect(screen.queryByTestId("survey-response-2")).not.toBeInTheDocument();
@@ -407,7 +407,7 @@ describe("SurveyResponses", () => {
         error: null,
       } as any);
 
-      render(<SurveyResponses {...defaultProps} />);
+      render(<SurveyTemplateResponses {...defaultProps} />);
 
       expect(screen.getByTestId("survey-response-1")).toBeInTheDocument();
       expect(screen.getByText("John Doe - Closed")).toBeInTheDocument();
@@ -420,7 +420,7 @@ describe("SurveyResponses", () => {
         error: null,
       } as any);
 
-      render(<SurveyResponses {...defaultProps} />);
+      render(<SurveyTemplateResponses {...defaultProps} />);
 
       expect(screen.getByText("No responses available")).toBeInTheDocument();
     });
@@ -436,7 +436,7 @@ describe("SurveyResponses", () => {
     });
 
     it("initializes with no response open", () => {
-      render(<SurveyResponses {...defaultProps} />);
+      render(<SurveyTemplateResponses {...defaultProps} />);
 
       expect(screen.getByText("John Doe - Closed")).toBeInTheDocument();
       expect(screen.getByText("Jane Smith - Closed")).toBeInTheDocument();
@@ -444,7 +444,7 @@ describe("SurveyResponses", () => {
     });
 
     it("maintains state correctly across multiple interactions", async () => {
-      render(<SurveyResponses {...defaultProps} />);
+      render(<SurveyTemplateResponses {...defaultProps} />);
 
       const toggle1 = screen.getByTestId("toggle-1");
       const toggle2 = screen.getByTestId("toggle-2");

@@ -1,4 +1,4 @@
-import { getSurveyTemplateResponsesUseCase } from "@/features/feedback/use-cases/survey-templates.use-case";
+import { getSurveyTemplateResponses } from "@/data-access/survey-response/queries";
 import { NextResponse } from "next/server";
 
 export async function GET(
@@ -7,7 +7,7 @@ export async function GET(
 ) {
   const { surveyTemplateId } = await params;
 
-  const data = await getSurveyTemplateResponsesUseCase({
+  const data = await getSurveyTemplateResponses({
     surveyTemplateId: Number.parseInt(surveyTemplateId),
   });
 

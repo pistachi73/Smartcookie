@@ -7,7 +7,7 @@ import {
 } from "@/shared/lib/testing/test-utils";
 import { useQuery } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { SurveyResponse } from "../../survey-responses/survey-response";
+import { SurveyTemplateResponse } from "../../survey-template-responses/survey-template-response";
 
 vi.mock("@tanstack/react-query", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@tanstack/react-query")>();
@@ -17,14 +17,19 @@ vi.mock("@tanstack/react-query", async (importOriginal) => {
   };
 });
 
-vi.mock("../../survey-responses/survey-response-answers", () => ({
-  SurveyResponseAnswers: vi.fn(({ surveyResponseId, surveyTemplateId }) => (
-    <div data-testid="survey-response-answers">
-      Survey Response Answers - Response: {surveyResponseId}, Template:{" "}
-      {surveyTemplateId}
-    </div>
-  )),
-}));
+vi.mock(
+  "../../survey-template-responses/survey-template-response-answers",
+  () => ({
+    SurveyTemplateResponseAnswers: vi.fn(
+      ({ surveyResponseId, surveyTemplateId }) => (
+        <div data-testid="survey-response-answers">
+          Survey Response Answers - Response: {surveyResponseId}, Template:{" "}
+          {surveyTemplateId}
+        </div>
+      ),
+    ),
+  }),
+);
 
 const mockResponse = {
   id: 1,
@@ -62,7 +67,7 @@ describe("SurveyResponse", () => {
 
   describe("Main Component Structure", () => {
     it("renders the expected content", () => {
-      render(<SurveyResponse {...defaultProps} />);
+      render(<SurveyTemplateResponse {...defaultProps} />);
 
       const toggleButton = screen.getByRole("button");
       expect(toggleButton).toBeInTheDocument();
@@ -76,7 +81,10 @@ describe("SurveyResponse", () => {
     it("calls handleToggle when button is clicked", () => {
       const mockHandleToggle = vi.fn();
       render(
-        <SurveyResponse {...defaultProps} handleToggle={mockHandleToggle} />,
+        <SurveyTemplateResponse
+          {...defaultProps}
+          handleToggle={mockHandleToggle}
+        />,
       );
 
       const toggleButton = screen.getByRole("button");
@@ -86,7 +94,7 @@ describe("SurveyResponse", () => {
     });
 
     it("shows right arrow icon when closed", () => {
-      render(<SurveyResponse {...defaultProps} isOpen={false} />);
+      render(<SurveyTemplateResponse {...defaultProps} isOpen={false} />);
 
       const toggleButton = screen.getByRole("button");
       expect(toggleButton).toBeInTheDocument();
@@ -100,7 +108,7 @@ describe("SurveyResponse", () => {
         data: null,
       } as any);
 
-      render(<SurveyResponse {...defaultProps} isOpen={true} />);
+      render(<SurveyTemplateResponse {...defaultProps} isOpen={true} />);
       expect(screen.getByLabelText("Loading response")).toBeInTheDocument();
     });
 
@@ -110,7 +118,7 @@ describe("SurveyResponse", () => {
         data: null,
       } as any);
 
-      render(<SurveyResponse {...defaultProps} isOpen={true} />);
+      render(<SurveyTemplateResponse {...defaultProps} isOpen={true} />);
 
       expect(
         screen.queryByLabelText("Loading response"),
@@ -125,7 +133,7 @@ describe("SurveyResponse", () => {
         data: null,
       } as any);
 
-      render(<SurveyResponse {...defaultProps} isOpen={true} />);
+      render(<SurveyTemplateResponse {...defaultProps} isOpen={true} />);
 
       expect(screen.getByTestId("survey-response-answers")).toBeInTheDocument();
       expect(
@@ -134,7 +142,7 @@ describe("SurveyResponse", () => {
     });
 
     it("does not render SurveyResponseAnswers when closed", () => {
-      render(<SurveyResponse {...defaultProps} isOpen={false} />);
+      render(<SurveyTemplateResponse {...defaultProps} isOpen={false} />);
 
       expect(
         screen.queryByTestId("survey-response-answers"),
@@ -147,7 +155,7 @@ describe("SurveyResponse", () => {
         data: null,
       } as any);
 
-      render(<SurveyResponse {...defaultProps} isOpen={true} />);
+      render(<SurveyTemplateResponse {...defaultProps} isOpen={true} />);
 
       expect(
         screen.queryByTestId("survey-response-answers"),
@@ -156,7 +164,7 @@ describe("SurveyResponse", () => {
 
     it("passes correct props to SurveyResponseAnswers", () => {
       render(
-        <SurveyResponse
+        <SurveyTemplateResponse
           {...defaultProps}
           surveyTemplateId={999}
           isOpen={true}
@@ -173,7 +181,7 @@ describe("SurveyResponse", () => {
 
   describe("Animation and Transitions", () => {
     it("renders expanded content when open", async () => {
-      render(<SurveyResponse {...defaultProps} isOpen={true} />);
+      render(<SurveyTemplateResponse {...defaultProps} isOpen={true} />);
 
       await waitFor(() => {
         const expandedContent = screen.getByTestId("survey-response-answers");

@@ -17,10 +17,7 @@ import {
   Rocket01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
 
-import {
-  surveyTemplateByIdQueryOptions,
-  surveyTemplateResponsesQueryOptions,
-} from "@/features/feedback/lib/survey-template-query-options";
+import { surveyTemplateByIdQueryOptions } from "@/features/feedback/lib/survey-template-query-options";
 import { Badge } from "@/shared/components/ui/badge";
 import { Menu } from "@/shared/components/ui/menu";
 import useNavigateWithParams from "@/shared/hooks/use-navigate-with-params";
@@ -28,15 +25,16 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useQueries } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { surveyTemplateResponsesQueryOptions } from "../../lib/survey-template-responses-query-options";
 import { DataCard } from "../questions/question-details/question-answers/shared-cards";
 import { FeedbackLoading } from "../shared/feedback-loading";
 import { FeedbackNotFound } from "../shared/feedback-not-found";
 import { DeleteSurveyTemplateModal } from "./delete-survey-template-modal";
 import { InitSurveyFromFeedbackSheet } from "./init-survey-from-feedback-sheet";
-import { SurveyResponses } from "./survey-responses";
+import { SurveyTemplateResponses } from "./survey-template-responses";
 import { TemplateQuestion } from "./template-question";
 
-type SurveyDetailsProps = {
+type SurveyTemplateDetailsProps = {
   surveyTemplateId: number;
 };
 
@@ -69,7 +67,9 @@ const getCompletionRateColors = (rate: number) => {
   };
 };
 
-export const SurveyDetails = ({ surveyTemplateId }: SurveyDetailsProps) => {
+export const SurveyTemplateDetails = ({
+  surveyTemplateId,
+}: SurveyTemplateDetailsProps) => {
   const router = useRouter();
   const { createHrefWithParams } = useNavigateWithParams();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -295,7 +295,7 @@ export const SurveyDetails = ({ surveyTemplateId }: SurveyDetailsProps) => {
           </div>
         </section>
 
-        <SurveyResponses surveyTemplateId={surveyTemplateId} />
+        <SurveyTemplateResponses surveyTemplateId={surveyTemplateId} />
       </div>
       {surveyTemplateQuery.data && (
         <DeleteSurveyTemplateModal

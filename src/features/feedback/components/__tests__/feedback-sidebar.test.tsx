@@ -15,8 +15,10 @@ vi.mock("../questions/questions-panel", () => ({
   ),
 }));
 
-vi.mock("../survey-templates/surveys-panel", () => ({
-  SurveysPanel: () => <div data-testid="surveys-panel">Surveys Panel</div>,
+vi.mock("../survey-templates/survey-template-panel", () => ({
+  SurveyTemplatesPanel: () => (
+    <div data-testid="survey-templates-panel">Survey Templates Panel</div>
+  ),
 }));
 
 describe("FeedbackSidebar", () => {
@@ -50,7 +52,9 @@ describe("FeedbackSidebar", () => {
       const questionsTab = screen.getByRole("tab", { name: /questions/i });
       expect(questionsTab).toHaveAttribute("aria-selected", "true");
       expect(screen.getByTestId("questions-panel")).toBeInTheDocument();
-      expect(screen.queryByTestId("surveys-panel")).not.toBeInTheDocument();
+      expect(
+        screen.queryByTestId("survey-templates-panel"),
+      ).not.toBeInTheDocument();
     });
 
     it("shows surveys tab and panel when tab param is surveys", () => {
@@ -62,7 +66,7 @@ describe("FeedbackSidebar", () => {
 
       const surveysTab = screen.getByRole("tab", { name: /templates/i });
       expect(surveysTab).toHaveAttribute("aria-selected", "true");
-      expect(screen.getByTestId("surveys-panel")).toBeInTheDocument();
+      expect(screen.getByTestId("survey-templates-panel")).toBeInTheDocument();
       expect(screen.queryByTestId("questions-panel")).not.toBeInTheDocument();
     });
 

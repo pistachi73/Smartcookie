@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useCreateSurvey } from "@/features/feedback/hooks/survey-templates/use-create-survey";
-import { useUpdateSurvey } from "@/features/feedback/hooks/survey-templates/use-update-survey";
+import { useCreateSurveyTemplate } from "@/features/feedback/hooks/survey-templates/use-create-survey-template";
+import { useUpdateSurveyTemplate } from "@/features/feedback/hooks/survey-templates/use-update-survey-template";
 import { mockNextNavigation } from "@/shared/lib/testing/navigation-mocks";
 import {
   cleanup,
@@ -20,11 +20,7 @@ import { StepPreview } from "../../survey-template-form/step-preview";
 mockNextNavigation();
 
 // Mock dependencies
-vi.mock("@/shared/hooks/use-navigate-with-params", () => ({
-  default: () => ({
-    createHrefWithParams: vi.fn((pathname) => pathname),
-  }),
-}));
+vi.mock("@/shared/hooks/use-navigate-with-params");
 
 vi.mock("sonner", () => ({
   toast: {
@@ -32,19 +28,25 @@ vi.mock("sonner", () => ({
   },
 }));
 
-vi.mock("@/features/feedback/hooks/survey-templates/use-create-survey", () => ({
-  useCreateSurvey: vi.fn(() => ({
-    mutate: vi.fn(),
-    isPending: false,
-  })),
-}));
+vi.mock(
+  "@/features/feedback/hooks/survey-templates/use-create-survey-template",
+  () => ({
+    useCreateSurveyTemplate: vi.fn(() => ({
+      mutate: vi.fn(),
+      isPending: false,
+    })),
+  }),
+);
 
-vi.mock("@/features/feedback/hooks/survey-templates/use-update-survey", () => ({
-  useUpdateSurvey: vi.fn(() => ({
-    mutate: vi.fn(),
-    isPending: false,
-  })),
-}));
+vi.mock(
+  "@/features/feedback/hooks/survey-templates/use-update-survey-template",
+  () => ({
+    useUpdateSurveyTemplate: vi.fn(() => ({
+      mutate: vi.fn(),
+      isPending: false,
+    })),
+  }),
+);
 
 vi.mock("../../questions/question-type-badge", () => ({
   QuestionTypeBadge: ({ type, label }: any) => (
@@ -133,12 +135,12 @@ describe("StepPreview", () => {
     mockStore.resetState();
     vi.mocked(useRouter).mockReturnValue(mockRouter as any);
 
-    vi.mocked(useCreateSurvey).mockReturnValue({
+    vi.mocked(useCreateSurveyTemplate).mockReturnValue({
       mutate: mockCreateSurvey,
       isPending: false,
     } as any);
 
-    vi.mocked(useUpdateSurvey).mockReturnValue({
+    vi.mocked(useUpdateSurveyTemplate).mockReturnValue({
       mutate: mockUpdateSurvey,
       isPending: false,
     } as any);
@@ -385,7 +387,7 @@ describe("StepPreview", () => {
 
   describe("Loading States", () => {
     it("shows loading state when creating", () => {
-      vi.mocked(useCreateSurvey).mockReturnValue({
+      vi.mocked(useCreateSurveyTemplate).mockReturnValue({
         mutate: mockCreateSurvey,
         isPending: true,
       } as any);
@@ -401,7 +403,7 @@ describe("StepPreview", () => {
     });
 
     it("shows loading state when updating", () => {
-      vi.mocked(useUpdateSurvey).mockReturnValue({
+      vi.mocked(useUpdateSurveyTemplate).mockReturnValue({
         mutate: mockUpdateSurvey,
         isPending: true,
       } as any);
@@ -434,10 +436,12 @@ describe("StepPreview", () => {
 
     it("navigates to feedback page on successful creation", async () => {
       let onSuccessCallback: () => void;
-      vi.mocked(useCreateSurvey).mockImplementation(({ onSuccess }: any) => {
-        onSuccessCallback = onSuccess;
-        return { mutate: mockCreateSurvey, isPending: false } as any;
-      });
+      vi.mocked(useCreateSurveyTemplate).mockImplementation(
+        ({ onSuccess }: any) => {
+          onSuccessCallback = onSuccess;
+          return { mutate: mockCreateSurvey, isPending: false } as any;
+        },
+      );
 
       render(<StepPreview />);
 

@@ -13,17 +13,17 @@ export const GetQuestionsSchema = z.object({
   q: z.string().optional(),
 });
 
-export const QuestionFormSchema = z.object({
+export const CreateQuestionSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
   enableAdditionalComment: z.boolean(),
   questionType: z.enum(["text", "rating", "boolean"]),
 });
 
-export const UpdateQuestionFormSchema = QuestionFormSchema.partial().extend({
+export const UpdateQuestionSchema = CreateQuestionSchema.partial().extend({
   id: z.number(),
 });
 
-export const DeleteQuestionFormSchema = z.object({
+export const DeleteQuestionSchema = z.object({
   id: z.number(),
 });

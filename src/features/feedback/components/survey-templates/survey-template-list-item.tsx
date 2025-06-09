@@ -5,8 +5,8 @@ import { useParams } from "next/navigation";
 
 import useNavigateWithParams from "@/shared/hooks/use-navigate-with-params";
 import { cn } from "@/shared/lib/classes";
-import type { getSurveysUseCase } from "../../use-cases/survey-templates.use-case";
 
+import type { getSurveyTemplates } from "@/data-access/survey-templates/queries";
 import { Button } from "@/shared/components/ui/button";
 import { Menu } from "@/shared/components/ui/menu";
 import {
@@ -18,24 +18,28 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useState } from "react";
 import { DeleteSurveyTemplateModal } from "./delete-survey-template-modal";
 
-type SurveyListItemProps = {
-  survey: Awaited<ReturnType<typeof getSurveysUseCase>>["surveys"][number];
+type SurveyTemplateListItemProps = {
+  surveyTemplate: Awaited<
+    ReturnType<typeof getSurveyTemplates>
+  >["surveyTemplates"][number];
 };
 
-export const SurveyListItem = ({ survey }: SurveyListItemProps) => {
+export const SurveyTemplateListItem = ({
+  surveyTemplate,
+}: SurveyTemplateListItemProps) => {
   const params = useParams();
   const { createHrefWithParams } = useNavigateWithParams();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const { surveyId } = params;
 
-  const isActive = Number(surveyId) === survey.id;
+  const isActive = Number(surveyId) === surveyTemplate.id;
 
   const viewHref = createHrefWithParams(
-    `/portal/feedback/surveys/${survey.id}`,
+    `/portal/feedback/surveys/${surveyTemplate.id}`,
   );
   const editHref = createHrefWithParams(
-    `/portal/feedback/surveys/${survey.id}/edit`,
+    `/portal/feedback/surveys/${surveyTemplate.id}/edit`,
   );
 
   return (
@@ -57,14 +61,16 @@ export const SurveyListItem = ({ survey }: SurveyListItemProps) => {
           className="flex-1 flex items-center gap-4 p-4 pr-0"
         >
           <p className="flex-shrink-0 size-8 flex items-center justify-center  text-sm font-medium tabular-nums bg-muted rounded-sm">
-            {survey.totalResponses}
+            {surveyTemplate.totalResponses}
           </p>
 
           <div className="space-y-0.5">
-            <p className="font-medium text-sm text-balance">{survey.title}</p>
-            {survey.description && (
+            <p className="font-medium text-sm text-balance">
+              {surveyTemplate.title}
+            </p>
+            {surveyTemplate.description && (
               <p className="text-xs text-muted-fg line-clamp-2">
-                {survey.description}
+                {surveyTemplate.description}
               </p>
             )}
           </div>
@@ -107,9 +113,9 @@ export const SurveyListItem = ({ survey }: SurveyListItemProps) => {
         isOpen={isDeleteModalOpen}
         onOpenChange={setIsDeleteModalOpen}
         surveyTemplate={{
-          id: survey.id,
-          title: survey.title,
-          description: survey.description,
+          id: surveyTemplate.id,
+          title: surveyTemplate.title,
+          description: surveyTemplate.description,
         }}
       />
     </>

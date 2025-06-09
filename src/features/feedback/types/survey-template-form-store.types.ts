@@ -1,8 +1,12 @@
+import type { CreateSurveyTemplateSchema } from "@/data-access/survey-templates/schemas";
 import type { z } from "zod";
 import type { FeedbackQuestion } from "../components/questions/question-list-item";
-import type { SurveyTemplateFormSchema } from "../lib/surveys.schema";
 
-export type SurveyFormData = Partial<z.infer<typeof SurveyTemplateFormSchema>>;
+export type SurveyFormData = Partial<
+  Omit<z.infer<typeof CreateSurveyTemplateSchema>, "questions">
+> & {
+  id?: number;
+};
 
 export type SurveyQuestion = FeedbackQuestion & {
   required: boolean;

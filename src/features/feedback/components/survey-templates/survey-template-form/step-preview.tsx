@@ -9,8 +9,8 @@ import { ArrowLeft02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { useCreateSurvey } from "../../../hooks/survey-templates/use-create-survey";
-import { useUpdateSurvey } from "../../../hooks/survey-templates/use-update-survey";
+import { useCreateSurveyTemplate } from "../../../hooks/survey-templates/use-create-survey-template";
+import { useUpdateSurveyTemplate } from "../../../hooks/survey-templates/use-update-survey-template";
 import { useSurveyTemplateFormStore } from "../../../store/survey-template-form.store";
 import { QuestionTypeBadge } from "../../questions/question-type-badge";
 import { QuestionChangeIndicators } from "./question-change-indicators";
@@ -24,17 +24,19 @@ export function StepPreview() {
   const mode = useSurveyTemplateFormStore((state) => state.mode);
   const getChanges = useSurveyTemplateFormStore((state) => state.getChanges);
 
-  const { mutate: createSurvey, isPending: isCreating } = useCreateSurvey({
-    onSuccess: () => {
-      router.push(createHrefWithParams("/portal/feedback/"));
-    },
-  });
+  const { mutate: createSurvey, isPending: isCreating } =
+    useCreateSurveyTemplate({
+      onSuccess: () => {
+        router.push(createHrefWithParams("/portal/feedback/"));
+      },
+    });
 
-  const { mutate: updateSurvey, isPending: isUpdating } = useUpdateSurvey({
-    onSuccess: () => {
-      router.push(createHrefWithParams("/portal/feedback/"));
-    },
-  });
+  const { mutate: updateSurvey, isPending: isUpdating } =
+    useUpdateSurveyTemplate({
+      onSuccess: () => {
+        router.push(createHrefWithParams("/portal/feedback/"));
+      },
+    });
 
   const isPending = isCreating || isUpdating;
 

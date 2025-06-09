@@ -1,30 +1,22 @@
-import { queryOptions } from "@tanstack/react-query";
 import type {
-  getSurveyTemplateByIdUseCase,
-  getSurveyTemplateResponsesUseCase,
-  getSurveysUseCase,
-} from "../use-cases/survey-templates.use-case";
-import type { SortBy } from "./questions.schema";
-import { GetSurveysSchema } from "./surveys.schema";
+  getSurveyTemplateById,
+  getSurveyTemplates,
+} from "@/data-access/survey-templates/queries";
+import { GetSurveyTemplatesSchema } from "@/data-access/survey-templates/schemas";
+import { queryOptions } from "@tanstack/react-query";
+import type { z } from "zod";
 
-type SurveysQueryOptionsProps = {
-  page?: number;
-  pageSize?: number;
-  sortBy?: SortBy;
-  q?: string;
-};
-
-export const surveysQueryOptions = ({
+export const surveyTemplatesQueryOptions = ({
   page = 1,
   pageSize = 10,
-  sortBy = "alphabetical" as SortBy,
+  sortBy = "alphabetical",
   q = "",
-}: SurveysQueryOptionsProps) =>
+}: Partial<z.infer<typeof GetSurveyTemplatesSchema>>) =>
   queryOptions({
-    queryKey: ["feedback", "surveys", page, pageSize, sortBy, q],
+    queryKey: ["feedback", "survey-templates", page, pageSize, sortBy, q],
     queryFn: async () => {
       // Validate parameters before making the API call
-      const validationResult = GetSurveysSchema.safeParse({
+      const validationResult = GetSurveyTemplatesSchema.safeParse({
         page,
         pageSize,
         sortBy,
@@ -33,7 +25,7 @@ export const surveysQueryOptions = ({
 
       if (!validationResult.success) {
         return {
-          surveys: [],
+          surveyTemplates: [],
           totalCount: 0,
           page,
           pageSize,
@@ -50,14 +42,9 @@ export const surveysQueryOptions = ({
         q: validatedParams.q || "",
       });
 
-      console.log(
-        "searchParams",
-        `/api/survey-templates?${searchParams.toString()}`,
-      );
-
       const response = await fetch(`/api/survey-templates?${searchParams}`);
       const result = (await response.json()) as Awaited<
-        ReturnType<typeof getSurveysUseCase>
+        ReturnType<typeof getSurveyTemplates>
       >;
       return result;
     },
@@ -65,7 +52,7 @@ export const surveysQueryOptions = ({
       if (!previousData) return undefined;
 
       return {
-        surveys: [],
+        surveyTemplates: [],
         page,
         pageSize,
         totalPages: previousData.totalPages,
@@ -74,29 +61,15 @@ export const surveysQueryOptions = ({
     },
   });
 
-export const surveyTemplateByIdQueryOptions = (surveyTemplateId: number) => ({
-  queryKey: ["survey-template", surveyTemplateId],
-  queryFn: async () => {
-    const response = await fetch(`/api/survey-templates/${surveyTemplateId}`);
-    const json = (await response.json()) as Awaited<
-      ReturnType<typeof getSurveyTemplateByIdUseCase>
-    >;
-
-    return json;
-  },
-  enabled: !!surveyTemplateId,
-});
-
-export const surveyTemplateResponsesQueryOptions = (surveyTemplateId: number) =>
+export const surveyTemplateByIdQueryOptions = (surveyTemplateId: number) =>
   queryOptions({
-    queryKey: ["survey-template-responses", surveyTemplateId],
+    queryKey: ["survey-template", surveyTemplateId],
     queryFn: async () => {
-      const response = await fetch(
-        `/api/survey-templates/${surveyTemplateId}/responses`,
-      );
+      const response = await fetch(`/api/survey-templates/${surveyTemplateId}`);
       const json = (await response.json()) as Awaited<
-        ReturnType<typeof getSurveyTemplateResponsesUseCase>
+        ReturnType<typeof getSurveyTemplateById>
       >;
+
       return json;
     },
     enabled: !!surveyTemplateId,

@@ -1,5 +1,6 @@
 "use client";
 
+import { CreateQuestionSchema } from "@/data-access/questions/schemas";
 import { Heading } from "@/shared/components/ui/heading";
 import { Link } from "@/shared/components/ui/link";
 import { useNavigateWithParams } from "@/shared/hooks/use-navigate-with-params";
@@ -10,15 +11,14 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 import { useCreateQuestion } from "../../hooks/questions/use-create-question";
-import { QuestionFormSchema } from "../../lib/questions.schema";
 import { QuestionForm } from "./question-form";
 
 export const CreateQuestion = () => {
   const router = useRouter();
   const { createHrefWithParams } = useNavigateWithParams();
 
-  const form = useForm<z.infer<typeof QuestionFormSchema>>({
-    resolver: zodResolver(QuestionFormSchema),
+  const form = useForm<z.infer<typeof CreateQuestionSchema>>({
+    resolver: zodResolver(CreateQuestionSchema),
     defaultValues: {
       title: "",
       description: "",
@@ -34,7 +34,7 @@ export const CreateQuestion = () => {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof QuestionFormSchema>) => {
+  const onSubmit = (data: z.infer<typeof CreateQuestionSchema>) => {
     mutate(data);
   };
 

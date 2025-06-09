@@ -1,10 +1,11 @@
-import { queryOptions } from "@tanstack/react-query";
-import type { getQuestionsUseCase } from "../use-cases/feedback.use-case";
+import type { getQuestionAnswers } from "@/data-access/anwers/queries";
 import type {
-  getQuestionAnswersUseCase,
-  getQuestionByIdUseCase,
-} from "../use-cases/questions.use-case";
-import { GetQuestionsSchema, type SortBy } from "./questions.schema";
+  getQuestionById,
+  getQuestions,
+} from "@/data-access/questions/queries";
+import { GetQuestionsSchema } from "@/data-access/questions/schemas";
+import { queryOptions } from "@tanstack/react-query";
+import type { z } from "zod";
 
 export const questionQueryOptions = (id: number) =>
   queryOptions({
@@ -12,7 +13,7 @@ export const questionQueryOptions = (id: number) =>
     queryFn: async () => {
       const response = await fetch(`/api/questions/${id}`);
       const json = (await response.json()) as Awaited<
-        ReturnType<typeof getQuestionByIdUseCase>
+        ReturnType<typeof getQuestionById>
       >;
 
       return json;
@@ -42,7 +43,7 @@ export const questionAnswersQueryOptions = (
     queryFn: async () => {
       const response = await fetch(url);
       const json = (await response.json()) as Awaited<
-        ReturnType<typeof getQuestionAnswersUseCase>
+        ReturnType<typeof getQuestionAnswers>
       >;
 
       return json;
@@ -55,12 +56,7 @@ export const questionsQueryOptions = ({
   pageSize = 10,
   sortBy = "alphabetical",
   q = "",
-}: {
-  page?: number;
-  pageSize?: number;
-  sortBy?: SortBy;
-  q?: string;
-}) =>
+}: Partial<z.infer<typeof GetQuestionsSchema>>) =>
   queryOptions({
     queryKey: ["feedback", "questions", page, pageSize, sortBy, q],
     queryFn: async () => {
@@ -96,7 +92,7 @@ export const questionsQueryOptions = ({
       });
 
       const json = (await response.json()) as Awaited<
-        ReturnType<typeof getQuestionsUseCase>
+        ReturnType<typeof getQuestions>
       >;
 
       return json;

@@ -1,13 +1,13 @@
-import { getQuestionByIdUseCase } from "@/features/feedback/use-cases/questions.use-case";
+import { getQuestionById } from "@/data-access/questions/queries";
 import { NextResponse } from "next/server";
 
 export async function GET(
-  request: Request,
+  _: Request,
   { params }: { params: Promise<{ questionId: string }> },
 ) {
   const { questionId } = await params;
 
-  const data = await getQuestionByIdUseCase({
+  const data = await getQuestionById({
     id: Number.parseInt(questionId),
   });
 

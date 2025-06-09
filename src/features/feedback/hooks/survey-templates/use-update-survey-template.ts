@@ -1,10 +1,10 @@
+import { updateSurveyTemplate } from "@/data-access/survey-templates/mutations";
+import { UpdateSurveyTemplateSchema } from "@/data-access/survey-templates/schemas";
 import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { UpdateSurveyTemplateSchema } from "../../lib/surveys.schema";
-import { updateSurveyTemplateUseCase } from "../../use-cases/survey-templates.use-case";
 
-export const useUpdateSurvey = ({
+export const useUpdateSurveyTemplate = ({
   onSuccess,
 }: {
   onSuccess?: () => void;
@@ -13,10 +13,12 @@ export const useUpdateSurvey = ({
 
   return useProtectedMutation({
     schema: UpdateSurveyTemplateSchema,
-    mutationFn: async (data) => updateSurveyTemplateUseCase(data),
+    mutationFn: updateSurveyTemplate,
     onSuccess: (_, variables) => {
-      toast.success("Survey updated successfully");
-      queryClient.invalidateQueries({ queryKey: ["surveys"] });
+      toast.success("Survey template updated successfully");
+      queryClient.invalidateQueries({
+        queryKey: ["feedback", "survey-templates"],
+      });
       queryClient.invalidateQueries({
         queryKey: ["survey-template", variables.id],
       });
@@ -24,7 +26,7 @@ export const useUpdateSurvey = ({
     },
     onError: (error) => {
       console.error(error);
-      toast.error("Failed to update survey");
+      toast.error("Failed to update survey template");
     },
   });
 };

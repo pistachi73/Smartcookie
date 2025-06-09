@@ -1,11 +1,10 @@
-"use server";
-
 import { db } from "@/db";
 import { questions } from "@/db/schema";
-import { withValidationAndAuth } from "@/shared/lib/protected-use-case";
 import { and, count, desc, eq, sql } from "drizzle-orm";
 import { cache } from "react";
-import { GetQuestionsSchema } from "../lib/questions.schema";
+import { z } from "zod";
+import { withValidationAndAuth } from "../protected-data-access";
+import { GetQuestionsSchema } from "./schemas";
 
 const buildSearchCondition = (q?: string) => {
   if (!q || q.trim() === "") {
@@ -30,9 +29,9 @@ const getCachedQuestionCount = cache(async (userId: string, q?: string) => {
   return countResult[0]?.value || 0;
 });
 
-export const getQuestionsUseCase = withValidationAndAuth({
+export const getQuestions = withValidationAndAuth({
   schema: GetQuestionsSchema,
-  useCase: async ({ page, pageSize, sortBy, q }, userId) => {
+  callback: async ({ page, pageSize, sortBy, q }, userId) => {
     // Base condition for current user's questions
     const userCondition = eq(questions.userId, userId);
     const whereCondition =
@@ -73,5 +72,29 @@ export const getQuestionsUseCase = withValidationAndAuth({
       pageSize,
       totalPages: Math.ceil(totalCount / pageSize),
     };
+  },
+});
+
+export const getQuestionById = withValidationAndAuth({
+  schema: z.object({
+    id: z.number(),
+  }),
+  callback: async ({ id }, userId) => {
+    // Get question basic info only
+    const question = await db.query.questions.findFirst({
+      where: and(eq(questions.id, id), eq(questions.userId, userId)),
+      columns: {
+        id: true,
+        title: true,
+        description: true,
+        type: true,
+        enableAdditionalComment: true,
+        totalAnswers: true,
+      },
+    });
+
+    if (!question) return null;
+
+    return question;
   },
 });

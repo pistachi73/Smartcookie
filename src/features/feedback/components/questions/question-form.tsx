@@ -1,5 +1,6 @@
 "use client";
 
+import type { CreateQuestionSchema } from "@/data-access/questions/schemas";
 import type { QuestionType } from "@/db/schema";
 import { Button } from "@/shared/components/ui/button";
 import { Checkbox } from "@/shared/components/ui/checkbox";
@@ -27,7 +28,6 @@ import {
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Controller, type UseFormReturn } from "react-hook-form";
 import type { z } from "zod";
-import type { QuestionFormSchema } from "../../lib/questions.schema";
 
 const questionTypes: {
   id: QuestionType;
@@ -60,13 +60,13 @@ const questionTypes: {
 ];
 
 export interface QuestionFormProps {
-  form: UseFormReturn<z.infer<typeof QuestionFormSchema>>;
-  onSubmit: (data: z.infer<typeof QuestionFormSchema>) => void;
+  form: UseFormReturn<z.infer<typeof CreateQuestionSchema>>;
+  onSubmit: (data: z.infer<typeof CreateQuestionSchema>) => void;
   isPending: boolean;
   submitButtonText: string;
   loadingText: string;
   disabledFields?: Partial<
-    Record<keyof z.infer<typeof QuestionFormSchema>, boolean>
+    Record<keyof z.infer<typeof CreateQuestionSchema>, boolean>
   >;
 }
 
@@ -194,7 +194,7 @@ export const QuestionForm = ({
 
       {/* Submit Button */}
       <div className="flex justify-end">
-        <Button type="submit" className="w-fit px-6" isPending={isPending} >
+        <Button type="submit" className="w-fit px-6" isPending={isPending}>
           {isPending && (
             <ProgressCircle isIndeterminate aria-label={loadingText} />
           )}

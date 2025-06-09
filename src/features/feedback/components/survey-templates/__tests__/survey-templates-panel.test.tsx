@@ -7,7 +7,7 @@ import {
 import { cleanup, render, screen } from "@/shared/lib/testing/test-utils";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
-import { SurveysPanel } from "../surveys-panel";
+import { SurveyTemplatesPanel } from "../survey-template-panel";
 
 mockNextNavigation();
 
@@ -29,12 +29,12 @@ vi.mock("@tanstack/react-query", async (importOriginal) => {
   };
 });
 
-vi.mock("../survey-list-item", () => ({
-  SurveyListItem: ({ survey }: { survey: any }) => (
-    <div data-testid={`survey-item-${survey.id}`}>
-      <h3>{survey.title}</h3>
-      <p>{survey.description}</p>
-      <span>{survey.totalResponses} responses</span>
+vi.mock("../survey-template-list-item", () => ({
+  SurveyTemplateListItem: ({ surveyTemplate }: { surveyTemplate: any }) => (
+    <div data-testid={`survey-item-${surveyTemplate.id}`}>
+      <h3>{surveyTemplate.title}</h3>
+      <p>{surveyTemplate.description}</p>
+      <span>{surveyTemplate.totalResponses} responses</span>
     </div>
   ),
 }));
@@ -45,7 +45,7 @@ vi.mock("../../questions/skeleton-question-list-item", () => ({
   },
 }));
 
-const mockSurveys = [
+const mockSurveyTemplates = [
   {
     id: 1,
     title: "Customer Satisfaction Survey",
@@ -69,10 +69,12 @@ const mockSurveys = [
   },
 ];
 
-const createMockSurveysData = (surveys: any[] = mockSurveys) => ({
-  surveys,
-  totalCount: surveys.length,
-  totalPages: Math.ceil(surveys.length / 10),
+const createMockSurveysData = (
+  surveyTemplates: any[] = mockSurveyTemplates,
+) => ({
+  surveyTemplates,
+  totalCount: surveyTemplates.length,
+  totalPages: Math.ceil(surveyTemplates.length / 10),
   page: 1,
   pageSize: 10,
 });
@@ -101,7 +103,7 @@ describe("SurveysPanel", () => {
 
       vi.mocked(useQuery).mockReturnValue(mockQueryResult);
 
-      render(<SurveysPanel />);
+      render(<SurveyTemplatesPanel />);
 
       const skeletonItems = screen.getAllByTestId("skeleton-survey-item");
       expect(skeletonItems).toHaveLength(8);
@@ -116,7 +118,7 @@ describe("SurveysPanel", () => {
         isFetching: false,
       } as any);
 
-      render(<SurveysPanel />);
+      render(<SurveyTemplatesPanel />);
 
       const skeletonItems = screen.getAllByTestId("skeleton-survey-item");
       expect(skeletonItems).toHaveLength(8);
@@ -126,13 +128,13 @@ describe("SurveysPanel", () => {
   describe("Empty States", () => {
     it("displays no surveys message when no data is returned", () => {
       vi.mocked(useQuery).mockReturnValue({
-        data: { surveys: [], totalCount: 0, totalPages: 1 },
+        data: { surveyTemplates: [], totalCount: 0, totalPages: 1 },
         isLoading: false,
         isPlaceholderData: false,
         isFetching: false,
       } as any);
 
-      render(<SurveysPanel />);
+      render(<SurveyTemplatesPanel />);
 
       expect(screen.getByText("No surveys found")).toBeInTheDocument();
     });
@@ -145,7 +147,7 @@ describe("SurveysPanel", () => {
         isFetching: false,
       } as any);
 
-      render(<SurveysPanel />);
+      render(<SurveyTemplatesPanel />);
 
       expect(screen.getByText("No surveys found")).toBeInTheDocument();
     });
@@ -160,7 +162,7 @@ describe("SurveysPanel", () => {
         isFetching: false,
       } as any);
 
-      render(<SurveysPanel />);
+      render(<SurveyTemplatesPanel />);
 
       expect(screen.getByTestId("survey-item-1")).toBeInTheDocument();
       expect(screen.getByTestId("survey-item-2")).toBeInTheDocument();
@@ -181,7 +183,7 @@ describe("SurveysPanel", () => {
         isFetching: false,
       } as any);
 
-      render(<SurveysPanel />);
+      render(<SurveyTemplatesPanel />);
 
       expect(screen.getByText("42 responses")).toBeInTheDocument();
       expect(screen.getByText("15 responses")).toBeInTheDocument();
@@ -206,11 +208,18 @@ describe("SurveysPanel", () => {
         isFetching: false,
       } as any);
 
-      render(<SurveysPanel />);
+      render(<SurveyTemplatesPanel />);
 
       expect(vi.mocked(useQuery)).toHaveBeenCalledWith(
         expect.objectContaining({
-          queryKey: ["feedback", "surveys", 2, 10, "newest", "customer"],
+          queryKey: [
+            "feedback",
+            "survey-templates",
+            2,
+            10,
+            "newest",
+            "customer",
+          ],
         }),
       );
     });
@@ -225,7 +234,7 @@ describe("SurveysPanel", () => {
         isFetching: false,
       } as any);
 
-      render(<SurveysPanel />);
+      render(<SurveyTemplatesPanel />);
 
       expect(screen.getByText("surveys 1-3 of 3")).toBeInTheDocument();
     });
@@ -238,7 +247,7 @@ describe("SurveysPanel", () => {
         isFetching: false,
       } as any);
 
-      render(<SurveysPanel />);
+      render(<SurveyTemplatesPanel />);
 
       const loadingTexts = screen.getAllByText("Loading...");
       expect(loadingTexts.length).toBeGreaterThan(0);
@@ -258,7 +267,7 @@ describe("SurveysPanel", () => {
         isFetching: false,
       } as any);
 
-      render(<SurveysPanel />);
+      render(<SurveyTemplatesPanel />);
 
       expect(screen.getByText("surveys 1-10 of 25")).toBeInTheDocument();
     });
@@ -273,13 +282,13 @@ describe("SurveysPanel", () => {
         isFetching: false,
       } as any);
 
-      render(<SurveysPanel />);
+      render(<SurveyTemplatesPanel />);
 
       expect(screen.getByText("No surveys found")).toBeInTheDocument();
     });
 
     it("handles single survey correctly", () => {
-      const singleSurveyData = createMockSurveysData([mockSurveys[0]]);
+      const singleSurveyData = createMockSurveysData([mockSurveyTemplates[0]]);
 
       vi.mocked(useQuery).mockReturnValue({
         data: singleSurveyData,
@@ -288,7 +297,7 @@ describe("SurveysPanel", () => {
         isFetching: false,
       } as any);
 
-      render(<SurveysPanel />);
+      render(<SurveyTemplatesPanel />);
 
       expect(screen.getByTestId("survey-item-1")).toBeInTheDocument();
       expect(screen.queryByTestId("survey-item-2")).not.toBeInTheDocument();
@@ -313,7 +322,7 @@ describe("SurveysPanel", () => {
         isFetching: false,
       } as any);
 
-      render(<SurveysPanel />);
+      render(<SurveyTemplatesPanel />);
 
       expect(
         screen.getByText("Survey without description"),
@@ -323,13 +332,13 @@ describe("SurveysPanel", () => {
 
     it("handles missing totalCount and totalPages gracefully", () => {
       vi.mocked(useQuery).mockReturnValue({
-        data: { surveys: mockSurveysData.surveys },
+        data: { surveyTemplates: mockSurveysData.surveyTemplates },
         isLoading: false,
         isPlaceholderData: false,
         isFetching: false,
       } as any);
 
-      render(<SurveysPanel />);
+      render(<SurveyTemplatesPanel />);
 
       expect(screen.getByText("No results")).toBeInTheDocument();
     });

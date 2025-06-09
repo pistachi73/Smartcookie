@@ -3,20 +3,22 @@
 import { Heading } from "@/shared/components/ui/heading";
 import { UserGroupIcon } from "@hugeicons-pro/core-stroke-rounded";
 
-import { surveyTemplateResponsesQueryOptions } from "@/features/feedback/lib/survey-template-query-options";
+import { surveyTemplateResponsesQueryOptions } from "@/features/feedback/lib/survey-template-responses-query-options";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { FeedbackLoading } from "../../shared/feedback-loading";
 import { FeedbackNotFound } from "../../shared/feedback-not-found";
-import { SurveyNoResponses } from "./survey-no-responses";
-import { SurveyResponse } from "./survey-response";
+import { SurveyTemplateNoResponses } from "./survey-template-no-responses";
+import { SurveyTemplateResponse } from "./survey-template-response";
 
-interface SurveyResponseProps {
+interface SurveyTemplateResponsesProps {
   surveyTemplateId: number;
 }
 
-export const SurveyResponses = ({ surveyTemplateId }: SurveyResponseProps) => {
+export const SurveyTemplateResponses = ({
+  surveyTemplateId,
+}: SurveyTemplateResponsesProps) => {
   const [openResponseId, setOpenResponseId] = useState<number | null>(null);
 
   const {
@@ -49,7 +51,7 @@ export const SurveyResponses = ({ surveyTemplateId }: SurveyResponseProps) => {
           />
           <Heading level={3}>Survey Responses</Heading>
         </div>
-        <SurveyNoResponses />
+        <SurveyTemplateNoResponses />
       </section>
     );
   }
@@ -71,7 +73,7 @@ export const SurveyResponses = ({ surveyTemplateId }: SurveyResponseProps) => {
 
       <div className="space-y-2">
         {surveyTemplateResponses?.responses.map((response) => (
-          <SurveyResponse
+          <SurveyTemplateResponse
             key={response.id}
             isOpen={openResponseId === response.id}
             handleToggle={() => handleResponseToggle(response.id)}

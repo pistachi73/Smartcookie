@@ -9,8 +9,8 @@ import {
   Clock01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
 
-import { surveyResponseAnswersQueryOptions } from "@/features/feedback/lib/survey-response-query-options";
-import type { getSurveyTemplateResponsesUseCase } from "@/features/feedback/use-cases/survey-templates.use-case";
+import type { getSurveyTemplateResponses } from "@/data-access/survey-response/queries";
+import { surveyTemplateResponseAnswersQueryOptions } from "@/features/feedback/lib/survey-template-responses-query-options";
 import { StudentProfile } from "@/shared/components/students/student-profile";
 import { ProgressCircle } from "@/shared/components/ui/progress-circle";
 import { Separator } from "@/shared/components/ui/separator";
@@ -18,25 +18,25 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { AnimatePresence, m } from "motion/react";
-import { SurveyResponseAnswers } from "./survey-response-answers";
+import { SurveyTemplateResponseAnswers } from "./survey-template-response-answers";
 
-type SurveyResponseProps = {
+type SurveyTemplateResponseProps = {
   surveyTemplateId: number;
   handleToggle: () => void;
   isOpen: boolean;
   response: Awaited<
-    ReturnType<typeof getSurveyTemplateResponsesUseCase>
+    ReturnType<typeof getSurveyTemplateResponses>
   >["responses"][number];
 };
 
-export const SurveyResponse = ({
+export const SurveyTemplateResponse = ({
   handleToggle,
   isOpen,
   response,
   surveyTemplateId,
-}: SurveyResponseProps) => {
+}: SurveyTemplateResponseProps) => {
   const { isLoading } = useQuery({
-    ...surveyResponseAnswersQueryOptions({
+    ...surveyTemplateResponseAnswersQueryOptions({
       surveyResponseId: response.id,
       surveyTemplateId,
     }),
@@ -113,7 +113,7 @@ export const SurveyResponse = ({
             exit={{ opacity: 0, height: 0 }}
           >
             <Separator />
-            <SurveyResponseAnswers
+            <SurveyTemplateResponseAnswers
               surveyResponseId={response.id}
               surveyTemplateId={surveyTemplateId}
             />

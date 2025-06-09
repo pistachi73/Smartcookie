@@ -1,8 +1,8 @@
+import { updateQuestion } from "@/data-access/questions/mutations";
+import { UpdateQuestionSchema } from "@/data-access/questions/schemas";
 import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { UpdateQuestionFormSchema } from "../../lib/questions.schema";
-import { updateQuestionUseCase } from "../../use-cases/questions.use-case";
 
 export const useUpdateQuestion = ({
   onSuccess,
@@ -11,8 +11,8 @@ export const useUpdateQuestion = ({
 }) => {
   const queryClient = useQueryClient();
   return useProtectedMutation({
-    schema: UpdateQuestionFormSchema,
-    mutationFn: (data) => updateQuestionUseCase(data),
+    schema: UpdateQuestionSchema,
+    mutationFn: (data) => updateQuestion(data),
 
     onSuccess: (_, data) => {
       toast.success("Question updated successfully");

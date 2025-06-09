@@ -1,9 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import {
-  surveyTemplateByIdQueryOptions,
-  surveyTemplateResponsesQueryOptions,
-} from "@/features/feedback/lib/survey-template-query-options";
 import { mockNextNavigation } from "@/shared/lib/testing/navigation-mocks";
 import {
   cleanup,
@@ -13,7 +9,7 @@ import {
 } from "@/shared/lib/testing/test-utils";
 import { useQueries } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { SurveyDetails } from "../survey-details";
+import { SurveyTemplateDetails } from "../survey-template-details";
 
 mockNextNavigation();
 
@@ -25,13 +21,7 @@ vi.mock("@tanstack/react-query", async (importOriginal) => {
   };
 });
 
-vi.mock("@/features/feedback/lib/survey-template-query-options", () => ({
-  surveyTemplateByIdQueryOptions: vi.fn(),
-  surveyTemplateResponsesQueryOptions: vi.fn(),
-}));
-
 vi.mock("@/shared/hooks/use-navigate-with-params");
-vi.mock("@/features/feedback/use-cases/survey-templates.use-case", () => ({}));
 
 vi.mock("../delete-survey-template-modal", () => ({
   DeleteSurveyTemplateModal: vi.fn(),
@@ -92,7 +82,7 @@ const defaultProps = {
   surveyTemplateId: 1,
 };
 
-describe("SurveyDetails", () => {
+describe("SurveyTemplateDetails", () => {
   const mockPush = vi.fn();
 
   beforeEach(() => {
@@ -101,9 +91,6 @@ describe("SurveyDetails", () => {
     vi.mocked(useRouter).mockReturnValue({
       push: mockPush,
     } as any);
-
-    vi.mocked(surveyTemplateByIdQueryOptions).mockReturnValue({} as any);
-    vi.mocked(surveyTemplateResponsesQueryOptions).mockReturnValue({} as any);
 
     vi.mocked(useQueries).mockReturnValue([
       {
@@ -143,7 +130,7 @@ describe("SurveyDetails", () => {
       it(name, () => {
         vi.mocked(useQueries).mockReturnValue(queries as any);
 
-        render(<SurveyDetails {...defaultProps} />);
+        render(<SurveyTemplateDetails {...defaultProps} />);
 
         expect(
           screen.getByRole("progressbar", { name: /loading survey template/i }),
@@ -165,7 +152,7 @@ describe("SurveyDetails", () => {
         },
       ] as any);
 
-      render(<SurveyDetails {...defaultProps} />);
+      render(<SurveyTemplateDetails {...defaultProps} />);
 
       expect(screen.getByText("Survey template not found")).toBeInTheDocument();
       expect(
@@ -178,7 +165,7 @@ describe("SurveyDetails", () => {
 
   describe("Survey Template Display", () => {
     it("renders survey template title and description", () => {
-      render(<SurveyDetails {...defaultProps} />);
+      render(<SurveyTemplateDetails {...defaultProps} />);
 
       expect(screen.getByText("React Fundamentals Survey")).toBeInTheDocument();
       expect(
@@ -203,7 +190,7 @@ describe("SurveyDetails", () => {
         },
       ] as any);
 
-      render(<SurveyDetails {...defaultProps} />);
+      render(<SurveyTemplateDetails {...defaultProps} />);
 
       expect(screen.getByText("React Fundamentals Survey")).toBeInTheDocument();
       expect(
@@ -239,7 +226,7 @@ describe("SurveyDetails", () => {
           { data: responses, isLoading: false },
         ] as any);
 
-        render(<SurveyDetails {...defaultProps} />);
+        render(<SurveyTemplateDetails {...defaultProps} />);
 
         expectedTexts.forEach((text) => {
           expect(screen.getByText(text)).toBeInTheDocument();
@@ -250,7 +237,7 @@ describe("SurveyDetails", () => {
 
   describe("Statistics Display", () => {
     it("renders completion rate and average response time when there are responses", () => {
-      render(<SurveyDetails {...defaultProps} />);
+      render(<SurveyTemplateDetails {...defaultProps} />);
 
       // Check labels
       expect(screen.getByText("Completion Rate")).toBeInTheDocument();
@@ -285,7 +272,7 @@ describe("SurveyDetails", () => {
         },
       ] as any);
 
-      render(<SurveyDetails {...defaultProps} />);
+      render(<SurveyTemplateDetails {...defaultProps} />);
 
       const hiddenElements = ["Completion Rate", "Avg Response Time"];
       hiddenElements.forEach((text) => {
@@ -338,7 +325,7 @@ describe("SurveyDetails", () => {
             },
           ] as any);
 
-          render(<SurveyDetails {...defaultProps} />);
+          render(<SurveyTemplateDetails {...defaultProps} />);
 
           const percentage = expectedRate.replace("%", "");
           expect(screen.getByText(percentage)).toBeInTheDocument();
@@ -364,7 +351,7 @@ describe("SurveyDetails", () => {
         },
       ] as any);
 
-      render(<SurveyDetails {...defaultProps} />);
+      render(<SurveyTemplateDetails {...defaultProps} />);
 
       expect(screen.getByText("45")).toBeInTheDocument();
       expect(screen.queryByText(/m$/)).not.toBeInTheDocument(); // No minutes
@@ -373,7 +360,7 @@ describe("SurveyDetails", () => {
 
   describe("Questions Display", () => {
     it("renders all questions", () => {
-      render(<SurveyDetails {...defaultProps} />);
+      render(<SurveyTemplateDetails {...defaultProps} />);
 
       expect(screen.getByText("Questions")).toBeInTheDocument();
 
@@ -386,7 +373,7 @@ describe("SurveyDetails", () => {
 
   describe("Navigation", () => {
     it("renders back to hall link", () => {
-      render(<SurveyDetails {...defaultProps} />);
+      render(<SurveyTemplateDetails {...defaultProps} />);
 
       const backLink = screen.getByRole("link", { name: /back to hall/i });
       expect(backLink).toBeInTheDocument();
@@ -396,7 +383,7 @@ describe("SurveyDetails", () => {
 
   describe("Menu Actions", () => {
     it("renders menu with all action items", () => {
-      render(<SurveyDetails {...defaultProps} />);
+      render(<SurveyTemplateDetails {...defaultProps} />);
 
       const menuButton = screen.getByRole("button"); // Menu trigger button
       fireEvent.click(menuButton);
@@ -408,7 +395,7 @@ describe("SurveyDetails", () => {
     });
 
     it("navigates to edit page when edit template is clicked", () => {
-      render(<SurveyDetails {...defaultProps} />);
+      render(<SurveyTemplateDetails {...defaultProps} />);
 
       const menuButton = screen.getByRole("button");
       fireEvent.click(menuButton);
@@ -457,7 +444,7 @@ describe("SurveyDetails", () => {
             { data: responses, isLoading: false },
           ] as any);
 
-          render(<SurveyDetails {...defaultProps} />);
+          render(<SurveyTemplateDetails {...defaultProps} />);
 
           if (expectedText) {
             expect(screen.getByText(expectedText)).toBeInTheDocument();
@@ -469,14 +456,5 @@ describe("SurveyDetails", () => {
         });
       },
     );
-  });
-
-  describe("Data Integration", () => {
-    it("calls correct query options with surveyTemplateId", () => {
-      render(<SurveyDetails {...defaultProps} />);
-
-      expect(surveyTemplateByIdQueryOptions).toHaveBeenCalledWith(1);
-      expect(surveyTemplateResponsesQueryOptions).toHaveBeenCalledWith(1);
-    });
   });
 });

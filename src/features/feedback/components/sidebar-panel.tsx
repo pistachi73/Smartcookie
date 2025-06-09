@@ -3,6 +3,7 @@
 import { Button } from "@/shared/components/ui/button";
 import { Menu } from "@/shared/components/ui/menu";
 
+import type { SortBy } from "@/data-access/questions/schemas";
 import { Pagination } from "@/shared/components/ui/pagination";
 import { useDebouncedValue } from "@/shared/hooks/use-debounced-value";
 import useNavigateWithParams from "@/shared/hooks/use-navigate-with-params";
@@ -17,7 +18,6 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Input } from "react-aria-components";
-import type { SortBy } from "../lib/questions.schema";
 import { validateSearchParams } from "../lib/validate-search-params";
 
 const sortByOptions: {

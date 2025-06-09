@@ -1,8 +1,8 @@
 "use client";
 import { Link } from "@/shared/components/ui/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
-import type { getQuestionsUseCase } from "../../use-cases/feedback.use-case";
 
+import type { getQuestions } from "@/data-access/questions/queries";
 import { Button } from "@/shared/components/ui/button";
 import { Menu } from "@/shared/components/ui/menu";
 import useNavigateWithParams from "@/shared/hooks/use-navigate-with-params";
@@ -22,7 +22,7 @@ import { DeleteQuestionModal } from "./delete-question-modal";
 import { QuestionTypeBadge } from "./question-type-badge";
 
 export type FeedbackQuestion = Awaited<
-  ReturnType<typeof getQuestionsUseCase>
+  ReturnType<typeof getQuestions>
 >["questions"][number];
 
 type QuestionListItemProps = {

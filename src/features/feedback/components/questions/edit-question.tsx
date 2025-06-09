@@ -1,5 +1,9 @@
 "use client";
 
+import {
+  CreateQuestionSchema,
+  type UpdateQuestionSchema,
+} from "@/data-access/questions/schemas";
 import { Heading } from "@/shared/components/ui/heading";
 import { Link } from "@/shared/components/ui/link";
 import { useNavigateWithParams } from "@/shared/hooks/use-navigate-with-params";
@@ -13,10 +17,6 @@ import { useForm } from "react-hook-form";
 import type { z } from "zod";
 import { useUpdateQuestion } from "../../hooks/questions/use-update-question";
 import { questionQueryOptions } from "../../lib/questions-query-options";
-import {
-  QuestionFormSchema,
-  type UpdateQuestionFormSchema,
-} from "../../lib/questions.schema";
 import { FeedbackLoading } from "../shared/feedback-loading";
 import { FeedbackNotFound } from "../shared/feedback-not-found";
 import { QuestionForm } from "./question-form";
@@ -32,8 +32,8 @@ export const EditQuestion = ({ questionId }: EditQuestionProps) => {
   const questionQuery = useQuery(questionQueryOptions(questionId));
   const question = questionQuery.data;
 
-  const form = useForm<z.infer<typeof QuestionFormSchema>>({
-    resolver: zodResolver(QuestionFormSchema),
+  const form = useForm<z.infer<typeof CreateQuestionSchema>>({
+    resolver: zodResolver(CreateQuestionSchema),
     defaultValues: {
       title: "",
       description: "",
@@ -64,8 +64,8 @@ export const EditQuestion = ({ questionId }: EditQuestionProps) => {
     },
   });
 
-  const onSubmit = (data: z.infer<typeof QuestionFormSchema>) => {
-    const updateData: z.infer<typeof UpdateQuestionFormSchema> = {
+  const onSubmit = (data: z.infer<typeof CreateQuestionSchema>) => {
+    const updateData: z.infer<typeof UpdateQuestionSchema> = {
       id: questionId,
       ...data,
     };

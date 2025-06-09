@@ -1,5 +1,6 @@
 "use client";
 
+import { CreateSurveyTemplateSchema } from "@/data-access/survey-templates/schemas";
 import { Button } from "@/shared/components/ui/button";
 import { Form } from "@/shared/components/ui/form";
 import { TextField } from "@/shared/components/ui/text-field";
@@ -10,13 +11,12 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
-import { SurveyTemplateFormSchema } from "../../../lib/surveys.schema";
 import { useSurveyTemplateFormStore } from "../../../store/survey-template-form.store";
 
 // Create a schema with only title and description
 const schema = z.object({
-  title: SurveyTemplateFormSchema.shape.title,
-  description: SurveyTemplateFormSchema.shape.description,
+  title: CreateSurveyTemplateSchema.shape.title,
+  description: CreateSurveyTemplateSchema.shape.description,
 });
 
 type SurveyInfoFormValues = z.infer<typeof schema>;

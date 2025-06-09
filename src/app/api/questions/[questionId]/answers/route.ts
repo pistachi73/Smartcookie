@@ -1,4 +1,4 @@
-import { getQuestionAnswersUseCase } from "@/features/feedback/use-cases/questions.use-case";
+import { getQuestionAnswers } from "@/data-access/anwers/queries";
 import { NextResponse } from "next/server";
 
 export async function GET(
@@ -11,7 +11,7 @@ export async function GET(
   const dateFrom = searchParams.get("dateFrom");
   const dateTo = searchParams.get("dateTo");
 
-  const data = await getQuestionAnswersUseCase({
+  const data = await getQuestionAnswers({
     id: Number.parseInt(questionId),
     dateFrom: dateFrom ? new Date(dateFrom) : undefined,
     dateTo: dateTo ? new Date(dateTo) : undefined,

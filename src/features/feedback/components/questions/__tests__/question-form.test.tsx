@@ -1,4 +1,4 @@
-import { QuestionFormSchema } from "@/features/feedback/lib/questions.schema";
+import { CreateQuestionSchema } from "@/data-access/questions/schemas";
 import {
   cleanup,
   fireEvent,
@@ -13,7 +13,7 @@ import type { z } from "zod";
 import { QuestionForm, type QuestionFormProps } from "../question-form";
 
 type TestWrapperProps = Omit<QuestionFormProps, "form"> & {
-  defaultValues?: Partial<z.infer<typeof QuestionFormSchema>>;
+  defaultValues?: Partial<z.infer<typeof CreateQuestionSchema>>;
 };
 
 const TestWrapper = ({
@@ -24,8 +24,8 @@ const TestWrapper = ({
   disabledFields,
   defaultValues,
 }: TestWrapperProps) => {
-  const form = useForm<z.infer<typeof QuestionFormSchema>>({
-    resolver: zodResolver(QuestionFormSchema),
+  const form = useForm<z.infer<typeof CreateQuestionSchema>>({
+    resolver: zodResolver(CreateQuestionSchema),
     defaultValues: {
       title: "",
       questionType: "text" as const,
@@ -213,7 +213,7 @@ describe("QuestionForm", () => {
 
   it("shows question type descriptions", () => {
     renderQuestionForm({ ...defaultProps, onSubmit: mockOnSubmit });
- 
+
     expect(screen.getByText("Open-ended responses")).toBeInTheDocument();
     expect(screen.getByText("1-10 scale rating")).toBeInTheDocument();
     expect(screen.getByText("Simple yes/no choice")).toBeInTheDocument();

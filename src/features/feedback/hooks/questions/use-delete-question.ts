@@ -1,8 +1,8 @@
+import { deleteQuestion } from "@/data-access/questions/mutations";
+import { DeleteQuestionSchema } from "@/data-access/questions/schemas";
 import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { DeleteQuestionFormSchema } from "../../lib/questions.schema";
-import { deleteQuestionUseCase } from "../../use-cases/questions.use-case";
 
 export const useDeleteQuestion = ({
   onSuccess,
@@ -11,8 +11,8 @@ export const useDeleteQuestion = ({
 }) => {
   const queryClient = useQueryClient();
   return useProtectedMutation({
-    schema: DeleteQuestionFormSchema,
-    mutationFn: (data) => deleteQuestionUseCase(data),
+    schema: DeleteQuestionSchema,
+    mutationFn: (data) => deleteQuestion(data),
 
     onSuccess: () => {
       toast.success("Question deleted successfully");

@@ -1,6 +1,6 @@
 import { QuestionTypeBadge } from "@/features/feedback/components/questions/question-type-badge";
-import { surveyResponseAnswersQueryOptions } from "@/features/feedback/lib/survey-response-query-options";
 import { surveyTemplateByIdQueryOptions } from "@/features/feedback/lib/survey-template-query-options";
+import { surveyTemplateResponseAnswersQueryOptions } from "@/features/feedback/lib/survey-template-responses-query-options";
 import { cn } from "@/shared/lib/classes";
 import {
   StarIcon,
@@ -108,7 +108,7 @@ const isQuestionAddedLater = (
   return templateUpdated > responseCompleted;
 };
 
-export const SurveyResponseAnswers = ({
+export const SurveyTemplateResponseAnswers = ({
   surveyResponseId,
   surveyTemplateId,
 }: SurveyResponseAnswersProps) => {
@@ -118,7 +118,7 @@ export const SurveyResponseAnswers = ({
   ] = useQueries({
     queries: [
       surveyTemplateByIdQueryOptions(surveyTemplateId),
-      surveyResponseAnswersQueryOptions({
+      surveyTemplateResponseAnswersQueryOptions({
         surveyResponseId,
         surveyTemplateId,
       }),

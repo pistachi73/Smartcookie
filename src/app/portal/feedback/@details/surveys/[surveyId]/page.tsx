@@ -1,4 +1,4 @@
-import { SurveyDetails } from "@/features/feedback/components/survey-templates/survey-details";
+import { SurveyDetails } from "@/features/feedback/components/survey-templates/survey-template-details";
 import isNumber from "lodash/isNumber";
 import { redirect } from "next/navigation";
 

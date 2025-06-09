@@ -1,5 +1,5 @@
-import type { getQuestionAnswersUseCase } from "../use-cases/questions.use-case";
+import type { getQuestionAnswers } from "@/data-access/anwers/queries";
 
 export type Answer = NonNullable<
-  Awaited<ReturnType<typeof getQuestionAnswersUseCase>>
+  Awaited<ReturnType<typeof getQuestionAnswers>>
 >[number];

@@ -5,7 +5,7 @@ import {
 
 import { HugeiconsIcon } from "@hugeicons/react";
 
-export const SurveyNoResponses = () => {
+export const SurveyTemplateNoResponses = () => {
   return (
     <div className="text-center py-16 flex flex-col items-center gap-4">
       <div className="relative size-14 bg-primary/10 rounded-full flex items-center justify-center animate-bounce">

@@ -2,19 +2,19 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import { surveysQueryOptions } from "../../lib/survey-template-query-options";
+import { surveyTemplatesQueryOptions } from "../../lib/survey-template-query-options";
 import { validateSearchParams } from "../../lib/validate-search-params";
 import { SkeletonQuestionListItem } from "../questions/skeleton-question-list-item";
 import { SidebarPanel } from "../sidebar-panel";
-import { SurveyListItem } from "./survey-list-item";
+import { SurveyTemplateListItem } from "./survey-template-list-item";
 
-export const SurveysPanel = () => {
+export const SurveyTemplatesPanel = () => {
   const searchParams = useSearchParams();
 
   const { page, sortBy, q } = validateSearchParams(searchParams);
 
   const { data, isLoading, isPlaceholderData } = useQuery(
-    surveysQueryOptions({
+    surveyTemplatesQueryOptions({
       page,
       sortBy,
       q,
@@ -23,7 +23,7 @@ export const SurveysPanel = () => {
 
   const isLoadingSurveys = isLoading || isPlaceholderData;
 
-  const surveys = data?.surveys || [];
+  const surveyTemplates = data?.surveyTemplates || [];
   const totalSurveys = data?.totalCount || 0;
   const totalPages = data?.totalPages || 1;
 
@@ -40,13 +40,16 @@ export const SurveysPanel = () => {
             key={`skeleton-question-list-item-${index}`}
           />
         ))
-      ) : surveys.length === 0 ? (
+      ) : surveyTemplates.length === 0 ? (
         <div className="flex items-center justify-center h-full">
           <p className="text-sm text-muted-fg">No surveys found</p>
         </div>
       ) : (
-        surveys.map((survey) => (
-          <SurveyListItem key={`survey-${survey.id}`} survey={survey} />
+        surveyTemplates.map((surveyTemplate) => (
+          <SurveyTemplateListItem
+            key={`survey-template-${surveyTemplate.id}`}
+            surveyTemplate={surveyTemplate}
+          />
         ))
       )}
     </SidebarPanel>
