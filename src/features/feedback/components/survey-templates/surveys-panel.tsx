@@ -2,25 +2,20 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import type { SortBy } from "../../lib/questions.schema";
 import { surveysQueryOptions } from "../../lib/survey-template-query-options";
+import { validateSearchParams } from "../../lib/validate-search-params";
 import { SkeletonQuestionListItem } from "../questions/skeleton-question-list-item";
 import { SidebarPanel } from "../sidebar-panel";
 import { SurveyListItem } from "./survey-list-item";
 
 export const SurveysPanel = () => {
   const searchParams = useSearchParams();
-  const page = Number(searchParams.get("page") || "1");
-  const sortBy: SortBy =
-    (searchParams.get("sortBy") as SortBy) || "alphabetical";
-  const q = searchParams.get("q") || "";
 
-  // Guard against invalid page numbers from URL
-  const validPage = Number.isInteger(page) && page > 0 ? page : 1;
+  const { page, sortBy, q } = validateSearchParams(searchParams);
 
   const { data, isLoading, isPlaceholderData } = useQuery(
     surveysQueryOptions({
-      page: validPage,
+      page,
       sortBy,
       q,
     }),

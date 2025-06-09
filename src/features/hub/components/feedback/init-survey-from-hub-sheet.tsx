@@ -46,6 +46,7 @@ interface SurveyTemplateRadioItemProps {
 function SurveyTemplateRadioItem({ template }: SurveyTemplateRadioItemProps) {
   return (
     <RadioToggle
+      aria-label={template.title}
       value={template.id.toString()}
       className="w-full h-auto p-4 justify-between gap-4"
     >
@@ -219,6 +220,7 @@ export function InitSurveyFromHubSheet({
                   </p>
                 ) : (
                   <RadioToggleGroup
+                    aria-label="Survey templates"
                     value={selectedTemplateId}
                     onChange={setSelectedTemplateId}
                     orientation="vertical"

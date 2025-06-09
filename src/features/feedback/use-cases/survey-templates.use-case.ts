@@ -24,6 +24,7 @@ const buildSearchCondition = (q?: string) => {
   if (!q || q.trim() === "") {
     return undefined;
   }
+
   const searchTerm = `%${q}%`;
   return sql`(${surveyTemplates.title} ILIKE ${searchTerm} OR ${surveyTemplates.description} ILIKE ${searchTerm})`;
 };
@@ -87,7 +88,7 @@ export const getSurveysUseCase = withValidationAndAuth({
             ? asc(surveyTemplates.title)
             : sortBy === "newest"
               ? desc(surveyTemplates.updatedAt)
-              : desc(sql`"responsesCount"`),
+              : desc(surveyTemplates.totalResponses),
         ),
       getCachedSurveysCount(userId, q),
     ]);
@@ -361,13 +362,11 @@ export const getSurveyTemplateResponsesUseCase = withValidationAndAuth({
 export const getSurveyResponseAnswersUseCase = withValidationAndAuth({
   schema: z.object({
     surveyResponseId: z.number(),
-    studentId: z.number(),
   }),
-  useCase: async ({ surveyResponseId, studentId }) => {
+  useCase: async ({ surveyResponseId }) => {
     const studentResponse = await db.query.surveyResponses.findFirst({
       where: and(
         eq(surveyResponses.id, surveyResponseId),
-        eq(surveyResponses.studentId, studentId),
         eq(surveyResponses.completed, true),
       ),
       columns: {

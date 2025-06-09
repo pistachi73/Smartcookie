@@ -1,9 +1,9 @@
 import { queryOptions } from "@tanstack/react-query";
 import type {
   getSurveyTemplateByIdUseCase,
+  getSurveyTemplateResponsesUseCase,
   getSurveysUseCase,
 } from "../use-cases/survey-templates.use-case";
-import { getSurveyTemplateResponsesUseCase } from "../use-cases/survey-templates.use-case";
 import type { SortBy } from "./questions.schema";
 import { GetSurveysSchema } from "./surveys.schema";
 
@@ -50,6 +50,11 @@ export const surveysQueryOptions = ({
         q: validatedParams.q || "",
       });
 
+      console.log(
+        "searchParams",
+        `/api/survey-templates?${searchParams.toString()}`,
+      );
+
       const response = await fetch(`/api/survey-templates?${searchParams}`);
       const result = (await response.json()) as Awaited<
         ReturnType<typeof getSurveysUseCase>
@@ -85,6 +90,14 @@ export const surveyTemplateByIdQueryOptions = (surveyTemplateId: number) => ({
 export const surveyTemplateResponsesQueryOptions = (surveyTemplateId: number) =>
   queryOptions({
     queryKey: ["survey-template-responses", surveyTemplateId],
-    queryFn: () => getSurveyTemplateResponsesUseCase({ surveyTemplateId }),
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/survey-templates/${surveyTemplateId}/responses`,
+      );
+      const json = (await response.json()) as Awaited<
+        ReturnType<typeof getSurveyTemplateResponsesUseCase>
+      >;
+      return json;
+    },
     enabled: !!surveyTemplateId,
   });

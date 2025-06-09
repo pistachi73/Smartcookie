@@ -19,25 +19,29 @@ export function useNavigateWithParams() {
       path: string,
       additionalParams: Record<string, string | null> = {},
     ): string => {
-      // Create a new URLSearchParams object
-      const newParams = new URLSearchParams();
-
-      // Preserve all existing parameters
+      // Convert existing search params to object
+      const existingParams: Record<string, string> = {};
       searchParams.forEach((value, key) => {
-        newParams.set(key, value);
+        existingParams[key] = value;
       });
 
-      // Add any additional parameters
+      // Merge with additional params
+      const allParams = { ...existingParams };
       Object.entries(additionalParams).forEach(([key, value]) => {
         if (value === null) {
-          newParams.delete(key);
+          delete allParams[key];
         } else {
-          newParams.set(key, value);
+          allParams[key] = value;
         }
       });
 
-      // Build the URL with the retained parameters
-      const queryString = newParams.toString();
+      // Build query string manually
+      const queryPairs = Object.entries(allParams)
+        .filter(([, value]) => value !== undefined && value !== null)
+        .map(([key, value]) => `${key}=${encodeURIComponent(value)}`);
+
+      const queryString = queryPairs.join("&");
+
       return queryString ? `${path}?${queryString}` : path;
     },
     [searchParams],

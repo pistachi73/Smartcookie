@@ -11,7 +11,6 @@ export const ByweekdayCheckboxGroup = ({
   setRruleOptions,
   byweekday,
 }: ByweekdayCheckboxGroupProps) => {
-  console.log({ byweekday });
   return (
     <ToggleGroup
       gap={1}

@@ -39,6 +39,7 @@ You are an expert full-stack developer proficient in TypeScript, React, Next.js,
 
   ### Testing
   - Write unit tests for components using Vitest and React Testing Library.
+  - Avoid mocking unnecessay components.
   - Use pnpm for runing any test command and zsh terminal.
   - Use pnpm test:run for terminal commands.
   - Don't use comments for tests.

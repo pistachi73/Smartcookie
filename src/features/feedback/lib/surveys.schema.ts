@@ -10,8 +10,14 @@ export const GetSurveysSchema = z.object({
 
 export const SurveyTemplateFormSchema = z.object({
   id: z.number().optional(),
-  title: z.string().min(1, "Title is required"),
-  description: z.string().optional(),
+  title: z
+    .string()
+    .min(1, "Title is required")
+    .max(255, "Title must be at most 255 characters"),
+  description: z
+    .string()
+    .max(1000, "Description must be at most 1000 characters")
+    .optional(),
   questions: z.array(
     z.object({
       id: z.number(),

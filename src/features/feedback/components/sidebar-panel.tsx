@@ -18,6 +18,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Input } from "react-aria-components";
 import type { SortBy } from "../lib/questions.schema";
+import { validateSearchParams } from "../lib/validate-search-params";
 
 const sortByOptions: {
   label: string;
@@ -60,41 +61,32 @@ export const SidebarPanel = ({
   const router = useRouter();
   const { createHrefWithParams } = useNavigateWithParams();
   const searchParams = useSearchParams();
-  const [query, setQuery] = useState("");
+  const { page, sortBy, q } = validateSearchParams(searchParams);
+  const [query, setQuery] = useState(q);
 
   useDebouncedValue(query, 300, (value) => {
     let query: string | null = value;
     if (!value || !value.trim()) {
       query = null;
     }
-    router.push(createHrefWithParams(pathname, { q: query, page: null }));
+    const href = createHrefWithParams(pathname, { q: query, page: null });
+    router.push(href);
   });
 
-  const page = Number(searchParams.get("page") || "1");
-  const sortBy = (searchParams.get("sortBy") as SortBy) || "alphabetical";
-
-  const validPage = Number.isInteger(page) && page > 0 ? page : 1;
   const validTotalPages = Math.max(1, totalPages);
 
   useEffect(() => {
     // Redirect to page 1 if current page exceeds total pages or is invalid
-    if (validPage > validTotalPages || validPage !== page) {
+    if (page > validTotalPages) {
       router.push(
         createHrefWithParams(pathname, {
           page: "1",
           sortBy,
+          q: null,
         }),
       );
     }
-  }, [
-    validPage,
-    validTotalPages,
-    page,
-    pathname,
-    router,
-    createHrefWithParams,
-    sortBy,
-  ]);
+  }, [validTotalPages, page, pathname, router, createHrefWithParams, sortBy]);
 
   return (
     <div className="h-full grid grid-cols-1 grid-rows-[auto_1fr_auto]">
@@ -149,17 +141,6 @@ export const SidebarPanel = ({
             ))}
           </Menu.Content>
         </Menu>
-        {/* <Link
-          className={buttonStyles({
-            intent: "outline",
-            size: "square-petite",
-          })}
-          href={createHrefWithParams(`/portal/feedback/${panel}/new/`, {
-            page: null,
-          })}
-        >
-          <HugeiconsIcon icon={AddIcon} size={16} data-slot="icon" />
-        </Link> */}
       </div>
 
       <div className="overflow-y-auto flex-1">{children}</div>
@@ -168,7 +149,7 @@ export const SidebarPanel = ({
           {isLoading
             ? "Loading..."
             : totalItems > 0
-              ? `${panel} ${(validPage - 1) * 10 + 1}-${Math.min(validPage * 10, totalItems)} of ${totalItems}`
+              ? `${panel} ${(page - 1) * 10 + 1}-${Math.min(page * 10, totalItems)} of ${totalItems}`
               : "No results"}
         </p>
 
@@ -185,15 +166,15 @@ export const SidebarPanel = ({
                 href={createHrefWithParams(pathname, {
                   page: "1",
                 })}
-                isDisabled={validPage === 1 || validTotalPages === 1}
+                isDisabled={page === 1 || validTotalPages === 1}
               />
               <Pagination.Item
                 routerOptions={{ scroll: false }}
                 segment="previous"
                 href={createHrefWithParams(pathname, {
-                  page: `${Math.max(1, validPage - 1)}`,
+                  page: `${Math.max(1, page - 1)}`,
                 })}
-                isDisabled={validPage === 1 || validTotalPages === 1}
+                isDisabled={page === 1 || validTotalPages === 1}
               />
               <Pagination.Section
                 aria-label="Pagination Segment"
@@ -203,7 +184,7 @@ export const SidebarPanel = ({
                   routerOptions={{ scroll: false }}
                   segment="label"
                 >
-                  {validPage}
+                  {page}
                 </Pagination.Item>
                 <Pagination.Item
                   routerOptions={{ scroll: false }}
@@ -221,11 +202,9 @@ export const SidebarPanel = ({
                 routerOptions={{ scroll: false }}
                 segment="next"
                 href={createHrefWithParams(pathname, {
-                  page: `${Math.min(validTotalPages, validPage + 1)}`,
+                  page: `${Math.min(validTotalPages, page + 1)}`,
                 })}
-                isDisabled={
-                  validPage === validTotalPages || validTotalPages === 1
-                }
+                isDisabled={page === validTotalPages || validTotalPages === 1}
               />
               <Pagination.Item
                 routerOptions={{ scroll: false }}
@@ -233,9 +212,7 @@ export const SidebarPanel = ({
                 href={createHrefWithParams(pathname, {
                   page: `${validTotalPages}`,
                 })}
-                isDisabled={
-                  validPage === validTotalPages || validTotalPages === 1
-                }
+                isDisabled={page === validTotalPages || validTotalPages === 1}
               />
             </Pagination.List>
           </Pagination>

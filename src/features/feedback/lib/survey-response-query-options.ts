@@ -1,17 +1,30 @@
 import { queryOptions } from "@tanstack/react-query";
-import { getSurveyResponseAnswersUseCase } from "../use-cases/survey-templates.use-case";
+import type { getSurveyResponseAnswersUseCase } from "../use-cases/survey-templates.use-case";
 
 export const surveyResponseAnswersQueryOptions = ({
   surveyResponseId,
-  studentId,
+  surveyTemplateId,
 }: {
   surveyResponseId: number;
-  studentId: number;
+  surveyTemplateId: number;
 }) => {
   return queryOptions({
-    queryKey: ["survey-response", surveyResponseId, studentId],
-    queryFn: () =>
-      getSurveyResponseAnswersUseCase({ surveyResponseId, studentId }),
-    enabled: !!surveyResponseId && !!studentId,
+    queryKey: ["survey-response-answers", surveyResponseId],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/survey-templates/${surveyTemplateId}/responses/${surveyResponseId}/answers`,
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch survey response answers");
+      }
+
+      const json = (await response.json()) as Awaited<
+        ReturnType<typeof getSurveyResponseAnswersUseCase>
+      >;
+
+      return json;
+    },
+    enabled: !!surveyResponseId && !!surveyTemplateId,
   });
 };

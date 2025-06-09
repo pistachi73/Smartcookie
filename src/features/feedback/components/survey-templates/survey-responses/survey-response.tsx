@@ -38,19 +38,19 @@ export const SurveyResponse = ({
   const { isLoading } = useQuery({
     ...surveyResponseAnswersQueryOptions({
       surveyResponseId: response.id,
-      studentId: response.student.id,
+      surveyTemplateId,
     }),
     enabled: isOpen,
   });
 
   return (
-    <div className=" border rounded-lg overflow-hidden">
+    <div className=" border rounded-lg overflow-hidde">
       <Button
         onPress={handleToggle}
         intent="plain"
         className={cn(
           "group p-4 h-auto flex w-full  gap-2 transition-all",
-          isOpen && "bg-muted rounded-none",
+          isOpen && "bg-muted rounded-b-none",
         )}
       >
         <div className="flex items-center justify-between w-full">
@@ -115,7 +115,6 @@ export const SurveyResponse = ({
             <Separator />
             <SurveyResponseAnswers
               surveyResponseId={response.id}
-              studentId={response.student.id}
               surveyTemplateId={surveyTemplateId}
             />
           </m.div>

@@ -12,7 +12,6 @@ import { useQueries } from "@tanstack/react-query";
 
 interface SurveyResponseAnswersProps {
   surveyResponseId: number;
-  studentId: number;
   surveyTemplateId: number;
 }
 
@@ -111,19 +110,24 @@ const isQuestionAddedLater = (
 
 export const SurveyResponseAnswers = ({
   surveyResponseId,
-  studentId,
   surveyTemplateId,
 }: SurveyResponseAnswersProps) => {
-  const [{ data: surveyTemplate }, { data: surveyResponseAnswers }] =
-    useQueries({
-      queries: [
-        surveyTemplateByIdQueryOptions(surveyTemplateId),
-        surveyResponseAnswersQueryOptions({
-          surveyResponseId,
-          studentId,
-        }),
-      ],
-    });
+  const [
+    { data: surveyTemplate, isPending: isSurveyTemplatePending },
+    { data: surveyResponseAnswers, isPending: isSurveyResponseAnswersPending },
+  ] = useQueries({
+    queries: [
+      surveyTemplateByIdQueryOptions(surveyTemplateId),
+      surveyResponseAnswersQueryOptions({
+        surveyResponseId,
+        surveyTemplateId,
+      }),
+    ],
+  });
+
+  if (isSurveyTemplatePending || isSurveyResponseAnswersPending) {
+    return null;
+  }
 
   if (!surveyTemplate || !surveyResponseAnswers) {
     return (

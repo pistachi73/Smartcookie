@@ -8,6 +8,7 @@ export async function GET(request: Request) {
   const pageSize = searchParams.get("pageSize");
   const sortBy = searchParams.get("sortBy");
   const q = searchParams.get("q");
+  console.log({ q });
 
   const result = await getQuestionsUseCase({
     page: page ? Number.parseInt(page) : 1,

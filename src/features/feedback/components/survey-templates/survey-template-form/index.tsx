@@ -58,15 +58,14 @@ export const SurveyTemplateForm = () => {
     { id: 3, name: "Preview", icon: BubbleChatPreviewIcon },
   ];
 
+  const stepContent =
+    STEP_CONTENT[currentStep as keyof typeof STEP_CONTENT] || STEP_CONTENT[1];
+
   return (
     <div className="flex flex-col gap-6">
       <div className="space-y-1">
-        <Heading level={2}>
-          {STEP_CONTENT[currentStep as keyof typeof STEP_CONTENT].title}
-        </Heading>
-        <p className="text-sm text-muted-fg">
-          {STEP_CONTENT[currentStep as keyof typeof STEP_CONTENT].description}
-        </p>
+        <Heading level={2}>{stepContent.title}</Heading>
+        <p className="text-sm text-muted-fg">{stepContent.description}</p>
       </div>
 
       <div className="space-y-4">

@@ -59,7 +59,7 @@ const questionTypes: {
   },
 ];
 
-interface QuestionFormProps {
+export interface QuestionFormProps {
   form: UseFormReturn<z.infer<typeof QuestionFormSchema>>;
   onSubmit: (data: z.infer<typeof QuestionFormSchema>) => void;
   isPending: boolean;
@@ -194,7 +194,7 @@ export const QuestionForm = ({
 
       {/* Submit Button */}
       <div className="flex justify-end">
-        <Button type="submit" className="w-fit px-6" isPending={isPending}>
+        <Button type="submit" className="w-fit px-6" isPending={isPending} >
           {isPending && (
             <ProgressCircle isIndeterminate aria-label={loadingText} />
           )}

@@ -38,7 +38,7 @@ export const SurveyResponses = ({ surveyTemplateId }: SurveyResponseProps) => {
     );
   }
 
-  if (surveyTemplateResponses.responses.length === 0) {
+  if (!surveyTemplateResponses?.responses.length) {
     return (
       <section className="space-y-4">
         <div className="flex items-center gap-2">
@@ -70,7 +70,7 @@ export const SurveyResponses = ({ surveyTemplateId }: SurveyResponseProps) => {
       </div>
 
       <div className="space-y-2">
-        {surveyTemplateResponses.responses.map((response) => (
+        {surveyTemplateResponses?.responses.map((response) => (
           <SurveyResponse
             key={response.id}
             isOpen={openResponseId === response.id}

@@ -49,6 +49,8 @@ export const SurveyListItem = ({ survey }: SurveyListItemProps) => {
               isActive,
           },
         )}
+        data-selected={isActive}
+        data-testid="survey-list-item"
       >
         <Link
           href={viewHref}

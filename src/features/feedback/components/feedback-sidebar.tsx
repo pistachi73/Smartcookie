@@ -53,7 +53,7 @@ export const FeedbackSidebar = () => {
   useEffect(() => {
     if (validTab !== tab) {
       router.push(
-        createHrefWithParams(pathname, { tab: validTab, page: null }),
+        createHrefWithParams(pathname, { tab: validTab, page: null, q: null }),
       );
     }
   }, [validTab, tab, router, pathname, createHrefWithParams]);
@@ -65,7 +65,11 @@ export const FeedbackSidebar = () => {
         selectedKey={validTab}
         onSelectionChange={(key) => {
           router.push(
-            createHrefWithParams(pathname, { tab: key as string, page: null }),
+            createHrefWithParams(pathname, {
+              tab: key as string,
+              page: null,
+              q: null,
+            }),
           );
         }}
       >

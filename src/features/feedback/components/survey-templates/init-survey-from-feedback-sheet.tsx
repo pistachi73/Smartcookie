@@ -40,6 +40,7 @@ function HubRadioItem({ hub }: HubRadioItemProps) {
 
   return (
     <RadioToggle
+      aria-label={`Select hub: ${hub.name}`}
       value={hub.id.toString()}
       className={cn("w-full h-12 justify-between")}
     >
@@ -174,6 +175,7 @@ export function InitSurveyFromFeedbackSheet({
                 </div>
 
                 <SearchField
+                  aria-label="Search hubs by name"
                   placeholder="Search hubs by name..."
                   value={searchQuery}
                   onChange={setSearchQuery}
@@ -189,6 +191,7 @@ export function InitSurveyFromFeedbackSheet({
                   </p>
                 ) : (
                   <RadioToggleGroup
+                    aria-label="Select hub"
                     value={selectedHubId}
                     onChange={setSelectedHubId}
                     orientation="vertical"

@@ -80,6 +80,8 @@ export const NotDraggableQuestionListItem = ({
               isActive,
           },
         )}
+        data-selected={isActive}
+        data-testid="question-list-item"
       >
         <Link
           key={`question-${question.id}`}
@@ -187,6 +189,7 @@ const DraggableQuestionItem = ({ question }: QuestionListItemProps) => {
         <span
           {...buttonProps}
           ref={dragButtonRef}
+          data-testid="drag-handle"
           className="rounded-xs focus-visible:ring-2 p-0.5 mr-0.5 ring-primary "
         >
           <HugeiconsIcon
@@ -224,6 +227,7 @@ const DraggableQuestionItem = ({ question }: QuestionListItemProps) => {
                 ? "bg-primary-tint border-primary"
                 : "hover:bg-overlay-highlight hover:border-fg",
             )}
+            data-testid="add-question-button"
           >
             {isSelectedIndex >= 0 && (
               <p className="font-medium">{isSelectedIndex + 1}</p>
