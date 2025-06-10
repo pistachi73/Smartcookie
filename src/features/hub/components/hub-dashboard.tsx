@@ -1,7 +1,7 @@
 "use client";
 
-import { AddNoteCard } from "@/features/notes/components/add-note-card";
-import { NoteCardList } from "@/features/notes/components/note-card-list";
+import { AddNoteCard } from "@/features/quick-notes/components/add-note-card";
+import { NoteCardList } from "@/features/quick-notes/components/note-card-list";
 import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
 import ViewportOnly from "@/shared/components/layout/viewport-context/viewport-only";
 import { Heading } from "@/shared/components/ui/heading";

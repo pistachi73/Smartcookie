@@ -1,6 +1,6 @@
 import { HubDashboard } from "@/features/hub/components/hub-dashboard";
 import { getHubByIdQueryOptions } from "@/features/hub/hooks/use-hub-by-id";
-import { getHubNotesQueryOptions } from "@/features/notes/lib/quick-notes-query-options";
+import { quickNotesByHubIdQueryOptions } from "@/features/quick-notes/lib/quick-notes-query-options";
 import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
 import { currentUser } from "@/shared/lib/auth";
 import { getQueryClient } from "@/shared/lib/get-query-client";
@@ -37,7 +37,7 @@ const HubPage = async ({ params }: HubPageProps) => {
       ...getHubByIdQueryOptions(hubIdNumber),
       staleTime: 1000 * 60 * 60 * 24,
     }),
-    queryClient.prefetchQuery(getHubNotesQueryOptions(hubIdNumber)),
+    queryClient.prefetchQuery(quickNotesByHubIdQueryOptions(hubIdNumber)),
   ]);
 
   if (!hub) {

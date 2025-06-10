@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { integer, serial, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { integer, serial, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { hub } from "./hub";
 import { user } from "./user";
 import { pgTable } from "./utils";
@@ -10,7 +10,7 @@ export const quickNote = pgTable("quick_note", {
     .references(() => user.id, { onDelete: "cascade" })
     .notNull(),
   hubId: integer().references(() => hub.id, { onDelete: "cascade" }),
-  content: text().notNull(),
+  content: varchar({ length: 1000 }).notNull(),
   createdAt: timestamp({ mode: "string", withTimezone: true })
     .defaultNow()
     .notNull(),

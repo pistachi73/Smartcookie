@@ -1,4 +1,4 @@
-import { QuickNotesLoading } from "@/features/notes/components/loading";
+import { QuickNotesLoading } from "@/features/quick-notes/components/loading";
 import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
 import { NoteIcon } from "@hugeicons-pro/core-solid-rounded";
 

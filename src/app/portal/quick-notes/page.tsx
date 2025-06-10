@@ -4,9 +4,9 @@ import {
   dehydrate,
 } from "@tanstack/react-query";
 
-import { QuickNotes } from "@/features/notes/components/quick-notes";
-import { quickNotesHubsQueryOptions } from "@/features/notes/lib/quick-notes-query-options";
-import { QuickNotesStoreProvider } from "@/features/notes/store/quick-notes-store-provider";
+import { QuickNotes } from "@/features/quick-notes/components/quick-notes";
+import { quickNotesHubsQueryOptions } from "@/features/quick-notes/lib/quick-notes-query-options";
+import { QuickNotesStoreProvider } from "@/features/quick-notes/store/quick-notes-store-provider";
 import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
 import { NoteIcon } from "@hugeicons-pro/core-solid-rounded";
 
