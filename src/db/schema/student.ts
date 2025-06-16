@@ -6,6 +6,7 @@ import {
   serial,
   text,
   timestamp,
+  unique,
   uuid,
 } from "drizzle-orm/pg-core";
 import { attendance } from "./attendance";
@@ -43,6 +44,7 @@ export const student = pgTable(
   (table) => ({
     nameIdx: index().on(table.name),
     emailIdx: index().on(table.email),
+    emailUnique: unique().on(table.email),
     searchIdx: index("student_search_idx").using(
       "gin",
       sql`to_tsvector('english', ${table.name} || ' ' || ${table.email})`,

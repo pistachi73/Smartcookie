@@ -13,10 +13,12 @@ import { FeedbackNotFound } from "../shared/feedback-not-found";
 import { SurveyTemplateForm } from "./survey-template-form";
 
 interface EditSurveyTemplateProps {
-  surveyId: number;
+  surveyTemplateId: number;
 }
 
-export const EditSurveyTemplate = ({ surveyId }: EditSurveyTemplateProps) => {
+export const EditSurveyTemplate = ({
+  surveyTemplateId,
+}: EditSurveyTemplateProps) => {
   const { createHrefWithParams } = useNavigateWithParams();
   const backHref = createHrefWithParams("/portal/feedback");
   const initializeForEdit = useSurveyTemplateFormStore(
@@ -27,7 +29,7 @@ export const EditSurveyTemplate = ({ surveyId }: EditSurveyTemplateProps) => {
     data: surveyTemplate,
     isLoading,
     error,
-  } = useQuery(surveyTemplateByIdQueryOptions(surveyId));
+  } = useQuery(surveyTemplateByIdQueryOptions(surveyTemplateId));
 
   // Initialize the store with survey data when it loads
   useEffect(() => {

@@ -7,27 +7,59 @@ import { TimeField } from "@/shared/components/ui/time-field";
 import { cn } from "@/shared/lib/classes";
 import { ArrowRight02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { type CalendarDate, parseDateTime } from "@internationalized/date";
+import {
+  type CalendarDate,
+  type Time,
+  parseDateTime,
+} from "@internationalized/date";
 import {
   Controller,
-  type UseFormReturn,
+  useFormContext,
   useFormState,
   useWatch,
 } from "react-hook-form";
-import type { z } from "zod";
-import type { AddSessionFormSchema } from "../../lib/sessions.schema";
+import { z } from "zod";
+
+export const AddSessionFormSchema = z
+  .object({
+    date: z.custom<CalendarDate>(),
+    startTime: z.custom<Time>(),
+    endTime: z.custom<Time>(),
+    rrule: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.endTime && data.startTime && data.endTime <= data.startTime) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["endTime"],
+        message: "End time must be after start time",
+      });
+    }
+
+    if (!data.startTime) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["startTime"],
+        message: "Start time is required",
+      });
+    }
+
+    if (!data.endTime) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["endTime"],
+        message: "End time is required",
+      });
+    }
+  });
 
 interface AddSessionsFormProps {
-  form: UseFormReturn<z.infer<typeof AddSessionFormSchema>>;
   minDate?: string;
   maxDate?: string | null;
 }
 
-export function AddSessionsForm({
-  form,
-  minDate,
-  maxDate,
-}: AddSessionsFormProps) {
+export function AddSessionsForm({ minDate, maxDate }: AddSessionsFormProps) {
+  const form = useFormContext<z.infer<typeof AddSessionFormSchema>>();
   const [date, startTime] = useWatch({
     control: form.control,
     name: ["date", "startTime"],

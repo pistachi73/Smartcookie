@@ -403,7 +403,9 @@ describe("SurveyTemplateDetails", () => {
       const editButton = screen.getByText("Edit Template");
       fireEvent.click(editButton);
 
-      expect(mockPush).toHaveBeenCalledWith("/portal/feedback/surveys/1/edit");
+      expect(mockPush).toHaveBeenCalledWith(
+        "/portal/feedback/survey-templates/1/edit",
+      );
     });
   });
 

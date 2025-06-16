@@ -8,16 +8,15 @@ import { serializeTime } from "@/shared/lib/serialize-react-aria/serialize-time"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Time, getLocalTimeZone, today } from "@internationalized/date";
 import { useEffect, useState } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
 import { useAddSessions } from "../../hooks/session/use-add-sessions";
 import { useCheckSessionConflicts } from "../../hooks/session/use-check-session-conflicts";
 import { useHubById } from "../../hooks/use-hub-by-id";
 import { calculateRecurrentSessions } from "../../lib/calculate-recurrent-sessions";
-import { SessionFormSchema } from "../../lib/schemas";
 import { useSessionStore } from "../../store/session-store";
-import { AddSessionsForm } from "./add-sessions-form";
+import { AddSessionFormSchema, AddSessionsForm } from "./add-sessions-form";
 import {
   SessionConflictModalContent,
   SessionConflictWarning,
@@ -37,8 +36,8 @@ export const AddSessionsFormModal = ({ hubId }: AddSessionsFormModalProps) => {
     return null;
   }
 
-  const form = useForm<z.infer<typeof SessionFormSchema>>({
-    resolver: zodResolver(SessionFormSchema),
+  const form = useForm<z.infer<typeof AddSessionFormSchema>>({
+    resolver: zodResolver(AddSessionFormSchema),
     defaultValues: {
       date: today(getLocalTimeZone()),
       startTime: new Time(12, 30, 0),
@@ -71,7 +70,7 @@ export const AddSessionsFormModal = ({ hubId }: AddSessionsFormModalProps) => {
     isPending: isCheckingConflicts,
   } = useCheckSessionConflicts();
 
-  const onSubmit = async (data: z.infer<typeof SessionFormSchema>) => {
+  const onSubmit = async (data: z.infer<typeof AddSessionFormSchema>) => {
     const sessions = calculateRecurrentSessions({
       date: serializeDateValue(data.date),
       startTime: serializeTime(data.startTime),
@@ -80,8 +79,6 @@ export const AddSessionsFormModal = ({ hubId }: AddSessionsFormModalProps) => {
       hubEndsOn: hub.endDate,
       hubStartsOn: hub.startDate,
     });
-
-    console.log({ sessions });
 
     const { success } = await checkSessionConflicts({
       sessions,
@@ -124,77 +121,56 @@ export const AddSessionsFormModal = ({ hubId }: AddSessionsFormModalProps) => {
           title="Add Session"
           description="Add a session and notes to track your progress."
         />
-        <Form onSubmit={form.handleSubmit(onSubmit)}>
-          <Modal.Body className="pb-1 space-y-4">
-            <AddSessionsForm
-              form={form}
-              minDate={hub?.startDate}
-              maxDate={hub?.endDate}
-            />
-
-            {showRecurrenceWarning && (
-              <Note intent="warning">
-                <div className="space-y-1">
-                  <p className="font-medium">Recurrence limitation</p>
-                  <p className="text-sm opacity-80">
-                    Since this hub doesn't have an end date, recurring sessions
-                    will be calculated for a maximum of 6 months from the start
-                    date.
-                  </p>
-                </div>
-              </Note>
-            )}
-            {conflictsData && !conflictsData?.success && (
-              <SessionConflictWarning
-                setIsConflictModalOpen={setIsConflictModalOpen}
+        <FormProvider {...form}>
+          <Form onSubmit={form.handleSubmit(onSubmit)}>
+            <Modal.Body className="pb-1 space-y-4">
+              <AddSessionsForm
+                minDate={hub?.startDate}
+                maxDate={hub?.endDate}
               />
-              // <div className="flex items-center flex-wrap gap-2 p-3 mt-4 justify-between text-sm bg-danger/20 border border-danger rounded-md">
-              //   <div className="flex items-center gap-2">
-              //     <HugeiconsIcon
-              //       icon={Alert02Icon}
-              //       size={20}
-              //       className="shrink-0 text-danger/80"
-              //     />
-              //     <p className="font-medium text-danger/80">
-              //       Session time conflict detected
-              //     </p>
-              //   </div>
-              //   {!!conflictsData?.overlappingSessions.length && (
-              //     <Button
-              //       intent="outline"
-              //       size="small"
-              //       className="text-danger/80 hover:text-danger border-danger/50 bg-overlay/50 px-2 py-1"
-              //       onPress={() => setIsConflictModalOpen(true)}
-              //     >
-              //       View conflicts
-              //     </Button>
-              //   )}
-              // </div>
-            )}
-          </Modal.Body>
-          <Modal.Footer>
-            <Modal.Close size="small" isDisabled={isAddingSessions}>
-              Cancel
-            </Modal.Close>
-            <Button
-              type="submit"
-              shape="square"
-              size="small"
-              className="px-6"
-              isPending={isAddingSessions || isCheckingConflicts}
-            >
-              {(isAddingSessions || isCheckingConflicts) && (
-                <ProgressCircle
-                  isIndeterminate
-                  aria-label="Adding session..."
+
+              {showRecurrenceWarning && (
+                <Note intent="warning">
+                  <div className="space-y-1">
+                    <p className="font-medium">Recurrence limitation</p>
+                    <p className="text-sm opacity-80">
+                      Since this hub doesn't have an end date, recurring
+                      sessions will be calculated for a maximum of 6 months from
+                      the start date.
+                    </p>
+                  </div>
+                </Note>
+              )}
+              {conflictsData && !conflictsData?.success && (
+                <SessionConflictWarning
+                  setIsConflictModalOpen={setIsConflictModalOpen}
                 />
               )}
-              {isCheckingConflicts || isAddingSessions
-                ? "Adding session..."
-                : "Add Session"}
-            </Button>
-          </Modal.Footer>
-        </Form>
+            </Modal.Body>
+            <Modal.Footer>
+              <Modal.Close size="small" isDisabled={isAddingSessions}>
+                Cancel
+              </Modal.Close>
+              <Button
+                type="submit"
+                shape="square"
+                size="small"
+                className="px-6"
+                isPending={isAddingSessions || isCheckingConflicts}
+              >
+                {(isAddingSessions || isCheckingConflicts) && (
+                  <ProgressCircle
+                    isIndeterminate
+                    aria-label="Adding session..."
+                  />
+                )}
+                {isCheckingConflicts || isAddingSessions
+                  ? "Adding session..."
+                  : "Add Session"}
+              </Button>
+            </Modal.Footer>
+          </Form>
+        </FormProvider>
       </Modal.Content>
 
       <SessionConflictModalContent

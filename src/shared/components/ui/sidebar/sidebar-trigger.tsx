@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu02Icon } from "@hugeicons-pro/core-solid-rounded";
+import { Menu01Icon } from "@hugeicons-pro/core-solid-rounded";
 import { SidebarLeft01Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Button, type ButtonProps } from "../button";
@@ -32,7 +32,7 @@ export const SidebarTrigger = ({
             className="hidden md:inline"
           />
           <HugeiconsIcon
-            icon={Menu02Icon}
+            icon={Menu01Icon}
             size={20}
             className="inline md:hidden"
           />

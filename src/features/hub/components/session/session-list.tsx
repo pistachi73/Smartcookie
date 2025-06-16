@@ -1,3 +1,5 @@
+"use client";
+
 import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
 import { Button } from "@/shared/components/ui/button";
 import { Heading } from "@/shared/components/ui/heading";
@@ -75,7 +77,6 @@ export function SessionsList({ hubId }: { hubId: number }) {
 
             <Button
               shape="square"
-              size="small"
               intent={isEditingMode ? "danger" : "primary"}
               onPress={() => {
                 if (isEditingMode) {

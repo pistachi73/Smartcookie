@@ -150,7 +150,9 @@ describe("QuestionListItem", () => {
     const mockAddQuestions = vi.fn();
     const mockRemoveQuestion = vi.fn();
     beforeEach(() => {
-      vi.mocked(usePathname).mockReturnValue("/portal/feedback/surveys/new");
+      vi.mocked(usePathname).mockReturnValue(
+        "/portal/feedback/survey-templates/new",
+      );
       mockSurveyTemplateFormStore.setState({
         currentStep: 2,
         addQuestion: mockAddQuestions,
@@ -175,7 +177,9 @@ describe("QuestionListItem", () => {
     });
 
     it("detects new survey form path", () => {
-      vi.mocked(usePathname).mockReturnValue("/portal/feedback/surveys/new");
+      vi.mocked(usePathname).mockReturnValue(
+        "/portal/feedback/survey-templates/new",
+      );
       mockSurveyTemplateFormStore.setState({
         currentStep: 2,
       });
@@ -187,7 +191,7 @@ describe("QuestionListItem", () => {
 
     it("detects edit survey form path", () => {
       vi.mocked(usePathname).mockReturnValue(
-        "/portal/feedback/surveys/123/edit",
+        "/portal/feedback/survey-templates/123/edit",
       );
       mockSurveyTemplateFormStore.setState({
         currentStep: 2,
@@ -200,7 +204,7 @@ describe("QuestionListItem", () => {
 
     it("shows selected index if question is in the form", () => {
       vi.mocked(usePathname).mockReturnValue(
-        "/portal/feedback/surveys/123/edit",
+        "/portal/feedback/survey-templates/123/edit",
       );
 
       mockSurveyTemplateFormStore.setState({

@@ -5,7 +5,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { useRef } from "react";
 import { useButton, useDrag } from "react-aria";
 import { useDeleteSessionNote } from "../../../hooks/session-notes/use-delete-session-note";
-import type { SessionNote } from "../../../types/session.types";
+import type { SessionNote } from "../../../types/session-notes.types";
 type DraggableSessionNoteProps = {
   note: SessionNote;
   sessionId: number;

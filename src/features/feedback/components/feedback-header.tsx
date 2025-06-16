@@ -14,7 +14,9 @@ export const FeedbackHeader = () => {
   const addQuestionHref = createHrefWithParams(
     "/portal/feedback/questions/new",
   );
-  const createSurveyHref = createHrefWithParams("/portal/feedback/surveys/new");
+  const createSurveyHref = createHrefWithParams(
+    "/portal/feedback/survey-templates/new",
+  );
 
   return (
     <PageHeader

@@ -2,15 +2,12 @@ import { getNotesByHubId } from "@/data-access/quick-notes/queries";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-interface RouteParams {
-  params: {
-    hubId: string;
-  };
-}
-
-export async function GET(request: NextRequest, { params }: RouteParams) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ hubId: string }> },
+) {
   try {
-    const hubId = Number.parseInt(params.hubId, 10);
+    const { hubId } = await params;
 
     if (Number.isNaN(hubId)) {
       return NextResponse.json(
@@ -19,7 +16,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    const notes = await getNotesByHubId({ hubId });
+    const notes = await getNotesByHubId({ hubId: Number.parseInt(hubId) });
 
     return NextResponse.json(notes);
   } catch (error) {

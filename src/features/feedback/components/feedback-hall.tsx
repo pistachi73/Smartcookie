@@ -36,7 +36,7 @@ export const FeedbackHall = () => {
         </Link>
 
         <Link
-          href={createHrefWithParams("/portal/feedback/surveys/new")}
+          href={createHrefWithParams("/portal/feedback/survey-templates/new")}
           className="hover:border-primary hover:bg-primary-tint transition-all border rounded-lg p-4"
         >
           <Heading

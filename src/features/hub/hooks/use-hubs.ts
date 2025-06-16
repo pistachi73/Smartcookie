@@ -1,14 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { getHubsAction } from "../actions";
-
-export const getHubsQueryOptions = {
-  queryKey: ["hubs"],
-  queryFn: async () => {
-    const res = await getHubsAction();
-    return res?.data;
-  },
-};
+import { getHubsByUserIdQueryOptions } from "../lib/hub-query-options";
 
 export const useHubs = () => {
-  return useQuery(getHubsQueryOptions);
+  return useQuery(getHubsByUserIdQueryOptions);
 };

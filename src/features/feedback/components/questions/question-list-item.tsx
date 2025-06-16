@@ -36,8 +36,8 @@ export const QuestionListItem = ({ question }: QuestionListItemProps) => {
   );
 
   const isInSurveyForm =
-    pathname.includes("/portal/feedback/surveys/new") ||
-    (pathname.includes("/portal/feedback/surveys/") &&
+    pathname.includes("/portal/feedback/survey-templates/new") ||
+    (pathname.includes("/portal/feedback/survey-templates/") &&
       pathname.includes("/edit"));
 
   const isSurveyFormStep = isInSurveyForm && createSurveyStep === 2;

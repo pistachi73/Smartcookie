@@ -8,7 +8,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { tv } from "tailwind-variants";
 
 const questionTypeStyles = tv({
-  base: "w-fit h-6 p-1 rounded-sm flex items-center",
+  base: "w-fit h-6 p-1 rounded-sm flex items-center text-xs",
   variants: {
     type: {
       text: "bg-custom-blueberry-bg",
@@ -50,10 +50,8 @@ export const QuestionTypeBadge = ({
       })}
     >
       <HugeiconsIcon icon={icon} size={16} />
-      {typeof label === "string" && (
-        <p className="text-xs tabular-nums">{label}</p>
-      )}
-      {label === true && <p className="text-xs font-medium">{labelText}</p>}
+      {typeof label === "string" && <p className="tabular-nums">{label}</p>}
+      {label === true && <p className="font-medium">{labelText}</p>}
     </div>
   );
 };

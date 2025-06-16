@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import { surveyTemplatesQueryOptions } from "../../lib/survey-template-query-options";
+import { getSurveyTemplatesQueryOptions } from "../../lib/survey-template-query-options";
 import { validateSearchParams } from "../../lib/validate-search-params";
 import { SkeletonQuestionListItem } from "../questions/skeleton-question-list-item";
 import { SidebarPanel } from "../sidebar-panel";
@@ -14,7 +14,7 @@ export const SurveyTemplatesPanel = () => {
   const { page, sortBy, q } = validateSearchParams(searchParams);
 
   const { data, isLoading, isPlaceholderData } = useQuery(
-    surveyTemplatesQueryOptions({
+    getSurveyTemplatesQueryOptions({
       page,
       sortBy,
       q,

@@ -1,17 +1,24 @@
+import { addStudent } from "@/data-access/students/mutations";
+import { AddStudentSchema } from "@/data-access/students/schemas";
 import { useCurrentUser } from "@/shared/hooks/use-current-user";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { addStudentAction } from "../actions";
 import type { SelectStudent } from "../components/create-hub-multistep-form/step-students";
 import { useHubFormStore } from "../store/hub-form-store";
 
 export const useAddStudent = () => {
-  const { addStudent, removeStudent, updateStudent } = useHubFormStore();
+  const {
+    addStudent: storeAddStudent,
+    removeStudent,
+    updateStudent,
+  } = useHubFormStore();
   const queryClient = useQueryClient();
   const user = useCurrentUser();
 
-  return useMutation({
-    mutationFn: addStudentAction,
+  return useProtectedMutation({
+    schema: AddStudentSchema,
+    mutationFn: addStudent,
     onMutate: (data) => {
       // Create a placeholder ID (negative to avoid collisions with real IDs)
       const placeholderId = -Math.floor(Math.random() * 10000);
@@ -19,12 +26,12 @@ export const useAddStudent = () => {
       // Add to store with placeholder ID
       const optimisticStudent = {
         id: placeholderId,
-        name: data.formData.name,
-        email: data.formData.email,
+        name: data.name,
+        email: data.email,
         image: null,
       };
 
-      addStudent(optimisticStudent);
+      storeAddStudent(optimisticStudent);
 
       // Add to query cache with isSelected = true
       queryClient.setQueryData<SelectStudent[]>(
@@ -45,9 +52,9 @@ export const useAddStudent = () => {
       return { placeholderId };
     },
     onSuccess: (data, variables, context) => {
-      if (!context || !data?.data) return;
+      if (!context || !data) return;
 
-      const student = data.data;
+      const student = data;
       const studentData = {
         id: student.id,
         name: student.name,

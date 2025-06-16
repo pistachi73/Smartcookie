@@ -1,13 +1,7 @@
-import type { getHubsUseCase } from "../use-cases/get-hubs";
-export type Hub = Awaited<ReturnType<typeof getHubsUseCase>>[number];
+import type { getHubsByUserId } from "@/data-access/hubs/queries";
+import type { getSessionsByHubId } from "@/data-access/sessions/queries";
 
-export type HubStudent = {
-  id: number;
-  name: string;
-  email: string;
-  image: string | null;
-};
+export type Hub = Awaited<ReturnType<typeof getHubsByUserId>>[number];
+export type HubStudent = Hub["students"][number];
 
-import type { getHubSessions } from "@/features/hub/use-cases/get-hub-sessions.use-case";
-
-export type HubSession = Awaited<ReturnType<typeof getHubSessions>>[number];
+export type HubSession = Awaited<ReturnType<typeof getSessionsByHubId>>[number];

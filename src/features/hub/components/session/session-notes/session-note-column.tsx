@@ -1,15 +1,16 @@
 import type { SessionNotePosition } from "@/db/schema";
+import { getSessionNotesBySessionIdQueryOptions } from "@/features/hub/lib/session-notes-query-options";
 import { Button } from "@/shared/components/ui/button";
 import { Heading } from "@/shared/components/ui/heading";
 import { regularSpring } from "@/shared/lib/animation";
 import { cn } from "@/shared/lib/classes";
 import { Add01Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, type Variants } from "motion/react";
 import * as m from "motion/react-m";
 import { useState } from "react";
-import { useSessionNotes } from "../../../hooks/session-notes/use-session-notes";
-import type { SessionNote } from "../../../types/session.types";
+import type { ClientSessionNote } from "../../../types/session-notes.types";
 import { AddSessionNoteForm } from "./add-session-note-form";
 import { DraggableSessionNote } from "./draggable-session-note";
 import { DroppableSessionNoteColumn } from "./droppable-session-note-column";
@@ -47,11 +48,11 @@ export const SessionNoteColumn = <T extends SessionNotePosition>({
 }: SessionNoteColumnProps<T>) => {
   const [isAddingNote, setIsAddingNote] = useState(false);
 
-  const { data: sessionNotes } = useSessionNotes({
-    sessionId,
+  const { data: sessionNotes } = useQuery({
+    ...getSessionNotesBySessionIdQueryOptions(sessionId),
   });
 
-  const notes = (sessionNotes?.[position] ?? []) as SessionNote[];
+  const notes = (sessionNotes?.[position] ?? []) as ClientSessionNote[];
 
   return (
     <DroppableSessionNoteColumn sessionId={sessionId} position={position}>

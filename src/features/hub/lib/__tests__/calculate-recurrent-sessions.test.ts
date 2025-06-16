@@ -1,7 +1,27 @@
 import { addMonths } from "date-fns";
 import { RRule, datetime } from "rrule";
+import { Temporal } from "temporal-polyfill";
 import { describe, expect, it } from "vitest";
 import { calculateRecurrentSessions } from "../calculate-recurrent-sessions";
+
+// Helper function to create expected timestamps using Temporal API
+const createExpectedTimestamp = (
+  year: number,
+  month: number,
+  day: number,
+  hour: number,
+  minute: number,
+) => {
+  const userTimezone = Temporal.Now.timeZoneId();
+  const dateTime = Temporal.PlainDateTime.from({
+    year,
+    month,
+    day,
+    hour,
+    minute,
+  });
+  return dateTime.toZonedDateTime(userTimezone).toInstant().toString();
+};
 
 describe("calculateRecurrentSessions", () => {
   const baseDate = new Date(2023, 0, 10); // January 10, 2023
@@ -33,8 +53,8 @@ describe("calculateRecurrentSessions", () => {
 
     const session = sessions[0];
     expect(session).toEqual({
-      startTime: new Date(2023, 0, 15, 10, 0).toISOString(),
-      endTime: new Date(2023, 0, 15, 11, 30).toISOString(),
+      startTime: createExpectedTimestamp(2023, 1, 15, 10, 0),
+      endTime: createExpectedTimestamp(2023, 1, 15, 11, 30),
     });
   });
 
@@ -60,8 +80,8 @@ describe("calculateRecurrentSessions", () => {
     expect(firstSession).toBeDefined();
     if (firstSession) {
       expect(firstSession).toEqual({
-        startTime: new Date(2023, 0, 15, 10, 0).toISOString(),
-        endTime: new Date(2023, 0, 15, 11, 30).toISOString(),
+        startTime: createExpectedTimestamp(2023, 1, 15, 10, 0),
+        endTime: createExpectedTimestamp(2023, 1, 15, 11, 30),
       });
     }
 
@@ -70,8 +90,8 @@ describe("calculateRecurrentSessions", () => {
     expect(secondSession).toBeDefined();
     if (secondSession) {
       expect(secondSession).toEqual({
-        startTime: new Date(2023, 0, 17, 10, 0).toISOString(),
-        endTime: new Date(2023, 0, 17, 11, 30).toISOString(),
+        startTime: createExpectedTimestamp(2023, 1, 17, 10, 0),
+        endTime: createExpectedTimestamp(2023, 1, 17, 11, 30),
       });
     }
 
@@ -80,8 +100,8 @@ describe("calculateRecurrentSessions", () => {
     expect(lastSession).toBeDefined();
     if (lastSession) {
       expect(lastSession).toEqual({
-        startTime: new Date(2023, 2, 10, 10, 0).toISOString(),
-        endTime: new Date(2023, 2, 10, 11, 30).toISOString(),
+        startTime: createExpectedTimestamp(2023, 3, 10, 10, 0),
+        endTime: createExpectedTimestamp(2023, 3, 10, 11, 30),
       });
     }
   });
@@ -158,8 +178,8 @@ describe("calculateRecurrentSessions", () => {
     expect(firstSession).toBeDefined();
     if (firstSession) {
       expect(firstSession).toEqual({
-        startTime: new Date(2023, 0, 15, 10, 0).toISOString(),
-        endTime: new Date(2023, 0, 15, 11, 30).toISOString(),
+        startTime: createExpectedTimestamp(2023, 1, 15, 10, 0),
+        endTime: createExpectedTimestamp(2023, 1, 15, 11, 30),
       });
     }
 
@@ -167,8 +187,8 @@ describe("calculateRecurrentSessions", () => {
     expect(secondSession).toBeDefined();
     if (secondSession) {
       expect(secondSession).toEqual({
-        startTime: new Date(2023, 1, 15, 10, 0).toISOString(),
-        endTime: new Date(2023, 1, 15, 11, 30).toISOString(),
+        startTime: createExpectedTimestamp(2023, 2, 15, 10, 0),
+        endTime: createExpectedTimestamp(2023, 2, 15, 11, 30),
       });
     }
   });

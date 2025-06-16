@@ -1,14 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { getStudentsByHubIdUseCase } from "../../use-cases/students.use-case";
+import { getStudentsByHubIdQueryOptions } from "../../lib/hub-students-query-optionts";
 
 export const useStudentsByHubId = (hubId: number) => {
-  return useQuery({
-    queryKey: ["hub-students", hubId],
-    queryFn: async () => {
-      console.log({ hubId });
-      const res = await getStudentsByHubIdUseCase({ hubId });
-      console.log(res);
-      return res;
-    },
-  });
+  return useQuery(getStudentsByHubIdQueryOptions(hubId));
 };

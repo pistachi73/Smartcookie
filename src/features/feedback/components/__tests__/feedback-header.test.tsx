@@ -32,7 +32,7 @@ describe("FeedbackHeader", () => {
       "/portal/feedback/questions/new",
     );
     expect(mockCreateHrefWithParams).toHaveBeenCalledWith(
-      "/portal/feedback/surveys/new",
+      "/portal/feedback/survey-templates/new",
     );
 
     expect(mockCreateHrefWithParams).toHaveBeenCalledTimes(2);

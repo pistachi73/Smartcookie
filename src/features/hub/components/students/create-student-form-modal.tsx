@@ -3,12 +3,15 @@ import { Form } from "@/shared/components/ui/form";
 import { Modal } from "@/shared/components/ui/modal";
 import { ProgressCircle } from "@/shared/components/ui/progress-circle";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import type { z } from "zod";
 import { useCreateStudentInHub } from "../../hooks/students/use-create-student-in-hub";
 import { useHubById } from "../../hooks/use-hub-by-id";
-import { CreateStudentFormSchema } from "../../lib/students.schema";
-import { CreateStudentForm } from "./create-student-form";
+import {
+  CreateStudentForm,
+  CreateStudentFormSchema,
+} from "./create-student-form";
+
 type CreateStudentFormModalProps = {
   hubId: number;
   isOpen: boolean;
@@ -48,8 +51,12 @@ export const CreateStudentFormModal = ({
   };
 
   const onSubmit = async (data: z.infer<typeof CreateStudentFormSchema>) => {
-    await createStudentInHub({ formData: data, hubId });
-    handleOpenChange(false);
+    const res = await createStudentInHub({ student: data, hubId });
+    if (res.success) {
+      handleOpenChange(false);
+    } else {
+      form.setError("email", { message: res.message });
+    }
   };
 
   return (
@@ -58,29 +65,31 @@ export const CreateStudentFormModal = ({
         title="Create Student"
         description="Create and add a new student to your course."
       />
-      <Form onSubmit={form.handleSubmit(onSubmit)}>
-        <Modal.Body className="pb-1 space-y-4">
-          <CreateStudentForm form={form} autoFocus />
-        </Modal.Body>
-        <Modal.Footer>
-          <Modal.Close size="small">Cancel</Modal.Close>
-          <Button
-            type="submit"
-            shape="square"
-            size="small"
-            className="px-6"
-            isPending={isPending}
-          >
-            {isPending && (
-              <ProgressCircle
-                isIndeterminate
-                aria-label="Creating student..."
-              />
-            )}
-            {isPending ? "Creating student..." : "Create Student"}
-          </Button>
-        </Modal.Footer>
-      </Form>
+      <FormProvider {...form}>
+        <Form onSubmit={form.handleSubmit(onSubmit)}>
+          <Modal.Body className="pb-1 space-y-4">
+            <CreateStudentForm autoFocus />
+          </Modal.Body>
+          <Modal.Footer>
+            <Modal.Close size="small">Cancel</Modal.Close>
+            <Button
+              type="submit"
+              shape="square"
+              size="small"
+              className="px-6"
+              isPending={isPending}
+            >
+              {isPending && (
+                <ProgressCircle
+                  isIndeterminate
+                  aria-label="Creating student..."
+                />
+              )}
+              {isPending ? "Creating student..." : "Create Student"}
+            </Button>
+          </Modal.Footer>
+        </Form>
+      </FormProvider>
     </Modal.Content>
   );
 };

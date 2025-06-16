@@ -1,0 +1,206 @@
+"use server";
+
+import { db } from "@/db";
+import { type InsertSession, hub, session, studentHub } from "@/db/schema";
+import { endOfDay, startOfDay } from "date-fns";
+import { and, between, eq, inArray, notInArray } from "drizzle-orm";
+import { addAttendance } from "../attendance/mutations";
+import { withValidationAndAuth } from "../protected-data-access";
+import { createTransaction } from "../utils";
+import {
+  AddSessionsSchema,
+  CheckSessionConflictsSchema,
+  DeleteSessionsSchema,
+  UpdateSessionSchema,
+} from "./schemas";
+import { findOverlappingIntervals, hasOverlappingIntervals } from "./utils";
+
+export const addSessions = withValidationAndAuth({
+  schema: AddSessionsSchema,
+  callback: async (data, userId) => {
+    await createTransaction(async (trx) => {
+      const { sessions, hubId } = data;
+
+      const toAddSessions: InsertSession[] = sessions.map((s) => ({
+        ...s,
+        userId,
+        hubId,
+      }));
+
+      const [addedSessions, hubStudents] = await Promise.all([
+        trx.insert(session).values(toAddSessions).returning({
+          id: session.id,
+        }),
+        trx
+          .select({
+            studentId: studentHub.studentId,
+          })
+          .from(studentHub)
+          .where(eq(studentHub.hubId, hubId)),
+      ]);
+
+      if (!addedSessions.length) {
+        throw new Error("Failed to add sessions");
+      }
+
+      await addAttendance({
+        data: {
+          sessionIds: addedSessions.map((s) => s.id),
+          studentIds: hubStudents.map((hs) => hs.studentId),
+          hubId,
+        },
+        trx,
+      });
+    });
+
+    return true;
+  },
+});
+
+export const checkSessionConflicts = withValidationAndAuth({
+  schema: CheckSessionConflictsSchema,
+  callback: async (data, userId) => {
+    const { sessions, excludedSessionIds } = data;
+
+    // First check if the new sessions overlap with each other
+    const newSessionIntervals = sessions.map((s) => [
+      new Date(s.startTime).getTime(),
+      new Date(s.endTime).getTime(),
+    ]) as [number, number][];
+
+    // Check if the new sessions overlap with each other first.
+    // This should never happen
+    if (hasOverlappingIntervals(newSessionIntervals)) {
+      return {
+        success: false,
+        overlappingSessions: [],
+      };
+    }
+
+    const uniqueDates = new Set<Date>();
+    for (const s of sessions) {
+      if (s.startTime) {
+        const date = new Date(s.startTime);
+        date.setHours(0, 0, 0, 0); // Normalize to start of day
+        uniqueDates.add(date);
+      }
+    }
+
+    const existingSessionArrays = await Promise.all(
+      Array.from(uniqueDates).map(async (date) => {
+        const dayStart = startOfDay(date);
+        const dayEnd = endOfDay(date);
+
+        return db
+          .select({
+            startTime: session.startTime,
+            endTime: session.endTime,
+            hubName: hub.name,
+          })
+          .from(session)
+          .leftJoin(hub, eq(session.hubId, hub.id))
+          .where(
+            and(
+              eq(session.userId, userId),
+              between(
+                session.startTime,
+                dayStart.toISOString(),
+                dayEnd.toISOString(),
+              ),
+              excludedSessionIds
+                ? notInArray(session.id, excludedSessionIds)
+                : undefined,
+            ),
+          );
+      }),
+    );
+
+    // Flatten the array of arrays into a single array
+    const existingSessions = existingSessionArrays.flat();
+
+    // Early return if no existing sessions
+    if (existingSessions.length === 0) {
+      return {
+        success: true,
+        overlappingSessions: [],
+      };
+    }
+
+    const existingSessionIntervals = existingSessions.map((s) => [
+      new Date(s.startTime).getTime(),
+      new Date(s.endTime).getTime(),
+    ]) as [number, number][];
+
+    // Check if new sessions overlap with existing ones
+    const overlappingSessionIndexes = findOverlappingIntervals([
+      ...newSessionIntervals,
+      ...existingSessionIntervals,
+    ]);
+
+    if (overlappingSessionIndexes.length) {
+      type OverlappingSession = {
+        startTime: string;
+        endTime: string;
+        hubName?: string;
+      };
+      const overlappingSessions = overlappingSessionIndexes.map(
+        ([startIndex, endIndex]) => {
+          const startSession =
+            startIndex < sessions.length
+              ? sessions[startIndex]
+              : existingSessions[startIndex - sessions.length];
+          const endSession =
+            endIndex < sessions.length
+              ? sessions[endIndex]
+              : existingSessions[endIndex - sessions.length];
+          return {
+            s1: startSession,
+            s2: endSession,
+          };
+        },
+      ) as { s1: OverlappingSession; s2: OverlappingSession }[];
+
+      return {
+        success: false,
+        overlappingSessions,
+      };
+    }
+
+    return {
+      success: true,
+      overlappingSessions: [],
+    };
+  },
+});
+
+export const updateSession = withValidationAndAuth({
+  schema: UpdateSessionSchema,
+  callback: async (data, userId) => {
+    const { sessionId, data: updateData } = data;
+
+    const updatedSession = await db
+      .update(session)
+      .set({
+        startTime: updateData.startTime,
+        endTime: updateData.endTime,
+        status: updateData.status,
+      })
+      .where(and(eq(session.id, sessionId), eq(session.userId, userId)))
+      .returning();
+
+    return { success: true, data: updatedSession[0] };
+  },
+});
+
+export const deleteSession = withValidationAndAuth({
+  schema: DeleteSessionsSchema,
+  callback: async (data, userId) => {
+    await db
+      .delete(session)
+      .where(
+        and(inArray(session.id, data.sessionIds), eq(session.userId, userId)),
+      );
+
+    return { success: true };
+  },
+});

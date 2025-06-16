@@ -110,7 +110,7 @@ export const SurveyTemplateDetails = ({
   const completionColors = getCompletionRateColors(completionRate);
 
   const editHref = createHrefWithParams(
-    `/portal/feedback/surveys/${surveyTemplateId}/edit`,
+    `/portal/feedback/survey-templates/${surveyTemplateId}/edit`,
   );
 
   const averageResponseTime = surveyTemplate.averageResponseTime

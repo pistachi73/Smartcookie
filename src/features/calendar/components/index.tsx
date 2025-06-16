@@ -58,8 +58,8 @@ export const Calendar = () => {
           </div>
         </div>
         <div className="h-full min-h-0 flex-1 flex bg-overlay">
-          {sidebarOpen && <CalendarSidebar />}
           <CalendarView />
+          {sidebarOpen && <CalendarSidebar />}
         </div>
       </div>
     </>

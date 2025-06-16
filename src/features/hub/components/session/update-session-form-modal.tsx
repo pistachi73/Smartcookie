@@ -7,19 +7,21 @@ import { serializeTime } from "@/shared/lib/serialize-react-aria/serialize-time"
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarDate, Time } from "@internationalized/date";
 import { useCallback, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import type { z } from "zod";
 import { useCheckSessionConflicts } from "../../hooks/session/use-check-session-conflicts";
 import { useUpdateSession } from "../../hooks/session/use-update-session";
 import { useHubById } from "../../hooks/use-hub-by-id";
 import { calculateRecurrentSessions } from "../../lib/calculate-recurrent-sessions";
-import { UpdateSessionFormSchema } from "../../lib/sessions.schema";
 import type { HubSession } from "../../types/hub.types";
 import {
   SessionConflictModalContent,
   SessionConflictWarning,
 } from "./session-conflict-modal-content";
-import { UpdateSessionsForm } from "./update-session-form";
+import {
+  UpdateSessionFormSchema,
+  UpdateSessionsForm,
+} from "./update-session-form";
 
 type UpdateSessionFormModalProps = {
   hubId: number;
@@ -67,25 +69,26 @@ export const UpdateSessionFormModal = ({
   }, [form.watch, resetConflicts]);
 
   useEffect(() => {
+    const startDate = new Date(session.startTime);
+    const endDate = new Date(session.endTime);
+
     form.reset({
       date: new CalendarDate(
-        session.startTime.getFullYear(),
-        session.startTime.getMonth() + 1,
-        session.startTime.getDate(),
+        startDate.getFullYear(),
+        startDate.getMonth() + 1,
+        startDate.getDate(),
       ),
-      startTime: new Time(
-        session.startTime.getHours(),
-        session.startTime.getMinutes(),
-      ),
-      endTime: new Time(
-        session.endTime.getHours(),
-        session.endTime.getMinutes(),
-      ),
+      startTime: new Time(startDate.getHours(), startDate.getMinutes()),
+      endTime: new Time(endDate.getHours(), endDate.getMinutes()),
       status: session.status,
     });
   }, [form, session]);
 
   const onSubmit = async (data: z.infer<typeof UpdateSessionFormSchema>) => {
+    console.log({
+      startTime: serializeTime(data.startTime),
+      endTime: serializeTime(data.endTime),
+    });
     const sessions = calculateRecurrentSessions({
       date: serializeDateValue(data.date),
       startTime: serializeTime(data.startTime),
@@ -102,6 +105,12 @@ export const UpdateSessionFormModal = ({
 
     if (!success || !sessionToUpdate) return;
 
+    console.log({
+      startTime: serializeTime(data.startTime),
+      endTime: serializeTime(data.endTime),
+      sessionToUpdateStartTime: sessionToUpdate.startTime,
+      sessionToUpdateEndTime: sessionToUpdate.endTime,
+    });
     await updateSession({
       sessionId: session.id,
       hubId,
@@ -137,40 +146,41 @@ export const UpdateSessionFormModal = ({
           title="Edit Session"
           description="Update the date, time, and status of the session."
         />
-        <Form onSubmit={form.handleSubmit(onSubmit)}>
-          <Modal.Body className="pb-1 space-y-4">
-            <UpdateSessionsForm
-              form={form}
-              minDate={hub?.startDate}
-              maxDate={hub?.endDate}
-            />
-
-            {conflictsData && !conflictsData?.success && (
-              <SessionConflictWarning
-                setIsConflictModalOpen={setIsConflictModalOpen}
+        <FormProvider {...form}>
+          <Form onSubmit={form.handleSubmit(onSubmit)}>
+            <Modal.Body className="pb-1 space-y-4">
+              <UpdateSessionsForm
+                minDate={hub?.startDate}
+                maxDate={hub?.endDate}
               />
-            )}
-          </Modal.Body>
-          <Modal.Footer>
-            <Modal.Close size="small">Close</Modal.Close>
-            <Button
-              type="submit"
-              shape="square"
-              size="small"
-              className="px-6"
-              isPending={isPending}
-              isDisabled={!isDirty}
-            >
-              {isPending && (
-                <ProgressCircle
-                  isIndeterminate
-                  aria-label="Editing session..."
+
+              {conflictsData && !conflictsData?.success && (
+                <SessionConflictWarning
+                  setIsConflictModalOpen={setIsConflictModalOpen}
                 />
               )}
-              {isPending ? "Editing..." : "Edit"}
-            </Button>
-          </Modal.Footer>
-        </Form>
+            </Modal.Body>
+            <Modal.Footer>
+              <Modal.Close size="small">Close</Modal.Close>
+              <Button
+                type="submit"
+                shape="square"
+                size="small"
+                className="px-6"
+                isPending={isPending}
+                isDisabled={!isDirty}
+              >
+                {isPending && (
+                  <ProgressCircle
+                    isIndeterminate
+                    aria-label="Editing session..."
+                  />
+                )}
+                {isPending ? "Editing..." : "Edit"}
+              </Button>
+            </Modal.Footer>
+          </Form>
+        </FormProvider>
       </Modal.Content>
 
       <SessionConflictModalContent

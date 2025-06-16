@@ -1,5 +1,9 @@
 "use client";
 
+import {
+  type GetSurveyTemplatesQueryResponse,
+  getSurveyTemplatesQueryOptions,
+} from "@/features/feedback/lib/survey-template-query-options";
 import { Button, buttonStyles } from "@/shared/components/ui/button";
 import { Heading } from "@/shared/components/ui/heading";
 import { Link } from "@/shared/components/ui/link";
@@ -11,6 +15,7 @@ import {
 import { SearchField } from "@/shared/components/ui/search-field";
 import { Sheet } from "@/shared/components/ui/sheet";
 import { Skeleton } from "@/shared/components/ui/skeleton";
+import { useDebouncedValue } from "@/shared/hooks/use-debounced-value";
 import {
   Add01Icon,
   Cancel01Icon,
@@ -19,9 +24,9 @@ import {
   Rocket01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useDeferredValue, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { useInitSurvey } from "../../hooks/feedback/use-init-survey";
-import { useSurveyTemplates } from "../../hooks/feedback/use-survey-templates";
 
 interface InitSurveyFromHubSheetProps {
   isOpen: boolean;
@@ -32,15 +37,8 @@ interface InitSurveyFromHubSheetProps {
   onCancel?: () => void;
 }
 
-type SurveyTemplate = {
-  id: number;
-  title: string;
-  description: string | null;
-  questionCount: number;
-};
-
 interface SurveyTemplateRadioItemProps {
-  template: SurveyTemplate;
+  template: GetSurveyTemplatesQueryResponse["surveyTemplates"][number];
 }
 
 function SurveyTemplateRadioItem({ template }: SurveyTemplateRadioItemProps) {
@@ -48,7 +46,7 @@ function SurveyTemplateRadioItem({ template }: SurveyTemplateRadioItemProps) {
     <RadioToggle
       aria-label={template.title}
       value={template.id.toString()}
-      className="w-full h-auto p-4 justify-between gap-4"
+      className="w-full h-auto p-4 py-3 justify-between gap-4"
     >
       {({ isSelected }) => (
         <>
@@ -66,10 +64,6 @@ function SurveyTemplateRadioItem({ template }: SurveyTemplateRadioItemProps) {
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
-            <p className="text-xs text-muted-fg ">
-              {template.questionCount} question
-              {template.questionCount !== 1 ? "s" : ""}
-            </p>
             {isSelected && (
               <HugeiconsIcon
                 icon={CheckmarkCircle02Icon}
@@ -92,33 +86,22 @@ export function InitSurveyFromHubSheet({
   onInitSurvey,
   onCancel,
 }: InitSurveyFromHubSheetProps) {
-  const { data: templates, isLoading } = useSurveyTemplates();
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
+
+  const { data, isFetching } = useQuery({
+    ...getSurveyTemplatesQueryOptions({
+      q: debouncedSearchQuery.trim(),
+    }),
+    enabled: isOpen,
+  });
 
   const { mutate: initSurvey, isPending: isInitializing } = useInitSurvey({
     onSuccess: () => {
       handleClose();
     },
   });
-
-  // Use deferred value for better performance during typing
-  const deferredSearchQuery = useDeferredValue(searchQuery);
-
-  const filteredTemplates = useMemo(() => {
-    if (!templates) return [];
-    if (!deferredSearchQuery.trim()) return templates;
-
-    return templates.filter(
-      (template) =>
-        template.title
-          .toLowerCase()
-          .includes(deferredSearchQuery.toLowerCase()) ||
-        (template.description?.toLowerCase() || "").includes(
-          deferredSearchQuery.toLowerCase(),
-        ),
-    );
-  }, [templates, deferredSearchQuery]);
 
   const handleClose = () => {
     setSelectedTemplateId("");
@@ -160,87 +143,89 @@ export function InitSurveyFromHubSheet({
         </Sheet.Header>
 
         <Sheet.Body className="p-6 space-y-6">
-          {isLoading ? (
+          <div className="space-y-6">
             <div className="space-y-3">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <Skeleton
-                  key={`template-skeleton-${i}`}
-                  className="h-20 rounded-lg"
-                />
-              ))}
+              <Heading level={3} className="text-base font-medium">
+                Available Templates ({data?.totalCount})
+              </Heading>
+              <SearchField
+                placeholder="Search survey templates by name or description..."
+                value={searchQuery}
+                onChange={setSearchQuery}
+                className={{
+                  primitive: "w-full",
+                  fieldGroup: "h-12",
+                }}
+              />
             </div>
-          ) : !templates || templates.length === 0 ? (
-            <div className="py-8 flex flex-col items-center gap-6 border border-dashed rounded-lg">
-              <div className="space-y-3 flex flex-col items-center">
-                <HugeiconsIcon
-                  icon={NewsIcon}
-                  size={24}
-                  className="text-muted-fg"
-                />
-                <div className="space-y-1">
-                  <Heading level={3}>No survey templates available</Heading>
-                  <p className="text-muted-fg text-sm">
-                    Create a survey template first to initialize surveys.
-                  </p>
-                </div>
+
+            {isFetching ? (
+              <div className="space-y-3">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <Skeleton
+                    key={`template-skeleton-${i}`}
+                    className="h-16 rounded-lg"
+                  />
+                ))}
               </div>
-              <Link
-                href="/portal/feedback/surveys/new"
-                intent="primary"
-                className={buttonStyles({
-                  shape: "square",
-                })}
-              >
-                <HugeiconsIcon icon={Add01Icon} size={16} data-slot="icon" />
-                Create Survey Template
-              </Link>
-            </div>
-          ) : (
-            <>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <Heading level={3} className="text-base font-medium">
-                    Available Templates ({filteredTemplates.length})
-                  </Heading>
+            ) : data?.totalCount === 0 && !debouncedSearchQuery ? (
+              <div className="py-8 flex flex-col items-center gap-6 border border-dashed rounded-lg">
+                <div className="space-y-3 flex flex-col items-center">
+                  <HugeiconsIcon
+                    icon={NewsIcon}
+                    size={24}
+                    className="text-muted-fg"
+                  />
+                  <div className="space-y-1">
+                    <Heading level={3}>No survey templates available</Heading>
+                    <p className="text-muted-fg text-sm">
+                      Create a survey template first to initialize surveys.
+                    </p>
+                  </div>
                 </div>
-
-                <SearchField
-                  placeholder="Search templates by name or description..."
-                  value={searchQuery}
-                  onChange={setSearchQuery}
-                  className={{
-                    primitive: "w-full",
-                    fieldGroup: "h-12",
-                  }}
-                />
-
-                {filteredTemplates.length === 0 ? (
-                  <p className="text-muted-fg text-sm w-full text-center py-6">
-                    No templates found matching "{deferredSearchQuery}"
+                <Link
+                  href="/portal/feedback/survey-templates/new"
+                  intent="primary"
+                  className={buttonStyles({
+                    shape: "square",
+                  })}
+                >
+                  <HugeiconsIcon icon={Add01Icon} size={16} data-slot="icon" />
+                  Create Survey Template
+                </Link>
+              </div>
+            ) : data?.surveyTemplates.length === 0 ? (
+              <p className="text-muted-fg text-sm w-full text-center py-6">
+                No survey templates found matching "{debouncedSearchQuery}"
+              </p>
+            ) : (
+              <div className="space-y-3">
+                {!debouncedSearchQuery.trim() && (
+                  <p className="text-muted-fg text-sm w-full">
+                    Recently viewed survey templates
                   </p>
-                ) : (
-                  <RadioToggleGroup
-                    aria-label="Survey templates"
-                    value={selectedTemplateId}
-                    onChange={setSelectedTemplateId}
-                    orientation="vertical"
-                    gap={2}
-                    appearance="outline"
-                    className={{
-                      content: "w-full",
-                    }}
-                  >
-                    {filteredTemplates.map((template) => (
-                      <SurveyTemplateRadioItem
-                        key={`template-${template.id}`}
-                        template={template}
-                      />
-                    ))}
-                  </RadioToggleGroup>
                 )}
+                <RadioToggleGroup
+                  aria-label="Survey data"
+                  value={selectedTemplateId}
+                  onChange={setSelectedTemplateId}
+                  orientation="vertical"
+                  gap={2}
+                  appearance="outline"
+                  className={{
+                    content: "w-full",
+                  }}
+                >
+                  {data?.surveyTemplates.map((template) => (
+                    <SurveyTemplateRadioItem
+                      key={`template-${template.id}`}
+                      template={template}
+                    />
+                  ))}
+                </RadioToggleGroup>
               </div>
-            </>
-          )}
+            )}
+          </div>
         </Sheet.Body>
 
         <Sheet.Footer className="border-t">

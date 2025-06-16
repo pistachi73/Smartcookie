@@ -1,5 +1,7 @@
+import { getHubById } from "@/data-access/hubs/queries";
+import { getNotesByHubId } from "@/data-access/quick-notes/queries";
 import { HubDashboard } from "@/features/hub/components/hub-dashboard";
-import { getHubByIdQueryOptions } from "@/features/hub/hooks/use-hub-by-id";
+import { getHubByIdQueryOptions } from "@/features/hub/lib/hub-query-options";
 import { quickNotesByHubIdQueryOptions } from "@/features/quick-notes/lib/quick-notes-query-options";
 import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
 import { currentUser } from "@/shared/lib/auth";
@@ -19,12 +21,12 @@ interface HubPageProps {
 
 const HubPage = async ({ params }: HubPageProps) => {
   const user = await currentUser();
+  const { hubId } = await params;
 
   if (!user) {
     redirect("/login");
   }
 
-  const { hubId } = await params;
   const hubIdNumber = Number(hubId);
 
   if (Number.isNaN(hubIdNumber)) {
@@ -32,17 +34,22 @@ const HubPage = async ({ params }: HubPageProps) => {
   }
 
   const queryClient = getQueryClient();
-  const [hub] = await Promise.all([
-    queryClient.fetchQuery({
-      ...getHubByIdQueryOptions(hubIdNumber),
-      staleTime: 1000 * 60 * 60 * 24,
-    }),
-    queryClient.prefetchQuery(quickNotesByHubIdQueryOptions(hubIdNumber)),
+
+  const [hub, notes] = await Promise.all([
+    getHubById({ hubId: hubIdNumber }),
+    getNotesByHubId({ hubId: hubIdNumber }),
   ]);
 
   if (!hub) {
     redirect("/portal/hubs");
   }
+
+  // Set both data sets we already fetched
+  queryClient.setQueryData(getHubByIdQueryOptions(hubIdNumber).queryKey, hub);
+  queryClient.setQueryData(
+    quickNotesByHubIdQueryOptions(hubIdNumber).queryKey,
+    notes,
+  );
 
   return (
     <>

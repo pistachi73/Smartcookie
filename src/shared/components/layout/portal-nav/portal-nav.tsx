@@ -15,7 +15,9 @@ import { Button } from "../../ui/button";
 import { FieldGroup, Input } from "../../ui/field";
 import { Keyboard } from "../../ui/keyboard";
 import { SidebarNav } from "../../ui/sidebar";
+import { SidebarTrigger } from "../../ui/sidebar/sidebar-trigger";
 import { Skeleton } from "../../ui/skeleton";
+import { useViewport } from "../viewport-context/viewport-context";
 
 export interface PortalNavProps {
   className?: string;
@@ -32,6 +34,8 @@ export const PortalNav = ({
   breadcrumbs,
 }: PortalNavProps) => {
   const [lastUrl, setLastUrl] = useState<string | null>(null);
+  const { down } = useViewport();
+  const isMobile = down("md");
 
   useEffect(() => {
     setLastUrl(document.referrer);
@@ -45,8 +49,9 @@ export const PortalNav = ({
       )}
     >
       <div className="flex items-center justify-between w-full h-full gap-8">
+        {isMobile && <SidebarTrigger />}
         <div className="flex items-center gap-x-4 flex-shrink-0">
-          <Breadcrumbs className="@md:flex hidden">
+          <Breadcrumbs className="@2xl:flex hidden">
             <Breadcrumbs.Item
               key="back"
               href={lastUrl || "#"}
@@ -90,7 +95,6 @@ export const PortalNav = ({
             })}
           </Breadcrumbs>
         </div>
-
         <div className="flex items-center gap-x-3">
           {showSearchField && (
             <div className="hidden md:block">

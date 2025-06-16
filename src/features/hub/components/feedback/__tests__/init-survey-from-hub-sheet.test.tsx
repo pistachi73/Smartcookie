@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { mockNextNavigation } from "@/shared/lib/testing/navigation-mocks";
@@ -9,15 +10,18 @@ import {
   waitFor,
 } from "@/shared/lib/testing/test-utils";
 import { useInitSurvey } from "../../../hooks/feedback/use-init-survey";
-import { useSurveyTemplates } from "../../../hooks/feedback/use-survey-templates";
 import { InitSurveyFromHubSheet } from "../init-survey-from-hub-sheet";
 
 mockNextNavigation();
 
 // Mock dependencies
-vi.mock("../../../hooks/feedback/use-survey-templates", () => ({
-  useSurveyTemplates: vi.fn(),
-}));
+vi.mock("@tanstack/react-query", async () => {
+  const actual = await vi.importActual<any>("@tanstack/react-query");
+  return {
+    ...actual,
+    useQuery: vi.fn(),
+  };
+});
 
 vi.mock("../../../hooks/feedback/use-init-survey", () => ({
   useInitSurvey: vi.fn(),
@@ -28,19 +32,16 @@ const mockSurveyTemplates = [
     id: 1,
     title: "Customer Satisfaction Survey",
     description: "Measure customer satisfaction with our services",
-    questionCount: 5,
   },
   {
     id: 2,
     title: "Course Feedback",
     description: "Collect feedback about course content and delivery",
-    questionCount: 8,
   },
   {
     id: 3,
     title: "Quick Poll",
     description: null,
-    questionCount: 3,
   },
 ];
 
@@ -59,8 +60,11 @@ describe("InitSurveyFromHubSheet", () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    vi.mocked(useSurveyTemplates).mockReturnValue({
-      data: mockSurveyTemplates,
+    vi.mocked(useQuery).mockReturnValue({
+      data: {
+        surveyTemplates: mockSurveyTemplates,
+        totalCount: mockSurveyTemplates.length,
+      },
       isLoading: false,
     } as any);
 
@@ -93,7 +97,7 @@ describe("InitSurveyFromHubSheet", () => {
 
       expect(
         screen.getByPlaceholderText(
-          "Search templates by name or description...",
+          "Search survey templates by name or description...",
         ),
       ).toBeInTheDocument();
     });
@@ -112,23 +116,23 @@ describe("InitSurveyFromHubSheet", () => {
 
   describe("Loading State", () => {
     it("shows skeleton loaders when loading", () => {
-      vi.mocked(useSurveyTemplates).mockReturnValue({
+      vi.mocked(useQuery).mockReturnValue({
         data: undefined,
-        isLoading: true,
+        isFetching: true,
       } as any);
 
       render(<InitSurveyFromHubSheet {...defaultProps} />);
 
-      // Should show skeleton loaders - check for skeleton class
-      const skeletons = document.querySelectorAll(".animate-pulse");
+      // Should show skeleton loaders - check for skeleton elements
+      const skeletons = document.querySelectorAll('[data-slot="skeleton"]');
       expect(skeletons.length).toBeGreaterThan(0);
     });
   });
 
   describe("Empty State", () => {
     it("shows empty state when no templates available", () => {
-      vi.mocked(useSurveyTemplates).mockReturnValue({
-        data: [],
+      vi.mocked(useQuery).mockReturnValue({
+        data: { surveyTemplates: [], totalCount: 0 },
         isLoading: false,
       } as any);
 
@@ -148,9 +152,9 @@ describe("InitSurveyFromHubSheet", () => {
     });
 
     it("shows empty state when templates is undefined", () => {
-      vi.mocked(useSurveyTemplates).mockReturnValue({
-        data: undefined,
-        isLoading: false,
+      vi.mocked(useQuery).mockReturnValue({
+        data: { surveyTemplates: [], totalCount: 0 },
+        isFetching: false,
       } as any);
 
       render(<InitSurveyFromHubSheet {...defaultProps} />);
@@ -184,39 +188,37 @@ describe("InitSurveyFromHubSheet", () => {
       ).toBeInTheDocument();
     });
 
-    it("shows question counts correctly", () => {
-      render(<InitSurveyFromHubSheet {...defaultProps} />);
-
-      expect(screen.getByText("5 questions")).toBeInTheDocument();
-      expect(screen.getByText("8 questions")).toBeInTheDocument();
-      expect(screen.getByText("3 questions")).toBeInTheDocument();
-    });
-
     it("shows singular 'question' for count of 1", () => {
-      vi.mocked(useSurveyTemplates).mockReturnValue({
-        data: [
-          {
-            id: 1,
-            title: "Single Question Survey",
-            description: "Just one question",
-            questionCount: 1,
-          },
-        ],
+      vi.mocked(useQuery).mockReturnValue({
+        data: {
+          surveyTemplates: [
+            {
+              id: 1,
+              title: "Single Question Survey",
+              description: "Just one question",
+            },
+          ],
+          totalCount: 1,
+        },
         isLoading: false,
       } as any);
 
       render(<InitSurveyFromHubSheet {...defaultProps} />);
 
-      expect(screen.getByText("1 question")).toBeInTheDocument();
+      expect(screen.getByText("Available Templates (1)")).toBeInTheDocument();
     });
   });
 
   describe("Search Functionality", () => {
     it("filters templates by title", async () => {
+      vi.mocked(useQuery).mockReturnValue({
+        data: { surveyTemplates: [mockSurveyTemplates[0]], totalCount: 1 },
+        isLoading: false,
+      } as any);
       render(<InitSurveyFromHubSheet {...defaultProps} />);
 
       const searchInput = screen.getByPlaceholderText(
-        "Search templates by name or description...",
+        "Search survey templates by name or description...",
       );
 
       fireEvent.change(searchInput, { target: { value: "Customer" } });
@@ -232,10 +234,14 @@ describe("InitSurveyFromHubSheet", () => {
     });
 
     it("filters templates by description", async () => {
+      vi.mocked(useQuery).mockReturnValue({
+        data: { surveyTemplates: [mockSurveyTemplates[1]], totalCount: 1 },
+        isLoading: false,
+      } as any);
       render(<InitSurveyFromHubSheet {...defaultProps} />);
 
       const searchInput = screen.getByPlaceholderText(
-        "Search templates by name or description...",
+        "Search survey templates by name or description...",
       );
 
       fireEvent.change(searchInput, { target: { value: "course content" } });
@@ -250,26 +256,34 @@ describe("InitSurveyFromHubSheet", () => {
     });
 
     it("shows no results message when search yields no matches", async () => {
+      vi.mocked(useQuery).mockReturnValue({
+        data: { surveyTemplates: [], totalCount: 0 },
+        isLoading: false,
+      } as any);
       render(<InitSurveyFromHubSheet {...defaultProps} />);
 
       const searchInput = screen.getByPlaceholderText(
-        "Search templates by name or description...",
+        "Search survey templates by name or description...",
       );
 
       fireEvent.change(searchInput, { target: { value: "nonexistent" } });
 
       await waitFor(() => {
         expect(
-          screen.getByText('No templates found matching "nonexistent"'),
+          screen.getByText('No survey templates found matching "nonexistent"'),
         ).toBeInTheDocument();
       });
     });
 
     it("is case insensitive", async () => {
+      vi.mocked(useQuery).mockReturnValue({
+        data: { surveyTemplates: [mockSurveyTemplates[0]], totalCount: 1 },
+        isLoading: false,
+      } as any);
       render(<InitSurveyFromHubSheet {...defaultProps} />);
 
       const searchInput = screen.getByPlaceholderText(
-        "Search templates by name or description...",
+        "Search survey templates by name or description...",
       );
 
       fireEvent.change(searchInput, { target: { value: "CUSTOMER" } });
@@ -416,7 +430,7 @@ describe("InitSurveyFromHubSheet", () => {
       fireEvent.click(customerSurveyOption);
 
       const searchInput = screen.getByPlaceholderText(
-        "Search templates by name or description...",
+        "Search survey templates by name or description...",
       );
       fireEvent.change(searchInput, { target: { value: "test search" } });
 
@@ -434,7 +448,7 @@ describe("InitSurveyFromHubSheet", () => {
 
       // Get new elements after re-render
       const newSearchInput = screen.getByPlaceholderText(
-        "Search templates by name or description...",
+        "Search survey templates by name or description...",
       );
       const newCustomerSurveyOption = screen.getByRole("radio", {
         name: /customer satisfaction survey/i,

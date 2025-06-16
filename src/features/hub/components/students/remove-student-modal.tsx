@@ -46,12 +46,28 @@ export const RemoveStudentModal = ({
 
       <div className="px-6">
         <Note intent="danger">
-          <strong>Warning: Permanent Data Loss</strong>
+          <strong>Permanent Data Loss</strong>
           <p className="mt-1">
-            Removing this student will permanently delete all attendance records
-            and course session links associated with them.
+            The following data will be permanently deleted and cannot be
+            recovered:
           </p>
+          <ul className="mt-2 ml-4 list-disc space-y-1 text-sm">
+            <li>All attendance records for this student</li>
+            <li>Course session links and associations</li>
+          </ul>
         </Note>
+
+        <div className="mt-4">
+          <Note intent="info">
+            <strong>Data Preservation</strong>
+            <p className="mt-1">
+              Survey responses will be archived and preserved for historical
+              data analysis. These responses will no longer appear in this hub's
+              feedback reports but will remain accessible in general feedback
+              analytics.
+            </p>
+          </Note>
+        </div>
       </div>
 
       <Modal.Footer>

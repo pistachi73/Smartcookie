@@ -1,5 +1,6 @@
-import { Button } from "@/shared/components/ui/button";
+import { Button, buttonStyles } from "@/shared/components/ui/button";
 import { Heading } from "@/shared/components/ui/heading";
+import { ProgressCircle } from "@/shared/components/ui/progress-circle";
 import { Separator } from "@/shared/components/ui/separator";
 import { regularSpring } from "@/shared/lib/animation";
 import { cn } from "@/shared/lib/classes";
@@ -10,12 +11,13 @@ import {
   PropertyEditIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";
 import dynamic from "next/dynamic";
 import { useCallback, useState } from "react";
-import { createSessionNotesQueryOptions } from "../../hooks/session-notes/use-session-notes";
+import { getSessionNotesBySessionIdQueryOptions } from "../../lib/session-notes-query-options";
 import { useSessionStore } from "../../store/session-store";
 import type { HubSession } from "../../types/hub.types";
 import { SessionBubble } from "./session-bubble";
@@ -65,6 +67,8 @@ type SessionProps = {
   position: number;
 };
 
+const MotionButton = m.create(Button);
+
 export const Session = ({ session, position, hubId }: SessionProps) => {
   const queryClient = getQueryClient();
   const [isExpanded, setIsExpanded] = useState(false);
@@ -74,7 +78,7 @@ export const Session = ({ session, position, hubId }: SessionProps) => {
 
   const prefecthSesionNotes = useCallback(() => {
     queryClient.prefetchQuery({
-      ...createSessionNotesQueryOptions(session.id),
+      ...getSessionNotesBySessionIdQueryOptions(session.id),
       staleTime: 60000,
     });
   }, [queryClient, session.id]);
@@ -82,6 +86,16 @@ export const Session = ({ session, position, hubId }: SessionProps) => {
   const onEditSession = useCallback(() => {
     setIsUpdateModalOpen(true);
   }, []);
+
+  const { isLoading: isLoadingSessionNotes } = useQuery({
+    ...getSessionNotesBySessionIdQueryOptions(session.id),
+    enabled: isExpanded,
+  });
+
+  console.log({
+    sessionStartTime: session.startTime,
+    sessionEndTime: session.endTime,
+  });
 
   return (
     <>
@@ -103,10 +117,10 @@ export const Session = ({ session, position, hubId }: SessionProps) => {
             }
           }}
           className={cn(
-            "group rounded-lg cursor-pointer w-full flex flex-row items-center justify-between p-2 sm:p-1 sm:pr-4",
-            "transition-colors duration-200 dark:hover:bg-overlay-highlight ",
-            "focus-visible:ring-2 focus-visible:ring-primary",
-            isExpanded && "bg-bg dark:bg-overlay-highlight rounded-b-none",
+            buttonStyles({ intent: "plain" }),
+            "group p-2 sm:p-1 sm:pr-4 h-auto flex w-full items-center flex-row gap-2 transition-all justify-between ",
+            isExpanded && "bg-muted rounded-b-none",
+            "transition-colors",
           )}
           onHoverStart={prefecthSesionNotes}
           onFocus={prefecthSesionNotes}
@@ -129,7 +143,7 @@ export const Session = ({ session, position, hubId }: SessionProps) => {
 
             <SessionBubble session={session} className="flex sm:hidden" />
 
-            <Heading level={3} className="text-sm font-medium">
+            <Heading level={3} className="text-base font-medium">
               Session {position}
             </Heading>
             <Separator orientation="vertical" className="h-4" />
@@ -158,20 +172,28 @@ export const Session = ({ session, position, hubId }: SessionProps) => {
               </div>
             )}
             <div className="size-9 flex items-center justify-center">
-              <HugeiconsIcon
-                icon={ArrowDown01Icon}
-                className={cn(
-                  "transition-transform duration-200",
-                  isExpanded && "rotate-180",
-                )}
-                size={16}
-              />
+              {isLoadingSessionNotes && isExpanded ? (
+                <ProgressCircle
+                  isIndeterminate
+                  aria-label="Loading session notes"
+                  className="size-4"
+                />
+              ) : (
+                <HugeiconsIcon
+                  icon={ArrowDown01Icon}
+                  className={cn(
+                    "transition-transform duration-200",
+                    isExpanded && "rotate-180",
+                  )}
+                  size={16}
+                />
+              )}
             </div>
           </div>
         </m.div>
 
         <AnimatePresence>
-          {isExpanded && (
+          {isExpanded && !isLoadingSessionNotes && (
             <m.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: "auto", opacity: 1 }}

@@ -6,7 +6,11 @@ import { GetSurveyTemplatesSchema } from "@/data-access/survey-templates/schemas
 import { queryOptions } from "@tanstack/react-query";
 import type { z } from "zod";
 
-export const surveyTemplatesQueryOptions = ({
+export type GetSurveyTemplatesQueryResponse = Awaited<
+  ReturnType<typeof getSurveyTemplates>
+>;
+
+export const getSurveyTemplatesQueryOptions = ({
   page = 1,
   pageSize = 10,
   sortBy = "alphabetical",
@@ -43,9 +47,7 @@ export const surveyTemplatesQueryOptions = ({
       });
 
       const response = await fetch(`/api/survey-templates?${searchParams}`);
-      const result = (await response.json()) as Awaited<
-        ReturnType<typeof getSurveyTemplates>
-      >;
+      const result = (await response.json()) as GetSurveyTemplatesQueryResponse;
       return result;
     },
     placeholderData: (previousData) => {

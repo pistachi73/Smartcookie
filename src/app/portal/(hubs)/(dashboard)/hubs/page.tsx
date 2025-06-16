@@ -1,5 +1,5 @@
 import { HubList } from "@/features/hub/components/hub-list";
-import { getHubsQueryOptions } from "@/features/hub/hooks/use-hubs";
+import { getHubsByUserIdQueryOptions } from "@/features/hub/lib/hub-query-options";
 import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
 import { FolderLibraryIcon } from "@hugeicons-pro/core-solid-rounded";
 import {
@@ -10,8 +10,9 @@ import {
 
 const HubsPage = async () => {
   const queryClient = new QueryClient();
+
   await queryClient.prefetchQuery({
-    ...getHubsQueryOptions,
+    ...getHubsByUserIdQueryOptions,
     staleTime: 1000 * 60 * 60 * 24,
   });
 

@@ -8,17 +8,20 @@ import { ProgressCircle } from "@/ui/progress-circle";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import type { z } from "zod";
+import { z } from "zod";
 import { useAddStudentToHub } from "../../hooks/students/use-add-student-to-hub";
 import { useStudentsByHubId } from "../../hooks/students/use-students-by-hub-id";
 import { useStudentsByUserId } from "../../hooks/students/use-students-by-user-id";
-import { AddStudentFormSchema } from "../../lib/students.schema";
 
 type AddStudentModalProps = {
   hubId: number;
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
 };
+
+export const AddStudentFormSchema = z.object({
+  studentId: z.number().min(1, "Please select a student"),
+});
 
 export const AddStudentModal = ({
   hubId,
@@ -71,13 +74,14 @@ export const AddStudentModal = ({
             render={({ field, fieldState }) => (
               <ComboBox
                 placeholder="Search existing student..."
-                menuTrigger="focus"
+                menuTrigger="input"
                 onSelectionChange={(value) => field.onChange(value)}
                 selectedKey={field.value}
                 errorMessage={fieldState.error?.message}
                 isInvalid={fieldState.invalid}
                 label="Select student"
                 allowsEmptyCollection={true}
+                autoFocus
               >
                 <ComboBox.Input
                   showArrow

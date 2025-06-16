@@ -1,6 +1,7 @@
 import { useQuickNotesStore } from "@/features/quick-notes/store/quick-notes-store-provider";
 import type { QuickNotesStore } from "@/features/quick-notes/types/quick-notes-store.types";
 import { cleanup, render, screen } from "@/shared/lib/testing/test-utils";
+import { mockZustandStoreImplementation } from "@/shared/lib/testing/zustand-utils";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { HubStackList } from "../hub-stack-list";
 
@@ -17,22 +18,19 @@ vi.mock("../hub-notes-stack", () => ({
 }));
 
 // Mock the zustand store
-vi.mock("@/features/notes/store/quick-notes-store-provider", () => ({
-  useQuickNotesStore: vi.fn(),
-}));
+vi.mock("@/features/quick-notes/store/quick-notes-store-provider");
 
 describe("HubStackList", () => {
-  const mockVisibleHubs = new Set([1, 2, 3]);
+  const mockStore = mockZustandStoreImplementation<QuickNotesStore>({
+    hook: useQuickNotesStore,
+    initialState: {
+      visibleHubs: new Set([1, 2, 3]),
+    },
+  });
+
   beforeEach(() => {
     vi.resetAllMocks();
-
-    // Default implementation - return empty visibleHubs
-    (useQuickNotesStore as any).mockImplementation(
-      (selector: (state: QuickNotesStore) => any) =>
-        selector({
-          visibleHubs: mockVisibleHubs,
-        } as QuickNotesStore),
-    );
+    mockStore.resetState();
   });
 
   afterEach(() => {
@@ -40,12 +38,9 @@ describe("HubStackList", () => {
   });
 
   it("renders EmptyState when there are no visible hubs", () => {
-    (useQuickNotesStore as any).mockImplementation(
-      (selector: (state: QuickNotesStore) => any) =>
-        selector({
-          visibleHubs: new Set(),
-        } as QuickNotesStore),
-    );
+    mockStore.setState({
+      visibleHubs: new Set(),
+    });
 
     render(<HubStackList />);
     expect(screen.getByTestId("empty-state")).toBeInTheDocument();
@@ -55,7 +50,7 @@ describe("HubStackList", () => {
     render(<HubStackList />);
 
     // Should render a HubNotesStack for each visible hub
-    mockVisibleHubs.forEach((hubId) => {
+    [1, 2, 3].forEach((hubId) => {
       expect(
         screen.getByTestId(`hub-notes-stack-${hubId}`),
       ).toBeInTheDocument();

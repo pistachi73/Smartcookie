@@ -1,8 +1,9 @@
 import type { InsertSession } from "@/db/schema";
 import { serializedDateValue } from "@/shared/lib/serialize-react-aria/serialize-date-value";
 import { serializedTime } from "@/shared/lib/serialize-react-aria/serialize-time";
-import { addMinutes, addMonths } from "date-fns";
+import { addMonths } from "date-fns";
 import { datetime, rrulestr } from "rrule";
+import { Temporal } from "temporal-polyfill";
 import { z } from "zod";
 
 const calculateRecurrentSessionsInputSchema = z.object({
@@ -31,6 +32,7 @@ export const calculateRecurrentSessions = (
     (endTime.hour - startTime.hour) * 60 + endTime.minute - startTime.minute;
 
   if (rruleStr) {
+    const userTimezone = Temporal.Now.timeZoneId();
     const hubStartsOnDate = new Date(hubStartsOn);
     const hubEndsOnDate = hubEndsOn ? new Date(hubEndsOn) : undefined;
 
@@ -53,28 +55,47 @@ export const calculateRecurrentSessions = (
     const rruleDates = rrule.between(rruleStartsOn, rruleEndsOn, true);
 
     rruleDates.forEach((rruleDate: Date) => {
-      rruleDate.setHours(startTime.hour, startTime.minute);
-      const e = addMinutes(rruleDate, durationInMinutes);
+      // Create PlainDateTime from the rrule date and specified times
+      const startDateTime = Temporal.PlainDateTime.from({
+        year: rruleDate.getFullYear(),
+        month: rruleDate.getMonth() + 1,
+        day: rruleDate.getDate(),
+        hour: startTime.hour,
+        minute: startTime.minute,
+      });
+
+      const endDateTime = startDateTime.add({ minutes: durationInMinutes });
+
+      // Convert to ZonedDateTime in user's timezone, then to ISO string
+      const startZoned = startDateTime.toZonedDateTime(userTimezone);
+      const endZoned = endDateTime.toZonedDateTime(userTimezone);
 
       sessions.push({
-        startTime: rruleDate.toISOString(),
-        endTime: e.toISOString(),
+        startTime: startZoned.toInstant().toString(),
+        endTime: endZoned.toInstant().toString(),
       });
     });
   } else {
-    const startDate = new Date(
-      date.year,
-      date.month - 1,
-      date.day,
-      startTime.hour,
-      startTime.minute,
-    );
+    // Use Temporal to create timestamps in the user's local timezone
+    const userTimezone = Temporal.Now.timeZoneId();
 
-    const endDate = addMinutes(startDate, durationInMinutes);
+    const startDateTime = Temporal.PlainDateTime.from({
+      year: date.year,
+      month: date.month,
+      day: date.day,
+      hour: startTime.hour,
+      minute: startTime.minute,
+    });
+
+    const endDateTime = startDateTime.add({ minutes: durationInMinutes });
+
+    // Convert to ZonedDateTime in user's timezone, then to ISO string
+    const startZoned = startDateTime.toZonedDateTime(userTimezone);
+    const endZoned = endDateTime.toZonedDateTime(userTimezone);
 
     sessions.push({
-      startTime: startDate.toISOString(),
-      endTime: endDate.toISOString(),
+      startTime: startZoned.toInstant().toString(),
+      endTime: endZoned.toInstant().toString(),
     });
   }
 

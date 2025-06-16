@@ -17,9 +17,10 @@ import {
   SortingZA01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { useQuery } from "@tanstack/react-query";
 import { useCallback, useMemo, useState } from "react";
 import { Link } from "react-aria-components";
-import { useHubs } from "../hooks/use-hubs";
+import { getHubsByUserIdQueryOptions } from "../lib/hub-query-options";
 import type { Hub } from "../types/hub.types";
 import { HubCard } from "./hub-card";
 import { HubCardSkeleton } from "./hub-card-skeleton";
@@ -31,7 +32,7 @@ type SortOption = {
 };
 
 export function HubList() {
-  const { data: hubs, isLoading } = useHubs();
+  const { data: hubs, isLoading } = useQuery(getHubsByUserIdQueryOptions);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption["key"]>("name");
 
@@ -43,10 +44,11 @@ export function HubList() {
   ];
 
   const filteredAndSortedHubs = useMemo(() => {
+    console.log("hubs", hubs);
     if (!hubs) return [];
 
     // Filter hubs based on search query
-    const filtered = hubs.filter(
+    const filtered = hubs?.filter(
       (hub) =>
         hub.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (hub.description?.toLowerCase() ?? "").includes(
@@ -111,6 +113,7 @@ export function HubList() {
               onChange={(value) => setSearchQuery(value)}
               className={{
                 primitive: "flex-1 @2xl:flex-none",
+                fieldGroup: "bg-overlay",
               }}
             />
 
@@ -119,7 +122,7 @@ export function HubList() {
                 intent="outline"
                 size="small"
                 shape="square"
-                className="px-0 size-10 @2xl:h-10 @2xl:w-auto @2xl:px-4"
+                className="px-0 size-10 @2xl:h-10 @2xl:w-auto @2xl:px-4 bg-overlay"
                 aria-label="Sort hubs"
               >
                 <HugeiconsIcon icon={SortByUp02Icon} size={16} />
@@ -220,9 +223,3 @@ export function HubList() {
     </>
   );
 }
-
-export const TestHubList = () => {
-  const { data: hubs } = useHubs();
-
-  return <div>TestHubList</div>;
-};

@@ -36,7 +36,7 @@ describe("FeedbackHall", () => {
     expect(createSurveyLink).toBeInTheDocument();
     expect(createSurveyLink).toHaveAttribute(
       "href",
-      "/portal/feedback/surveys/new",
+      "/portal/feedback/survey-templates/new",
     );
   });
 });

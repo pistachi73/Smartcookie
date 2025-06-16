@@ -94,7 +94,9 @@ describe("SurveyListItem", () => {
     const viewLink = screen.getByRole("link");
     expect(viewLink).toHaveAttribute(
       "href",
-      expect.stringContaining(`/portal/feedback/surveys/${mockSurvey.id}`),
+      expect.stringContaining(
+        `/portal/feedback/survey-templates/${mockSurvey.id}`,
+      ),
     );
   });
 
@@ -120,7 +122,7 @@ describe("SurveyListItem", () => {
       expect(editLink).toHaveAttribute(
         "href",
         expect.stringContaining(
-          `/portal/feedback/surveys/${mockSurvey.id}/edit`,
+          `/portal/feedback/survey-templates/${mockSurvey.id}/edit`,
         ),
       );
     });

@@ -5,13 +5,15 @@ import {
   DeleteIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { useHubSurveys } from "../../hooks/feedback/use-hub-surveys";
 import { useHubById } from "../../hooks/use-hub-by-id";
+import { getSurveysByHubIdQueryOptions } from "../../lib/hub-surveys-query-options";
 import { InitSurveyFromHubSheet } from "./init-survey-from-hub-sheet";
+import { SurveysList } from "./surveys-list";
 
 export const CourseFeedback = ({ hubId }: { hubId: number }) => {
-  const { data } = useHubSurveys(hubId);
+  const { data } = useQuery(getSurveysByHubIdQueryOptions(hubId));
   const { data: hub } = useHubById(hubId);
 
   const [isInitSurveySheetOpen, setIsInitSurveySheetOpen] = useState(false);
@@ -20,7 +22,7 @@ export const CourseFeedback = ({ hubId }: { hubId: number }) => {
   return (
     <>
       <div>
-        <div className="flex flex-row items-center justify-between mb-8 flex-wrap gap-3 ">
+        <div className="flex flex-row items-center justify-between mb-4 flex-wrap gap-3 ">
           <Heading level={2}>Course Feedback</Heading>
           <Button
             shape="square"
@@ -39,7 +41,7 @@ export const CourseFeedback = ({ hubId }: { hubId: number }) => {
           </Button>
         </div>
         <div className="flex flex-col gap-4">
-          {data?.length === 0 && (
+          {data?.length === 0 ? (
             <div className="border bg-bg dark:bg-overlay-highlight rounded-lg border-dashed flex flex-col items-center justify-center w-full h-full p-6">
               <Heading level={3} className="mb-1">
                 No feedback surveys created yet
@@ -49,6 +51,8 @@ export const CourseFeedback = ({ hubId }: { hubId: number }) => {
                 tutoring activities.
               </p>
             </div>
+          ) : (
+            <SurveysList hubId={hubId} />
           )}
         </div>
       </div>

@@ -1,9 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { getSessionsByHubIdUseCase } from "../../use-cases/sessions.use-case";
+import { getSessionsByHubIdQueryOptions } from "../../lib/hub-sessions-query-options";
 
 export const useSessionsByHubId = (hubId: number) => {
-  return useQuery({
-    queryKey: ["hub-sessions", hubId],
-    queryFn: () => getSessionsByHubIdUseCase({ hubId }),
-  });
+  return useQuery(getSessionsByHubIdQueryOptions(hubId));
 };

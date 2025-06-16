@@ -8,12 +8,16 @@ export const answers = pgTable(
   "answers",
   {
     id: serial().primaryKey(),
-    questionId: integer().references(() => questions.id, {
-      onDelete: "cascade",
-    }),
-    surveyResponseId: integer().references(() => surveyResponses.id, {
-      onDelete: "cascade",
-    }),
+    questionId: integer()
+      .references(() => questions.id, {
+        onDelete: "cascade",
+      })
+      .notNull(),
+    surveyResponseId: integer()
+      .references(() => surveyResponses.id, {
+        onDelete: "cascade",
+      })
+      .notNull(),
     value: text().notNull(),
     additionalComment: text(),
     answeredAt: timestamp({ mode: "string", withTimezone: true }).defaultNow(),

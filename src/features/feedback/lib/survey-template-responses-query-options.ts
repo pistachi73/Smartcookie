@@ -1,5 +1,5 @@
 import type {
-  getSurveyResponseAnswers,
+  getSurveyTemplateResponseAnswers,
   getSurveyTemplateResponses,
 } from "@/data-access/survey-response/queries";
 import { queryOptions } from "@tanstack/react-query";
@@ -38,7 +38,7 @@ export const surveyTemplateResponseAnswersQueryOptions = ({
       }
 
       const json = (await response.json()) as Awaited<
-        ReturnType<typeof getSurveyResponseAnswers>
+        ReturnType<typeof getSurveyTemplateResponseAnswers>
       >;
 
       return json;

@@ -29,7 +29,7 @@ export const hub = pgTable(
     name: text().notNull(),
     description: text(),
     schedule: text(),
-    status: hubStatusEnum("status").default("active"),
+    status: hubStatusEnum().default("active").notNull(),
     color: customColorEnum("color").default("neutral").notNull(),
     startDate: timestamp({ mode: "string" }).notNull(),
     endDate: timestamp({ mode: "string" }),
@@ -50,7 +50,7 @@ export type Hub = typeof hub.$inferSelect;
 export type HubStatus = (typeof hubStatusEnum.enumValues)[number];
 
 export const hubRelations = relations(hub, ({ many }) => ({
-  students: many(studentHub),
+  studentHubs: many(studentHub),
   sessions: many(event),
   quickNotes: many(quickNote),
   attendance: many(attendance),

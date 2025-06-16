@@ -1,55 +1,58 @@
-import { useQueryClient } from "@tanstack/react-query";
+import { type QueryKey, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+import { deleteSessionNote } from "@/data-access/session-notes/mutations";
+import { DeleteSessionNoteSchema } from "@/data-access/session-notes/schemas";
 import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
-import { DeleteSessionNoteUseCaseSchema } from "../../lib/session-notes.schema";
-import type { SessionNotesMap } from "../../types/session.types";
-import { deleteSessionNoteUseCase } from "../../use-cases/session-notes.use-case";
+import { getSessionNotesBySessionIdQueryOptions } from "../../lib/session-notes-query-options";
+import type { ClientSessionNotesMap } from "../../types/session-notes.types";
 
 interface MutationContext {
-  previousData: SessionNotesMap | undefined;
+  previousData: ClientSessionNotesMap | undefined;
   sessionId: number;
+  sessionNotesQueryKey: QueryKey;
 }
 
 export function useDeleteSessionNote() {
   const queryClient = useQueryClient();
 
   return useProtectedMutation({
-    schema: DeleteSessionNoteUseCaseSchema,
-    mutationFn: deleteSessionNoteUseCase,
+    schema: DeleteSessionNoteSchema,
+    mutationFn: deleteSessionNote,
     onMutate: async (input): Promise<MutationContext> => {
+      const queryKey = getSessionNotesBySessionIdQueryOptions(
+        input.sessionId,
+      ).queryKey;
       await queryClient.cancelQueries({
-        queryKey: ["session-notes", input.sessionId],
+        queryKey,
       });
 
-      const previousData = queryClient.getQueryData<SessionNotesMap>([
-        "session-notes",
-        input.sessionId,
-      ]);
+      const previousData =
+        queryClient.getQueryData<ClientSessionNotesMap>(queryKey);
 
-      queryClient.setQueryData<SessionNotesMap>(
-        ["session-notes", input.sessionId],
-        (old) => {
-          if (!old) return { past: [], present: [], future: [] };
+      queryClient.setQueryData<ClientSessionNotesMap>(queryKey, (old) => {
+        if (!old) return { past: [], present: [], future: [] };
 
-          return {
-            past: old.past?.filter((note) => note.id !== input.noteId) ?? [],
-            present:
-              old.present?.filter((note) => note.id !== input.noteId) ?? [],
-            future:
-              old.future?.filter((note) => note.id !== input.noteId) ?? [],
-          };
-        },
-      );
+        return {
+          past: old.past?.filter((note) => note.id !== input.noteId) ?? [],
+          present:
+            old.present?.filter((note) => note.id !== input.noteId) ?? [],
+          future: old.future?.filter((note) => note.id !== input.noteId) ?? [],
+        };
+      });
 
-      return { previousData, sessionId: input.sessionId };
+      return {
+        previousData,
+        sessionId: input.sessionId,
+        sessionNotesQueryKey: queryKey,
+      };
     },
 
     onError: (error, _, context) => {
       toast.error("Failed to delete note");
       if (context?.previousData) {
         queryClient.setQueryData(
-          ["session-notes", context.sessionId],
+          context.sessionNotesQueryKey,
           context.previousData,
         );
       }

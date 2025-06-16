@@ -21,7 +21,9 @@ export const surveys = pgTable(
         onDelete: "cascade",
       })
       .notNull(),
-    createdAt: timestamp({ mode: "string", withTimezone: true }).defaultNow(),
+    createdAt: timestamp({ mode: "string", withTimezone: true })
+      .notNull()
+      .defaultNow(),
   },
   (t) => ({
     userIdIdx: index().on(t.userId),

@@ -1,4 +1,7 @@
-import { UserAvatar } from "@/shared/components/ui/user-avatar";
+import {
+  UserAvatar,
+  type UserAvatarProps,
+} from "@/shared/components/ui/user-avatar";
 import { cn } from "@/shared/lib/classes";
 import { Tick02Icon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -10,17 +13,19 @@ export const StudentProfile = ({
   image,
   isSelected,
   className,
+  avatarSize = "medium",
 }: {
   name: string;
-  email: string;
+  email?: string;
   image: string | null;
   isSelected?: boolean;
   className?: string;
+  avatarSize?: UserAvatarProps["size"];
 }) => {
   return (
     <div className={cn("flex items-center gap-2", className)}>
-      <div className="relative size-8">
-        <UserAvatar userImage={image} userName={name} />
+      <div className="relative h-full">
+        <UserAvatar userImage={image} userName={name} size={avatarSize} />
 
         {isSelected && (
           <m.div
@@ -43,7 +48,7 @@ export const StudentProfile = ({
       </div>
       <div className="space-y-0.5 text-left">
         <p className="text-sm font-medium">{name}</p>
-        <p className="text-xs text-muted-fg line-clamp-1">{email}</p>
+        {email && <p className="text-xs text-muted-fg line-clamp-1">{email}</p>}
       </div>
     </div>
   );

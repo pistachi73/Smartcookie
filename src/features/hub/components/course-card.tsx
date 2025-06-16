@@ -9,10 +9,11 @@ export function CourseCard() {
   const params = useParams();
 
   const hubId = params.hubId as string;
+  const hubIdNumber = Number(hubId);
 
-  const { data: hub } = useHubById(Number(hubId));
+  const { data: hub } = useHubById(hubIdNumber);
 
-  if (!hub) return null;
+  if (!hubId || Number.isNaN(hubIdNumber) || !hub) return null;
 
   return (
     <div className="border  rounded-lg shadow-sm p-4 relative">

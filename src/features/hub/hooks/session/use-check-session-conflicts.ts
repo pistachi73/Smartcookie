@@ -1,10 +1,10 @@
+import { checkSessionConflicts } from "@/data-access/sessions/mutations";
+import { CheckSessionConflictsSchema } from "@/data-access/sessions/schemas";
 import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
-import { CheckSessionConflictsUseCaseSchema } from "../../lib/sessions.schema";
-import { checkSessionConflictsUseCase } from "../../use-cases/sessions.use-case";
 
 export const useCheckSessionConflicts = () => {
   return useProtectedMutation({
-    schema: CheckSessionConflictsUseCaseSchema,
-    mutationFn: (data) => checkSessionConflictsUseCase(data),
+    schema: CheckSessionConflictsSchema,
+    mutationFn: checkSessionConflicts,
   });
 };

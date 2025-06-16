@@ -1,5 +1,7 @@
+import type { DB } from "@/db";
 import { db } from "@/db";
 import { type Column, sql } from "drizzle-orm";
+import { z } from "zod";
 
 export function generateRandomToken(length: number) {
   return Array.from(
@@ -47,11 +49,34 @@ export async function createTransaction<T extends typeof db>(
   await db.transaction(cb as any);
 }
 
+// Custom Zod type for database transaction
+export const DatabaseTransactionSchema = z
+  .custom<DB>((val) => {
+    // Basic validation - check if it has the expected database methods
+    return (
+      val &&
+      typeof val === "object" &&
+      "select" in val &&
+      "insert" in val &&
+      "update" in val &&
+      "delete" in val &&
+      "transaction" in val
+    );
+  }, "Invalid database transaction object")
+  .optional()
+  .default(db);
+
 export const parseDateWithTimezone = (
   date: Column,
   as: string,
   timestamp?: Column,
 ) =>
   sql<string>`trim(both '"' from to_json(${date}::timestamptz at time zone ${timestamp ?? "UTC"})::text)`.as(
+    as,
+  );
+
+// Function to get timestamp in ISO format (YYYY-MM-DDTHH:MM:SS.sssZ)
+export const getTimestampISO = (date: Column, as: string) =>
+  sql<string>`to_char(${date} at time zone 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"')`.as(
     as,
   );

@@ -22,6 +22,20 @@
       "when": 1748876414143,
       "tag": "0002_yielding_morlun",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1749632824675,
+      "tag": "0003_solid_songbird",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1749896251970,
+      "tag": "0004_glamorous_surge",
+      "breakpoints": true
     }
   ]
 }

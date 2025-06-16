@@ -1,18 +1,33 @@
 import { PhoneField } from "@/shared/components/ui/phone-field";
 import { TextField } from "@/shared/components/ui/text-field";
-import { Controller, type UseFormReturn } from "react-hook-form";
-import type { z } from "zod";
-import type { CreateStudentFormSchema } from "../../lib/students.schema";
+import { isValidPhoneNumber } from "libphonenumber-js/min";
+import { z } from "node_modules/zod/lib";
+import { Controller, useFormContext } from "react-hook-form";
+
+export const CreateStudentFormSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Please enter a valid email"),
+  phone: z.string().refine(
+    (phone) => {
+      if (!phone) return true; // Allow empty phone
+      try {
+        return isValidPhoneNumber(phone);
+      } catch (e) {
+        return false;
+      }
+    },
+    { message: "Please enter a valid phone number" },
+  ),
+});
 
 type CreateStudentFormProps = {
-  form: UseFormReturn<z.infer<typeof CreateStudentFormSchema>>;
   autoFocus?: boolean;
 };
 
 export const CreateStudentForm = ({
-  form,
   autoFocus = false,
 }: CreateStudentFormProps) => {
+  const form = useFormContext<z.infer<typeof CreateStudentFormSchema>>();
   const { control, setError, clearErrors } = form;
 
   const handlePhoneValidityChange = (isValid: boolean) => {

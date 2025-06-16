@@ -1,12 +1,7 @@
 "use server";
 
 import { db } from "@/db";
-import {
-  surveyResponses,
-  surveyTemplateQuestions,
-  surveyTemplates,
-  surveys as surveysTable,
-} from "@/db/schema";
+import { surveyTemplateQuestions, surveyTemplates } from "@/db/schema";
 import { and, asc, count, desc, eq, sql } from "drizzle-orm";
 import { cache } from "react";
 import { z } from "zod";
@@ -58,24 +53,7 @@ export const getSurveyTemplates = withValidationAndAuth({
           totalResponses: surveyTemplates.totalResponses,
         })
         .from(surveyTemplates)
-        .leftJoin(
-          surveysTable,
-          eq(surveysTable.surveyTemplateId, surveyTemplates.id),
-        )
-        .leftJoin(
-          surveyResponses,
-          and(
-            eq(surveyResponses.surveyId, surveysTable.id),
-            eq(surveyResponses.completed, true),
-          ),
-        )
         .where(whereCondition)
-        .groupBy(
-          surveyTemplates.id,
-          surveyTemplates.title,
-          surveyTemplates.description,
-          surveyTemplates.updatedAt,
-        )
         .limit(pageSize)
         .offset((page - 1) * pageSize)
         .orderBy(

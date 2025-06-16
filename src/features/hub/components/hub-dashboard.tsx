@@ -96,9 +96,9 @@ export function HubDashboard({ hubId }: { hubId: number }) {
         <Tabs
           aria-label="Hub Dashboard"
           defaultSelectedKey={"feedback"}
-          className="flex-1"
+          className="flex-1 gap-4 sm:gap-6"
         >
-          <Tabs.List className={"sticky top-0 px-4 pt-3 bg-overlay z-20"}>
+          <Tabs.List className={"sticky top-0 px-6 pt-3 bg-overlay z-20"}>
             {tabs.map((tab) => {
               if (tab.id === "quick-notes" && !isDownLg) return null;
               return (
@@ -126,7 +126,7 @@ export function HubDashboard({ hubId }: { hubId: number }) {
               );
             })}
           </Tabs.List>
-          <Tabs.Panel id="overview" className={"p-4 pt-0"}>
+          <Tabs.Panel id="overview" className={"p-6 pt-0"}>
             <HubOverview hubId={hubId} />
           </Tabs.Panel>
           <Tabs.Panel id="students" className={"px-2 sm:px-5 pt-0 py-2"}>
@@ -135,7 +135,7 @@ export function HubDashboard({ hubId }: { hubId: number }) {
           <Tabs.Panel id="sessions" className={"px-2 sm:px-5 pt-0 py-2"}>
             <SessionsList hubId={hubId} />
           </Tabs.Panel>
-          <Tabs.Panel id="feedback" className={"p-4 pt-0"}>
+          <Tabs.Panel id="feedback" className={"px-4 sm:px-6"}>
             <CourseFeedback hubId={hubId} />
           </Tabs.Panel>
           <ViewportOnly down="lg">

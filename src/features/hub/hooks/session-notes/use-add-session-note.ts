@@ -1,37 +1,43 @@
-import { useQueryClient } from "@tanstack/react-query";
+import { type QueryKey, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 
-import { CreateSessionNoteUseCaseSchema } from "../../lib/session-notes.schema";
-import type { SessionNote, SessionNotesMap } from "../../types/session.types";
-import { addSessionNoteUseCase } from "../../use-cases/session-notes.use-case";
+import { addSessionNote } from "@/data-access/session-notes/mutations";
+import { CreateSessionNoteSchema } from "@/data-access/session-notes/schemas";
+import { getSessionNotesBySessionIdQueryOptions } from "../../lib/session-notes-query-options";
+import type {
+  ClientSessionNote,
+  ClientSessionNotesMap,
+} from "../../types/session-notes.types";
 
 interface MutationContext {
-  previousData: SessionNotesMap | undefined;
+  previousData: ClientSessionNotesMap | undefined;
   optimisticId: number;
   clientId: string;
+  sessionNotesQueryKey: QueryKey;
 }
 
 export function useAddSessionNote() {
   const queryClient = useQueryClient();
 
   return useProtectedMutation({
-    schema: CreateSessionNoteUseCaseSchema,
-    mutationFn: addSessionNoteUseCase,
+    schema: CreateSessionNoteSchema,
+    mutationFn: addSessionNote,
     onMutate: async (input): Promise<MutationContext> => {
-      await queryClient.cancelQueries({
-        queryKey: ["session-notes", input.sessionId],
-      });
-      const previousData = queryClient.getQueryData<SessionNotesMap>([
-        "session-notes",
+      const queryKey = getSessionNotesBySessionIdQueryOptions(
         input.sessionId,
-      ]);
+      ).queryKey;
+      await queryClient.cancelQueries({
+        queryKey,
+      });
+      const previousData =
+        queryClient.getQueryData<ClientSessionNotesMap>(queryKey);
 
       const optimisticId = -Date.now();
       const clientId = `client-${Date.now()}`;
 
-      const optimisticNote: SessionNote = {
+      const optimisticNote: ClientSessionNote = {
         id: optimisticId,
         sessionId: input.sessionId,
         content: input.content,
@@ -39,7 +45,7 @@ export function useAddSessionNote() {
         clientId,
       };
 
-      queryClient.setQueryData<SessionNotesMap>(
+      queryClient.setQueryData<ClientSessionNotesMap>(
         ["session-notes", input.sessionId],
         (old) => {
           if (!old) {
@@ -56,14 +62,19 @@ export function useAddSessionNote() {
         },
       );
 
-      return { previousData, optimisticId, clientId };
+      return {
+        previousData,
+        optimisticId,
+        clientId,
+        sessionNotesQueryKey: queryKey,
+      };
     },
 
     onSuccess: (data, input, context) => {
       if (!data || !context) return;
 
-      queryClient.setQueryData<SessionNotesMap>(
-        ["session-notes", input.sessionId],
+      queryClient.setQueryData<ClientSessionNotesMap>(
+        context.sessionNotesQueryKey,
         (old) => {
           if (!old) {
             return {
@@ -88,7 +99,7 @@ export function useAddSessionNote() {
       toast.error("Failed to add note");
       if (context?.previousData) {
         queryClient.setQueryData(
-          ["session-notes", input.sessionId],
+          context.sessionNotesQueryKey,
           context.previousData,
         );
       }

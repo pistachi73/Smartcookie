@@ -3,6 +3,7 @@ import {
   boolean,
   index,
   integer,
+  pgEnum,
   serial,
   timestamp,
   uuid,
@@ -12,17 +13,22 @@ import { student } from "./student";
 import { surveys } from "./surveys";
 import { pgTable } from "./utils";
 
+export const surveyResponseStatus = pgEnum("survey_response_status", [
+  "active", // The student is currently in the hub
+  "archived", // The student is no longer in the hub
+  "deleted", // Soft deleted (hide but not delete permanently)
+]);
+
 export const surveyResponses = pgTable(
   "survey_responses",
   {
     id: serial().primaryKey(),
-    surveyId: uuid()
-      .references(() => surveys.id, { onDelete: "cascade" })
-      .notNull(),
+    surveyId: uuid().references(() => surveys.id, { onDelete: "set null" }),
     studentId: integer()
       .references(() => student.id, { onDelete: "cascade" })
       .notNull(),
     completed: boolean().default(false),
+    status: surveyResponseStatus().notNull().default("active"),
     createdAt: timestamp({ mode: "string", withTimezone: true }).defaultNow(),
     startedAt: timestamp({ mode: "string", withTimezone: true }),
     completedAt: timestamp({ mode: "string", withTimezone: true }),
@@ -50,3 +56,5 @@ export const surveyResponsesRelations = relations(
 
 export type InsertSurveyResponse = typeof surveyResponses.$inferInsert;
 export type SurveyResponse = typeof surveyResponses.$inferSelect;
+export type SurveyResponseStatus =
+  (typeof surveyResponseStatus.enumValues)[number];

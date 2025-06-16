@@ -2,14 +2,18 @@
 
 import { ArrowRight02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { parseDateTime } from "@internationalized/date";
+import {
+  type CalendarDate,
+  type Time,
+  parseDateTime,
+} from "@internationalized/date";
 import {
   Controller,
-  type UseFormReturn,
+  useFormContext,
   useFormState,
   useWatch,
 } from "react-hook-form";
-import type { z } from "zod";
+import { z } from "zod";
 
 import type { SessionStatus } from "@/db/schema/session";
 import { ToggleGroup } from "@/shared/components/ui/toggle-group";
@@ -19,7 +23,38 @@ import { Label, fieldStyles } from "@/ui/field";
 import { TimeField } from "@/ui/time-field";
 import { Toggle } from "@/ui/toggle";
 
-import type { UpdateSessionFormSchema } from "../../lib/sessions.schema";
+export const UpdateSessionFormSchema = z
+  .object({
+    date: z.custom<CalendarDate>(),
+    startTime: z.custom<Time>(),
+    endTime: z.custom<Time>(),
+    status: z.enum(["upcoming", "completed", "cancelled"]),
+  })
+  .superRefine((data, ctx) => {
+    if (data.endTime && data.startTime && data.endTime <= data.startTime) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["endTime"],
+        message: "End time must be after start time",
+      });
+    }
+
+    if (!data.startTime) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["startTime"],
+        message: "Start time is required",
+      });
+    }
+
+    if (!data.endTime) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["endTime"],
+        message: "End time is required",
+      });
+    }
+  });
 
 const sessionStatusOptions: {
   id: SessionStatus;
@@ -47,16 +82,15 @@ const sessionStatusOptions: {
 ];
 
 interface UpdateSessionsFormProps {
-  form: UseFormReturn<z.infer<typeof UpdateSessionFormSchema>>;
   minDate?: string;
   maxDate?: string | null;
 }
 
 export function UpdateSessionsForm({
-  form,
   minDate,
   maxDate,
 }: UpdateSessionsFormProps) {
+  const form = useFormContext<z.infer<typeof UpdateSessionFormSchema>>();
   const [startTime] = useWatch({
     control: form.control,
     name: ["startTime"],
@@ -69,8 +103,12 @@ export function UpdateSessionsForm({
   const endStartTimeError =
     formState.errors.startTime?.message || formState.errors.endTime?.message;
 
-  const maxCalendarDate = maxDate ? parseDateTime(maxDate) : undefined;
-  const minCalendarDate = minDate ? parseDateTime(minDate) : undefined;
+  const maxCalendarDate = maxDate
+    ? parseDateTime(maxDate.replace(" ", "T"))
+    : undefined;
+  const minCalendarDate = minDate
+    ? parseDateTime(minDate.replace(" ", "T"))
+    : undefined;
 
   return (
     <div className="space-y-4">

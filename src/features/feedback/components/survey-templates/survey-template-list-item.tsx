@@ -36,10 +36,10 @@ export const SurveyTemplateListItem = ({
   const isActive = Number(surveyId) === surveyTemplate.id;
 
   const viewHref = createHrefWithParams(
-    `/portal/feedback/surveys/${surveyTemplate.id}`,
+    `/portal/feedback/survey-templates/${surveyTemplate.id}`,
   );
   const editHref = createHrefWithParams(
-    `/portal/feedback/surveys/${surveyTemplate.id}/edit`,
+    `/portal/feedback/survey-templates/${surveyTemplate.id}/edit`,
   );
 
   return (

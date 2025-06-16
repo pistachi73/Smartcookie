@@ -52,7 +52,7 @@ export const getSurveyTemplateResponses = withValidationAndAuth({
   },
 });
 
-export const getSurveyResponseAnswers = withValidationAndAuth({
+export const getSurveyTemplateResponseAnswers = withValidationAndAuth({
   schema: z.object({
     surveyResponseId: z.number(),
   }),
@@ -101,5 +101,59 @@ export const getSurveyResponseAnswers = withValidationAndAuth({
       completedAt: studentResponse.completedAt,
       answers,
     };
+  },
+});
+
+export const getSurveyResponsesBySurveyId = withValidationAndAuth({
+  schema: z.object({
+    surveyId: z.string(),
+  }),
+  callback: async ({ surveyId }) => {
+    const responses = await db.query.surveyResponses.findMany({
+      where: and(
+        eq(surveyResponses.surveyId, surveyId),
+        eq(surveyResponses.completed, true),
+        eq(surveyResponses.status, "active"),
+      ),
+      columns: {
+        id: true,
+        completedAt: true,
+      },
+      with: {
+        survey: {
+          columns: {},
+          with: {
+            surveyTemplate: {
+              columns: {},
+              with: {
+                surveyTemplateQuestions: {
+                  columns: {
+                    questionId: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        student: {
+          columns: {
+            id: true,
+            name: true,
+            email: true,
+            image: true,
+          },
+        },
+
+        answers: {
+          columns: {
+            id: true,
+            value: true,
+            questionId: true,
+          },
+        },
+      },
+    });
+
+    return responses;
   },
 });
