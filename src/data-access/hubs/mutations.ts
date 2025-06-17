@@ -34,7 +34,7 @@ export const createHub = withValidationAndAuth({
       }
 
       await Promise.all([
-        studentIds
+        studentIds?.length
           ? trx.insert(studentHub).values(
               studentIds.map((studentId) => ({
                 hubId,

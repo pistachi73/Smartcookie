@@ -45,16 +45,16 @@ export function StepSessions() {
       },
     });
 
-    // [createHub({
-    //   studentIds: students.map((student) => student.id),
-    //   sessions: sessions, // Use index since sessions don't have IDs yet
-    //   hubInfo: {
-    //     ...hubInfo,
-    //     name: hubInfo.name,
-    //     startDate: hubInfo.startDate?.toString(),
-    //     endDate: hubInfo.endDate?.toString(),
-    //   },
-    // });]
+    createHub({
+      studentIds: students.map((student) => student.id),
+      sessions: sessions,
+      hubInfo: {
+        ...hubInfo,
+        name: hubInfo.name,
+        startDate: hubInfo.startDate?.toString(),
+        endDate: hubInfo.endDate?.toString(),
+      },
+    });
   };
 
   return (

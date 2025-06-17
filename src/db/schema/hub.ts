@@ -9,7 +9,6 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { attendance } from "./attendance";
-import { event } from "./event";
 import { quickNote } from "./quick-note";
 import { customColorEnum } from "./shared";
 import { studentHub } from "./student-hub";
@@ -51,7 +50,6 @@ export type HubStatus = (typeof hubStatusEnum.enumValues)[number];
 
 export const hubRelations = relations(hub, ({ many }) => ({
   studentHubs: many(studentHub),
-  sessions: many(event),
   quickNotes: many(quickNote),
   attendance: many(attendance),
   surveys: many(surveys),

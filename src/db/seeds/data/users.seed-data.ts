@@ -7,6 +7,13 @@ export default [
     isTwoFactorEnabled: false,
   },
   {
+    name: "Martina Monreal",
+    email: "infomartinamotiva@gmail.com",
+    password: "password",
+    role: "USER",
+    isTwoFactorEnabled: false,
+  },
+  {
     name: "Alice Johnson",
     email: "test1@example.com",
     password: "password",

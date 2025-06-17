@@ -50,7 +50,9 @@ export const CreateStudentModal = ({
 
   const onSubmit = (data: StudentFormValues) => {
     addStudent({
-      formData: data,
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
     });
     reset();
     setIsOpen(false);

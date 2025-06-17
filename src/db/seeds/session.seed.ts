@@ -10,40 +10,53 @@ export default async function seed(db: DB) {
 
   if (!user) throw new Error("User not found!");
 
-  const hubId = 1;
+  // Get all hubs for the user to lookup by name
+  const hubs = await db.query.hub.findMany({
+    where: eq(schema.hub.userId, user.id),
+  });
 
-  const hubStudents = await db
-    .select({
-      id: schema.student.id,
-    })
-    .from(schema.student)
-    .leftJoin(
-      schema.studentHub,
-      eq(schema.student.id, schema.studentHub.studentId),
-    )
-    .where(eq(schema.studentHub.hubId, hubId));
+  for (const sessionData of sessions) {
+    const { hubName, session, notes } = sessionData;
 
-  sessions.forEach(async (session, index) => {
+    const hub = hubs.find((h) => h.name === hubName);
+    if (!hub) {
+      console.warn(`Hub not found for session: ${hubName}`);
+      continue;
+    }
+
+    const hubStudents = await db
+      .select({
+        id: schema.student.id,
+      })
+      .from(schema.student)
+      .leftJoin(
+        schema.studentHub,
+        eq(schema.student.id, schema.studentHub.studentId),
+      )
+      .where(eq(schema.studentHub.hubId, hub.id));
+
     const [s] = await db
       .insert(schema.session)
       .values({
-        ...session.session,
+        ...session,
         userId: user.id,
-        hubId,
+        hubId: hub.id,
       })
       .returning({ id: schema.session.id });
 
     if (!s) throw new Error("Session not found!");
 
-    session.notes.forEach(async (note) => {
+    // Create session notes
+    for (const note of notes) {
       await db.insert(schema.sessionNote).values({
         userId: user.id,
         sessionId: s.id,
         ...note,
       });
-    });
+    }
 
-    hubStudents.forEach(async (student) => {
+    // Create attendance records for all students in the hub
+    for (const student of hubStudents) {
       const statuses = [
         "present",
         "present",
@@ -57,8 +70,8 @@ export default async function seed(db: DB) {
         studentId: student.id,
         sessionId: s.id,
         status: randomStatus,
-        hubId,
+        hubId: hub.id,
       });
-    });
-  });
+    }
+  }
 }

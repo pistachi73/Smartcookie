@@ -7,7 +7,7 @@ import { cn } from "@/shared/lib/classes";
 import { regularSpring } from "@/shared/lib/animation";
 import * as m from "motion/react-m";
 import { useUpdateSessionNote } from "../../../hooks/session-notes/use-update-session-note";
-import type { SessionNote } from "../../../types/session-notes.types";
+import type { ClientSessionNote } from "../../../types/session-notes.types";
 export const DroppableSessionNoteColumn = ({
   children,
   sessionId,
@@ -26,7 +26,7 @@ export const DroppableSessionNoteColumn = ({
         e.items
           .filter(isTextDropItem)
           .map(async (item) => JSON.parse(await item.getText("session-note"))),
-      )) as SessionNote[];
+      )) as ClientSessionNote[];
 
       if (!item) return;
 

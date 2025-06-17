@@ -9,7 +9,6 @@ import {
 } from "../attendance/mutations";
 import { withValidationAndAuth } from "../protected-data-access";
 import { archiveStudentSurveyResponsesInHub } from "../survey-response/mutations";
-import { createTransaction } from "../utils";
 import {
   AddStudentSchema,
   AddStudentToHubSchema,
@@ -35,7 +34,7 @@ export const addStudent = withValidationAndAuth({
 export const addStudentToHub = withValidationAndAuth({
   schema: AddStudentToHubSchema,
   callback: async ({ studentId, hubId }) => {
-    await createTransaction(async (trx) => {
+    await db.transaction(async (trx) => {
       const sessions = await trx
         .select({ id: session.id })
         .from(session)
@@ -62,7 +61,7 @@ export const addStudentToHub = withValidationAndAuth({
 export const removeStudentFromHub = withValidationAndAuth({
   schema: RemoveStudentFromHubSchema,
   callback: async ({ studentId, hubId }) => {
-    await createTransaction(async (trx) => {
+    await db.transaction(async (trx) => {
       await Promise.all([
         trx
           .delete(studentHub)
@@ -110,7 +109,7 @@ export const createStudentInHub = withValidationAndAuth({
 
     let createdStudentId: number;
 
-    await createTransaction(async (trx) => {
+    await db.transaction(async (trx) => {
       // Parallel fetch of sessions while creating student
       const [createdStudents, sessions] = await Promise.all([
         trx

@@ -1,7 +1,7 @@
 import type { InsertStudent } from "@/db/schema";
 
 type InsertStudentExtended = InsertStudent & {
-  hubs: number[];
+  hubNames: string[];
 };
 
 const students: Omit<InsertStudentExtended, "id" | "salt" | "userId">[] = [
@@ -18,7 +18,7 @@ const students: Omit<InsertStudentExtended, "id" | "salt" | "userId">[] = [
     learningLanguage: "Spanish",
     interests: "Reading, Cooking, Traveling",
     age: 30,
-    hubs: [1, 2],
+    hubNames: ["Català A2 - Abat Oliba", "Español A1 - UAB"],
   },
   {
     name: "Mohamed Ali",
@@ -33,7 +33,7 @@ const students: Omit<InsertStudentExtended, "id" | "salt" | "userId">[] = [
     learningLanguage: "English",
     interests: "Technology, Reading, Chess",
     age: 35,
-    hubs: [2],
+    hubNames: ["Español A1 - UAB"],
   },
   {
     name: "Liam Smith",
@@ -48,7 +48,7 @@ const students: Omit<InsertStudentExtended, "id" | "salt" | "userId">[] = [
     learningLanguage: "French",
     interests: "Travel, Photography, Hiking",
     age: 35,
-    hubs: [3],
+    hubNames: ["Español A2 - Bogi"],
   },
   {
     name: "Sofia García",
@@ -63,7 +63,7 @@ const students: Omit<InsertStudentExtended, "id" | "salt" | "userId">[] = [
     learningLanguage: "English",
     interests: "Art, Music, Cooking",
     age: 28,
-    hubs: [1, 3],
+    hubNames: ["Català A2 - Abat Oliba", "Español A2 - Bogi"],
   },
   {
     name: "Raj Patel",
@@ -78,7 +78,7 @@ const students: Omit<InsertStudentExtended, "id" | "salt" | "userId">[] = [
     learningLanguage: "English",
     interests: "Technology, Cricket, Reading",
     age: 32,
-    hubs: [2, 3],
+    hubNames: ["Español A1 - UAB", "Español A2 - Bogi"],
   },
   {
     name: "Emma Zhang",
@@ -93,7 +93,7 @@ const students: Omit<InsertStudentExtended, "id" | "salt" | "userId">[] = [
     learningLanguage: "English",
     interests: "Finance, Yoga, Travel",
     age: 31,
-    hubs: [3],
+    hubNames: ["Español A2 - Bogi"],
   },
   {
     name: "Carlos Mendes",
@@ -108,7 +108,7 @@ const students: Omit<InsertStudentExtended, "id" | "salt" | "userId">[] = [
     learningLanguage: "English",
     interests: "Teaching, Soccer, Music",
     age: 36,
-    hubs: [1],
+    hubNames: ["Català A2 - Abat Oliba"],
   },
 ];
 

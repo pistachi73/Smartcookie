@@ -5,10 +5,12 @@ const today = new Date();
 today.setHours(10, 0, 0, 0); // Set to 10:00 AM
 
 const sessions: {
+  hubName: string;
   session: Omit<InsertSession, "userId" | "hubId">;
   notes: Omit<InsertSessionNote, "userId" | "sessionId">[];
 }[] = [
   {
+    hubName: "Català A2 - Abat Oliba",
     session: {
       startTime: today.toISOString(),
       endTime: addHours(today, 1).toISOString(),
@@ -36,6 +38,7 @@ const sessions: {
     ],
   },
   {
+    hubName: "Català A2 - Abat Oliba",
     session: {
       startTime: addDays(today, 1).toISOString(),
       endTime: addMinutes(addDays(today, 1), 75).toISOString(),
@@ -65,6 +68,7 @@ const sessions: {
     ],
   },
   {
+    hubName: "Español A1 - UAB",
     session: {
       startTime: addDays(today, 3).toISOString(),
       endTime: addHours(addDays(today, 3), 2).toISOString(),
@@ -94,6 +98,7 @@ const sessions: {
     ],
   },
   {
+    hubName: "Español A1 - UAB",
     session: {
       startTime: addDays(today, 4).toISOString(),
       endTime: addMinutes(addDays(today, 4), 75).toISOString(),
@@ -122,6 +127,7 @@ const sessions: {
     ],
   },
   {
+    hubName: "Español A2 - Bogi",
     session: {
       startTime: addDays(today, 6).toISOString(),
       endTime: addMinutes(addDays(today, 6), 75).toISOString(),
@@ -151,6 +157,7 @@ const sessions: {
     ],
   },
   {
+    hubName: "Español A2 - Bogi",
     session: {
       startTime: addDays(today, 7).toISOString(),
       endTime: addMinutes(addDays(today, 7), 75).toISOString(),
@@ -179,6 +186,7 @@ const sessions: {
     ],
   },
   {
+    hubName: "Català A2 - Abat Oliba",
     session: {
       startTime: addDays(today, 8).toISOString(),
       endTime: addHours(addDays(today, 8), 1).toISOString(),
@@ -186,6 +194,7 @@ const sessions: {
     notes: [],
   },
   {
+    hubName: "Español A1 - UAB",
     session: {
       startTime: addDays(today, 9).toISOString(),
       endTime: addMinutes(addDays(today, 9), 90).toISOString(),
@@ -193,6 +202,7 @@ const sessions: {
     notes: [],
   },
   {
+    hubName: "Español A2 - Bogi",
     session: {
       startTime: addDays(today, 10).toISOString(),
       endTime: addHours(addDays(today, 10), 1).toISOString(),
@@ -200,6 +210,7 @@ const sessions: {
     notes: [],
   },
   {
+    hubName: "Català A2 - Abat Oliba",
     session: {
       startTime: addDays(today, 11).toISOString(),
       endTime: addMinutes(addDays(today, 11), 75).toISOString(),
@@ -207,6 +218,7 @@ const sessions: {
     notes: [],
   },
   {
+    hubName: "Español A1 - UAB",
     session: {
       startTime: addDays(today, 12).toISOString(),
       endTime: addHours(addDays(today, 12), 1).toISOString(),
@@ -214,6 +226,7 @@ const sessions: {
     notes: [],
   },
   {
+    hubName: "Español A2 - Bogi",
     session: {
       startTime: addDays(today, 13).toISOString(),
       endTime: addMinutes(addDays(today, 13), 90).toISOString(),
@@ -221,6 +234,7 @@ const sessions: {
     notes: [],
   },
   {
+    hubName: "Català A2 - Abat Oliba",
     session: {
       startTime: addDays(today, 14).toISOString(),
       endTime: addHours(addDays(today, 14), 1).toISOString(),

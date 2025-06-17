@@ -6,6 +6,10 @@ import users from "./data/users.seed-data";
 export default async function seed(db: DB) {
   await Promise.all(
     users.map(async (user) => {
+      if (user.email === "infomartinamotiva@gmail.com") {
+        return;
+      }
+
       const { password, ...rest } = user;
       const { hashedPassword, salt } = await hashPassword(password);
 

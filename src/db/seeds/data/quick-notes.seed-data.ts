@@ -1,32 +1,32 @@
 import type { InsertQuickNote } from "@/db/schema";
 
-const quickNotes: Omit<
+const quickNotes: (Omit<
   InsertQuickNote,
-  "userId" | "createdAt" | "updatedAt"
->[] = [
+  "userId" | "hubId" | "createdAt" | "updatedAt"
+> & { hubName: string })[] = [
   {
-    hubId: 1,
+    hubName: "Català A2 - Abat Oliba",
     content:
       "Need to prepare additional practice problems for next week's algebra session",
   },
   {
-    hubId: 1,
+    hubName: "Català A2 - Abat Oliba",
     content: "Student showing great progress in quadratic equations",
   },
   {
-    hubId: 2,
+    hubName: "Español A1 - UAB",
     content: "Remember to bring Spanish conversation cards for next class",
   },
   {
-    hubId: 2,
+    hubName: "Español A1 - UAB",
     content: "Need to focus more on pronunciation exercises",
   },
   {
-    hubId: 3,
+    hubName: "Español A2 - Bogi",
     content: "Prepare lab safety guidelines for next chemistry experiment",
   },
   {
-    hubId: 3,
+    hubName: "Español A2 - Bogi",
     content: "Students requested more hands-on biology activities",
   },
 ];
