@@ -6,7 +6,6 @@ import { endOfDay, startOfDay } from "date-fns";
 import { and, between, eq, inArray, notInArray } from "drizzle-orm";
 import { addAttendance } from "../attendance/mutations";
 import { withValidationAndAuth } from "../protected-data-access";
-import { createTransaction } from "../utils";
 import {
   AddSessionsSchema,
   CheckSessionConflictsSchema,
@@ -17,10 +16,8 @@ import { findOverlappingIntervals, hasOverlappingIntervals } from "./utils";
 
 export const addSessions = withValidationAndAuth({
   schema: AddSessionsSchema,
-  callback: async (data, userId) => {
-    await createTransaction(async (trx) => {
-      const { sessions, hubId } = data;
-
+  callback: async ({ sessions, hubId, trx = db }, userId) => {
+    await trx.transaction(async (trx) => {
       const toAddSessions: InsertSession[] = sessions.map((s) => ({
         ...s,
         userId,

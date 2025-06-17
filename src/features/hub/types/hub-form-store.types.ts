@@ -1,3 +1,4 @@
+import type { calculateRecurrentSessions } from "../lib/calculate-recurrent-sessions";
 import type { HubInfoValues } from "../lib/schemas";
 
 // Types for each step's additional data
@@ -24,7 +25,7 @@ export type HubFormState = {
   // Form data for each step
   hubInfo: Partial<HubInfoValues>;
   students: StudentData[];
-  sessions: SessionData[];
+  sessions: ReturnType<typeof calculateRecurrentSessions>;
 
   // Actions
   setCurrentStep: (step: number) => void;
@@ -36,9 +37,11 @@ export type HubFormState = {
   addStudent: (student: StudentData) => void;
   removeStudent: (studentId: number) => void;
   updateStudent: (studentId: number, data: Partial<StudentData>) => void;
-  addSession: (session: SessionData) => void;
-  removeSession: (sessionId: number) => void;
-  updateSession: (sessionId: number, data: Partial<SessionData>) => void;
+  addSessions: (
+    sessions: ReturnType<typeof calculateRecurrentSessions>,
+  ) => void;
+  removeSession: (sessionIndex: number) => void;
+  updateSession: (sessionIndex: number, data: Partial<SessionData>) => void;
 
   // Reset
   reset: () => void;

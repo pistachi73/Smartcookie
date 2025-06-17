@@ -59,23 +59,4 @@ export const defaultHubInfo: HubInfoValues = {
   endDate: undefined,
 };
 
-export const serializedHubInfoSchema = z.object({
-  name: z.string(),
-  description: z.string().optional(),
-  level: z.string().optional(),
-  color: z.custom<CustomColor>(),
-  schedule: z.string().optional(),
-  status: z.custom<HubStatus>(),
-  startDate: z.string(),
-  endDate: z.string().optional(),
-});
-
 export type HubInfoValues = z.infer<typeof hubInfoSchema>;
-export type SerializedHubInfoValues = z.infer<typeof serializedHubInfoSchema>;
-
-export const CreateHubUseCaseSchema = z.object({
-  userId: z.string(),
-  hubInfo: serializedHubInfoSchema,
-  studentIds: z.array(z.number()).optional(),
-  sessionIds: z.array(z.number()).optional(),
-});

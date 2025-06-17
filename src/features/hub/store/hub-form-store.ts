@@ -48,20 +48,20 @@ export const useHubFormStore = create<HubFormState>((set) => ({
       ),
     })),
 
-  addSession: (session) =>
+  addSessions: (sessions) =>
     set((state) => ({
-      sessions: [...state.sessions, session],
+      sessions: [...state.sessions, ...sessions],
     })),
 
-  removeSession: (sessionId) =>
+  removeSession: (sessionIndex: number) =>
     set((state) => ({
-      sessions: state.sessions.filter((session) => session.id !== sessionId),
+      sessions: state.sessions.filter((_, index) => index !== sessionIndex),
     })),
 
-  updateSession: (sessionId, data) =>
+  updateSession: (sessionIndex: number, data) =>
     set((state) => ({
-      sessions: state.sessions.map((session) =>
-        session.id === sessionId ? { ...session, ...data } : session,
+      sessions: state.sessions.map((session, index) =>
+        index === sessionIndex ? { ...session, ...data } : session,
       ),
     })),
 

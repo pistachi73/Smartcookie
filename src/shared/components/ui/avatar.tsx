@@ -22,7 +22,7 @@ const avatar = tv({
 });
 
 // Define image sizes for different avatar sizes
-const avatarSizes = {
+export const avatarSizes = {
   "extra-small": { width: 20, height: 20 },
   small: { width: 24, height: 24 },
   medium: { width: 32, height: 32 },

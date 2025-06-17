@@ -4,10 +4,10 @@ import { toast } from "sonner";
 
 import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 
-import type { Hub } from "@/db/schema";
-import { CreateHubUseCaseSchema } from "../lib/schemas";
+import { createHub } from "@/data-access/hubs/mutations";
+import { CreateHubUseCaseSchema } from "@/data-access/hubs/schemas";
+import { getHubsByUserIdQueryOptions } from "../lib/hub-query-options";
 import { useHubFormStore } from "../store/hub-form-store";
-import { createHubUseCase } from "../use-cases/create-hub.use-case";
 
 export function useCreateHub() {
   const reset = useHubFormStore((state) => state.reset);
@@ -15,23 +15,15 @@ export function useCreateHub() {
   const router = useRouter();
 
   return useProtectedMutation({
-    schema: CreateHubUseCaseSchema.omit({ userId: true }),
-    mutationFn: (input, { userId }) => {
-      return createHubUseCase({
-        ...input,
-        userId,
-      });
-    },
-
-    onMutate: async (input) => {
-      await queryClient.cancelQueries({ queryKey: ["hubs"] });
-      const previousData = queryClient.getQueryData<Hub[]>(["hubs"]);
-      return { previousData };
+    schema: CreateHubUseCaseSchema,
+    mutationFn: createHub,
+    onMutate: async () => {
+      const hubsQueryKey = getHubsByUserIdQueryOptions.queryKey;
+      await queryClient.cancelQueries({ queryKey: hubsQueryKey });
     },
 
     onSuccess: () => {
       toast.success("Hub created successfully");
-      queryClient.invalidateQueries({ queryKey: ["hubs"] });
       reset();
       router.push("/portal/hubs");
     },

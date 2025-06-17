@@ -26,6 +26,7 @@ export const UserAvatar = ({
   className,
   userImage,
   userName,
+  size,
   ...props
 }: UserAvatarProps) => {
   const initials = useMemo(() => {
@@ -61,6 +62,7 @@ export const UserAvatar = ({
       src={userImage ?? undefined}
       initials={initials}
       alt={userName ?? undefined}
+      size={size}
       {...props}
     />
   );

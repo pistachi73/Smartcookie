@@ -94,7 +94,6 @@ export const CustomColorPicker = <T extends object>({
       <Button
         intent="outline"
         shape="square"
-        size="small"
         className="data-hovered:bg-overlay-highlight border-input"
       >
         <div

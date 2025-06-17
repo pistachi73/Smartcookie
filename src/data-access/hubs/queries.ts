@@ -8,7 +8,7 @@ import {
   withValidationAndAuth,
 } from "../protected-data-access";
 import { parseDateWithTimezone } from "../utils";
-import { GetHubByIdSchema } from "./schema";
+import { GetHubByIdSchema } from "./schemas";
 
 export const getHubsByUserIdForQuickNotes = withAuthenticationNoInput({
   callback: async (userId) => {

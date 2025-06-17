@@ -1,23 +1,25 @@
 "use client";
 
-import {
-  ArrowLeft02Icon,
-  UserAdd01Icon,
-} from "@hugeicons-pro/core-solid-rounded";
+import { ArrowLeft02Icon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 
 import { Button } from "@/ui/button";
-import { ComboBox } from "@/ui/combo-box";
 import { ProgressCircle } from "@/ui/progress-circle";
 
 import { useCreateHub } from "@/features/hub/hooks/use-create-hub";
-import type { SerializedHubInfoValues } from "@/features/hub/lib/schemas";
 
 import { cn } from "@/shared/lib/classes";
 
+import { Heading } from "@/shared/components/ui/heading";
+import { AddIcon } from "@hugeicons-pro/core-stroke-rounded";
+import { useState } from "react";
+import { toast } from "sonner";
 import { useHubFormStore } from "../../../store/hub-form-store";
+import { SessionModal } from "./session-modal";
+import { SessionsList } from "./sessions-list";
 
 export function StepSessions() {
+  const [isSessionModalOpen, setIsSessionModalOpen] = useState(false);
   const prevStep = useHubFormStore((state) => state.prevStep);
 
   const { mutate: createHub, isPending } = useCreateHub();
@@ -27,78 +29,58 @@ export function StepSessions() {
   const hubInfo = useHubFormStore((state) => state.hubInfo);
 
   const handleCreateHub = () => {
-    const data = {
+    if (!hubInfo.name || !hubInfo.startDate) {
+      toast.error("Hub name is required");
+      return;
+    }
+
+    console.log({
       studentIds: students.map((student) => student.id),
-      sessionIds: sessions.map((session) => session.id),
+      sessions: sessions, // Use index since sessions don't have IDs yet
       hubInfo: {
         ...hubInfo,
+        name: hubInfo.name,
         startDate: hubInfo.startDate?.toString(),
         endDate: hubInfo.endDate?.toString(),
-      } as SerializedHubInfoValues,
-    };
+      },
+    });
 
-    createHub(data);
+    // [createHub({
+    //   studentIds: students.map((student) => student.id),
+    //   sessions: sessions, // Use index since sessions don't have IDs yet
+    //   hubInfo: {
+    //     ...hubInfo,
+    //     name: hubInfo.name,
+    //     startDate: hubInfo.startDate?.toString(),
+    //     endDate: hubInfo.endDate?.toString(),
+    //   },
+    // });]
   };
 
   return (
     <>
       <div className="w-full space-y-4">
-        <div className={cn("w-full flex items-center gap-2 ")}>
-          <div className="relative flex-1 ">
-            <ComboBox
-              placeholder="Search existing student..."
-              menuTrigger="focus"
-              selectedKey={null}
-              allowsEmptyCollection={true}
-            >
-              <ComboBox.Input
-                className={{
-                  fieldGroup: "h-10 sm:h-12 bg-overlay-highlight",
-                }}
-              />
-
-              <ComboBox.List
-                renderEmptyState={() => (
-                  <div className="flex flex-col items-center p-6 gap-0.5">
-                    <p className="text-lg font-medium">No students found</p>
-                    <p className="text-sm text-muted-fg">
-                      You can search by name or email
-                    </p>
-                  </div>
-                )}
-                items={[]}
-                className={{
-                  popoverContent:
-                    "bg-overlay-highlight w-[calc(var(--trigger-width))]",
-                }}
-                showArrow={false}
-              >
-                {(item) => {
-                  return (
-                    <ComboBox.Option
-                      id={"id"}
-                      textValue={"name"}
-                      className={"flex gap-3"}
-                    >
-                      test
-                    </ComboBox.Option>
-                  );
-                }}
-              </ComboBox.List>
-            </ComboBox>
-          </div>
-          <Button
-            shape="square"
-            className="shrink-0 h-10 w-10 sm:w-fit sm:h-12"
-          >
-            <HugeiconsIcon icon={UserAdd01Icon} size={16} data-slot="icon" />
-            <span className="hidden sm:block">New Session</span>
+        <div className={cn("w-full flex items-center gap-2 justify-between")}>
+          <Heading level={3} className="font-semibold">
+            Scheduled Sessions
+          </Heading>
+          <Button shape="square" onPress={() => setIsSessionModalOpen(true)}>
+            <HugeiconsIcon icon={AddIcon} size={16} data-slot="icon" />
+            <span className="hidden sm:block">Add Sessions</span>
           </Button>
         </div>
 
-        <div className="flex justify-end w-full gap-4 shrink-0">
+        {/* Sessions List */}
+        <SessionsList />
+
+        <div
+          className={cn(
+            "flex flex-col-reverse fixed bottom-0 border-t left-0 bg-overlay p-4 w-full gap-2 ",
+            "sm:relative sm:p-0 sm:flex-row sm:justify-between sm:border-none",
+          )}
+        >
           <Button
-            intent="plain"
+            intent="outline"
             onPress={prevStep}
             shape="square"
             isDisabled={isPending}
@@ -120,6 +102,10 @@ export function StepSessions() {
           </Button>
         </div>
       </div>
+      <SessionModal
+        isOpen={isSessionModalOpen}
+        onOpenChange={setIsSessionModalOpen}
+      />
     </>
   );
 }

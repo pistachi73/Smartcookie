@@ -1,3 +1,4 @@
+import { db } from "@/db";
 import { attendance } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { withValidationAndAuth } from "../protected-data-access";
@@ -8,7 +9,7 @@ import {
 
 export const addAttendance = withValidationAndAuth({
   schema: AddAttendanceSchema,
-  callback: async ({ trx, data }, userId) => {
+  callback: async ({ trx = db, data }, userId) => {
     const { sessionIds, studentIds, hubId } = data;
 
     if (!sessionIds.length || !studentIds.length) {
@@ -30,7 +31,7 @@ export const addAttendance = withValidationAndAuth({
 
 export const removeAllStudentAttendance = withValidationAndAuth({
   schema: RemoveAllStudentAttendanceSchema,
-  callback: async ({ trx, data }) => {
+  callback: async ({ trx = db, data }) => {
     const { studentId, hubId } = data;
 
     await trx

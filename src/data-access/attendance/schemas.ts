@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { DatabaseTransactionSchema } from "../utils";
+import { DatabaseTransactionSchema } from "../shared-schemas";
 
 export const AddAttendanceSchema = z.object({
   data: z.object({

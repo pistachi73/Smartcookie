@@ -8,6 +8,8 @@ import { TextField } from "@/shared/components/ui/text-field";
 import { Textarea } from "@/shared/components/ui/textarea";
 import { cn } from "@/shared/lib/classes";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ArrowRight02Icon } from "@hugeicons-pro/core-stroke-rounded";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import type { z } from "zod";
 import { hubInfoSchema } from "../../lib/schemas";
@@ -164,7 +166,8 @@ export function StepHubInfo() {
           )}
         >
           <Button type="submit" shape="square" className="px-6">
-            Continue
+            Continue to students
+            <HugeiconsIcon icon={ArrowRight02Icon} size={16} data-slot="icon" />
           </Button>
         </div>
       </Form>
