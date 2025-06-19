@@ -32,6 +32,8 @@ export const QuickNotesSidebar = () => {
       }),
     );
 
+  console.log("visibleHubs", visibleHubs, visibleHubs.size, hubs?.length);
+
   const handleToggleAllHubs = () => {
     if (!hubs) return;
     const allHubIds = hubs.map((hub) => hub.id);

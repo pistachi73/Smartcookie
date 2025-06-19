@@ -72,8 +72,8 @@ export const createQuickNotesStore = (initState: QuickNotesState) => {
         }),
         merge(persistedState, currentState) {
           const visibleHubs = new Set([
-            ...currentState.visibleHubs,
-            ...((persistedState as any).visibleHubs || []),
+            ...(currentState?.visibleHubs || []),
+            ...((persistedState as any)?.visibleHubs || []),
           ]);
 
           return {
@@ -84,6 +84,7 @@ export const createQuickNotesStore = (initState: QuickNotesState) => {
         },
         onRehydrateStorage: () => {
           return async (state, error) => {
+            console.log("onRehydrateStorage", error);
             if (!error) {
               state?.setHydrated();
             }
