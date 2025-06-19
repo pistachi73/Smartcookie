@@ -14,7 +14,7 @@ export const MaxWidthWrapper = forwardRef<
   return (
     <Component
       ref={ref}
-      className={cn("mx-auto w-full px-2.5 md:px-20", className)}
+      className={cn("max-w-7xl mx-auto w-full px-2.5 md:px-20", className)}
     >
       {children}
     </Component>

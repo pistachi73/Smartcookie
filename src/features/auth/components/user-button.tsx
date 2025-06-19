@@ -1,7 +1,13 @@
 "use client";
-import { Home, LogOut } from "lucide-react";
+import {
+  DashboardSquare01Icon,
+  Home09Icon,
+  Logout01Icon,
+} from "@hugeicons-pro/core-stroke-rounded";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { signOut } from "next-auth/react";
 
+import { StudentProfile } from "@/shared/components/students/student-profile";
 import { useCurrentUser } from "@/shared/hooks/use-current-user";
 import { Menu } from "@/ui/menu";
 import { UserAvatar } from "@/ui/user-avatar";
@@ -20,28 +26,25 @@ export const UserButton = () => {
       </Menu.Trigger>
       <Menu.Content placement="bottom end" popoverClassName="w-[300px]">
         <Menu.Header>
-          <div className="flex flex-row gap-3 items-center">
-            <UserAvatar
-              userImage={user?.image}
-              userName={user?.name}
-              size="medium"
-            />
-            <div className="overflow-hidden">
-              <p className="text-md font-medium">{user?.name}</p>
-              <p className="text-text-sub text-sm truncate font-normal">
-                {user?.email}
-              </p>
-            </div>
-          </div>
+          <StudentProfile
+            name={user?.name}
+            image={user?.image ?? null}
+            email={user?.email}
+            className="w-full"
+          />
         </Menu.Header>
         <Menu.Separator />
+        <Menu.Item href="/portal/dashboard">
+          <HugeiconsIcon icon={DashboardSquare01Icon} data-slot="icon" />
+          Dashboard
+        </Menu.Item>
         <Menu.Item href="/account">
-          <Home className="h-5 w-5 mr-2" />
+          <HugeiconsIcon icon={Home09Icon} data-slot="icon" />
           Account
         </Menu.Item>
         <Menu.Separator />
         <Menu.Item onAction={() => signOut({ redirectTo: "/" })}>
-          <LogOut className="h-5 w-5 mr-2" />
+          <HugeiconsIcon icon={Logout01Icon} data-slot="icon" />
           Logout
         </Menu.Item>
       </Menu.Content>

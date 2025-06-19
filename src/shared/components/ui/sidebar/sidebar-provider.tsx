@@ -12,7 +12,7 @@ import {
 import { useMediaQuery } from "@/shared/hooks/use-media-query";
 import { cn } from "@/shared/lib/classes";
 
-const SIDEBAR_COOKIE_NAME = "sidebar:state";
+export const SIDEBAR_COOKIE_NAME = "sidebar:state";
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 type SidebarContextProps = {
   state: "expanded" | "collapsed";
@@ -46,6 +46,7 @@ const SidebarProvider = ({
   const isMobile = useMediaQuery("(max-width: 767px)");
   const [openMobile, setOpenMobile] = useState(false);
 
+  console.log(defaultOpen);
   const [internalOpenState, setInternalOpenState] = useState(defaultOpen);
   const open = openProp ?? internalOpenState;
   const setOpen = useCallback(

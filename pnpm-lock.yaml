@@ -58,7 +58,7 @@ importers:
         specifier: 19.0.0-beta-3229e95-20250315
         version: 19.0.0-beta-3229e95-20250315
       class-variance-authority:
-        specifier: ^0.7.0
+        specifier: ^0.7.1
         version: 0.7.1
       date-fns:
         specifier: ^4.1.0
@@ -206,7 +206,7 @@ importers:
         specifier: ^8.4.35
         version: 8.5.3
       tailwind-merge:
-        specifier: ^2.5.5
+        specifier: ^2.6.0
         version: 2.6.0
       tailwind-variants:
         specifier: ^0.3.1

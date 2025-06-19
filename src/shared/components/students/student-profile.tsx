@@ -57,7 +57,11 @@ export const StudentProfile = ({
       </div>
       <div className="space-y-0.5 text-left">
         <p className="text-sm font-medium">{name}</p>
-        {email && <p className="text-xs text-muted-fg line-clamp-1">{email}</p>}
+        {email && (
+          <p className="text-xs font-normal text-muted-fg line-clamp-1">
+            {email}
+          </p>
+        )}
       </div>
     </div>
   );

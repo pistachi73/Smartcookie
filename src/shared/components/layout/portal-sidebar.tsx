@@ -52,16 +52,32 @@ export default function AppSidebar(
             "flex items-center justify-center w-full",
         )}
       >
-        <div className="w-full flex flex-row items-center sm:justify-start justify-center gap-x-2">
-          <div className="relative h-8 w-4 shrink-0">
-            <Image
-              src="/Logo.svg"
-              alt="SmartCookie"
-              fill
-              className="rounded-full"
-            />
+        <div
+          className={cn(
+            "w-full flex flex-row items-center sm:justify-start justify-center gap-x-2",
+            state.state === "collapsed" && "justify-center",
+          )}
+        >
+          <div
+            className={cn(
+              "flex items-center justify-center w-full",
+              state.state !== "collapsed" && "w-fit",
+            )}
+          >
+            <div className="relative h-8 w-4 shrink-0">
+              <Image
+                src="/Logo.svg"
+                alt="SmartCookie"
+                fill
+                className="rounded-full"
+              />
+            </div>
           </div>
-          <SidebarLabel className="font-bold text-lg">SmartCookie</SidebarLabel>
+          {state.state !== "collapsed" && (
+            <SidebarLabel className="font-bold text-lg">
+              SmartCookie
+            </SidebarLabel>
+          )}
         </div>
         {state.state !== "collapsed" && (
           <SidebarTrigger
@@ -93,7 +109,7 @@ export default function AppSidebar(
                     showAlt={isCurrent}
                     size={18}
                     className={cn(
-                      "group-hover:rotate-6 group-hover:scale-105 transition-transform",
+                      "group-hover:rotate-6 group-hover:scale-105 transition-transform shrink-0",
                       isCurrent && "text-primary",
                     )}
                     data-slot="icon"
