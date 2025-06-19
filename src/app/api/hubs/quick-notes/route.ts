@@ -6,6 +6,8 @@ export async function GET(request: NextRequest) {
   try {
     const hubs = await getHubsByUserIdForQuickNotes();
 
+    console.log(hubs);
+
     return NextResponse.json(hubs);
   } catch (error) {
     console.error("Error fetching quick notes hubs:", error);
