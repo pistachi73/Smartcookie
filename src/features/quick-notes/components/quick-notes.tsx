@@ -10,8 +10,6 @@ import { QuickNotesSidebar } from "./quick-notes-sidebar";
 export const QuickNotes = () => {
   const isHydrated = useQuickNotesStore((state) => state.isHydrated);
 
-  console.log({ isHydrated });
-
   return isHydrated ? (
     <Suspense fallback={<QuickNotesLoading />}>
       <div className="min-h-0 h-full flex flex-col w-full overflow-hidden">

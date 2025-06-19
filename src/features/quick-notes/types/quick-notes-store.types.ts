@@ -5,20 +5,17 @@ export type QuickNotesState = {
   edittingHub: number | null;
   visibleHubs: Set<number>;
   isFilterPanelOpen: boolean;
-
-  hubIds: number[];
 };
 
 export type QuickNotesActions = {
   setHydrated: () => void;
 
-  // Hub visibility
+  // Hub visibilit
   toggleHubVisibility: (hubId: number) => void;
-  toggleAllHubsVisibility: () => void;
+  toggleAllHubsVisibility: (hubIds: number[]) => void;
   setEdittingHub: (hubId: number | null) => void;
 };
 
 export type InitialQuickNotesStateData = {
   visibleHubs?: number[];
-  hubIds: number[];
 };

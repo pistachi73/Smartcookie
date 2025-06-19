@@ -18,21 +18,25 @@ export const QuickNotesSidebar = () => {
   const [isMinimized, setIsMinimized] = useState(false);
   const { data: hubs } = useQuery(quickNotesHubsQueryOptions);
 
-  const { visibleHubs, allHubsVisible, toggleHub } = useQuickNotesStore(
-    useShallow((state) => {
-      const visibleHubs = state.visibleHubs;
-      const allHubsVisible = hubs?.length === visibleHubs.size;
-      return {
-        visibleHubs,
-        allHubsVisible,
-        toggleHub: state.toggleHubVisibility,
-      };
-    }),
-  );
+  const { visibleHubs, allHubsVisible, toggleHub, toggleAllHubsVisibility } =
+    useQuickNotesStore(
+      useShallow((state) => {
+        const visibleHubs = state.visibleHubs;
+        const allHubsVisible = hubs?.length === visibleHubs.size;
+        return {
+          visibleHubs,
+          allHubsVisible,
+          toggleHub: state.toggleHubVisibility,
+          toggleAllHubsVisibility: state.toggleAllHubsVisibility,
+        };
+      }),
+    );
 
-  const toggleAllHubsVisibility = useQuickNotesStore(
-    (state) => state.toggleAllHubsVisibility,
-  );
+  const handleToggleAllHubs = () => {
+    if (!hubs) return;
+    const allHubIds = hubs.map((hub) => hub.id);
+    toggleAllHubsVisibility(allHubIds);
+  };
 
   const filteredData = hubs
     ? hubs.filter(({ name }) =>
@@ -64,7 +68,10 @@ export const QuickNotesSidebar = () => {
           icon={allHubsVisible ? ViewOffSlashIcon : ViewIcon}
           isVisible={allHubsVisible}
           isMinimized={isMinimized}
-          onPress={toggleAllHubsVisibility}
+          onPress={() => {
+            console.log("toggle all hubs");
+            handleToggleAllHubs();
+          }}
           prefix={
             <HugeiconsIcon
               icon={ViewIcon}

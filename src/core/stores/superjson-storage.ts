@@ -12,16 +12,40 @@ superjson.registerCustom<Temporal.PlainDate, string>(
   "Temporal.PlainDate",
 );
 
+// Helper to check if we're in browser environment
+const isBrowser = typeof window !== "undefined";
+
 export const superjsonStorage: PersistStorage<any> = {
   getItem: (name) => {
+    if (!isBrowser) return null;
+
     const str = localStorage.getItem(name);
 
     if (!str) return null;
 
-    return superjson.parse(str);
+    try {
+      return superjson.parse(str);
+    } catch (error) {
+      console.warn(`Failed to parse stored data for key "${name}":`, error);
+      return null;
+    }
   },
   setItem: (name, value) => {
-    window?.localStorage?.setItem(name, superjson.stringify(value));
+    if (!isBrowser) return;
+
+    try {
+      localStorage.setItem(name, superjson.stringify(value));
+    } catch (error) {
+      console.warn(`Failed to store data for key "${name}":`, error);
+    }
   },
-  removeItem: (name) => localStorage.removeItem(name),
+  removeItem: (name) => {
+    if (!isBrowser) return;
+
+    try {
+      localStorage.removeItem(name);
+    } catch (error) {
+      console.warn(`Failed to remove data for key "${name}":`, error);
+    }
+  },
 };

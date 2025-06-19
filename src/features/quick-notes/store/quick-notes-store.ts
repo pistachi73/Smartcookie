@@ -17,7 +17,6 @@ export const initQuickNotesStore = (
     isHydrated: false,
     edittingHub: null,
     isFilterPanelOpen: false,
-    hubIds: initilData?.hubIds || [],
   };
 };
 
@@ -39,17 +38,16 @@ export const createQuickNotesStore = (initState: QuickNotesState) => {
           });
         },
 
-        toggleAllHubsVisibility: () => {
+        toggleAllHubsVisibility: (hubIds: number[]) => {
           set((state) => {
-            const areAllVisible =
-              state.hubIds.length === state.visibleHubs.size;
-            if (areAllVisible) {
-              state.visibleHubs.clear();
+            const allVisible = hubIds.every((id) => state.visibleHubs.has(id));
+
+            if (allVisible) {
+              // If all provided hubs are visible, hide them
+              hubIds.forEach((id) => state.visibleHubs.delete(id));
             } else {
-              state.visibleHubs = new Set([
-                ...state.visibleHubs,
-                ...state.hubIds,
-              ]);
+              // If not all are visible, show all provided hubs
+              hubIds.forEach((id) => state.visibleHubs.add(id));
             }
           });
         },
@@ -69,7 +67,7 @@ export const createQuickNotesStore = (initState: QuickNotesState) => {
       {
         name: "quick-notes-store",
         storage: superjsonStorage,
-        partialize: ({ edittingHub, hubIds, isHydrated, ...rest }) => ({
+        partialize: ({ edittingHub, isHydrated, ...rest }) => ({
           ...rest,
         }),
         merge(persistedState, currentState) {
