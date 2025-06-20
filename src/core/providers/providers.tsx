@@ -29,7 +29,7 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
           <ThemeProvider
             attribute="class"
             disableTransitionOnChange
-            defaultTheme="system"
+            defaultTheme="light"
           >
             <LazyMotion features={loadFeatures}>{children}</LazyMotion>
           </ThemeProvider>

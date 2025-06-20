@@ -10,6 +10,7 @@ import {
   ArrowDown01Icon,
   Delete01Icon,
   DeliveryView01Icon,
+  Link02Icon,
   MoreVerticalIcon,
   UserMultipleIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
@@ -19,6 +20,7 @@ import { format } from "date-fns";
 import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";
 import { useCallback, useState } from "react";
+import { toast } from "sonner";
 import {
   type GetSurveysByHubIdQueryResponse,
   getSurveyResponsesBySurveyIdQueryOptions,
@@ -56,6 +58,17 @@ export const SurveyListItem = ({
       staleTime: 60000,
     });
   }, [queryClient, survey.id]);
+
+  const copySurveyLink = useCallback(async () => {
+    const surveyUrl = `${window.location.origin}/survey/${survey.id}`;
+    try {
+      await navigator.clipboard.writeText(surveyUrl);
+      toast.success("Survey link copied to clipboard");
+    } catch (err) {
+      console.error("Failed to copy survey link:", err);
+      toast.error("Failed to copy survey link");
+    }
+  }, [survey.id]);
 
   const completedSurveyResponses = survey.surveyResponses.filter(
     (response) => response.completed,
@@ -174,6 +187,10 @@ export const SurveyListItem = ({
                     data-slot="icon"
                   />
                   <Menu.Label>View Survey Template</Menu.Label>
+                </Menu.Item>
+                <Menu.Item onAction={copySurveyLink}>
+                  <HugeiconsIcon icon={Link02Icon} size={16} data-slot="icon" />
+                  <Menu.Label>Copy Survey Link</Menu.Label>
                 </Menu.Item>
                 <Menu.Separator />
                 <Menu.Item

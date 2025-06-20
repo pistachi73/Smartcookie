@@ -1,11 +1,16 @@
+import { Features } from "@/features/landing/components/features";
 import { Hero } from "@/features/landing/components/hero";
-import { HeroCarrousel } from "@/features/landing/components/hero-carrouse";
+import { MainPoints } from "@/features/landing/components/main-points";
+import { Plans } from "@/features/landing/components/pricing/pricing-plans";
 
 export default async function Home() {
   return (
-    <main className="flex gap-3 h-full bg-bg items-center flex-col">
+    <main className="gap-3   overflow-hidden flex flex-col justify-center items-center">
       <Hero />
-      <HeroCarrousel />
+      {/* <HeroCarrousel /> */}
+      <Features />
+      <MainPoints />
+      <Plans />
     </main>
   );
 }

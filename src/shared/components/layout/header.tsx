@@ -1,6 +1,5 @@
 "use client";
 
-import { UserButton } from "@/features/auth/components/user-button";
 import { buttonStyles } from "@/shared/components/ui/button";
 import { useCurrentUser } from "@/shared/hooks/use-current-user";
 import { cn } from "@/shared/lib/classes";
@@ -86,12 +85,12 @@ export const Header = () => {
 
   return (
     <>
-      <div aria-hidden="true" className="h-17 bg-bg" />
+      <div aria-hidden="true" className="h-17 bg-white" />
       <header className="fixed top-4 left-1/2 -translate-x-1/2 flex gap-2 z-50 items-center justify-center">
         <div
           className={cn(
             "bg-overlay rounded-2xl flex shrink-0 items-center  p-1 gap-1",
-            "shadow-md border-input",
+            "shadow-md border-input bg-bg",
           )}
         >
           <div className="px-3 flex items-center gap-2 bg-primary-tint h-11 rounded-lg">
@@ -109,7 +108,7 @@ export const Header = () => {
                     intent: "plain",
                     size: "large",
                     className:
-                      "sm:text-base shrink-0 tracking-tight hover:bg-primary-tint",
+                      "sm:text-base shrink-0 tracking-tight hover:bg-overlay",
                   })}
                 >
                   <span>{item.label}</span>
@@ -118,9 +117,23 @@ export const Header = () => {
             })}
           </nav>
         </div>
-        <div className="h-full  shadow-md border-input bg-overlay rounded-2xl flex gap-1  p-1 items-center shrink-0">
+        <div className="h-full  shadow-md  bg-overlay rounded-2xl flex gap-1  p-1 items-center shrink-0">
           {user ? (
-            <UserButton />
+            <Link
+              href="/login"
+              className={cn(
+                buttonStyles({ size: "large", intent: "primary" }),
+                "group",
+                "sm:text-base  shrink-0 tracking-tight",
+              )}
+            >
+              Go to dashboard
+              <HugeiconsIcon
+                icon={ArrowRight02Icon}
+                size={20}
+                className="shrink-0 group-hover:translate-x-1 transition-transform"
+              />
+            </Link>
           ) : (
             <>
               <Link
