@@ -1,8 +1,10 @@
 "use client";
 
 import { MaxWidthWrapper } from "@/shared/components/layout/max-width-wrapper";
+import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
 import { Button } from "@/shared/components/ui/button";
 import { Heading } from "@/shared/components/ui/heading";
+import { cn } from "@/shared/lib/classes";
 import {
   StickyNote02Icon,
   TableIcon,
@@ -15,13 +17,14 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
 const animatedTexts = [
-  { text: "admin.", icon: UserSettingsIcon },
-  { text: "spreadsheets.", icon: TableIcon },
   { text: "last-minute prep.", icon: Time02Icon },
+  { text: "spreadsheets.", icon: TableIcon },
+  { text: "admin.", icon: UserSettingsIcon },
   { text: "chaotic notes.", icon: StickyNote02Icon },
 ] as const;
 
 export function Hero() {
+  const { up } = useViewport();
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [containerWidth, setContainerWidth] = useState(0);
   const measureRef = useRef<HTMLDivElement>(null);
@@ -43,23 +46,38 @@ export function Hero() {
   return (
     <MaxWidthWrapper
       as="section"
-      className="flex items-center justify-center px-4 py-24"
+      className="flex items-center py-24 md:py-0 justify-center md:min-h-[400px] md:h-[calc(80vh)] md:max-h-[500px]"
     >
       <div className="mx-auto max-w-4xl text-center">
         <div className="mb-4">
           <Heading
             level={1}
             tracking="tighter"
-            className="mb-4 text-4xl sm:text-5xl md:text-6xl lg:text-6xl"
+            className="text-[42px] sm:text-4xl md:text-5xl lg:text-6xl"
+            style={{
+              lineHeight: "1.3",
+            }}
           >
             Focus on teaching,
           </Heading>
-          <div className="flex  justify-center gap-1.5 text-4xl font-bold tracking-tighter text-muted-fg sm:text-5xl md:text-6xl lg:text-6xl">
-            <div className="">forget about</div>
+          <div
+            className={cn(
+              "flex  lg:flex-row flex-col items-center justify-center lg:gap-1.5 text-4xl font-bold tracking-tighter text-muted-fg ",
+              "text-[42px] sm:text-4xl md:text-5xl lg:text-6xl",
+            )}
+          >
+            <span
+              style={{
+                lineHeight: "1.3",
+              }}
+              className="inline-block"
+            >
+              forget about
+            </span>
 
             <motion.div
-              className="relative"
-              animate={{ width: containerWidth }}
+              className="relative flex flex-col lg:flex-row items-center"
+              animate={{ width: up("lg") ? containerWidth : "100%" }}
               transition={{
                 type: "spring",
                 stiffness: 140,
@@ -73,7 +91,7 @@ export function Hero() {
                 className="absolute invisible whitespace-nowrap flex gap-1.5"
                 aria-hidden="true"
               >
-                <div className="size-12 mx-2 mr-1" />
+                <div className="size-12 lg:mx-2 lg:mr-1" />
                 {animatedTexts[currentTextIndex]?.text}
               </div>
 
@@ -83,9 +101,9 @@ export function Hero() {
                   initial="hidden"
                   animate="visible"
                   exit="exit"
-                  className="inline-flex gap-1.5 whitespace-nowrap -translate-y-3"
+                  className="inline-flex gap-1.5 whitespace-nowrap items-center h-full"
                 >
-                  <motion.div className="overflow-hidden flex items-center mx-2 mr-1 translate-y-1">
+                  <motion.div className="overflow-hidden flex items-center lg:mx-2 lg:mr-1 h-full">
                     <motion.div
                       variants={{
                         hidden: {
@@ -143,11 +161,11 @@ export function Hero() {
                             delay: (wordIndex + 1) * 0.15,
                           }}
                           style={{
-                            lineHeight: "1.2",
-                            paddingBottom: "0.2em",
-                            marginBottom: "-0.2em",
+                            lineHeight: "1.3",
+                            paddingBottom: "0.3em",
+                            marginBottom: "-0.3em",
                           }}
-                          className="h-full inline-block bg-gradient-to-r from-primary to-primary-shade bg-clip-text text-transparent"
+                          className="inline-block bg-gradient-to-r from-primary to-primary-shade bg-clip-text text-transparent"
                         >
                           {word}
                         </motion.span>
@@ -164,8 +182,8 @@ export function Hero() {
           business. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
         </p>
 
-        <div className="mt-6 flex flex-col md:flex-row items-center justify-center gap-2">
-          <Button intent="primary" size="large" className="group sm:h-13 px-8">
+        <div className="mt-6 flex flex-row items-center justify-center gap-2">
+          <Button intent="primary" size="large" className="group h-13 px-8">
             Get Started
             <HugeiconsIcon
               icon={ArrowRight02Icon}
@@ -173,7 +191,7 @@ export function Hero() {
               className="shrink-0 group-hover:translate-x-1 transition-transform"
             />
           </Button>
-          <Button intent="secondary" size="large" className="sm:h-13 px-8">
+          <Button intent="secondary" size="large" className="h-13 px-8">
             Learn More
           </Button>
         </div>

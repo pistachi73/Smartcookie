@@ -5,10 +5,12 @@ import { Plans } from "@/features/landing/components/pricing/pricing-plans";
 
 export default async function Home() {
   return (
-    <main className="gap-3   overflow-hidden flex flex-col justify-center items-center">
-      <Hero />
-      {/* <HeroCarrousel /> */}
-      <Features />
+    <main className="gap-3 overflow-hidden flex flex-col justify-center items-center gap-y-24">
+      <div className="space-y-12">
+        <Hero />
+        {/* <HeroCarrousel /> */}
+        <Features />
+      </div>
       <MainPoints />
       <Plans />
     </main>

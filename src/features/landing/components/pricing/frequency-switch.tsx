@@ -42,10 +42,10 @@ export const PlanFrequencySwitch = ({
   }, [paymentFrequency]);
 
   return (
-    <div className="relative flex items-center justify-center p-1 bg-muted rounded-2xl gap-1 border border-input">
+    <div className="relative flex items-center justify-center p-1 bg-muted rounded-full gap-1t">
       {/* Blob that matches active button dimensions */}
       <motion.div
-        className="absolute rounded-lg h-[calc(100%-8px)] top-1 bg-white shadow-sm border z-0"
+        className="absolute rounded-full h-[calc(100%-8px)] top-1 bg-white shadow-sm border z-0"
         animate={{
           left: blobStyle.left,
           width: blobStyle.width,

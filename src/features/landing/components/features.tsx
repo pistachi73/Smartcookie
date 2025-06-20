@@ -10,7 +10,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 
 export const Features = () => {
   return (
-    <MaxWidthWrapper className="py-16 space-y-6">
+    <MaxWidthWrapper className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
         <Card
           className={cn(
