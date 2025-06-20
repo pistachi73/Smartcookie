@@ -11,15 +11,19 @@ import {
   Time02Icon,
   UserSettingsIcon,
 } from "@hugeicons-pro/core-solid-rounded";
-import { ArrowRight02Icon } from "@hugeicons-pro/core-stroke-rounded";
+import {
+  ArrowRight02Icon,
+  HeartAddIcon,
+} from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
 const animatedTexts = [
-  { text: "last-minute prep.", icon: Time02Icon },
-  { text: "spreadsheets.", icon: TableIcon },
+  { text: "JERO GAY.", icon: HeartAddIcon },
   { text: "admin.", icon: UserSettingsIcon },
+  { text: "spreadsheets.", icon: TableIcon },
+  { text: "last-minute prep.", icon: Time02Icon },
   { text: "chaotic notes.", icon: StickyNote02Icon },
 ] as const;
 

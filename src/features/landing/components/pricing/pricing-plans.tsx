@@ -15,7 +15,7 @@ import {
 } from "@/shared/components/ui/card";
 import { Heading } from "@/shared/components/ui/heading";
 import { Separator } from "@/shared/components/ui/separator";
-import { ArrowRight02Icon } from "@hugeicons-pro/core-solid-rounded";
+import { ArrowRight02Icon, Tag01Icon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { guestChecks, memberChecks } from "./constants";
 import { PlanFrequencySwitch } from "./frequency-switch";
@@ -28,14 +28,29 @@ export const Plans = () => {
   const sessionId = searchParams.get("session_id");
 
   return (
-    <MaxWidthWrapper className="items-center h-full flex justify-center flex-col space-y-10">
-      <Heading
-        level={2}
-        tracking="tight"
-        className="text-3xl sm:text-4xl font-bold tracking-tighter text-foreground"
-      >
-        Choose the right plan for you!
-      </Heading>
+    <MaxWidthWrapper className="items-center h-full flex justify-center flex-col space-y-12">
+      <div className="text-center space-y-6">
+        <Badge
+          intent="primary"
+          className="px-4 py-2 text-sm font-medium inline-flex items-center gap-2"
+        >
+          <HugeiconsIcon icon={Tag01Icon} size={16} />
+          Pricing Plans
+        </Badge>
+        <Heading
+          level={2}
+          tracking="tight"
+          className="text-3xl sm:text-4xl font-bold tracking-tighter text-foreground"
+        >
+          Choose the right plan for you!
+        </Heading>
+        <p className="text-lg text-muted-fg max-w-2xl mx-auto">
+          Start free and upgrade as your tutoring business grows. All plans
+          include our core features to help you manage your students
+          effectively.
+        </p>
+      </div>
+
       <PlanFrequencySwitch
         paymentFrequency={paymentFrequency}
         setPaymentFrequency={setPaymentFrequency}
@@ -47,7 +62,7 @@ export const Plans = () => {
           className="w-full overflow-hidden transition-transform flex flex-col justify-between"
           spacing="lg"
         >
-          <CardHeader>
+          <CardHeader className="space-y-3">
             <CardTitle className="text-2xl font-bold tracking-tighter flex items-center gap-2">
               Free
             </CardTitle>
@@ -56,7 +71,7 @@ export const Plans = () => {
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="space-y-6 flex-1">
+          <CardContent className="space-y-8 flex-1">
             <Separator />
             <div className="flex items-center gap-4">
               <p className="flex items-center gap-3">
@@ -82,7 +97,8 @@ export const Plans = () => {
                 data-slot="icon"
               />
             </Button>
-            <div className="space-y-6">
+
+            <div className="space-y-4">
               <p className="text-sm font-medium text-muted-fg uppercase">
                 What's included
               </p>
@@ -105,28 +121,28 @@ export const Plans = () => {
           className="w-full overflow-hidden transition-transform flex flex-col justify-between relative border-2 border-primary shadow-lg"
           spacing="lg"
         >
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold  flex items-center gap-2 ">
+          <CardHeader className="space-y-3">
+            <CardTitle className="text-2xl font-bold flex items-center gap-2">
               <span className="tracking-tighter">Professional</span>
               <Badge intent="primary" className="px-4 py-1 text-xs font-medium">
                 Most Popular
               </Badge>
             </CardTitle>
             <CardDescription className="text-muted-fg text-base">
-              Ideal for teachers who want to streamline utheir lesson planning
+              Ideal for teachers who want to streamline their lesson planning
               and management.
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="space-y-6 flex-1">
+          <CardContent className="space-y-8 flex-1">
             <Separator />
             <div className="flex items-center gap-4 relative">
               <p className="flex items-center gap-3">
                 <span className="text-5xl font-bold tracking-tighter tabular-nums text-primary">
-                  {paymentFrequency === "M" ? "9.50 €" : "95.00 €"}
+                  {paymentFrequency === "M" ? "9.50 €" : "8.00 €"}
                 </span>
                 <span className="font-semibold text-sm text-muted-fg">
-                  {paymentFrequency === "M" ? "/ month" : "/ year"}
+                  / month
                 </span>
               </p>
               {paymentFrequency === "A" && (
@@ -150,7 +166,7 @@ export const Plans = () => {
               />
             </Button>
 
-            <div className="space-y-6 pt-3">
+            <div className="space-y-4">
               <p className="text-sm font-medium text-muted-fg uppercase">
                 Everything in Free, plus:
               </p>
