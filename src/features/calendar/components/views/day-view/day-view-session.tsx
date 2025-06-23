@@ -54,7 +54,7 @@ export const DayViewSession = ({
       >
         <div
           className={cn(
-            "border relative h-full w-full overflow-hidden",
+            " relative h-full w-full overflow-hidden",
             eventColor?.className,
             isShortEvent ? "rounded-sm" : "rounded-md",
             isEditing && "border-fg",

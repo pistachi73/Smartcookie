@@ -5,12 +5,12 @@ import { Badge } from "@/shared/components/ui/badge";
 import { Heading } from "@/shared/components/ui/heading";
 import { regularSpring } from "@/shared/lib/animation";
 import { cn } from "@/shared/lib/classes";
-import { QuoteDownIcon, QuoteUpIcon } from "@hugeicons-pro/core-solid-rounded";
 import {
-  Brain02Icon,
-  HealtcareIcon,
+  QuoteDownIcon,
+  QuoteUpIcon,
   SparklesIcon,
-} from "@hugeicons-pro/core-stroke-rounded";
+} from "@hugeicons-pro/core-solid-rounded";
+import { Brain02Icon, HealtcareIcon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as motion from "motion/react-m";
 import Image from "next/image";

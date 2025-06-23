@@ -1,6 +1,7 @@
 "use client";
 
 import { buttonStyles } from "@/shared/components/ui/button";
+import { Menu } from "@/shared/components/ui/menu";
 import { useCurrentUser } from "@/shared/hooks/use-current-user";
 import { cn } from "@/shared/lib/classes";
 import {
@@ -12,11 +13,11 @@ import {
   UserGroupIcon as UserGroupIconSolid,
 } from "@hugeicons-pro/core-solid-rounded";
 import {
-  ArrowRight02Icon,
   Calendar03Icon,
   Comment01Icon,
   DashboardSquare01Icon,
   FolderLibraryIcon,
+  Menu01Icon,
   NoteIcon,
   UserGroupIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
@@ -24,6 +25,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Link } from "react-aria-components";
+import { MaxWidthWrapper } from "./max-width-wrapper";
 
 const portalNavigation = [
   {
@@ -67,15 +69,15 @@ const portalNavigation = [
 const publicNavigation = [
   {
     label: "Features",
-    href: "/features",
+    href: "#features",
   },
   {
     label: "Pricing",
-    href: "/pricing",
+    href: "#pricing",
   },
   {
     label: "Who we are",
-    href: "/about",
+    href: "#about",
   },
 ];
 
@@ -86,84 +88,152 @@ export const Header = () => {
   return (
     <>
       <div aria-hidden="true" className="h-17 bg-white" />
-      <header className="fixed top-4 left-1/2 -translate-x-1/2 flex gap-2 z-50 items-center justify-center">
-        <div
-          className={cn(
-            "bg-overlay rounded-2xl flex shrink-0 items-center  p-1 gap-1",
-            "shadow-md border-input bg-bg",
-          )}
-        >
-          <div className="px-3 flex items-center gap-2 bg-primary-tint h-11 rounded-lg">
-            <Image src="/Logo.svg" alt="SmartCookie" height={28} width={14} />
-            <p className="text-base font-medium text-primary">SmartCookie</p>
-          </div>
+      <MaxWidthWrapper
+        as="header"
+        className="fixed top-[2vw] md:top-4 left-1/2 -translate-x-1/2 flex md:gap-2 z-50 items-center justify-center w-full"
+      >
+        {/* Desktop Header */}
+        <div className="w-full md:flex gap-2 items-center md:justify-center justify-between">
+          <div
+            className={cn(
+              "bg-white rounded-md md:rounded-xl flex shrink-0 items-center md:justify-center justify-between p-1 gap-1",
+              "shadow-md border-input",
+            )}
+          >
+            <div className="px-3 flex items-center gap-2 bg-primary-tint h-11 rounded-lg">
+              <Image src="/Logo.svg" alt="SmartCookie" height={28} width={14} />
+              <p className="text-base font-medium text-primary">SmartCookie</p>
+            </div>
 
-          <nav className="flex items-center gap-1">
-            {publicNavigation.map((item) => {
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={buttonStyles({
-                    intent: "plain",
-                    size: "large",
-                    className:
-                      "sm:text-base shrink-0 tracking-tight hover:bg-overlay",
-                  })}
-                >
-                  <span>{item.label}</span>
-                </Link>
-              );
-            })}
-          </nav>
-        </div>
-        <div className="h-full  shadow-md  bg-overlay rounded-2xl flex gap-1  p-1 items-center shrink-0">
-          {user ? (
-            <Link
-              href="/login"
-              className={cn(
-                buttonStyles({ size: "large", intent: "primary" }),
-                "group",
-                "sm:text-base  shrink-0 tracking-tight",
-              )}
-            >
-              Go to dashboard
-              <HugeiconsIcon
-                icon={ArrowRight02Icon}
-                size={20}
-                className="shrink-0 group-hover:translate-x-1 transition-transform"
-              />
-            </Link>
-          ) : (
-            <>
-              <Link
-                href="/login"
+            <nav className="hidden md:flex items-center gap-1">
+              {publicNavigation.map((item) => {
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={buttonStyles({
+                      intent: "plain",
+                      size: "large",
+                      className:
+                        "sm:text-base shrink-0 tracking-tight hover:bg-primary-tint",
+                    })}
+                  >
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </nav>
+
+            <Menu>
+              <Menu.Trigger
                 className={cn(
-                  buttonStyles({ size: "large", intent: "plain" }),
-                  "text-base!  shrink-0 tracking-tight hover:bg-primary-tint",
+                  buttonStyles({ size: "small", intent: "plain" }),
+                  "p-2 md:hidden",
                 )}
               >
-                Log in
-              </Link>
+                <HugeiconsIcon icon={Menu01Icon} size={20} />
+              </Menu.Trigger>
+              <Menu.Content placement="bottom end" className="min-w-48">
+                <Menu.Section>
+                  <Menu.Header className="py-4">
+                    <div className="flex items-center gap-2">
+                      <Image
+                        src="/Logo.svg"
+                        alt="SmartCookie"
+                        height={28}
+                        width={14}
+                      />
+                      <span className="text-base font-medium text-primary">
+                        SmartCookie
+                      </span>
+                    </div>
+                  </Menu.Header>
+                  {publicNavigation.map((item) => (
+                    <Menu.Item
+                      key={item.href}
+                      href={item.href}
+                      className="py-3"
+                    >
+                      {item.label}
+                    </Menu.Item>
+                  ))}
+                </Menu.Section>
+
+                {/* <Menu.Section>
+                  {user ? (
+                    <Menu.Item href="/portal/dashboard">
+                      <span>Go to dashboard</span>
+                      <HugeiconsIcon
+                        icon={ArrowRight02Icon}
+                        size={16}
+                        className="ml-auto"
+                      />
+                    </Menu.Item>
+                  ) : (
+                    <>
+                      <Menu.Item href="/login">Log in</Menu.Item>
+                      <Menu.Item href="/login">
+                        <span>Start free trial</span>
+                        <HugeiconsIcon
+                          icon={ArrowRight02Icon}
+                          size={16}
+                          className="ml-auto"
+                        />
+                      </Menu.Item>
+                    </>
+                  )}
+                </Menu.Section> */}
+              </Menu.Content>
+            </Menu>
+          </div>
+          {/* <div className="h-full shadow-md bg-overlay rounded-2xl flex gap-1 p-1 items-center shrink-0">
+            {user ? (
               <Link
-                href="/login"
+                href="/portal/dashboard"
                 className={cn(
                   buttonStyles({ size: "large", intent: "primary" }),
                   "group",
-                  "sm:text-base  shrink-0 tracking-tight",
+                  "sm:text-base shrink-0 tracking-tight",
                 )}
               >
-                Start free trial
+                Go to dashboard
                 <HugeiconsIcon
                   icon={ArrowRight02Icon}
                   size={20}
                   className="shrink-0 group-hover:translate-x-1 transition-transform"
                 />
               </Link>
-            </>
-          )}
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className={cn(
+                    buttonStyles({ size: "large", intent: "plain" }),
+                    "text-base shrink-0 tracking-tight hover:bg-primary-tint",
+                  )}
+                >
+                  Log in
+                </Link>
+                <Link
+                  href="/login"
+                  className={cn(
+                    buttonStyles({ size: "large", intent: "primary" }),
+                    "group",
+                    "sm:text-base shrink-0 tracking-tight",
+                  )}
+                >
+                  Start free trial
+                  <HugeiconsIcon
+                    icon={ArrowRight02Icon}
+                    size={20}
+                    className="shrink-0 group-hover:translate-x-1 transition-transform"
+                  />
+                </Link>
+              </>
+            )}
+          </div> */}
         </div>
-      </header>
+      </MaxWidthWrapper>
     </>
   );
 };

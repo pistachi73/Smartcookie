@@ -8,13 +8,14 @@ export const MaxWidthWrapper = forwardRef<
     children: ReactNode;
     className?: string;
     as?: string;
-  }
->(({ className, children, as = "div" }, ref) => {
+  } & React.HTMLAttributes<HTMLDivElement>
+>(({ className, children, as = "div", ...props }, ref) => {
   const Component = as as any;
   return (
     <Component
       ref={ref}
       className={cn("max-w-7xl mx-auto w-full px-[2%] md:px-[5%]", className)}
+      {...props}
     >
       {children}
     </Component>

@@ -3,6 +3,7 @@
 import { Button } from "@/shared/components/ui/button";
 import { CustomColorPicker } from "@/shared/components/ui/custom-color-picker";
 import { DatePicker } from "@/shared/components/ui/date-picker/index";
+import { Label } from "@/shared/components/ui/field";
 import { Form } from "@/shared/components/ui/form";
 import { TextField } from "@/shared/components/ui/text-field";
 import { Textarea } from "@/shared/components/ui/textarea";
@@ -20,7 +21,11 @@ export function StepHubInfo() {
   const nextStep = useHubFormStore((state) => state.nextStep);
   const hubInfo = useHubFormStore((state) => state.hubInfo);
 
-  const { control, handleSubmit } = useForm<z.infer<typeof hubInfoSchema>>({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<z.infer<typeof hubInfoSchema>>({
     resolver: zodResolver(hubInfoSchema),
     defaultValues: hubInfo,
     mode: "onChange",
@@ -34,6 +39,8 @@ export function StepHubInfo() {
     nextStep();
   };
 
+  console.log(errors);
+
   return (
     <>
       <Form
@@ -41,37 +48,39 @@ export function StepHubInfo() {
         onSubmit={handleSubmit(onSubmit)}
         className="w-full space-y-4"
       >
-        <div className="flex gap-2">
-          <Controller
-            name="name"
-            control={control}
-            render={({ field, fieldState }) => (
-              <TextField
-                label="Name"
-                placeholder="My Hub"
-                isRequired
-                isInvalid={fieldState.invalid}
-                errorMessage={fieldState.error?.message}
-                className={{
-                  primitive: "flex-1 w-full",
-                }}
-                {...field}
-              />
-            )}
-          />
-          <Controller
-            name="color"
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <div className="mt-6.5">
-                <CustomColorPicker
-                  selectedKey={value}
-                  onSelectionChange={onChange}
-                  aria-label="Hub color picker"
+        <div className="flex flex-col gap-1.5">
+          <Label isRequired>Name</Label>
+          <div className="flex gap-2 items-center">
+            <Controller
+              name="color"
+              control={control}
+              render={({ field: { onChange, value } }) => (
+                <div className={cn(Boolean(errors.name?.message) && "-mt-7.5")}>
+                  <CustomColorPicker
+                    selectedKey={value}
+                    onSelectionChange={onChange}
+                    aria-label="Hub color picker"
+                  />
+                </div>
+              )}
+            />
+            <Controller
+              name="name"
+              control={control}
+              render={({ field, fieldState }) => (
+                <TextField
+                  placeholder="My Hub"
+                  isRequired
+                  isInvalid={fieldState.invalid}
+                  errorMessage={fieldState.error?.message}
+                  className={{
+                    primitive: "flex-1 w-full",
+                  }}
+                  {...field}
                 />
-              </div>
-            )}
-          />
+              )}
+            />
+          </div>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4">

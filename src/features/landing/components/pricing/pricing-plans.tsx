@@ -28,7 +28,10 @@ export const Plans = () => {
   const sessionId = searchParams.get("session_id");
 
   return (
-    <MaxWidthWrapper className="items-center h-full flex justify-center flex-col space-y-12">
+    <MaxWidthWrapper
+      id="pricing"
+      className="items-center h-full flex justify-center flex-col space-y-12"
+    >
       <div className="text-center space-y-6">
         <Badge
           intent="primary"
