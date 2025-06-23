@@ -2,82 +2,20 @@
 
 import { MaxWidthWrapper } from "@/shared/components/layout/max-width-wrapper";
 import { Badge } from "@/shared/components/ui/badge";
-import { Card, CardDescription, CardTitle } from "@/shared/components/ui/card";
 import { Heading } from "@/shared/components/ui/heading";
 import { regularSpring } from "@/shared/lib/animation";
+import { cn } from "@/shared/lib/classes";
+import { QuoteDownIcon, QuoteUpIcon } from "@hugeicons-pro/core-solid-rounded";
 import {
-  Analytics02Icon,
   Brain02Icon,
-  FrameworksIcon,
   HealtcareIcon,
-  Settings02Icon,
   SparklesIcon,
-  Target03Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as motion from "motion/react-m";
+import Image from "next/image";
 
-const MotionCard = motion.create(Card);
-
-const mainPointsData = [
-  {
-    mainPoint: {
-      title: "All-in-One Workspace",
-      description: "All Your Tools, One Screen",
-      icon: FrameworksIcon,
-      accentColor: "var(--color-custom-blueberry-bg-shade)",
-    },
-    statistic: {
-      number: "12+",
-      label: "Tools Replaced",
-      description: "Average tools tutors use separately",
-      icon: Settings02Icon,
-    },
-  },
-  {
-    mainPoint: {
-      title: "Your Daily Teaching Companion",
-      description: "Your Second Brain (for Teaching)",
-      icon: Brain02Icon,
-      accentColor: "var(--color-custom-lavender-bg-shade)",
-    },
-    statistic: {
-      number: "85%",
-      label: "Time Saved",
-      description: "Less time on admin, more on teaching",
-      icon: Analytics02Icon,
-    },
-  },
-  {
-    mainPoint: {
-      title: "Track Emotions & Engagement",
-      description: "Track What Really Matters",
-      icon: HealtcareIcon,
-      accentColor: "var(--color-custom-sage-bg-shade)",
-    },
-    statistic: {
-      number: "92%",
-      label: "Success Rate",
-      description: "Classes with emotional tracking",
-      icon: Target03Icon,
-    },
-  },
-];
-
-const cardVariants = {
-  hidden: {
-    opacity: 0,
-    y: 50,
-  },
-  visible: (index: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: {
-      ...regularSpring,
-      delay: index * 0.1,
-    },
-  }),
-};
+const MotionHugeIcons = motion.create(HugeiconsIcon);
 
 export const MainPoints = () => {
   return (
@@ -107,199 +45,229 @@ export const MainPoints = () => {
         </p>
       </div>
 
-      {/* Bento Grid */}
-      <div className="w-full">
-        <div className="grid grid-cols-4 grid-rows-3 gap-4 h-[600px] md:h-[500px]">
-          {/* Feature Card 1 - Top Left */}
-          <MotionCard
-            variants={cardVariants}
-            custom={0}
-            initial="hidden"
-            animate="visible"
-            whileHover="hover"
-            className="col-span-1 row-span-1 bg-overlay p-4 relative overflow-hidden border-0 flex flex-col justify-center"
+      <div
+        className={cn(
+          "w-full grid gap-4",
+          "grid-rows-[repeat(7,auto)] grid-cols-2",
+          "sm:grid-cols-4 sm:grid-rows-[auto_auto_auto_auto]",
+          "lg:grid-cols-6 lg:grid-rows-[auto_1fr_1fr]",
+        )}
+      >
+        {/* Texas image */}
+        <div
+          className={cn(
+            "w-full  h-full relative aspect-square rounded-xl p-6 md:p-8 overflow-hidden",
+            "row-start-3 col-start-1 col-span-2 row-span-2",
+            "sm:row-start-2 sm:col-start-1 sm:col-span-2 sm:row-span-2",
+            "lg:col-start-1 lg:row-start-2 lg:col-span-2 lg:row-span-2",
+          )}
+        >
+          <Image
+            src="/texas.jpg"
+            alt="Your Daily Teaching Companion"
+            fill
+            className="object-cover"
+          />
+        </div>
+
+        {/* All-in-One Workspace */}
+        <div
+          className={cn(
+            "flex flex-col relative bg-muted rounded-xl p-6 md:p-8 overflow-hidden",
+            "aspect-auto row-start-1 col-start-1 col-span-2 row-span-1 space-y-4",
+            "sm:justify-between sm:aspect-[2/1] sm:row-start-2 sm:col-start-3 sm:col-span-2 sm:row-span-1",
+            "lg:aspect-video lg:row-start-1 lg:col-start-1 lg:col-span-2 lg:row-span-1",
+          )}
+        >
+          <p className="text-xl lg:text-2xl  font-semibold leading-tight">
+            All-in-One Workspace
+          </p>
+          <p className="text-base text-muted-fg ">
+            All Your Tools, One Screen. All Your Tools, One Screen
+          </p>
+        </div>
+
+        {/* Health care */}
+        <motion.div
+          initial="initial"
+          whileHover="animate"
+          className={cn(
+            "group flex flex-col items-center justify-center overflow-hidden relative  bg-primary-tint rounded-xl p-6 md:p-8",
+            "row-start-2 col-start-1 col-span-2 row-span-1",
+            "sm:row-start-1 sm:col-start-1 sm:col-span-2 sm:row-span-1",
+            "lg:row-start-1 lg:col-start-3 lg:col-span-2 lg:row-span-1",
+          )}
+        >
+          <MotionHugeIcons
+            icon={HealtcareIcon}
+            size={72}
+            variants={{
+              initial: {
+                y: 0,
+              },
+              animate: {
+                y: -10,
+                rotate: -5,
+                scale: 1.05,
+              },
+            }}
+            transition={regularSpring}
+            className="group-hover:text-primary"
+          />
+          <motion.p
+            variants={{
+              initial: {
+                y: 8,
+                opacity: 0,
+              },
+              animate: {
+                y: 12,
+                opacity: 1,
+              },
+            }}
+            transition={regularSpring}
+            className=" leading-0 text-base font-medium text-center text-balance"
           >
-            <div className="relative z-10 text-center">
-              <div className="flex justify-center mb-3">
-                <div className="bg-fg rounded-full p-2">
-                  <HugeiconsIcon
-                    icon={FrameworksIcon}
-                    size={24}
-                    className="text-primary-fg"
-                  />
-                </div>
-              </div>
-              <CardTitle className="text-sm font-bold mb-1">
-                All-in-One Workspace
-              </CardTitle>
-              <CardDescription className="text-xs text-fg/70">
-                All Your Tools, One Screen
-              </CardDescription>
-            </div>
-          </MotionCard>
+            Track Emotions & Engagemen
+          </motion.p>
+        </motion.div>
 
-          {/* Statistic 1 - Top Center */}
-          <MotionCard
-            variants={cardVariants}
-            custom={1}
-            initial="hidden"
-            animate="visible"
-            whileHover="hover"
-            className="col-span-1 row-span-1 bg-overlay p-4 relative overflow-hidden border-0 flex flex-col justify-center"
+        {/* Martina online image */}
+        <div
+          className={cn(
+            " relative overflow-hidden rounded-xl p-6 md:p-8",
+            "row-start-5 col-start-1 col-span-2 row-span-1",
+            "sm:row-start-1 sm:col-start-3 sm:col-span-2 sm:row-span-1",
+            "aspect-video lg:row-start-1 lg:col-start-5 lg:col-span-2 lg:row-span-1",
+          )}
+        >
+          <Image
+            src="/martina_teaching_1.png"
+            alt="Your Daily Teaching Companion"
+            fill
+            className="object-cover"
+          />
+        </div>
+
+        {/* Quote */}
+        <div
+          className={cn(
+            "group max-h-full relative bg-muted rounded-md p-6 md:p-8 items-center justify-center",
+            "hidden",
+            "lg:flex lg:row-start-2 lg:col-start-3 lg:col-span-2 lg:row-span-1",
+          )}
+        >
+          <HugeiconsIcon
+            icon={QuoteUpIcon}
+            size={40}
+            className={cn(
+              "text-muted-fg  transition-all duration-300",
+              "absolute top-4 left-4",
+              "size-7 xl:size-10",
+              "group-hover:text-primary group-hover:rotate-5",
+            )}
+          />
+          <div className="flex items-center justify-center text-muted-fg  absolute bottom-4 right-4 group-hover:text-primary transition-colors duration-300">
+            <HugeiconsIcon
+              icon={QuoteDownIcon}
+              size={40}
+              className="group-hover:-rotate-5 transition-transform"
+            />
+          </div>
+          <blockquote className="text-center text-sm xl:text-base font-medium text-foreground leading-relaxed relative ">
+            This platform transformed how I manage my tutoring sessions.
+          </blockquote>
+        </div>
+
+        {/* Time saved */}
+        <div
+          className={cn(
+            "group flex flex-col justify-between bg-accent rounded-md p-6 md:p-8",
+            "row-start-6 col-start-1 col-span-1 row-span-1",
+            "aspect-square sm:row-start-3 sm:col-start-3 sm:col-span-1 sm:row-span-1",
+            "lg:aspect-square lg:row-start-3 lg:col-start-3 lg:col-span-1 lg:row-span-1",
+          )}
+        >
+          <p className="text-muted-fg text-base lg:text-sm xl:text-base">
+            Time saved
+          </p>
+          <div className="relative w-fit">
+            <p className="text-5xl sm:text-4xl xl:text-5xl font-bold tracking-tight tabular-nums">
+              90%
+            </p>
+            <div className="absolute top-full left-0 bg-primary w-full scale-x-0 group-hover:scale-x-100 origin-left transition-transform h-1 rounded-sm" />
+          </div>
+        </div>
+
+        {/* Your external brain */}
+        <motion.div
+          initial="initial"
+          whileHover="animate"
+          className={cn(
+            "group bg-primary-tint flex flex-col items-center justify-center rounded-md",
+            "row-start-6 col-start-2 col-span-1 row-span-1",
+            "aspect-square sm:row-start-3 sm:col-start-4 sm:col-span-1 sm:row-span-1",
+            "lg:aspect-square lg:row-start-3 lg:col-start-4 lg:col-span-1 lg:row-span-1",
+          )}
+        >
+          <MotionHugeIcons
+            icon={Brain02Icon}
+            size={70}
+            className="group-hover:text-primary"
+            variants={{
+              initial: {
+                y: 0,
+              },
+              animate: {
+                y: -10,
+                rotate: -5,
+                scale: 1.05,
+              },
+            }}
+            transition={regularSpring}
+          />
+          <motion.p
+            variants={{
+              initial: {
+                y: 8,
+                opacity: 0,
+              },
+              animate: {
+                y: 12,
+                opacity: 1,
+              },
+            }}
+            transition={regularSpring}
+            className=" leading-0 text-base font-medium text-center text-balance"
           >
-            <div className="relative z-10 text-center">
-              <div className="flex justify-center mb-2">
-                <div className="p-2 rounded-full bg-blue-100">
-                  <HugeiconsIcon
-                    icon={Settings02Icon}
-                    size={16}
-                    className="text-blue-600"
-                  />
-                </div>
-              </div>
-              <div className="text-2xl font-bold tracking-tight tabular-nums mb-1 text-blue-600">
-                12+
-              </div>
-              <div className="text-xs font-medium text-fg/90 mb-1">
-                Tools Replaced
-              </div>
+            Your external brain
+          </motion.p>
+        </motion.div>
+
+        {/* Tools Replaced */}
+        <div
+          className={cn(
+            "group flex   bg-muted rounded-xl p-6 md:p-8",
+            " flex-col gap-4 justify-between row-start-7 col-start-1 col-span-2 row-span-1",
+            " sm:aspect-[16/4.5] sm:flex-row sm:gap-24 sm:items-end sm:row-start-4 sm:col-start-1 sm:col-span-4 sm:row-span-1",
+            "lg:justify-between lg:gap-0 lg:aspect-square lg:flex-col lg:items-start lg:row-start-2 lg:col-start-5 lg:col-span-2 lg:row-span-2",
+          )}
+        >
+          <div className="relative z-10 flex flex-col gap-3 sm:gap-4">
+            <p className="text-5xl md:text-6xl font-bold tracking-tight tabular-nums mb-1 ">
+              12
+              <span className="group-hover:text-primary transition-all duration-300">
+                +
+              </span>
+            </p>
+            <div className="text-xl lg:text-2xl font-semibold  mb-1 shrink-0 text-nowrap">
+              Tools Replaced
             </div>
-          </MotionCard>
-
-          {/* Large Feature Card - Top Right */}
-          <MotionCard
-            variants={cardVariants}
-            custom={2}
-            initial="hidden"
-            animate="visible"
-            whileHover="hover"
-            className="col-span-2 row-span-2 bg-overlay p-6 relative overflow-hidden border-0 flex flex-col justify-center"
-          >
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent from-20% via-overlay/20 via-40% to-overlay/60" />
-
-            <div className="relative z-10 text-center">
-              <div className="flex justify-center mb-6">
-                <div className="bg-fg rounded-full p-3 relative">
-                  <HugeiconsIcon
-                    icon={Brain02Icon}
-                    size={40}
-                    className="text-primary-fg"
-                  />
-                </div>
-              </div>
-              <CardTitle className="text-xl font-bold mb-3">
-                Your Daily Teaching Companion
-              </CardTitle>
-              <CardDescription className="text-sm text-fg/70 mb-4">
-                Your Second Brain (for Teaching)
-              </CardDescription>
-
-              <div className="flex justify-center">
-                <div className="text-center">
-                  <div className="text-3xl font-bold tracking-tight tabular-nums mb-1 text-purple-600">
-                    85%
-                  </div>
-                  <div className="text-sm font-medium text-fg/90">
-                    Time Saved
-                  </div>
-                </div>
-              </div>
-            </div>
-          </MotionCard>
-
-          {/* Feature Card 3 - Middle Left */}
-          <MotionCard
-            variants={cardVariants}
-            custom={3}
-            initial="hidden"
-            animate="visible"
-            whileHover="hover"
-            className="col-span-1 row-span-1 bg-overlay p-4 relative overflow-hidden border-0 flex flex-col justify-center"
-          >
-            <div className="relative z-10 text-center">
-              <div className="flex justify-center mb-3">
-                <div className="bg-fg rounded-full p-2">
-                  <HugeiconsIcon
-                    icon={HealtcareIcon}
-                    size={24}
-                    className="text-primary-fg"
-                  />
-                </div>
-              </div>
-              <CardTitle className="text-sm font-bold mb-1">
-                Track Emotions & Engagement
-              </CardTitle>
-              <CardDescription className="text-xs text-fg/70">
-                Track What Really Matters
-              </CardDescription>
-            </div>
-          </MotionCard>
-
-          {/* Statistic 3 - Middle Center */}
-          <MotionCard
-            variants={cardVariants}
-            custom={4}
-            initial="hidden"
-            animate="visible"
-            whileHover="hover"
-            className="col-span-1 row-span-1 bg-overlay p-4 relative overflow-hidden border-0 flex flex-col justify-center"
-          >
-            <div className="relative z-10 text-center">
-              <div className="flex justify-center mb-2">
-                <div className="p-2 rounded-full bg-green-100">
-                  <HugeiconsIcon
-                    icon={Target03Icon}
-                    size={16}
-                    className="text-green-600"
-                  />
-                </div>
-              </div>
-              <div className="text-2xl font-bold tracking-tight tabular-nums mb-1 text-green-600">
-                92%
-              </div>
-              <div className="text-xs font-medium text-fg/90 mb-1">
-                Success Rate
-              </div>
-            </div>
-          </MotionCard>
-
-          {/* Wide Bottom Card */}
-          <MotionCard
-            variants={cardVariants}
-            custom={5}
-            initial="hidden"
-            animate="visible"
-            whileHover="hover"
-            className="col-span-4 row-span-1 bg-overlay p-6 relative overflow-hidden border-0"
-          >
-            <div className="relative z-10 flex items-center justify-between">
-              <div className="flex items-center gap-6">
-                <div className="bg-fg rounded-full p-3">
-                  <HugeiconsIcon
-                    icon={SparklesIcon}
-                    size={32}
-                    className="text-primary-fg"
-                  />
-                </div>
-                <div>
-                  <CardTitle className="text-lg font-bold mb-1">
-                    Ready to Transform Your Tutoring?
-                  </CardTitle>
-                  <CardDescription className="text-sm text-fg/70">
-                    Join thousands of tutors who have streamlined their workflow
-                  </CardDescription>
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="text-3xl font-bold tracking-tight tabular-nums mb-1 text-orange-600">
-                  1000+
-                </div>
-                <div className="text-sm font-medium text-fg/90">
-                  Happy Tutors
-                </div>
-              </div>
-            </div>
-          </MotionCard>
+          </div>
+          <p className="text-muted-fg text-base">
+            The average teacher uses 12 different tools to manage their. The
+            average teacher uses 12 different tools to manage their
+          </p>
         </div>
       </div>
     </MaxWidthWrapper>

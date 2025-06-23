@@ -11,10 +11,19 @@ import { Toast } from "@/ui/toast";
 import { SessionProvider } from "next-auth/react";
 import { sans } from "./fonts";
 
+// app/layout.tsx
 export const metadata = {
-  title: "Title",
-  description: "Description",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  title: "SmartCookie",
+  description: "Private tutoring management platform",
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+    ],
+    apple: "/apple-touch-icon.png",
+  },
+  manifest: "/site.webmanifest",
 };
 
 export default async function RootLayout({

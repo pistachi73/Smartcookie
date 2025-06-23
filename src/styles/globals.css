@@ -8,6 +8,9 @@
 @plugin 'tailwindcss-animate';
 
 @theme {
+  --breakpoint-xs: 540px;
+  
+
   --font-sans: "Urbanist", "Urbanist Fallback";
   --font-mono: "Geist Mono", 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace';
 

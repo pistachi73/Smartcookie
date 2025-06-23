@@ -4,6 +4,7 @@ import { MaxWidthWrapper } from "@/shared/components/layout/max-width-wrapper";
 import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
 import { Button } from "@/shared/components/ui/button";
 import { Heading } from "@/shared/components/ui/heading";
+import { TextField } from "@/shared/components/ui/text-field";
 import { cn } from "@/shared/lib/classes";
 import {
   StickyNote02Icon,
@@ -11,16 +12,12 @@ import {
   Time02Icon,
   UserSettingsIcon,
 } from "@hugeicons-pro/core-solid-rounded";
-import {
-  ArrowRight02Icon,
-  HeartAddIcon,
-} from "@hugeicons-pro/core-stroke-rounded";
+import { ArrowRight02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 
 const animatedTexts = [
-  { text: "JERO GAY.", icon: HeartAddIcon },
   { text: "admin.", icon: UserSettingsIcon },
   { text: "spreadsheets.", icon: TableIcon },
   { text: "last-minute prep.", icon: Time02Icon },
@@ -181,12 +178,12 @@ export function Hero() {
           </div>
         </div>
 
-        <p className="text-base leading-relaxed text-fg/80 font-medium sm:text-xl text-center text-balance tracking-tight">
+        <p className="max-w-[400px] sm:max-w-none mx-auto text-base leading-relaxed text-fg/80 font-medium sm:text-xl text-center text-balance tracking-tight">
           SmartCookie is a platform that helps you manage your tutoring
           business. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
         </p>
 
-        <div className="mt-6 flex flex-row items-center justify-center gap-2">
+        {/* <div className="mt-6 flex flex-row items-center justify-center gap-2">
           <Button intent="primary" size="large" className="group h-13 px-8">
             Get Started
             <HugeiconsIcon
@@ -197,6 +194,28 @@ export function Hero() {
           </Button>
           <Button intent="secondary" size="large" className="h-13 px-8">
             Learn More
+          </Button>
+        </div> */}
+
+        <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2">
+          <TextField
+            placeholder="Enter your email"
+            className={{
+              primitive: "w-full max-w-[400px]",
+              fieldGroup: "w-full sm:w-[400px] h-13",
+            }}
+          />
+          <Button
+            intent="primary"
+            size="large"
+            className="group h-13 w-full sm:w-auto max-w-[400px] sm:max-w-none"
+          >
+            Request a Demo
+            <HugeiconsIcon
+              icon={ArrowRight02Icon}
+              size={20}
+              className="rshrink-0 group-hover:translate-x-1 transition-transform"
+            />
           </Button>
         </div>
       </div>
