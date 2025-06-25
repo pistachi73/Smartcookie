@@ -2,7 +2,6 @@
 
 import { buttonStyles } from "@/shared/components/ui/button";
 import { Menu } from "@/shared/components/ui/menu";
-import { useCurrentUser } from "@/shared/hooks/use-current-user";
 import { cn } from "@/shared/lib/classes";
 import {
   Calendar03Icon as Calendar03IconSolid,
@@ -23,7 +22,6 @@ import {
 } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
 import { Link } from "react-aria-components";
 import { MaxWidthWrapper } from "./max-width-wrapper";
 
@@ -72,19 +70,20 @@ const publicNavigation = [
     href: "#features",
   },
   {
+    label: "Highlights",
+    href: "#main-points",
+  },
+  {
     label: "Pricing",
     href: "#pricing",
   },
   {
-    label: "Who we are",
+    label: "About Us",
     href: "#about",
   },
 ];
 
 export const Header = () => {
-  const user = useCurrentUser();
-  const pathname = usePathname();
-
   return (
     <>
       <div aria-hidden="true" className="h-17 bg-white" />

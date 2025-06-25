@@ -179,8 +179,8 @@ export function Hero() {
         </div>
 
         <p className="max-w-[400px] sm:max-w-none mx-auto text-base leading-relaxed text-fg/80 font-medium sm:text-xl text-center text-balance tracking-tight">
-          SmartCookie is a platform that helps you manage your tutoring
-          business. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          SmartCookie is an all-in-one tool that simplifies admin, tracks
+          lessons, and boosts motivation. A second brain to teach smarter.
         </p>
 
         {/* <div className="mt-6 flex flex-row items-center justify-center gap-2">
@@ -210,7 +210,7 @@ export function Hero() {
             size="large"
             className="group h-13 w-full sm:w-auto max-w-[400px] sm:max-w-none"
           >
-            Request a Demo
+            Get a Demo
             <HugeiconsIcon
               icon={ArrowRight02Icon}
               size={20}

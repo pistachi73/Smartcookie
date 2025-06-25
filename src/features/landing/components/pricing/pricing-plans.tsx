@@ -13,10 +13,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shared/components/ui/card";
-import { Heading } from "@/shared/components/ui/heading";
 import { Separator } from "@/shared/components/ui/separator";
 import { ArrowRight02Icon, Tag01Icon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { LandingSectionHeader } from "../landing-section-header";
 import { guestChecks, memberChecks } from "./constants";
 import { PlanFrequencySwitch } from "./frequency-switch";
 
@@ -32,27 +32,12 @@ export const Plans = () => {
       id="pricing"
       className="items-center h-full flex justify-center flex-col space-y-12"
     >
-      <div className="text-center space-y-6">
-        <Badge
-          intent="primary"
-          className="px-4 py-2 text-sm font-medium inline-flex items-center gap-2"
-        >
-          <HugeiconsIcon icon={Tag01Icon} size={16} />
-          Pricing Plans
-        </Badge>
-        <Heading
-          level={2}
-          tracking="tight"
-          className="text-3xl sm:text-4xl font-bold tracking-tighter text-foreground"
-        >
-          Choose the right plan for you!
-        </Heading>
-        <p className="text-lg text-muted-fg max-w-2xl mx-auto">
-          Start free and upgrade as your tutoring business grows. All plans
-          include our core features to help you manage your students
-          effectively.
-        </p>
-      </div>
+      <LandingSectionHeader
+        title="Pricing plans to grow with you"
+        description="Begin with a free plan and scale up as your needs evolve. Each plan provides powerful features to help you teach smarter."
+        badge="Pricing"
+        icon={Tag01Icon}
+      />
 
       <PlanFrequencySwitch
         paymentFrequency={paymentFrequency}
@@ -142,7 +127,7 @@ export const Plans = () => {
             <div className="flex items-center gap-4 relative">
               <p className="flex items-center gap-3">
                 <span className="text-5xl font-bold tracking-tighter tabular-nums text-primary">
-                  {paymentFrequency === "M" ? "9.50 €" : "8.00 €"}
+                  {paymentFrequency === "M" ? "10.00 €" : "8.50 €"}
                 </span>
                 <span className="font-semibold text-sm text-muted-fg">
                   / month

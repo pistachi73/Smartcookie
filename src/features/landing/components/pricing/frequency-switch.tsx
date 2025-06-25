@@ -44,14 +44,16 @@ export const PlanFrequencySwitch = ({
   return (
     <div className="relative flex items-center justify-center p-1 bg-muted rounded-full gap-1t">
       {/* Blob that matches active button dimensions */}
-      <motion.div
-        className="absolute rounded-full h-[calc(100%-8px)] top-1 bg-white shadow-sm border z-0"
-        animate={{
-          left: blobStyle.left,
-          width: blobStyle.width,
-        }}
-        transition={regularSpring}
-      />
+      {blobStyle.width > 0 && (
+        <motion.div
+          className="absolute rounded-full h-[calc(100%-8px)] top-1 bg-white shadow-sm border z-0"
+          animate={{
+            left: blobStyle.left,
+            width: blobStyle.width,
+          }}
+          transition={regularSpring}
+        />
+      )}
 
       {/* Monthly Button */}
       <Button

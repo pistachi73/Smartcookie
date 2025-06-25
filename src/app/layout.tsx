@@ -13,8 +13,9 @@ import { sans } from "./fonts";
 
 // app/layout.tsx
 export const metadata = {
-  title: "SmartCookie",
-  description: "Private tutoring management platform",
+  title: "SmartCookie – A Second Brain for Teachers",
+  description:
+    "SmartCookie is the all-in-one app that acts as a second brain for language teachers, helping them organize their calendars, track lesson progress, and boost student motivation through actionable feedback.",
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },

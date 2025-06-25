@@ -1,8 +1,6 @@
 "use client";
 
 import { MaxWidthWrapper } from "@/shared/components/layout/max-width-wrapper";
-import { Badge } from "@/shared/components/ui/badge";
-import { Heading } from "@/shared/components/ui/heading";
 import { regularSpring } from "@/shared/lib/animation";
 import { cn } from "@/shared/lib/classes";
 import {
@@ -14,36 +12,24 @@ import { Brain02Icon, HealtcareIcon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import * as motion from "motion/react-m";
 import Image from "next/image";
+import { LandingSectionHeader } from "./landing-section-header";
 
 const MotionHugeIcons = motion.create(HugeiconsIcon);
 
-export const MainPoints = () => {
+export const Highlights = () => {
   return (
     <MaxWidthWrapper
       as="section"
+      id="main-points"
       className="items-center h-full flex justify-center flex-col space-y-12"
     >
       {/* Header Section */}
-      <div className="text-center space-y-6">
-        <Badge
-          intent="primary"
-          className="px-4 py-2 text-sm font-medium inline-flex items-center gap-2"
-        >
-          <HugeiconsIcon icon={SparklesIcon} size={16} />
-          Key Features
-        </Badge>
-        <Heading
-          level={2}
-          tracking="tight"
-          className="text-3xl sm:text-4xl font-bold tracking-tighter text-foreground"
-        >
-          Everything you need to succeed
-        </Heading>
-        <p className="text-lg text-muted-fg max-w-2xl mx-auto">
-          Streamline your tutoring workflow with powerful tools designed
-          specifically for private tutors and educators.
-        </p>
-      </div>
+      <LandingSectionHeader
+        title="Built for busy teachers like you"
+        description="Everything you need to manage your lessons, students, and feedback in one intuitive platform. Designed by teachers, for teachers."
+        badge="Highlights"
+        icon={SparklesIcon}
+      />
 
       <div
         className={cn(
@@ -80,10 +66,10 @@ export const MainPoints = () => {
           )}
         >
           <p className="text-xl lg:text-2xl  font-semibold leading-tight">
-            All-in-One Workspace
+            All your tools, one screen.
           </p>
           <p className="text-base text-muted-fg ">
-            All Your Tools, One Screen. All Your Tools, One Screen
+            Organized. Centralized. Effortless.
           </p>
         </div>
 
@@ -93,8 +79,8 @@ export const MainPoints = () => {
           whileHover="animate"
           className={cn(
             "group flex flex-col items-center justify-center overflow-hidden relative  bg-primary-tint rounded-xl p-6 md:p-8",
-            "row-start-2 col-start-1 col-span-2 row-span-1",
-            "sm:row-start-1 sm:col-start-1 sm:col-span-2 sm:row-span-1",
+            "row-start-2 col-start-1 col-span-2 row-span-1 py-12",
+            "sm:py-0 sm:row-start-1 sm:col-start-1 sm:col-span-2 sm:row-span-1",
             "lg:row-start-1 lg:col-start-3 lg:col-span-2 lg:row-span-1",
           )}
         >
@@ -128,7 +114,7 @@ export const MainPoints = () => {
             transition={regularSpring}
             className=" leading-0 text-base font-medium text-center text-balance"
           >
-            Track Emotions & Engagemen
+            Monitor motivation over time
           </motion.p>
         </motion.div>
 
@@ -136,7 +122,7 @@ export const MainPoints = () => {
         <div
           className={cn(
             " relative overflow-hidden rounded-xl p-6 md:p-8",
-            "row-start-5 col-start-1 col-span-2 row-span-1",
+            "row-start-6 col-start-1 col-span-2 row-span-1",
             "sm:row-start-1 sm:col-start-3 sm:col-span-2 sm:row-span-1",
             "aspect-video lg:row-start-1 lg:col-start-5 lg:col-span-2 lg:row-span-1",
           )}
@@ -174,26 +160,26 @@ export const MainPoints = () => {
               className="group-hover:-rotate-5 transition-transform"
             />
           </div>
-          <blockquote className="text-center text-sm xl:text-base font-medium text-foreground leading-relaxed relative ">
-            This platform transformed how I manage my tutoring sessions.
+          <blockquote className="text-center text-base xl:text-base font-medium leading-relaxed relative text-pretty">
+            Focus on teaching, trust everything else to SmartCookie.
           </blockquote>
         </div>
 
         {/* Time saved */}
         <div
           className={cn(
-            "group flex flex-col justify-between bg-accent rounded-md p-6 md:p-8",
-            "row-start-6 col-start-1 col-span-1 row-span-1",
+            "group flex flex-col justify-between bg-muted rounded-md p-6 md:p-8",
+            "row-start-5 col-start-1 col-span-1 row-span-1",
             "aspect-square sm:row-start-3 sm:col-start-3 sm:col-span-1 sm:row-span-1",
             "lg:aspect-square lg:row-start-3 lg:col-start-3 lg:col-span-1 lg:row-span-1",
           )}
         >
           <p className="text-muted-fg text-base lg:text-sm xl:text-base">
-            Time saved
+            Trusted by
           </p>
           <div className="relative w-fit">
             <p className="text-5xl sm:text-4xl xl:text-5xl font-bold tracking-tight tabular-nums">
-              90%
+              95%
             </p>
             <div className="absolute top-full left-0 bg-primary w-full scale-x-0 group-hover:scale-x-100 origin-left transition-transform h-1 rounded-sm" />
           </div>
@@ -205,7 +191,7 @@ export const MainPoints = () => {
           whileHover="animate"
           className={cn(
             "group bg-primary-tint flex flex-col items-center justify-center rounded-md",
-            "row-start-6 col-start-2 col-span-1 row-span-1",
+            "row-start-5 col-start-2 col-span-1 row-span-1",
             "aspect-square sm:row-start-3 sm:col-start-4 sm:col-span-1 sm:row-span-1",
             "lg:aspect-square lg:row-start-3 lg:col-start-4 lg:col-span-1 lg:row-span-1",
           )}
@@ -240,7 +226,7 @@ export const MainPoints = () => {
             transition={regularSpring}
             className=" leading-0 text-base font-medium text-center text-balance"
           >
-            Your external brain
+            Your second brain
           </motion.p>
         </motion.div>
 
@@ -261,12 +247,12 @@ export const MainPoints = () => {
               </span>
             </p>
             <div className="text-xl lg:text-2xl font-semibold  mb-1 shrink-0 text-nowrap">
-              Tools Replaced
+              Hours Saved Weekly
             </div>
           </div>
           <p className="text-muted-fg text-base">
-            The average teacher uses 12 different tools to manage their. The
-            average teacher uses 12 different tools to manage their
+            Teachers save 12+ hours weekly by trusting SmartCookie to manage
+            their admin.
           </p>
         </div>
       </div>

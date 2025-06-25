@@ -1,13 +1,11 @@
 "use client";
 
 import { MaxWidthWrapper } from "@/shared/components/layout/max-width-wrapper";
-import { Badge } from "@/shared/components/ui/badge";
-import { Heading } from "@/shared/components/ui/heading";
 import { UserGroupIcon } from "@hugeicons-pro/core-solid-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 
 import { cn } from "@/shared/lib/classes";
 import Image from "next/image";
+import { LandingSectionHeader } from "../landing-section-header";
 import martinaImage from "./assets/martina.jpg";
 import oscarImage from "./assets/oscar.jpeg";
 const teamMembers = [
@@ -20,28 +18,33 @@ const teamMembers = [
     companies: [
       {
         src: "/logos/adidas_logo.svg",
-        alt: "Adidas",
+        alt: "Adidas Logo",
         id: "martina-adidas-logo",
       },
       {
         src: "/logos/astrazeneca_text_logo.svg",
-        alt: "AstraZeneca",
+        alt: "AstraZeneca Logo",
         id: "martina-astrazeneca-logo",
       },
       {
         src: "/logos/IBM_logo.svg",
-        alt: "IBM",
+        alt: "IBM Logo",
         id: "martina-ibm-logo",
       },
       {
         src: "/logos/roche_Logo.svg",
-        alt: "Roche",
+        alt: "Roche Logo",
         id: "martina-roche-logo",
       },
       {
         src: "/logos/uab_logo.svg",
-        alt: "UAB",
+        alt: "UAB Logo",
         id: "martina-uab-logo",
+      },
+      {
+        src: "/logos/coca_cola_logo.svg",
+        alt: "Coca-Cola Logo",
+        id: "martina-coca-cola-logo",
       },
     ],
     reversed: false,
@@ -55,17 +58,17 @@ const teamMembers = [
     companies: [
       {
         src: "/logos/gartner_logo.svg",
-        alt: "Gartner",
+        alt: "Gartner Logo",
         id: "oscar-gartner-logo",
       },
       {
         src: "/logos/boehringer_ingelheim_logo.svg",
-        alt: "Boehringer Ingelheim",
+        alt: "Boehringer Ingelheim Logo",
         id: "oscar-boehringer-logo",
       },
       {
         src: "/logos/new_work_logo.svg",
-        alt: "New Work",
+        alt: "New Work Logo",
         id: "oscar-newwork-logo",
       },
     ],
@@ -73,7 +76,7 @@ const teamMembers = [
   },
 ];
 
-export const WhoWeAre = () => {
+export const AboutUs = () => {
   return (
     <MaxWidthWrapper
       as="section"
@@ -81,26 +84,12 @@ export const WhoWeAre = () => {
       className="items-center h-full flex justify-center flex-col space-y-12"
     >
       {/* Header Section */}
-      <div className="text-center space-y-6">
-        <Badge
-          intent="primary"
-          className="px-4 py-2 text-sm font-medium inline-flex items-center gap-2"
-        >
-          <HugeiconsIcon icon={UserGroupIcon} size={16} />
-          Our Team
-        </Badge>
-        <Heading
-          level={2}
-          tracking="tight"
-          className="text-3xl sm:text-4xl font-bold tracking-tighter text-foreground"
-        >
-          Meet the minds behind the magic
-        </Heading>
-        <p className="text-lg text-muted-fg max-w-2xl mx-auto">
-          A passionate team of educators and technologists dedicated to
-          transforming the tutoring experience.
-        </p>
-      </div>
+      <LandingSectionHeader
+        title="The faces behind SmartCookie"
+        description="A language teacher and a software developer with over 15 years of combined experience, uniting forces to empower busy professionals like you."
+        badge="About us"
+        icon={UserGroupIcon}
+      />
 
       <div className="space-y-14">
         {teamMembers.map(

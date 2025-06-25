@@ -5,234 +5,179 @@ import { cn } from "@/shared/lib/classes";
 import {
   ArrowRight02Icon,
   Calendar03Icon,
+  Chart02Icon,
+  FolderLibraryIcon,
+  HealtcareIcon,
+  StickyNote02Icon,
 } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 
 export const Features = () => {
   return (
-    <MaxWidthWrapper className="space-y-8" id="features">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 ">
-        <Card
-          className={cn(
-            "p-0! pb-1! group relative",
-            "rounded-xl border-transparent bg-custom-sage-bg-tint/30 border-2  overflow-hidden",
-            "hover:border-custom-sage-bg transition-all duration-300",
-          )}
-        >
-          <div
-            className={cn(
-              "absolute top-4 right-4",
-              "size-10 rounded-full bg-white flex items-center justify-center",
-              " group-hover:translate-x-1 transition-transform",
-            )}
-          >
-            <HugeiconsIcon icon={ArrowRight02Icon} size={22} />
-          </div>
-          {/* Text Content */}
-          <div className="flex flex-col gap-2 px-6 py-6">
-            <div className="flex items-center gap-2">
-              <div className="size-8 rounded-sm bg-white flex items-center justify-center shadow-sm">
-                <HugeiconsIcon
-                  icon={Calendar03Icon}
-                  size={16}
-                  className="text-custom-sage-bg-shade"
-                />
-              </div>
-              <p className="text-base font-medium">Integrated Calendar</p>
-            </div>
-            <div className="w-full flex items-center justify-between">
-              <Heading>Schedule Lessons Effortlessly</Heading>
-            </div>
-            <p className="text-sm text-fg/80">
-              Streamline your booking process with intelligent scheduling that
-              adapts to your availability
-            </p>
-          </div>
-
-          {/* Calendar Image with Gradient */}
-          <div className="w-full pr-1 h-full">
-            <div className="flex-1 relative h-full w-full">
-              <img
-                src="/calenadar_2.png"
-                alt="Calendar interface"
-                className="object-cover object-top rounded-lg h-auto w-full group-hover:scale-105 transition-transform duration-300 origin-bottom-right"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-              {/* Subtle gradient overlay at bottom right */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-transparent to-white/20 rounded-lg" />
-            </div>
-          </div>
-        </Card>
-        <Card
-          className={cn(
-            "p-0! pb-1!",
-            "rounded-xl border-none bg-custom-blueberry-bg-tint/30 border border-custom-sage-bg overflow-hidden",
-          )}
-        >
-          {/* Text Content */}
-          <div className="flex flex-col gap-2 px-6 py-6">
-            <div className="flex items-center gap-2">
-              <div className="size-8 rounded-sm bg-white flex items-center justify-center shadow-sm">
-                <HugeiconsIcon
-                  icon={Calendar03Icon}
-                  size={16}
-                  className="text-custom-sage-bg-shade"
-                />
-              </div>
-              <p className="text-base font-medium">Integrated Calendar</p>
-            </div>
-            <Heading>Schedule Lessons Effortlessly</Heading>
-            <p className="text-sm text-fg/80">
-              Streamline your booking process with intelligent scheduling that
-              adapts to your availability
-            </p>
-          </div>
-
-          {/* Calendar Image with Gradient */}
-          <div className="w-full pr-1 h-full">
-            <div className="flex-1 relative h-full w-full">
-              <img
-                src="/quick_notes.png"
-                alt="Calendar interface"
-                className="object-cover object-top rounded-lg h-auto w-full"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-              {/* Subtle gradient overlay at bottom right */}
-            </div>
-          </div>
-        </Card>
+    <MaxWidthWrapper className="md:space-y-8 space-y-4" id="features">
+      <div className="grid grid-cols-1 md:grid-cols-2 md:gap-8 gap-4">
+        <VerticalFeatureCard
+          title="Schedule Lessons Effortlessly"
+          subtitle="Integrated Calendar"
+          description="Streamline your booking process with intelligent scheduling that adapts to your availability"
+          image={{ src: "/calendar.png", alt: "Calendar interface" }}
+          icon={Calendar03Icon}
+        />
+        <VerticalFeatureCard
+          title="Capture Notes Easily"
+          subtitle="Next-Level Notes"
+          description="Keep all your key details linked to students and lessons. Forget about messy or lost notes."
+          image={{ src: "/quick_notes.png", alt: "Quick Notes" }}
+          icon={StickyNote02Icon}
+        />
       </div>
-      <Card
-        className={cn(
-          "p-0! pb-1! group",
-          "flex flex-row rounded-xl bg-custom-flamingo-bg-tint/30 border-2 border-transparent overflow-hidden",
-          "hover:border-custom-flamingo-bg transition-all duration-300",
-        )}
-      >
-        {/* Text Content */}
-        <div className="flex flex-col justify-between pb-4 pl-6">
-          <div className="flex flex-col gap-2 py-6">
-            <div className="flex items-center gap-2">
-              <div className="size-8 rounded-sm bg-white flex items-center justify-center shadow-sm">
-                <HugeiconsIcon
-                  icon={Calendar03Icon}
-                  size={16}
-                  className="text-custom-flamingo-bg"
-                />
-              </div>
-              <p className="text-base font-medium">Integrated Calendar</p>
-            </div>
-            <Heading>Schedule Lessons Effortlessly</Heading>
-            <p className="text-base text-fg/80">
-              Streamline your booking process with intelligent scheduling that
-              adapts to your availability
-            </p>
-          </div>
-          <div
-            className={cn(
-              "size-10 rounded-full bg-white flex items-center justify-center",
-              " group-hover:translate-x-1 transition-transform",
-            )}
-          >
-            <HugeiconsIcon icon={ArrowRight02Icon} size={22} />
-          </div>
-        </div>
-
-        {/* Calendar Image with Gradient */}
-        <div className="w-full pr-1 h-full">
-          <div className="flex-1 relative h-full w-full">
-            <img
-              src="/feedback.png"
-              alt="Calendar interface"
-              className="object-cover object-top rounded-lg h-auto w-full group-hover:scale-103 transition-transform duration-300 origin-bottom-right"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
-            {/* Subtle gradient overlay at bottom right */}
-          </div>
-        </div>
-      </Card>
-
-      <div className="grid grid-cols-2 gap-6 ">
-        <Card
-          className={cn(
-            "p-0! pb-1!",
-            "rounded-xl border-none bg-custom-sage-bg-tint border border-custom-sage-bg overflow-hidden",
-            "bg-[color-mix(in_oklab,var(--color-custom-sage-bg),white_50%)]",
-          )}
-        >
-          {/* Text Content */}
-          <div className="flex flex-col gap-2 px-6 py-6">
-            <div className="flex items-center gap-2">
-              <div className="size-8 rounded-sm bg-white flex items-center justify-center shadow-sm">
-                <HugeiconsIcon
-                  icon={Calendar03Icon}
-                  size={16}
-                  className="text-custom-sage-bg-shade"
-                />
-              </div>
-              <p className="text-base font-medium">Integrated Calendar</p>
-            </div>
-            <Heading>Schedule Lessons Effortlessly</Heading>
-            <p className="text-sm text-fg/80">
-              Streamline your booking process with intelligent scheduling that
-              adapts to your availability
-            </p>
-          </div>
-
-          {/* Calendar Image with Gradient */}
-          <div className="w-full pr-1 h-full">
-            <div className="flex-1 relative h-full w-full">
-              <img
-                src="/calenadar_2.png"
-                alt="Calendar interface"
-                className="object-cover object-top rounded-lg h-auto w-full"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-              {/* Subtle gradient overlay at bottom right */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-transparent to-white/20 rounded-lg" />
-            </div>
-          </div>
-        </Card>
-        <Card
-          className={cn(
-            "p-0! pb-1!",
-            "rounded-xl border-none bg-custom-sage-bg-tint border border-custom-sage-bg overflow-hidden",
-            "bg-[color-mix(in_oklab,var(--color-custom-blueberry-bg),white_80%)] ",
-          )}
-        >
-          {/* Text Content */}
-          <div className="flex flex-col gap-2 px-6 py-6">
-            <div className="flex items-center gap-2">
-              <div className="size-8 rounded-sm bg-white flex items-center justify-center shadow-sm">
-                <HugeiconsIcon
-                  icon={Calendar03Icon}
-                  size={16}
-                  className="text-custom-sage-bg-shade"
-                />
-              </div>
-              <p className="text-base font-medium">Integrated Calendar</p>
-            </div>
-            <Heading>Schedule Lessons Effortlessly</Heading>
-            <p className="text-sm text-fg/80">
-              Streamline your booking process with intelligent scheduling that
-              adapts to your availability
-            </p>
-          </div>
-
-          {/* Calendar Image with Gradient */}
-          <div className="w-full pr-1 h-full">
-            <div className="flex-1 relative h-full w-full">
-              <img
-                src="/quick_notes.png"
-                alt="Calendar interface"
-                className="object-cover object-top rounded-lg h-auto w-full"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-              {/* Subtle gradient overlay at bottom right */}
-            </div>
-          </div>
-        </Card>
+      <HorizontalFeatureCard />
+      <div className="grid grid-cols-1 md:grid-cols-2 md:gap-8 gap-4">
+        <VerticalFeatureCard
+          title="Manage Courses Smoothly"
+          subtitle="Smart Dashboard"
+          description="Keep all your courses organized in one place. Quickly switch between classes without losing focus."
+          image={{ src: "/hubs.png", alt: "Hubs" }}
+          icon={FolderLibraryIcon}
+        />
+        <VerticalFeatureCard
+          title="Track Workload Effortlessly"
+          subtitle="Stay on Top of Workload"
+          description="Get a clear overview of your tasks and lessons. Balance your schedule and avoid burnout."
+          image={{ src: "/dashboard.png", alt: "Dashboard" }}
+          icon={Chart02Icon}
+        />
       </div>
     </MaxWidthWrapper>
+  );
+};
+
+type VerticalFeatureCardProps = {
+  title: string;
+  subtitle: string;
+  description: string;
+  image: {
+    src: string;
+    alt: string;
+  };
+  icon: typeof Calendar03Icon;
+};
+
+export const VerticalFeatureCard = ({
+  title,
+  subtitle,
+  description,
+  image,
+  icon,
+}: VerticalFeatureCardProps) => {
+  return (
+    <Card
+      className={cn(
+        "p-0! pb-0! group relative",
+        "rounded-xl border-transparent border-2  overflow-hidden justify-between",
+        "transition-all duration-300",
+        "bg-muted hover:border-muted-fg/80",
+      )}
+    >
+      <div
+        className={cn(
+          "absolute top-4 right-4",
+          "size-10 rounded-full bg-white flex items-center justify-center",
+          " group-hover:translate-x-1 transition-transform",
+        )}
+      >
+        <HugeiconsIcon icon={ArrowRight02Icon} size={22} />
+      </div>
+      {/* Text Content */}
+      <div className="flex flex-col gap-2 p-6">
+        <div className="flex items-center gap-2">
+          <div className="size-8 rounded-sm bg-white flex items-center justify-center shadow-sm">
+            <HugeiconsIcon icon={icon} size={16} className="text-primary" />
+          </div>
+          <p className="text-base font-medium">{subtitle}</p>
+        </div>
+        <div className="w-full flex items-center justify-between">
+          <Heading>{title}</Heading>
+        </div>
+        <p className="text-muted-fg">{description}</p>
+      </div>
+
+      {/* Calendar Image with Gradient */}
+      <div className="w-full relative">
+        <img
+          src={image.src}
+          alt={image.alt}
+          className="object-cover object-top rounded-lg h-auto w-full group-hover:scale-102 transition-transform duration-300 origin-center"
+          sizes="(max-width: 768px) 100vw, 50vw"
+        />
+        {/* Subtle gradient overlay at bottom right */}
+      </div>
+      <div
+        className={cn(
+          "absolute h-[30px] w-full bottom-0 left-0 bg-gradient-to-t",
+          "from-muted/70 to-muted/0",
+        )}
+      />
+    </Card>
+  );
+};
+
+export const HorizontalFeatureCard = () => {
+  return (
+    <Card
+      className={cn(
+        "p-0!  group relative flex-col lg:flex-row",
+        "flex rounded-xl bg-custom-flamingo-bg-tint/30 border-2 border-transparent overflow-hidden",
+        "hover:border-primary transition-all duration-300 bg-primary-tint",
+      )}
+    >
+      <div
+        className={cn(
+          "absolute top-4 right-4 lg:top-auto lg:bottom-4 lg:left-4",
+          "size-10 rounded-full bg-white flex items-center justify-center",
+          " group-hover:translate-x-1 transition-transform",
+        )}
+      >
+        <HugeiconsIcon icon={ArrowRight02Icon} size={22} />
+      </div>
+      {/* Text Content */}
+      <div className="lg:basis-[40%] lg:pb-22 flex flex-row lg:flex-col justify-between px-6 lg:pr-0 lg:flex-1">
+        <div className="flex flex-col gap-2 py-6">
+          <div className="flex items-center gap-2">
+            <div className="size-8 rounded-sm bg-white flex items-center justify-center shadow-sm">
+              <HugeiconsIcon
+                icon={HealtcareIcon}
+                size={16}
+                className="text-primary"
+              />
+            </div>
+            <p className="text-base font-medium">
+              Frictionless Feedback Tracking.
+            </p>
+          </div>
+          <Heading>Collect Feedback Thoughtfully</Heading>
+          <p className="text-base text-fg/80">
+            Record meaningful insights on your own terms. Use meaningful
+            feedback to adapt and improve your teaching.
+          </p>
+        </div>
+      </div>
+
+      {/* Calendar Image with Gradient */}
+      <div className="relative lg:flex-1 w-full flex items-end justify-end lg:basis-[60%]">
+        <img
+          src="/feedback.png"
+          alt="Calendar interface"
+          className="object-cover object-top rounded-lg h-auto w-full group-hover:scale-102 transition-transform duration-300 origin-bottom-right"
+          sizes="(max-width: 768px) 100vw, 50vw"
+        />
+        {/* Subtle gradient overlay at bottom right */}
+        <div
+          className={cn(
+            "absolute h-[30px] w-full bottom-0 left-0 bg-gradient-to-t from-primary-tint/70 to-primary-tint/0",
+          )}
+        />
+      </div>
+    </Card>
   );
 };
