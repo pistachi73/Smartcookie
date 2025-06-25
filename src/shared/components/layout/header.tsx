@@ -96,7 +96,7 @@ export const Header = () => {
           <div
             className={cn(
               "bg-white rounded-md md:rounded-xl flex shrink-0 items-center md:justify-center justify-between p-1 gap-1",
-              "shadow-md border-input",
+              "shadow-sm md:shadow-md border-input",
             )}
           >
             <div className="px-3 flex items-center gap-2 bg-primary-tint h-11 rounded-lg">

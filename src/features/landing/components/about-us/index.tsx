@@ -106,7 +106,15 @@ export const AboutUs = () => {
                   reversed ? " md:col-start-2" : "row-start-1 col-start-1",
                 )}
               >
-                <Image src={image} alt={name} fill className="object-cover" />
+                <Image
+                  src={image}
+                  alt={name}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw"
+                  className="object-cover"
+                  priority={false}
+                  loading="lazy"
+                />
               </div>
               <section
                 className={cn(

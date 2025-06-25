@@ -1,11 +1,17 @@
 "use client";
 
+import { createEmailMarketing } from "@/data-access/email-marketing/mutations";
+import { CreateEmailMarketingSchema } from "@/data-access/email-marketing/schemas";
 import { MaxWidthWrapper } from "@/shared/components/layout/max-width-wrapper";
 import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
 import { Button } from "@/shared/components/ui/button";
+import { Form } from "@/shared/components/ui/form";
 import { Heading } from "@/shared/components/ui/heading";
+import { ProgressCircle } from "@/shared/components/ui/progress-circle";
 import { TextField } from "@/shared/components/ui/text-field";
+import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 import { cn } from "@/shared/lib/classes";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   StickyNote02Icon,
   TableIcon,
@@ -16,6 +22,9 @@ import { ArrowRight02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
 const animatedTexts = [
   { text: "admin.", icon: UserSettingsIcon },
@@ -197,28 +206,75 @@ export function Hero() {
           </Button>
         </div> */}
 
-        <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2">
+        <EmailMarketingForm />
+      </div>
+    </MaxWidthWrapper>
+  );
+}
+
+const formSchema = z.object({
+  email: z.string().email(),
+});
+
+export const EmailMarketingForm = () => {
+  const { mutate, isPending } = useProtectedMutation({
+    schema: CreateEmailMarketingSchema,
+    mutationFn: createEmailMarketing,
+    onSuccess: (data) => {
+      toast.success(data.message, { position: "top-center" });
+      form.reset();
+    },
+  });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+    },
+  });
+
+  const onSubmit = (data: z.infer<typeof formSchema>) => {
+    mutate(data);
+  };
+
+  return (
+    <Form
+      onSubmit={form.handleSubmit(onSubmit)}
+      className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-2"
+    >
+      <Controller
+        control={form.control}
+        name="email"
+        render={({ field }) => (
           <TextField
             placeholder="Enter your email"
             className={{
               primitive: "w-full max-w-[400px]",
               fieldGroup: "w-full sm:w-[400px] h-13",
             }}
+            {...field}
           />
-          <Button
-            intent="primary"
-            size="large"
-            className="group h-13 w-full sm:w-auto max-w-[400px] sm:max-w-none"
-          >
-            Get a Demo
-            <HugeiconsIcon
-              icon={ArrowRight02Icon}
-              size={20}
-              className="rshrink-0 group-hover:translate-x-1 transition-transform"
-            />
-          </Button>
-        </div>
-      </div>
-    </MaxWidthWrapper>
+        )}
+      />
+
+      <Button
+        intent="primary"
+        size="large"
+        type="submit"
+        isPending={isPending}
+        className="group h-13 w-full sm:w-auto max-w-[400px] sm:max-w-none gap-6"
+      >
+        {isPending ? "Sending..." : "Get a Demo"}
+        {isPending ? (
+          <ProgressCircle isIndeterminate className="size-5" />
+        ) : (
+          <HugeiconsIcon
+            icon={ArrowRight02Icon}
+            size={20}
+            className="rshrink-0 group-hover:translate-x-1 transition-transform"
+          />
+        )}
+      </Button>
+    </Form>
   );
-}
+};

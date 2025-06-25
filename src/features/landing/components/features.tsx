@@ -11,6 +11,7 @@ import {
   StickyNote02Icon,
 } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import Image, { type ImageProps } from "next/image";
 
 export const Features = () => {
   return (
@@ -20,14 +21,24 @@ export const Features = () => {
           title="Schedule Lessons Effortlessly"
           subtitle="Integrated Calendar"
           description="Streamline your booking process with intelligent scheduling that adapts to your availability"
-          image={{ src: "/calendar.png", alt: "Calendar interface" }}
+          image={{
+            src: "/calendar.png",
+            alt: "Calendar interface",
+            priority: true,
+            loading: "eager",
+          }}
           icon={Calendar03Icon}
         />
         <VerticalFeatureCard
           title="Capture Notes Easily"
           subtitle="Next-Level Notes"
           description="Keep all your key details linked to students and lessons. Forget about messy or lost notes."
-          image={{ src: "/quick_notes.png", alt: "Quick Notes" }}
+          image={{
+            src: "/quick_notes.png",
+            alt: "Quick Notes",
+            priority: true,
+            loading: "eager",
+          }}
           icon={StickyNote02Icon}
         />
       </div>
@@ -37,14 +48,24 @@ export const Features = () => {
           title="Manage Courses Smoothly"
           subtitle="Smart Dashboard"
           description="Keep all your courses organized in one place. Quickly switch between classes without losing focus."
-          image={{ src: "/hubs.png", alt: "Hubs" }}
+          image={{
+            src: "/hubs.png",
+            alt: "Hubs",
+            priority: false,
+            loading: "lazy",
+          }}
           icon={FolderLibraryIcon}
         />
         <VerticalFeatureCard
           title="Track Workload Effortlessly"
           subtitle="Stay on Top of Workload"
           description="Get a clear overview of your tasks and lessons. Balance your schedule and avoid burnout."
-          image={{ src: "/dashboard.png", alt: "Dashboard" }}
+          image={{
+            src: "/dashboard.png",
+            alt: "Dashboard",
+            priority: false,
+            loading: "lazy",
+          }}
           icon={Chart02Icon}
         />
       </div>
@@ -59,6 +80,8 @@ type VerticalFeatureCardProps = {
   image: {
     src: string;
     alt: string;
+    priority?: boolean;
+    loading?: ImageProps["loading"];
   };
   icon: typeof Calendar03Icon;
 };
@@ -103,12 +126,14 @@ export const VerticalFeatureCard = ({
       </div>
 
       {/* Calendar Image with Gradient */}
-      <div className="w-full relative">
-        <img
+      <div className="w-full relative aspect-video">
+        <Image
           src={image.src}
           alt={image.alt}
-          className="object-cover object-top rounded-lg h-auto w-full group-hover:scale-102 transition-transform duration-300 origin-center"
-          sizes="(max-width: 768px) 100vw, 50vw"
+          fill
+          className="aspect-video object-cover object-top rounded-lg h-auto w-full group-hover:scale-102 transition-transform duration-300 origin-center"
+          sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 550px"
+          priority={image.priority}
         />
         {/* Subtle gradient overlay at bottom right */}
       </div>
@@ -164,14 +189,16 @@ export const HorizontalFeatureCard = () => {
       </div>
 
       {/* Calendar Image with Gradient */}
-      <div className="relative lg:flex-1 w-full flex items-end justify-end lg:basis-[60%]">
-        <img
+      <div className="aspect-[64/27] relative lg:flex-1 w-full flex items-end justify-end lg:basis-[60%] shrink-0">
+        <Image
           src="/feedback.png"
           alt="Calendar interface"
-          className="object-cover object-top rounded-lg h-auto w-full group-hover:scale-102 transition-transform duration-300 origin-bottom-right"
-          sizes="(max-width: 768px) 100vw, 50vw"
+          fill
+          className="aspect-[64/27] object-cover object-top rounded-lg h-auto w-full group-hover:scale-102 transition-transform duration-300 origin-bottom-right"
+          sizes="(max-width: 1024px) 80vw, 600px"
+          priority={false}
+          loading="lazy"
         />
-        {/* Subtle gradient overlay at bottom right */}
         <div
           className={cn(
             "absolute h-[30px] w-full bottom-0 left-0 bg-gradient-to-t from-primary-tint/70 to-primary-tint/0",

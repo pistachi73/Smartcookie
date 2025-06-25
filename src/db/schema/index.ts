@@ -2,6 +2,7 @@ export * from "./account";
 export * from "./answers";
 export * from "./attendance";
 export * from "./billing";
+export * from "./email-marketing";
 export * from "./event";
 export * from "./event-occurrence";
 export * from "./event-participant";
