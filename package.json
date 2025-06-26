@@ -34,6 +34,7 @@
     "@react-types/shared": "^3.29.1",
     "@t3-oss/env-nextjs": "^0.11.1",
     "@tanstack/react-query": "^5.62.3",
+    "@vercel/analytics": "^1.5.0",
     "babel-plugin-react-compiler": "19.0.0-beta-3229e95-20250315",
     "class-variance-authority": "^0.7.1",
     "date-fns": "^4.1.0",

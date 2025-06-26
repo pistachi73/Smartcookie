@@ -8,6 +8,7 @@ import { getSsrViewport } from "@/shared/components/layout/viewport-context/util
 import { ViewportProvider } from "@/shared/components/layout/viewport-context/viewport-context";
 import { getHeaders } from "@/shared/lib/get-headers";
 import { Toast } from "@/ui/toast";
+import { Analytics } from "@vercel/analytics/next";
 import { SessionProvider } from "next-auth/react";
 import { sans } from "./fonts";
 
@@ -16,6 +17,28 @@ export const metadata = {
   title: "SmartCookie – A Second Brain for Teachers",
   description:
     "SmartCookie is the all-in-one app that acts as a second brain for language teachers, helping them organize their calendars, track lesson progress, and boost student motivation through actionable feedback.",
+  keywords: [
+    "language teacher app",
+    "teaching organization",
+    "lesson tracking",
+    "student motivation",
+    "second brain for teachers",
+  ],
+  authors: [{ name: "SmartCookie Team" }],
+  creator: "SmartCookie",
+  publisher: "SmartCookie",
+  metadataBase: new URL("https://smartcookieapp.com"),
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
@@ -46,13 +69,13 @@ export default async function RootLayout({
     >
       {/* <ReactScan /> */}
       <body className={`${sans.variable} font-sans h-full`}>
+        <Analytics />
         <Providers>
           <SessionProvider session={session}>
             <ViewportProvider ssrViewport={ssrViewport}>
               {children}
               {authModal}
               <Toast />
-              {/* <Toaster /> */}
               <ToastNotification />
             </ViewportProvider>
           </SessionProvider>

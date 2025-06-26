@@ -99,7 +99,7 @@ export const Header = () => {
               "shadow-sm md:shadow-md border-input",
             )}
           >
-            <div className="px-3 flex items-center gap-2 bg-primary-tint h-11 rounded-lg">
+            <div className="px-3 flex items-center gap-2 md:bg-primary-tint h-11 rounded-lg">
               <Image src="/Logo.svg" alt="SmartCookie" height={28} width={14} />
               <p className="text-base font-medium text-primary">SmartCookie</p>
             </div>

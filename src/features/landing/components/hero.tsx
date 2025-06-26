@@ -56,7 +56,7 @@ export function Hero() {
   return (
     <MaxWidthWrapper
       as="section"
-      className="flex items-center py-24 md:py-0 justify-center md:min-h-[400px] md:h-[calc(80vh)] md:max-h-[500px]"
+      className="flex items-center  py-16 sm:py-24 md:py-0 justify-center md:min-h-[400px] md:h-[calc(80vh)] md:max-h-[500px]"
     >
       <div className="mx-auto max-w-4xl text-center">
         <div className="mb-4">
@@ -235,6 +235,9 @@ export const EmailMarketingForm = () => {
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     mutate(data);
+    // posthog.capture("email_marketing_form_submitted", {
+    //   email: data.email,
+    // });
   };
 
   return (
