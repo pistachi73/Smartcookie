@@ -1,14 +1,14 @@
 export default [
   {
-    name: "Oscar Pulido",
-    email: "oscarpulido98@gmail.com",
+    name: "Martina Monreal",
+    email: "infomartinamotiva@gmail.com",
     password: "password",
     role: "USER",
     isTwoFactorEnabled: false,
   },
   {
-    name: "Martina Monreal",
-    email: "infomartinamotiva@gmail.com",
+    name: "Oscar Pulido",
+    email: "oscarpulido98@gmail.com",
     password: "password",
     role: "USER",
     isTwoFactorEnabled: false,

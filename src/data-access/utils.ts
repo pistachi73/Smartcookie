@@ -61,3 +61,13 @@ export const getTimestampISO = (date: Column, as: string) =>
   sql<string>`to_char(${date} at time zone 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"')`.as(
     as,
   );
+
+export const generateSecureRandomInt = (
+  min = 100_000,
+  max = 1_000_000,
+): string => {
+  const array = new Uint32Array(1);
+  crypto.getRandomValues(array);
+  const randomInt = ((array[0]! % (max - min)) + min).toString();
+  return randomInt;
+};

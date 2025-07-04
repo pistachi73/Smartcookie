@@ -144,6 +144,7 @@
   --color-custom-slate-border: var(--custom-slate-border);
 
   --animate-password-input-div-down: password-input-div-down 250ms ease-out 0s 1 normal none running;
+  --animate-password-input-p-down: password-input-p-down 250ms ease-out 100ms 1 normal forwards running;
   
   @keyframes password-input-div-down {
     from {
@@ -155,6 +156,17 @@
       opacity: 1;
       transform: translateY(0px);
       max-height: 100px;
+    }
+  }
+
+  @keyframes password-input-p-down {
+    from {
+      opacity: 0;
+      transform: translateY(-5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0px);
     }
   }
   

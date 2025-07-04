@@ -1,5 +1,5 @@
-import { auth } from "@/core/config/auth-config";
 import { cache } from "react";
+import { auth } from "@/core/config/auth-config";
 
 export const currentUser = cache(async () => {
   const session = await auth();

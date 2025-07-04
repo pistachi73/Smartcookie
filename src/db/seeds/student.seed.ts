@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import students from "./data/students.seed-data";
 
 export default async function seed(db: DB) {
+  console.log("Seeding students...");
   const user = await db.query.user.findFirst({
     where: eq(schema.user.email, "oscarpulido98@gmail.com"),
   });

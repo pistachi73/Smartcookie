@@ -5,6 +5,5 @@ import { useMemo } from "react";
 export const useCurrentUser = () => {
   const session = useSession();
   const user = useMemo(() => session.data?.user as ExtendedUser, [session]);
-
-  return user;
+  return user || null;
 };

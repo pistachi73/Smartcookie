@@ -1,6 +1,5 @@
 import { useAuthStore } from "@/features/auth/store/auth-store-provider";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAction } from "next-safe-action/hooks";
 import { Controller, useForm } from "react-hook-form";
 import type { z } from "zod";
 import { useShallow } from "zustand/react/shallow";
@@ -9,11 +8,15 @@ import { authSchema } from "../lib/validation";
 import { FormWrapper } from "./form-wrapper";
 import { SocialButton } from "./oauth-button";
 
+import { getUserAndAccountByEmail } from "@/data-access/user/queries";
+import { GetUserAndAccountByEmailSchema } from "@/data-access/user/schemas";
+import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 import { Button } from "@/ui/button";
 import { Form } from "@/ui/form";
 import { ProgressCircle } from "@/ui/progress-circle";
 import { TextField } from "@/ui/text-field";
-import { getUserAndAccountByEmailAction } from "../actions";
+import { signIn } from "next-auth/react";
+import { toast } from "sonner";
 
 const authLandingSchema = authSchema.pick({
   email: true,
@@ -31,27 +34,41 @@ const useAuthLanding = () =>
 
 export const Landing = () => {
   const { setStep, setData } = useAuthLanding();
-  const { executeAsync: getUserAndAccountByEmailAsync, isExecuting } =
-    useAction(getUserAndAccountByEmailAction);
+
+  const { mutateAsync: getUserAndAccountByEmailAsync, isPending } =
+    useProtectedMutation({
+      requireAuth: false,
+      schema: GetUserAndAccountByEmailSchema,
+      mutationFn: getUserAndAccountByEmail,
+      onError: () => {
+        toast.error("Something went wrong! Please try again.");
+      },
+    });
 
   const form = useForm<z.infer<typeof authLandingSchema>>({
     resolver: zodResolver(authLandingSchema),
     defaultValues: {
       email: "",
     },
-    mode: "onChange",
+    mode: "onSubmit",
   });
 
   const onSubmit = async (values: AuthLandingSchema) => {
     const { email } = values;
-    const result = await getUserAndAccountByEmailAsync(values.email);
+    const { account, user } = await getUserAndAccountByEmailAsync({
+      email,
+    });
 
-    if (result?.data?.user && result.data.account) {
+    setData({ email });
+
+    if (account) {
+      signIn(account.provider, {
+        redirectTo: "/portal/dashboard",
+      });
       return;
     }
 
-    setData({ email });
-    if (result?.data?.user) {
+    if (user) {
       setStep("ENTER_PASSWORD");
     } else {
       setStep("CREATE_PASSWORD");
@@ -60,7 +77,7 @@ export const Landing = () => {
 
   return (
     <FormWrapper
-      header="Welcome to OH Subscription!"
+      header="Welcome to SmartCookie!"
       subHeader="Log in or register to get started."
     >
       <Form onSubmit={form.handleSubmit(onSubmit)}>
@@ -71,17 +88,18 @@ export const Landing = () => {
             <TextField
               {...field}
               label="Email"
+              autoFocus
               validationBehavior="aria"
               isInvalid={invalid}
               errorMessage={error?.message}
-              isDisabled={isExecuting}
+              isDisabled={isPending}
             />
           )}
         />
 
-        <Button className="w-full mt-4" type="submit" isPending={isExecuting}>
-          {isExecuting && (
-            <ProgressCircle isIndeterminate aria-label="Creating..." />
+        <Button className="w-full mt-4" type="submit" isPending={isPending}>
+          {isPending && (
+            <ProgressCircle isIndeterminate aria-label="Loading..." />
           )}
           Continue
         </Button>
@@ -91,7 +109,6 @@ export const Landing = () => {
       </span>
       <div className="space-y-3">
         <SocialButton provider="google" />
-        <SocialButton provider="apple" />
       </div>
     </FormWrapper>
   );

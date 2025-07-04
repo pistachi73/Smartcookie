@@ -43,9 +43,12 @@ async function main() {
     console.log(`Found Martina's user ID: ${martinaUserId}`);
 
     // Delete users except Martina
-    await db
+    const deletedUsers = await db
       .delete(schema.user)
-      .where(ne(schema.user.email, "infomartinamotiva@gmail.com"));
+      .where(ne(schema.user.email, "infomartinamotiva@gmail.com"))
+      .returning();
+
+    console.log(`Deleted ${deletedUsers.map((u) => u.email).join(", ")} users`);
 
     // Delete records from tables with direct userId relationships
     console.log("Deleting records with direct userId relationships...");

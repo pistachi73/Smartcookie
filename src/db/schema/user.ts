@@ -8,7 +8,7 @@ export const user = pgTable(
   "user",
   {
     id: uuid().default(sql`gen_random_uuid()`).primaryKey(),
-    email: text().notNull(),
+    email: text().notNull().unique(),
     name: text(),
     image: text(),
     emailVerified: timestamp({ mode: "date" }).defaultNow(),
@@ -32,3 +32,4 @@ export const userRelations = relations(user, ({ one, many }) => ({
 
 export type InsertUser = typeof user.$inferInsert;
 export type User = typeof user.$inferSelect;
+export type UserRole = (typeof user.$inferSelect)["role"];

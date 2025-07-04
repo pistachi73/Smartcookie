@@ -1,5 +1,4 @@
 import { useAuthStore } from "@/features/auth/store/auth-store-provider";
-import { useSafeAction } from "@/shared/hooks/use-safe-action";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -12,16 +11,20 @@ import { authSchema } from "../lib/validation";
 
 import { FormWrapper } from "./form-wrapper";
 
+import {
+  credentialsSignIn,
+  credentialsSignUp,
+} from "@/data-access/auth/mutations";
+import { CredentialsSignUpSchema } from "@/data-access/auth/schemas";
+import { isDataAccessError } from "@/data-access/errors";
+import { sendEmailVerificationEmail } from "@/data-access/verification-token/mutations";
+import { SendEmailVerificationEmailSchema } from "@/data-access/verification-token/schemas";
+import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 import { Button } from "@/ui/button";
 import { Form } from "@/ui/form";
 import { InputOTP } from "@/ui/input-otp";
 import { Link } from "@/ui/link";
 import { ProgressCircle } from "@/ui/progress-circle";
-import {
-  registerAction,
-  resendEmailVerificationEmailAction,
-  signInAction,
-} from "../actions";
 
 const emailVerificationSchema = authSchema.pick({
   code: true,
@@ -48,37 +51,80 @@ export const EmailVerification = () => {
   const router = useRouter();
   const [counter, setCounter] = useState(0);
 
-  const { executeAsync: registerUser, isExecuting: isRegistering } =
-    useSafeAction(registerAction, {
-      onSuccess: async ({ data }) => {
-        if (!data?.user) return;
+  const { mutate: credentialsSignUpMutation, isPending: isVerifying } =
+    useProtectedMutation({
+      requireAuth: false,
+      schema: CredentialsSignUpSchema,
+      mutationFn: credentialsSignUp,
+      onSuccess: async (result) => {
+        if (isDataAccessError(result)) {
+          switch (result.type) {
+            case "DUPLICATE_RESOURCE":
+              toast.error("Email already in use");
+              break;
+            case "INVALID_TOKEN":
+              toast.error("Invalid email verification token");
+              break;
+            case "TOKEN_EXPIRED":
+              toast.error("Email verification token expired");
+              break;
+            case "EMAIL_SENDING_FAILED":
+              toast.error("Failed to send email verification");
+              break;
+            default:
+              toast.error("Something went wrong, please try again later.");
+          }
+          return;
+        }
 
-        await signInAction({
-          email: data.user.email,
-          password: data.user.password as string,
+        if (!data.email || !data.registerPassword) {
+          router.push("/auth/login");
+          return;
+        }
+
+        const signInResult = await credentialsSignIn({
+          email: data.email,
+          password: data.registerPassword,
         });
 
-        router.push("/calendar");
+        if (isDataAccessError(signInResult)) {
+          toast.error(
+            "Account created but sign-in failed. Please try logging in manually.",
+          );
+          router.push("/login");
+          return;
+        }
+
+        toast.success("Account created successfully!");
+        router.push("/portal/dashboard");
       },
     });
 
-  const { execute: resendEmailVerificationEmail } = useSafeAction(
-    resendEmailVerificationEmailAction,
-    {
-      onSuccess: () => {
-        setCounter(60);
-        toast.success("Verification code sent to your email");
-      },
+  const { mutate: resendEmailVerificationEmail } = useProtectedMutation({
+    requireAuth: false,
+    schema: SendEmailVerificationEmailSchema,
+    mutationFn: sendEmailVerificationEmail,
+    onSuccess: (result) => {
+      if (isDataAccessError(result)) {
+        toast.error("Failed to send email verification");
+        return;
+      }
+      setCounter(60);
+      toast.success("Verification code sent to your email");
     },
-  );
+    onError: () => {
+      toast.error("Something went wrong, please try again later.");
+    },
+  });
 
   const onSubmit = async (value: EmailVerificationSchema) => {
     const { code } = value;
     const { registerPassword, email } = data;
 
     if (!registerPassword || !email) return;
+    console.log({ registerPassword, email });
 
-    await registerUser({
+    credentialsSignUpMutation({
       email,
       password: registerPassword,
       emailVerificationCode: code,
@@ -133,17 +179,16 @@ export const EmailVerification = () => {
             className="text-sm cursor-pointer"
             isDisabled={counter > 0}
             onPress={() => {
-              console.log(data);
               if (counter !== 0 || !data.email) return;
-              resendEmailVerificationEmail(data.email);
+              resendEmailVerificationEmail({ email: data.email });
             }}
           >
             {counter > 0 ? `Resend code in ${counter}s` : "Resend code"}
           </Link>
         </div>
 
-        <Button className="w-full mt-4" type="submit" isPending={isRegistering}>
-          {isRegistering && (
+        <Button className="w-full mt-4" type="submit" isPending={isVerifying}>
+          {isVerifying && (
             <ProgressCircle isIndeterminate aria-label="Verifying email..." />
           )}
           Verify email

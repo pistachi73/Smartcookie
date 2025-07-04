@@ -13,3 +13,6 @@ export const verificationToken = pgTable(
     unique: unique().on(vt.email, vt.token),
   }),
 );
+
+export type VerificationToken = typeof verificationToken.$inferSelect;
+export type InsertVerificationToken = typeof verificationToken.$inferInsert;

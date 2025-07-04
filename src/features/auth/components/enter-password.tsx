@@ -1,6 +1,8 @@
-import { useSafeAction } from "@/shared/hooks/use-safe-action";
-
+import { credentialsSignIn } from "@/data-access/auth/mutations";
+import { CredentialsSignInSchema } from "@/data-access/auth/schemas";
+import { isDataAccessError } from "@/data-access/errors";
 import { useAuthStore } from "@/features/auth/store/auth-store-provider";
+import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 import { Button } from "@/ui/button";
 import { Form } from "@/ui/form";
 import { Link } from "@/ui/link";
@@ -8,9 +10,9 @@ import { ProgressCircle } from "@/ui/progress-circle";
 import { TextField } from "@/ui/text-field";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import type { z } from "zod";
 import { useShallow } from "zustand/react/shallow";
-import { signInAction } from "../actions";
 import { useLoginSuccess } from "../hooks/use-login-success";
 import { authSchema } from "../lib/validation";
 import { FormWrapper } from "./form-wrapper";
@@ -41,18 +43,36 @@ export const EnterPassword = () => {
     mode: "onChange",
   });
 
-  const { execute: signIn, isExecuting } = useSafeAction(signInAction, {
-    onSuccess: ({ data }) => {
-      if (data?.twoFactor) {
+  const { mutate: credentialsSignInSync, isPending } = useProtectedMutation({
+    requireAuth: false,
+    schema: CredentialsSignInSchema,
+    mutationFn: credentialsSignIn,
+    onSuccess: (result) => {
+      if (isDataAccessError(result)) {
+        console.log({ result });
+        switch (result.type) {
+          case "INVALID_LOGIN":
+            toast.error("Invalid email or password");
+            form.setError("loginPassword", {
+              message: "Invalid email or password",
+            });
+            break;
+          default:
+            toast.error("Something went wrong! Please try again.");
+            break;
+        }
+        return;
+      }
+
+      if (result.twoFactor) {
         setStep("TWO_FACTOR");
       } else {
-        form.reset();
         onLoginSuccess();
+        form.reset();
       }
-      console.log("login success");
     },
     onError: () => {
-      // form.setError("loginPassword", { type: "informative" });
+      toast.error("Something went wrong! Please try again.");
       form.setFocus("loginPassword", { shouldSelect: true });
     },
   });
@@ -69,7 +89,7 @@ export const EnterPassword = () => {
     if (!email || !loginPassword) return;
 
     setData({ loginPassword });
-    signIn({ email, password: loginPassword });
+    credentialsSignInSync({ email, password: loginPassword });
   };
 
   return (
@@ -91,15 +111,16 @@ export const EnterPassword = () => {
         <Controller
           control={form.control}
           name="loginPassword"
-          render={({ field: { ...rest } }) => (
+          render={({ field: { ...rest }, fieldState: { error, invalid } }) => (
             <TextField
               {...rest}
               autoFocus
               isRevealable
               type="password"
               label="Password"
-              validationBehavior="aria"
-              isDisabled={isExecuting}
+              isDisabled={isPending}
+              errorMessage={error?.message}
+              isInvalid={invalid}
             />
           )}
         />
@@ -116,8 +137,8 @@ export const EnterPassword = () => {
           </Link>
         </div>
 
-        <Button className="w-full mt-4" type="submit" isPending={isExecuting}>
-          {isExecuting && (
+        <Button className="w-full mt-4" type="submit" isPending={isPending}>
+          {isPending && (
             <ProgressCircle isIndeterminate aria-label="Logging in..." />
           )}
           Login

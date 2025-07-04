@@ -51,6 +51,6 @@
     }
   },
   "files": {
-    "ignore": ["node_modules", ".next/*", "drizzle/*"]
+    "ignore": ["node_modules", ".next/*", "drizzle/*", "**/*.d.ts"]
   }
 }

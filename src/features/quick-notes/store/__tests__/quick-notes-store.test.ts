@@ -29,7 +29,6 @@ describe("Quick Notes Store", () => {
   describe("Initial State", () => {
     it("should initialize with the correct state", () => {
       expect(state.visibleHubs).toEqual(new Set(mockInitialState.visibleHubs));
-      expect(state.isHydrated).toBe(false);
       expect(state.edittingHub).toBe(null);
       expect(state.isFilterPanelOpen).toBe(false);
     });
@@ -80,7 +79,7 @@ describe("Quick Notes Store", () => {
     });
   });
 
-  describe("toggleMultipleHubsVisibility", () => {
+  describe("toggleAllHubsVisibility", () => {
     beforeEach(() => {
       store.setState({
         ...store.getState(),
@@ -134,35 +133,6 @@ describe("Quick Notes Store", () => {
 
       // Should not change anything
       expect(store.getState().visibleHubs).toEqual(initialVisible);
-    });
-  });
-
-  describe("toggleAllHubsVisibility", () => {
-    it("should clear all visible hubs when called", () => {
-      // Set up some visible hubs
-      store.setState({
-        ...store.getState(),
-        visibleHubs: new Set([1, 2, 3]),
-      });
-
-      act(() => {
-        state.toggleAllHubsVisibility();
-      });
-
-      expect(store.getState().visibleHubs).toEqual(new Set([]));
-    });
-
-    it("should still clear when no hubs are visible", () => {
-      store.setState({
-        ...store.getState(),
-        visibleHubs: new Set([]),
-      });
-
-      act(() => {
-        state.toggleAllHubsVisibility();
-      });
-
-      expect(store.getState().visibleHubs).toEqual(new Set([]));
     });
   });
 

@@ -16,3 +16,7 @@ export const twoFactorConirmation = pgTable(
     uniqueOnTokenUserId: unique().on(table.userId, table.token),
   }),
 );
+
+export type TwoFactorConfirmation = typeof twoFactorConirmation.$inferSelect;
+export type InsertTwoFactorConfirmation =
+  typeof twoFactorConirmation.$inferInsert;

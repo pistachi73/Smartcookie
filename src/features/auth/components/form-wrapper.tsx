@@ -1,9 +1,10 @@
+import { Heading } from "@/shared/components/ui/heading";
 import { cn } from "@/shared/lib/classes";
 import { Button } from "@/ui/button";
 import { Card } from "@/ui/card";
 import { ArrowLeft02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { motion } from "motion/react";
+import * as motion from "motion/react-m";
 import { useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
 import { useAuthStore } from "../store/auth-store-provider";
@@ -39,11 +40,8 @@ export const FormWrapper = ({
     setAnimationDir(1);
   }, [setAnimationDir]);
 
-  console.log(animationDir);
-
   return (
-    <MotionCard
-      // @ts-ignore
+    <motion.div
       className="w-full border-none bg-transparent shadow-none"
       initial={{ opacity: 0, x: animationDir === 1 ? 20 : -20 }}
       animate={{
@@ -67,23 +65,26 @@ export const FormWrapper = ({
               await setAnimationDir(-1);
               backButtonOnClick?.();
             }}
-            size="extra-small"
+            size="small"
             intent="plain"
             type="button"
-            className="text-sm"
           >
             <HugeiconsIcon icon={ArrowLeft02Icon} size={18} />
             Back
           </Button>
         )}
       </div>
-      <Card.Header className="px-0 py-6">
-        <Card.Title>{header}</Card.Title>
-        <Card.Description>{subHeader}</Card.Description>
-      </Card.Header>
-      <Card.Content className={cn("px-0 py-4", className)}>
-        {children}
-      </Card.Content>
-    </MotionCard>
+      <div className="py-6 space-y-1">
+        <Heading
+          level={2}
+          tracking="tight"
+          className="sm:text-2xl font-semibold"
+        >
+          {header}
+        </Heading>
+        <p className="text-base text-muted-fg">{subHeader}</p>
+      </div>
+      <div className={cn("px-0 py-4", className)}>{children}</div>
+    </motion.div>
   );
 };

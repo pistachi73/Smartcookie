@@ -4,6 +4,11 @@ import type { NeonQueryResultHKT } from "drizzle-orm/neon-serverless";
 import type { PgTransaction } from "drizzle-orm/pg-core";
 import { z } from "zod";
 
+// Type for main database instance
+export type DrizzleDB = ReturnType<
+  typeof import("drizzle-orm/neon-serverless").drizzle<typeof schema>
+>;
+
 // Type for Drizzle transaction
 export type DrizzleTransaction = PgTransaction<
   NeonQueryResultHKT,
@@ -11,9 +16,12 @@ export type DrizzleTransaction = PgTransaction<
   ExtractTablesWithRelations<typeof schema>
 >;
 
-// Custom Zod type for database transaction
+// Union type for both database and transaction
+export type DatabaseExecutor = DrizzleDB | DrizzleTransaction;
+
+// Custom Zod type for database transaction or main db instance
 export const DatabaseTransactionSchema = z
-  .custom<DrizzleTransaction>((val) => {
+  .custom<DatabaseExecutor>((val) => {
     // Basic validation - check if it has the expected database methods
     return (
       val &&
@@ -21,8 +29,7 @@ export const DatabaseTransactionSchema = z
       "select" in val &&
       "insert" in val &&
       "update" in val &&
-      "delete" in val &&
-      "transaction" in val
+      "delete" in val
     );
-  }, "Invalid database transaction object")
+  }, "Invalid database executor object")
   .optional();

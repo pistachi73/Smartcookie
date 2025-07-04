@@ -7,7 +7,7 @@ import VerifyEmail from "@/emails/verify-email";
 import { env } from "@/env";
 import { getUrl } from "@/shared/lib/get-url";
 const resend = new Resend(env.RESEND_API_KEY);
-const emailFrom = env.EMAIL_FROM || "onboarding@resend.dev";
+const emailFrom = env.EMAIL_FROM || "SmartCookie <noreply@smartcookieapp.com>";
 
 export const sendVerificationEmail = async ({
   email,
@@ -17,9 +17,9 @@ export const sendVerificationEmail = async ({
   token: string;
 }) => {
   await resend.emails.send({
-    from: emailFrom,
+    from: "SmartCookie Team <noreply@smartcookieapp.com>",
     to: email,
-    subject: "Confirm your email",
+    subject: "Welcome to SmartCookie! Confirm your email address",
     react: <VerifyEmail token={token} />,
   });
 };
@@ -33,9 +33,9 @@ export const sendPasswordResetEmail = async ({
 }) => {
   const resetLink = getUrl(`/reset-password?token=${token}`);
   await resend.emails.send({
-    from: emailFrom,
+    from: "SmartCookie Security <noreply@smartcookieapp.com>",
     to: email,
-    subject: "Reset your password",
+    subject: "Reset your SmartCookie password",
     react: <PasswordReset resetLink={resetLink} />,
   });
 };
@@ -48,9 +48,9 @@ export const sendTwoFactorTokenEmail = async ({
   token: string;
 }) => {
   await resend.emails.send({
-    from: emailFrom,
+    from: "SmartCookie 2FA <noreply@smartcookieapp.com>",
     to: email,
-    subject: "2FA Code",
+    subject: "Your SmartCookie security code",
     react: <TwoFactorVerification token={token} />,
   });
 };

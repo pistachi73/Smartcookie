@@ -7,19 +7,19 @@ import { pgTable } from "./utils";
 export const account = pgTable(
   "account",
   {
-    userId: uuid("userId")
+    userId: uuid()
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
-    type: text("type").$type<AdapterAccount["type"]>().notNull(),
-    provider: text("provider").notNull(),
-    providerAccountId: text("providerAccountId").notNull(),
-    refresh_token: text("refresh_token"),
-    access_token: text("access_token"),
-    expires_at: integer("expires_at"),
-    token_type: text("token_type"),
-    scope: text("scope"),
-    id_token: text("id_token"),
-    session_state: text("session_state"),
+    type: text().$type<AdapterAccount["type"]>().notNull(),
+    provider: text().notNull(),
+    providerAccountId: text().notNull(),
+    refresh_token: text(),
+    access_token: text(),
+    expires_at: integer(),
+    token_type: text(),
+    scope: text(),
+    id_token: text(),
+    session_state: text(),
   },
   (account) => ({
     compoundKey: primaryKey({
@@ -34,3 +34,6 @@ export const accountRelations = relations(account, ({ one }) => ({
     references: [user.id],
   }),
 }));
+
+export type Account = typeof account.$inferSelect;
+export type InsertAccount = typeof account.$inferInsert;

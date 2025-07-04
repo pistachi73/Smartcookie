@@ -63,18 +63,21 @@ export function useProtectedMutation<
   TContext = unknown,
   TVariables = TInput,
   TError = Error | ValidationError<TInput> | AuthenticationError,
+  TRequireAuth extends boolean = true,
 >({
   schema,
   mutationFn,
-  requireAuth = true,
+  requireAuth = true as TRequireAuth,
   ...options
 }: {
   schema: ZodType<TInput>;
   mutationFn: (
     input: TInput,
-    authContext: { userId: string },
+    authContext: TRequireAuth extends true
+      ? { userId: string }
+      : { userId: string | null },
   ) => Promise<TOutput>;
-  requireAuth?: boolean;
+  requireAuth?: TRequireAuth;
 } & Omit<
   UseMutationOptions<TOutput, TError, TVariables, TContext>,
   "mutationFn"
@@ -86,7 +89,7 @@ export function useProtectedMutation<
     ...options,
     mutationFn: async (variables: TVariables) => {
       // First check authentication
-      if (requireAuth && !user.id) {
+      if (requireAuth && !user?.id) {
         throw new AuthenticationError() as unknown as TError;
       }
 
@@ -100,9 +103,12 @@ export function useProtectedMutation<
           formattedErrors,
         ) as unknown as TError;
       }
+
       return await mutationFn(parse.data, {
-        userId: user.id,
-      });
+        userId: requireAuth ? user!.id : (user?.id ?? null),
+      } as TRequireAuth extends true
+        ? { userId: string }
+        : { userId: string | null });
     },
 
     onError: (error, variables, context) => {

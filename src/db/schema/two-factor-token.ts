@@ -13,3 +13,6 @@ export const twoFactorToken = pgTable(
     twoFactorTokensUnique: unique().on(t.email, t.token),
   }),
 );
+
+export type TwoFactorToken = typeof twoFactorToken.$inferSelect;
+export type InsertTwoFactorToken = typeof twoFactorToken.$inferInsert;

@@ -120,16 +120,16 @@ const PasswordFieldWithValidation = ({
           <FieldError>{errorMessage}</FieldError>
 
           {showValidation && (
-            <div className="relative mt-0! h-[100px] animate-password-input-div-down">
+            <div className="relative mt-0! h-[90px] animate-password-input-div-down">
               <div className="top-0 absolute mt-2 flex animate-password-input-p-down flex-col space-y-1.5 opacity-0 fill-mode-forwards">
                 {validations.map(({ message, id, valid }) => (
                   <p
                     key={id}
                     className={cn(
-                      "flex items-center gap-1.5 text-xs font-light",
+                      "flex items-center gap-1.5 text-xs",
                       {
                         "text-muted-fg": !valid,
-                        "text-emerald-500 line-through": valid,
+                        "text-success line-through": valid,
                       },
                       className,
                     )}

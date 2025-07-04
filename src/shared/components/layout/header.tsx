@@ -1,9 +1,11 @@
 "use client";
 
+import { env } from "@/env";
 import { buttonStyles } from "@/shared/components/ui/button";
 import { Menu } from "@/shared/components/ui/menu";
 import { cn } from "@/shared/lib/classes";
 import {
+  ArrowRight02Icon,
   Calendar03Icon as Calendar03IconSolid,
   Comment01Icon as Comment01IconSolid,
   DashboardSquare01Icon as DashboardSquare01IconSolid,
@@ -84,6 +86,10 @@ const publicNavigation = [
 ];
 
 export const Header = () => {
+  const user = false;
+
+  const isPortalBlocked = env.NEXT_PUBLIC_BLOCK_PORTAL === "true";
+
   return (
     <>
       <div aria-hidden="true" className="h-17 bg-white" />
@@ -185,52 +191,54 @@ export const Header = () => {
               </Menu.Content>
             </Menu>
           </div>
-          {/* <div className="h-full shadow-md bg-overlay rounded-2xl flex gap-1 p-1 items-center shrink-0">
-            {user ? (
-              <Link
-                href="/portal/dashboard"
-                className={cn(
-                  buttonStyles({ size: "large", intent: "primary" }),
-                  "group",
-                  "sm:text-base shrink-0 tracking-tight",
-                )}
-              >
-                Go to dashboard
-                <HugeiconsIcon
-                  icon={ArrowRight02Icon}
-                  size={20}
-                  className="shrink-0 group-hover:translate-x-1 transition-transform"
-                />
-              </Link>
-            ) : (
-              <>
+          {!isPortalBlocked && (
+            <div className="h-full shadow-md bg-overlay rounded-2xl flex gap-1 p-1 items-center shrink-0">
+              {user ? (
                 <Link
-                  href="/login"
-                  className={cn(
-                    buttonStyles({ size: "large", intent: "plain" }),
-                    "text-base shrink-0 tracking-tight hover:bg-primary-tint",
-                  )}
-                >
-                  Log in
-                </Link>
-                <Link
-                  href="/login"
+                  href="/portal/dashboard"
                   className={cn(
                     buttonStyles({ size: "large", intent: "primary" }),
                     "group",
                     "sm:text-base shrink-0 tracking-tight",
                   )}
                 >
-                  Start free trial
+                  Go to dashboard
                   <HugeiconsIcon
                     icon={ArrowRight02Icon}
                     size={20}
                     className="shrink-0 group-hover:translate-x-1 transition-transform"
                   />
                 </Link>
-              </>
-            )}
-          </div> */}
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    className={cn(
+                      buttonStyles({ size: "large", intent: "plain" }),
+                      "text-base shrink-0 tracking-tight hover:bg-primary-tint",
+                    )}
+                  >
+                    Log in
+                  </Link>
+                  <Link
+                    href="/login"
+                    className={cn(
+                      buttonStyles({ size: "large", intent: "primary" }),
+                      "group",
+                      "sm:text-base shrink-0 tracking-tight",
+                    )}
+                  >
+                    Start free trial
+                    <HugeiconsIcon
+                      icon={ArrowRight02Icon}
+                      size={20}
+                      className="shrink-0 group-hover:translate-x-1 transition-transform"
+                    />
+                  </Link>
+                </>
+              )}
+            </div>
+          )}
         </div>
       </MaxWidthWrapper>
     </>

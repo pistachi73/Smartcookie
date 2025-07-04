@@ -1,5 +1,4 @@
 import { useAuthStore } from "@/features/auth/store/auth-store-provider";
-import { useSafeAction } from "@/shared/hooks/use-safe-action";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
@@ -7,10 +6,13 @@ import { toast } from "sonner";
 import type { z } from "zod";
 import { useShallow } from "zustand/react/shallow";
 
-import { changePasswordAction } from "../actions";
 import { authSchema } from "../lib/validation";
 import { FormWrapper } from "./form-wrapper";
 
+import { changePassword } from "@/data-access/auth/mutations";
+import { ChangePasswordSchema } from "@/data-access/auth/schemas";
+import { isDataAccessError } from "@/data-access/errors";
+import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 import { Button } from "@/ui/button";
 import { Form } from "@/ui/form";
 import { PasswordFieldWithValidation } from "@/ui/password-field-with-validation";
@@ -51,16 +53,31 @@ export const UpdatePassword = () => {
     mode: "onChange",
   });
 
-  const { execute: changePassword, isExecuting } = useSafeAction(
-    changePasswordAction,
-    {
-      onSuccess: () => {
-        form.reset();
-        toast.success("Password updated!");
-        router.push("/login");
-      },
+  const { mutate, isPending } = useProtectedMutation({
+    requireAuth: false,
+    schema: ChangePasswordSchema,
+    mutationFn: changePassword,
+    onSuccess: (result) => {
+      if (isDataAccessError(result)) {
+        switch (result.type) {
+          case "INVALID_TOKEN":
+            toast.error("Invalid token!");
+            break;
+          case "TOKEN_EXPIRED":
+            toast.error("Token has expired!");
+            break;
+          case "NOT_FOUND":
+            toast.error("User not found!");
+            break;
+          default:
+        }
+        return;
+      }
+      form.reset();
+      toast.success("Password updated! Please login with your new password.");
+      setStep("LANDING");
     },
-  );
+  });
 
   const onSubmit = (value: UpdatePasswordSchema) => {
     const { registerPassword } = value;
@@ -70,7 +87,7 @@ export const UpdatePassword = () => {
       return;
     }
 
-    changePassword({
+    mutate({
       token,
       password: registerPassword,
     });
@@ -91,7 +108,8 @@ export const UpdatePassword = () => {
               {...field}
               label="Password"
               autoFocus
-              isDisabled={isExecuting}
+              placeholder="******"
+              isDisabled={isPending}
               autoComplete="new-password"
               showValidation={
                 form.formState.dirtyFields.registerPassword ||
@@ -110,7 +128,7 @@ export const UpdatePassword = () => {
               placeholder="******"
               type="password"
               isRevealable
-              isDisabled={isExecuting}
+              isDisabled={isPending}
               autoComplete="confirm-password"
               isInvalid={invalid}
               errorMessage={error?.message}
@@ -119,8 +137,8 @@ export const UpdatePassword = () => {
         />
 
         <div className="space-y-3">
-          <Button className="w-full" type="submit" isPending={isExecuting}>
-            {isExecuting && (
+          <Button className="w-full" type="submit" isPending={isPending}>
+            {isPending && (
               <ProgressCircle isIndeterminate aria-label="Registering..." />
             )}
             Update

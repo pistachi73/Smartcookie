@@ -4,6 +4,7 @@ import type { DB } from "@/db/seed";
 import users from "./data/users.seed-data";
 
 export default async function seed(db: DB) {
+  console.log("Seeding users...");
   await Promise.all(
     users.map(async (user) => {
       if (user.email === "infomartinamotiva@gmail.com") {

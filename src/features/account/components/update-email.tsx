@@ -45,6 +45,10 @@ export const UpdateEmail = () => {
       },
     });
 
+  if (!user) {
+    return null;
+  }
+
   if (user.isOAuth) {
     return (
       <Card className="shadow-md overflow-hidden bg-accent/50">

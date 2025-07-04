@@ -5,43 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1748619819936,
-      "tag": "0000_swift_talisman",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1748799163526,
-      "tag": "0001_swift_galactus",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1748876414143,
-      "tag": "0002_yielding_morlun",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1749632824675,
-      "tag": "0003_solid_songbird",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1749896251970,
-      "tag": "0004_glamorous_surge",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1750865729557,
-      "tag": "0005_workable_captain_marvel",
+      "when": 1750937101889,
+      "tag": "0000_acoustic_darwin",
       "breakpoints": true
     }
   ]
