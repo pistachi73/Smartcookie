@@ -39,10 +39,10 @@ const agendaDateRanges: { label: string; value: number }[] = [
 ];
 
 export const AgendaCard = () => {
-  const [dateRange, setDateRange] = useState(1);
+  const [dateRange, setDateRange] = useState(7);
   const [dateInterval, setDateInterval] = useState<[Date, Date]>([
     new Date(),
-    new Date(),
+    addDays(new Date(), 6),
   ]);
   const { data: agendaSessions, isPending } =
     useGetAgendaSessions(dateInterval);
@@ -125,7 +125,7 @@ export const AgendaCard = () => {
           </Button>
           <p className="text-sm font-medium flex-1 text-center tabular-nums">
             {dateRange === 1
-              ? format(dateInterval[0], "dd MMM yyyy")
+              ? format(dateInterval[0], "dd MMM")
               : `${format(dateInterval[0], "dd MMM yyyy")} - ${format(dateInterval[1], "dd MMM yyyy")}`}
           </p>
           <Button

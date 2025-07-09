@@ -14,12 +14,12 @@ import { and, asc, eq, gte, lt, sql } from "drizzle-orm";
 import { z } from "zod";
 
 export const getNextSessionUseCase = withAuthenticationNoInput({
-  useCase: async (userId) => {
+  useCase: async (user) => {
     const now = new Date();
 
     const n = await db.query.session.findFirst({
       where: and(
-        eq(session.userId, userId),
+        eq(session.userId, user.id),
         gte(session.startTime, now.toISOString()),
       ),
       columns: {
@@ -33,7 +33,7 @@ export const getNextSessionUseCase = withAuthenticationNoInput({
         totalSessions: sql<number>`(
           SELECT COUNT(*) 
           FROM ${session} s
-          WHERE s.user_id = ${userId}
+          WHERE s.user_id = ${user.id}
             AND s.hub_id = ${session.hubId}
             AND s.status != 'cancelled'
         )`
@@ -42,7 +42,7 @@ export const getNextSessionUseCase = withAuthenticationNoInput({
         cancelledSessions: sql<number>`(
           SELECT COUNT(*) 
           FROM ${session} s
-          WHERE s.user_id = ${userId}
+          WHERE s.user_id = ${user.id}
             AND s.hub_id = ${session.hubId}
             AND s.status = 'cancelled'
         )`
@@ -51,7 +51,7 @@ export const getNextSessionUseCase = withAuthenticationNoInput({
         completedSessions: sql<number>`(
           SELECT COUNT(*) 
           FROM ${session} s
-          WHERE s.user_id = ${userId}
+          WHERE s.user_id = ${user.id}
             AND s.hub_id = ${session.hubId}
             AND s.status = 'completed'
         )`
@@ -110,7 +110,7 @@ export const getAgendaSessionsUseCase = withValidationAndAuth({
   schema: z.object({
     dateInterval: z.tuple([z.string().datetime(), z.string().datetime()]),
   }),
-  useCase: async ({ dateInterval }, userId) => {
+  useCase: async ({ dateInterval }, user) => {
     const startDate = new Date(dateInterval[0]);
     const endDate = new Date(dateInterval[1]);
 
@@ -119,7 +119,7 @@ export const getAgendaSessionsUseCase = withValidationAndAuth({
 
     const sessions = await db.query.session.findMany({
       where: and(
-        eq(session.userId, userId),
+        eq(session.userId, user.id),
         gte(session.startTime, startDate.toISOString()),
         lt(session.endTime, endDate.toISOString()),
       ),
@@ -165,14 +165,14 @@ export const getWeeklyHoursUseCase = withValidationAndAuth({
   schema: z.object({
     date: z.string().datetime(),
   }),
-  useCase: async ({ date }, userId) => {
+  useCase: async ({ date }, user) => {
     const firstDay = startOfWeek(date, { weekStartsOn: 1 });
     const lastDay = lastDayOfWeek(date, { weekStartsOn: 1 });
     lastDay.setHours(23, 59, 59, 999);
 
     const sessions = await db.query.session.findMany({
       where: and(
-        eq(session.userId, userId),
+        eq(session.userId, user.id),
         gte(session.startTime, firstDay.toISOString()),
         lt(session.startTime, lastDay.toISOString()),
       ),

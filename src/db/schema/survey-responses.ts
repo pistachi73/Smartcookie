@@ -33,10 +33,7 @@ export const surveyResponses = pgTable(
     startedAt: timestamp({ mode: "string", withTimezone: true }),
     completedAt: timestamp({ mode: "string", withTimezone: true }),
   },
-  (t) => ({
-    surveyIdIdx: index().on(t.surveyId),
-    studentIdIdx: index().on(t.studentId),
-  }),
+  (t) => [index().on(t.surveyId), index().on(t.studentId)],
 );
 
 export const surveyResponsesRelations = relations(

@@ -11,6 +11,7 @@ import {
   getAccountByUserId,
 } from "@/data-access/accounts/queries";
 import { getTwoFactorConirmationByUserId } from "@/data-access/two-factor-confirmation/queries";
+import { getUserSubscriptionByUserId } from "@/data-access/user-subscription/queries";
 import { getUserByEmail, getUserById } from "@/data-access/user/queries";
 import { db } from "@/db";
 
@@ -116,7 +117,21 @@ export async function jwtCallback(params: { token: JWT }): Promise<JWT> {
 
   if (!user) return token;
 
-  const existingAccount = await getAccountByUserId({ userId: user.id });
+  const [existingAccount, userSubscription] = await Promise.all([
+    getAccountByUserId({
+      userId: user.id,
+      columns: {
+        provider: true,
+      },
+    }),
+    getUserSubscriptionByUserId({
+      userId: user.id,
+      columns: {
+        tier: true,
+        status: true,
+      },
+    }),
+  ]);
 
   return {
     ...token,
@@ -125,6 +140,9 @@ export async function jwtCallback(params: { token: JWT }): Promise<JWT> {
     email: user.email,
     role: user.role,
     isTwoFactorEnabled: user.isTwoFactorEnabled,
+    stripeCustomerId: user.stripeCustomerId,
+    subscriptionTier: userSubscription?.tier,
+    subscriptionStatus: userSubscription?.status,
   };
 }
 
@@ -141,6 +159,9 @@ export async function sessionCallback(params: {
     session.user.name = token.name;
     session.user.email = token.email;
     session.user.isOAuth = token.isOAuth;
+    session.user.stripeCustomerId = token.stripeCustomerId;
+    session.user.subscriptionTier = token.subscriptionTier;
+    session.user.hasActiveSubscription = token.subscriptionStatus === "active";
   }
 
   return session;

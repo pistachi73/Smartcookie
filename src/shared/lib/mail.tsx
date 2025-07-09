@@ -7,7 +7,6 @@ import VerifyEmail from "@/emails/verify-email";
 import { env } from "@/env";
 import { getUrl } from "@/shared/lib/get-url";
 const resend = new Resend(env.RESEND_API_KEY);
-const emailFrom = env.EMAIL_FROM || "SmartCookie <noreply@smartcookieapp.com>";
 
 export const sendVerificationEmail = async ({
   email,

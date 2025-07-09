@@ -10,10 +10,10 @@ export const getSurveyTemplateResponses = withValidationAndAuth({
   schema: z.object({
     surveyTemplateId: z.number(),
   }),
-  callback: async ({ surveyTemplateId }, userId) => {
+  callback: async ({ surveyTemplateId }, user) => {
     const baseCondition = and(
       eq(surveysTable.surveyTemplateId, surveyTemplateId),
-      eq(surveysTable.userId, userId),
+      eq(surveysTable.userId, user.id),
     );
 
     const [responses, uncompletedCountResult] = await Promise.all([

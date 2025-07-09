@@ -3,7 +3,7 @@ import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
 import { Comment01Icon } from "@hugeicons-pro/core-solid-rounded";
 import type { ReactNode } from "react";
 
-export default function FeedbackLayout({
+export default async function FeedbackLayout({
   children,
   sidebar,
   details,

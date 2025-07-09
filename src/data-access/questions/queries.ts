@@ -31,9 +31,9 @@ const getCachedQuestionCount = cache(async (userId: string, q?: string) => {
 
 export const getQuestions = withValidationAndAuth({
   schema: GetQuestionsSchema,
-  callback: async ({ page, pageSize, sortBy, q }, userId) => {
+  callback: async ({ page, pageSize, sortBy, q }, user) => {
     // Base condition for current user's questions
-    const userCondition = eq(questions.userId, userId);
+    const userCondition = eq(questions.userId, user.id);
     const whereCondition =
       q && q.trim() !== ""
         ? and(userCondition, buildSearchCondition(q))
@@ -62,7 +62,7 @@ export const getQuestions = withValidationAndAuth({
               ? desc(questions.totalAnswers)
               : desc(questions.updatedAt),
         ),
-      getCachedQuestionCount(userId, q),
+      getCachedQuestionCount(user.id, q),
     ]);
 
     return {
@@ -79,10 +79,10 @@ export const getQuestionById = withValidationAndAuth({
   schema: z.object({
     id: z.number(),
   }),
-  callback: async ({ id }, userId) => {
+  callback: async ({ id }, user) => {
     // Get question basic info only
     const question = await db.query.questions.findFirst({
-      where: and(eq(questions.id, id), eq(questions.userId, userId)),
+      where: and(eq(questions.id, id), eq(questions.userId, user.id)),
       columns: {
         id: true,
         title: true,

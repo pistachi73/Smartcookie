@@ -1,22 +1,26 @@
+import type { User, UserSubscription } from "@/db/schema";
 import "next-auth";
 import type { DefaultSession } from "next-auth";
 import "next-auth/jwt";
 
-export type ExtendedUser = DefaultSession["user"] & {
+export type AuthUser = DefaultSession["user"] & {
   role: User["role"];
   isTwoFactorEnabled: User["isTwoFactorEnabled"];
   isOAuth: boolean;
   id: string;
   name: User["name"];
   email: User["email"];
+  stripeCustomerId: User["stripeCustomerId"];
+  subscriptionTier?: UserSubscription["tier"];
+  hasActiveSubscription: boolean;
 };
 
 declare module "next-auth" {
   interface Session {
-    user: ExtendedUser;
+    user: AuthUser;
   }
 
-  interface User extends ExtendedUser {}
+  interface User extends AuthUser {}
 }
 
 declare module "next-auth/jwt" {
@@ -26,5 +30,8 @@ declare module "next-auth/jwt" {
     email: User["email"];
     role: User["role"];
     isTwoFactorEnabled: User["isTwoFactorEnabled"];
+    stripeCustomerId: User["stripeCustomerId"];
+    subscriptionTier?: UserSubscription["tier"];
+    subscriptionStatus?: UserSubscription["status"];
   }
 }

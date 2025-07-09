@@ -12,10 +12,10 @@ import {
 
 export const addSessionNote = withValidationAndAuth({
   schema: CreateSessionNoteSchema,
-  callback: async (data, userId) => {
+  callback: async (data, user) => {
     const [createdSessonNote] = await db
       .insert(sessionNote)
-      .values({ ...data, userId })
+      .values({ ...data, userId: user.id })
       .returning();
 
     return createdSessonNote;
@@ -24,7 +24,7 @@ export const addSessionNote = withValidationAndAuth({
 
 export const updateSessionNote = withValidationAndAuth({
   schema: UpdateSessionNoteSchema,
-  callback: async (data, userId) => {
+  callback: async (data, user) => {
     const { noteId, target } = data;
 
     const [updatedNote] = await db
@@ -33,7 +33,7 @@ export const updateSessionNote = withValidationAndAuth({
         sessionId: target.sessionId,
         position: target.position,
       })
-      .where(and(eq(sessionNote.id, noteId), eq(sessionNote.userId, userId)))
+      .where(and(eq(sessionNote.id, noteId), eq(sessionNote.userId, user.id)))
       .returning({
         id: sessionNote.id,
         sessionId: sessionNote.sessionId,
@@ -50,10 +50,10 @@ export const updateSessionNote = withValidationAndAuth({
 
 export const deleteSessionNote = withValidationAndAuth({
   schema: DeleteSessionNoteSchema,
-  callback: async ({ noteId, sessionId }, userId) => {
+  callback: async ({ noteId, sessionId }, user) => {
     const [deletedNote] = await db
       .delete(sessionNote)
-      .where(and(eq(sessionNote.id, noteId), eq(sessionNote.userId, userId)))
+      .where(and(eq(sessionNote.id, noteId), eq(sessionNote.userId, user.id)))
       .returning();
 
     return deletedNote;

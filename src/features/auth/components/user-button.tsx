@@ -1,20 +1,19 @@
 "use client";
 import {
+  AccountSetting02Icon,
   DashboardSquare01Icon,
-  Home09Icon,
+  Invoice02Icon,
   Logout01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { signOut } from "next-auth/react";
 
 import { StudentProfile } from "@/shared/components/students/student-profile";
-import { useCurrentUser } from "@/shared/hooks/use-current-user";
+import type { AuthUser } from "@/types/next-auth";
 import { Menu } from "@/ui/menu";
 import { UserAvatar } from "@/ui/user-avatar";
 
-export const UserButton = () => {
-  const user = useCurrentUser();
-
+export const UserButton = ({ user }: { user: AuthUser }) => {
   return (
     <Menu>
       <Menu.Trigger>
@@ -38,9 +37,13 @@ export const UserButton = () => {
           <HugeiconsIcon icon={DashboardSquare01Icon} data-slot="icon" />
           Dashboard
         </Menu.Item>
-        <Menu.Item href="/account">
-          <HugeiconsIcon icon={Home09Icon} data-slot="icon" />
+        <Menu.Item href="/portal/account">
+          <HugeiconsIcon icon={AccountSetting02Icon} data-slot="icon" />
           Account
+        </Menu.Item>
+        <Menu.Item href="/portal/account?t=subscription">
+          <HugeiconsIcon icon={Invoice02Icon} data-slot="icon" />
+          Billing and subscription
         </Menu.Item>
         <Menu.Separator />
         <Menu.Item onAction={() => signOut({ redirectTo: "/" })}>

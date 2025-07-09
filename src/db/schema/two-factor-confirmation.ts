@@ -11,10 +11,7 @@ export const twoFactorConirmation = pgTable(
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
   },
-  (table) => ({
-    tokenIdx: index().on(table.token),
-    uniqueOnTokenUserId: unique().on(table.userId, table.token),
-  }),
+  (table) => [index().on(table.token), unique().on(table.userId, table.token)],
 );
 
 export type TwoFactorConfirmation = typeof twoFactorConirmation.$inferSelect;

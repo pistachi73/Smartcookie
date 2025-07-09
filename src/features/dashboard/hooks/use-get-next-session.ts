@@ -1,16 +1,13 @@
-import { useCurrentUser } from "@/shared/hooks/use-current-user";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { getNextSessionUseCase } from "../use-cases/dashboard.use-case";
 
-export const getNextSessionQueryOptions = (userId: string) => {
+export const getNextSessionQueryOptions = () => {
   return queryOptions({
-    queryKey: ["next-session", userId],
+    queryKey: ["next-session"],
     queryFn: () => getNextSessionUseCase(),
   });
 };
 
 export const useGetNextSession = () => {
-  const user = useCurrentUser();
-
-  return useQuery(getNextSessionQueryOptions(user.id));
+  return useQuery(getNextSessionQueryOptions());
 };

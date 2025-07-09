@@ -82,6 +82,7 @@ interface ModalContentProps
     overlay?: ModalOverlayProps["className"];
     content?: ModalOverlayProps["className"];
   };
+  spacing?: "sm" | "md" | "lg";
 }
 
 const ModalContent = ({
@@ -92,6 +93,7 @@ const ModalContent = ({
   size,
   role = "dialog",
   closeButton = true,
+  spacing = "md",
   ...props
 }: ModalContentProps) => {
   const isDismissable = isDismissableInternal ?? role !== "alertdialog";
@@ -101,6 +103,7 @@ const ModalContent = ({
       isDismissable={isDismissable}
       className={composeRenderProps(
         classNames?.overlay,
+
         (className, renderProps) =>
           modalOverlayStyles({
             ...renderProps,

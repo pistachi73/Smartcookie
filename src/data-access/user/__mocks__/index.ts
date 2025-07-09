@@ -10,5 +10,6 @@ export const createMockUser = (overrides: Partial<User> = {}): User => ({
   salt: "user-salt",
   role: "USER",
   isTwoFactorEnabled: false,
+  stripeCustomerId: null,
   ...overrides,
 });

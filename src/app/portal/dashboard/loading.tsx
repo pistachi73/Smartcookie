@@ -2,7 +2,7 @@ import { SkeletonDashboard } from "@/features/dashboard/components/skeleton-dash
 import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
 import { DashboardSquare01Icon } from "@hugeicons-pro/core-solid-rounded";
 
-const LoadingDashboardPage = () => {
+const LoadingDashboardPage = async () => {
   return (
     <>
       <PortalNav

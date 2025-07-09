@@ -41,15 +41,15 @@ export const student = pgTable(
     interests: text(),
     age: integer(),
   },
-  (table) => ({
-    nameIdx: index().on(table.name),
-    emailIdx: index().on(table.email),
-    emailUnique: unique().on(table.email),
-    searchIdx: index("student_search_idx").using(
+  (table) => [
+    index().on(table.name),
+    index().on(table.email),
+    unique().on(table.email),
+    index("student_search_idx").using(
       "gin",
       sql`to_tsvector('english', ${table.name} || ' ' || ${table.email})`,
     ),
-  }),
+  ],
 );
 
 export type InsertStudent = typeof student.$inferInsert;

@@ -36,6 +36,10 @@ vi.mock("@/data-access/user/mutations", () => ({
   updateUser: vi.fn(),
 }));
 
+vi.mock("@/data-access/user-subscription/queries", () => ({
+  getUserSubscriptionByUserId: vi.fn(),
+}));
+
 // Mock the database
 vi.mock("@/db", () => ({
   db: {
@@ -52,6 +56,8 @@ import {
 import { createMockAccount } from "@/data-access/accounts/__mocks__";
 import { deleteTwoFactorConfirmationByToken } from "@/data-access/two-factor-confirmation/mutations";
 import { getTwoFactorConirmationByUserId } from "@/data-access/two-factor-confirmation/queries";
+import { createMockUserSubscription } from "@/data-access/user-subscription/__mocks__";
+import { getUserSubscriptionByUserId } from "@/data-access/user-subscription/queries";
 import { createMockUser } from "@/data-access/user/__mocks__";
 import { updateUser } from "@/data-access/user/mutations";
 import { getUserByEmail, getUserById } from "@/data-access/user/queries";
@@ -84,6 +90,10 @@ const mockGetUserByEmail = getUserByEmail as MockedFunction<
 >;
 const mockGetUserById = getUserById as MockedFunction<typeof getUserById>;
 const mockUpdateUser = updateUser as MockedFunction<typeof updateUser>;
+const mockGetUserSubscriptionByUserId =
+  getUserSubscriptionByUserId as MockedFunction<
+    typeof getUserSubscriptionByUserId
+  >;
 const mockDbTransaction = db.transaction as MockedFunction<
   typeof db.transaction
 >;
@@ -703,6 +713,8 @@ describe("jwtCallback", () => {
 
     expect(result).toEqual(token);
     expect(mockGetUserById).not.toHaveBeenCalled();
+    expect(mockGetAccountByUserId).not.toHaveBeenCalled();
+    expect(mockGetUserSubscriptionByUserId).not.toHaveBeenCalled();
   });
 
   it("should return token unchanged when user not found", async () => {
@@ -714,9 +726,11 @@ describe("jwtCallback", () => {
 
     expect(result).toEqual(token);
     expect(mockGetUserById).toHaveBeenCalledWith({ id: token.sub });
+    expect(mockGetAccountByUserId).not.toHaveBeenCalled();
+    expect(mockGetUserSubscriptionByUserId).not.toHaveBeenCalled();
   });
 
-  it("should update token with user data when user exists without OAuth account", async () => {
+  it("should update token with user data when user exists without OAuth account or subscription", async () => {
     const token = { sub: "user-123", oldProp: "should-remain" };
 
     const user = createMockUser({
@@ -725,10 +739,12 @@ describe("jwtCallback", () => {
       email: "john@example.com",
       role: "USER",
       isTwoFactorEnabled: true,
+      stripeCustomerId: "cus_123",
     });
 
     mockGetUserById.mockResolvedValue(user);
     mockGetAccountByUserId.mockResolvedValue(undefined);
+    mockGetUserSubscriptionByUserId.mockResolvedValue(undefined);
 
     const result = await jwtCallback({ token: token as any });
 
@@ -740,9 +756,19 @@ describe("jwtCallback", () => {
       email: "john@example.com",
       role: "USER",
       isTwoFactorEnabled: true,
+      stripeCustomerId: "cus_123",
+      subscriptionTier: undefined,
+      subscriptionStatus: undefined,
     });
     expect(mockGetUserById).toHaveBeenCalledWith({ id: token.sub });
-    expect(mockGetAccountByUserId).toHaveBeenCalledWith({ userId: token.sub });
+    expect(mockGetAccountByUserId).toHaveBeenCalledWith({
+      userId: token.sub,
+      columns: { provider: true },
+    });
+    expect(mockGetUserSubscriptionByUserId).toHaveBeenCalledWith({
+      userId: token.sub,
+      columns: { tier: true, status: true },
+    });
   });
 
   it("should update token with user data when user exists with OAuth account", async () => {
@@ -754,6 +780,7 @@ describe("jwtCallback", () => {
       email: "jane@example.com",
       role: "ADMIN",
       isTwoFactorEnabled: false,
+      stripeCustomerId: "cus_456",
     });
 
     const account = createMockAccount({
@@ -764,6 +791,7 @@ describe("jwtCallback", () => {
 
     mockGetUserById.mockResolvedValue(user);
     mockGetAccountByUserId.mockResolvedValue(account);
+    mockGetUserSubscriptionByUserId.mockResolvedValue(undefined);
 
     const result = await jwtCallback({ token });
 
@@ -774,6 +802,157 @@ describe("jwtCallback", () => {
       email: "jane@example.com",
       role: "ADMIN",
       isTwoFactorEnabled: false,
+      stripeCustomerId: "cus_456",
+      subscriptionTier: undefined,
+      subscriptionStatus: undefined,
+    });
+  });
+
+  describe("Subscription scenarios", () => {
+    it("should include active pro subscription data", async () => {
+      const token = { sub: "user-123" } as JWT;
+
+      const user = createMockUser({
+        id: "user-123",
+        name: "Pro User",
+        email: "pro@example.com",
+        role: "USER",
+        isTwoFactorEnabled: false,
+        stripeCustomerId: "cus_pro",
+      });
+
+      const subscription = createMockUserSubscription({
+        userId: "user-123",
+        status: "active",
+        tier: "pro",
+      });
+
+      mockGetUserById.mockResolvedValue(user);
+      mockGetAccountByUserId.mockResolvedValue(undefined);
+      mockGetUserSubscriptionByUserId.mockResolvedValue(subscription);
+
+      const result = await jwtCallback({ token });
+
+      expect(result).toEqual({
+        sub: "user-123",
+        isOAuth: false,
+        name: "Pro User",
+        email: "pro@example.com",
+        role: "USER",
+        isTwoFactorEnabled: false,
+        stripeCustomerId: "cus_pro",
+        subscriptionTier: "pro",
+        subscriptionStatus: "active",
+      });
+    });
+
+    it("should include inactive subscription data", async () => {
+      const token = { sub: "user-123" } as JWT;
+
+      const user = createMockUser({
+        id: "user-123",
+        name: "Inactive User",
+        email: "inactive@example.com",
+        role: "USER",
+        stripeCustomerId: "cus_inactive",
+      });
+
+      const subscription = createMockUserSubscription({
+        userId: "user-123",
+        status: "inactive",
+        tier: "pro",
+      });
+
+      mockGetUserById.mockResolvedValue(user);
+      mockGetAccountByUserId.mockResolvedValue(undefined);
+      mockGetUserSubscriptionByUserId.mockResolvedValue(subscription);
+
+      const result = await jwtCallback({ token });
+
+      expect(result).toEqual({
+        sub: "user-123",
+        isOAuth: false,
+        name: "Inactive User",
+        email: "inactive@example.com",
+        role: "USER",
+        isTwoFactorEnabled: false,
+        stripeCustomerId: "cus_inactive",
+        subscriptionTier: "pro",
+        subscriptionStatus: "inactive",
+      });
+    });
+
+    it("should handle user with OAuth account and active subscription", async () => {
+      const token = { sub: "user-123" } as JWT;
+
+      const user = createMockUser({
+        id: "user-123",
+        name: "OAuth Pro User",
+        email: "oauth.pro@example.com",
+        role: "USER",
+        isTwoFactorEnabled: false,
+        stripeCustomerId: "cus_oauth_pro",
+      });
+
+      const account = createMockAccount({
+        userId: "user-123",
+        provider: "github",
+        providerAccountId: "github-456",
+      });
+
+      const subscription = createMockUserSubscription({
+        userId: "user-123",
+        status: "active",
+        tier: "pro",
+      });
+
+      mockGetUserById.mockResolvedValue(user);
+      mockGetAccountByUserId.mockResolvedValue(account);
+      mockGetUserSubscriptionByUserId.mockResolvedValue(subscription);
+
+      const result = await jwtCallback({ token });
+
+      expect(result).toEqual({
+        sub: "user-123",
+        isOAuth: true,
+        name: "OAuth Pro User",
+        email: "oauth.pro@example.com",
+        role: "USER",
+        isTwoFactorEnabled: false,
+        stripeCustomerId: "cus_oauth_pro",
+        subscriptionTier: "pro",
+        subscriptionStatus: "active",
+      });
+    });
+
+    it("should handle user without stripeCustomerId", async () => {
+      const token = { sub: "user-123" } as JWT;
+
+      const user = createMockUser({
+        id: "user-123",
+        name: "No Stripe User",
+        email: "nostripe@example.com",
+        role: "USER",
+        stripeCustomerId: null,
+      });
+
+      mockGetUserById.mockResolvedValue(user);
+      mockGetAccountByUserId.mockResolvedValue(undefined);
+      mockGetUserSubscriptionByUserId.mockResolvedValue(undefined);
+
+      const result = await jwtCallback({ token });
+
+      expect(result).toEqual({
+        sub: "user-123",
+        isOAuth: false,
+        name: "No Stripe User",
+        email: "nostripe@example.com",
+        role: "USER",
+        isTwoFactorEnabled: false,
+        stripeCustomerId: null,
+        subscriptionTier: undefined,
+        subscriptionStatus: undefined,
+      });
     });
   });
 });
@@ -787,6 +966,9 @@ describe("sessionCallback", () => {
       role: "ADMIN",
       isTwoFactorEnabled: true,
       isOAuth: false,
+      stripeCustomerId: "cus_123",
+      subscriptionTier: "pro",
+      subscriptionStatus: "active",
     } as JWT;
 
     const session = {
@@ -804,6 +986,9 @@ describe("sessionCallback", () => {
         role: "ADMIN",
         isTwoFactorEnabled: true,
         isOAuth: false,
+        stripeCustomerId: "cus_123",
+        subscriptionTier: "pro",
+        hasActiveSubscription: true,
       },
       expires: "2024-12-31T23:59:59.999Z",
     });
@@ -814,6 +999,9 @@ describe("sessionCallback", () => {
       sub: "user-123",
       name: "John Doe",
       email: "john@example.com",
+      stripeCustomerId: "cus_123",
+      subscriptionTier: "pro",
+      subscriptionStatus: "active",
     } as JWT;
 
     const session = {
@@ -824,6 +1012,113 @@ describe("sessionCallback", () => {
 
     expect(result).toEqual({
       expires: "2024-12-31T23:59:59.999Z",
+    });
+  });
+
+  describe("Subscription status mapping", () => {
+    it("should set hasActiveSubscription to true when subscription status is active", async () => {
+      const token = {
+        sub: "user-123",
+        name: "Pro User",
+        email: "pro@example.com",
+        role: "USER",
+        isTwoFactorEnabled: false,
+        isOAuth: false,
+        stripeCustomerId: "cus_pro",
+        subscriptionTier: "pro",
+        subscriptionStatus: "active",
+      } as JWT;
+
+      const session = {
+        user: {},
+        expires: "2024-12-31T23:59:59.999Z",
+      } as Session;
+
+      const result = await sessionCallback({ token, session });
+
+      expect(result.user?.hasActiveSubscription).toBe(true);
+    });
+
+    it("should set hasActiveSubscription to false when subscription status is inactive", async () => {
+      const token = {
+        sub: "user-123",
+        name: "Inactive User",
+        email: "inactive@example.com",
+        role: "USER",
+        isTwoFactorEnabled: false,
+        isOAuth: false,
+        stripeCustomerId: "cus_inactive",
+        subscriptionTier: "pro",
+        subscriptionStatus: "inactive",
+      } as JWT;
+
+      const session = {
+        user: {},
+        expires: "2024-12-31T23:59:59.999Z",
+      } as Session;
+
+      const result = await sessionCallback({ token, session });
+
+      expect(result.user?.hasActiveSubscription).toBe(false);
+    });
+
+    it("should set hasActiveSubscription to false when subscription status is undefined", async () => {
+      const token = {
+        sub: "user-123",
+        name: "Free User",
+        email: "free@example.com",
+        role: "USER",
+        isTwoFactorEnabled: false,
+        isOAuth: false,
+        stripeCustomerId: "cus_free",
+        subscriptionTier: undefined,
+        subscriptionStatus: undefined,
+      } as JWT;
+
+      const session = {
+        user: {},
+        expires: "2024-12-31T23:59:59.999Z",
+      } as Session;
+
+      const result = await sessionCallback({ token, session });
+
+      expect(result.user?.hasActiveSubscription).toBe(false);
+    });
+
+    it("should handle user without stripeCustomerId", async () => {
+      const token = {
+        sub: "user-123",
+        name: "No Stripe User",
+        email: "nostripe@example.com",
+        role: "USER",
+        isTwoFactorEnabled: false,
+        isOAuth: false,
+        stripeCustomerId: null,
+        subscriptionTier: undefined,
+        subscriptionStatus: undefined,
+      } as JWT;
+
+      const session = {
+        user: {},
+        expires: "2024-12-31T23:59:59.999Z",
+      } as Session;
+
+      const result = await sessionCallback({ token, session });
+
+      expect(result).toEqual({
+        user: {
+          id: "user-123",
+          name: "No Stripe User",
+          email: "nostripe@example.com",
+          role: "USER",
+          isTwoFactorEnabled: false,
+          isOAuth: false,
+          stripeCustomerId: null,
+          subscriptionTier: undefined,
+          hasActiveSubscription: false,
+        },
+        expires: "2024-12-31T23:59:59.999Z",
+      });
     });
   });
 });

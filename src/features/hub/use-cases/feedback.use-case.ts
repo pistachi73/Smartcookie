@@ -22,9 +22,9 @@ export const getHubSurveysUseCase = withValidationAndAuth({
   schema: z.object({
     hubId: z.number(),
   }),
-  useCase: async ({ hubId }, userId) => {
+  useCase: async ({ hubId }, user) => {
     const feedback = await db.query.surveys.findMany({
-      where: and(eq(surveys.hubId, hubId), eq(surveys.userId, userId)),
+      where: and(eq(surveys.hubId, hubId), eq(surveys.userId, user.id)),
       columns: {
         createdAt: true,
         id: true,
@@ -45,7 +45,7 @@ export const getHubSurveysUseCase = withValidationAndAuth({
 });
 
 export const getSurveyTemplatesUseCase = withAuthenticationNoInput({
-  useCase: async (userId) => {
+  useCase: async (user) => {
     const templates = await db
       .select({
         id: surveyTemplates.id,
@@ -60,7 +60,7 @@ export const getSurveyTemplatesUseCase = withAuthenticationNoInput({
         surveyTemplateQuestions,
         eq(surveyTemplates.id, surveyTemplateQuestions.surveyTemplateId),
       )
-      .where(eq(surveyTemplates.userId, userId))
+      .where(eq(surveyTemplates.userId, user.id))
       .groupBy(
         surveyTemplates.id,
         surveyTemplates.title,
@@ -73,13 +73,13 @@ export const getSurveyTemplatesUseCase = withAuthenticationNoInput({
 
 export const createHubSurveyUseCase = withValidationAndAuth({
   schema: createHubSurveySchema,
-  useCase: async ({ hubId, surveyTemplateId }, userId) => {
+  useCase: async ({ hubId, surveyTemplateId }, user) => {
     return await db.transaction(async (tx) => {
       const students = await tx
         .select({ id: student.id })
         .from(student)
         .leftJoin(studentHub, eq(student.id, studentHub.studentId))
-        .where(and(eq(studentHub.hubId, hubId), eq(student.userId, userId)));
+        .where(and(eq(studentHub.hubId, hubId), eq(student.userId, user.id)));
 
       if (students.length === 0) {
         return {
@@ -92,7 +92,7 @@ export const createHubSurveyUseCase = withValidationAndAuth({
         .insert(surveys)
         .values({
           hubId,
-          userId,
+          userId: user.id,
           surveyTemplateId,
         })
         .returning({ id: surveys.id });

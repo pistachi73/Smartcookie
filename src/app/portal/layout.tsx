@@ -21,7 +21,7 @@ export default async function PortalLayout({
 
   return (
     <PortalProviders>
-      <AppSidebar collapsible="dock" />
+      <AppSidebar collapsible="dock" closeButton={false} user={user} />
       <SidebarInset className="h-full min-h-0 flex-col">
         {children}
       </SidebarInset>

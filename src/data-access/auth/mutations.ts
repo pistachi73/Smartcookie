@@ -6,15 +6,22 @@ import { hashPassword } from "../utils";
 import { signIn } from "@/core/config/auth-config";
 import { createDataAccessError, isDataAccessError } from "@/data-access/errors";
 import { getPasswordResetTokenByToken } from "@/data-access/password-reset-token/queries";
-import { withValidationOnly } from "@/data-access/protected-data-access";
+import {
+  withValidationAndAuth,
+  withValidationOnly,
+} from "@/data-access/protected-data-access";
 import { generateTwoFactorConfirmation } from "@/data-access/two-factor-confirmation/mutations";
 import {
   deleteTwoFactorTokenByToken,
   sendTwoFactorEmail,
 } from "@/data-access/two-factor-token/mutations";
 import { getTwoFactorTokenByEmail } from "@/data-access/two-factor-token/queries";
-import { createUser, updateUserPassword } from "@/data-access/user/mutations";
-import { getUserByEmail } from "@/data-access/user/queries";
+import {
+  createUser,
+  updateUser,
+  updateUserPassword,
+} from "@/data-access/user/mutations";
+import { getUserByEmail, getUserById } from "@/data-access/user/queries";
 import { sendEmailVerificationEmail } from "@/data-access/verification-token/mutations";
 import { getVerificationTokenByTokenAndEmail } from "@/data-access/verification-token/queries";
 import { db } from "@/db";
@@ -28,6 +35,8 @@ import {
   CredentialsSignInSchema,
   CredentialsSignUpSchema,
   ResetPasswordSchema,
+  UpdateUserAccountEmailSchema,
+  UpdateUserAccountPasswordSchema,
   VerifyPasswordSchema,
 } from "./schemas";
 
@@ -246,5 +255,90 @@ export const changePassword = withValidationOnly({
     });
 
     return true;
+  },
+});
+
+export const updateUserAccountEmail = withValidationAndAuth({
+  schema: UpdateUserAccountEmailSchema,
+  callback: async ({ newEmail, verificationToken }, currentUser) => {
+    const existingUser = await getUserByEmail({ email: newEmail });
+
+    if (existingUser) {
+      return createDataAccessError("DUPLICATE_RESOURCE");
+    }
+
+    if (!currentUser) {
+      return createDataAccessError("NOT_FOUND", "User not found!");
+    }
+
+    if (!currentUser.email || currentUser.email === newEmail) {
+      return createDataAccessError("EMAIL_MUST_BE_DIFFERENT");
+    }
+
+    if (!verificationToken) {
+      const res = await sendEmailVerificationEmail({
+        email: newEmail,
+      });
+      if (isDataAccessError(res)) {
+        return res;
+      }
+      return {
+        verifyEmail: true,
+      };
+    }
+
+    const existingToken = await getVerificationTokenByTokenAndEmail({
+      token: verificationToken,
+      email: newEmail,
+    });
+
+    if (!existingToken) {
+      return createDataAccessError("INVALID_TOKEN");
+    }
+
+    const hasExpired = new Date(existingToken.expires) < new Date();
+
+    if (hasExpired) {
+      return createDataAccessError("TOKEN_EXPIRED");
+    }
+
+    await updateUser({
+      id: currentUser.id,
+      data: {
+        email: newEmail,
+      },
+    });
+
+    return {
+      verifyEmail: false,
+    };
+  },
+});
+
+export const updateUserAccountPassword = withValidationAndAuth({
+  schema: UpdateUserAccountPasswordSchema,
+  callback: async ({ currentPassword, newPassword }, user) => {
+    const currentUser = await getUserById({ id: user.id });
+
+    if (!currentUser?.salt || !currentUser.password) {
+      return createDataAccessError("NOT_FOUND");
+    }
+
+    const passwordsMatch = await verifyPassword({
+      plainTextPassword: currentPassword,
+      salt: currentUser.salt,
+      hashedPassword: currentUser.password,
+    });
+
+    if (!passwordsMatch) {
+      return createDataAccessError("INVALID_LOGIN");
+    }
+
+    await updateUserPassword({
+      data: {
+        userId: currentUser.id,
+        password: newPassword,
+      },
+    });
   },
 });

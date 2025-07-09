@@ -9,9 +9,7 @@ export const emailMarketing = pgTable(
     email: text().notNull(),
     createdAt: timestamp({ mode: "date" }).defaultNow().notNull(),
   },
-  (table) => ({
-    emailIdx: index().on(table.email),
-  }),
+  (table) => [index().on(table.email)],
 );
 
 export type InsertEmailMarketing = typeof emailMarketing.$inferInsert;

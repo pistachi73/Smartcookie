@@ -75,7 +75,7 @@ export const FeedbackSidebar = () => {
       >
         <Tabs.List className={"sticky top-0 px-4 h-12 pt-3"}>
           {tabs.map((tab) => (
-            <Tabs.Tab key={tab.id} id={tab.id} className="px-2 ">
+            <Tabs.Tab key={tab.id} id={tab.id} className="px-2">
               {({ isSelected }) => {
                 return (
                   <p

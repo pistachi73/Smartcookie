@@ -9,7 +9,7 @@ import { GetNotesByHubIdSchema } from "./schemas";
 
 export const getNotesByHubId = withValidationAndAuth({
   schema: GetNotesByHubIdSchema,
-  callback: async ({ hubId }, userId) => {
+  callback: async ({ hubId }, user) => {
     const notes = await db
       .select({
         id: quickNote.id,
@@ -20,7 +20,7 @@ export const getNotesByHubId = withValidationAndAuth({
       .from(quickNote)
       .where(
         and(
-          eq(quickNote.userId, userId),
+          eq(quickNote.userId, user.id),
           hubId === 0 ? isNull(quickNote.hubId) : eq(quickNote.hubId, hubId),
         ),
       )

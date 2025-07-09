@@ -36,8 +36,8 @@ const getCachedSurveyTemplatesCount = cache(
 
 export const getSurveyTemplates = withValidationAndAuth({
   schema: GetSurveyTemplatesSchema,
-  callback: async ({ page, pageSize, sortBy, q }, userId) => {
-    const userCondition = eq(surveyTemplates.userId, userId);
+  callback: async ({ page, pageSize, sortBy, q }, user) => {
+    const userCondition = eq(surveyTemplates.userId, user.id);
     const whereCondition =
       q && q.trim() !== ""
         ? and(userCondition, buildSearchCondition(q))
@@ -63,7 +63,7 @@ export const getSurveyTemplates = withValidationAndAuth({
               ? desc(surveyTemplates.updatedAt)
               : desc(surveyTemplates.totalResponses),
         ),
-      getCachedSurveyTemplatesCount(userId, q),
+      getCachedSurveyTemplatesCount(user.id, q),
     ]);
 
     return {
@@ -80,11 +80,11 @@ export const getSurveyTemplateById = withValidationAndAuth({
   schema: z.object({
     id: z.number(),
   }),
-  callback: async ({ id }, userId) => {
+  callback: async ({ id }, user) => {
     const surveyTemplate = await db.query.surveyTemplates.findFirst({
       where: and(
         eq(surveyTemplates.id, id),
-        eq(surveyTemplates.userId, userId),
+        eq(surveyTemplates.userId, user.id),
       ),
       columns: {
         id: true,

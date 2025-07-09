@@ -8,6 +8,48 @@
       "when": 1750937101889,
       "tag": "0000_acoustic_darwin",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1751706672350,
+      "tag": "0001_dizzy_peter_quill",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1751916331365,
+      "tag": "0002_little_valkyrie",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1751916369484,
+      "tag": "0003_lively_roulette",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1751982452689,
+      "tag": "0004_equal_millenium_guard",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1751982914577,
+      "tag": "0005_tidy_scarlet_spider",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1752074382590,
+      "tag": "0006_woozy_bug",
+      "breakpoints": true
     }
   ]
 }

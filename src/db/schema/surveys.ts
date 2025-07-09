@@ -25,11 +25,11 @@ export const surveys = pgTable(
       .notNull()
       .defaultNow(),
   },
-  (t) => ({
-    userIdIdx: index().on(t.userId),
-    surveyTemplateIdIdx: index().on(t.surveyTemplateId),
-    hubIdIdx: index().on(t.hubId),
-  }),
+  (t) => [
+    index().on(t.userId),
+    index().on(t.surveyTemplateId),
+    index().on(t.hubId),
+  ],
 );
 
 export const surveysRelations = relations(surveys, ({ one, many }) => ({

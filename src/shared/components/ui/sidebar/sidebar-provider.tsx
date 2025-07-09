@@ -104,7 +104,7 @@ const SidebarProvider = ({
           "group/sidebar-root has-data-[sidebar-intent=inset]:bg-sidebar dark:has-data-[sidebar-intent=inset]:bg-bg",
           "[--sidebar-width-dock:calc(var(--spacing)*16)]",
           "[--sidebar-width-mobile:18rem]",
-          "[--sidebar-width:15rem]",
+          "[--sidebar-width:16rem]",
           "[--sidebar-border:var(--color-border)]",
           "[--sidebar-secondary:color-mix(in_oklab,var(--color-secondary)_60%,white_20%)]",
           "[--sidebar-accent:color-mix(in_oklab,var(--color-accent)_60%,white_20%)]",

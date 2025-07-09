@@ -16,11 +16,11 @@ import { findOverlappingIntervals, hasOverlappingIntervals } from "./utils";
 
 export const addSessions = withValidationAndAuth({
   schema: AddSessionsSchema,
-  callback: async ({ sessions, hubId, trx = db }, userId) => {
+  callback: async ({ sessions, hubId, trx = db }, user) => {
     await trx.transaction(async (trx) => {
       const toAddSessions: InsertSession[] = sessions.map((s) => ({
         ...s,
-        userId,
+        userId: user.id,
         hubId,
       }));
 
@@ -56,7 +56,7 @@ export const addSessions = withValidationAndAuth({
 
 export const checkSessionConflicts = withValidationAndAuth({
   schema: CheckSessionConflictsSchema,
-  callback: async (data, userId) => {
+  callback: async (data, user) => {
     const { sessions, excludedSessionIds } = data;
 
     // First check if the new sessions overlap with each other
@@ -98,7 +98,7 @@ export const checkSessionConflicts = withValidationAndAuth({
           .leftJoin(hub, eq(session.hubId, hub.id))
           .where(
             and(
-              eq(session.userId, userId),
+              eq(session.userId, user.id),
               between(
                 session.startTime,
                 dayStart.toISOString(),
@@ -172,7 +172,7 @@ export const checkSessionConflicts = withValidationAndAuth({
 
 export const updateSession = withValidationAndAuth({
   schema: UpdateSessionSchema,
-  callback: async (data, userId) => {
+  callback: async (data, user) => {
     const { sessionId, data: updateData } = data;
 
     const updatedSession = await db
@@ -182,7 +182,7 @@ export const updateSession = withValidationAndAuth({
         endTime: updateData.endTime,
         status: updateData.status,
       })
-      .where(and(eq(session.id, sessionId), eq(session.userId, userId)))
+      .where(and(eq(session.id, sessionId), eq(session.userId, user.id)))
       .returning();
 
     return { success: true, data: updatedSession[0] };
@@ -191,11 +191,11 @@ export const updateSession = withValidationAndAuth({
 
 export const deleteSession = withValidationAndAuth({
   schema: DeleteSessionsSchema,
-  callback: async (data, userId) => {
+  callback: async (data, user) => {
     await db
       .delete(session)
       .where(
-        and(inArray(session.id, data.sessionIds), eq(session.userId, userId)),
+        and(inArray(session.id, data.sessionIds), eq(session.userId, user.id)),
       );
 
     return { success: true };

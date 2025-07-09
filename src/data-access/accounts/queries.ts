@@ -11,22 +11,24 @@ import {
 
 export const getAccountByUserId = withValidationOnly({
   schema: GetAccountByUserIdSchema,
-  callback: async ({ userId }) => {
+  callback: async ({ userId, columns }) => {
     return await db.query.account.findFirst({
       where: eq(account.userId, userId),
+      columns,
     });
   },
 });
 
 export const getAccountByProviderAndUserId = withValidationOnly({
   schema: GetAccountByProviderAndUserIdSchema,
-  callback: async ({ userId, provider, providerAccountId }) => {
+  callback: async ({ userId, provider, providerAccountId, columns }) => {
     return await db.query.account.findFirst({
       where: and(
         eq(account.userId, userId),
         eq(account.provider, provider),
         eq(account.providerAccountId, providerAccountId),
       ),
+      columns,
     });
   },
 });

@@ -2,7 +2,10 @@
 
 import { hashPassword } from "../utils";
 
-import { withValidationOnly } from "@/data-access/protected-data-access";
+import {
+  withAuthenticationNoInput,
+  withValidationOnly,
+} from "@/data-access/protected-data-access";
 import { db } from "@/db";
 import { user } from "@/db/schema";
 import { eq } from "drizzle-orm";
@@ -52,5 +55,11 @@ export const updateUserPassword = withValidationOnly({
       data: { password: hashedPassword, salt },
       trx,
     });
+  },
+});
+
+export const deleteUser = withAuthenticationNoInput({
+  callback: async (authUser) => {
+    await db.delete(user).where(eq(user.id, authUser.id));
   },
 });

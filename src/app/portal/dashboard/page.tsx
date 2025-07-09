@@ -19,12 +19,12 @@ const DashboardPage = async () => {
 
   await Promise.all([
     queryClient.prefetchQuery(
-      getAgendaSessionsQueryOptions(user!.id, [new Date(), new Date()]),
+      getAgendaSessionsQueryOptions([new Date(), new Date()]),
     ),
     queryClient.prefetchQuery(
-      getWeeklyHoursQueryOptions(user!.id, new Date().toISOString()),
+      getWeeklyHoursQueryOptions(new Date().toISOString()),
     ),
-    queryClient.prefetchQuery(getNextSessionQueryOptions(user!.id)),
+    queryClient.prefetchQuery(getNextSessionQueryOptions()),
   ]);
 
   const dehydratedState = dehydrate(queryClient);

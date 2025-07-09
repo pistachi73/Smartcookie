@@ -21,11 +21,11 @@ export const account = pgTable(
     id_token: text(),
     session_state: text(),
   },
-  (account) => ({
-    compoundKey: primaryKey({
+  (account) => [
+    primaryKey({
       columns: [account.provider, account.providerAccountId],
     }),
-  }),
+  ],
 );
 
 export const accountRelations = relations(account, ({ one }) => ({

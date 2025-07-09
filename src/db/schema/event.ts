@@ -13,22 +13,26 @@ import { hub } from "./hub";
 import { user } from "./user";
 import { pgTable } from "./utils";
 
-export const event = pgTable("event", {
-  id: serial().primaryKey(),
-  hubId: integer().references(() => hub.id, { onDelete: "cascade" }),
-  userId: uuid()
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-  title: text().notNull(),
-  description: text(),
-  startTime: timestamp({ mode: "string", withTimezone: true }).notNull(),
-  endTime: timestamp({ mode: "string", withTimezone: true }).notNull(),
-  price: integer(),
-  isRecurring: boolean().default(false),
-  recurrenceRule: text(),
-  timezone: text().default("UTC").notNull(),
-  color: text().default("blue").notNull(),
-});
+export const event = pgTable(
+  "event",
+  {
+    id: serial().primaryKey(),
+    hubId: integer().references(() => hub.id, { onDelete: "cascade" }),
+    userId: uuid()
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    title: text().notNull(),
+    description: text(),
+    startTime: timestamp({ mode: "string", withTimezone: true }).notNull(),
+    endTime: timestamp({ mode: "string", withTimezone: true }).notNull(),
+    price: integer(),
+    isRecurring: boolean().default(false),
+    recurrenceRule: text(),
+    timezone: text().default("UTC").notNull(),
+    color: text().default("blue").notNull(),
+  },
+  () => [],
+);
 
 export const eventRelations = relations(event, ({ one, many }) => ({
   hub: one(hub, {

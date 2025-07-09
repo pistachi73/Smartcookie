@@ -16,6 +16,8 @@ export const ERROR_TYPES = {
   AUTHENTICATION_ERROR: "AUTHENTICATION_ERROR",
   UNEXPECTED_ERROR: "UNEXPECTED_ERROR",
   NOT_FOUND: "NOT_FOUND",
+  EMAIL_MUST_BE_DIFFERENT: "EMAIL_MUST_BE_DIFFERENT",
+  USER_ALREADY_HAS_SUBSCRIPTION: "USER_ALREADY_HAS_SUBSCRIPTION",
 } as const;
 
 /**
@@ -37,6 +39,8 @@ const ERROR_MESSAGES: Record<ErrorType, string> = {
   AUTHENTICATION_ERROR: "Not authenticated",
   UNEXPECTED_ERROR: "An unexpected error occurred",
   NOT_FOUND: "Resource not found",
+  EMAIL_MUST_BE_DIFFERENT: "Email must be different",
+  USER_ALREADY_HAS_SUBSCRIPTION: "User already has a subscription",
 };
 
 /**

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const UpdateEmailSchema = z.object({
-  email: z.string().email({
+  newEmail: z.string().email({
     message: "Email is required",
   }),
   verificationToken: z.string().optional(),

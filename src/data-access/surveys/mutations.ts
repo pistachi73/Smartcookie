@@ -8,9 +8,9 @@ import { DeleteSurveySchema } from "./schemas";
 
 export const deleteSurvey = withValidationAndAuth({
   schema: DeleteSurveySchema,
-  callback: async ({ surveyId }, userId) => {
+  callback: async ({ surveyId }, user) => {
     await db
       .delete(surveys)
-      .where(and(eq(surveys.id, surveyId), eq(surveys.userId, userId)));
+      .where(and(eq(surveys.id, surveyId), eq(surveys.userId, user.id)));
   },
 });

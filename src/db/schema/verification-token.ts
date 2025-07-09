@@ -9,9 +9,7 @@ export const verificationToken = pgTable(
     email: text().notNull(),
     expires: timestamp({ mode: "date" }).notNull(),
   },
-  (vt) => ({
-    unique: unique().on(vt.email, vt.token),
-  }),
+  (vt) => [unique().on(vt.email, vt.token)],
 );
 
 export type VerificationToken = typeof verificationToken.$inferSelect;

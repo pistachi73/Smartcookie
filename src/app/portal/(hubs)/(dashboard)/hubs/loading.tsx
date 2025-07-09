@@ -2,7 +2,7 @@ import { SkeletonHubList } from "@/features/hub/components/skeleton-hub-list";
 import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
 import { FolderLibraryIcon } from "@hugeicons-pro/core-solid-rounded";
 
-export default function HubsLoading() {
+const LoadingHubsPage = () => {
   return (
     <>
       <PortalNav
@@ -14,4 +14,6 @@ export default function HubsLoading() {
       <SkeletonHubList />
     </>
   );
-}
+};
+
+export default LoadingHubsPage;

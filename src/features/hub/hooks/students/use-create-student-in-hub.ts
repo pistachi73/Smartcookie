@@ -15,7 +15,7 @@ export const useCreateStudentInHub = () => {
     onSuccess: (data, variables) => {
       if (!data.success) return;
       queryClient.invalidateQueries({
-        queryKey: ["user-students", user.id],
+        queryKey: ["user-students"],
       });
       queryClient.invalidateQueries({
         queryKey: ["hub-students", variables.hubId],

@@ -1,25 +1,7 @@
 import { currentUser } from "@/shared/lib/auth";
 import { PublicError } from "@/shared/services/errors";
+import type { AuthUser } from "@/types/next-auth";
 import type { z } from "zod";
-
-export function withAuthentication<TData, TResult>({
-  callback,
-}: {
-  callback: (data: TData, userId: string) => Promise<TResult>;
-}) {
-  return async (data: TData): Promise<TResult> => {
-    // Get authenticated user
-    const authenticatedUser = await currentUser();
-
-    // Verify authentication
-    if (!authenticatedUser || !authenticatedUser.id) {
-      throw new PublicError("Not authenticated");
-    }
-
-    // Call the original use case with authenticated userId
-    return callback(data, authenticatedUser.id);
-  };
-}
 
 /**
  * Wraps a use case function with Zod schema validation and authentication
@@ -39,7 +21,7 @@ export function withValidationAndAuth<TSchema extends z.ZodType, TResult>({
   callback,
 }: {
   schema: TSchema;
-  callback: (data: z.infer<TSchema>, userId: string) => Promise<TResult>;
+  callback: (data: z.infer<TSchema>, user: AuthUser) => Promise<TResult>;
 }) {
   return async (data: z.infer<TSchema>): Promise<TResult> => {
     const authenticatedUser = await currentUser();
@@ -54,14 +36,14 @@ export function withValidationAndAuth<TSchema extends z.ZodType, TResult>({
       throw new Error("Validation failed", { cause: parseResult.error });
     }
 
-    return callback(parseResult.data, authenticatedUser.id);
+    return callback(parseResult.data, authenticatedUser);
   };
 }
 
 export function withAuthenticationNoInput<TResult>({
   callback,
 }: {
-  callback: (userId: string) => Promise<TResult>;
+  callback: (user: AuthUser) => Promise<TResult>;
 }) {
   return async (): Promise<TResult> => {
     const authenticatedUser = await currentUser();
@@ -70,7 +52,7 @@ export function withAuthenticationNoInput<TResult>({
       throw new PublicError("Not authenticated");
     }
 
-    return callback(authenticatedUser.id);
+    return callback(authenticatedUser);
   };
 }
 

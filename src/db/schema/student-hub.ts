@@ -15,11 +15,11 @@ export const studentHub = pgTable(
       .notNull()
       .references(() => hub.id, { onDelete: "cascade" }),
   },
-  (t) => ({
-    studentIdIdx: index().on(t.studentId),
-    hubIdIdx: index().on(t.hubId),
-    unq: unique().on(t.studentId, t.hubId),
-  }),
+  (t) => [
+    index().on(t.studentId),
+    index().on(t.hubId),
+    unique().on(t.studentId, t.hubId),
+  ],
 );
 
 export const studentHubRelations = relations(studentHub, ({ one }) => ({

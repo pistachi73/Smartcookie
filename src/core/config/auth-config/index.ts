@@ -35,6 +35,7 @@ export const {
     signIn: "/login",
     error: "/error",
   },
+
   callbacks: {
     signIn: signInCallback,
     jwt: jwtCallback,

@@ -9,9 +9,7 @@ export const passwordResetToken = pgTable(
     email: text().notNull(),
     expires: timestamp({ mode: "date" }).notNull(),
   },
-  (t) => ({
-    passwordResetTokenUnique: unique().on(t.email, t.token),
-  }),
+  (t) => [unique().on(t.email, t.token)],
 );
 
 export type PasswordResetToken = typeof passwordResetToken.$inferSelect;

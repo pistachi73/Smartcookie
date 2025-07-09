@@ -5,10 +5,7 @@ import {
   getWeeklyHoursUseCase,
 } from "../use-cases/dashboard.use-case";
 
-export const getAgendaSessionsQueryOptions = (
-  userId: string,
-  dateInterval: [Date, Date],
-) => {
+export const getAgendaSessionsQueryOptions = (dateInterval: [Date, Date]) => {
   const dayOfYear = getDayOfYear(dateInterval[0]);
   const dayOfYearEnd = getDayOfYear(dateInterval[1]);
   const startYear = getYear(dateInterval[0]);
@@ -17,7 +14,6 @@ export const getAgendaSessionsQueryOptions = (
   return queryOptions({
     queryKey: [
       "agenda-sessions",
-      userId,
       `${dayOfYear}-${startYear}`,
       `${dayOfYearEnd}-${endYear}}`,
     ],
@@ -31,13 +27,13 @@ export const getAgendaSessionsQueryOptions = (
   });
 };
 
-export const getWeeklyHoursQueryOptions = (userId: string, date: string) => {
+export const getWeeklyHoursQueryOptions = (date: string) => {
   const dateObj = new Date(date);
   const year = getYear(dateObj);
   const yearWeek = getWeek(dateObj);
 
   return queryOptions({
-    queryKey: ["weekly-hours", userId, `${yearWeek}-${year}`],
+    queryKey: ["weekly-hours", `${yearWeek}-${year}`],
     queryFn: () => getWeeklyHoursUseCase({ date }),
   });
 };

@@ -17,7 +17,8 @@
     "start": "next start",
     "email": "email dev --dir src/emails --port 4000",
     "test": "vitest",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "stripe:listen": "stripe listen --forward-to http://localhost:3000/api/webhook/stripe/"
   },
   "dependencies": {
     "@auth/core": "^0.37.2",
@@ -64,6 +65,7 @@
     "resend": "^4.0.0",
     "rrule": "^2.8.1",
     "sonner": "^1.7.0",
+    "stripe": "^18.3.0",
     "superjson": "^2.2.2",
     "temporal-polyfill": "^0.2.5",
     "zod": "^3.25.67",

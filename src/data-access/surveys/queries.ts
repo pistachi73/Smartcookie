@@ -9,9 +9,9 @@ import { GetSurveysByHubIdSchema } from "./schemas";
 
 export const getSurveysByHubId = withValidationAndAuth({
   schema: GetSurveysByHubIdSchema,
-  callback: async ({ hubId }, userId) => {
+  callback: async ({ hubId }, user) => {
     const res = await db.query.surveys.findMany({
-      where: and(eq(surveys.hubId, hubId), eq(surveys.userId, userId)),
+      where: and(eq(surveys.hubId, hubId), eq(surveys.userId, user.id)),
       columns: {
         createdAt: true,
         id: true,

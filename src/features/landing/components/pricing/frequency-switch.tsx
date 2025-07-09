@@ -8,9 +8,11 @@ import * as motion from "motion/react-m";
 import { useEffect, useRef, useState } from "react";
 import "./frequency-switch.css";
 
+export type PaymentFrequency = "M" | "A";
+
 type PlanFrequencySwitchProps = {
-  paymentFrequency: "M" | "A";
-  setPaymentFrequency: (paymentFrequency: "M" | "A") => void;
+  paymentFrequency: PaymentFrequency;
+  setPaymentFrequency: (paymentFrequency: PaymentFrequency) => void;
 };
 
 export const PlanFrequencySwitch = ({
@@ -42,11 +44,11 @@ export const PlanFrequencySwitch = ({
   }, [paymentFrequency]);
 
   return (
-    <div className="relative flex items-center justify-center p-1 bg-muted rounded-full gap-1t">
+    <div className="relative flex items-center justify-center p-0.5 bg-muted rounded-full gap-0.5 w-fit">
       {/* Blob that matches active button dimensions */}
       {blobStyle.width > 0 && (
         <motion.div
-          className="absolute rounded-full h-[calc(100%-8px)] top-1 bg-white shadow-sm border z-0"
+          className="absolute rounded-full h-[calc(100%-4px)] top-0.5 bg-white shadow-sm border z-0"
           animate={{
             left: blobStyle.left,
             width: blobStyle.width,
@@ -63,9 +65,9 @@ export const PlanFrequencySwitch = ({
         }}
         type="button"
         intent="plain"
-        size="large"
+        size="medium"
         className={cn(
-          "hover:bg-transparent flex items-center gap-2 font-semibold transition-colors relative z-10",
+          "hover:bg-transparent flex items-center gap-1 font-medium transition-colors relative z-10",
           paymentFrequency === "M" ? "" : "text-muted-fg",
         )}
       >
@@ -80,9 +82,9 @@ export const PlanFrequencySwitch = ({
         }}
         type="button"
         intent="plain"
-        size="large"
+        size="medium"
         className={cn(
-          "hover:bg-transparent flex items-center gap-2 font-semibold transition-colors relative z-10",
+          "hover:bg-transparent flex items-center gap-1 font-medium transition-colors relative z-10",
           paymentFrequency === "A" ? "" : "text-muted-fg",
         )}
       >

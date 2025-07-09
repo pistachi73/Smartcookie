@@ -15,14 +15,14 @@ export const eventParticipant = pgTable(
       .references(() => student.id, { onDelete: "cascade" }),
     attended: boolean().default(false),
   },
-  (t) => ({
-    cpk: primaryKey({
+  (t) => [
+    primaryKey({
       name: "composite_key",
       columns: [t.participantId, t.eventOccurrenceId],
     }),
-    participantIdx: index().on(t.participantId),
-    eventOccurrenceIdx: index().on(t.eventOccurrenceId),
-  }),
+    index().on(t.participantId),
+    index().on(t.eventOccurrenceId),
+  ],
 );
 
 export const eventParticipantRelations = relations(

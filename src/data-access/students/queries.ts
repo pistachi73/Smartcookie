@@ -3,16 +3,16 @@
 import { db } from "@/db";
 
 import { attendance, session, student, studentHub } from "@/db/schema";
+import { and, eq, sql } from "drizzle-orm";
 import {
   withAuthenticationNoInput,
   withValidationAndAuth,
-} from "@/shared/lib/protected-use-case";
-import { and, eq, sql } from "drizzle-orm";
+} from "../protected-data-access";
 import { GetStudentsByHubIdSchema } from "./schemas";
 
 export const getStudentsByHubId = withValidationAndAuth({
   schema: GetStudentsByHubIdSchema,
-  useCase: async ({ hubId }) => {
+  callback: async ({ hubId }) => {
     const hubStudents = await db
       .select({
         id: student.id,
@@ -43,7 +43,7 @@ export const getStudentsByHubId = withValidationAndAuth({
 });
 
 export const getStudentsByUserId = withAuthenticationNoInput({
-  useCase: async (userId) => {
+  callback: async (user) => {
     const students = await db
       .select({
         id: student.id,
@@ -52,7 +52,7 @@ export const getStudentsByUserId = withAuthenticationNoInput({
         image: student.image,
       })
       .from(student)
-      .where(eq(student.userId, userId));
+      .where(eq(student.userId, user.id));
     return students;
   },
 });

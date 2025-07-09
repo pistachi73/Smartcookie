@@ -9,7 +9,7 @@ import {
 
 export const addAttendance = withValidationAndAuth({
   schema: AddAttendanceSchema,
-  callback: async ({ trx = db, data }, userId) => {
+  callback: async ({ trx = db, data }) => {
     const { sessionIds, studentIds, hubId } = data;
 
     if (!sessionIds.length || !studentIds.length) {

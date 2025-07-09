@@ -16,7 +16,7 @@ const config = {
     optimizePackageImports: [
       "@hugeicons/react",
       "@hugeicons-pro/core-solid-rounded",
-      "@hugeicons-pro/core-outline-rounded",
+      "@hugeicons-pro/core-stroke-rounded",
     ],
   },
 

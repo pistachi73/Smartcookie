@@ -16,14 +16,14 @@ import {
 
 export const createSurveyTemplate = withValidationAndAuth({
   schema: CreateSurveyTemplateSchema,
-  callback: async ({ title, description, questions }, userId) => {
+  callback: async ({ title, description, questions }, user) => {
     await db.transaction(async (tx) => {
       const [surveyTemplate] = await tx
         .insert(surveyTemplates)
         .values({
           title,
           description,
-          userId,
+          userId: user.id,
         })
         .returning({ id: surveyTemplates.id });
 
@@ -50,7 +50,7 @@ export const updateSurveyTemplate = withValidationAndAuth({
   schema: UpdateSurveyTemplateSchema,
   callback: async (
     { id: surveyTemplateId, title, description, questions },
-    userId,
+    user,
   ) => {
     await db.transaction(async (tx) => {
       // Update survey template basic info
@@ -63,7 +63,7 @@ export const updateSurveyTemplate = withValidationAndAuth({
         .where(
           and(
             eq(surveyTemplates.id, surveyTemplateId),
-            eq(surveyTemplates.userId, userId),
+            eq(surveyTemplates.userId, user.id),
           ),
         );
 
@@ -151,11 +151,11 @@ export const updateSurveyTemplate = withValidationAndAuth({
 
 export const deleteSurveyTemplate = withValidationAndAuth({
   schema: DeleteSurveyTemplateSchema,
-  callback: async ({ id }, userId) => {
+  callback: async ({ id }, user) => {
     await db
       .delete(surveyTemplates)
       .where(
-        and(eq(surveyTemplates.id, id), eq(surveyTemplates.userId, userId)),
+        and(eq(surveyTemplates.id, id), eq(surveyTemplates.userId, user.id)),
       );
   },
 });

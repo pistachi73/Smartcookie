@@ -23,4 +23,5 @@ export * from "./two-factor-confirmation";
 export * from "./two-factor-token";
 export * from "./user";
 export * from "./user-session";
+export * from "./user-subscription";
 export * from "./verification-token";

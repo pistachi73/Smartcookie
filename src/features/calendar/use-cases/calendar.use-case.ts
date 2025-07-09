@@ -60,11 +60,11 @@ export const getCalendarSessionsByDateRange = async (
 
 export const getCalendarSessionsByDateRangeUseCase = withValidationAndAuth({
   schema: GetCalendarSessionsByDateRangeSchema,
-  useCase: async ({ startDate, endDate }, userId) => {
+  useCase: async ({ startDate, endDate }, user) => {
     const sess = await getCalendarSessionsByDateRange(
       startDate,
       endDate,
-      userId,
+      user.id,
     );
 
     console.log("sess students", sess[0]?.students.length, sess[0]?.students);

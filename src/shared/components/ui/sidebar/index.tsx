@@ -187,7 +187,6 @@ const footer = tv({
         "**:data-[slot=menu-trigger]:**:data-[slot=chevron]:ml-auto **:data-[slot=menu-trigger]:**:data-[slot=chevron]:transition-transform **:data-[slot=menu-trigger]:w-full **:data-[slot=menu-trigger]:data-pressed:**:data-[slot=chevron]:rotate-180",
       ],
       true: [
-        "**:data-[slot=avatar]:*:size-6 **:data-[slot=avatar]:size-6",
         "**:data-[slot=chevron]:hidden **:data-[slot=menu-label]:hidden",
         "**:data-[slot=menu-trigger]:grid **:data-[slot=menu-trigger]:size-8 **:data-[slot=menu-trigger]:place-content-center",
       ],

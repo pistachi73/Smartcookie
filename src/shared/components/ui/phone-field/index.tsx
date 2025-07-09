@@ -1,6 +1,5 @@
 "use client";
 
-import examples from "libphonenumber-js/examples.mobile.json";
 import {
   AsYouType,
   type CountryCode,
@@ -49,9 +48,15 @@ function getFlagEmoji(countryCode: string) {
 }
 
 // Get example phone number for a country
-function getExampleForCountry(countryCode: CountryCode): string {
-  const example = getExampleNumber(countryCode, examples);
-  return example ? example.formatNational() : "";
+async function getExampleForCountry(countryCode: CountryCode): Promise<string> {
+  try {
+    const examples = await import("libphonenumber-js/examples.mobile.json");
+    const example = getExampleNumber(countryCode, examples.default);
+    return example ? example.formatNational() : "";
+  } catch (error) {
+    console.warn("Failed to load phone examples:", error);
+    return "";
+  }
 }
 
 interface PhoneFieldProps
@@ -151,8 +156,10 @@ export const PhoneField = ({
   }, [value, selectedCountry]);
 
   // Get placeholder based on selected country
-  const placeholder = useMemo(() => {
-    return getExampleForCountry(selectedCountry);
+  const [placeholder, setPlaceholder] = useState("");
+
+  useEffect(() => {
+    getExampleForCountry(selectedCountry).then(setPlaceholder);
   }, [selectedCountry]);
 
   // Handle text input changes

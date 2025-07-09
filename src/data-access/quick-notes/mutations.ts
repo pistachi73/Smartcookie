@@ -13,7 +13,7 @@ import {
 
 export const createQuickNote = withValidationAndAuth({
   schema: CreateQuickNoteSchema,
-  callback: async ({ hubId, content, updatedAt }, userId) => {
+  callback: async ({ hubId, content, updatedAt }, user) => {
     const actualHubId = hubId === 0 ? null : hubId;
 
     const newNote = await db
@@ -22,7 +22,7 @@ export const createQuickNote = withValidationAndAuth({
         content,
         hubId: actualHubId,
         updatedAt,
-        userId,
+        userId: user.id,
       })
       .returning();
 
@@ -32,7 +32,7 @@ export const createQuickNote = withValidationAndAuth({
 
 export const updateQuickNote = withValidationAndAuth({
   schema: UpdateQuickNoteSchema,
-  callback: async ({ id, content, updatedAt }, userId) => {
+  callback: async ({ id, content, updatedAt }, user) => {
     const updateData: Partial<InsertQuickNote> = {
       content,
     };
@@ -45,7 +45,7 @@ export const updateQuickNote = withValidationAndAuth({
     const updatedNote = await db
       .update(quickNote)
       .set(updateData)
-      .where(and(eq(quickNote.id, id), eq(quickNote.userId, userId)))
+      .where(and(eq(quickNote.id, id), eq(quickNote.userId, user.id)))
       .returning({
         id: quickNote.id,
         content: quickNote.content,
@@ -59,10 +59,10 @@ export const updateQuickNote = withValidationAndAuth({
 
 export const deleteQuickNote = withValidationAndAuth({
   schema: DeleteQuickNoteSchema,
-  callback: async ({ id }, userId) => {
+  callback: async ({ id }, user) => {
     await db
       .delete(quickNote)
-      .where(and(eq(quickNote.id, id), eq(quickNote.userId, userId)));
+      .where(and(eq(quickNote.id, id), eq(quickNote.userId, user.id)));
 
     return { success: true };
   },

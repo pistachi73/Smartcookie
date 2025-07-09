@@ -4,10 +4,13 @@ import { cn } from "@/shared/lib/classes";
 import { HugeiconsIcon } from "@hugeicons/react";
 
 import {
+  AccountSetting02Icon,
   Calendar03Icon,
   Comment01Icon,
   DashboardSquare01Icon,
   FolderLibraryIcon,
+  Invoice02Icon,
+  Logout01Icon,
   NoteIcon,
   UserGroupIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
@@ -16,12 +19,13 @@ import {
   Calendar03Icon as Calendar03IconSolid,
   Comment01Icon as Comment01IconSolid,
   DashboardSquare01Icon as DashboardSquare01IconSolid,
+  Diamond02Icon,
   FolderLibraryIcon as FolderLibraryIconSolid,
   NoteIcon as NoteIconSolid,
   UserGroupIcon as UserGroupIconSolid,
 } from "@hugeicons-pro/core-solid-rounded";
 
-import { UserButton } from "@/features/auth/components/user-button";
+import type { AuthUser } from "@/types/next-auth";
 import {
   Sidebar,
   SidebarFooter,
@@ -34,13 +38,20 @@ import {
 import { SidebarContent } from "@/ui/sidebar/sidebar-content";
 import { SidebarItem } from "@/ui/sidebar/sidebar-item";
 import { SidebarSection } from "@/ui/sidebar/sidebar-section";
+import { signOut } from "next-auth/react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { ExplorePremiumModal } from "../explore-premium-modal";
+import { Button } from "../ui/button";
+import { Menu } from "../ui/menu";
 import { SidebarTrigger } from "../ui/sidebar/sidebar-trigger";
+import { UserAvatar } from "../ui/user-avatar";
 
-export default function AppSidebar(
-  props: React.ComponentProps<typeof Sidebar>,
-) {
+type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
+  user: AuthUser;
+};
+
+export default function AppSidebar({ user, ...props }: AppSidebarProps) {
   const pathname = usePathname();
   const state = useSidebar();
   return (
@@ -123,9 +134,78 @@ export default function AppSidebar(
         </SidebarSectionGroup>
       </SidebarContent>
 
-      <SidebarFooter>
-        <UserButton />
-        {/* <ThemeSwitcher /> */}
+      <SidebarFooter
+        className={cn(
+          state.state === "collapsed" ? "items-center gap-2" : "gap-3",
+        )}
+      >
+        {!user.hasActiveSubscription && (
+          <ExplorePremiumModal>
+            <Button
+              size={state.state === "collapsed" ? "square-petite" : "medium"}
+              shape="square"
+              className="justify-between"
+            >
+              {state.state === "collapsed" ? "" : "Explore premium"}
+              <HugeiconsIcon icon={Diamond02Icon} size={16} data-slot="icon" />
+            </Button>
+          </ExplorePremiumModal>
+        )}
+        <Menu>
+          <Menu.Trigger
+            className={cn(
+              "flex items-center shrink-0 h-auto",
+              state.state === "collapsed" && "justify-center",
+            )}
+          >
+            <UserAvatar
+              userImage={user.image}
+              userName={user.name}
+              size="large"
+            />
+            {state.open && (
+              <div className="space-y-0.5 text-left">
+                <p className="text-sm font-medium">{user.name}</p>
+                {user.email && (
+                  <p className="text-xs font-normal text-muted-fg line-clamp-1">
+                    {user.email}
+                  </p>
+                )}
+              </div>
+            )}
+          </Menu.Trigger>
+          <Menu.Content
+            placement="bottom end"
+            popoverClassName="w-full sm:w-[var(--trigger-width)]"
+          >
+            <Menu.Header>
+              <p className="text-sm font-medium">{user.name}</p>
+              {user.email && (
+                <p className="text-xs font-normal text-muted-fg line-clamp-1">
+                  {user.email}
+                </p>
+              )}
+            </Menu.Header>
+            <Menu.Separator />
+            <Menu.Item href="/portal/dashboard">
+              <HugeiconsIcon icon={DashboardSquare01Icon} data-slot="icon" />
+              Dashboard
+            </Menu.Item>
+            <Menu.Item href="/portal/account">
+              <HugeiconsIcon icon={AccountSetting02Icon} data-slot="icon" />
+              Account
+            </Menu.Item>
+            <Menu.Item href="/portal/account?t=subscription">
+              <HugeiconsIcon icon={Invoice02Icon} data-slot="icon" />
+              Billing and subscription
+            </Menu.Item>
+            <Menu.Separator />
+            <Menu.Item onAction={() => signOut({ redirectTo: "/" })}>
+              <HugeiconsIcon icon={Logout01Icon} data-slot="icon" />
+              Logout
+            </Menu.Item>
+          </Menu.Content>
+        </Menu>
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

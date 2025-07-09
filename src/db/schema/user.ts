@@ -9,17 +9,16 @@ export const user = pgTable(
   {
     id: uuid().default(sql`gen_random_uuid()`).primaryKey(),
     email: text().notNull().unique(),
-    name: text(),
+    name: text().notNull().default(""),
     image: text(),
     emailVerified: timestamp({ mode: "date" }).defaultNow(),
     password: text(),
     salt: text(),
     role: text({ enum: ["ADMIN", "USER"] }).default("USER"),
     isTwoFactorEnabled: boolean().default(false),
+    stripeCustomerId: text().unique(),
   },
-  (table) => ({
-    emailIdx: index().on(table.email),
-  }),
+  (table) => [index().on(table.email)],
 );
 
 export const userRelations = relations(user, ({ one, many }) => ({

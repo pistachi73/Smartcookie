@@ -6,7 +6,6 @@ import { getCalendarSessionsByDateRangeUseCase } from "../use-cases/calendar.use
 
 export const getMonthSessionsQueryOptions = (
   periodDate: Temporal.PlainDateTime,
-  userId: string,
 ) => {
   const currentPeriodStart = periodDate.with({
     day: 1,
@@ -24,7 +23,6 @@ export const getMonthSessionsQueryOptions = (
   return queryOptions({
     queryKey: [
       "calendar-sessions",
-      userId,
       `${currentPeriodStart.year}-${currentPeriodStart.month}`,
     ],
     queryFn: () =>
@@ -46,7 +44,7 @@ export const useMonthSessions = (yearMonth: {
   const firstDayOfMonth = new Temporal.PlainDateTime(year, month, 1);
 
   const { data, isLoading } = useQuery(
-    getMonthSessionsQueryOptions(firstDayOfMonth, user.id),
+    getMonthSessionsQueryOptions(firstDayOfMonth),
   );
 
   return {

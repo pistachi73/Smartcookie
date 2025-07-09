@@ -27,15 +27,6 @@ const CalendarPage = async ({ params }: CalendarPageProps) => {
   const user = await currentUser();
   const { calendarView, year, month, day } = await params;
 
-  console.log(
-    calendarView,
-    year,
-    month,
-    day,
-    isCalendarView(calendarView),
-    isNumber(year),
-  );
-
   if (
     !isCalendarView(calendarView) ||
     !isNumber(Number(year)) ||
@@ -58,13 +49,13 @@ const CalendarPage = async ({ params }: CalendarPageProps) => {
 
   await Promise.all([
     queryClient.prefetchQuery({
-      ...getMonthSessionsQueryOptions(plainDateTime, user!.id),
+      ...getMonthSessionsQueryOptions(plainDateTime),
       staleTime: 1000 * 60 * 60 * 24,
     }),
     ...(isDifferentMonth
       ? [
           queryClient.prefetchQuery({
-            ...getMonthSessionsQueryOptions(today, user!.id),
+            ...getMonthSessionsQueryOptions(today),
             staleTime: 1000 * 60 * 60 * 24,
           }),
         ]

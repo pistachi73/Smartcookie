@@ -57,6 +57,3 @@ export const memberChecks = [
     icon: StudentIcon,
   },
 ];
-
-export const MONTHLY_PRODUCT_ID = "price_1POJIyJ9Jo9B1JTLq9Rmem0A";
-export const ANNUAL_PRODUCT_ID = "price_1POJJbJ9Jo9B1JTLEaHkRYl5";

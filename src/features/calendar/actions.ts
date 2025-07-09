@@ -6,19 +6,7 @@ import {
   type OccurrenceFormSchema,
   SerializedOccurrenceFormSchema,
 } from "./types/occurrence-form-schema";
-import {
-  createEventUseCase,
-  editNonRecurrentEventUseCase,
-  getCalendarDataUseCase,
-} from "./use-cases";
-
-export const getCalendarDataAction = protectedAction.action(async ({ ctx }) => {
-  const {
-    user: { id },
-  } = ctx;
-
-  return await getCalendarDataUseCase(id);
-});
+import { createEventUseCase, editNonRecurrentEventUseCase } from "./use-cases";
 
 export const editNonRecurrentEventAction = protectedAction
   .schema(

@@ -12,7 +12,7 @@ export const getQuestionAnswers = withValidationAndAuth({
     dateFrom: z.date().optional(),
     dateTo: z.date().optional(),
   }),
-  callback: async ({ id, dateFrom, dateTo }, userId) => {
+  callback: async ({ id, dateFrom, dateTo }, user) => {
     // Default to 2 months from today if no date range provided
     const defaultDateFrom = new Date();
     defaultDateFrom.setMonth(defaultDateFrom.getMonth() - 2);
@@ -22,7 +22,7 @@ export const getQuestionAnswers = withValidationAndAuth({
 
     // Verify question belongs to user first
     const question = await db.query.questions.findFirst({
-      where: and(eq(questions.id, id), eq(questions.userId, userId)),
+      where: and(eq(questions.id, id), eq(questions.userId, user.id)),
       columns: { id: true },
     });
 

@@ -4,7 +4,6 @@ import { HubDashboard } from "@/features/hub/components/hub-dashboard";
 import { getHubByIdQueryOptions } from "@/features/hub/lib/hub-query-options";
 import { quickNotesByHubIdQueryOptions } from "@/features/quick-notes/lib/quick-notes-query-options";
 import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
-import { currentUser } from "@/shared/lib/auth";
 import { getQueryClient } from "@/shared/lib/get-query-client";
 import {
   Folder02Icon,
@@ -20,12 +19,7 @@ interface HubPageProps {
 }
 
 const HubPage = async ({ params }: HubPageProps) => {
-  const user = await currentUser();
   const { hubId } = await params;
-
-  if (!user) {
-    redirect("/login");
-  }
 
   const hubIdNumber = Number(hubId);
 

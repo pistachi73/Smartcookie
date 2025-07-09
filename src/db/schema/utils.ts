@@ -1,9 +1,9 @@
 import { sql } from "drizzle-orm";
-import { pgTableCreator } from "drizzle-orm/pg-core";
+import { pgTable as pgTableCreator } from "drizzle-orm/pg-core";
 
 import type { Column } from "drizzle-orm";
 
-export const pgTable = pgTableCreator((name) => name);
+export const pgTable = pgTableCreator;
 
 export const slugify = (column: Column) => sql`regexp_replace(
     regexp_replace(

@@ -8,7 +8,7 @@ import { CreateHubUseCaseSchema } from "./schemas";
 
 export const createHub = withValidationAndAuth({
   schema: CreateHubUseCaseSchema,
-  callback: async (data, userId) => {
+  callback: async (data, user) => {
     const { sessions, studentIds, hubInfo } = data;
     const { description, level, schedule, endDate, name, ...rest } = hubInfo;
 
@@ -16,7 +16,7 @@ export const createHub = withValidationAndAuth({
       typeof value === "string" ? value.trim() || null : null;
 
     const hubData = {
-      userId,
+      userId: user.id,
       name: name.trim(),
       description: trimOrNull(description),
       level: trimOrNull(level),
@@ -42,7 +42,7 @@ export const createHub = withValidationAndAuth({
               })),
             )
           : Promise.resolve(),
-        sessions
+        sessions?.length
           ? addSessions({
               sessions,
               hubId,

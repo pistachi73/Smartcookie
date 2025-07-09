@@ -18,12 +18,12 @@ import {
 
 export const addStudent = withValidationAndAuth({
   schema: AddStudentSchema,
-  callback: async (data, userId) => {
+  callback: async (data, user) => {
     const [createdStudent] = await db
       .insert(student)
       .values({
         ...data,
-        userId,
+        userId: user.id,
       })
       .returning();
 
@@ -89,13 +89,13 @@ export const removeStudentFromHub = withValidationAndAuth({
 
 export const createStudentInHub = withValidationAndAuth({
   schema: CreateStudentInHubSchema,
-  callback: async ({ student: studentData, hubId }, userId) => {
+  callback: async ({ student: studentData, hubId }, user) => {
     // Check for existing student first to avoid unnecessary transaction
     const existingStudent = await db
       .select({ id: student.id })
       .from(student)
       .where(
-        and(eq(student.email, studentData.email), eq(student.userId, userId)),
+        and(eq(student.email, studentData.email), eq(student.userId, user.id)),
       )
       .limit(1);
 
@@ -114,7 +114,7 @@ export const createStudentInHub = withValidationAndAuth({
       const [createdStudents, sessions] = await Promise.all([
         trx
           .insert(student)
-          .values({ ...studentData, userId })
+          .values({ ...studentData, userId: user.id })
           .returning({ id: student.id }),
         trx
           .select({ id: session.id })

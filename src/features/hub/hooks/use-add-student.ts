@@ -1,6 +1,5 @@
 import { addStudent } from "@/data-access/students/mutations";
 import { AddStudentSchema } from "@/data-access/students/schemas";
-import { useCurrentUser } from "@/shared/hooks/use-current-user";
 import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -14,7 +13,6 @@ export const useAddStudent = () => {
     updateStudent,
   } = useHubFormStore();
   const queryClient = useQueryClient();
-  const user = useCurrentUser();
 
   return useProtectedMutation({
     schema: AddStudentSchema,
@@ -34,19 +32,16 @@ export const useAddStudent = () => {
       storeAddStudent(optimisticStudent);
 
       // Add to query cache with isSelected = true
-      queryClient.setQueryData<SelectStudent[]>(
-        ["user-students", user.id],
-        (old) => {
-          if (!old) return old;
-          return [
-            ...old,
-            {
-              ...optimisticStudent,
-              isSelected: true,
-            },
-          ];
-        },
-      );
+      queryClient.setQueryData<SelectStudent[]>(["user-students"], (old) => {
+        if (!old) return old;
+        return [
+          ...old,
+          {
+            ...optimisticStudent,
+            isSelected: true,
+          },
+        ];
+      });
 
       // Return context for onError
       return { placeholderId };
@@ -65,21 +60,18 @@ export const useAddStudent = () => {
       updateStudent(context.placeholderId, studentData);
 
       // Update query cache with real data
-      queryClient.setQueryData<SelectStudent[]>(
-        ["user-students", user.id],
-        (old) => {
-          if (!old) return old;
-          return old.map((student) => {
-            if (student.id === context.placeholderId) {
-              return {
-                ...studentData,
-                isSelected: true,
-              };
-            }
-            return student;
-          });
-        },
-      );
+      queryClient.setQueryData<SelectStudent[]>(["user-students"], (old) => {
+        if (!old) return old;
+        return old.map((student) => {
+          if (student.id === context.placeholderId) {
+            return {
+              ...studentData,
+              isSelected: true,
+            };
+          }
+          return student;
+        });
+      });
 
       toast.success("Student added successfully");
     },
@@ -89,15 +81,10 @@ export const useAddStudent = () => {
         removeStudent(context.placeholderId);
 
         // Remove from query cache
-        queryClient.setQueryData<SelectStudent[]>(
-          ["user-students", user.id],
-          (old) => {
-            if (!old) return old;
-            return old.filter(
-              (student) => student.id !== context.placeholderId,
-            );
-          },
-        );
+        queryClient.setQueryData<SelectStudent[]>(["user-students"], (old) => {
+          if (!old) return old;
+          return old.filter((student) => student.id !== context.placeholderId);
+        });
       }
 
       toast.error(

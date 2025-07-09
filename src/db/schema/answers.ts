@@ -22,10 +22,7 @@ export const answers = pgTable(
     additionalComment: text(),
     answeredAt: timestamp({ mode: "string", withTimezone: true }).defaultNow(),
   },
-  (t) => ({
-    questionIdIdx: index().on(t.questionId),
-    surveyResponseIdIdx: index().on(t.surveyResponseId),
-  }),
+  (t) => [index().on(t.questionId), index().on(t.surveyResponseId)],
 );
 
 export const answersRelations = relations(answers, ({ one }) => ({

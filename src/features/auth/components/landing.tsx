@@ -97,13 +97,14 @@ export const Landing = () => {
           )}
         />
 
-        <Button className="w-full mt-4" type="submit" isPending={isPending}>
+        <Button className="w-full mt-2" type="submit" isPending={isPending}>
           {isPending && (
             <ProgressCircle isIndeterminate aria-label="Loading..." />
           )}
-          Continue
+          Continue with email
         </Button>
       </Form>
+
       <span className="my-6 block w-full text-center text-xs font-medium text-muted-foreground">
         OR
       </span>

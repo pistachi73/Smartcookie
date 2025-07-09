@@ -9,9 +9,7 @@ export const twoFactorToken = pgTable(
     email: text().notNull(),
     expires: timestamp({ mode: "date" }).notNull(),
   },
-  (t) => ({
-    twoFactorTokensUnique: unique().on(t.email, t.token),
-  }),
+  (t) => [unique().on(t.email, t.token)],
 );
 
 export type TwoFactorToken = typeof twoFactorToken.$inferSelect;

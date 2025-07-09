@@ -14,7 +14,7 @@ export const createQuestion = withValidationAndAuth({
   schema: CreateQuestionSchema,
   callback: async (
     { title, description, enableAdditionalComment, questionType },
-    userId,
+    user,
   ) => {
     const question = await db
       .insert(questions)
@@ -23,7 +23,7 @@ export const createQuestion = withValidationAndAuth({
         description,
         type: questionType,
         enableAdditionalComment,
-        userId,
+        userId: user.id,
       })
       .returning();
 
@@ -33,19 +33,19 @@ export const createQuestion = withValidationAndAuth({
 
 export const deleteQuestion = withValidationAndAuth({
   schema: DeleteQuestionSchema,
-  callback: async ({ id }, userId) => {
+  callback: async ({ id }, user) => {
     await db
       .delete(questions)
-      .where(and(eq(questions.id, id), eq(questions.userId, userId)));
+      .where(and(eq(questions.id, id), eq(questions.userId, user.id)));
   },
 });
 
 export const updateQuestion = withValidationAndAuth({
   schema: UpdateQuestionSchema,
-  callback: async (data, userId) => {
+  callback: async (data, user) => {
     await db
       .update(questions)
       .set(data)
-      .where(and(eq(questions.id, data.id), eq(questions.userId, userId)));
+      .where(and(eq(questions.id, data.id), eq(questions.userId, user.id)));
   },
 });

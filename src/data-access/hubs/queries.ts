@@ -11,7 +11,7 @@ import { parseDateWithTimezone } from "../utils";
 import { GetHubByIdSchema } from "./schemas";
 
 export const getHubsByUserIdForQuickNotes = withAuthenticationNoInput({
-  callback: async (userId) => {
+  callback: async (user) => {
     return await db
       .select({
         id: hub.id,
@@ -19,12 +19,12 @@ export const getHubsByUserIdForQuickNotes = withAuthenticationNoInput({
         color: hub.color,
       })
       .from(hub)
-      .where(eq(hub.userId, userId));
+      .where(eq(hub.userId, user.id));
   },
 });
 
 export const getHubsByUserId = withAuthenticationNoInput({
-  callback: async (userId) => {
+  callback: async (user) => {
     const hubs = await db.query.hub.findMany({
       columns: {
         id: true,
@@ -52,7 +52,7 @@ export const getHubsByUserId = withAuthenticationNoInput({
           },
         },
       },
-      where: eq(hub.userId, userId),
+      where: eq(hub.userId, user.id),
       orderBy: [asc(sql`LOWER(${hub.name})`)],
     });
 

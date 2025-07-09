@@ -33,3 +33,24 @@ export const DatabaseTransactionSchema = z
     );
   }, "Invalid database executor object")
   .optional();
+
+/**
+ * Factory function to create a column selection schema for any Drizzle table
+ */
+export function createColumnSelectionSchema<
+  T extends { $inferSelect: Record<string, any> },
+>(table: T) {
+  type SelectType = T["$inferSelect"];
+  const columnKeys = Object.keys(table) as Array<keyof SelectType>;
+  return z
+    .object(
+      columnKeys.reduce(
+        (acc, key) => {
+          acc[key] = z.literal(true);
+          return acc;
+        },
+        {} as Record<keyof SelectType, z.ZodLiteral<true>>,
+      ),
+    )
+    .partial();
+}

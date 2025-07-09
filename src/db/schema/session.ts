@@ -12,23 +12,27 @@ export const sessionStatusEnum = pgEnum("session_status", [
   "cancelled",
 ]);
 
-export const session = pgTable("session", {
-  id: serial().primaryKey(),
-  hubId: integer()
-    .notNull()
-    .references(() => hub.id, { onDelete: "cascade" }),
-  userId: uuid()
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-  startTime: timestamp({ mode: "string", withTimezone: true }).notNull(),
-  endTime: timestamp({ mode: "string", withTimezone: true }).notNull(),
-  status: sessionStatusEnum().default("upcoming").notNull(),
-  createdAt: timestamp({ mode: "string" }).defaultNow().notNull(),
-  updatedAt: timestamp({ mode: "string" })
-    .defaultNow()
-    .$onUpdate(() => new Date().toISOString())
-    .notNull(),
-});
+export const session = pgTable(
+  "session",
+  {
+    id: serial().primaryKey(),
+    hubId: integer()
+      .notNull()
+      .references(() => hub.id, { onDelete: "cascade" }),
+    userId: uuid()
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    startTime: timestamp({ mode: "string", withTimezone: true }).notNull(),
+    endTime: timestamp({ mode: "string", withTimezone: true }).notNull(),
+    status: sessionStatusEnum().default("upcoming").notNull(),
+    createdAt: timestamp({ mode: "string" }).defaultNow().notNull(),
+    updatedAt: timestamp({ mode: "string" })
+      .defaultNow()
+      .$onUpdate(() => new Date().toISOString())
+      .notNull(),
+  },
+  () => [],
+);
 
 export const sessionRelations = relations(session, ({ one, many }) => ({
   hub: one(hub, {

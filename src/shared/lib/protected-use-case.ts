@@ -1,11 +1,12 @@
 import { PublicError } from "@/shared/services/errors";
+import type { AuthUser } from "@/types/next-auth";
 import type { z } from "zod";
 import { currentUser } from "./auth";
 
 export function withAuthentication<TData, TResult>({
   useCase,
 }: {
-  useCase: (data: TData, userId: string) => Promise<TResult>;
+  useCase: (data: TData, user: AuthUser) => Promise<TResult>;
 }) {
   return async (data: TData): Promise<TResult> => {
     // Get authenticated user
@@ -16,8 +17,8 @@ export function withAuthentication<TData, TResult>({
       throw new PublicError("Not authenticated");
     }
 
-    // Call the original use case with authenticated userId
-    return useCase(data, authenticatedUser.id);
+    // Call the original use case with authenticated user
+    return useCase(data, authenticatedUser);
   };
 }
 
@@ -27,7 +28,7 @@ export function withAuthentication<TData, TResult>({
  * @example
  * // Define your schema and use case implementation
  * const mySchema = z.object({ ... });
- * const myUseCaseImpl = async (data: z.infer<typeof mySchema>, userId: string) => {
+ * const myUseCaseImpl = async (data: z.infer<typeof mySchema>, user: AuthUser) => {
  *   // Your logic here
  * };
  *
@@ -39,7 +40,7 @@ export function withValidationAndAuth<TSchema extends z.ZodType, TResult>({
   useCase,
 }: {
   schema: TSchema;
-  useCase: (data: z.infer<TSchema>, userId: string) => Promise<TResult>;
+  useCase: (data: z.infer<TSchema>, user: AuthUser) => Promise<TResult>;
 }) {
   return async (data: z.infer<TSchema>): Promise<TResult> => {
     const authenticatedUser = await currentUser();
@@ -54,14 +55,14 @@ export function withValidationAndAuth<TSchema extends z.ZodType, TResult>({
       throw new Error("Validation failed", { cause: parseResult.error });
     }
 
-    return useCase(parseResult.data, authenticatedUser.id);
+    return useCase(parseResult.data, authenticatedUser);
   };
 }
 
 export function withAuthenticationNoInput<TResult>({
   useCase,
 }: {
-  useCase: (userId: string) => Promise<TResult>;
+  useCase: (user: AuthUser) => Promise<TResult>;
 }) {
   return async (): Promise<TResult> => {
     const authenticatedUser = await currentUser();
@@ -70,7 +71,7 @@ export function withAuthenticationNoInput<TResult>({
       throw new PublicError("Not authenticated");
     }
 
-    return useCase(authenticatedUser.id);
+    return useCase(authenticatedUser);
   };
 }
 

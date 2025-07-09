@@ -4,67 +4,13 @@ import { env } from "@/env";
 import { buttonStyles } from "@/shared/components/ui/button";
 import { Menu } from "@/shared/components/ui/menu";
 import { cn } from "@/shared/lib/classes";
-import {
-  ArrowRight02Icon,
-  Calendar03Icon as Calendar03IconSolid,
-  Comment01Icon as Comment01IconSolid,
-  DashboardSquare01Icon as DashboardSquare01IconSolid,
-  FolderLibraryIcon as FolderLibraryIconSolid,
-  NoteIcon as NoteIconSolid,
-  UserGroupIcon as UserGroupIconSolid,
-} from "@hugeicons-pro/core-solid-rounded";
-import {
-  Calendar03Icon,
-  Comment01Icon,
-  DashboardSquare01Icon,
-  FolderLibraryIcon,
-  Menu01Icon,
-  NoteIcon,
-  UserGroupIcon,
-} from "@hugeicons-pro/core-stroke-rounded";
+import type { AuthUser } from "@/types/next-auth";
+import { ArrowRight02Icon } from "@hugeicons-pro/core-solid-rounded";
+import { Menu01Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Image from "next/image";
 import { Link } from "react-aria-components";
 import { MaxWidthWrapper } from "./max-width-wrapper";
-
-const portalNavigation = [
-  {
-    label: "Dashboard",
-    href: "/portal/dashboard",
-    icon: DashboardSquare01Icon,
-    iconActive: DashboardSquare01IconSolid,
-  },
-  {
-    label: "Calendar",
-    href: "/portal/calendar",
-    icon: Calendar03Icon,
-    iconActive: Calendar03IconSolid,
-  },
-  {
-    label: "Hubs",
-    href: "/portal/hubs",
-    icon: FolderLibraryIcon,
-    iconActive: FolderLibraryIconSolid,
-  },
-  {
-    label: "Students",
-    href: "/portal/students",
-    icon: UserGroupIcon,
-    iconActive: UserGroupIconSolid,
-  },
-  {
-    label: "Quick Notes",
-    href: "/portal/quick-notes",
-    icon: NoteIcon,
-    iconActive: NoteIconSolid,
-  },
-  {
-    label: "Feedback",
-    href: "/portal/feedback",
-    icon: Comment01Icon,
-    iconActive: Comment01IconSolid,
-  },
-];
 
 const publicNavigation = [
   {
@@ -85,10 +31,9 @@ const publicNavigation = [
   },
 ];
 
-export const Header = () => {
-  const user = false;
-
+export const Header = ({ user }: { user?: AuthUser }) => {
   const isPortalBlocked = env.NEXT_PUBLIC_BLOCK_PORTAL === "true";
+  console.log(user);
 
   return (
     <>

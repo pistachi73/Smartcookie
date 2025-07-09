@@ -4,5 +4,5 @@ import { getAgendaSessionsQueryOptions } from "./hook-options";
 
 export const useGetAgendaSessions = (dateInterval: [Date, Date]) => {
   const user = useCurrentUser();
-  return useQuery(getAgendaSessionsQueryOptions(user.id, dateInterval));
+  return useQuery(getAgendaSessionsQueryOptions(dateInterval));
 };

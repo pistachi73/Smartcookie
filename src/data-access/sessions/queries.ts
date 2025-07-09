@@ -10,7 +10,7 @@ import { GetSessionsByHubIdSchema } from "./schemas";
 
 export const getSessionsByHubId = withValidationAndAuth({
   schema: GetSessionsByHubIdSchema,
-  callback: async ({ hubId }, userId) => {
+  callback: async ({ hubId }, user) => {
     const sessions = await db
       .select({
         id: session.id,
@@ -19,7 +19,7 @@ export const getSessionsByHubId = withValidationAndAuth({
         status: session.status,
       })
       .from(session)
-      .where(and(eq(session.hubId, hubId), eq(session.userId, userId)))
+      .where(and(eq(session.hubId, hubId), eq(session.userId, user.id)))
       .orderBy(asc(session.startTime));
 
     const formattedSessions = sessions.map((session) => {

@@ -40,13 +40,13 @@ export const questions = pgTable(
       .$onUpdate(() => new Date().toISOString())
       .notNull(),
   },
-  (t) => ({
-    userIdIdx: index().on(t.userId),
-    searchIdx: index("search_idx").using(
+  (t) => [
+    index().on(t.userId),
+    index("search_idx").using(
       "gin",
       sql`to_tsvector('english', coalesce(${t.title}, '') || ' ' || coalesce(${t.description}, ''))`,
     ),
-  }),
+  ],
 );
 
 export const questionsRelations = relations(questions, ({ many }) => ({

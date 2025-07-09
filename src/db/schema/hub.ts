@@ -39,9 +39,7 @@ export const hub = pgTable(
       .$onUpdate(() => new Date().toISOString())
       .notNull(),
   },
-  (t) => ({
-    userIdIdx: index("user_id_idx").on(t.userId),
-  }),
+  (t) => [index("user_id_idx").on(t.userId)],
 );
 
 export type InsertHub = typeof hub.$inferInsert;

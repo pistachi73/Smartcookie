@@ -8,7 +8,7 @@ import { GetSessionNotesBySessionIdSchema } from "./schemas";
 
 export const getSessionNotesBySessionId = withValidationAndAuth({
   schema: GetSessionNotesBySessionIdSchema,
-  callback: async ({ sessionId }, userId) => {
+  callback: async ({ sessionId }, user) => {
     const notes = await db
       .select({
         id: sessionNote.id,
@@ -20,7 +20,7 @@ export const getSessionNotesBySessionId = withValidationAndAuth({
       .where(
         and(
           eq(sessionNote.sessionId, sessionId),
-          eq(sessionNote.userId, userId),
+          eq(sessionNote.userId, user.id),
         ),
       )
       .orderBy(desc(sessionNote.updatedAt));

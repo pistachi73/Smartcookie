@@ -18,21 +18,25 @@ export const sessionNotePositionEnum = pgEnum("session_note_position", [
   "future",
 ]);
 
-export const sessionNote = pgTable("session_note", {
-  id: serial().primaryKey(),
-  sessionId: integer()
-    .notNull()
-    .references(() => session.id, { onDelete: "cascade" }),
-  userId: uuid()
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-  position: sessionNotePositionEnum("position").default("present").notNull(),
-  content: text().notNull(),
-  updatedAt: timestamp({ mode: "string" })
-    .defaultNow()
-    .$onUpdate(() => new Date().toISOString())
-    .notNull(),
-});
+export const sessionNote = pgTable(
+  "session_note",
+  {
+    id: serial().primaryKey(),
+    sessionId: integer()
+      .notNull()
+      .references(() => session.id, { onDelete: "cascade" }),
+    userId: uuid()
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    position: sessionNotePositionEnum("position").default("present").notNull(),
+    content: text().notNull(),
+    updatedAt: timestamp({ mode: "string" })
+      .defaultNow()
+      .$onUpdate(() => new Date().toISOString())
+      .notNull(),
+  },
+  () => [],
+);
 
 export const sessionNoteRelations = relations(sessionNote, ({ one }) => ({
   session: one(session, {

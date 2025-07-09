@@ -21,10 +21,7 @@ export const surveyTemplateQuestions = pgTable(
     required: boolean().notNull().default(true),
     order: integer().notNull().default(0),
   },
-  (t) => ({
-    surveyTemplateIdIdx: index().on(t.surveyTemplateId),
-    questionIdIdx: index().on(t.questionId),
-  }),
+  (t) => [index().on(t.surveyTemplateId), index().on(t.questionId)],
 );
 
 export const surveyTemplateQuestionsRelations = relations(

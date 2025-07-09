@@ -24,7 +24,7 @@ export const PageHeader = ({
   return (
     <div
       className={cn(
-        "p-5 border-b flex flex-col @2xl:flex-row justify-between gap-4 items-start @2xl:items-center",
+        "p-4 sm:p-5 border-b flex flex-col @2xl:flex-row justify-between gap-4 items-start @2xl:items-center",
         className?.container,
       )}
     >
