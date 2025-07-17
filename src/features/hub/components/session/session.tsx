@@ -201,10 +201,9 @@ export const Session = ({ session, position, hubId }: SessionProps) => {
               transition={regularSpring}
               className="overflow-hidden"
             >
-              <div className="p-2 flex flex-col sm:grid sm:grid-rows-1 sm:grid-cols-3">
-                <SessionNoteColumn position="past" sessionId={session.id} />
-                <SessionNoteColumn position="present" sessionId={session.id} />
-                <SessionNoteColumn position="future" sessionId={session.id} />
+              <div className="p-2 flex flex-col sm:grid sm:grid-rows-1 sm:grid-cols-2">
+                <SessionNoteColumn position="plans" sessionId={session.id} />
+                <SessionNoteColumn position="in-class" sessionId={session.id} />
               </div>
             </m.div>
           )}

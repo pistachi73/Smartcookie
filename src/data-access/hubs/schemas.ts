@@ -1,5 +1,6 @@
-import type { InsertHub } from "@/db/schema";
 import { z } from "zod";
+
+import type { InsertHub } from "@/db/schema";
 
 export const GetHubsByUserIdSchema = z.object({});
 

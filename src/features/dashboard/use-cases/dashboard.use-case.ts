@@ -64,7 +64,7 @@ export const getNextSessionUseCase = withAuthenticationNoInput({
             id: true,
             content: true,
           },
-          where: eq(sessionNote.position, "past"),
+          where: eq(sessionNote.position, "plans"),
         },
         attendance: {
           columns: {},

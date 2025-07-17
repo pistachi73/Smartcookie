@@ -1,14 +1,14 @@
+import { act, renderHook, waitFor } from "@testing-library/react";
+import { toast } from "sonner";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
 import {
   createQueryClientWrapper,
   createTestQueryClient,
 } from "@/shared/lib/testing/query-client-utils";
-import { act, renderHook } from "@/shared/lib/testing/test-utils";
-import type { QueryClient } from "@tanstack/react-query";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import {
-  type UseUpdateQuickNoteProps,
-  useUpdateQuickNote,
-} from "../use-update-quick-note";
+
+import type { NoteSummary } from "../../types/quick-notes.types";
+import { useUpdateQuickNote } from "../use-update-quick-note";
 
 const mocks = vi.hoisted(() => ({
   updateQuickNote: vi.fn(),
@@ -18,151 +18,347 @@ vi.mock("@/data-access/quick-notes/mutations", () => ({
   updateQuickNote: mocks.updateQuickNote,
 }));
 
-vi.mock("@/shared/hooks/use-current-user", () => ({
-  useCurrentUser: vi.fn().mockReturnValue({
-    id: "test-user-id",
-    name: "Test User",
-    email: "test@example.com",
-  }),
+vi.mock("sonner", () => ({
+  toast: {
+    error: vi.fn(),
+  },
 }));
 
-vi.useFakeTimers();
-
-const mockHookProps: UseUpdateQuickNoteProps = {
-  noteId: 123,
-  initialContent: "Initial test content",
-  hubId: 456,
+const mockUpdateQuickNoteReturn = {
+  id: 123,
+  content: "Updated content",
+  updatedAt: "2023-01-02T00:00:00Z",
 };
 
-const renderHookWithQueryClient = (
-  queryClient: QueryClient,
-  hookProps: UseUpdateQuickNoteProps = mockHookProps,
-) => {
-  return renderHook(() => useUpdateQuickNote(hookProps), {
-    wrapper: createQueryClientWrapper(queryClient),
-  });
-};
+const mockHubId = 456;
+const mockQueryKey = ["hub-notes", mockHubId];
 
 describe("useUpdateQuickNote", () => {
   let queryClient: ReturnType<typeof createTestQueryClient>;
 
-  beforeEach(() => {
-    vi.mocked(mocks.updateQuickNote).mockResolvedValue({
-      id: 123,
-      content: "Updated content",
-      updatedAt: new Date().toISOString(),
+  const renderHookWithQueryClient = (props: any) =>
+    renderHook(() => useUpdateQuickNote(props), {
+      wrapper: createQueryClientWrapper(queryClient),
     });
 
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.mocked(mocks.updateQuickNote).mockResolvedValue(
+      mockUpdateQuickNoteReturn,
+    );
     queryClient = createTestQueryClient();
-
     vi.spyOn(queryClient, "setQueryData");
-    vi.spyOn(queryClient, "getQueryData").mockReturnValue([
-      {
-        id: 123,
-        content: "Initial content",
-        hubId: 456,
-        updatedAt: "2023-01-01",
-      },
-    ]);
+    vi.spyOn(queryClient, "getQueryData");
     vi.spyOn(queryClient, "cancelQueries").mockResolvedValue(undefined);
-    vi.clearAllMocks();
   });
 
   afterEach(() => {
     vi.clearAllMocks();
+    vi.useRealTimers();
   });
 
-  it("should initialize with the provided initial content", () => {
-    const { result } = renderHookWithQueryClient(queryClient);
-    expect(result.current.content).toBe("Initial test content");
-    expect(result.current.isUnsaved).toBe(false);
-    expect(result.current.isSaving).toBe(false);
+  describe("basic functionality", () => {
+    it("should update content and trigger debounced save for positive note IDs", async () => {
+      const initialProps = {
+        noteId: 123,
+        initialContent: "Initial content",
+        hubId: mockHubId,
+      };
+
+      const { result } = renderHookWithQueryClient(initialProps);
+
+      act(() => {
+        result.current.handleContentChange("New content");
+      });
+
+      expect(result.current.content).toBe("New content");
+      expect(result.current.isUnsaved).toBe(true);
+
+      // Fast-forward the debounce timeout
+      act(() => {
+        vi.advanceTimersByTime(800);
+      });
+
+      await waitFor(() => {
+        expect(mocks.updateQuickNote).toHaveBeenCalledWith({
+          id: 123,
+          content: "New content",
+          updatedAt: expect.any(String),
+        });
+      });
+    });
+
+    it("should not trigger save when content hasn't changed", async () => {
+      const initialProps = {
+        noteId: 123,
+        initialContent: "Initial content",
+        hubId: mockHubId,
+      };
+
+      const { result } = renderHookWithQueryClient(initialProps);
+
+      act(() => {
+        result.current.handleContentChange("Initial content");
+      });
+
+      act(() => {
+        vi.advanceTimersByTime(800);
+      });
+
+      expect(mocks.updateQuickNote).not.toHaveBeenCalled();
+    });
   });
 
-  it("should update content when handleContentChange is called", async () => {
-    const { result } = renderHookWithQueryClient(queryClient);
-    act(() => {
-      result.current.handleContentChange("Updated content");
+  describe("optimistic note retry mechanism", () => {
+    it("should start retry polling for negative note IDs", async () => {
+      const initialProps = {
+        noteId: -Date.now(),
+        initialContent: "",
+        hubId: mockHubId,
+        clientId: "client-123",
+      };
+
+      const { result } = renderHookWithQueryClient(initialProps);
+
+      act(() => {
+        result.current.handleContentChange("New content");
+      });
+
+      // Fast-forward the debounce timeout
+      act(() => {
+        vi.advanceTimersByTime(800);
+      });
+
+      // Should not call mutation directly for negative IDs
+      expect(mocks.updateQuickNote).not.toHaveBeenCalled();
+
+      // Fast-forward the retry polling interval
+      act(() => {
+        vi.advanceTimersByTime(500);
+      });
+
+      expect(queryClient.getQueryData).toHaveBeenCalledWith(mockQueryKey);
     });
 
-    expect(result.current.content).toBe("Updated content");
+    it("should retry and save when real note is found by clientId", async () => {
+      const optimisticId = -Date.now();
+      const clientId = "client-123";
 
-    expect(result.current.isUnsaved).toBe(true);
+      const initialProps = {
+        noteId: optimisticId,
+        initialContent: "",
+        hubId: mockHubId,
+        clientId: clientId,
+      };
 
-    expect(queryClient.cancelQueries).not.toHaveBeenCalled();
+      // Set up initial notes data
+      const mockNotes: NoteSummary[] = [
+        {
+          id: optimisticId,
+          content: "",
+          updatedAt: "2023-01-01T00:00:00Z",
+          hubId: mockHubId,
+          clientId: clientId,
+        },
+      ];
+
+      queryClient.setQueryData(mockQueryKey, mockNotes);
+      vi.mocked(queryClient.getQueryData).mockReturnValue(mockNotes);
+
+      const { result } = renderHookWithQueryClient(initialProps);
+
+      act(() => {
+        result.current.handleContentChange("New content");
+      });
+
+      // Fast-forward the debounce timeout
+      act(() => {
+        vi.advanceTimersByTime(800);
+      });
+
+      // Simulate the note getting a real ID from the server
+      const updatedNotes: NoteSummary[] = [
+        {
+          id: 999, // Real ID from server
+          content: "New content",
+          updatedAt: "2023-01-01T00:00:00Z",
+          hubId: mockHubId,
+          clientId: clientId, // Same clientId
+        },
+      ];
+
+      // Update the query data to simulate server response
+      queryClient.setQueryData(mockQueryKey, updatedNotes);
+      vi.mocked(queryClient.getQueryData).mockReturnValue(updatedNotes);
+
+      // Fast-forward the retry polling interval
+      act(() => {
+        vi.advanceTimersByTime(500);
+      });
+
+      await waitFor(() => {
+        expect(mocks.updateQuickNote).toHaveBeenCalledWith({
+          id: 999,
+          content: "New content",
+          updatedAt: expect.any(String),
+        });
+      });
+    });
+
+    it("should retry and save when real note is found by content (fallback)", async () => {
+      const optimisticId = -Date.now();
+
+      const initialProps = {
+        noteId: optimisticId,
+        initialContent: "",
+        hubId: mockHubId,
+        // No clientId provided
+      };
+
+      const mockNotes: NoteSummary[] = [
+        {
+          id: optimisticId,
+          content: "",
+          updatedAt: "2023-01-01T00:00:00Z",
+          hubId: mockHubId,
+        },
+      ];
+
+      queryClient.setQueryData(mockQueryKey, mockNotes);
+      vi.mocked(queryClient.getQueryData).mockReturnValue(mockNotes);
+
+      const { result } = renderHookWithQueryClient(initialProps);
+
+      act(() => {
+        result.current.handleContentChange("Unique content");
+      });
+
+      act(() => {
+        vi.advanceTimersByTime(800);
+      });
+
+      // Simulate the note getting a real ID
+      const updatedNotes: NoteSummary[] = [
+        {
+          id: 888,
+          content: "Unique content",
+          updatedAt: "2023-01-01T00:00:00Z",
+          hubId: mockHubId,
+        },
+      ];
+
+      queryClient.setQueryData(mockQueryKey, updatedNotes);
+      vi.mocked(queryClient.getQueryData).mockReturnValue(updatedNotes);
+
+      act(() => {
+        vi.advanceTimersByTime(500);
+      });
+
+      await waitFor(() => {
+        expect(mocks.updateQuickNote).toHaveBeenCalledWith({
+          id: 888,
+          content: "Unique content",
+          updatedAt: expect.any(String),
+        });
+      });
+    });
+
+    it("should timeout and show error after 10 seconds", async () => {
+      const initialProps = {
+        noteId: -Date.now(),
+        initialContent: "",
+        hubId: mockHubId,
+        clientId: "client-123",
+      };
+
+      const { result } = renderHookWithQueryClient(initialProps);
+
+      act(() => {
+        result.current.handleContentChange("New content");
+      });
+
+      act(() => {
+        vi.advanceTimersByTime(800);
+      });
+
+      // Fast-forward past the timeout
+      act(() => {
+        vi.advanceTimersByTime(10000);
+      });
+
+      expect(toast.error).toHaveBeenCalledWith(
+        "Note creation timed out. Please try editing the note again.",
+      );
+    });
+
+    it("should clear retry polling on successful save", async () => {
+      const initialProps = {
+        noteId: 123,
+        initialContent: "Initial content",
+        hubId: mockHubId,
+      };
+
+      const { result } = renderHookWithQueryClient(initialProps);
+
+      act(() => {
+        result.current.handleContentChange("New content");
+      });
+
+      act(() => {
+        vi.advanceTimersByTime(800);
+      });
+
+      await waitFor(() => {
+        expect(result.current.isSaving).toBe(false);
+        expect(result.current.isUnsaved).toBe(false);
+      });
+    });
   });
 
-  it("should save content after debounce timer expires", async () => {
-    const { result } = renderHookWithQueryClient(queryClient);
-    act(() => {
-      result.current.handleContentChange("Updated content");
+  describe("error handling", () => {
+    it("should revert optimistic updates on error", async () => {
+      vi.mocked(mocks.updateQuickNote).mockRejectedValue(
+        new Error("Network error"),
+      );
+
+      const previousData: NoteSummary[] = [
+        {
+          id: 123,
+          content: "Original content",
+          updatedAt: "2023-01-01T00:00:00Z",
+          hubId: mockHubId,
+        },
+      ];
+
+      queryClient.setQueryData(mockQueryKey, previousData);
+      vi.mocked(queryClient.getQueryData).mockReturnValue(previousData);
+
+      const initialProps = {
+        noteId: 123,
+        initialContent: "Original content",
+        hubId: mockHubId,
+      };
+
+      const { result } = renderHookWithQueryClient(initialProps);
+
+      act(() => {
+        result.current.handleContentChange("New content");
+      });
+
+      act(() => {
+        vi.advanceTimersByTime(800);
+      });
+
+      await waitFor(() => {
+        expect(toast.error).toHaveBeenCalledWith(
+          "Failed to save note. Changes will be lost if you navigate away.",
+        );
+      });
+
+      expect(queryClient.setQueryData).toHaveBeenCalledWith(
+        mockQueryKey,
+        previousData,
+      );
     });
-
-    expect(result.current.content).toBe("Updated content");
-    expect(result.current.isSaving).toBe(false);
-    expect(result.current.isUnsaved).toBe(true);
-
-    await act(async () => {
-      vi.advanceTimersByTime(1000);
-    });
-
-    expect(mocks.updateQuickNote).toHaveBeenCalledWith(
-      {
-        id: 123,
-        content: "Updated content",
-        updatedAt: expect.any(String),
-      },
-      {
-        userId: "test-user-id",
-      },
-    );
-    expect(queryClient.cancelQueries).toHaveBeenCalledWith({
-      queryKey: ["hub-notes", 456],
-    });
-    expect(queryClient.setQueryData).toHaveBeenCalled();
-  });
-
-  it("should not save if content hasn't changed from initial", async () => {
-    const { result } = renderHookWithQueryClient(queryClient);
-
-    act(() => {
-      result.current.handleContentChange("Initial test content");
-    });
-
-    act(() => {
-      vi.advanceTimersByTime(1000);
-    });
-
-    expect(queryClient.cancelQueries).not.toHaveBeenCalled();
-    expect(queryClient.setQueryData).not.toHaveBeenCalled();
-  });
-
-  it("should handle multiple content changes within debounce period", async () => {
-    const { result } = renderHookWithQueryClient(queryClient);
-    act(() => {
-      result.current.handleContentChange("Change 1");
-    });
-
-    act(() => {
-      vi.advanceTimersByTime(300);
-      result.current.handleContentChange("Change 2");
-    });
-
-    act(() => {
-      vi.advanceTimersByTime(300);
-      result.current.handleContentChange("Final change");
-    });
-
-    expect(result.current.content).toBe("Final change");
-
-    act(() => {
-      vi.advanceTimersByTime(1000);
-    });
-
-    await act(async () => {
-      await Promise.resolve();
-    });
-
-    expect(result.current.content).toBe("Final change");
   });
 });

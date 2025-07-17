@@ -31,13 +31,12 @@ export function useDeleteSessionNote() {
         queryClient.getQueryData<ClientSessionNotesMap>(queryKey);
 
       queryClient.setQueryData<ClientSessionNotesMap>(queryKey, (old) => {
-        if (!old) return { past: [], present: [], future: [] };
+        if (!old) return { plans: [], "in-class": [] };
 
         return {
-          past: old.past?.filter((note) => note.id !== input.noteId) ?? [],
-          present:
-            old.present?.filter((note) => note.id !== input.noteId) ?? [],
-          future: old.future?.filter((note) => note.id !== input.noteId) ?? [],
+          plans: old.plans?.filter((note) => note.id !== input.noteId) ?? [],
+          "in-class":
+            old["in-class"]?.filter((note) => note.id !== input.noteId) ?? [],
         };
       });
 

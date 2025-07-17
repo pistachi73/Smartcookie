@@ -10,16 +10,16 @@ import type {
   ValidationResult,
 } from "react-aria-components";
 import {
+  composeRenderProps,
   FieldError as FieldErrorPrimitive,
   Group,
   Input as InputPrimitive,
   Label as LabelPrimitive,
   Text,
-  composeRenderProps,
 } from "react-aria-components";
+import type { RefCallBack } from "react-hook-form";
 import { tv } from "tailwind-variants";
 
-import { RefCallBack } from "react-hook-form";
 import { composeTailwindRenderProps, focusStyles } from "./primitive";
 
 interface FieldProps {

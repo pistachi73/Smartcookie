@@ -1,14 +1,16 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CalendarDate, Time } from "@internationalized/date";
+import { useCallback, useEffect, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import type { z } from "zod";
+
 import { Button } from "@/shared/components/ui/button";
 import { Form } from "@/shared/components/ui/form";
 import { Modal } from "@/shared/components/ui/modal";
 import { ProgressCircle } from "@/shared/components/ui/progress-circle";
 import { serializeDateValue } from "@/shared/lib/serialize-react-aria/serialize-date-value";
 import { serializeTime } from "@/shared/lib/serialize-react-aria/serialize-time";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { CalendarDate, Time } from "@internationalized/date";
-import { useCallback, useEffect, useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
-import type { z } from "zod";
+
 import { useCheckSessionConflicts } from "../../hooks/session/use-check-session-conflicts";
 import { useUpdateSession } from "../../hooks/session/use-update-session";
 import { useHubById } from "../../hooks/use-hub-by-id";
@@ -40,8 +42,6 @@ export const UpdateSessionFormModal = ({
 
   const { data: hub } = useHubById(hubId);
 
-  if (!hub) return null;
-
   const {
     mutateAsync: checkSessionConflicts,
     reset: resetConflicts,
@@ -69,6 +69,8 @@ export const UpdateSessionFormModal = ({
   }, [form.watch, resetConflicts]);
 
   useEffect(() => {
+    if (!hub) return;
+
     const startDate = new Date(session.startTime);
     const endDate = new Date(session.endTime);
 
@@ -82,9 +84,11 @@ export const UpdateSessionFormModal = ({
       endTime: new Time(endDate.getHours(), endDate.getMinutes()),
       status: session.status,
     });
-  }, [form, session]);
+  }, [form, session, hub]);
 
   const onSubmit = async (data: z.infer<typeof UpdateSessionFormSchema>) => {
+    if (!hub) return;
+
     console.log({
       startTime: serializeTime(data.startTime),
       endTime: serializeTime(data.endTime),
@@ -168,7 +172,7 @@ export const UpdateSessionFormModal = ({
                 size="small"
                 className="px-6"
                 isPending={isPending}
-                isDisabled={!isDirty}
+                isDisabled={!isDirty || !hub}
               >
                 {isPending && (
                   <ProgressCircle

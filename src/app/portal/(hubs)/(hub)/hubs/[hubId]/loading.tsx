@@ -1,17 +1,7 @@
-import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
-import { FolderLibraryIcon } from "@hugeicons-pro/core-solid-rounded";
+"use client";
 
-export default function HubLoading() {
-  return (
-    <>
-      <PortalNav
-        breadcrumbs={[
-          { label: "Portal", href: "/portal" },
-          { label: "Hubs", href: "/portal/hubs", icon: FolderLibraryIcon },
-          "skeleton",
-        ]}
-      />
-      <div className="bg-bg p-5">Loading...</div>
-    </>
-  );
+import { HubLoading } from "@/features/hub/components/hub-loading";
+
+export default function HubLoadingPage() {
+  return <HubLoading />;
 }

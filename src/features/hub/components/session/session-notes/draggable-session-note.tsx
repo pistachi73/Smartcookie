@@ -44,7 +44,7 @@ export const DraggableSessionNote = ({
       {...dragProps}
       className={cn(
         "group relative flex flex-row items-center gap-1",
-        "p-2 rounded-lg  transition-all duration-200 not-last:mb-1",
+        "p-2.5 rounded-lg  transition-all duration-200 not-last:mb-1",
         "focus-visible:border-primary focus-visible:bg-primary/10",
         "cursor-grab",
         "border dark:border-transparent hover:border-fg/30",
@@ -55,11 +55,11 @@ export const DraggableSessionNote = ({
       <span
         {...buttonProps}
         ref={dragButtonRef}
-        className="rounded-xs focus-visible:ring-2 p-0.5 mr-0.5 ring-primary text-muted-fg"
+        className="rounded-xs focus-visible:ring-2 p-0.5 mr-0.5 ring-primary text-muted-fg shrink-0"
       >
         <HugeiconsIcon
           icon={DragDropVerticalIcon}
-          size={12}
+          size={14}
           className="shrink-0"
         />
       </span>

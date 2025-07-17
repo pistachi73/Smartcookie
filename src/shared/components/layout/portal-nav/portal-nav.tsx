@@ -131,7 +131,7 @@ export const PortalNav = ({
 
           {!user?.hasActiveSubscription && (
             <ExplorePremiumModal>
-              <Button>
+              <Button className="shrink-0">
                 Explore premium
                 <HugeiconsIcon
                   icon={Diamond02Icon}

@@ -37,9 +37,8 @@ type SessionNoteColumnProps<T extends SessionNotePosition> = {
 };
 
 const headerMap: Record<SessionNotePosition, string> = {
-  present: "Present",
-  future: "Future",
-  past: "Past",
+  plans: "Plans",
+  "in-class": "In-Class",
 } as const;
 
 export const SessionNoteColumn = <T extends SessionNotePosition>({
@@ -58,7 +57,7 @@ export const SessionNoteColumn = <T extends SessionNotePosition>({
     <DroppableSessionNoteColumn sessionId={sessionId} position={position}>
       <m.div
         layout
-        className="p-1 mb-1 pr-0 flex flex-row items-center justify-between gap-x-2"
+        className="mb-1 pr-0 flex flex-row items-center justify-between gap-x-2"
       >
         <Heading level={4} className="text-sm font-medium text-muted-fg">
           {headerMap[position]}
