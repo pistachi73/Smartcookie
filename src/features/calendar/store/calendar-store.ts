@@ -1,10 +1,10 @@
-import type { CalendarView } from "@/features/calendar/types/calendar.types";
 import { Temporal } from "temporal-polyfill";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
+import { createStore } from "zustand/vanilla";
 
 import { superjsonStorage } from "@/core/stores/superjson-storage";
-import { createStore } from "zustand/vanilla";
+import type { CalendarView } from "@/features/calendar/types/calendar.types";
 import type {
   CalendarState,
   CalendarStore,
@@ -33,6 +33,9 @@ export const initCalendarStore = (
     selectedDate: initialSelectedDate,
     visibleDates,
     calendarView,
+
+    isCreateSessionModalOpen: false,
+    createSessionFormData: null,
   };
 
   return initState;
@@ -48,9 +51,17 @@ export const createCalendarStore = (
         ...initState,
         _setHydrated: () => set({ _isHydrated: true }),
         toggleSidebar: () => set({ sidebarOpen: !get().sidebarOpen }),
+        setIsCreateSessionModalOpen: (open) =>
+          set({ isCreateSessionModalOpen: open }),
+        setCreateSessionFormData: (values) => {
+          set((state) => {
+            state.createSessionFormData = values;
+          });
+        },
+
         selectDate: (date) => {
           const { visibleDates } = get();
-          let newVisibleDates = undefined;
+          let newVisibleDates;
           if (!visibleDates.includes(date)) {
             newVisibleDates = getDatesForCalendarView(date, get().calendarView);
           }
@@ -123,7 +134,7 @@ export const createCalendarStore = (
         },
 
         onToday: () => {
-          let newVisibleDates = undefined;
+          let newVisibleDates;
           const today = Temporal.Now.plainDateISO();
 
           if (!get().visibleDates.includes(today)) {
@@ -150,6 +161,13 @@ export const createCalendarStore = (
         name: "calendar-store",
         storage: superjsonStorage,
         skipHydration,
+        partialize: (state) => {
+          const { createSessionFormData, isCreateSessionModalOpen, ...rest } =
+            state;
+          return {
+            ...rest,
+          };
+        },
         onRehydrateStorage: () => {
           return (state, error) => {
             if (!error) state?._setHydrated();

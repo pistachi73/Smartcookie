@@ -7,7 +7,7 @@ export const GetSessionNotesBySessionIdSchema = z.object({
 export const CreateSessionNoteSchema = z.object({
   sessionId: z.number(),
   content: z.string().min(1, "Content is required"),
-  position: z.enum(["past", "present", "future"]),
+  position: z.enum(["plans", "in-class"]),
 });
 
 export const DeleteSessionNoteSchema = z.object({
@@ -19,10 +19,10 @@ export const UpdateSessionNoteSchema = z.object({
   noteId: z.number(),
   source: z.object({
     sessionId: z.number(),
-    position: z.enum(["past", "present", "future"]),
+    position: z.enum(["plans", "in-class"]),
   }),
   target: z.object({
     sessionId: z.number(),
-    position: z.enum(["past", "present", "future"]),
+    position: z.enum(["plans", "in-class"]),
   }),
 });

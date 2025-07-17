@@ -1,12 +1,14 @@
 "use client";
 
-import { deleteQuickNote } from "@/data-access/quick-notes/mutations";
-import { DeleteQuickNoteSchema } from "@/data-access/quick-notes/schemas";
-import type { NoteSummary } from "@/features/quick-notes/types/quick-notes.types";
-import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+
+import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
+
+import { deleteQuickNote } from "@/data-access/quick-notes/mutations";
+import { DeleteQuickNoteSchema } from "@/data-access/quick-notes/schemas";
+import type { NoteSummary } from "@/features/quick-notes/types/quick-notes.types";
 
 export const DELETION_TIME_MS = 500;
 
@@ -115,6 +117,7 @@ export const useDeleteQuickNote = ({
   return {
     isDeleting,
     deleteProgress,
+    deleteNote,
     handleDeletePress,
     handleDeleteRelease,
   };

@@ -1,10 +1,13 @@
+import { CalendarDate, Time } from "@internationalized/date";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Temporal } from "temporal-polyfill";
+import { useShallow } from "zustand/react/shallow";
+
 import {
   getCurrentTimezone,
   getSnapToNearest15MinutesIndex,
 } from "@/features/calendar/lib/utils";
-import type { DatedOccurrence } from "@/features/calendar/types/calendar.types";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Temporal } from "temporal-polyfill";
+import { useCalendarStore } from "../store/calendar-store-provider";
 
 export const getTimeLabelFromSnapIndex = (snapIndex: number) => {
   const minutes = snapIndex * 15;
@@ -30,9 +33,13 @@ export const useDragToCreateEvent = ({
 }: {
   date: Temporal.PlainDate;
 }) => {
-  // const addDraftOccurrence = useCalendarStore(
-  //   useShallow((store) => store.addDraftOccurrence),
-  // );
+  const { setCreateSessionFormData, setIsCreateSessionModalOpen } =
+    useCalendarStore(
+      useShallow((store) => ({
+        setCreateSessionFormData: store.setCreateSessionFormData,
+        setIsCreateSessionModalOpen: store.setIsCreateSessionModalOpen,
+      })),
+    );
   const scrollableParent = useRef<HTMLElement | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const [dragStartY, setDragStartY] = useState<number | null>(null);
@@ -44,8 +51,6 @@ export const useDragToCreateEvent = ({
     currentY: null as number | null,
     lastUpdate: 0,
   });
-
-  const dateInstant = useMemo(() => Temporal.Now.instant(), []);
 
   useEffect(() => {
     scrollableParent.current = getScrollableParent(ref.current);
@@ -113,15 +118,33 @@ export const useDragToCreateEvent = ({
         }),
       });
 
-      const draftOccurrence: DatedOccurrence = {
-        eventId: -1,
-        id: -1,
-        startTime: startDate,
-        endTime: endDate,
-        overrides: null,
+      const defaultValues = {
+        startTime: new Time(
+          startDate.toPlainTime().hour,
+          startDate.toPlainTime().minute,
+        ),
+        endTime: new Time(
+          endDate.toPlainTime().hour,
+          endDate.toPlainTime().minute,
+        ),
+        date: new CalendarDate(startDate.year, startDate.month, startDate.day),
       };
 
-      // addDraftOccurrence(draftOccurrence);
+      console.log("defaultValues", defaultValues);
+
+      setCreateSessionFormData({
+        startTime: new Time(
+          startDate.toPlainTime().hour,
+          startDate.toPlainTime().minute,
+        ),
+        endTime: new Time(
+          endDate.toPlainTime().hour,
+          endDate.toPlainTime().minute,
+        ),
+        date: new CalendarDate(startDate.year, startDate.month, startDate.day),
+      });
+
+      setIsCreateSessionModalOpen(true);
     }
 
     // Reset all state at once

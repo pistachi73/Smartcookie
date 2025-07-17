@@ -1,5 +1,12 @@
 import { relations } from "drizzle-orm";
-import { integer, pgEnum, serial, timestamp, uuid } from "drizzle-orm/pg-core";
+import {
+  index,
+  integer,
+  pgEnum,
+  serial,
+  timestamp,
+  uuid,
+} from "drizzle-orm/pg-core";
 import { attendance } from "./attendance";
 import { hub } from "./hub";
 import { sessionNote } from "./session-note";
@@ -31,7 +38,16 @@ export const session = pgTable(
       .$onUpdate(() => new Date().toISOString())
       .notNull(),
   },
-  () => [],
+  (table) => [
+    // Most important: covers WHERE hub_id = ? AND user_id = ? ORDER BY start_time
+    index("session_hub_user_start_idx").on(
+      table.hubId,
+      table.userId,
+      table.startTime,
+    ),
+    // For queries by status (upcoming/completed)
+    index("session_status_idx").on(table.status),
+  ],
 );
 
 export const sessionRelations = relations(session, ({ one, many }) => ({

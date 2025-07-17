@@ -1,15 +1,17 @@
-import {
-  PIXELS_PER_15_MINUTES,
-  calculateOccurrenceHeight,
-  calculateOccurrenceTop,
-  getCalendarColor,
-} from "@/features/calendar/lib/utils";
-import type { LayoutCalendarSession } from "@/features/calendar/types/calendar.types";
-import { cn } from "@/shared/lib/classes";
-import { Popover } from "@/ui/popover";
 import { format } from "date-fns";
 import dynamic from "next/dynamic";
 import { Button } from "react-aria-components";
+
+import { Popover } from "@/ui/popover";
+import { cn } from "@/shared/lib/classes";
+
+import {
+  calculateOccurrenceHeight,
+  calculateOccurrenceTop,
+  getCalendarColor,
+  PIXELS_PER_15_MINUTES,
+} from "@/features/calendar/lib/utils";
+import type { LayoutCalendarSession } from "@/features/calendar/types/calendar.types";
 
 const LazyPopoverContent = dynamic(() =>
   import("../../session-popover-content").then((mod) => mod.SessionPopover),
@@ -17,7 +19,9 @@ const LazyPopoverContent = dynamic(() =>
 
 export const DayViewSession = ({
   session,
-}: { session: LayoutCalendarSession }) => {
+}: {
+  session: LayoutCalendarSession;
+}) => {
   if (!session) return null;
 
   const startTimeDate = new Date(session.startTime);

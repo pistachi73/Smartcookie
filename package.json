@@ -41,10 +41,12 @@
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.44.2",
+    "embla-carousel-react": "^8.6.0",
     "heap-js": "^2.6.0",
     "immer": "^10.1.1",
     "input-otp": "^1.4.2",
     "justd-icons": "^1.10.24",
+    "keen-slider": "^6.8.6",
     "libphonenumber-js": "^1.12.6",
     "lodash": "^4.17.21",
     "lucide-react": "^0.453.0",
@@ -72,7 +74,7 @@
     "zustand": "^5.0.2"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
+    "@biomejs/biome": "2.0.6",
     "@tailwindcss/postcss": "4.0.0-beta.2",
     "@tanstack/react-query-devtools": "^5.68.0",
     "@testing-library/dom": "^10.4.0",

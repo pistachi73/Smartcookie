@@ -50,9 +50,8 @@ export function useAddSessionNote() {
         (old) => {
           if (!old) {
             return {
-              past: [],
-              present: [],
-              future: [],
+              plans: [],
+              "in-class": [],
             };
           }
           return {
@@ -78,9 +77,8 @@ export function useAddSessionNote() {
         (old) => {
           if (!old) {
             return {
-              past: [],
-              present: [],
-              future: [],
+              plans: [],
+              "in-class": [],
             };
           }
           return {

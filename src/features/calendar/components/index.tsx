@@ -1,25 +1,47 @@
 "use client";
 
+import { HugeiconsIcon } from "@hugeicons/react";
+import { FolderLibraryIcon } from "@hugeicons-pro/core-solid-rounded";
+import { PlusSignIcon } from "@hugeicons-pro/core-stroke-rounded";
+import dynamic from "next/dynamic";
+
+import { Button } from "@/shared/components/ui/button";
+import { Heading } from "@/ui/heading";
+
 import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
+import { AddSessionsFormModal } from "@/features/hub/components/session/add-sessions-form-modal";
 import { CalendarSidebar } from "./calendar-sidebar";
 import { CalendarSkeleton } from "./calendar-skeleton";
 import { CalendarView } from "./calendar-view";
 
-import { buttonStyles } from "@/shared/components/ui/button";
-import { cn } from "@/shared/lib/classes";
-import { Heading } from "@/ui/heading";
-import { FolderLibraryIcon } from "@hugeicons-pro/core-solid-rounded";
-import { PlusSignIcon } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Link } from "react-aria-components";
+const DynamicAddSessionsFormModal = dynamic(
+  () =>
+    import("@/features/hub/components/session/add-sessions-form-modal").then(
+      (mod) => mod.AddSessionsFormModal,
+    ),
+  {
+    ssr: false,
+  },
+);
 
 export const Calendar = () => {
   const _isHydrated = useCalendarStore((state) => state._isHydrated);
   const sidebarOpen = useCalendarStore((store) => store.sidebarOpen);
+  const setIsCreateSessionModalOpen = useCalendarStore(
+    (store) => store.setIsCreateSessionModalOpen,
+  );
+  const isCreateSessionModalOpen = useCalendarStore(
+    (store) => store.isCreateSessionModalOpen,
+  );
+  const createSessionFormData = useCalendarStore(
+    (store) => store.createSessionFormData,
+  );
 
   if (!_isHydrated) {
     return <CalendarSkeleton />;
   }
+
+  console.log("createSessionFormData", createSessionFormData);
 
   return (
     <>
@@ -41,20 +63,18 @@ export const Calendar = () => {
             </div>
           </div>
           <div className="flex gap-2 items-center justify-end w-full @2xl:w-auto">
-            <Link
-              className={cn(
-                buttonStyles({
-                  intent: "primary",
-                  size: "small",
-                  shape: "square",
-                }),
-                "px-0 size-10 @2xl:h-10 @2xl:w-auto @2xl:px-4",
-              )}
-              href="/portal/hubs/new"
+            <Button
+              intent="primary"
+              size="small"
+              shape="square"
+              className="px-0 size-10 @2xl:h-10 @2xl:w-auto @2xl:px-4"
+              onPress={() => {
+                setIsCreateSessionModalOpen(true);
+              }}
             >
               <HugeiconsIcon icon={PlusSignIcon} size={16} />
               <span className="hidden @2xl:block">Add session</span>
-            </Link>
+            </Button>
           </div>
         </div>
         <div className="h-full min-h-0 flex-1 flex bg-overlay">
@@ -62,6 +82,11 @@ export const Calendar = () => {
           {sidebarOpen && <CalendarSidebar />}
         </div>
       </div>
+      <AddSessionsFormModal
+        isOpen={isCreateSessionModalOpen}
+        onOpenChange={setIsCreateSessionModalOpen}
+        defaultValues={createSessionFormData ?? undefined}
+      />
     </>
   );
 };

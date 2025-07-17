@@ -45,7 +45,6 @@ export const QueryError = ({
           onPress={onRetry}
           isDisabled={isRetrying}
           intent="outline"
-          size="large"
           className="transition-all duration-200"
         >
           {isRetrying ? (
