@@ -29,7 +29,6 @@ export const authorize = async (
     });
 
     if (!passwordsMatch) return null;
-    console.log("returning user, authorized");
     return user;
   } catch (error) {
     console.error(error);

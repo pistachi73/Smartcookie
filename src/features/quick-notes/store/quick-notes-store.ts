@@ -85,7 +85,6 @@ export const createQuickNotesStore = (initState: QuickNotesState) => {
         },
         onRehydrateStorage: () => {
           return async (state, error) => {
-            console.log("onRehydrateStorage", error);
             if (!error) {
               state?.setHydrated();
             }
