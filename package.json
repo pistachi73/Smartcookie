@@ -6,6 +6,8 @@
   "scripts": {
     "build": "next build",
     "lint": "biome lint .",
+    "check": "biome check .",
+    "check:fix": "biome check . --write",
     "tsc": "tsc --noEmit",
     "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",
