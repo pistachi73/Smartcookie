@@ -40,13 +40,13 @@ export const SkeletonSessionTimeline = () => {
         align: "start",
       }}
       className="w-full"
+      spacing="md"
     >
       <Carousel.Content>
         {Array.from({ length: 4 }).map((_, index) => (
           <Carousel.Item
             key={`skeleton-session-timeline-item-${index}`}
             className="basis-1/2 @2xl:basis-1/3 @4xl:basis-1/4"
-            spacing="md"
           >
             <SkeletonSessionTimelineItem />
           </Carousel.Item>
