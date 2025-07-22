@@ -38,6 +38,8 @@ const Bars = ({ className, ...props }: React.SVGProps<SVGSVGElement>) => (
     viewBox="0 0 135 140"
     xmlns="http://www.w3.org/2000/svg"
     fill="currentColor"
+    aria-label="Loading..."
+    role="presentation"
     {...props}
   >
     <rect y="10" width="15" height="120" rx="6">
@@ -138,6 +140,8 @@ const Spin = ({ className, ...props }: React.SVGProps<SVGSVGElement>) => (
     className={twMerge("size-4", className)}
     data-slot="icon"
     viewBox="0 0 2400 2400"
+    aria-label="Loading..."
+    role="presentation"
     {...props}
   >
     <g strokeWidth="200" strokeLinecap="round" fill="none">

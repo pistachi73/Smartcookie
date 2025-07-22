@@ -1,8 +1,9 @@
 "use server";
 
+import { eq } from "drizzle-orm";
+
 import { db } from "@/db";
 import { emailMarketing } from "@/db/schema";
-import { eq } from "drizzle-orm";
 import { withValidationOnly } from "../protected-data-access";
 import { CreateEmailMarketingSchema } from "./schemas";
 
@@ -23,7 +24,7 @@ export const createEmailMarketing = withValidationOnly({
       };
     }
 
-    const newEmail = await db
+    const _newEmail = await db
       .insert(emailMarketing)
       .values({
         email,

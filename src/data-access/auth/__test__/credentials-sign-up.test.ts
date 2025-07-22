@@ -1,9 +1,9 @@
 import {
-  type MockedFunction,
   beforeEach,
   describe,
   expect,
   it,
+  type MockedFunction,
   vi,
 } from "vitest";
 
@@ -289,7 +289,7 @@ describe("credentialsSignUp", () => {
       );
       mockGetUserByEmail.mockResolvedValue(undefined);
 
-      const result = await credentialsSignUp({
+      await credentialsSignUp({
         email: "test@example.com",
         password: "password123",
         emailVerificationCode: "123456",

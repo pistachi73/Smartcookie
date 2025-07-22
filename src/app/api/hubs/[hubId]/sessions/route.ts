@@ -1,9 +1,10 @@
-import { getSessionsByHubId } from "@/data-access/sessions/queries";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
+import { getSessionsByHubId } from "@/data-access/sessions/queries";
+
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ hubId: string }> },
 ) {
   try {

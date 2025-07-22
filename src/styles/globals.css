@@ -255,7 +255,7 @@
 
 
     /* Other variables */
-    --bg: oklch(1 0 0);
+    --bg: oklch(96.5% 1.2% 220);
     --fg: oklch(0.141 0.005 285.823);
 
     
@@ -268,13 +268,8 @@
     --secondary: oklch(0.92 0.004 286.32);
     --secondary-fg: oklch(0.141 0.005 285.823);
     
-    --overlay: oklch(1 0 0);
-    --overlay-fg: oklch(0.141 0.005 285.823);
-
-       /* Other variables */
-    --bg: oklch(96.5% 1.2% 220);
-   
     --overlay: oklch(100% 0.006 250);
+    --overlay-fg: oklch(0.141 0.005 285.823);
     --overlay-highlight: oklch(92.5% 1.1% 250);
     
     --accent: oklch(0.94   0.004 286.32);

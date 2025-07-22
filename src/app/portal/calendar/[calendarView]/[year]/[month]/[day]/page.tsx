@@ -1,18 +1,20 @@
-import { Calendar } from "@/features/calendar/components";
-import { getMonthSessionsQueryOptions } from "@/features/calendar/hooks/use-calendar-sessions";
-import { isCalendarView } from "@/features/calendar/lib/calendar";
-import { CalendarStoreProvider } from "@/features/calendar/store/calendar-store-provider";
-import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
-import { currentUser } from "@/shared/lib/auth";
 import { Calendar03Icon } from "@hugeicons-pro/core-solid-rounded";
 import {
+  dehydrate,
   HydrationBoundary,
   QueryClient,
-  dehydrate,
 } from "@tanstack/react-query";
 import isNumber from "lodash/isNumber";
 import { redirect } from "next/navigation";
 import { Temporal } from "temporal-polyfill";
+
+import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
+import { currentUser } from "@/shared/lib/auth";
+
+import { Calendar } from "@/features/calendar/components";
+import { getMonthSessionsQueryOptions } from "@/features/calendar/hooks/use-calendar-sessions";
+import { isCalendarView } from "@/features/calendar/lib/calendar";
+import { CalendarStoreProvider } from "@/features/calendar/store/calendar-store-provider";
 
 type CalendarPageProps = {
   params: Promise<{
@@ -24,7 +26,7 @@ type CalendarPageProps = {
 };
 const CalendarPage = async ({ params }: CalendarPageProps) => {
   const queryClient = new QueryClient();
-  const user = await currentUser();
+  const _user = await currentUser();
   const { calendarView, year, month, day } = await params;
 
   if (

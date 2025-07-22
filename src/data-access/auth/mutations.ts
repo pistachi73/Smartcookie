@@ -1,7 +1,8 @@
 "use server";
 
 import { AuthError } from "next-auth";
-import { hashPassword } from "../utils";
+
+import { sendPasswordResetEmail } from "@/shared/lib/mail";
 
 import { signIn } from "@/core/config/auth-config";
 import { createDataAccessError, isDataAccessError } from "@/data-access/errors";
@@ -25,11 +26,11 @@ import { getUserByEmail, getUserById } from "@/data-access/user/queries";
 import { sendEmailVerificationEmail } from "@/data-access/verification-token/mutations";
 import { getVerificationTokenByTokenAndEmail } from "@/data-access/verification-token/queries";
 import { db } from "@/db";
-import { sendPasswordResetEmail } from "@/shared/lib/mail";
 import {
   deletePasswordResetTokenByToken,
   generatePasswordResetToken,
 } from "../password-reset-token/mutations";
+import { hashPassword } from "../utils";
 import {
   ChangePasswordSchema,
   CredentialsSignInSchema,
@@ -126,7 +127,7 @@ export const credentialsSignIn = withValidationOnly({
       return {
         twoFactor: null,
       };
-    } catch (error) {
+    } catch (_error) {
       return {
         twoFactor: null,
       };
@@ -212,7 +213,7 @@ export const resetPassword = withValidationOnly({
         token: passwordResetToken.token,
         email: passwordResetToken.email,
       });
-    } catch (e) {
+    } catch (_e) {
       return createDataAccessError("EMAIL_SENDING_FAILED");
     }
 

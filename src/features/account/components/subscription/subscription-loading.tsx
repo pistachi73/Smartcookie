@@ -27,7 +27,7 @@ export const SubscriptionLoading = () => {
 
             {/* Feature list skeleton - 6 items to match memberChecks */}
             <div className="flex flex-col gap-3">
-              {Array.from({ length: 6 }).map((_, index) => (
+              {Array.from({ length: 6 }, (_, index) => index).map((index) => (
                 <div
                   key={`feature-skeleton-${index}`}
                   className="flex flex-row items-center gap-3"

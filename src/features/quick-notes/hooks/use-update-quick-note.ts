@@ -71,7 +71,7 @@ export const useUpdateQuickNote = ({
 
       return { previousData };
     },
-    onError: (err, _, context) => {
+    onError: (_err, _variables, context) => {
       // Revert the optimistic update
       if (context?.previousData) {
         queryClient.setQueryData<NoteSummary[]>(

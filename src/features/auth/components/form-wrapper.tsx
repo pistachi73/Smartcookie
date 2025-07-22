@@ -1,16 +1,14 @@
-import { Heading } from "@/shared/components/ui/heading";
-import { cn } from "@/shared/lib/classes";
-import { Button } from "@/ui/button";
-import { Card } from "@/ui/card";
-import { ArrowLeft02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowLeft02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import * as motion from "motion/react-m";
 import { useEffect } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { useAuthStore } from "../store/auth-store-provider";
 
-// @ts-ignore
-const MotionCard = motion.create(Card);
+import { Heading } from "@/shared/components/ui/heading";
+import { Button } from "@/ui/button";
+import { cn } from "@/shared/lib/classes";
+
+import { useAuthStore } from "../store/auth-store-provider";
 
 type FormWrapperProps = {
   children: React.ReactNode;

@@ -9,7 +9,6 @@ import { Button } from "@/shared/components/ui/button";
 import { Heading } from "@/ui/heading";
 
 import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
-import { AddSessionsFormModal } from "@/features/hub/components/session/add-sessions-form-modal";
 import { CalendarSidebar } from "./calendar-sidebar";
 import { CalendarSkeleton } from "./calendar-skeleton";
 import { CalendarView } from "./calendar-view";
@@ -82,7 +81,7 @@ export const Calendar = () => {
           {sidebarOpen && <CalendarSidebar />}
         </div>
       </div>
-      <AddSessionsFormModal
+      <DynamicAddSessionsFormModal
         isOpen={isCreateSessionModalOpen}
         onOpenChange={setIsCreateSessionModalOpen}
         defaultValues={createSessionFormData ?? undefined}

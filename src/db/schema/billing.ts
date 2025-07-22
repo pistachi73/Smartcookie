@@ -1,4 +1,5 @@
 import { boolean, integer, serial } from "drizzle-orm/pg-core";
+
 import { hub } from "./hub";
 import { student } from "./student";
 import { pgTable } from "./utils";
@@ -17,7 +18,7 @@ export const billing = pgTable(
     tentative: boolean().default(true),
     invoiceSent: boolean().default(false),
   },
-  (table) => [],
+  (_table) => [],
 );
 
 export type InsertBilling = typeof billing.$inferInsert;

@@ -61,7 +61,7 @@ export const createCalendarStore = (
 
         selectDate: (date) => {
           const { visibleDates } = get();
-          let newVisibleDates;
+          let newVisibleDates: Temporal.PlainDate[] | undefined;
           if (!visibleDates.includes(date)) {
             newVisibleDates = getDatesForCalendarView(date, get().calendarView);
           }
@@ -134,7 +134,7 @@ export const createCalendarStore = (
         },
 
         onToday: () => {
-          let newVisibleDates;
+          let newVisibleDates: Temporal.PlainDate[] | undefined;
           const today = Temporal.Now.plainDateISO();
 
           if (!get().visibleDates.includes(today)) {

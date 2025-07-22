@@ -1,6 +1,6 @@
-import { act, renderHook, waitFor } from "@testing-library/react";
+import { act, renderHook } from "@testing-library/react";
 import { toast } from "sonner";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
   createQueryClientWrapper,
@@ -16,6 +16,14 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@/data-access/quick-notes/mutations", () => ({
   updateQuickNote: mocks.updateQuickNote,
+}));
+
+vi.mock("@/shared/hooks/use-current-user", () => ({
+  useCurrentUser: vi.fn().mockReturnValue({
+    id: "test-user-id",
+    name: "Test User",
+    email: "test@example.com",
+  }),
 }));
 
 vi.mock("sonner", () => ({
@@ -79,13 +87,20 @@ describe("useUpdateQuickNote", () => {
         vi.advanceTimersByTime(800);
       });
 
-      await waitFor(() => {
-        expect(mocks.updateQuickNote).toHaveBeenCalledWith({
+      // Flush any pending async operations
+      await act(async () => {
+        await vi.runAllTimersAsync();
+      });
+
+      // Check if the mutation was called with both data and auth context
+      expect(mocks.updateQuickNote).toHaveBeenCalledWith(
+        {
           id: 123,
           content: "New content",
           updatedAt: expect.any(String),
-        });
-      });
+        },
+        { userId: "test-user-id" },
+      );
     });
 
     it("should not trigger save when content hasn't changed", async () => {
@@ -196,13 +211,19 @@ describe("useUpdateQuickNote", () => {
         vi.advanceTimersByTime(500);
       });
 
-      await waitFor(() => {
-        expect(mocks.updateQuickNote).toHaveBeenCalledWith({
+      // Flush any pending async operations
+      await act(async () => {
+        await vi.runAllTimersAsync();
+      });
+
+      expect(mocks.updateQuickNote).toHaveBeenCalledWith(
+        {
           id: 999,
           content: "New content",
           updatedAt: expect.any(String),
-        });
-      });
+        },
+        { userId: "test-user-id" },
+      );
     });
 
     it("should retry and save when real note is found by content (fallback)", async () => {
@@ -254,13 +275,19 @@ describe("useUpdateQuickNote", () => {
         vi.advanceTimersByTime(500);
       });
 
-      await waitFor(() => {
-        expect(mocks.updateQuickNote).toHaveBeenCalledWith({
+      // Flush any pending async operations
+      await act(async () => {
+        await vi.runAllTimersAsync();
+      });
+
+      expect(mocks.updateQuickNote).toHaveBeenCalledWith(
+        {
           id: 888,
           content: "Unique content",
           updatedAt: expect.any(String),
-        });
-      });
+        },
+        { userId: "test-user-id" },
+      );
     });
 
     it("should timeout and show error after 10 seconds", async () => {
@@ -308,10 +335,13 @@ describe("useUpdateQuickNote", () => {
         vi.advanceTimersByTime(800);
       });
 
-      await waitFor(() => {
-        expect(result.current.isSaving).toBe(false);
-        expect(result.current.isUnsaved).toBe(false);
+      // Flush any pending async operations
+      await act(async () => {
+        await vi.runAllTimersAsync();
       });
+
+      expect(result.current.isSaving).toBe(false);
+      expect(result.current.isUnsaved).toBe(false);
     });
   });
 
@@ -349,11 +379,14 @@ describe("useUpdateQuickNote", () => {
         vi.advanceTimersByTime(800);
       });
 
-      await waitFor(() => {
-        expect(toast.error).toHaveBeenCalledWith(
-          "Failed to save note. Changes will be lost if you navigate away.",
-        );
+      // Flush any pending async operations
+      await act(async () => {
+        await vi.runAllTimersAsync();
       });
+
+      expect(toast.error).toHaveBeenCalledWith(
+        "Failed to save note. Changes will be lost if you navigate away.",
+      );
 
       expect(queryClient.setQueryData).toHaveBeenCalledWith(
         mockQueryKey,

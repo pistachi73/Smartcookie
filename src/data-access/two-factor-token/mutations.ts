@@ -1,10 +1,12 @@
 "use server";
 
-import { db } from "@/db";
-import { twoFactorToken } from "@/db/schema";
-import { sendTwoFactorTokenEmail } from "@/shared/lib/mail";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
+
+import { sendTwoFactorTokenEmail } from "@/shared/lib/mail";
+
+import { db } from "@/db";
+import { twoFactorToken } from "@/db/schema";
 import { createDataAccessError } from "../errors";
 import { withValidationOnly } from "../protected-data-access";
 import { generateSecureRandomInt } from "../utils";
@@ -13,7 +15,7 @@ import { SendTwoFactorTokenEmailSchema } from "./schemas";
 
 export const generateTwoFactorToken = async (email: string) => {
   const token = generateSecureRandomInt();
-  const expires = new Date(new Date().getTime() + 5 * 60 * 1000);
+  const expires = new Date(Date.now() + 5 * 60 * 1000);
   const existingToken = await getTwoFactorTokenByEmail({ email });
 
   if (existingToken) {
@@ -43,7 +45,7 @@ export const sendTwoFactorEmail = withValidationOnly({
         token: twoFactorToken.token,
         email: data.email,
       });
-    } catch (error) {
+    } catch (_e) {
       return createDataAccessError("EMAIL_SENDING_FAILED");
     }
 

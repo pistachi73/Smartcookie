@@ -27,7 +27,7 @@ type SessionPopoverProps = {
 
 export const SessionPopover = ({
   session,
-  onEditPress,
+  onEditPress: _onEditPress,
   popoverProps,
 }: SessionPopoverProps) => {
   const [isUpdateSessionModalOpen, setIsUpdateSessionModalOpen] =
