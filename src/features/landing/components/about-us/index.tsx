@@ -1,13 +1,15 @@
 "use client";
 
-import { MaxWidthWrapper } from "@/shared/components/layout/max-width-wrapper";
 import { UserGroupIcon } from "@hugeicons-pro/core-solid-rounded";
-
-import { cn } from "@/shared/lib/classes";
 import Image from "next/image";
+
+import { MaxWidthWrapper } from "@/shared/components/layout/max-width-wrapper";
+import { cn } from "@/shared/lib/classes";
+
 import { LandingSectionHeader } from "../landing-section-header";
-import martinaImage from "./assets/martina.jpg";
-import oscarImage from "./assets/oscar.jpeg";
+
+const martinaImage = "/images/team/martina.jpg";
+const oscarImage = "/images/team/oscar.jpeg";
 const teamMembers = [
   {
     name: "Martina Monreal",
