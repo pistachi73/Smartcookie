@@ -23,8 +23,7 @@ export const createEmailMarketing = withValidationOnly({
         message: "Thanks for your interest! We'll be in touch soon.",
       };
     }
-
-    const _newEmail = await db
+    await db
       .insert(emailMarketing)
       .values({
         email,
