@@ -1,6 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { mockNextNavigation } from "@/shared/lib/testing/navigation-mocks";
 import {
   cleanup,
   fireEvent,
@@ -11,8 +10,6 @@ import {
 
 import { useDeleteQuestion } from "../../../hooks/questions/use-delete-question";
 import { DeleteQuestionModal } from "../delete-question-modal";
-
-mockNextNavigation();
 
 vi.mock("../../../hooks/questions/use-delete-question", () => ({
   useDeleteQuestion: vi.fn(),

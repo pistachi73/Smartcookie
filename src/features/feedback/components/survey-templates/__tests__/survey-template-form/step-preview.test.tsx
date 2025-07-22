@@ -2,7 +2,6 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { mockNextNavigation } from "@/shared/lib/testing/navigation-mocks";
 import {
   cleanup,
   fireEvent,
@@ -17,8 +16,6 @@ import { useUpdateSurveyTemplate } from "@/features/feedback/hooks/survey-templa
 import { useSurveyTemplateFormStore } from "../../../../store/survey-template-form.store";
 import type { SurveyTemplateFormState } from "../../../../types/survey-template-form-store.types";
 import { StepPreview } from "../../survey-template-form/step-preview";
-
-mockNextNavigation();
 
 // Mock dependencies
 vi.mock("@/shared/hooks/use-navigate-with-params");

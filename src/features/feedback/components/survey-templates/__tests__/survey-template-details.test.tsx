@@ -2,7 +2,6 @@ import { useQueries } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { mockNextNavigation } from "@/shared/lib/testing/navigation-mocks";
 import {
   cleanup,
   fireEvent,
@@ -11,8 +10,6 @@ import {
 } from "@/shared/lib/testing/test-utils";
 
 import { SurveyTemplateDetails } from "../survey-template-details";
-
-mockNextNavigation();
 
 vi.mock("@tanstack/react-query", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@tanstack/react-query")>();

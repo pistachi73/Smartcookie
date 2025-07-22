@@ -2,14 +2,9 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import {
-  createMockSearchParams,
-  mockNextNavigation,
-} from "@/shared/lib/testing/navigation-mocks";
+import { createMockSearchParams } from "@/shared/lib/testing/navigation-mocks";
 
 import { FeedbackSidebar } from "../feedback-sidebar";
-
-mockNextNavigation();
 
 vi.mock("../questions/questions-panel", () => ({
   QuestionsPanel: () => (

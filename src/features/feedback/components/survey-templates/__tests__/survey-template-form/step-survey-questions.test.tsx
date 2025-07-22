@@ -1,7 +1,6 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { mockNextNavigation } from "@/shared/lib/testing/navigation-mocks";
 import {
   cleanup,
   fireEvent,
@@ -13,8 +12,6 @@ import { mockZustandStoreImplementation } from "@/shared/lib/testing/zustand-uti
 import { useSurveyTemplateFormStore } from "../../../../store/survey-template-form.store";
 import type { SurveyTemplateFormState } from "../../../../types/survey-template-form-store.types";
 import { StepSurveyQuestions } from "../../survey-template-form/step-survey-questions";
-
-mockNextNavigation();
 
 // Mock the complex dependencies
 vi.mock("@/shared/hooks/use-navigate-with-params");

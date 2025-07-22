@@ -52,7 +52,7 @@ export function StepSurveyQuestions() {
         }),
       );
     }
-  }, []);
+  }, [createHrefWithParams, searchParams, router, pathname]);
 
   return (
     <LayoutGroup>
@@ -221,7 +221,6 @@ const DroppableQuestionContainer = () => {
 
                     <div className="flex items-center justify-between gap-6 w-full">
                       <TemplateQuestion
-                        id={question.id}
                         type={question.type}
                         order={index + 1}
                         title={question.title}

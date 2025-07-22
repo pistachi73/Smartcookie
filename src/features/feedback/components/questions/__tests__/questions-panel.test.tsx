@@ -2,15 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import {
-  createMockSearchParams,
-  mockNextNavigation,
-} from "@/shared/lib/testing/navigation-mocks";
+import { createMockSearchParams } from "@/shared/lib/testing/navigation-mocks";
 import { cleanup, render, screen } from "@/shared/lib/testing/test-utils";
 
 import { QuestionsPanel } from "../questions-panel";
-
-mockNextNavigation();
 
 // Create a mock router object
 const mockRouter = {

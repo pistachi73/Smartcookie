@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { mockNextNavigation } from "@/shared/lib/testing/navigation-mocks";
 import {
   cleanup,
   fireEvent,
@@ -13,8 +12,6 @@ import {
 
 import { useUpdateQuestion } from "../../../hooks/questions/use-update-question";
 import { EditQuestion } from "../edit-question";
-
-mockNextNavigation();
 
 vi.mock("@/shared/hooks/use-navigate-with-params");
 

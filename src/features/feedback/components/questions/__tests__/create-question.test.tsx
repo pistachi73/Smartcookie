@@ -1,7 +1,6 @@
 import { useRouter } from "next/navigation";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { mockNextNavigation } from "@/shared/lib/testing/navigation-mocks";
 import {
   cleanup,
   fireEvent,
@@ -12,8 +11,6 @@ import {
 
 import { useCreateQuestion } from "../../../hooks/questions/use-create-question";
 import { CreateQuestion } from "../create-question";
-
-mockNextNavigation();
 
 vi.mock("@/shared/hooks/use-navigate-with-params");
 
