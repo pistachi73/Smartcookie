@@ -1,16 +1,18 @@
+import {
+  Folder02Icon,
+  FolderLibraryIcon,
+} from "@hugeicons-pro/core-solid-rounded";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { redirect } from "next/navigation";
+
+import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
+import { getQueryClient } from "@/shared/lib/get-query-client";
+
 import { getHubById } from "@/data-access/hubs/queries";
 import { getNotesByHubId } from "@/data-access/quick-notes/queries";
 import { HubDashboard } from "@/features/hub/components/hub-dashboard";
 import { getHubByIdQueryOptions } from "@/features/hub/lib/hub-query-options";
 import { quickNotesByHubIdQueryOptions } from "@/features/quick-notes/lib/quick-notes-query-options";
-import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
-import { getQueryClient } from "@/shared/lib/get-query-client";
-import {
-  Folder02Icon,
-  FolderLibraryIcon,
-} from "@hugeicons-pro/core-solid-rounded";
-import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
-import { redirect } from "next/navigation";
 
 interface HubPageProps {
   params: Promise<{

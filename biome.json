@@ -53,7 +53,7 @@
       "recommended": true,
       "suspicious": {
         "noExplicitAny": "off",
-        "noArrayIndexKey": "warn"
+        "noArrayIndexKey": "off"
       },
       "performance": {
         "noAccumulatingSpread": "off"

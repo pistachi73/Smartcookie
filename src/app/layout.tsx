@@ -1,15 +1,17 @@
 import "@/styles/globals.css";
 import "@/styles/scrollbar.css";
 
-import { auth } from "@/core/config/auth-config";
-import { Providers } from "@/core/providers/providers";
+import { Analytics } from "@vercel/analytics/next";
+import { SessionProvider } from "next-auth/react";
+
+import { Toast } from "@/ui/toast";
 import { ToastNotification } from "@/shared/components/layout/toast-notification";
 import { getSsrViewport } from "@/shared/components/layout/viewport-context/utils";
 import { ViewportProvider } from "@/shared/components/layout/viewport-context/viewport-context";
 import { getHeaders } from "@/shared/lib/get-headers";
-import { Toast } from "@/ui/toast";
-import { Analytics } from "@vercel/analytics/next";
-import { SessionProvider } from "next-auth/react";
+
+import { auth } from "@/core/config/auth-config";
+import { Providers } from "@/core/providers/providers";
 import { sans } from "./fonts";
 
 // app/layout.tsx

@@ -1,8 +1,10 @@
-import { deleteSession } from "@/data-access/sessions/mutations";
-import { DeleteSessionsSchema } from "@/data-access/sessions/schemas";
-import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+
+import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
+
+import { deleteSession } from "@/data-access/sessions/mutations";
+import { DeleteSessionsSchema } from "@/data-access/sessions/schemas";
 
 export const useDeleteSession = ({ hubId }: { hubId: number }) => {
   const queryClient = useQueryClient();

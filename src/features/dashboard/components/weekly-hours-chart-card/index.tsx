@@ -1,14 +1,16 @@
 "use client";
 
+import { getLocalTimeZone, today } from "@internationalized/date";
+import dynamic from "next/dynamic";
+import { useState } from "react";
+
 import { Card } from "@/shared/components/ui/card";
 import { SkeletonBarChart } from "@/shared/components/ui/chart/skeleton-bar-chart";
 import { DatePicker } from "@/shared/components/ui/date-picker";
 import { Heading } from "@/shared/components/ui/heading";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { Tooltip } from "@/shared/components/ui/tooltip";
-import { getLocalTimeZone, today } from "@internationalized/date";
-import dynamic from "next/dynamic";
-import { useState } from "react";
+
 import { useGetWeeklyHours } from "../../hooks/use-get-weekly-hours";
 
 const DynamicWeeklyHoursCard = dynamic(

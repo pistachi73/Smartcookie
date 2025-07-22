@@ -1,3 +1,6 @@
+import { CalendarDate } from "@internationalized/date";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import setMockViewport from "@/shared/components/layout/viewport-context/test-utils/setMockViewport";
 import {
   cleanup,
@@ -5,8 +8,7 @@ import {
   render,
   screen,
 } from "@/shared/lib/testing/test-utils";
-import { CalendarDate } from "@internationalized/date";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import { EndsRadioGroup } from "../../recurrence-select/components/ends-radio-group";
 import { EndsEnum } from "../../recurrence-select/utils";
 

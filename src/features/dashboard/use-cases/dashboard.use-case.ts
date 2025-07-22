@@ -1,17 +1,19 @@
 "use server";
 
-import { db } from "@/db";
-import { session, sessionNote } from "@/db/schema";
-import { organizeSessionsByDay } from "@/features/calendar/lib/organize-sessions-by-day";
-import { getDayKeyFromDateString } from "@/features/calendar/lib/utils";
+import { addDays, lastDayOfWeek, startOfWeek } from "date-fns";
+import { and, asc, eq, gte, lt, sql } from "drizzle-orm";
+import { z } from "zod";
+
 import type { ChartConfig } from "@/shared/components/ui/chart";
 import {
   withAuthenticationNoInput,
   withValidationAndAuth,
 } from "@/shared/lib/protected-use-case";
-import { addDays, lastDayOfWeek, startOfWeek } from "date-fns";
-import { and, asc, eq, gte, lt, sql } from "drizzle-orm";
-import { z } from "zod";
+
+import { db } from "@/db";
+import { session, sessionNote } from "@/db/schema";
+import { organizeSessionsByDay } from "@/features/calendar/lib/organize-sessions-by-day";
+import { getDayKeyFromDateString } from "@/features/calendar/lib/utils";
 
 export const getNextSessionUseCase = withAuthenticationNoInput({
   useCase: async (user) => {

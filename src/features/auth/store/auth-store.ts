@@ -1,5 +1,6 @@
 import { immer } from "zustand/middleware/immer";
 import { createStore } from "zustand/vanilla";
+
 import type { AuthState, AuthStore } from "../types/auth-store.types";
 
 export const initAuthStore = (initilData?: Partial<AuthState>): AuthState => {

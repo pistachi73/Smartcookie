@@ -1,17 +1,19 @@
-import type { Invoice } from "@/data-access/payment/formatters";
-import { Badge } from "@/shared/components/ui/badge";
-import { Button } from "@/shared/components/ui/button";
-import { Card } from "@/shared/components/ui/card";
-import { Menu } from "@/shared/components/ui/menu";
-import { Table } from "@/shared/components/ui/table";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Download01Icon,
   Invoice02Icon,
   Link02Icon,
   MoreHorizontalIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 import { format } from "date-fns";
+
+import { Badge } from "@/shared/components/ui/badge";
+import { Button } from "@/shared/components/ui/button";
+import { Card } from "@/shared/components/ui/card";
+import { Menu } from "@/shared/components/ui/menu";
+import { Table } from "@/shared/components/ui/table";
+
+import type { Invoice } from "@/data-access/payment/formatters";
 
 const getStatusBadgeProps = (status: string | null) => {
   switch (status) {

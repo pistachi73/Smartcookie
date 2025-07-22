@@ -1,12 +1,13 @@
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+
 import { Survey } from "@/features/surveys/components/survey";
 import { SurveyNotFound } from "@/features/surveys/components/survey-not-found";
 import { getSurveyByIdQueryOptions } from "@/features/surveys/hooks/use-survey";
 import { SurveyStoreProvider } from "@/features/surveys/store/survey-store-provider";
-import {
-  HydrationBoundary,
-  QueryClient,
-  dehydrate,
-} from "@tanstack/react-query";
 
 type SurveyPageProps = {
   params: Promise<{

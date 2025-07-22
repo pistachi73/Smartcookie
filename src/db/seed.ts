@@ -1,13 +1,12 @@
 import "dotenv/config";
-import { eq, getTableName, ne, notInArray, sql } from "drizzle-orm";
-
-import * as schema from "@/db/schema/index";
-
-import * as seeds from "@/db/seeds";
-import { env } from "@/env";
 import { neon } from "@neondatabase/serverless";
 import type { Table } from "drizzle-orm";
+import { eq, getTableName, ne, notInArray, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/neon-http";
+
+import * as schema from "@/db/schema/index";
+import * as seeds from "@/db/seeds";
+import { env } from "@/env";
 
 const connection = neon(env.DATABASE_URL);
 const db = drizzle(connection, { schema, casing: "snake_case" });

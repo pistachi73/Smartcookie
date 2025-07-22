@@ -1,8 +1,10 @@
 "use client";
-import { useQuickNotesStore } from "@/features/quick-notes/store/quick-notes-store-provider";
-import { PageHeader } from "@/shared/components/layout/page-header";
 import { NoteIcon } from "@hugeicons-pro/core-solid-rounded";
 import { Suspense } from "react";
+
+import { PageHeader } from "@/shared/components/layout/page-header";
+
+import { useQuickNotesStore } from "@/features/quick-notes/store/quick-notes-store-provider";
 import { HubStackList } from "./hub-stack-list";
 import { QuickNotesLoading } from "./loading";
 import { QuickNotesSidebar } from "./quick-notes-sidebar";

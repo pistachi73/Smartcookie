@@ -1,10 +1,11 @@
 "use client";
 
+import { getLocalTimeZone, today } from "@internationalized/date";
+
 import { SkeletonBarChart } from "@/shared/components/ui/chart/skeleton-bar-chart";
 import { DatePicker } from "@/shared/components/ui/date-picker";
 import { Heading } from "@/shared/components/ui/heading";
 import { Skeleton } from "@/shared/components/ui/skeleton";
-import { getLocalTimeZone, today } from "@internationalized/date";
 
 export function SkeletonWeeklyHoursChartCard() {
   const now = today(getLocalTimeZone());

@@ -1,8 +1,10 @@
 "use client";
 
-import { cn } from "@/shared/lib/classes";
 import { useMemo } from "react";
-import { type VariantProps, tv } from "tailwind-variants";
+import { tv, type VariantProps } from "tailwind-variants";
+
+import { cn } from "@/shared/lib/classes";
+
 import { Avatar } from "./avatar";
 import { Tooltip } from "./tooltip";
 import { UserAvatar } from "./user-avatar";

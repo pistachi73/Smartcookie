@@ -1,6 +1,7 @@
+import { eq } from "drizzle-orm";
+
 import * as schema from "@/db/schema";
 import type { DB } from "@/db/seed";
-import { eq } from "drizzle-orm";
 import quickNotes from "./data/quick-notes.seed-data";
 
 export default async function seed(db: DB) {

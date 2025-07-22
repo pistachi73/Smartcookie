@@ -1,10 +1,11 @@
+import { queryOptions } from "@tanstack/react-query";
+
 import type { getHubsByUserIdForQuickNotes } from "@/data-access/hubs/queries";
 import type { getNotesByHubId } from "@/data-access/quick-notes/queries";
 import type {
   HubSummary,
   NoteSummary,
 } from "@/features/quick-notes/types/quick-notes.types";
-import { queryOptions } from "@tanstack/react-query";
 
 export const quickNotesHubsQueryOptions = queryOptions({
   queryKey: ["quick-notes-hubs"],

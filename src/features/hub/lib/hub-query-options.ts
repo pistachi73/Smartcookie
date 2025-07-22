@@ -1,7 +1,9 @@
-import type { getHubById, getHubsByUserId } from "@/data-access/hubs/queries";
-import { getUrl } from "@/shared/lib/get-url";
 import { queryOptions } from "@tanstack/react-query";
 import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
+
+import { getUrl } from "@/shared/lib/get-url";
+
+import type { getHubById, getHubsByUserId } from "@/data-access/hubs/queries";
 
 export const getHubsByUserIdQueryOptions = queryOptions({
   queryKey: ["hubs"],

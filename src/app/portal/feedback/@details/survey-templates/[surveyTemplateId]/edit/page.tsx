@@ -1,6 +1,7 @@
-import { EditSurveyTemplate } from "@/features/feedback/components/survey-templates/edit-survey-template";
 import isNumber from "lodash/isNumber";
 import { redirect } from "next/navigation";
+
+import { EditSurveyTemplate } from "@/features/feedback/components/survey-templates/edit-survey-template";
 
 type EditQuestionPageProps = {
   params: Promise<{

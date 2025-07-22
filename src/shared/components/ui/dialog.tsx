@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-
-import { MultiplicationSignIcon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { MultiplicationSignIcon } from "@hugeicons-pro/core-stroke-rounded";
+import { useEffect, useRef } from "react";
 import type { HeadingProps } from "react-aria-components";
 import {
   Button as ButtonPrimitive,

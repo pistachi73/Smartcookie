@@ -1,5 +1,6 @@
-import type { InsertSession, InsertSessionNote } from "@/db/schema";
 import { addDays, addHours, addMinutes } from "date-fns";
+
+import type { InsertSession, InsertSessionNote } from "@/db/schema";
 
 const today = new Date();
 today.setHours(10, 0, 0, 0); // Set to 10:00 AM

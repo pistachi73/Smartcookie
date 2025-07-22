@@ -1,6 +1,8 @@
-import { CalendarSkeleton } from "@/features/calendar/components/calendar-skeleton";
-import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
 import { Calendar03Icon } from "@hugeicons-pro/core-solid-rounded";
+
+import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
+
+import { CalendarSkeleton } from "@/features/calendar/components/calendar-skeleton";
 
 const LoadingCalendarPage = () => {
   return (

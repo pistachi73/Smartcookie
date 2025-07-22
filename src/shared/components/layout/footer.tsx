@@ -1,14 +1,16 @@
 "use client";
 
-import { Button } from "@/shared/components/ui/button";
-import { cn } from "@/shared/lib/classes";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ArrowUp01Icon,
   Linkedin01Icon,
   SmartPhoneIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 import Image from "next/image";
+
+import { Button } from "@/shared/components/ui/button";
+import { cn } from "@/shared/lib/classes";
+
 import { Heading } from "../ui/heading";
 import { Link } from "../ui/link";
 import { MaxWidthWrapper } from "./max-width-wrapper";

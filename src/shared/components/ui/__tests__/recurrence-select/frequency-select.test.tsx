@@ -1,3 +1,6 @@
+import type { Frequency } from "rrule";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import setMockViewport from "@/shared/components/layout/viewport-context/test-utils/setMockViewport";
 import {
   cleanup,
@@ -5,8 +8,7 @@ import {
   render,
   screen,
 } from "@/shared/lib/testing/test-utils";
-import type { Frequency } from "rrule";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import { FrequencySelect } from "../../recurrence-select/components/frequency-select";
 
 const getTrigger = () => screen.getByTestId("frequency-select-trigger");

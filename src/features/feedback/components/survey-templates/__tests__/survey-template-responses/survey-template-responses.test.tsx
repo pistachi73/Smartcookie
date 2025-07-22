@@ -1,4 +1,6 @@
-import type { getSurveyTemplateResponses } from "@/data-access/survey-response/queries";
+import { useQuery } from "@tanstack/react-query";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import {
   cleanup,
   fireEvent,
@@ -6,8 +8,8 @@ import {
   screen,
   waitFor,
 } from "@/shared/lib/testing/test-utils";
-import { useQuery } from "@tanstack/react-query";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+import type { getSurveyTemplateResponses } from "@/data-access/survey-response/queries";
 import { SurveyTemplateResponses } from "../../survey-template-responses/index";
 
 vi.mock("@tanstack/react-query", async (importOriginal) => {

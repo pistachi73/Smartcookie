@@ -1,5 +1,6 @@
 import { relations, sql } from "drizzle-orm";
 import { boolean, index, text, timestamp, uuid } from "drizzle-orm/pg-core";
+
 import { account } from "./account";
 import { quickNote } from "./quick-note";
 import { pgTable } from "./utils";

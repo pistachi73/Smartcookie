@@ -1,6 +1,8 @@
-import { useCalendarDay } from "@/features/calendar/hooks/use-calendar-sessions";
-import { cn } from "@/shared/lib/classes";
 import type { Temporal } from "temporal-polyfill";
+
+import { cn } from "@/shared/lib/classes";
+
+import { useCalendarDay } from "@/features/calendar/hooks/use-calendar-sessions";
 import { DayViewSession } from "./day-view-session";
 import { DragToCreateEvent } from "./drag-to-create-event";
 import { HourMarker } from "./hour-marker";

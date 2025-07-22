@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import type { Frequency } from "rrule";
-import type { SetRruleOptions } from "../utils";
 
 import { Select } from "../../select";
+import type { SetRruleOptions } from "../utils";
 import { getFrequencyItems } from "../utils";
 
 type FrequencySelectProps = {

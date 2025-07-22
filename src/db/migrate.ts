@@ -1,9 +1,9 @@
-import { Pool, neon } from "@neondatabase/serverless";
+import { neon, Pool } from "@neondatabase/serverless";
 import "dotenv/config";
-import { drizzle } from "drizzle-orm/neon-http";
-import { migrate } from "drizzle-orm/neon-http/migrator";
 import { readFile, unlink, writeFile } from "fs/promises";
 import { join } from "path";
+import { drizzle } from "drizzle-orm/neon-http";
+import { migrate } from "drizzle-orm/neon-http/migrator";
 
 import { env } from "@/env";
 import * as schema from "./schema";

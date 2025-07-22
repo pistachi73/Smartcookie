@@ -1,3 +1,7 @@
+import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import setMockViewport from "@/shared/components/layout/viewport-context/test-utils/setMockViewport";
 import {
   cleanup,
@@ -5,9 +9,7 @@ import {
   render,
   screen,
 } from "@/shared/lib/testing/test-utils";
-import { useQuery } from "@tanstack/react-query";
-import { toast } from "sonner";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import { useAddQuickNote } from "../../hooks/use-add-quick-note";
 import { QuickNotesMenu } from "../quick-notes-menu";
 

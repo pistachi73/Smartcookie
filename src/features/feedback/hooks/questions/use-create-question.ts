@@ -1,8 +1,10 @@
-import { createQuestion } from "@/data-access/questions/mutations";
-import { CreateQuestionSchema } from "@/data-access/questions/schemas";
-import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+
+import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
+
+import { createQuestion } from "@/data-access/questions/mutations";
+import { CreateQuestionSchema } from "@/data-access/questions/schemas";
 
 export const useCreateQuestion = ({
   onSuccess,

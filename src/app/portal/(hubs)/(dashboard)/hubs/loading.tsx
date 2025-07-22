@@ -1,6 +1,8 @@
-import { SkeletonHubList } from "@/features/hub/components/skeleton-hub-list";
-import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
 import { FolderLibraryIcon } from "@hugeicons-pro/core-solid-rounded";
+
+import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
+
+import { SkeletonHubList } from "@/features/hub/components/skeleton-hub-list";
 
 const LoadingHubsPage = () => {
   return (

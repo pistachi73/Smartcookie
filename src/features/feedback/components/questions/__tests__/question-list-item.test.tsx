@@ -1,4 +1,6 @@
-import type { SurveyTemplateFormState } from "@/features/feedback/types/survey-template-form-store.types";
+import { useParams, usePathname, useRouter } from "next/navigation";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import { mockNextNavigation } from "@/shared/lib/testing/navigation-mocks";
 import {
   cleanup,
@@ -7,10 +9,11 @@ import {
   screen,
 } from "@/shared/lib/testing/test-utils";
 import { mockZustandStoreImplementation } from "@/shared/lib/testing/zustand-utils";
-import { useParams, usePathname, useRouter } from "next/navigation";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+import type { SurveyTemplateFormState } from "@/features/feedback/types/survey-template-form-store.types";
 import { useSurveyTemplateFormStore } from "../../../store/survey-template-form.store";
 import { type FeedbackQuestion, QuestionListItem } from "../question-list-item";
+
 mockNextNavigation();
 
 vi.mock("../../../store/survey-template-form.store", () => ({

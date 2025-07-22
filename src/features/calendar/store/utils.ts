@@ -1,10 +1,11 @@
+import memoize from "lodash/memoize";
+import { Temporal } from "temporal-polyfill";
+
 import type { Event, Occurrence } from "@/db/schema";
 import type {
   CalendarView,
   UIOccurrence,
 } from "@/features/calendar/types/calendar.types";
-import memoize from "lodash/memoize";
-import { Temporal } from "temporal-polyfill";
 
 export const computeUIOccurrence = memoize(
   (occ: Occurrence, evt: Event): UIOccurrence => {
@@ -46,7 +47,10 @@ export const windowPushHistory = (path: string) => {
 export const updateURL = ({
   calendarView,
   selectedDate,
-}: { calendarView: CalendarView; selectedDate: Temporal.PlainDate }) => {
+}: {
+  calendarView: CalendarView;
+  selectedDate: Temporal.PlainDate;
+}) => {
   const [year, month, day] = [
     selectedDate.year,
     selectedDate.month,

@@ -1,9 +1,10 @@
+import { z } from "zod";
+
 import type { InsertAccount } from "@/db/schema";
 import { account } from "@/db/schema";
-import { z } from "zod";
 import {
-  DatabaseTransactionSchema,
   createColumnSelectionSchema,
+  DatabaseTransactionSchema,
 } from "../shared-schemas";
 
 const accountColumnsSchema = createColumnSelectionSchema(account);

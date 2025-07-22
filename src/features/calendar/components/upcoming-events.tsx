@@ -1,17 +1,16 @@
-import { Temporal } from "temporal-polyfill";
-
-import { getCalendarColor } from "@/features/calendar/lib/utils";
-import type { CalendarSession } from "@/features/calendar/types/calendar.types";
-
-import { cn } from "@/shared/lib/classes";
-import { format } from "date-fns";
-
-import { Heading } from "@/ui/heading";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ArrowRight02Icon,
   Clock02Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { format } from "date-fns";
+import { Temporal } from "temporal-polyfill";
+
+import { Heading } from "@/ui/heading";
+import { cn } from "@/shared/lib/classes";
+
+import { getCalendarColor } from "@/features/calendar/lib/utils";
+import type { CalendarSession } from "@/features/calendar/types/calendar.types";
 import { useCalendarDay } from "../hooks/use-calendar-sessions";
 
 export const UpcomingEvents = () => {

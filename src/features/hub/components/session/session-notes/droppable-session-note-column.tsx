@@ -1,11 +1,11 @@
+import * as m from "motion/react-m";
 import { useRef } from "react";
 import { isTextDropItem, useDrop } from "react-aria";
 
-import type { SessionNotePosition } from "@/db/schema";
+import { regularSpring } from "@/shared/lib/animation";
 import { cn } from "@/shared/lib/classes";
 
-import { regularSpring } from "@/shared/lib/animation";
-import * as m from "motion/react-m";
+import type { SessionNotePosition } from "@/db/schema";
 import { useUpdateSessionNote } from "../../../hooks/session-notes/use-update-session-note";
 import type { ClientSessionNote } from "../../../types/session-notes.types";
 export const DroppableSessionNoteColumn = ({

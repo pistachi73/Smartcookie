@@ -1,11 +1,11 @@
 "use server";
 
 import { eq } from "drizzle-orm";
+import { z } from "zod";
 
 import { TOKEN_LENGTH } from "@/core/config/app-config";
 import { db } from "@/db";
 import { twoFactorConirmation } from "@/db/schema";
-import { z } from "zod";
 import { withValidationOnly } from "../protected-data-access";
 import { generateRandomToken } from "../utils";
 

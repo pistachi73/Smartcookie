@@ -1,24 +1,25 @@
 "use client";
 
-import { Button, buttonStyles } from "@/shared/components/ui/button";
-import { Heading } from "@/shared/components/ui/heading";
-import { cn } from "@/shared/lib/classes";
-import { getCustomColorClasses } from "@/shared/lib/custom-colors";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ArrowLeft01Icon,
   ArrowRight01Icon,
   Settings01Icon,
   UserIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
+import { addDays, format, subDays } from "date-fns";
+import { useState } from "react";
 
+import { Button, buttonStyles } from "@/shared/components/ui/button";
 import { Card } from "@/shared/components/ui/card";
+import { Heading } from "@/shared/components/ui/heading";
 import { Link } from "@/shared/components/ui/link";
 import { Menu } from "@/shared/components/ui/menu";
 import { Separator } from "@/shared/components/ui/separator";
 import { Tooltip } from "@/shared/components/ui/tooltip";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { addDays, format, subDays } from "date-fns";
-import { useState } from "react";
+import { cn } from "@/shared/lib/classes";
+import { getCustomColorClasses } from "@/shared/lib/custom-colors";
+
 import { useGetAgendaSessions } from "../../hooks/use-get-agenda-sessions";
 import type { getAgendaSessionsUseCase } from "../../use-cases/dashboard.use-case";
 import { SkeletonAgendaSessionCard } from "./skeleton-agenda-card";

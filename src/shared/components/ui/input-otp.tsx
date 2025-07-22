@@ -1,12 +1,11 @@
 "use client";
 
+import { HugeiconsIcon } from "@hugeicons/react";
+import { CircleIcon } from "@hugeicons-pro/core-solid-rounded";
+import { OTPInput, OTPInputContext } from "input-otp";
 import { use } from "react";
 
-import { OTPInput, OTPInputContext } from "input-otp";
-
 import { cn } from "@/shared/lib/classes";
-import { CircleIcon } from "@hugeicons-pro/core-solid-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 
 type InputOTOPProps = React.ComponentProps<typeof OTPInput>;
 const InputOTP = ({

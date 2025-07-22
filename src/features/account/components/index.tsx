@@ -1,9 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { Heading } from "@/shared/components/ui/heading";
-import { Tabs } from "@/shared/components/ui/tabs";
-import useNavigateWithParams from "@/shared/hooks/use-navigate-with-params";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   AccountSetting02Icon as AccountSetting02IconSolid,
   InvoiceIcon as InvoiceIconSolid,
@@ -12,8 +9,13 @@ import {
   AccountSetting02Icon,
   InvoiceIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 import { useRouter, useSearchParams } from "next/navigation";
+
+import { Heading } from "@/shared/components/ui/heading";
+import { Tabs } from "@/shared/components/ui/tabs";
+import useNavigateWithParams from "@/shared/hooks/use-navigate-with-params";
+
+import { cn } from "@/lib/utils";
 import { DangerZone } from "./account-settings/danger-zone";
 import { UpdateEmail } from "./account-settings/update-email";
 import { UpdateNameAvatar } from "./account-settings/update-name-avatar";

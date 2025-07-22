@@ -1,15 +1,17 @@
 "use client";
-import { updateUser } from "@/data-access/user/mutations";
-import { useCurrentUser } from "@/shared/hooks/use-current-user";
-import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
-import { Card } from "@/ui/card";
-import { Form } from "@/ui/form";
-import { Switch } from "@/ui/switch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Fingerprint } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+
+import { Card } from "@/ui/card";
+import { Form } from "@/ui/form";
+import { Switch } from "@/ui/switch";
+import { useCurrentUser } from "@/shared/hooks/use-current-user";
+import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
+
+import { updateUser } from "@/data-access/user/mutations";
 import { UpdateTFASchema } from "../../lib/validation";
 
 export const UpdateTFA = () => {

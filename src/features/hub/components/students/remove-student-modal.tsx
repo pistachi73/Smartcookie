@@ -2,6 +2,7 @@ import { Button } from "@/shared/components/ui/button";
 import { Modal } from "@/shared/components/ui/modal";
 import { Note } from "@/shared/components/ui/note";
 import { ProgressCircle } from "@/shared/components/ui/progress-circle";
+
 import { useRemoveStudentFromHub } from "../../hooks/students/use-remove-student-from-hub";
 
 type RemoveStudentModalProps = {

@@ -1,5 +1,6 @@
-import { createStripeCustomer } from "@/data-access/payment/mutations";
 import type { User } from "next-auth";
+
+import { createStripeCustomer } from "@/data-access/payment/mutations";
 
 export const createUser = async ({ user }: { user: User }) => {
   if (!user.email || !user.name || !user.id) {

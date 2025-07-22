@@ -1,5 +1,6 @@
-import { getSurveyTemplateById } from "@/data-access/survey-templates/queries";
 import { NextResponse } from "next/server";
+
+import { getSurveyTemplateById } from "@/data-access/survey-templates/queries";
 
 export async function GET(
   _: Request,

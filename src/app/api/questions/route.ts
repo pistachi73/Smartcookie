@@ -1,6 +1,7 @@
+import { NextResponse } from "next/server";
+
 import { getQuestions } from "@/data-access/questions/queries";
 import type { SortBy } from "@/data-access/questions/schemas";
-import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

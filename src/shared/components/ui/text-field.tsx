@@ -1,18 +1,17 @@
 "use client";
 
-import { useState } from "react";
-
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ViewIcon, ViewOffSlashIcon } from "@hugeicons-pro/core-solid-rounded";
 import type { TextInputDOMProps } from "@react-types/shared";
+import { useState } from "react";
 import {
   Button as ButtonPrimitive,
   TextField as TextFieldPrimitive,
   type TextFieldProps as TextFieldPrimitiveProps,
 } from "react-aria-components";
+import type { RefCallBack } from "react-hook-form";
 import { twJoin } from "tailwind-merge";
 
-import { ViewIcon, ViewOffSlashIcon } from "@hugeicons-pro/core-solid-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-import type { RefCallBack } from "react-hook-form";
 import type { FieldGroupProps, FieldProps } from "./field";
 import { Description, FieldError, FieldGroup, Input, Label } from "./field";
 import { Loader } from "./loader";

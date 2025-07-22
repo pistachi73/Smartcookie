@@ -1,12 +1,14 @@
-import { HubList } from "@/features/hub/components/hub-list";
-import { getHubsByUserIdQueryOptions } from "@/features/hub/lib/hub-query-options";
-import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
 import { FolderLibraryIcon } from "@hugeicons-pro/core-solid-rounded";
 import {
+  dehydrate,
   HydrationBoundary,
   QueryClient,
-  dehydrate,
 } from "@tanstack/react-query";
+
+import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
+
+import { HubList } from "@/features/hub/components/hub-list";
+import { getHubsByUserIdQueryOptions } from "@/features/hub/lib/hub-query-options";
 
 const HubsPage = async () => {
   const queryClient = new QueryClient();

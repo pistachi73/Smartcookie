@@ -1,9 +1,11 @@
-import { createStudentInHub } from "@/data-access/students/mutations";
-import { CreateStudentInHubSchema } from "@/data-access/students/schemas";
-import { useCurrentUser } from "@/shared/hooks/use-current-user";
-import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+
+import { useCurrentUser } from "@/shared/hooks/use-current-user";
+import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
+
+import { createStudentInHub } from "@/data-access/students/mutations";
+import { CreateStudentInHubSchema } from "@/data-access/students/schemas";
 
 export const useCreateStudentInHub = () => {
   const queryClient = useQueryClient();

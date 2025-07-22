@@ -1,3 +1,6 @@
+import { useParams } from "next/navigation";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import { mockNextNavigation } from "@/shared/lib/testing/navigation-mocks";
 import {
   cleanup,
@@ -5,8 +8,7 @@ import {
   render,
   screen,
 } from "@/shared/lib/testing/test-utils";
-import { useParams } from "next/navigation";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import { SurveyTemplateListItem } from "../survey-template-list-item";
 
 mockNextNavigation();

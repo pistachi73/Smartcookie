@@ -1,7 +1,8 @@
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Alert01Icon, RefreshIcon } from "@hugeicons-pro/core-solid-rounded";
+
 import { Button } from "@/shared/components/ui/button";
 import { Card } from "@/shared/components/ui/card";
-import { Alert01Icon, RefreshIcon } from "@hugeicons-pro/core-solid-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 
 interface QueryErrorProps {
   title?: string;

@@ -1,6 +1,7 @@
+import { and, eq } from "drizzle-orm";
+
 import { db } from "@/db";
 import { attendance } from "@/db/schema";
-import { and, eq } from "drizzle-orm";
 import { withValidationAndAuth } from "../protected-data-access";
 import {
   AddAttendanceSchema,

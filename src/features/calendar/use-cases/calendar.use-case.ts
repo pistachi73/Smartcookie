@@ -1,9 +1,11 @@
 "use server";
 
+import { and, between, eq } from "drizzle-orm";
+
+import { withValidationAndAuth } from "@/shared/lib/protected-use-case";
+
 import { db } from "@/db";
 import { session } from "@/db/schema";
-import { withValidationAndAuth } from "@/shared/lib/protected-use-case";
-import { and, between, eq } from "drizzle-orm";
 import { GetCalendarSessionsByDateRangeSchema } from "../lib/calendar.schema";
 import { groupOverlappingSessions } from "../lib/group-overlapping-sessions";
 import { organizeSessionsByDay } from "../lib/organize-sessions-by-day";

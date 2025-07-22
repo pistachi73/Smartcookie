@@ -1,5 +1,6 @@
-import { Avatar, type AvatarProps } from "@/shared/components/ui/avatar";
 import { useMemo } from "react";
+
+import { Avatar, type AvatarProps } from "@/shared/components/ui/avatar";
 
 // Using custom color CSS variables from globals.css
 const AVATAR_COLORS = [

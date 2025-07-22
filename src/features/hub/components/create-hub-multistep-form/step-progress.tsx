@@ -1,14 +1,16 @@
 "use client";
 
-import { Separator } from "@/shared/components/ui/separator";
-import { cn } from "@/shared/lib/classes";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Book02Icon,
   FolderDetailsIcon,
   UserMultiple02Icon,
 } from "@hugeicons-pro/core-solid-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 import * as m from "motion/react-m";
+
+import { Separator } from "@/shared/components/ui/separator";
+import { cn } from "@/shared/lib/classes";
+
 import { useHubFormStore } from "../../store/hub-form-store";
 
 const steps = [

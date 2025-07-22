@@ -1,14 +1,18 @@
-import { getCalendarColor } from "@/features/calendar/lib/utils";
-import type { CalendarSession } from "@/features/calendar/types/calendar.types";
-import { cn } from "@/shared/lib/classes";
-import { Popover } from "@/ui/popover";
 import { format } from "date-fns";
 import { Button } from "react-aria-components";
+
+import { Popover } from "@/ui/popover";
+import { cn } from "@/shared/lib/classes";
+
+import { getCalendarColor } from "@/features/calendar/lib/utils";
+import type { CalendarSession } from "@/features/calendar/types/calendar.types";
 import { SessionPopover } from "../../session-popover-content";
 
 export const AgendaViewOccurrence = ({
   session,
-}: { session: CalendarSession }) => {
+}: {
+  session: CalendarSession;
+}) => {
   const color = getCalendarColor(session.hub?.color);
 
   return (

@@ -1,20 +1,20 @@
 "use client";
 
-import { Button, buttonStyles } from "@/shared/components/ui/button";
-import { Heading } from "@/shared/components/ui/heading";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ArrowLeft01Icon,
   ArrowRight01Icon,
   Settings01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
+import { format } from "date-fns";
+import React from "react";
 
+import { Button, buttonStyles } from "@/shared/components/ui/button";
 import { Card } from "@/shared/components/ui/card";
+import { Heading } from "@/shared/components/ui/heading";
 import { Link } from "@/shared/components/ui/link";
 import { Separator } from "@/shared/components/ui/separator";
 import { Skeleton } from "@/shared/components/ui/skeleton";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { format } from "date-fns";
-import React from "react";
 
 export const SkeletonAgendaCard = () => {
   const now = new Date();

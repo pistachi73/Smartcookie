@@ -1,9 +1,9 @@
 import {
-  type MockedFunction,
   beforeEach,
   describe,
   expect,
   it,
+  type MockedFunction,
   vi,
 } from "vitest";
 
@@ -47,24 +47,25 @@ vi.mock("@/db", () => ({
   },
 }));
 
+import type { Account as NextAuthAccount, Session } from "next-auth";
+import type { JWT } from "next-auth/jwt";
+
+import { createMockAccount } from "@/data-access/accounts/__mocks__";
 import { linkOAuthAccount } from "@/data-access/accounts/mutations";
 import {
   getAccountByProviderAndUserId,
   getAccountByUserId,
 } from "@/data-access/accounts/queries";
-
-import { createMockAccount } from "@/data-access/accounts/__mocks__";
 import { deleteTwoFactorConfirmationByToken } from "@/data-access/two-factor-confirmation/mutations";
 import { getTwoFactorConirmationByUserId } from "@/data-access/two-factor-confirmation/queries";
-import { createMockUserSubscription } from "@/data-access/user-subscription/__mocks__";
-import { getUserSubscriptionByUserId } from "@/data-access/user-subscription/queries";
 import { createMockUser } from "@/data-access/user/__mocks__";
 import { updateUser } from "@/data-access/user/mutations";
 import { getUserByEmail, getUserById } from "@/data-access/user/queries";
+import { createMockUserSubscription } from "@/data-access/user-subscription/__mocks__";
+import { getUserSubscriptionByUserId } from "@/data-access/user-subscription/queries";
 import { db } from "@/db";
-import type { Account as NextAuthAccount, Session } from "next-auth";
-import type { JWT } from "next-auth/jwt";
 import { jwtCallback, sessionCallback, signInCallback } from "../callbacks";
+
 // Import the actual functions we want to test
 
 const mockLinkOAuthAccount = linkOAuthAccount as MockedFunction<

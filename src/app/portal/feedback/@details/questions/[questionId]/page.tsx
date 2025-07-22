@@ -1,6 +1,7 @@
-import { QuestionDetails } from "@/features/feedback/components/questions/question-details";
 import isNumber from "lodash/isNumber";
 import { redirect } from "next/navigation";
+
+import { QuestionDetails } from "@/features/feedback/components/questions/question-details";
 
 type QuestionDetailsPageProps = {
   params: Promise<{

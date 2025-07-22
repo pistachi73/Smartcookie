@@ -7,14 +7,15 @@ import type {
   ValidationResult,
 } from "react-aria-components";
 import {
+  composeRenderProps,
   RadioGroup as RadioGroupPrimitive,
   Radio as RadioPrimitive,
-  composeRenderProps,
 } from "react-aria-components";
 import type { VariantProps } from "tailwind-variants";
 import { tv } from "tailwind-variants";
 
 import { cn } from "@/shared/lib/classes";
+
 import { Description, FieldError, Label } from "./field";
 
 type RadioToggleGroupContextProps = {

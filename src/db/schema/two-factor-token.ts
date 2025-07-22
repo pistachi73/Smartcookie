@@ -1,4 +1,5 @@
 import { serial, text, timestamp, unique } from "drizzle-orm/pg-core";
+
 import { pgTable } from "./utils";
 
 export const twoFactorToken = pgTable(

@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import { boolean, index, primaryKey, serial } from "drizzle-orm/pg-core";
+
 import { eventOccurrence } from "./event-occurrence";
 import { student } from "./student";
 import { pgTable } from "./utils";

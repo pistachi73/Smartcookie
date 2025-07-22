@@ -1,8 +1,9 @@
 "use client";
 
-import { Heading } from "@/shared/components/ui/heading";
-import { DashboardSquare01Icon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { DashboardSquare01Icon } from "@hugeicons-pro/core-solid-rounded";
+
+import { Heading } from "@/shared/components/ui/heading";
 
 import { SkeletonAgendaCard } from "./agenda-card/skeleton-agenda-card";
 import { SkeletonNextSession } from "./next-session/skeleton-next-session";

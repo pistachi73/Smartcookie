@@ -1,9 +1,9 @@
 "use server";
 
-import { db } from "@/db";
-
-import { attendance, session, student, studentHub } from "@/db/schema";
 import { and, eq, sql } from "drizzle-orm";
+
+import { db } from "@/db";
+import { attendance, session, student, studentHub } from "@/db/schema";
 import {
   withAuthenticationNoInput,
   withValidationAndAuth,

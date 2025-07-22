@@ -1,5 +1,6 @@
-import type { getSessionNotesBySessionId } from "@/data-access/session-notes/queries";
 import { queryOptions } from "@tanstack/react-query";
+
+import type { getSessionNotesBySessionId } from "@/data-access/session-notes/queries";
 
 export type GetSessionNotesBySessionIdQueryResponse = Awaited<
   ReturnType<typeof getSessionNotesBySessionId>

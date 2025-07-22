@@ -7,6 +7,7 @@ import {
   timestamp,
   uuid,
 } from "drizzle-orm/pg-core";
+
 import { attendance } from "./attendance";
 import { hub } from "./hub";
 import { sessionNote } from "./session-note";

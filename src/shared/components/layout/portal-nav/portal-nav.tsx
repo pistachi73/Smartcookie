@@ -1,18 +1,19 @@
 "use client";
 
-import { Breadcrumbs } from "@/ui/breadcrumbs";
-import { useEffect, useState } from "react";
-
-import { UserButton } from "@/features/auth/components/user-button";
-import { useCurrentUser } from "@/shared/hooks/use-current-user";
-import { cn } from "@/shared/lib/classes";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ArrowLeft02Icon,
   Diamond02Icon,
   Search01Icon,
 } from "@hugeicons-pro/core-solid-rounded";
 import { Notification01Icon } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { useEffect, useState } from "react";
+
+import { Breadcrumbs } from "@/ui/breadcrumbs";
+import { useCurrentUser } from "@/shared/hooks/use-current-user";
+import { cn } from "@/shared/lib/classes";
+
+import { UserButton } from "@/features/auth/components/user-button";
 import { ExplorePremiumModal } from "../../explore-premium-modal";
 import { Button } from "../../ui/button";
 import { FieldGroup, Input } from "../../ui/field";

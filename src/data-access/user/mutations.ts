@@ -1,6 +1,6 @@
 "use server";
 
-import { hashPassword } from "../utils";
+import { eq } from "drizzle-orm";
 
 import {
   withAuthenticationNoInput,
@@ -8,7 +8,7 @@ import {
 } from "@/data-access/protected-data-access";
 import { db } from "@/db";
 import { user } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { hashPassword } from "../utils";
 import {
   CreateUserSchema,
   UpdateUserPasswordSchema,

@@ -1,23 +1,23 @@
 "use client";
 
-import { createContext, use, useState } from "react";
-
 import type { PanInfo } from "motion/react";
 import {
   AnimatePresence,
-  type Inertia,
   animate,
+  type Inertia,
   motion,
   useMotionTemplate,
   useMotionValue,
   useMotionValueEvent,
   useTransform,
 } from "motion/react";
+import { createContext, use, useState } from "react";
 import type { DialogProps } from "react-aria-components";
 import { type ButtonProps, Modal, ModalOverlay } from "react-aria-components";
 import { twJoin } from "tailwind-merge";
 
 import { cn } from "@/shared/lib/classes";
+
 import { Dialog } from "./dialog";
 
 const inertiaTransition: Inertia = {

@@ -1,3 +1,5 @@
+import { useQuery } from "@tanstack/react-query";
+import { useRouter, useSearchParams } from "next/navigation";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
@@ -5,8 +7,7 @@ import {
   mockNextNavigation,
 } from "@/shared/lib/testing/navigation-mocks";
 import { cleanup, render, screen } from "@/shared/lib/testing/test-utils";
-import { useQuery } from "@tanstack/react-query";
-import { useRouter, useSearchParams } from "next/navigation";
+
 import { SurveyTemplatesPanel } from "../survey-template-panel";
 
 mockNextNavigation();

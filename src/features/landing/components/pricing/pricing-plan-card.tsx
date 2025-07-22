@@ -1,6 +1,8 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowRight02Icon } from "@hugeicons-pro/core-solid-rounded";
+
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import {
@@ -11,8 +13,8 @@ import {
   CardTitle,
 } from "@/shared/components/ui/card";
 import { Separator } from "@/shared/components/ui/separator";
-import { ArrowRight02Icon } from "@hugeicons-pro/core-solid-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
+
+import { cn } from "@/lib/utils";
 import { guestChecks, memberChecks } from "./constants";
 import type { PaymentFrequency } from "./frequency-switch";
 
@@ -179,13 +181,7 @@ export const FreePlanCard = ({
   );
 };
 
-export const PlanCheck = ({
-  label,
-  icon,
-}: {
-  label: string;
-  icon?: any;
-}) => {
+export const PlanCheck = ({ label, icon }: { label: string; icon?: any }) => {
   return (
     <div className="flex flex-row items-center gap-3">
       {icon && <HugeiconsIcon icon={icon} size={16} strokeWidth={1.5} />}

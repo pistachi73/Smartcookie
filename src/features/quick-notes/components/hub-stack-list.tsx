@@ -2,6 +2,7 @@
 
 import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";
+
 import { useQuickNotesStore } from "../store/quick-notes-store-provider";
 import { EmptyState } from "./empty-state";
 import { HubNotesStack } from "./hub-notes-stack";

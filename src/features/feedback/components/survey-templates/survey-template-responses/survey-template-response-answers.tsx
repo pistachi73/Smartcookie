@@ -1,14 +1,16 @@
-import { QuestionTypeBadge } from "@/features/feedback/components/questions/question-type-badge";
-import { surveyTemplateByIdQueryOptions } from "@/features/feedback/lib/survey-template-query-options";
-import { surveyTemplateResponseAnswersQueryOptions } from "@/features/feedback/lib/survey-template-responses-query-options";
-import { cn } from "@/shared/lib/classes";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   StarIcon,
   ThumbsDownIcon,
   ThumbsUpIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 import { useQueries } from "@tanstack/react-query";
+
+import { cn } from "@/shared/lib/classes";
+
+import { QuestionTypeBadge } from "@/features/feedback/components/questions/question-type-badge";
+import { surveyTemplateByIdQueryOptions } from "@/features/feedback/lib/survey-template-query-options";
+import { surveyTemplateResponseAnswersQueryOptions } from "@/features/feedback/lib/survey-template-responses-query-options";
 
 interface SurveyResponseAnswersProps {
   surveyResponseId: number;

@@ -1,5 +1,6 @@
 import { format } from "date-fns";
 import { useCallback, useEffect, useRef, useState } from "react";
+
 import { calculateOccurrenceTop } from "../lib/utils";
 
 export const useCurrentTime = () => {

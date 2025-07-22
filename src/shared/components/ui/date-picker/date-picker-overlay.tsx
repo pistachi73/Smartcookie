@@ -1,8 +1,10 @@
 "use client";
 
-import { cn } from "@/shared/lib/classes";
 import type { DateDuration } from "@internationalized/date";
 import type { DialogProps } from "react-aria-components";
+
+import { cn } from "@/shared/lib/classes";
+
 import { useViewport } from "../../layout/viewport-context/viewport-context";
 import { Calendar } from "../calendar";
 import { Popover, type PopoverProps } from "../popover";

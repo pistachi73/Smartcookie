@@ -1,10 +1,11 @@
+import Heap from "heap-js";
+import memoize from "lodash/memoize";
+
 import type {
   CalendarSession,
   LayoutCalendarSession,
   TimeBoundary,
 } from "@/features/calendar/types/calendar.types";
-import Heap from "heap-js";
-import memoize from "lodash/memoize";
 
 export const groupOverlappingSessions = memoize(
   (sessions: CalendarSession[]): LayoutCalendarSession[] => {

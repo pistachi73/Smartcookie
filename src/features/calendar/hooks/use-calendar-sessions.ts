@@ -1,6 +1,8 @@
-import { useCurrentUser } from "@/shared/hooks/use-current-user";
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { Temporal } from "temporal-polyfill";
+
+import { useCurrentUser } from "@/shared/hooks/use-current-user";
+
 import { getDayKeyFromDate } from "../lib/utils";
 import { getCalendarSessionsByDateRangeUseCase } from "../use-cases/calendar.use-case";
 

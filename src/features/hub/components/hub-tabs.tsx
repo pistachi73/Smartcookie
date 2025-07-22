@@ -1,14 +1,6 @@
 "use client";
 
-import type { getHubById } from "@/data-access/hubs/queries";
-import { AddNoteCard } from "@/features/quick-notes/components/add-note-card";
-import { NoteCardList } from "@/features/quick-notes/components/note-card-list";
-import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
-import ViewportOnly from "@/shared/components/layout/viewport-context/viewport-only";
-import { Heading } from "@/shared/components/ui/heading";
-import { ProgressCircle } from "@/shared/components/ui/progress-circle";
-import { Tabs } from "@/shared/components/ui/tabs";
-import { cn } from "@/shared/lib/classes";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   CalendarIcon as CalendarIconSolid,
   Comment01Icon as Comment01IconSolid,
@@ -24,7 +16,17 @@ import {
   NoteIcon,
   UserMultiple02Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
+
+import { Heading } from "@/shared/components/ui/heading";
+import { ProgressCircle } from "@/shared/components/ui/progress-circle";
+import { Tabs } from "@/shared/components/ui/tabs";
+import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
+import ViewportOnly from "@/shared/components/layout/viewport-context/viewport-only";
+import { cn } from "@/shared/lib/classes";
+
+import type { getHubById } from "@/data-access/hubs/queries";
+import { AddNoteCard } from "@/features/quick-notes/components/add-note-card";
+import { NoteCardList } from "@/features/quick-notes/components/note-card-list";
 import { CourseFeedback } from "./feedback";
 import { HubOverview } from "./hub-overview";
 import { SessionsList } from "./session/session-list";

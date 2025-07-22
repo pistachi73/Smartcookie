@@ -1,14 +1,12 @@
-import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+
+import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
+
 import { createHubSurveySchema } from "../../lib/feedback.schema";
 import { createHubSurveyUseCase } from "../../use-cases/feedback.use-case";
 
-export const useInitSurvey = ({
-  onSuccess,
-}: {
-  onSuccess?: () => void;
-}) => {
+export const useInitSurvey = ({ onSuccess }: { onSuccess?: () => void }) => {
   const queryClient = useQueryClient();
 
   return useProtectedMutation({

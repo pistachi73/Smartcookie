@@ -1,3 +1,5 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import {
   cleanup,
   fireEvent,
@@ -5,12 +7,12 @@ import {
   screen,
 } from "@/shared/lib/testing/test-utils";
 import { mockZustandStoreImplementation } from "@/shared/lib/testing/zustand-utils";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import { useStudentHasSurveyAccess } from "../../hooks/use-student-has-survey-access";
 import { useSurvey } from "../../hooks/use-survey";
 import { useSurveyNavigation } from "../../hooks/use-survey-navigation";
-import { useSurveyStore } from "../../store/survey-store-provider";
 import type { SurveyStoreState } from "../../store/survey.store";
+import { useSurveyStore } from "../../store/survey-store-provider";
 import { SurveyPresentation } from "../survey-presentation";
 
 vi.mock("../../store/survey-store-provider", () => ({

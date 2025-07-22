@@ -1,3 +1,5 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import { mockNextNavigation } from "@/shared/lib/testing/navigation-mocks";
 import {
   cleanup,
@@ -6,7 +8,7 @@ import {
   screen,
   waitFor,
 } from "@/shared/lib/testing/test-utils";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import { useDeleteQuestion } from "../../../hooks/questions/use-delete-question";
 import { DeleteQuestionModal } from "../delete-question-modal";
 

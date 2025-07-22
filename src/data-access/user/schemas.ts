@@ -1,5 +1,6 @@
-import type { User } from "@/db/schema";
 import { z } from "zod";
+
+import type { User } from "@/db/schema";
 import { DatabaseTransactionSchema } from "../shared-schemas";
 
 export const GetUserAndAccountByEmailSchema = z.object({

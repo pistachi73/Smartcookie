@@ -7,18 +7,18 @@ import type {
   PopoverProps as PopoverPrimitiveProps,
 } from "react-aria-components";
 import {
+  composeRenderProps,
   DialogTrigger,
   Modal,
   ModalOverlay,
   OverlayArrow,
   PopoverContext,
   Popover as PopoverPrimitive,
-  composeRenderProps,
   useSlottedContext,
 } from "react-aria-components";
+import { twMerge } from "tailwind-merge";
 import { tv } from "tailwind-variants";
 
-import { twMerge } from "tailwind-merge";
 import { useViewport } from "../layout/viewport-context/viewport-context";
 import type {
   DialogBodyProps,

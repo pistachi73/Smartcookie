@@ -1,8 +1,9 @@
 "use client";
 
+import { HugeiconsIcon } from "@hugeicons/react";
 import { Menu01Icon } from "@hugeicons-pro/core-solid-rounded";
 import { SidebarLeft01Icon } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
+
 import { Button, type ButtonProps } from "../button";
 import { useSidebar } from "./sidebar-provider";
 

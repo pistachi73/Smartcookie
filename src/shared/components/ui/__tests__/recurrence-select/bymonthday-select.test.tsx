@@ -1,3 +1,5 @@
+import { afterEach, describe, expect, it, vi } from "vitest";
+
 import setMockViewport from "@/shared/components/layout/viewport-context/test-utils/setMockViewport";
 import {
   cleanup,
@@ -5,7 +7,7 @@ import {
   render,
   screen,
 } from "@/shared/lib/testing/test-utils";
-import { afterEach, describe, expect, it, vi } from "vitest";
+
 import { BymonthdaySelect } from "../../recurrence-select/components/bymonthday-select";
 
 setMockViewport("xl");

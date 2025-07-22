@@ -1,5 +1,6 @@
 import { Button } from "@/shared/components/ui/button";
 import { Heading } from "@/shared/components/ui/heading";
+
 import { useSurveyStore } from "../store/survey-store-provider";
 
 export const SurveyOutBoundaries = () => {

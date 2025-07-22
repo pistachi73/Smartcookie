@@ -1,18 +1,19 @@
 "use client";
 
-import { HubHeader } from "@/features/hub/components/hub-header";
-import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
-import { Tabs } from "@/shared/components/ui/tabs";
-import { cn } from "@/shared/lib/classes";
-import { FolderLibraryIcon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { TABS } from "../lib/constants";
+import { FolderLibraryIcon } from "@hugeicons-pro/core-solid-rounded";
 
-import { SkeletonNoteCardList } from "@/features/quick-notes/components/skeleton-note-card-list";
-import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
-import ViewportOnly from "@/shared/components/layout/viewport-context/viewport-only";
 import { Heading } from "@/shared/components/ui/heading";
 import { Skeleton } from "@/shared/components/ui/skeleton";
+import { Tabs } from "@/shared/components/ui/tabs";
+import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
+import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
+import ViewportOnly from "@/shared/components/layout/viewport-context/viewport-only";
+import { cn } from "@/shared/lib/classes";
+
+import { HubHeader } from "@/features/hub/components/hub-header";
+import { SkeletonNoteCardList } from "@/features/quick-notes/components/skeleton-note-card-list";
+import { TABS } from "../lib/constants";
 import { SessionSkeleton } from "./session/session-skeleton";
 import { SkeletonStudentListView } from "./students/skeleton-student-list-view";
 

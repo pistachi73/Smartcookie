@@ -1,9 +1,11 @@
-import { getCalendarColor } from "@/features/calendar/lib/utils";
-import type { LayoutCalendarSession } from "@/features/calendar/types/calendar.types";
-import { cn } from "@/shared/lib/classes";
-import { Popover, type PopoverContentProps } from "@/ui/popover";
 import { format } from "date-fns";
 import { Button } from "react-aria-components";
+
+import { Popover, type PopoverContentProps } from "@/ui/popover";
+import { cn } from "@/shared/lib/classes";
+
+import { getCalendarColor } from "@/features/calendar/lib/utils";
+import type { LayoutCalendarSession } from "@/features/calendar/types/calendar.types";
 import { SessionPopover } from "../../session-popover-content";
 
 export const MonthViewOccurrence = ({

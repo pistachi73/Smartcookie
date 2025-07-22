@@ -3,16 +3,15 @@ import type { Account, User as NextAuthUser, Session } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 
 import { linkOAuthAccount } from "@/data-access/accounts/mutations";
-import { deleteTwoFactorConfirmationByToken } from "@/data-access/two-factor-confirmation/mutations";
-import { updateUser } from "@/data-access/user/mutations";
-
 import {
   getAccountByProviderAndUserId,
   getAccountByUserId,
 } from "@/data-access/accounts/queries";
+import { deleteTwoFactorConfirmationByToken } from "@/data-access/two-factor-confirmation/mutations";
 import { getTwoFactorConirmationByUserId } from "@/data-access/two-factor-confirmation/queries";
-import { getUserSubscriptionByUserId } from "@/data-access/user-subscription/queries";
+import { updateUser } from "@/data-access/user/mutations";
 import { getUserByEmail, getUserById } from "@/data-access/user/queries";
+import { getUserSubscriptionByUserId } from "@/data-access/user-subscription/queries";
 import { db } from "@/db";
 
 export async function signInCallback(params: {

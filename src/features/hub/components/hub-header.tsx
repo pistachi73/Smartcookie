@@ -1,8 +1,9 @@
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowLeft02Icon } from "@hugeicons-pro/core-stroke-rounded";
+import Link from "next/link";
+
 import { Heading } from "@/shared/components/ui/heading";
 import { Skeleton } from "@/shared/components/ui/skeleton";
-import { ArrowLeft02Icon } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-import Link from "next/link";
 
 export const HubHeader = ({ hubName }: { hubName?: string }) => {
   return (

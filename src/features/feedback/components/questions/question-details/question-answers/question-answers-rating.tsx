@@ -1,5 +1,6 @@
-import { StarIcon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { StarIcon } from "@hugeicons-pro/core-solid-rounded";
+
 import type { Answer } from "../../../../types/answer.types";
 import { QuestionNoAnswers } from "./question-no-answers";
 import { DataCard, ResponseCard } from "./shared-cards";

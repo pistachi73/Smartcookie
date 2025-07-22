@@ -1,8 +1,9 @@
-import { superjsonStorage } from "@/core/stores/superjson-storage";
 import { enableMapSet } from "immer";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { createStore } from "zustand/vanilla";
+
+import { superjsonStorage } from "@/core/stores/superjson-storage";
 import type {
   InitialQuickNotesStateData,
   QuickNotesState,

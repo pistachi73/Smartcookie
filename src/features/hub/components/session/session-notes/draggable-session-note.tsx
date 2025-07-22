@@ -1,11 +1,14 @@
-import { DeleteProgressButton } from "@/shared/components/ui/delete-progress-button";
-import { cn } from "@/shared/lib/classes";
-import { DragDropVerticalIcon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { DragDropVerticalIcon } from "@hugeicons-pro/core-solid-rounded";
 import { useRef } from "react";
 import { useButton, useDrag } from "react-aria";
+
+import { DeleteProgressButton } from "@/shared/components/ui/delete-progress-button";
+import { cn } from "@/shared/lib/classes";
+
 import { useDeleteSessionNote } from "../../../hooks/session-notes/use-delete-session-note";
 import type { ClientSessionNote } from "../../../types/session-notes.types";
+
 type DraggableSessionNoteProps = {
   note: ClientSessionNote;
   sessionId: number;

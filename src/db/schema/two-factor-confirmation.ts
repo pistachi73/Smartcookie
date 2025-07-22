@@ -1,4 +1,5 @@
 import { index, serial, text, unique, uuid } from "drizzle-orm/pg-core";
+
 import { user } from "./user";
 import { pgTable } from "./utils";
 

@@ -1,7 +1,9 @@
-import { Account } from "@/features/account/components";
+import { AccountSetting02Icon } from "@hugeicons-pro/core-solid-rounded";
+
 import { PageHeader } from "@/shared/components/layout/page-header";
 import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
-import { AccountSetting02Icon } from "@hugeicons-pro/core-solid-rounded";
+
+import { Account } from "@/features/account/components";
 
 export default async function AccountPage() {
   return (

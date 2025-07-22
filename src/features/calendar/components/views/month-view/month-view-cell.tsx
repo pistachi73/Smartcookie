@@ -1,15 +1,17 @@
 "use client";
 
-import { useCalendarDay } from "@/features/calendar/hooks/use-calendar-sessions";
-import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
-import { cn } from "@/shared/lib/classes";
-import { getWeekdayAbbrev } from "@/shared/lib/temporal/format";
-import { Popover } from "@/ui/popover";
-import { MultiplicationSignIcon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { MultiplicationSignIcon } from "@hugeicons-pro/core-solid-rounded";
 import { useEffect, useRef, useState } from "react";
 import { Button as AriaButton } from "react-aria-components";
 import type { Temporal } from "temporal-polyfill";
+
+import { Popover } from "@/ui/popover";
+import { cn } from "@/shared/lib/classes";
+import { getWeekdayAbbrev } from "@/shared/lib/temporal/format";
+
+import { useCalendarDay } from "@/features/calendar/hooks/use-calendar-sessions";
+import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
 import { MonthViewOccurrence } from "./month-view-occurrence";
 
 type MonthCalendarDayCellProps = {

@@ -1,3 +1,5 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import setMockViewport from "@/shared/components/layout/viewport-context/test-utils/setMockViewport";
 import {
   cleanup,
@@ -6,9 +8,9 @@ import {
   screen,
 } from "@/shared/lib/testing/test-utils";
 import { mockZustandStoreImplementation } from "@/shared/lib/testing/zustand-utils";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { useSurveyStore } from "../../store/survey-store-provider";
+
 import type { SurveyStoreState } from "../../store/survey.store";
+import { useSurveyStore } from "../../store/survey-store-provider";
 import { SurveyBottomBar } from "../survey-bottom-bar";
 
 vi.mock("../../store/survey-store-provider", () => ({

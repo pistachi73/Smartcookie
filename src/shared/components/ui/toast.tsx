@@ -1,16 +1,17 @@
 "use client";
 
-import { cn } from "@/shared/lib/classes";
-import { Toaster as ToasterPrimitive, type ToasterProps } from "sonner";
-
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Alert02Icon,
   AlertCircleIcon,
   CheckmarkCircle01Icon,
   InformationCircleIcon,
 } from "@hugeicons-pro/core-solid-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 import { useTheme } from "next-themes";
+import { Toaster as ToasterPrimitive, type ToasterProps } from "sonner";
+
+import { cn } from "@/shared/lib/classes";
+
 import { buttonStyles } from "./button";
 import { Loader } from "./loader";
 

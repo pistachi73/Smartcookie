@@ -1,6 +1,7 @@
 import type { Time } from "@internationalized/date";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Key } from "react-aria-components";
+
 import {
   formatLabel,
   generateTimeSelectOptions,
@@ -79,7 +80,7 @@ export const useTimeCombobox = ({
   }, []);
 
   const handleBlur = useCallback(
-    (e: React.FocusEvent) => {
+    (_e: React.FocusEvent) => {
       handleInputParsing(input);
       setIsOpen(false);
     },
