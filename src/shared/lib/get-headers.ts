@@ -1,5 +1,6 @@
-import { VERCEL_HEADERS } from "@/core/config/app-config";
 import { headers } from "next/headers";
+
+import { VERCEL_HEADERS } from "@/core/config/app-config";
 import type { DeviceType } from "../components/layout/viewport-context/types";
 
 export const getHeaders = async () => {

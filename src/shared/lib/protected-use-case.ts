@@ -1,6 +1,8 @@
-import { PublicError } from "@/shared/services/errors";
-import type { AuthUser } from "@/types/next-auth";
 import type { z } from "zod";
+
+import { PublicError } from "@/shared/services/errors";
+
+import type { AuthUser } from "@/types/next-auth";
 import { currentUser } from "./auth";
 
 export function withAuthentication<TData, TResult>({
