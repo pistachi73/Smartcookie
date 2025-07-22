@@ -25,6 +25,11 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'pnpm'
 
+      - name: Configure HugeIcons authentication
+        run: |
+          echo "@hugeicons-pro:registry=https://npm.hugeicons.com/" > ~/.npmrc
+          echo "//npm.hugeicons.com/:_authToken=${{ secrets.HUGEICONS_TOKEN }}" >> ~/.npmrc
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
