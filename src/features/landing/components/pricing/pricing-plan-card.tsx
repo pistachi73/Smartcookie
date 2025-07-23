@@ -57,7 +57,7 @@ export const PremiumPlanCard = ({
         <div className="flex items-center gap-4 relative">
           <p className="flex items-center gap-3">
             <span className="text-5xl font-bold tracking-tighter tabular-nums text-primary">
-              {paymentFrequency === "M" ? "10.00 €" : "8.50 €"}
+              {paymentFrequency === "M" ? "9.95 €" : "8.55 €"}
             </span>
             <span className="font-semibold text-sm text-muted-fg">/ month</span>
           </p>
