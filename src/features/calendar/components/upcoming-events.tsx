@@ -1,17 +1,11 @@
-import { HugeiconsIcon } from "@hugeicons/react";
-import {
-  ArrowRight02Icon,
-  Clock02Icon,
-} from "@hugeicons-pro/core-stroke-rounded";
 import { format } from "date-fns";
 import { Temporal } from "temporal-polyfill";
 
 import { Heading } from "@/ui/heading";
-import { cn } from "@/shared/lib/classes";
+import { AgendaSessionCard } from "@/shared/components/sessions/agenda-session-card";
 
-import { getCalendarColor } from "@/features/calendar/lib/utils";
-import type { CalendarSession } from "@/features/calendar/types/calendar.types";
 import { useCalendarDay } from "../hooks/use-calendar-sessions";
+import { transformCalendarSessionToAgendaData } from "../lib/transform-calendar-data";
 
 export const UpcomingEvents = () => {
   // Memoize the current date to prevent it from changing on each render
@@ -41,9 +35,9 @@ export const UpcomingEvents = () => {
           sessions
             .slice(0, 3)
             .map((session) => (
-              <UpcomingOccurrenceCard
+              <AgendaSessionCard
                 key={`upcoming-session-${session.id}`}
-                session={session}
+                session={transformCalendarSessionToAgendaData(session)}
               />
             ))
         ) : (
@@ -59,42 +53,6 @@ const EmptyUpcomingEvents = () => {
     <div className="flex flex-col items-center justify-center p-4 text-center bg-overlay-highlight rounded-xl">
       <p className="text-sm font-medium mb-1">No upcoming events</p>
       <p className="text-xs text-muted-fg">Your schedule is clear for now</p>
-    </div>
-  );
-};
-
-const UpcomingOccurrenceCard = ({ session }: { session: CalendarSession }) => {
-  const color = getCalendarColor(session.hub?.color);
-
-  return (
-    <div
-      className={cn(
-        "border shadow-xs dark:bg-overlay-elevated",
-        "relative h-full w-full flex items-stretch rounded-md gap-3 pl-1 pr-2",
-        "hover:bg-secondary cursor-pointer",
-      )}
-    >
-      <div
-        className={cn(
-          "my-1 rounded-lg w-1 shrink-0 min-w-0 min-h-0 border",
-          color?.className,
-        )}
-      />
-      <div
-        className={cn("text-left flex flex-col gap-0 justify-between py-2.5")}
-      >
-        <div className="flex flex-row items-center gap-1.5">
-          <HugeiconsIcon icon={Clock02Icon} size={12} />
-          <div className="flex items-center gap-1 text-xs text-muted-fg">
-            {format(session.startTime, "HH:mm")}
-            <HugeiconsIcon icon={ArrowRight02Icon} size={14} />
-            {format(session.endTime, "HH:mm")}
-          </div>
-        </div>
-        <p className="text-sm line-clamp-2 font-normal leading-tight">
-          {session.hub?.name ?? "Untitled"}
-        </p>
-      </div>
     </div>
   );
 };

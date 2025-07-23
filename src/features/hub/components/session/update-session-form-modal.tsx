@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarDate, Time } from "@internationalized/date";
+import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import type { z } from "zod";
@@ -13,8 +14,8 @@ import { serializeTime } from "@/shared/lib/serialize-react-aria/serialize-time"
 
 import { useCheckSessionConflicts } from "../../hooks/session/use-check-session-conflicts";
 import { useUpdateSession } from "../../hooks/session/use-update-session";
-import { useHubById } from "../../hooks/use-hub-by-id";
 import { calculateRecurrentSessions } from "../../lib/calculate-recurrent-sessions";
+import { getHubByIdQueryOptions } from "../../lib/hub-query-options";
 import type { HubSession } from "../../types/hub.types";
 import {
   SessionConflictModalContent,
@@ -40,7 +41,10 @@ export const UpdateSessionFormModal = ({
 }: UpdateSessionFormModalProps) => {
   const [isConflictModalOpen, setIsConflictModalOpen] = useState(false);
 
-  const { data: hub } = useHubById(hubId);
+  const { data: hub } = useQuery({
+    ...getHubByIdQueryOptions(hubId),
+    enabled: isOpen,
+  });
 
   const {
     mutateAsync: checkSessionConflicts,

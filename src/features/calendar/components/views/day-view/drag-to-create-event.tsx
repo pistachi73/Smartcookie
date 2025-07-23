@@ -13,7 +13,7 @@ export const DragToCreateEvent = ({ date }: { date: Temporal.PlainDate }) => {
     <>
       <div
         ref={ref}
-        className="absolute top-0 left-0 h-full w-full cursor-crosshair touch-none"
+        className="absolute top-0 left-0 h-full w-full touch-none"
         onMouseDown={handleMouseDown}
         onTouchStart={handleTouchStart}
         role="button"

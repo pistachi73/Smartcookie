@@ -69,6 +69,8 @@ export const getCalendarSessionsByDateRangeUseCase = withValidationAndAuth({
       user.id,
     );
 
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
     console.log("sess students", sess[0]?.students.length, sess[0]?.students);
 
     return organizeSessionsByDay(groupOverlappingSessions(sess));

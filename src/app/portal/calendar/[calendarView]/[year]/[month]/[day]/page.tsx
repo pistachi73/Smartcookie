@@ -49,20 +49,20 @@ const CalendarPage = async ({ params }: CalendarPageProps) => {
     today.month !== plainDateTime.month ||
     (today.month === plainDateTime.month && today.year !== plainDateTime.year);
 
-  await Promise.all([
-    queryClient.prefetchQuery({
-      ...getMonthSessionsQueryOptions(plainDateTime),
-      staleTime: 1000 * 60 * 60 * 24,
-    }),
-    ...(isDifferentMonth
-      ? [
-          queryClient.prefetchQuery({
-            ...getMonthSessionsQueryOptions(today),
-            staleTime: 1000 * 60 * 60 * 24,
-          }),
-        ]
-      : []),
-  ]);
+  // await Promise.all([
+  //   queryClient.prefetchQuery({
+  //     ...getMonthSessionsQueryOptions(plainDateTime),
+  //     staleTime: 1000 * 60 * 60 * 24,
+  //   }),
+  //   ...(isDifferentMonth
+  //     ? [
+  //         queryClient.prefetchQuery({
+  //           ...getMonthSessionsQueryOptions(today),
+  //           staleTime: 1000 * 60 * 60 * 24,
+  //         }),
+  //       ]
+  //     : []),
+  // ]);
 
   return (
     <>

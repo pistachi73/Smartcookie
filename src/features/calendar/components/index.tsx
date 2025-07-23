@@ -25,6 +25,7 @@ const DynamicAddSessionsFormModal = dynamic(
 
 export const Calendar = () => {
   const _isHydrated = useCalendarStore((state) => state._isHydrated);
+  const selectedDate = useCalendarStore((store) => store.selectedDate);
   const sidebarOpen = useCalendarStore((store) => store.sidebarOpen);
   const setIsCreateSessionModalOpen = useCalendarStore(
     (store) => store.setIsCreateSessionModalOpen,
@@ -36,11 +37,10 @@ export const Calendar = () => {
     (store) => store.createSessionFormData,
   );
 
+  // Only show skeleton while hydrating, let individual views handle session loading
   if (!_isHydrated) {
     return <CalendarSkeleton />;
   }
-
-  console.log("createSessionFormData", createSessionFormData);
 
   return (
     <>

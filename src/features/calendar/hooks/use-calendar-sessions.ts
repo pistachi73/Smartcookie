@@ -1,8 +1,6 @@
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { Temporal } from "temporal-polyfill";
 
-import { useCurrentUser } from "@/shared/hooks/use-current-user";
-
 import { getDayKeyFromDate } from "../lib/utils";
 import { getCalendarSessionsByDateRangeUseCase } from "../use-cases/calendar.use-case";
 
@@ -25,7 +23,7 @@ export const getMonthSessionsQueryOptions = (
   return queryOptions({
     queryKey: [
       "calendar-sessions",
-      `${currentPeriodStart.year}-${currentPeriodStart.month}`,
+      { year: currentPeriodStart.year, month: currentPeriodStart.month },
     ],
     queryFn: () =>
       getCalendarSessionsByDateRangeUseCase({
@@ -41,7 +39,6 @@ export const useMonthSessions = (yearMonth: {
   month: number;
 }) => {
   const { year, month } = yearMonth;
-  const user = useCurrentUser();
 
   const firstDayOfMonth = new Temporal.PlainDateTime(year, month, 1);
 
