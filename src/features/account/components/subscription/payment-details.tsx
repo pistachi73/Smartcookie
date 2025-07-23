@@ -1,10 +1,12 @@
-import type { PaymentMethod } from "@/data-access/payment/formatters";
-import { Card } from "@/shared/components/ui/card";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   CreditCardIcon,
   MasterCardIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
+
+import { Card } from "@/shared/components/ui/card";
+
+import type { PaymentMethod } from "@/data-access/payment/formatters";
 import { BillingPortalButton } from "./billing-portal-button";
 
 type PaymentDetailsProps = {

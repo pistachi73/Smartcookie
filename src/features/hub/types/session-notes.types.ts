@@ -1,7 +1,7 @@
 import type { GetSessionNotesBySessionIdQueryResponse } from "../lib/session-notes-query-options";
 
 export type ClientSessionNote =
-  GetSessionNotesBySessionIdQueryResponse["future"][number] & {
+  GetSessionNotesBySessionIdQueryResponse["plans"][number] & {
     clientId?: string;
   };
 

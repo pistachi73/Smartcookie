@@ -1,5 +1,6 @@
 "use client";
 
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ArrowLeft01Icon,
   ArrowLeftDoubleIcon,
@@ -7,8 +8,6 @@ import {
   ArrowRightDoubleIcon,
   MoreHorizontalIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-
 import type {
   ListBoxItemProps,
   ListBoxProps,
@@ -20,8 +19,8 @@ import {
   ListBoxSection,
   Separator,
 } from "react-aria-components";
-
 import { twMerge } from "tailwind-merge";
+
 import { buttonStyles } from "./button";
 import { composeTailwindRenderProps } from "./primitive";
 

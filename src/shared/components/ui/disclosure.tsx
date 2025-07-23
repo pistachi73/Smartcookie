@@ -1,7 +1,7 @@
 "use client";
 
-import { ArrowLeft01Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowLeft01Icon } from "@hugeicons-pro/core-stroke-rounded";
 import type {
   DisclosureGroupProps as AccordionProps,
   ButtonProps,
@@ -13,28 +13,34 @@ import {
   Button,
   Disclosure as Collapsible,
   DisclosurePanel as CollapsiblePanel,
-  Heading,
   composeRenderProps,
+  Heading,
 } from "react-aria-components";
 import { tv } from "tailwind-variants";
+
 import { composeTailwindRenderProps } from "./primitive";
 
 interface DisclosureGroupProps extends AccordionProps {
   ref?: React.RefObject<HTMLDivElement>;
 }
-const DisclosureGroup = ({ children, ref, className, ...props }: DisclosureGroupProps) => {
+const DisclosureGroup = ({
+  children,
+  ref,
+  className,
+  ...props
+}: DisclosureGroupProps) => {
   return (
     <Accordion
       ref={ref}
-      data-slot='disclosure-group'
+      data-slot="disclosure-group"
       {...props}
       className={composeTailwindRenderProps(
         className,
-        "peer cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-75"
+        "peer cursor-pointer data-disabled:cursor-not-allowed data-disabled:opacity-75",
       )}
     >
       {(values) => (
-        <div data-slot='disclosure-content'>
+        <div data-slot="disclosure-content">
           {typeof children === "function" ? children(values) : children}
         </div>
       )}
@@ -58,10 +64,10 @@ const Disclosure = ({ className, ref, ...props }: DisclosureProps) => {
   return (
     <Collapsible
       ref={ref}
-      data-slot='disclosure'
+      data-slot="disclosure"
       {...props}
       className={composeRenderProps(className, (className, renderProps) =>
-        disclosure({ ...renderProps, className })
+        disclosure({ ...renderProps, className }),
       )}
     >
       {props.children}
@@ -89,28 +95,34 @@ const disclosureTrigger = tv({
 interface DisclosureTriggerProps extends ButtonProps {
   ref?: React.Ref<HTMLButtonElement>;
 }
-const DisclosureTrigger = ({ className, ref, ...props }: DisclosureTriggerProps) => {
+const DisclosureTrigger = ({
+  className,
+  ref,
+  ...props
+}: DisclosureTriggerProps) => {
   return (
     <Heading>
       <Button
         ref={ref}
-        slot='trigger'
+        slot="trigger"
         className={composeRenderProps(className, (className, renderProps) =>
           disclosureTrigger({
             ...renderProps,
             className,
-          })
+          }),
         )}
         {...props}
       >
         {(values) => (
           <>
-            {typeof props.children === "function" ? props.children(values) : props.children}
+            {typeof props.children === "function"
+              ? props.children(values)
+              : props.children}
             <HugeiconsIcon
               icon={ArrowLeft01Icon}
               size={16}
-              data-slot='disclosure-chevron'
-              className='internal-chevron ml-auto shrink-0 transition duration-300'
+              data-slot="disclosure-chevron"
+              className="internal-chevron ml-auto shrink-0 transition duration-300"
             />
           </>
         )}
@@ -122,20 +134,24 @@ const DisclosureTrigger = ({ className, ref, ...props }: DisclosureTriggerProps)
 interface DisclosurePanelProps extends DisclosurePanelPrimitiveProps {
   ref?: React.Ref<HTMLDivElement>;
 }
-const DisclosurePanel = ({ className, ref, ...props }: DisclosurePanelProps) => {
+const DisclosurePanel = ({
+  className,
+  ref,
+  ...props
+}: DisclosurePanelProps) => {
   return (
     <CollapsiblePanel
       ref={ref}
-      data-slot='disclosure-panel'
+      data-slot="disclosure-panel"
       className={composeTailwindRenderProps(
         className,
-        "overflow-hidden text-muted-fg text-sm transition-all **:data-[slot=disclosure-group]:border-t **:data-[slot=disclosure-group]:**:[.internal-chevron]:hidden has-data-[slot=disclosure-group]:**:[button]:px-4"
+        "overflow-hidden text-muted-fg text-sm transition-all **:data-[slot=disclosure-group]:border-t **:data-[slot=disclosure-group]:**:[.internal-chevron]:hidden has-data-[slot=disclosure-group]:**:[button]:px-4",
       )}
       {...props}
     >
       <div
-        data-slot='disclosure-panel-content'
-        className='pt-0 not-has-data-[slot=disclosure-group]:group-data-expanded/disclosure:pb-3 [&:has([data-slot=disclosure-group])_&]:px-11'
+        data-slot="disclosure-panel-content"
+        className="pt-0 not-has-data-[slot=disclosure-group]:group-data-expanded/disclosure:pb-3 [&:has([data-slot=disclosure-group])_&]:px-11"
       >
         {props.children}
       </div>
@@ -144,4 +160,9 @@ const DisclosurePanel = ({ className, ref, ...props }: DisclosurePanelProps) => 
 };
 
 export { Disclosure, DisclosureGroup, DisclosurePanel, DisclosureTrigger };
-export type { DisclosureGroupProps, DisclosurePanelProps, DisclosureProps, DisclosureTriggerProps };
+export type {
+  DisclosureGroupProps,
+  DisclosurePanelProps,
+  DisclosureProps,
+  DisclosureTriggerProps,
+};

@@ -1,7 +1,8 @@
-import { db } from "@/db";
-import { student, studentHub } from "@/db/schema";
 import { and, eq, sql } from "drizzle-orm";
 import { z } from "zod";
+
+import { db } from "@/db";
+import { student, studentHub } from "@/db/schema";
 
 export const searchStudentsUseCaseSchema = z.object({
   userId: z.string(),

@@ -1,9 +1,10 @@
-import { getNotesByHubId } from "@/data-access/quick-notes/queries";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
+import { getNotesByHubId } from "@/data-access/quick-notes/queries";
+
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ hubId: string }> },
 ) {
   try {

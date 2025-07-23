@@ -1,24 +1,24 @@
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Clock01Icon } from "@hugeicons-pro/core-stroke-rounded";
 import type { Time } from "@internationalized/date";
 import { useEffect, useState } from "react";
 
-import {
-  type TimeSelectOption,
-  formatDifferenceLabel,
-  formatLabel,
-  generateTimeSelectOptions,
-  generateTimeValue,
-  parseTimeInput,
-} from "./utils";
-
 import { cn } from "@/shared/lib/classes";
-import { Clock01Icon } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
+
 import {
   ComboBox,
   type ComboBoxListProps,
   type ComboBoxProps,
 } from "../combo-box";
 import { DropdownLabel } from "../dropdown";
+import {
+  formatDifferenceLabel,
+  formatLabel,
+  generateTimeSelectOptions,
+  generateTimeValue,
+  parseTimeInput,
+  type TimeSelectOption,
+} from "./utils";
 
 type TimeComboboxProps<T extends object> = Omit<
   ComboBoxProps<T>,

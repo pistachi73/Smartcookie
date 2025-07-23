@@ -1,5 +1,7 @@
-import { useCurrentUser } from "@/shared/hooks/use-current-user";
 import { useQuery } from "@tanstack/react-query";
+
+import { useCurrentUser } from "@/shared/hooks/use-current-user";
+
 import { getAgendaSessionsQueryOptions } from "./hook-options";
 
 export const useGetAgendaSessions = (dateInterval: [Date, Date]) => {

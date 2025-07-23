@@ -1,10 +1,12 @@
 "use client";
 
-import { useIsMounted } from "@/shared/hooks/use-is-mounted";
-import { Moon02Icon, Sun03Icon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { Moon02Icon, Sun03Icon } from "@hugeicons-pro/core-solid-rounded";
 import { useTheme } from "next-themes";
 import { useCallback } from "react";
+
+import { useIsMounted } from "@/shared/hooks/use-is-mounted";
+
 import { Button } from "./button";
 
 export function ThemeSwitcher({
@@ -21,9 +23,9 @@ export function ThemeSwitcher({
     setTheme(nextTheme);
   }, [theme, setTheme]);
 
-  // if (!isMounted()) {
-  //   return null;
-  // }
+  if (!isMounted()) {
+    return null;
+  }
 
   return (
     <Button

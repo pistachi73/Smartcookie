@@ -1,8 +1,9 @@
 "use client";
 
 import type { LinkRenderProps } from "react-aria-components";
-import { Link, composeRenderProps } from "react-aria-components";
+import { composeRenderProps, Link } from "react-aria-components";
 import { tv } from "tailwind-variants";
+
 import { Badge } from "../badge";
 import { Tooltip } from "../tooltip";
 import { useSidebar } from "./sidebar-provider";

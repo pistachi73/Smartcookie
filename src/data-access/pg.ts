@@ -1,6 +1,7 @@
-import { db } from "@/db";
 import { sql } from "drizzle-orm";
 import { cache } from "react";
+
+import { db } from "@/db";
 
 export type PgTimezone = {
   name: string;

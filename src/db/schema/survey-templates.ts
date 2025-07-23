@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import { integer, serial, text, timestamp, uuid } from "drizzle-orm/pg-core";
+
 import { surveyTemplateQuestions } from "./survey-template-questions";
 import { surveys } from "./surveys";
 import { user } from "./user";

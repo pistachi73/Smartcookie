@@ -1,11 +1,12 @@
 "use client";
 
-import { Separator } from "@/shared/components/ui/separator";
-import { cn } from "@/shared/lib/classes";
+import { HugeiconsIcon } from "@hugeicons/react";
 import type { FolderDetailsIcon } from "@hugeicons-pro/core-solid-rounded";
 import { Tick01Icon } from "@hugeicons-pro/core-solid-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 import { Button } from "react-aria-components";
+
+import { Separator } from "@/shared/components/ui/separator";
+import { cn } from "@/shared/lib/classes";
 
 type MultistepFormProgressProps = {
   totalSteps: number;

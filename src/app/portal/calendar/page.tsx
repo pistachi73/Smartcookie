@@ -1,14 +1,16 @@
+import { Calendar03Icon } from "@hugeicons-pro/core-solid-rounded";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+import { Temporal } from "temporal-polyfill";
+
+import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
+
 import { Calendar } from "@/features/calendar/components";
 import { getMonthSessionsQueryOptions } from "@/features/calendar/hooks/use-calendar-sessions";
 import { CalendarStoreProvider } from "@/features/calendar/store/calendar-store-provider";
-import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
-import { Calendar03Icon } from "@hugeicons-pro/core-solid-rounded";
-import {
-  HydrationBoundary,
-  QueryClient,
-  dehydrate,
-} from "@tanstack/react-query";
-import { Temporal } from "temporal-polyfill";
 
 const CalendarPage = async () => {
   const queryClient = new QueryClient();

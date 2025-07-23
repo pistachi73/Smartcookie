@@ -1,7 +1,7 @@
 "use client";
 
-import { MinusSignIcon, Tick02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { MinusSignIcon, Tick02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import type {
   CheckboxGroupProps as CheckboxGroupPrimitiveProps,
   CheckboxProps as CheckboxPrimitiveProps,
@@ -15,6 +15,7 @@ import {
 import { tv } from "tailwind-variants";
 
 import { cn } from "@/shared/lib/classes";
+
 import { Description, FieldError, Label } from "./field";
 import { composeTailwindRenderProps } from "./primitive";
 

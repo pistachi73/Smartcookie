@@ -1,5 +1,7 @@
-import { cleanup, render, screen } from "@/shared/lib/testing/test-utils";
 import { afterEach, describe, expect, it, vi } from "vitest";
+
+import { cleanup, render, screen } from "@/shared/lib/testing/test-utils";
+
 import { AvatarStack, type User } from "../avatar-stack";
 
 // Mock users for testing

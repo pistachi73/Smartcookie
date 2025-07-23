@@ -1,8 +1,9 @@
 "use server";
 
+import { and, desc, eq } from "drizzle-orm";
+
 import { db } from "@/db";
 import { type SessionNotePosition, sessionNote } from "@/db/schema";
-import { and, desc, eq } from "drizzle-orm";
 import { withValidationAndAuth } from "../protected-data-access";
 import { GetSessionNotesBySessionIdSchema } from "./schemas";
 

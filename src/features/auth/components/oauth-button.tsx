@@ -1,14 +1,13 @@
 "use client";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { AppleIcon, GoogleIcon } from "@hugeicons-pro/core-solid-rounded";
+import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 
-import { useSearchParams } from "next/navigation";
-
-import { DEFAULT_LOGIN_REDIRECT } from "@/core/config/app-config";
+import { Button } from "@/ui/button";
 import { cn } from "@/shared/lib/classes";
 
-import { Button } from "@/ui/button";
-import { AppleIcon, GoogleIcon } from "@hugeicons-pro/core-solid-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { DEFAULT_LOGIN_REDIRECT } from "@/core/config/app-config";
 
 type Provider = "google" | "apple";
 

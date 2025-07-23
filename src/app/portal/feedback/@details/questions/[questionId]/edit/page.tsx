@@ -1,6 +1,7 @@
-import { EditQuestion } from "@/features/feedback/components/questions/edit-question";
 import isNumber from "lodash/isNumber";
 import { redirect } from "next/navigation";
+
+import { EditQuestion } from "@/features/feedback/components/questions/edit-question";
 
 type EditQuestionPageProps = {
   params: Promise<{

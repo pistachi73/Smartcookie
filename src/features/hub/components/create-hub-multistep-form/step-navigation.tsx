@@ -1,8 +1,10 @@
 "use client";
 
-import { Button } from "@/shared/components/ui/button";
-import { ArrowLeft02Icon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowLeft02Icon } from "@hugeicons-pro/core-solid-rounded";
+
+import { Button } from "@/shared/components/ui/button";
+
 import { useHubFormStore } from "../../store/hub-form-store";
 
 export function StepNavigation() {

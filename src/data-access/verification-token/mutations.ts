@@ -1,10 +1,12 @@
 "use server";
 
-import { db } from "@/db";
-import { verificationToken } from "@/db/schema";
-import { sendVerificationEmail } from "@/shared/lib/mail";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
+
+import { sendVerificationEmail } from "@/shared/lib/mail";
+
+import { db } from "@/db";
+import { verificationToken } from "@/db/schema";
 import { createDataAccessError } from "../errors";
 import { withValidationOnly } from "../protected-data-access";
 import { generateSecureRandomInt } from "../utils";
@@ -17,7 +19,7 @@ export const generateVerificationToken = withValidationOnly({
   }),
   callback: async ({ email }) => {
     const token = generateSecureRandomInt();
-    const expires = new Date(new Date().getTime() + 5 * 60 * 1000);
+    const expires = new Date(Date.now() + 5 * 60 * 1000);
     const existingToken = await getVerificationTokenByEmail({ email });
 
     const data = {
@@ -47,7 +49,7 @@ export const sendEmailVerificationEmail = withValidationOnly({
         email: response.email,
         token: response.token,
       });
-    } catch (e) {
+    } catch (_e) {
       return createDataAccessError("EMAIL_SENDING_FAILED");
     }
 

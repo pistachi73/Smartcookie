@@ -1,8 +1,8 @@
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ArrowRight02Icon,
   RepeatIcon,
 } from "@hugeicons-pro/core-solid-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 import {
   type CalendarDate,
   getDayOfWeek,
@@ -10,7 +10,8 @@ import {
   today,
 } from "@internationalized/date";
 import { useCallback, useEffect, useState } from "react";
-import { Frequency, RRule, datetime } from "rrule";
+import { datetime, Frequency, RRule } from "rrule";
+
 import { Button } from "../button";
 import { Label } from "../field";
 import { Modal } from "../modal";
@@ -22,8 +23,8 @@ import { IntervalInput } from "./components/interval-input";
 import { StartDaySelect } from "./components/start-day-select";
 import {
   type CustomRruleOptions,
-  EndsEnum,
   convertCustomToRRuleOptions,
+  EndsEnum,
   parseRruleText,
 } from "./utils";
 

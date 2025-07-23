@@ -1,3 +1,5 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import {
   act,
   cleanup,
@@ -5,9 +7,10 @@ import {
   render,
   screen,
 } from "@/shared/lib/testing/test-utils";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import { useAddQuickNote } from "../../hooks/use-add-quick-note";
 import { AddNoteCard, COOLDOWN_DURATION } from "../add-note-card";
+
 // Mock the hooks
 vi.mock("../../hooks/use-add-quick-note", () => ({
   useAddQuickNote: vi.fn(),

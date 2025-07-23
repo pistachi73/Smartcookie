@@ -6,12 +6,12 @@ import type {
   ModalOverlayProps,
 } from "react-aria-components";
 import {
+  composeRenderProps,
   DialogTrigger,
   Modal,
   ModalOverlay,
-  composeRenderProps,
 } from "react-aria-components";
-import { type VariantProps, tv } from "tailwind-variants";
+import { tv, type VariantProps } from "tailwind-variants";
 
 import { Dialog } from "./dialog";
 

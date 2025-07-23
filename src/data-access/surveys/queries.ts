@@ -1,9 +1,9 @@
 "use server";
 
-import { db } from "@/db";
-
-import { surveys } from "@/db/schema";
 import { and, desc, eq } from "drizzle-orm";
+
+import { db } from "@/db";
+import { surveys } from "@/db/schema";
 import { withValidationAndAuth } from "../protected-data-access";
 import { GetSurveysByHubIdSchema } from "./schemas";
 
@@ -50,7 +50,7 @@ export const getSurveysByHubId = withValidationAndAuth({
       orderBy: [desc(surveys.createdAt)],
     });
 
-    const formattedSurveys = res.map((survey, index) => {
+    const formattedSurveys = res.map((survey) => {
       const { surveyTemplate, ...rest } = survey;
       return {
         ...rest,

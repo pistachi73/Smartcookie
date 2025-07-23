@@ -1,105 +1,48 @@
 "use client";
 
-import { AddNoteCard } from "@/features/quick-notes/components/add-note-card";
-import { NoteCardList } from "@/features/quick-notes/components/note-card-list";
-import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
-import ViewportOnly from "@/shared/components/layout/viewport-context/viewport-only";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { NoteAddIcon } from "@hugeicons-pro/core-stroke-rounded";
+import { useMemo, useState } from "react";
+
 import { Heading } from "@/shared/components/ui/heading";
 import { Tabs } from "@/shared/components/ui/tabs";
+import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
+import ViewportOnly from "@/shared/components/layout/viewport-context/viewport-only";
 import { cn } from "@/shared/lib/classes";
-import {
-  CalendarIcon as CalendarIconSolid,
-  Comment01Icon as Comment01IconSolid,
-  DashboardBrowsingIcon as DashboardBrowsingIconSolid,
-  NoteIcon as NoteIconSolid,
-  UserMultiple02Icon as UserMultiple02IconSolid,
-} from "@hugeicons-pro/core-solid-rounded";
-import {
-  ArrowLeft02Icon,
-  CalendarIcon,
-  Comment01Icon,
-  DashboardBrowsingIcon,
-  NoteAddIcon,
-  NoteIcon,
-  UserMultiple02Icon,
-} from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-import Link from "next/link";
-import { useMemo } from "react";
+
+import { AddNoteCard } from "@/features/quick-notes/components/add-note-card";
+import { NoteCardList } from "@/features/quick-notes/components/note-card-list";
 import { useHubById } from "../hooks/use-hub-by-id";
+import { TABS } from "../lib/constants";
 import { CourseFeedback } from "./feedback";
-import { HubOverview } from "./hub-overview";
+import { HubHeader } from "./hub-header";
+import { HubOverview } from "./overview";
 import { SessionsList } from "./session/session-list";
 import { Students } from "./students/students";
 
-const tabs: {
-  id: string;
-  label: string;
-  icon: typeof UserMultiple02Icon;
-  altIcon: typeof UserMultiple02IconSolid;
-}[] = [
-  {
-    id: "overview",
-    icon: DashboardBrowsingIcon,
-    altIcon: DashboardBrowsingIconSolid,
-    label: "Overview",
-  },
-  {
-    id: "students",
-    icon: UserMultiple02Icon,
-    altIcon: UserMultiple02IconSolid,
-    label: "Students",
-  },
-  {
-    id: "sessions",
-    icon: CalendarIcon,
-    altIcon: CalendarIconSolid,
-    label: "Sessions",
-  },
-  {
-    id: "feedback",
-    icon: Comment01Icon,
-    altIcon: Comment01IconSolid,
-    label: "Feedback",
-  },
-  {
-    id: "quick-notes",
-    icon: NoteIcon,
-    altIcon: NoteIconSolid,
-    label: "Quick Notes",
-  },
-];
+type Tab = (typeof TABS)[number]["id"];
 
 export function HubDashboard({ hubId }: { hubId: number }) {
   const { down } = useViewport();
   const { data: hub } = useHubById(hubId);
-
-  if (!hub) return null;
+  const [selectedTab, setSelectedTab] = useState<Tab>("overview");
 
   const isDownLg = useMemo(() => down("lg"), [down]);
 
+  if (!hub) return null;
+
   return (
     <div className="h-full overflow-auto flex flex-col">
-      <div className="shrink-0 overflow-auto p-6 border-b space-y-4 bg-bg">
-        <Link
-          href="/portal/hubs"
-          className="flex items-center gap-2 text-sm text-muted-fg"
-        >
-          <HugeiconsIcon icon={ArrowLeft02Icon} size={16} />
-          Back to courses
-        </Link>
-        <Heading level={1} className="font-bold">
-          {hub.name}
-        </Heading>
-      </div>
+      <HubHeader hubName={hub.name} />
       <div className="lg:flex-1 flex flex-col lg:flex-row bg-overlay">
         <Tabs
           aria-label="Hub Dashboard"
-          defaultSelectedKey={"feedback"}
+          selectedKey={selectedTab}
+          onSelectionChange={(key) => setSelectedTab(key as Tab)}
           className="flex-1 gap-4 sm:gap-6"
         >
           <Tabs.List className={"sticky top-0 px-6 pt-3 bg-overlay z-20"}>
-            {tabs.map((tab) => {
+            {TABS.map((tab) => {
               if (tab.id === "quick-notes" && !isDownLg) return null;
               return (
                 <Tabs.Tab key={tab.id} id={tab.id} className="px-2 ">
@@ -127,7 +70,7 @@ export function HubDashboard({ hubId }: { hubId: number }) {
             })}
           </Tabs.List>
           <Tabs.Panel id="overview" className={"p-6 pt-0"}>
-            <HubOverview hubId={hubId} />
+            <HubOverview hubId={hubId} setSelectedTab={setSelectedTab} />
           </Tabs.Panel>
           <Tabs.Panel id="students" className={"px-2 sm:px-5 pt-0 py-2"}>
             <Students hubId={hubId} />

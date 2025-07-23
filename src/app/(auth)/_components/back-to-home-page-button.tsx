@@ -1,9 +1,10 @@
 "use client";
 
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowLeft02Icon } from "@hugeicons-pro/core-stroke-rounded";
+
 import { buttonStyles } from "@/ui/button";
 import { Link } from "@/ui/link";
-import { ArrowLeft02Icon } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 
 export const BackToHomePageButton = () => {
   return (

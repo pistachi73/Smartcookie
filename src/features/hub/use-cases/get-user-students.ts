@@ -1,7 +1,8 @@
-import { db } from "@/db";
-import { student } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
+
+import { db } from "@/db";
+import { student } from "@/db/schema";
 
 const GetUserStudentsSchema = z.object({
   userId: z.string(),

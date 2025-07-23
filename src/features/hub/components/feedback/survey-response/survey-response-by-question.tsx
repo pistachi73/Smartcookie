@@ -1,20 +1,22 @@
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  StarIcon,
+  ThumbsDownIcon,
+  ThumbsUpIcon,
+} from "@hugeicons-pro/core-stroke-rounded";
+import { useQuery } from "@tanstack/react-query";
+
+import { Heading } from "@/shared/components/ui/heading";
+import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
+import { StudentProfile } from "@/shared/components/students/student-profile";
+import { cn } from "@/shared/lib/classes";
+
 import type { QuestionType } from "@/db/schema";
 import { QuestionTypeBadge } from "@/features/feedback/components/questions/question-type-badge";
 import {
   type GetSurveysByHubIdQueryResponse,
   getSurveyResponsesBySurveyIdQueryOptions,
 } from "@/features/hub/lib/hub-surveys-query-options";
-import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
-import { StudentProfile } from "@/shared/components/students/student-profile";
-import { Heading } from "@/shared/components/ui/heading";
-import { cn } from "@/shared/lib/classes";
-import {
-  StarIcon,
-  ThumbsDownIcon,
-  ThumbsUpIcon,
-} from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { useQuery } from "@tanstack/react-query";
 import { SurveyNoResponses } from "./survey-no-responses";
 
 interface QuestionWithResponses {
@@ -83,7 +85,9 @@ const BooleanDisplay = ({ value }: { value: string }) => {
 
 const RatingSummary = ({
   responses,
-}: { responses: QuestionWithResponses["responses"] }) => {
+}: {
+  responses: QuestionWithResponses["responses"];
+}) => {
   const validRatings = responses
     .filter((r) => r.answer !== "Not answered")
     .map((r) => Number.parseInt(r.answer, 10))
@@ -111,7 +115,9 @@ const RatingSummary = ({
 
 const BooleanSummary = ({
   responses,
-}: { responses: QuestionWithResponses["responses"] }) => {
+}: {
+  responses: QuestionWithResponses["responses"];
+}) => {
   const validResponses = responses.filter((r) => r.answer !== "Not answered");
   const yesCount = validResponses.filter((r) => r.answer === "true").length;
   const noCount = validResponses.filter((r) => r.answer === "false").length;

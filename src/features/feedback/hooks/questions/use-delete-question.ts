@@ -1,8 +1,10 @@
-import { deleteQuestion } from "@/data-access/questions/mutations";
-import { DeleteQuestionSchema } from "@/data-access/questions/schemas";
-import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+
+import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
+
+import { deleteQuestion } from "@/data-access/questions/mutations";
+import { DeleteQuestionSchema } from "@/data-access/questions/schemas";
 
 export const useDeleteQuestion = ({
   onSuccess,

@@ -1,9 +1,10 @@
 "use server";
 
+import { and, eq } from "drizzle-orm";
+
 import { db } from "@/db";
 import type { InsertQuickNote } from "@/db/schema";
 import { quickNote } from "@/db/schema";
-import { and, eq } from "drizzle-orm";
 import { withValidationAndAuth } from "../protected-data-access";
 import {
   CreateQuickNoteSchema,

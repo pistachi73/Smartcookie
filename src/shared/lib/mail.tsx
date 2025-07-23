@@ -1,11 +1,13 @@
 "use server";
 import { Resend } from "resend";
 
+import { getUrl } from "@/shared/lib/get-url";
+
 import PasswordReset from "@/emails/password-reset";
 import TwoFactorVerification from "@/emails/two-factor-verification";
 import VerifyEmail from "@/emails/verify-email";
 import { env } from "@/env";
-import { getUrl } from "@/shared/lib/get-url";
+
 const resend = new Resend(env.RESEND_API_KEY);
 
 export const sendVerificationEmail = async ({

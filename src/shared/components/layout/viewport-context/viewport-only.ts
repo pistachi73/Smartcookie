@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+
 import type { Viewport } from "./types";
 import { useViewport } from "./viewport-context";
 

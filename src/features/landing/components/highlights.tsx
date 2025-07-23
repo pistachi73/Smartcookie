@@ -1,17 +1,19 @@
 "use client";
 
-import { MaxWidthWrapper } from "@/shared/components/layout/max-width-wrapper";
-import { regularSpring } from "@/shared/lib/animation";
-import { cn } from "@/shared/lib/classes";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   QuoteDownIcon,
   QuoteUpIcon,
   SparklesIcon,
 } from "@hugeicons-pro/core-solid-rounded";
 import { Brain02Icon, HealtcareIcon } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 import * as motion from "motion/react-m";
 import Image from "next/image";
+
+import { MaxWidthWrapper } from "@/shared/components/layout/max-width-wrapper";
+import { regularSpring } from "@/shared/lib/animation";
+import { cn } from "@/shared/lib/classes";
+
 import { LandingSectionHeader } from "./landing-section-header";
 
 const MotionHugeIcons = motion.create(HugeiconsIcon);

@@ -1,5 +1,7 @@
 "use client";
 
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowDown01Icon } from "@hugeicons-pro/core-stroke-rounded";
 import type {
   ListBoxProps,
   SelectProps as SelectPrimitiveProps,
@@ -7,10 +9,11 @@ import type {
 } from "react-aria-components";
 import {
   Button,
+  composeRenderProps,
   Select as SelectPrimitive,
   SelectValue,
-  composeRenderProps,
 } from "react-aria-components";
+import { tv } from "tailwind-variants";
 
 import {
   DropdownDescription,
@@ -19,9 +22,7 @@ import {
   DropdownSection,
   DropdownSeparator,
 } from "@/ui/dropdown";
-import { ArrowDown01Icon } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { tv } from "tailwind-variants";
+
 import { Description, FieldError, Label } from "./field";
 import { ListBox } from "./list-box";
 import { PopoverContent, type PopoverContentProps } from "./popover";

@@ -1,10 +1,12 @@
 "use client";
 
+import { format } from "date-fns";
+
 import { Button } from "@/shared/components/ui/button";
 import { Modal } from "@/shared/components/ui/modal";
 import { ProgressCircle } from "@/shared/components/ui/progress-circle";
 import { Separator } from "@/shared/components/ui/separator";
-import { format } from "date-fns";
+
 import { useDeleteSession } from "../../hooks/session/use-delete-sessions";
 import { useSessionsByHubId } from "../../hooks/session/use-sessions-by-hub-id";
 import { useSessionStore } from "../../store/session-store";

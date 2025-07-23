@@ -1,16 +1,18 @@
 "use client";
 
-import { Card } from "@/shared/components/ui/card";
-import { Heading } from "@/shared/components/ui/heading";
-import { MultistepFormProgress } from "@/shared/components/ui/multistep-form-progress";
-import { Separator } from "@/shared/components/ui/separator";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Book02Icon,
   FolderDetailsIcon,
   UserMultiple02Icon,
 } from "@hugeicons-pro/core-solid-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 import dynamic from "next/dynamic";
+
+import { Card } from "@/shared/components/ui/card";
+import { Heading } from "@/shared/components/ui/heading";
+import { MultistepFormProgress } from "@/shared/components/ui/multistep-form-progress";
+import { Separator } from "@/shared/components/ui/separator";
+
 import { useHubFormStore } from "../../store/hub-form-store";
 import { StepHubInfo } from "./step-hub-info";
 

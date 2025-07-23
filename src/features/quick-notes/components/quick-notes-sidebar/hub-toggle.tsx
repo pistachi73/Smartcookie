@@ -1,11 +1,13 @@
-import type { CustomColor } from "@/db/schema/shared";
-import { cn } from "@/shared/lib/classes";
-import { getCustomColorClasses } from "@/shared/lib/custom-colors";
-import { Tooltip } from "@/ui/tooltip";
-import { Folder02Icon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { Folder02Icon } from "@hugeicons-pro/core-solid-rounded";
 import { Button } from "react-aria-components";
 import { tv } from "tailwind-variants";
+
+import { Tooltip } from "@/ui/tooltip";
+import { cn } from "@/shared/lib/classes";
+import { getCustomColorClasses } from "@/shared/lib/custom-colors";
+
+import type { CustomColor } from "@/db/schema/shared";
 
 type HubToggleProps = {
   label: string;

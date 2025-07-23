@@ -1,11 +1,14 @@
-import { DeleteProgressButton } from "@/shared/components/ui/delete-progress-button";
-import { cn } from "@/shared/lib/classes";
-import { DragDropVerticalIcon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { DragDropVerticalIcon } from "@hugeicons-pro/core-solid-rounded";
 import { useRef } from "react";
 import { useButton, useDrag } from "react-aria";
+
+import { DeleteProgressButton } from "@/shared/components/ui/delete-progress-button";
+import { cn } from "@/shared/lib/classes";
+
 import { useDeleteSessionNote } from "../../../hooks/session-notes/use-delete-session-note";
 import type { ClientSessionNote } from "../../../types/session-notes.types";
+
 type DraggableSessionNoteProps = {
   note: ClientSessionNote;
   sessionId: number;
@@ -44,7 +47,7 @@ export const DraggableSessionNote = ({
       {...dragProps}
       className={cn(
         "group relative flex flex-row items-center gap-1",
-        "p-2 rounded-lg  transition-all duration-200 not-last:mb-1",
+        "p-2.5 rounded-lg  transition-all duration-200 not-last:mb-1",
         "focus-visible:border-primary focus-visible:bg-primary/10",
         "cursor-grab",
         "border dark:border-transparent hover:border-fg/30",
@@ -55,11 +58,11 @@ export const DraggableSessionNote = ({
       <span
         {...buttonProps}
         ref={dragButtonRef}
-        className="rounded-xs focus-visible:ring-2 p-0.5 mr-0.5 ring-primary text-muted-fg"
+        className="rounded-xs focus-visible:ring-2 p-0.5 mr-0.5 ring-primary text-muted-fg shrink-0"
       >
         <HugeiconsIcon
           icon={DragDropVerticalIcon}
-          size={12}
+          size={14}
           className="shrink-0"
         />
       </span>

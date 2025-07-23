@@ -1,6 +1,7 @@
-import { superjsonStorage } from "@/core/stores/superjson-storage";
 import { persist } from "zustand/middleware";
 import { createStore } from "zustand/vanilla";
+
+import { superjsonStorage } from "@/core/stores/superjson-storage";
 
 type SurveyResponseData = {
   id?: number;
@@ -41,7 +42,9 @@ const initialState = {
 
 export const initSurveyStore = ({
   totalQuestions,
-}: { totalQuestions: number }) => ({
+}: {
+  totalQuestions: number;
+}) => ({
   ...initialState,
   totalQuestions,
   totalSteps: totalQuestions + 1,

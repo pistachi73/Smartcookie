@@ -1,11 +1,10 @@
 "use client";
 
-import { cn } from "@/shared/lib/classes";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ArrowRight01Icon,
   SolidLine01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 import { createContext, use } from "react";
 import type {
   BreadcrumbProps,
@@ -16,6 +15,9 @@ import {
   Breadcrumb,
   Breadcrumbs as BreadcrumbsPrimitive,
 } from "react-aria-components";
+
+import { cn } from "@/shared/lib/classes";
+
 import { Link } from "./link";
 
 type BreadcrumbsContextProps = { separator?: "chevron" | "slash" | boolean };
@@ -78,7 +80,9 @@ const BreadcrumbsItem = ({
 
 const Separator = ({
   separator = "chevron",
-}: { separator?: BreadcrumbsItemProps["separator"] }) => {
+}: {
+  separator?: BreadcrumbsItemProps["separator"];
+}) => {
   return (
     <span className="*:shrink-0 *:text-muted-fg *:data-[slot=icon]:size-3.5">
       {separator === "chevron" && (

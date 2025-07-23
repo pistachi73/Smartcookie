@@ -1,9 +1,11 @@
 "use client";
 
+import { HugeiconsIcon } from "@hugeicons/react";
+import { FolderLibraryIcon } from "@hugeicons-pro/core-solid-rounded";
+
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { Heading } from "@/ui/heading";
-import { FolderLibraryIcon } from "@hugeicons-pro/core-solid-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
+
 import { HubCardSkeleton } from "./hub-card-skeleton";
 
 export function SkeletonHubList() {

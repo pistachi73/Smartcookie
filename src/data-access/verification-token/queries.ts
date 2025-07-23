@@ -1,7 +1,8 @@
-import { db } from "@/db";
-import { verificationToken } from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
+
+import { db } from "@/db";
+import { verificationToken } from "@/db/schema";
 import { withValidationOnly } from "../protected-data-access";
 
 export const getVerificationTokenByTokenAndEmail = withValidationOnly({

@@ -1,17 +1,15 @@
+import type { Temporal } from "temporal-polyfill";
+
+import { Heading } from "@/shared/components/ui/heading";
 import { cn } from "@/shared/lib/classes";
 import { getMonthAbbrev, getWeekday } from "@/shared/lib/temporal/format";
 
 import { useCalendarDay } from "@/features/calendar/hooks/use-calendar-sessions";
-import { getDayKeyFromDate } from "@/features/calendar/lib/utils";
 import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
-import { Heading } from "@/shared/components/ui/heading";
-import { useMemo } from "react";
-import type { Temporal } from "temporal-polyfill";
 import { AgendaViewNoEvents } from "./agenda-view-no-events";
 import { AgendaViewOccurrence } from "./agenda-view-occurrence";
 
 export const AgendaViewDay = ({ date }: { date: Temporal.PlainDate }) => {
-  const dayKey = useMemo(() => getDayKeyFromDate(date), [date]);
   const selectedDate = useCalendarStore((store) => store.selectedDate);
   const isToday = selectedDate.dayOfYear === date.dayOfYear;
 

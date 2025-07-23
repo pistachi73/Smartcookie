@@ -26,3 +26,10 @@ global.IntersectionObserver = vi.fn().mockImplementation(() => ({
   thresholds: [],
   takeRecords: vi.fn(),
 }));
+
+vi.mock("next/navigation", () => ({
+  useParams: vi.fn(),
+  usePathname: vi.fn(),
+  useRouter: vi.fn(),
+  useSearchParams: vi.fn(),
+}));

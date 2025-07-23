@@ -1,9 +1,8 @@
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Calendar03Icon,
   UserGroupIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
-
-import { HugeiconsIcon } from "@hugeicons/react";
 
 export const SurveyTemplateNoResponses = () => {
   return (

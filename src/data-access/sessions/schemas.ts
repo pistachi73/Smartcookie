@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { DatabaseTransactionSchema } from "../shared-schemas";
 
 export const GetSessionsByHubIdSchema = z.object({
@@ -34,4 +35,11 @@ export const CheckSessionConflictsSchema = AddSessionsSchema.pick({
   sessions: true,
 }).extend({
   excludedSessionIds: z.array(z.number()).optional(),
+});
+
+export const GetInfiniteSessionsByHubIdSchema = z.object({
+  hubId: z.coerce.number(),
+  cursor: z.date().optional(),
+  direction: z.enum(["next", "prev"]).optional(),
+  limit: z.number().min(1).max(50).default(5),
 });

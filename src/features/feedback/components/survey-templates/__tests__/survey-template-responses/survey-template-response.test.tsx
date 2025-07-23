@@ -1,3 +1,7 @@
+import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import {
   cleanup,
   fireEvent,
@@ -5,8 +9,7 @@ import {
   screen,
   waitFor,
 } from "@/shared/lib/testing/test-utils";
-import { useQuery } from "@tanstack/react-query";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import { SurveyTemplateResponse } from "../../survey-template-responses/survey-template-response";
 
 vi.mock("@tanstack/react-query", async (importOriginal) => {
@@ -73,7 +76,10 @@ describe("SurveyResponse", () => {
       expect(toggleButton).toBeInTheDocument();
       expect(screen.getByText("john.doe@example.com")).toBeInTheDocument();
       expect(screen.getByText("15 Jan 2024")).toBeInTheDocument();
-      expect(screen.getByText("3:30 PM")).toBeInTheDocument();
+
+      // Calculate expected time format based on the actual date to be timezone-agnostic
+      const expectedTime = format(new Date("2024-01-15T14:30:00Z"), "h:mm a");
+      expect(screen.getByText(expectedTime)).toBeInTheDocument();
     });
   });
 

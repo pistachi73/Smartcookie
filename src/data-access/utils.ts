@@ -1,5 +1,6 @@
-import { db } from "@/db";
 import { type Column, sql } from "drizzle-orm";
+
+import { db } from "@/db";
 
 export function generateRandomToken(length: number) {
   return Array.from(

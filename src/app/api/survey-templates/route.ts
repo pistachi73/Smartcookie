@@ -1,6 +1,7 @@
+import { NextResponse } from "next/server";
+
 import type { SortBy } from "@/data-access/questions/schemas";
 import { getSurveyTemplates } from "@/data-access/survey-templates/queries";
-import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

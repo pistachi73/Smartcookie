@@ -1,11 +1,13 @@
 "use client";
 
-import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
-import { Calendar } from "@/ui/calendar";
-import { ResizablePanelRoot } from "@/ui/resizable-panel";
 import { CalendarDate } from "@internationalized/date";
 import { useEffect, useState } from "react";
 import { Temporal } from "temporal-polyfill";
+
+import { Calendar } from "@/ui/calendar";
+import { ResizablePanelRoot } from "@/ui/resizable-panel";
+
+import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
 import { UpcomingEvents } from "./upcoming-events";
 
 export const CalendarSidebar = () => {

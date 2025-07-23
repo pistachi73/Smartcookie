@@ -1,9 +1,11 @@
 "use client";
 
-import { Separator } from "@/shared/components/ui/separator";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import React from "react";
+
+import { Separator } from "@/shared/components/ui/separator";
+
 import { questionsQueryOptions } from "../../lib/questions-query-options";
 import { validateSearchParams } from "../../lib/validate-search-params";
 import { SidebarPanel } from "../sidebar-panel";

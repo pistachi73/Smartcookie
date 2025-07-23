@@ -1,10 +1,12 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FormProvider, useForm } from "react-hook-form";
+import type { z } from "zod";
+
 import { Button } from "@/shared/components/ui/button";
 import { Form } from "@/shared/components/ui/form";
 import { Modal } from "@/shared/components/ui/modal";
 import { ProgressCircle } from "@/shared/components/ui/progress-circle";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form";
-import type { z } from "zod";
+
 import { useCreateStudentInHub } from "../../hooks/students/use-create-student-in-hub";
 import { useHubById } from "../../hooks/use-hub-by-id";
 import {
@@ -25,10 +27,6 @@ export const CreateStudentFormModal = ({
 }: CreateStudentFormModalProps) => {
   const { data: hub } = useHubById(hubId);
 
-  if (!hub) {
-    return null;
-  }
-
   const form = useForm<z.infer<typeof CreateStudentFormSchema>>({
     resolver: zodResolver(CreateStudentFormSchema),
     defaultValues: {
@@ -40,6 +38,10 @@ export const CreateStudentFormModal = ({
 
   const { mutateAsync: createStudentInHub, isPending } =
     useCreateStudentInHub();
+
+  if (!hub) {
+    return null;
+  }
 
   const handleOpenChange = (open: boolean) => {
     onOpenChange(open);

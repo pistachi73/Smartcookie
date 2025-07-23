@@ -1,8 +1,9 @@
-import type * as schema from "@/db/schema";
 import type { ExtractTablesWithRelations } from "drizzle-orm";
 import type { NeonQueryResultHKT } from "drizzle-orm/neon-serverless";
 import type { PgTransaction } from "drizzle-orm/pg-core";
 import { z } from "zod";
+
+import type * as schema from "@/db/schema";
 
 // Type for main database instance
 export type DrizzleDB = ReturnType<

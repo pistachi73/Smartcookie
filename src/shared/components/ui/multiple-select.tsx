@@ -1,9 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useId, useRef, useState } from "react";
-
-import { ArrowDown01Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowDown01Icon } from "@hugeicons-pro/core-stroke-rounded";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { useFilter } from "react-aria";
 import type {
   ComboBoxProps as ComboBoxPrimitiveProps,
@@ -16,6 +15,7 @@ import { useListData } from "react-stately";
 import { tv } from "tailwind-variants";
 
 import { cn } from "@/shared/lib/classes";
+
 import { Button } from "./button";
 import type { FieldProps } from "./field";
 import { Description, FieldError, Input, Label } from "./field";

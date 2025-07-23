@@ -5,6 +5,7 @@ import {
   getMonth,
   startOfMonth,
 } from "date-fns";
+
 import type { CalendarView } from "../types/calendar.types";
 
 export const getWeekdayCardinal = (

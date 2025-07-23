@@ -1,6 +1,8 @@
 "use client";
-import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
+
 import { cn } from "@/shared/lib/classes";
+
+import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
 import { DayColumn } from "./day-column";
 import { HourColumn } from "./hour-column";
 import { HourRowsColumn } from "./hour-rows-column";

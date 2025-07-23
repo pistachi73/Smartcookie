@@ -1,9 +1,10 @@
 "use client";
 
-import { ProgressBar } from "@/shared/components/ui/progress-bar";
-import { regularSpring } from "@/shared/lib/animation";
 import * as motion from "motion/react-m";
 import Image from "next/image";
+
+import { ProgressBar } from "@/shared/components/ui/progress-bar";
+import { regularSpring } from "@/shared/lib/animation";
 
 export default function LoadingSurvey() {
   return (

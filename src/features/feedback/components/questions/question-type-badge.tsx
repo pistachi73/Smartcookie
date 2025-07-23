@@ -1,11 +1,12 @@
-import type { QuestionType } from "@/db/schema";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   RankingIcon,
   TextIcon,
   ThumbsUpIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 import { tv } from "tailwind-variants";
+
+import type { QuestionType } from "@/db/schema";
 
 const questionTypeStyles = tv({
   base: "w-fit h-6 p-1 rounded-sm flex items-center text-xs",

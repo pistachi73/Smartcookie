@@ -1,5 +1,5 @@
-import { UserMultiple02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { UserMultiple02Icon } from "@hugeicons-pro/core-stroke-rounded";
 
 export const SurveyNoResponses = () => {
   return (

@@ -1,9 +1,11 @@
 "use client";
 
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowLeft02Icon } from "@hugeicons-pro/core-stroke-rounded";
+
 import { Link } from "@/shared/components/ui/link";
 import { useNavigateWithParams } from "@/shared/hooks/use-navigate-with-params";
-import { ArrowLeft02Icon } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
+
 import { SurveyTemplateForm } from "./survey-template-form";
 
 export const CreateSurvey = () => {

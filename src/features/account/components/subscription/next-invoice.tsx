@@ -1,9 +1,11 @@
+import { HugeiconsIcon } from "@hugeicons/react";
+import { InvoiceIcon } from "@hugeicons-pro/core-stroke-rounded";
+import { format } from "date-fns";
+
+import { Card } from "@/shared/components/ui/card";
+
 import type { Invoice, Subscription } from "@/data-access/payment/formatters";
 import { cn } from "@/lib/utils";
-import { Card } from "@/shared/components/ui/card";
-import { InvoiceIcon } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { format } from "date-fns";
 import { BillingPortalButton } from "./billing-portal-button";
 
 type UpcomingProps = {
@@ -59,22 +61,20 @@ export const UpcomingInvoice = ({
     <Card>
       <Card.Header title="Upcoming invoice" />
       <Card.Content className="space-y-6">
-        <>
-          <p className="text-xl font-medium tabular-nums h-9 flex items-center">
-            {currency}
-            {amountDue?.toFixed(2)}
-          </p>
-          <div className="grid grid-cols-[auto_1fr] gap-4">
-            <span>Payment date:</span>
-            <span className="text-muted-fg font-medium">
-              {periodEnd ? format(periodEnd, "MMMM d, yyyy") : "N/A"}
-            </span>
-            <span>Invoice details:</span>
-            <span className="text-muted-fg font-medium">
-              {upcomingInvoice.description || "N/A"}
-            </span>
-          </div>
-        </>
+        <p className="text-xl font-medium tabular-nums h-9 flex items-center">
+          {currency}
+          {amountDue?.toFixed(2)}
+        </p>
+        <div className="grid grid-cols-[auto_1fr] gap-4">
+          <span>Payment date:</span>
+          <span className="text-muted-fg font-medium">
+            {periodEnd ? format(periodEnd, "MMMM d, yyyy") : "N/A"}
+          </span>
+          <span>Invoice details:</span>
+          <span className="text-muted-fg font-medium">
+            {upcomingInvoice.description || "N/A"}
+          </span>
+        </div>
       </Card.Content>
     </Card>
   );

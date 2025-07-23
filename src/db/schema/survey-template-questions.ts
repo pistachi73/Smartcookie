@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import { boolean, index, integer, serial } from "drizzle-orm/pg-core";
+
 import { questions } from "./questions";
 import { surveyTemplates } from "./survey-templates";
 import { pgTable } from "./utils";

@@ -1,11 +1,13 @@
-import type { CustomColor } from "@/db/schema/shared";
-import { DEFAULT_CUSTOM_COLOR } from "@/shared/lib/custom-colors";
 import {
   type CalendarDate,
   getLocalTimeZone,
   today,
 } from "@internationalized/date";
 import { z } from "zod";
+
+import { DEFAULT_CUSTOM_COLOR } from "@/shared/lib/custom-colors";
+
+import type { CustomColor } from "@/db/schema/shared";
 import type { HubStatus } from "../../../db/schema/hub";
 
 export const hubInfoSchema = z

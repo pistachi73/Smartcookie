@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 /**
  * Creates a QueryClient instance with testing-friendly configuration
  */
-export function createTestQueryClient(options?: {
+export function createTestQueryClient(_options?: {
   defaultData?: Record<string, unknown>;
 }): QueryClient {
   return new QueryClient({

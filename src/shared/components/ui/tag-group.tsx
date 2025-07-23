@@ -1,7 +1,8 @@
 "use client";
 
+import { HugeiconsIcon } from "@hugeicons/react";
+import { MultiplicationSignIcon } from "@hugeicons-pro/core-stroke-rounded";
 import React from "react";
-
 import type {
   TagGroupProps as TagGroupPrimitiveProps,
   TagListProps,
@@ -9,16 +10,15 @@ import type {
 } from "react-aria-components";
 import {
   Button,
+  composeRenderProps,
   TagGroup as TagGroupPrimitive,
   TagList as TagListPrimitive,
   Tag as TagPrimitive,
-  composeRenderProps,
 } from "react-aria-components";
 import { tv } from "tailwind-variants";
 
 import { cn } from "@/shared/lib/classes";
-import { MultiplicationSignIcon } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
+
 import { badgeIntents, badgeShapes, badgeStyles } from "./badge";
 import { Description, Label } from "./field";
 import { composeTailwindRenderProps, focusStyles } from "./primitive";

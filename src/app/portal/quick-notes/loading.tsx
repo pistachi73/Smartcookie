@@ -1,6 +1,8 @@
-import { QuickNotesLoading } from "@/features/quick-notes/components/loading";
-import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
 import { NoteIcon } from "@hugeicons-pro/core-solid-rounded";
+
+import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
+
+import { QuickNotesLoading } from "@/features/quick-notes/components/loading";
 
 const LoadingQuickNotesPage = async () => {
   return (

@@ -1,5 +1,6 @@
-import { getQuestionAnswers } from "@/data-access/answers/queries";
 import { NextResponse } from "next/server";
+
+import { getQuestionAnswers } from "@/data-access/answers/queries";
 
 export async function GET(
   request: Request,

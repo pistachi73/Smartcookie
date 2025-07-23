@@ -1,16 +1,17 @@
 "use client";
 
-import type { CustomColor } from "@/db/schema/shared";
-
-import { cn } from "@/shared/lib/classes";
-import { getCustomColorClasses } from "@/shared/lib/custom-colors";
-import { ProgressCircle } from "@/ui/progress-circle";
-import { Delete01Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { Delete01Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";
 import { memo, useEffect, useRef, useState } from "react";
 import { Button, TextArea } from "react-aria-components";
+
+import { ProgressCircle } from "@/ui/progress-circle";
+import { cn } from "@/shared/lib/classes";
+import { getCustomColorClasses } from "@/shared/lib/custom-colors";
+
+import type { CustomColor } from "@/db/schema/shared";
 import { noteFocusRegistry } from "../../hooks/use-add-quick-note";
 import { useDeleteQuickNote } from "../../hooks/use-delete-quick-note";
 import { useUpdateQuickNote } from "../../hooks/use-update-quick-note";
@@ -32,14 +33,20 @@ const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
       noteId: note.id,
       initialContent: note.content,
       hubId: note.hubId || 0,
+      clientId: note.clientId, // Add clientId for optimistic note retry mechanism
     });
 
-  const { isDeleting, deleteProgress, handleDeletePress, handleDeleteRelease } =
-    useDeleteQuickNote({
-      noteId: note.id,
-      clientId: note.clientId,
-      hubId: note.hubId || 0,
-    });
+  const {
+    isDeleting,
+    deleteProgress,
+    handleDeletePress,
+    deleteNote,
+    handleDeleteRelease,
+  } = useDeleteQuickNote({
+    noteId: note.id,
+    clientId: note.clientId,
+    hubId: note.hubId || 0,
+  });
 
   // Check if this note needs focus when it mounts
   useEffect(() => {
@@ -59,6 +66,9 @@ const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
 
   const onBlur = () => {
     setIsEditingNote(false);
+    if (content.trim() === "") {
+      deleteNote({ id: note.id });
+    }
   };
 
   if (!note) return null;

@@ -1,6 +1,7 @@
-import { cn } from "@/shared/lib/classes";
-import { UserMultiple03Icon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon, type HugeiconsIconProps } from "@hugeicons/react";
+import { UserMultiple03Icon } from "@hugeicons-pro/core-solid-rounded";
+
+import { cn } from "@/shared/lib/classes";
 
 export const DataCard = ({
   iconProps,

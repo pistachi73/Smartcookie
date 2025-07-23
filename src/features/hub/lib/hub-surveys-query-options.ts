@@ -1,6 +1,7 @@
+import { queryOptions } from "@tanstack/react-query";
+
 import type { getSurveyResponsesBySurveyId } from "@/data-access/survey-response/queries";
 import type { getSurveysByHubId } from "@/data-access/surveys/queries";
-import { queryOptions } from "@tanstack/react-query";
 
 export type GetSurveysByHubIdQueryResponse = Awaited<
   ReturnType<typeof getSurveysByHubId>

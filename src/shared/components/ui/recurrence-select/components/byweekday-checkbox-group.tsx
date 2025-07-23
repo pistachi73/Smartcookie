@@ -1,6 +1,7 @@
 import type { Options } from "rrule";
+
 import { Toggle, ToggleGroup } from "../../toggle-group";
-import { type SetRruleOptions, daysOfWeekCheckboxes } from "../utils";
+import { daysOfWeekCheckboxes, type SetRruleOptions } from "../utils";
 
 type ByweekdayCheckboxGroupProps = {
   setRruleOptions: SetRruleOptions;

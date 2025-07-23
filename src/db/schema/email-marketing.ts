@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
 import { index, text, timestamp, uuid } from "drizzle-orm/pg-core";
+
 import { pgTable } from "./utils";
 
 export const emailMarketing = pgTable(

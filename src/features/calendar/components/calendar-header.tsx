@@ -1,17 +1,20 @@
 "use client";
-import { formatCalendarHeaderTitle } from "@/features/calendar/lib/utils";
-import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
-import type { CalendarView } from "@/features/calendar/types/calendar.types";
-import { Heading } from "@/shared/components/ui/heading";
-import { Button } from "@/ui/button";
-import { Select } from "@/ui/select";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ArrowLeft01Icon,
   ArrowRight01Icon,
   SidebarRight01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 import { useShallow } from "zustand/react/shallow";
+
+import { Heading } from "@/shared/components/ui/heading";
+import { Button } from "@/ui/button";
+import { Select } from "@/ui/select";
+
+import { formatCalendarHeaderTitle } from "@/features/calendar/lib/utils";
+import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
+import type { CalendarView } from "@/features/calendar/types/calendar.types";
+
 const useCalendarHeader = () =>
   useCalendarStore(
     useShallow((store) => ({

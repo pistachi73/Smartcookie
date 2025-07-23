@@ -1,3 +1,4 @@
+import { NextResponse, userAgent } from "next/server";
 import NextAuth from "next-auth";
 
 import {
@@ -8,7 +9,6 @@ import {
   VERCEL_HEADERS,
 } from "@/core/config/app-config";
 import { authConfig } from "@/core/config/auth-config";
-import { NextResponse, userAgent } from "next/server";
 import type { DeviceType } from "./shared/components/layout/viewport-context/types";
 
 const { auth } = NextAuth(authConfig);

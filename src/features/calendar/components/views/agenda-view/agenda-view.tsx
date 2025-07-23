@@ -1,5 +1,6 @@
-import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
 import { useShallow } from "zustand/react/shallow";
+
+import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
 import { AgendaViewDay } from "./agenda-view-day";
 
 export const AgendaView = () => {

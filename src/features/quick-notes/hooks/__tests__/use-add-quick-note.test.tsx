@@ -1,14 +1,16 @@
+import type { QueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import {
   createQueryClientWrapper,
   createTestQueryClient,
 } from "@/shared/lib/testing/query-client-utils";
 import { act, renderHook, waitFor } from "@/shared/lib/testing/test-utils";
-import type { QueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import {
-  type UseAddQuickNoteProps,
   noteFocusRegistry,
+  type UseAddQuickNoteProps,
   useAddQuickNote,
 } from "../use-add-quick-note";
 

@@ -1,9 +1,11 @@
-import type { CustomColor } from "@/db/schema/shared";
-import { quickNotesHubsQueryOptions } from "@/features/quick-notes/lib/quick-notes-query-options";
+import { useQuery } from "@tanstack/react-query";
+
+import { Heading } from "@/ui/heading";
 import { cn } from "@/shared/lib/classes";
 import { getCustomColorClasses } from "@/shared/lib/custom-colors";
-import { Heading } from "@/ui/heading";
-import { useQuery } from "@tanstack/react-query";
+
+import type { CustomColor } from "@/db/schema/shared";
+import { quickNotesHubsQueryOptions } from "@/features/quick-notes/lib/quick-notes-query-options";
 import { useHubNotes } from "../hooks/use-hub-notes";
 import { AddNoteCard } from "./add-note-card";
 import { NoteCardList } from "./note-card-list";

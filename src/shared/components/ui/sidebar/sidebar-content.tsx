@@ -1,4 +1,5 @@
 import { cn } from "@/shared/lib/classes";
+
 import { useSidebar } from "./sidebar-provider";
 
 export const SidebarContent = ({

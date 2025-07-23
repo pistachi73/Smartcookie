@@ -1,9 +1,11 @@
 "use client";
 
-import { useAuthStore } from "@/features/auth/store/auth-store-provider";
-import { cn } from "@/shared/lib/classes";
 import { AnimatePresence } from "motion/react";
 import Image from "next/image";
+
+import { cn } from "@/shared/lib/classes";
+
+import { useAuthStore } from "@/features/auth/store/auth-store-provider";
 import { CreatePassword } from "./create-password";
 import { EmailVerification } from "./email-verification";
 import { EnterPassword } from "./enter-password";

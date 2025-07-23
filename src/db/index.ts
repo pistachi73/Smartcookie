@@ -1,9 +1,8 @@
 import { Pool } from "@neondatabase/serverless";
-
-import * as schema from "./schema";
+import { drizzle } from "drizzle-orm/neon-serverless";
 
 import { env } from "@/env";
-import { drizzle } from "drizzle-orm/neon-serverless";
+import * as schema from "./schema";
 
 const connection = new Pool({
   connectionString: env.DATABASE_URL,

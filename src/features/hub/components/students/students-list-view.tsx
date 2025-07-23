@@ -1,11 +1,13 @@
-import { StudentProfile } from "@/shared/components/students/student-profile";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { MoreHorizontalIcon } from "@hugeicons-pro/core-stroke-rounded";
+import dynamic from "next/dynamic";
+import { useState } from "react";
+
 import { Button } from "@/shared/components/ui/button";
 import { Menu } from "@/shared/components/ui/menu";
 import { Table } from "@/shared/components/ui/table";
-import { MoreHorizontalIcon } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-import dynamic from "next/dynamic";
-import { useState } from "react";
+import { StudentProfile } from "@/shared/components/students/student-profile";
+
 import { useStudentsByHubId } from "../../hooks/students/use-students-by-hub-id";
 import { AttendanceBar } from "./attendance-bar";
 import { SkeletonStudentListView } from "./skeleton-student-list-view";

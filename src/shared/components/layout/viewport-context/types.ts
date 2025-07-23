@@ -1,4 +1,4 @@
-import type { SCREENS, createViewportHelpers } from "./utils";
+import type { createViewportHelpers, SCREENS } from "./utils";
 
 type DeviceType = "mobile" | "tablet" | "desktop";
 

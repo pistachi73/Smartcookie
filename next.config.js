@@ -40,9 +40,10 @@ const config = {
       },
     ],
   },
-  webpack: (config, { isServer }) => {
+  webpack: (config) => {
     config.optimization.sideEffects = true;
     config.optimization.usedExports = true;
+
     return config;
   },
 };

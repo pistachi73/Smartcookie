@@ -1,6 +1,7 @@
-import { SidebarProvider } from "@/shared/components/ui/sidebar/sidebar-provider";
 import { cookies } from "next/headers";
 import { use } from "react";
+
+import { SidebarProvider } from "@/shared/components/ui/sidebar/sidebar-provider";
 
 export const PortalProviders = ({
   children,

@@ -1,4 +1,8 @@
-import { CreateQuestionSchema } from "@/data-access/questions/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { z } from "zod";
+
 import {
   cleanup,
   fireEvent,
@@ -6,10 +10,8 @@ import {
   screen,
   waitFor,
 } from "@/shared/lib/testing/test-utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { z } from "zod";
+
+import { CreateQuestionSchema } from "@/data-access/questions/schemas";
 import { QuestionForm, type QuestionFormProps } from "../question-form";
 
 type TestWrapperProps = Omit<QuestionFormProps, "form"> & {

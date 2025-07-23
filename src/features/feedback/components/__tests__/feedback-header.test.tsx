@@ -1,6 +1,8 @@
-import useNavigateWithParams from "@/shared/hooks/use-navigate-with-params";
 import { cleanup, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+
+import useNavigateWithParams from "@/shared/hooks/use-navigate-with-params";
+
 import { FeedbackHeader } from "../feedback-header";
 
 vi.mock("@/shared/hooks/use-navigate-with-params");

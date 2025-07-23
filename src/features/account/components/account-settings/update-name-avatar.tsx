@@ -1,27 +1,28 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  AccountSetting02Icon,
+  ImageAdd02Icon,
+} from "@hugeicons-pro/core-stroke-rounded";
+import { useSession } from "next-auth/react";
 import { useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { updateUser } from "@/data-access/user/mutations";
 import { ProgressCircle } from "@/shared/components/ui/progress-circle";
-import { useCurrentUser } from "@/shared/hooks/use-current-user";
-import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
-import { cn } from "@/shared/lib/classes";
 import { Button } from "@/ui/button";
 import { Card } from "@/ui/card";
 import { Form } from "@/ui/form";
 import { TextField } from "@/ui/text-field";
 import { UserAvatar } from "@/ui/user-avatar";
-import {
-  AccountSetting02Icon,
-  ImageAdd02Icon,
-} from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { useSession } from "next-auth/react";
+import { useCurrentUser } from "@/shared/hooks/use-current-user";
+import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
+import { cn } from "@/shared/lib/classes";
+
+import { updateUser } from "@/data-access/user/mutations";
 import { UpdateNameSchema } from "../../lib/validation";
 
 export const UpdateNameAvatar = () => {

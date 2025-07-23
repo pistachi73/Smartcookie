@@ -59,6 +59,7 @@ const SidebarProvider = ({
         setInternalOpenState(openState);
       }
 
+      // biome-ignore lint/suspicious/noDocumentCookie: It is ok
       document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
     },
     [setOpenProp, open],

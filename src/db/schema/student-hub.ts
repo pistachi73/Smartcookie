@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import { index, serial, unique } from "drizzle-orm/pg-core";
+
 import { hub } from "./hub";
 import { student } from "./student";
 import { pgTable } from "./utils";

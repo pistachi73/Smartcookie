@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import { integer, jsonb, serial, timestamp } from "drizzle-orm/pg-core";
+
 import { type EventOverrides, event } from "./event";
 import { eventParticipant } from "./event-participant";
 import { pgTable } from "./utils";

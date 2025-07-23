@@ -1,4 +1,3 @@
-import { useAuthStore } from "@/features/auth/store/auth-store-provider";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -7,9 +6,12 @@ import { toast } from "sonner";
 import type { z } from "zod";
 import { useShallow } from "zustand/react/shallow";
 
-import { authSchema } from "../lib/validation";
-
-import { FormWrapper } from "./form-wrapper";
+import { Button } from "@/ui/button";
+import { Form } from "@/ui/form";
+import { InputOTP } from "@/ui/input-otp";
+import { Link } from "@/ui/link";
+import { ProgressCircle } from "@/ui/progress-circle";
+import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 
 import {
   credentialsSignIn,
@@ -19,12 +21,9 @@ import { CredentialsSignUpSchema } from "@/data-access/auth/schemas";
 import { isDataAccessError } from "@/data-access/errors";
 import { sendEmailVerificationEmail } from "@/data-access/verification-token/mutations";
 import { SendEmailVerificationEmailSchema } from "@/data-access/verification-token/schemas";
-import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
-import { Button } from "@/ui/button";
-import { Form } from "@/ui/form";
-import { InputOTP } from "@/ui/input-otp";
-import { Link } from "@/ui/link";
-import { ProgressCircle } from "@/ui/progress-circle";
+import { useAuthStore } from "@/features/auth/store/auth-store-provider";
+import { authSchema } from "../lib/validation";
+import { FormWrapper } from "./form-wrapper";
 
 const emailVerificationSchema = authSchema.pick({
   code: true,

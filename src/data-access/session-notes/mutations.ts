@@ -1,8 +1,9 @@
 "use server";
 
+import { and, eq } from "drizzle-orm";
+
 import { db } from "@/db";
 import { sessionNote } from "@/db/schema";
-import { and, eq } from "drizzle-orm";
 import { withValidationAndAuth } from "../protected-data-access";
 import {
   CreateSessionNoteSchema,
@@ -50,7 +51,7 @@ export const updateSessionNote = withValidationAndAuth({
 
 export const deleteSessionNote = withValidationAndAuth({
   schema: DeleteSessionNoteSchema,
-  callback: async ({ noteId, sessionId }, user) => {
+  callback: async ({ noteId, sessionId: _sessionId }, user) => {
     const [deletedNote] = await db
       .delete(sessionNote)
       .where(and(eq(sessionNote.id, noteId), eq(sessionNote.userId, user.id)))

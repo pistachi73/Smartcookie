@@ -1,5 +1,5 @@
 const AuthErrorPage = () => {
-  return <>Error</>;
+  return "Error";
 };
 
 export default AuthErrorPage;

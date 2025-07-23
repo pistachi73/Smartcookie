@@ -1,8 +1,9 @@
 "use server";
 
+import { and, eq } from "drizzle-orm";
+
 import { db } from "@/db";
 import { account } from "@/db/schema";
-import { and, eq } from "drizzle-orm";
 import { withValidationOnly } from "../protected-data-access";
 import {
   GetAccountByProviderAndUserIdSchema,

@@ -1,5 +1,6 @@
 import type { ReadonlyURLSearchParams } from "next/navigation";
 import { describe, expect, it } from "vitest";
+
 import { validateSearchParams } from "../validate-search-params";
 
 const createMockSearchParams = (params: Record<string, string> = {}) => {

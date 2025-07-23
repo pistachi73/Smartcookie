@@ -1,5 +1,6 @@
-import { getQuestionById } from "@/data-access/questions/queries";
 import { NextResponse } from "next/server";
+
+import { getQuestionById } from "@/data-access/questions/queries";
 
 export async function GET(
   _: Request,

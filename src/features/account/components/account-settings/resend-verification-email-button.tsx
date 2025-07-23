@@ -1,10 +1,12 @@
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+
+import { Link } from "@/shared/components/ui/link";
+import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
+
 import { isDataAccessError } from "@/data-access/errors";
 import { sendEmailVerificationEmail } from "@/data-access/verification-token/mutations";
 import { SendEmailVerificationEmailSchema } from "@/data-access/verification-token/schemas";
-import { Link } from "@/shared/components/ui/link";
-import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
 
 type ResendVerificationEmailButtonProps = {
   isUpdatingEmail: boolean;

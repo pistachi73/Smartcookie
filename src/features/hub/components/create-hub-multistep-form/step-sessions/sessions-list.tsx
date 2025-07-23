@@ -1,16 +1,18 @@
 "use client";
 
-import { Badge } from "@/shared/components/ui/badge";
-import { Button } from "@/shared/components/ui/button";
-import { Heading } from "@/shared/components/ui/heading";
-import { cn } from "@/shared/lib/classes";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Calendar03Icon,
   Clock01Icon,
   Delete02Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 import { format } from "date-fns";
+
+import { Badge } from "@/shared/components/ui/badge";
+import { Button } from "@/shared/components/ui/button";
+import { Heading } from "@/shared/components/ui/heading";
+import { cn } from "@/shared/lib/classes";
+
 import { useHubFormStore } from "../../../store/hub-form-store";
 
 export function SessionsList() {

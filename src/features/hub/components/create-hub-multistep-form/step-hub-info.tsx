@@ -1,5 +1,11 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowRight02Icon } from "@hugeicons-pro/core-stroke-rounded";
+import { Controller, useForm, useWatch } from "react-hook-form";
+import type { z } from "zod";
+
 import { Button } from "@/shared/components/ui/button";
 import { CustomColorPicker } from "@/shared/components/ui/custom-color-picker";
 import { DatePicker } from "@/shared/components/ui/date-picker/index";
@@ -8,11 +14,7 @@ import { Form } from "@/shared/components/ui/form";
 import { TextField } from "@/shared/components/ui/text-field";
 import { Textarea } from "@/shared/components/ui/textarea";
 import { cn } from "@/shared/lib/classes";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight02Icon } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Controller, useForm, useWatch } from "react-hook-form";
-import type { z } from "zod";
+
 import { hubInfoSchema } from "../../lib/schemas";
 import { useHubFormStore } from "../../store/hub-form-store";
 

@@ -1,10 +1,4 @@
-import type { GetSurveysByHubIdQueryResponse } from "@/features/hub/lib/hub-surveys-query-options";
-import {
-  ResizablePanelContent,
-  ResizablePanelRoot,
-} from "@/shared/components/ui/resizable-panel";
-import { Tabs } from "@/shared/components/ui/tabs";
-import { cn } from "@/shared/lib/classes";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   BubbleChatQuestionIcon as BubbleChatQuestionIconSolid,
   User03Icon as User03IconSolid,
@@ -13,8 +7,16 @@ import {
   BubbleChatQuestionIcon,
   User03Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 import { useState } from "react";
+
+import {
+  ResizablePanelContent,
+  ResizablePanelRoot,
+} from "@/shared/components/ui/resizable-panel";
+import { Tabs } from "@/shared/components/ui/tabs";
+import { cn } from "@/shared/lib/classes";
+
+import type { GetSurveysByHubIdQueryResponse } from "@/features/hub/lib/hub-surveys-query-options";
 import { SurveyResponseByQuestion } from "./survey-response-by-question";
 import { SurveyResponseByStudent } from "./survey-response-by-student";
 

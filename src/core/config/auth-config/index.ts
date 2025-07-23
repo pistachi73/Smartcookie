@@ -1,10 +1,11 @@
-import { db } from "@/db";
-import { account, user, userSession } from "@/db/schema";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import type { NextAuthConfig } from "next-auth";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
+
+import { db } from "@/db";
+import { account, user, userSession } from "@/db/schema";
 import { authorize } from "./authorize";
 import { jwtCallback, sessionCallback, signInCallback } from "./callbacks";
 

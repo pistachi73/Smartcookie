@@ -1,8 +1,10 @@
-import { addSessions } from "@/data-access/sessions/mutations";
-import { AddSessionsSchema } from "@/data-access/sessions/schemas";
-import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+
+import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
+
+import { addSessions } from "@/data-access/sessions/mutations";
+import { AddSessionsSchema } from "@/data-access/sessions/schemas";
 
 export const useAddSessions = ({
   onSuccess,

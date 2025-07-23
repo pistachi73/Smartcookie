@@ -1,6 +1,5 @@
 "use client";
 
-import { cn } from "@/shared/lib/classes";
 import dynamic from "next/dynamic";
 import type {
   LinkProps,
@@ -8,14 +7,17 @@ import type {
   SeparatorProps as SidebarSeparatorProps,
 } from "react-aria-components";
 import {
+  composeRenderProps,
   Header,
   Link,
   Separator,
   Text,
-  composeRenderProps,
 } from "react-aria-components";
 import { twJoin } from "tailwind-merge";
 import { tv } from "tailwind-variants";
+
+import { cn } from "@/shared/lib/classes";
+
 import { Badge } from "../badge";
 import { Tooltip } from "../tooltip";
 import { useSidebar } from "./sidebar-provider";

@@ -1,12 +1,14 @@
 "use client";
 
-import { Heading } from "@/shared/components/ui/heading";
-import { MultistepFormProgress } from "@/shared/components/ui/multistep-form-progress";
 import {
   BubbleChatPreviewIcon,
   BubbleChatQuestionIcon,
 } from "@hugeicons-pro/core-solid-rounded";
 import { useEffect } from "react";
+
+import { Heading } from "@/shared/components/ui/heading";
+import { MultistepFormProgress } from "@/shared/components/ui/multistep-form-progress";
+
 import { useSurveyTemplateFormStore } from "../../../store/survey-template-form.store";
 import { StepInfo } from "./step-info";
 import { StepPreview } from "./step-preview";

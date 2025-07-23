@@ -1,8 +1,9 @@
-import { db } from "@/db";
-import { questions } from "@/db/schema";
 import { and, count, desc, eq, sql } from "drizzle-orm";
 import { cache } from "react";
 import { z } from "zod";
+
+import { db } from "@/db";
+import { questions } from "@/db/schema";
 import { withValidationAndAuth } from "../protected-data-access";
 import { GetQuestionsSchema } from "./schemas";
 

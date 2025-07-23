@@ -1,11 +1,11 @@
 "use client";
 
-import React from "react";
-
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ArrowDown01Icon,
   Menu01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
+import React from "react";
 import type {
   CellProps,
   ColumnProps,
@@ -28,10 +28,9 @@ import {
   Table as TablePrimitive,
   useTableOptions,
 } from "react-aria-components";
+import { twMerge } from "tailwind-merge";
 import { tv } from "tailwind-variants";
 
-import { HugeiconsIcon } from "@hugeicons/react";
-import { twMerge } from "tailwind-merge";
 import { Checkbox } from "./checkbox";
 import { composeTailwindRenderProps } from "./primitive";
 

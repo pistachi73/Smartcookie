@@ -1,8 +1,9 @@
+import { eq } from "drizzle-orm";
+import { z } from "zod";
+
 import { withValidationOnly } from "@/data-access/protected-data-access";
 import { db } from "@/db";
 import { twoFactorToken } from "@/db/schema";
-import { eq } from "drizzle-orm";
-import { z } from "zod";
 
 export const getTwoFactorTokenByEmail = withValidationOnly({
   schema: z.object({

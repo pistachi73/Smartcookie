@@ -1,8 +1,9 @@
-import { PhoneField } from "@/shared/components/ui/phone-field";
-import { TextField } from "@/shared/components/ui/text-field";
 import { isValidPhoneNumber } from "libphonenumber-js/min";
 import { Controller, useFormContext } from "react-hook-form";
 import { z } from "zod";
+
+import { PhoneField } from "@/shared/components/ui/phone-field";
+import { TextField } from "@/shared/components/ui/text-field";
 
 export const CreateStudentFormSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),

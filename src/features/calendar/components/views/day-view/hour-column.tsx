@@ -1,5 +1,6 @@
-import { cn } from "@/shared/lib/classes";
 import { Badge } from "@/ui/badge";
+import { cn } from "@/shared/lib/classes";
+
 import { useCurrentTime } from "../../../hooks/use-current-time";
 
 export const HourColumn = () => {
@@ -8,7 +9,7 @@ export const HourColumn = () => {
   return (
     <div className="shrink-0 h-auto min-w-12 items-start relative ">
       <div className="w-full">
-        {Array.from({ length: 24 }).map((_, index) => {
+        {Array.from({ length: 24 }, (_, index) => index).map((index) => {
           return (
             <div
               key={`hour-${index}`}

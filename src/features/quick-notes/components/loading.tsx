@@ -1,8 +1,10 @@
-import { PageHeader } from "@/shared/components/layout/page-header";
-import { cn } from "@/shared/lib/classes";
+import { NoteIcon } from "@hugeicons-pro/core-solid-rounded";
+
 import { Separator } from "@/ui/separator";
 import { Skeleton } from "@/ui/skeleton";
-import { NoteIcon } from "@hugeicons-pro/core-solid-rounded";
+import { PageHeader } from "@/shared/components/layout/page-header";
+import { cn } from "@/shared/lib/classes";
+
 import { SkeletonNoteCard } from "./note-card/skeleton-note-card";
 
 export const QuickNotesLoading = () => {

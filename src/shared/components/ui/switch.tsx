@@ -4,9 +4,10 @@ import {
   Switch as SwitchPrimitive,
   type SwitchProps as SwitchPrimitiveProps,
 } from "react-aria-components";
+import { tv } from "tailwind-variants";
 
 import { cn } from "@/shared/lib/classes";
-import { tv } from "tailwind-variants";
+
 import { composeTailwindRenderProps } from "./primitive";
 
 const switchVariants = tv({

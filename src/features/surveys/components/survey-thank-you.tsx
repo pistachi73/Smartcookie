@@ -1,8 +1,9 @@
 "use client";
 
-import { regularSpring } from "@/shared/lib/animation";
 import * as motion from "motion/react-m";
 import Image from "next/image";
+
+import { regularSpring } from "@/shared/lib/animation";
 
 export default function SurveyThankYou() {
   return (

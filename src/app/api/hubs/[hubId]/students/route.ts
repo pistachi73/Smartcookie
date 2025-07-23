@@ -1,8 +1,9 @@
-import { getStudentsByHubId } from "@/data-access/students/queries";
 import { NextResponse } from "next/server";
 
+import { getStudentsByHubId } from "@/data-access/students/queries";
+
 export async function GET(
-  request: Request,
+  _request: Request,
   { params }: { params: Promise<{ hubId: string }> },
 ) {
   try {

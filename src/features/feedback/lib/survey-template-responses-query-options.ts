@@ -1,8 +1,9 @@
+import { queryOptions } from "@tanstack/react-query";
+
 import type {
   getSurveyTemplateResponseAnswers,
   getSurveyTemplateResponses,
 } from "@/data-access/survey-response/queries";
-import { queryOptions } from "@tanstack/react-query";
 
 export const surveyTemplateResponsesQueryOptions = (surveyTemplateId: number) =>
   queryOptions({

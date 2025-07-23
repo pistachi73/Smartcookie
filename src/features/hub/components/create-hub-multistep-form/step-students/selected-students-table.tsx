@@ -1,13 +1,15 @@
 "use client";
 
-import { StudentProfile } from "@/shared/components/students/student-profile";
-import { cn } from "@/shared/lib/classes";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { UserMultiple02Icon } from "@hugeicons-pro/core-solid-rounded";
+import { Delete02Icon } from "@hugeicons-pro/core-stroke-rounded";
+
 import { Badge } from "@/ui/badge";
 import { Button } from "@/ui/button";
 import { Heading } from "@/ui/heading";
-import { UserMultiple02Icon } from "@hugeicons-pro/core-solid-rounded";
-import { Delete02Icon } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { StudentProfile } from "@/shared/components/students/student-profile";
+import { cn } from "@/shared/lib/classes";
+
 import { useHubFormStore } from "../../../store/hub-form-store";
 
 export const SelectedStudentsTable = () => {

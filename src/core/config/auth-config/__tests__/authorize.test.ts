@@ -1,9 +1,9 @@
 import {
-  type MockedFunction,
   beforeEach,
   describe,
   expect,
   it,
+  type MockedFunction,
   vi,
 } from "vitest";
 

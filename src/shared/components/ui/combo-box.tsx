@@ -1,13 +1,11 @@
 "use client";
 
-import React from "react";
-
-import { cn } from "@/shared/lib/classes";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ArrowDown01Icon,
   MultiplicationSignIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
+import React from "react";
 import type { InputProps } from "react-aria-components";
 import {
   Button as ButtonPrimitive,
@@ -16,10 +14,13 @@ import {
   ComboBox as ComboboxPrimitive,
   type ComboBoxProps as ComboboxPrimitiveProps,
   type PopoverProps as PopoverPrimitiveProps,
-  type ValidationResult,
   useSlottedContext,
+  type ValidationResult,
 } from "react-aria-components";
 import { tv } from "tailwind-variants";
+
+import { cn } from "@/shared/lib/classes";
+
 import { Button } from "./button";
 import { DropdownItem, DropdownLabel, DropdownSection } from "./dropdown";
 import { Description, FieldError, FieldGroup, Input, Label } from "./field";
@@ -54,15 +55,17 @@ const ComboBox = <T extends object>({
   description,
   errorMessage,
   children,
+  isRequired,
   className,
   ...props
 }: ComboBoxProps<T>) => {
   return (
     <ComboboxPrimitive
       {...props}
+      isRequired={isRequired}
       className={composeTailwindRenderProps(className, base())}
     >
-      {label && <Label>{label}</Label>}
+      {label && <Label isRequired={isRequired}>{label}</Label>}
       {children}
       {description && <Description>{description}</Description>}
       <FieldError>{errorMessage}</FieldError>

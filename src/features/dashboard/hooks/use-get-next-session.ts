@@ -1,4 +1,5 @@
 import { queryOptions, useQuery } from "@tanstack/react-query";
+
 import { getNextSessionUseCase } from "../use-cases/dashboard.use-case";
 
 export const getNextSessionQueryOptions = () => {

@@ -1,23 +1,22 @@
 "use client";
 
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  CheckmarkCircle01Icon,
+  CheckmarkCircle01Icon as CheckmarkCircle01IconSolid,
+  ViewIcon,
+  ViewOffSlashIcon,
+} from "@hugeicons-pro/core-solid-rounded";
 import { useState } from "react";
-
 import {
   Button as ButtonPrimitive,
   TextField as TextFieldPrimitive,
 } from "react-aria-components";
 import { twJoin } from "tailwind-merge";
 
-import { passwordRegex } from "@/features/auth/lib/validation";
 import { cn } from "@/shared/lib/classes";
-import {
-  CheckmarkCircle01Icon,
-  ViewIcon,
-  ViewOffSlashIcon,
-} from "@hugeicons-pro/core-solid-rounded";
 
-import { CheckmarkCircle01Icon as CheckmarkCircle01IconSolid } from "@hugeicons-pro/core-solid-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { passwordRegex } from "@/features/auth/lib/validation";
 import { Description, FieldError, FieldGroup, Input, Label } from "./field";
 import { composeTailwindRenderProps } from "./primitive";
 import type { TextFieldProps } from "./text-field";

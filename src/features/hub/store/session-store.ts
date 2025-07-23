@@ -1,4 +1,5 @@
 import { create } from "zustand";
+
 import type { SessionStore } from "./session-store.types";
 
 export const useSessionStore = create<SessionStore>((set) => ({

@@ -1,8 +1,9 @@
-import { getSurveyResponsesBySurveyId } from "@/data-access/survey-response/queries";
 import { NextResponse } from "next/server";
 
+import { getSurveyResponsesBySurveyId } from "@/data-access/survey-response/queries";
+
 export async function GET(
-  request: Request,
+  _request: Request,
   { params }: { params: Promise<{ surveyId: string }> },
 ) {
   try {

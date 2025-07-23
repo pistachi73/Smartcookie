@@ -1,11 +1,13 @@
-import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { DeleteIcon, UserAdd02Icon } from "@hugeicons-pro/core-stroke-rounded";
+import dynamic from "next/dynamic";
+import { useState } from "react";
+
 import { Button } from "@/shared/components/ui/button";
 import { Heading } from "@/shared/components/ui/heading";
 import { Menu } from "@/shared/components/ui/menu";
-import { DeleteIcon, UserAdd02Icon } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
+
 import { StudentsListView } from "./students-list-view";
 
 const DynamicCreateStudentFormModal = dynamic(

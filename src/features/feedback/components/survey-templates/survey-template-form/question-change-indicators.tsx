@@ -1,13 +1,14 @@
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ArrowDown02Icon,
   ArrowUp02Icon,
   Settings02Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 import { tv } from "tailwind-variants";
 
-import type { SurveyTemplateQuestionChange } from "@/features/feedback/types/survey-template-form-store.types";
 import { Tooltip } from "@/shared/components/ui/tooltip";
+
+import type { SurveyTemplateQuestionChange } from "@/features/feedback/types/survey-template-form-store.types";
 
 type QuestionChangeIndicatorsProps = {
   changes: Array<SurveyTemplateQuestionChange>;

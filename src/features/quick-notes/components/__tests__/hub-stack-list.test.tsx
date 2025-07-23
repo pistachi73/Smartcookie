@@ -1,8 +1,10 @@
-import { useQuickNotesStore } from "@/features/quick-notes/store/quick-notes-store-provider";
-import type { QuickNotesStore } from "@/features/quick-notes/types/quick-notes-store.types";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import { cleanup, render, screen } from "@/shared/lib/testing/test-utils";
 import { mockZustandStoreImplementation } from "@/shared/lib/testing/zustand-utils";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+import { useQuickNotesStore } from "@/features/quick-notes/store/quick-notes-store-provider";
+import type { QuickNotesStore } from "@/features/quick-notes/types/quick-notes-store.types";
 import { HubStackList } from "../hub-stack-list";
 
 // Mock empty state component

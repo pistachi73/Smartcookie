@@ -1,5 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { getDayOfYear, getWeek, getYear } from "date-fns";
+
 import {
   getAgendaSessionsUseCase,
   getWeeklyHoursUseCase,

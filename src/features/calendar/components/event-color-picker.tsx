@@ -1,17 +1,19 @@
 "use client";
 
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Tick01Icon } from "@hugeicons-pro/core-solid-rounded";
+import { ListBoxItem } from "react-aria-components";
+
+import { Button } from "@/ui/button";
+import type { PopoverContentProps } from "@/ui/popover";
+import { Select, type SelectProps } from "@/ui/select";
+import { cn } from "@/shared/lib/classes";
+
 import {
   CALENDAR_EVENT_COLORS_ARRAY,
   CALENDAR_EVENT_COLORS_MAP,
   DEFAULT_EVENT_COLOR,
 } from "@/features/calendar/lib/utils";
-import { cn } from "@/shared/lib/classes";
-import { Button } from "@/ui/button";
-import type { PopoverContentProps } from "@/ui/popover";
-import { Select, type SelectProps } from "@/ui/select";
-import { Tick01Icon } from "@hugeicons-pro/core-solid-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { ListBoxItem } from "react-aria-components";
 
 interface EventColorPickerProps<T extends object>
   extends Omit<SelectProps<T>, "className"> {

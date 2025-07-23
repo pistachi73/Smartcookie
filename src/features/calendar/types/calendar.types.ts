@@ -1,5 +1,6 @@
-import type { Event, Occurrence } from "@/db/schema";
 import type { Temporal } from "temporal-polyfill";
+
+import type { Event, Occurrence } from "@/db/schema";
 import type { getCalendarSessionsByDateRange } from "../use-cases/calendar.use-case";
 
 export type CalendarView = "day" | "weekday" | "week" | "month" | "agenda";

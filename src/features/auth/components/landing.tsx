@@ -1,22 +1,22 @@
-import { useAuthStore } from "@/features/auth/store/auth-store-provider";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { signIn } from "next-auth/react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import type { z } from "zod";
 import { useShallow } from "zustand/react/shallow";
 
-import { authSchema } from "../lib/validation";
-import { FormWrapper } from "./form-wrapper";
-import { SocialButton } from "./oauth-button";
-
-import { getUserAndAccountByEmail } from "@/data-access/user/queries";
-import { GetUserAndAccountByEmailSchema } from "@/data-access/user/schemas";
-import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 import { Button } from "@/ui/button";
 import { Form } from "@/ui/form";
 import { ProgressCircle } from "@/ui/progress-circle";
 import { TextField } from "@/ui/text-field";
-import { signIn } from "next-auth/react";
-import { toast } from "sonner";
+import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
+
+import { getUserAndAccountByEmail } from "@/data-access/user/queries";
+import { GetUserAndAccountByEmailSchema } from "@/data-access/user/schemas";
+import { useAuthStore } from "@/features/auth/store/auth-store-provider";
+import { authSchema } from "../lib/validation";
+import { FormWrapper } from "./form-wrapper";
+import { SocialButton } from "./oauth-button";
 
 const authLandingSchema = authSchema.pick({
   email: true,

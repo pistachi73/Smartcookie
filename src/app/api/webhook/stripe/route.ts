@@ -1,9 +1,10 @@
-import { db } from "@/db";
-import { userSubscription } from "@/db/schema";
-import { env } from "@/env";
 import { eq } from "drizzle-orm";
 import { type NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+
+import { db } from "@/db";
+import { userSubscription } from "@/db/schema";
+import { env } from "@/env";
 
 type Metadata = {
   userId: string;
@@ -133,7 +134,7 @@ const webhookHandler = async (req: NextRequest) => {
             : "inactive";
 
           // Update using WHERE clause
-          const updateResult = await db
+          const _updateResult = await db
             .update(userSubscription)
             .set({
               stripePriceId: priceId,

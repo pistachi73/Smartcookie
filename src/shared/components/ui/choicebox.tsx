@@ -1,13 +1,17 @@
-"use client"
+"use client";
 
-import type { GridListItemProps, GridListProps } from "react-aria-components"
-import { GridList, GridListItem, composeRenderProps } from "react-aria-components"
-import type { VariantProps } from "tailwind-variants"
-import { tv } from "tailwind-variants"
+import type { GridListItemProps, GridListProps } from "react-aria-components";
+import {
+  composeRenderProps,
+  GridList,
+  GridListItem,
+} from "react-aria-components";
+import type { VariantProps } from "tailwind-variants";
+import { tv } from "tailwind-variants";
 
-import { Checkbox } from "./checkbox"
-import { Description, Label } from "./field"
-import { focusStyles } from "./primitive"
+import { Checkbox } from "./checkbox";
+import { Description, Label } from "./field";
+import { focusStyles } from "./primitive";
 
 const choiceboxStyles = tv({
   base: "grid",
@@ -39,12 +43,12 @@ const choiceboxStyles = tv({
         "*:data-[slot=choicebox-item]:-mt-px rounded-lg *:data-[slot=choicebox-item]:inset-ring-1 *:data-[slot=choicebox-item]:rounded-none *:data-[slot=choicebox-item]:last:rounded-b-[calc(var(--radius-lg)-1px)] *:data-[slot=choicebox-item]:first:rounded-t-[calc(var(--radius-lg)-1px)]",
     },
   ],
-})
+});
 
 interface ChoiceboxProps<T extends object>
   extends GridListProps<T>,
     VariantProps<typeof choiceboxStyles> {
-  className?: string
+  className?: string;
 }
 
 const Choicebox = <T extends object>({
@@ -65,8 +69,8 @@ const Choicebox = <T extends object>({
       })}
       {...props}
     />
-  )
-}
+  );
+};
 
 const choiceboxItemStyles = tv({
   extend: focusStyles,
@@ -91,16 +95,22 @@ const choiceboxItemStyles = tv({
       true: "z-10 cursor-default opacity-50 forced-colors:text-[GrayText] [&_[slot=description]]:text-muted-fg/70 [&_[slot=title]]:text-muted-fg",
     },
   },
-})
+});
 
-interface ChoiceboxItemProps extends GridListItemProps, VariantProps<typeof choiceboxItemStyles> {
-  title?: string
-  description?: string
-  icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>
+interface ChoiceboxItemProps
+  extends GridListItemProps,
+    VariantProps<typeof choiceboxItemStyles> {
+  title?: string;
+  description?: string;
+  icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
 }
 
-const ChoiceboxItem = ({ icon: Icon, className, ...props }: ChoiceboxItemProps) => {
-  const textValue = props.title ?? props.textValue
+const ChoiceboxItem = ({
+  icon: Icon,
+  className,
+  ...props
+}: ChoiceboxItemProps) => {
+  const textValue = props.title ?? props.textValue;
   return (
     <GridListItem
       textValue={textValue}
@@ -109,7 +119,10 @@ const ChoiceboxItem = ({ icon: Icon, className, ...props }: ChoiceboxItemProps) 
       className={composeRenderProps(className, (className, renderProps) =>
         choiceboxItemStyles({
           ...renderProps,
-          init: renderProps.isSelected || renderProps.isHovered || renderProps.isFocusVisible,
+          init:
+            renderProps.isSelected ||
+            renderProps.isHovered ||
+            renderProps.isFocusVisible,
           className,
         }),
       )}
@@ -123,20 +136,23 @@ const ChoiceboxItem = ({ icon: Icon, className, ...props }: ChoiceboxItemProps) 
                 {props.title}
               </Label>
               {props.description && (
-                <Description className="text-sm/5">{props.description}</Description>
+                <Description className="text-sm/5">
+                  {props.description}
+                </Description>
               )}
             </div>
           </div>
-          {values.selectionMode === "multiple" && values.selectionBehavior === "toggle" && (
-            <Checkbox slot="selection" />
-          )}
+          {values.selectionMode === "multiple" &&
+            values.selectionBehavior === "toggle" && (
+              <Checkbox slot="selection" />
+            )}
         </div>
       )}
     </GridListItem>
-  )
-}
+  );
+};
 
-Choicebox.Item = ChoiceboxItem
+Choicebox.Item = ChoiceboxItem;
 
-export type { ChoiceboxProps, ChoiceboxItemProps }
-export { Choicebox }
+export type { ChoiceboxProps, ChoiceboxItemProps };
+export { Choicebox };

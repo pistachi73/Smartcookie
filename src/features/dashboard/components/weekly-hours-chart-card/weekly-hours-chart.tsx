@@ -1,11 +1,5 @@
 "use client";
 
-import {
-  Chart,
-  type ChartConfig,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/ui/chart";
 import { type CalendarDate, getLocalTimeZone } from "@internationalized/date";
 import { format } from "date-fns";
 import {
@@ -16,6 +10,14 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+
+import {
+  Chart,
+  type ChartConfig,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/ui/chart";
+
 import { useGetWeeklyHours } from "../../hooks/use-get-weekly-hours";
 
 type WeeklyHoursChartProps = {

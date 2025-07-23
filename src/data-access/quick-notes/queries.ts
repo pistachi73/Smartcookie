@@ -1,9 +1,10 @@
 "use server";
 
+import { and, desc, eq, isNull } from "drizzle-orm";
+
 import { db } from "@/db";
 import { quickNote } from "@/db/schema";
 import type { NoteSummary } from "@/features/quick-notes/types/quick-notes.types";
-import { and, desc, eq, isNull } from "drizzle-orm";
 import { withValidationAndAuth } from "../protected-data-access";
 import { GetNotesByHubIdSchema } from "./schemas";
 

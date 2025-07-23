@@ -7,15 +7,15 @@ import {
   timestamp,
   uuid,
 } from "drizzle-orm/pg-core";
+
 import { session } from "./session";
 import { user } from "./user";
 import { pgTable } from "./utils";
 
 // Define an enum for note positions (past, present, future)
 export const sessionNotePositionEnum = pgEnum("session_note_position", [
-  "past",
-  "present",
-  "future",
+  "plans",
+  "in-class",
 ]);
 
 export const sessionNote = pgTable(
@@ -28,7 +28,7 @@ export const sessionNote = pgTable(
     userId: uuid()
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
-    position: sessionNotePositionEnum("position").default("present").notNull(),
+    position: sessionNotePositionEnum("position").default("plans").notNull(),
     content: text().notNull(),
     updatedAt: timestamp({ mode: "string" })
       .defaultNow()

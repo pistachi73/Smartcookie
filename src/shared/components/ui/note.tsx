@@ -1,12 +1,13 @@
-import { cn } from "@/shared/lib/classes";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   AlertCircleIcon,
   CheckmarkCircle01Icon,
   IdeaIcon,
   InformationCircleIcon,
 } from "@hugeicons-pro/core-solid-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { type VariantProps, tv } from "tailwind-variants";
+import { tv, type VariantProps } from "tailwind-variants";
+
+import { cn } from "@/shared/lib/classes";
 
 const noteStyles = tv({
   base: [

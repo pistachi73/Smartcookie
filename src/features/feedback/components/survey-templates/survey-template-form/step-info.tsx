@@ -1,16 +1,18 @@
 "use client";
 
-import { CreateSurveyTemplateSchema } from "@/data-access/survey-templates/schemas";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowRight02Icon } from "@hugeicons-pro/core-solid-rounded";
+import { useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+
 import { Button } from "@/shared/components/ui/button";
 import { Form } from "@/shared/components/ui/form";
 import { TextField } from "@/shared/components/ui/text-field";
 import { Textarea } from "@/shared/components/ui/textarea";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight02Icon } from "@hugeicons-pro/core-solid-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
+
+import { CreateSurveyTemplateSchema } from "@/data-access/survey-templates/schemas";
 import { useSurveyTemplateFormStore } from "../../../store/survey-template-form.store";
 
 // Create a schema with only title and description

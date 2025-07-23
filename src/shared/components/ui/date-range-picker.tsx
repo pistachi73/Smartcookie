@@ -1,5 +1,7 @@
 "use client";
 
+import type { DateDuration } from "@internationalized/date";
+import type { Placement } from "react-aria";
 import {
   DateRangePicker as DateRangePickerPrimitive,
   type DateRangePickerProps as DateRangePickerPrimitiveProps,
@@ -20,8 +22,6 @@ import {
 } from "@/shared/components/ui/field";
 import { composeTailwindRenderProps } from "@/shared/components/ui/primitive";
 import { cn } from "@/shared/lib/classes";
-import type { DateDuration } from "@internationalized/date";
-import type { Placement } from "react-aria";
 
 interface DateRangePickerProps<T extends DateValue>
   extends Omit<DateRangePickerPrimitiveProps<T>, "className"> {

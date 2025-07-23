@@ -1,10 +1,11 @@
 "use client";
 
-import type { Question } from "@/db/schema";
 import { Button } from "@/shared/components/ui/button";
 import { Modal } from "@/shared/components/ui/modal";
 import { Note } from "@/shared/components/ui/note";
 import { ProgressCircle } from "@/shared/components/ui/progress-circle";
+
+import type { Question } from "@/db/schema";
 import { useDeleteQuestion } from "../../hooks/questions/use-delete-question";
 import { QuestionTypeBadge } from "./question-type-badge";
 

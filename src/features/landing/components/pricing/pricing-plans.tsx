@@ -1,9 +1,10 @@
 "use client";
 
+import { Tag01Icon } from "@hugeicons-pro/core-solid-rounded";
 import { useState } from "react";
 
 import { MaxWidthWrapper } from "@/shared/components/layout/max-width-wrapper";
-import { Tag01Icon } from "@hugeicons-pro/core-solid-rounded";
+
 import { LandingSectionHeader } from "../landing-section-header";
 import { type PaymentFrequency, PlanFrequencySwitch } from "./frequency-switch";
 import { FreePlanCard, PremiumPlanCard } from "./pricing-plan-card";

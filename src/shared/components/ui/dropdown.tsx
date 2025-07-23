@@ -1,9 +1,10 @@
 "use client";
 
-import { Tick02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { Tick02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import {
   Collection,
+  composeRenderProps,
   Header,
   ListBoxItem as ListBoxItemPrimitive,
   type ListBoxItemProps,
@@ -13,10 +14,10 @@ import {
   type SeparatorProps,
   Text,
   type TextProps,
-  composeRenderProps,
 } from "react-aria-components";
 import { twMerge } from "tailwind-merge";
 import { tv } from "tailwind-variants";
+
 import { Keyboard } from "./keyboard";
 
 const dropdownItemStyles = tv({
@@ -73,9 +74,15 @@ const DropdownSection = <T extends object>({
   );
 };
 
-type DropdownItemProps = ListBoxItemProps;
+type DropdownItemProps = ListBoxItemProps & {
+  showSelectedIcon?: boolean;
+};
 
-const DropdownItem = ({ className, ...props }: DropdownItemProps) => {
+const DropdownItem = ({
+  className,
+  showSelectedIcon = true,
+  ...props
+}: DropdownItemProps) => {
   const textValue =
     typeof props.children === "string" ? props.children : undefined;
   return (
@@ -88,7 +95,7 @@ const DropdownItem = ({ className, ...props }: DropdownItemProps) => {
     >
       {composeRenderProps(props.children, (children, { isSelected }) => (
         <>
-          {isSelected && (
+          {isSelected && showSelectedIcon && (
             <HugeiconsIcon
               icon={Tick02Icon}
               className="-mx-0.5 mr-2"

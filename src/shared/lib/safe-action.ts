@@ -1,9 +1,11 @@
-import { PublicError } from "@/shared/services/errors";
 import {
-  type SafeActionResult,
   createSafeActionClient,
+  type SafeActionResult,
 } from "next-safe-action";
 import type { z } from "zod";
+
+import { PublicError } from "@/shared/services/errors";
+
 import { currentUser } from "./auth";
 
 export const actionClient = createSafeActionClient({

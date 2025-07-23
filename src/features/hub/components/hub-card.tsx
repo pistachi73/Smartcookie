@@ -1,6 +1,16 @@
 "use client";
 
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  Calendar01Icon,
+  Clock01Icon,
+  HelpCircleIcon,
+  UserMultiple02Icon,
+} from "@hugeicons-pro/core-stroke-rounded";
+import { Link } from "react-aria-components";
+
 import { AvatarStack } from "@/shared/components/ui/avatar-stack";
+import { Badge } from "@/shared/components/ui/badge";
 import { Card } from "@/shared/components/ui/card";
 import { Separator } from "@/shared/components/ui/separator";
 import { cn } from "@/shared/lib/classes";
@@ -8,16 +18,7 @@ import {
   getCustomColorClasses,
   hubCardColorStyleMap,
 } from "@/shared/lib/custom-colors";
-import {
-  Calendar01Icon,
-  Clock01Icon,
-  HelpCircleIcon,
-  UserMultiple02Icon,
-} from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Link } from "react-aria-components";
 
-import { Badge } from "@/shared/components/ui/badge";
 import { getHubDuration } from "../lib/utils";
 import type { Hub } from "../types/hub.types";
 

@@ -1,15 +1,11 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-
-import {
-  createMockSearchParams,
-  mockNextNavigation,
-} from "@/shared/lib/testing/navigation-mocks";
-import { cleanup, render, screen } from "@/shared/lib/testing/test-utils";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
-import { SurveyTemplatesPanel } from "../survey-template-panel";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-mockNextNavigation();
+import { createMockSearchParams } from "@/shared/lib/testing/navigation-mocks";
+import { cleanup, render, screen } from "@/shared/lib/testing/test-utils";
+
+import { SurveyTemplatesPanel } from "../survey-template-panel";
 
 const mockRouter = {
   push: vi.fn(),

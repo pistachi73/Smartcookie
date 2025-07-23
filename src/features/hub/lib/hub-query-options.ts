@@ -1,7 +1,8 @@
-import type { getHubById, getHubsByUserId } from "@/data-access/hubs/queries";
-import { getUrl } from "@/shared/lib/get-url";
 import { queryOptions } from "@tanstack/react-query";
-import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
+
+import { getUrl } from "@/shared/lib/get-url";
+
+import type { getHubById, getHubsByUserId } from "@/data-access/hubs/queries";
 
 export const getHubsByUserIdQueryOptions = queryOptions({
   queryKey: ["hubs"],
@@ -17,25 +18,12 @@ export const getHubsByUserIdQueryOptions = queryOptions({
   },
 });
 
-export const getHubByIdQueryOptions = (
-  hubId: number,
-  headers?: ReadonlyHeaders,
-) =>
+export const getHubByIdQueryOptions = (hubId: number) =>
   queryOptions({
     queryKey: ["hub", hubId],
     queryFn: async () => {
-      const fetchHeaders: HeadersInit = {};
-
-      if (headers) {
-        const cookie = headers.get("cookie");
-        if (cookie) {
-          fetchHeaders.cookie = cookie;
-        }
-      }
-
       const response = await fetch(getUrl(`/api/hubs/${hubId}`), {
         method: "GET",
-        headers: fetchHeaders,
       });
 
       const result = (await response.json()) as Awaited<

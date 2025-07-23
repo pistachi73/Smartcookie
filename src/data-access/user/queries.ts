@@ -1,11 +1,12 @@
 "use server";
 
+import { eq } from "drizzle-orm";
+import { z } from "zod";
+
 import { getAccountByUserId } from "@/data-access/accounts/queries";
 import { withValidationOnly } from "@/data-access/protected-data-access";
 import { db } from "@/db";
 import { user } from "@/db/schema";
-import { eq } from "drizzle-orm";
-import { z } from "zod";
 import { GetUserAndAccountByEmailSchema } from "./schemas";
 
 export const getUserByEmail = withValidationOnly({

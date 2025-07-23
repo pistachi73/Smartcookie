@@ -1,13 +1,15 @@
-import type { SessionNotePosition } from "@/db/schema";
-import { Form } from "@/shared/components/ui/form";
-import { regularSpring } from "@/shared/lib/animation";
-import { cn } from "@/shared/lib/classes";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as m from "motion/react-m";
 import { useRef } from "react";
 import { TextArea } from "react-aria-components";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
+
+import { Form } from "@/shared/components/ui/form";
+import { regularSpring } from "@/shared/lib/animation";
+import { cn } from "@/shared/lib/classes";
+
+import type { SessionNotePosition } from "@/db/schema";
 import { useAddSessionNote } from "../../../hooks/session-notes/use-add-session-note";
 
 type AddSessionNoteProps = {

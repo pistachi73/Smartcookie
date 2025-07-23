@@ -1,8 +1,9 @@
 "use server";
 
+import { and, eq } from "drizzle-orm";
+
 import { db } from "@/db";
 import { session, student, studentHub } from "@/db/schema";
-import { and, eq } from "drizzle-orm";
 import {
   addAttendance,
   removeAllStudentAttendance,

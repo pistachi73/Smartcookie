@@ -1,13 +1,14 @@
-import type {
-  CalendarView,
-  DatedOccurrence,
-} from "@/features/calendar/types/calendar.types";
-import type { OccurrenceFormSchema } from "@/features/calendar/types/occurrence-form-schema";
 import { CalendarDate, CalendarDateTime, Time } from "@internationalized/date";
 import { add, addDays, endOfWeek, format, startOfWeek } from "date-fns";
 import type { ReadonlyURLSearchParams } from "next/navigation";
 import { Temporal } from "temporal-polyfill";
 import type { z } from "zod";
+
+import type {
+  CalendarView,
+  DatedOccurrence,
+} from "@/features/calendar/types/calendar.types";
+import type { OccurrenceFormSchema } from "@/features/calendar/types/occurrence-form-schema";
 
 export const ROW_HEIGHT = 72;
 export const TIMESLOT_HEIGHT = ROW_HEIGHT / 4;
@@ -80,7 +81,10 @@ export const formatCalendarHeaderTitle = (
 export const generateOccurrenceEncodedOverrides = ({
   timeslotPosition,
   date,
-}: { timeslotPosition: number; date: Date }) => {
+}: {
+  timeslotPosition: number;
+  date: Date;
+}) => {
   const startTime = new Time(0, 0).add({ minutes: timeslotPosition * 15 });
   const endTime = startTime.add({ minutes: 30 });
 
@@ -220,7 +224,10 @@ export const getDayKeyFromDateString = (day: string): string | null => {
 export const calculateOccurrenceTop = ({
   hours,
   minutes,
-}: { hours: number; minutes: number }): number => {
+}: {
+  hours: number;
+  minutes: number;
+}): number => {
   const totalMinutes = (hours - CALENDAR_START_HOUR) * 60 + minutes;
   return totalMinutes * PIXELS_PER_MINUTE;
 };
@@ -243,7 +250,10 @@ export const getSnapToNearest15MinutesIndex = (yPosition: number) => {
 export const getDateFromSnapIndex = ({
   snapIndex,
   date,
-}: { snapIndex: number; date: Date }): Date => {
+}: {
+  snapIndex: number;
+  date: Date;
+}): Date => {
   const minutes = snapIndex * 15;
   const currentDate = new Date(date);
   const snapDate = add(currentDate, { minutes });

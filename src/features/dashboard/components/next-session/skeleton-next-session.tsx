@@ -1,8 +1,9 @@
+import { HugeiconsIcon } from "@hugeicons/react";
+import { CalendarCheckOut02Icon } from "@hugeicons-pro/core-stroke-rounded";
+
 import { Heading } from "@/shared/components/ui/heading";
 import { Separator } from "@/shared/components/ui/separator";
 import { Skeleton } from "@/shared/components/ui/skeleton";
-import { CalendarCheckOut02Icon } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 
 export const SkeletonNextSession = () => {
   return (

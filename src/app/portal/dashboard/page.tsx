@@ -1,21 +1,21 @@
+import { DashboardSquare01Icon } from "@hugeicons-pro/core-solid-rounded";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
+
+import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
+
 import { Dashboard } from "@/features/dashboard/components";
 import {
   getAgendaSessionsQueryOptions,
   getWeeklyHoursQueryOptions,
 } from "@/features/dashboard/hooks/hook-options";
 import { getNextSessionQueryOptions } from "@/features/dashboard/hooks/use-get-next-session";
-import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
-import { currentUser } from "@/shared/lib/auth";
-import { DashboardSquare01Icon } from "@hugeicons-pro/core-solid-rounded";
-import {
-  HydrationBoundary,
-  QueryClient,
-  dehydrate,
-} from "@tanstack/react-query";
 
 const DashboardPage = async () => {
   const queryClient = new QueryClient();
-  const user = await currentUser();
 
   await Promise.all([
     queryClient.prefetchQuery(

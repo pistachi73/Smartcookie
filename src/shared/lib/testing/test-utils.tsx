@@ -1,6 +1,7 @@
 import { type QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { type RenderOptions, render } from "@testing-library/react";
 import type { ReactElement } from "react";
+
 import { createTestQueryClient } from "./query-client-utils";
 
 interface TestProvidersProps {

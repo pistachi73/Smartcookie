@@ -2,7 +2,7 @@
   background-color: color-mix(in oklch, var(--color-text-md) 20%, transparent);
   border: 2px solid transparent;
   border-radius: 24px;
-  background-clip: padding-box;  
+  background-clip: padding-box;
 }
 
 ::-webkit-scrollbar {

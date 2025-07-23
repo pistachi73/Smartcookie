@@ -1,6 +1,7 @@
+import { CalendarDateTime, getLocalTimeZone } from "@internationalized/date";
+
 import type { InsertOccurrence } from "@/db/schema";
 import type { InsertEvent } from "@/db/schema/event";
-import { CalendarDateTime, getLocalTimeZone } from "@internationalized/date";
 
 const today = new Date();
 const year = today.getFullYear();

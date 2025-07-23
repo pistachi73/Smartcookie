@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import { index, integer, serial, text, timestamp } from "drizzle-orm/pg-core";
+
 import { questions } from "./questions";
 import { surveyResponses } from "./survey-responses";
 import { pgTable } from "./utils";

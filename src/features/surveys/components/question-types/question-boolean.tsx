@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  RadioToggle,
-  RadioToggleGroup,
-} from "@/shared/components/ui/radio-toggle-group";
-import { cn } from "@/shared/lib/classes";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ThumbsDownIcon as ThumbsDownIconSolid,
   ThumbsUpIcon as ThumbsUpIconSolid,
@@ -13,9 +9,15 @@ import {
   ThumbsDownIcon as ThumbsDownIconStroke,
   ThumbsUpIcon as ThumbsUpIconStroke,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 import { useCallback, useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
+
+import {
+  RadioToggle,
+  RadioToggleGroup,
+} from "@/shared/components/ui/radio-toggle-group";
+import { cn } from "@/shared/lib/classes";
+
 import { GO_TO_NEXT_QUESTION_DELAY } from "../../lib/question-type-registry";
 import { useSurveyStore } from "../../store/survey-store-provider";
 import { toggleStyles } from "./question-rating";

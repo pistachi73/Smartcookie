@@ -1,10 +1,13 @@
+import { CalendarDate, Time } from "@internationalized/date";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Temporal } from "temporal-polyfill";
+import { useShallow } from "zustand/react/shallow";
+
 import {
   getCurrentTimezone,
   getSnapToNearest15MinutesIndex,
 } from "@/features/calendar/lib/utils";
-import type { DatedOccurrence } from "@/features/calendar/types/calendar.types";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Temporal } from "temporal-polyfill";
+import { useCalendarStore } from "../store/calendar-store-provider";
 
 export const getTimeLabelFromSnapIndex = (snapIndex: number) => {
   const minutes = snapIndex * 15;
@@ -30,22 +33,25 @@ export const useDragToCreateEvent = ({
 }: {
   date: Temporal.PlainDate;
 }) => {
-  // const addDraftOccurrence = useCalendarStore(
-  //   useShallow((store) => store.addDraftOccurrence),
-  // );
+  const { setCreateSessionFormData, setIsCreateSessionModalOpen } =
+    useCalendarStore(
+      useShallow((store) => ({
+        setCreateSessionFormData: store.setCreateSessionFormData,
+        setIsCreateSessionModalOpen: store.setIsCreateSessionModalOpen,
+      })),
+    );
   const scrollableParent = useRef<HTMLElement | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const [dragStartY, setDragStartY] = useState<number | null>(null);
   const [dragEndY, setDragEndY] = useState<number | null>(null);
   const currentMouseYRef = useRef<number | null>(null);
+  const currentTouchIdRef = useRef<number | null>(null);
 
   const dragState = useRef({
     startY: null as number | null,
     currentY: null as number | null,
     lastUpdate: 0,
   });
-
-  const dateInstant = useMemo(() => Temporal.Now.instant(), []);
 
   useEffect(() => {
     scrollableParent.current = getScrollableParent(ref.current);
@@ -60,22 +66,38 @@ export const useDragToCreateEvent = ({
     return Math.max(0, Math.min(95, getSnapToNearest15MinutesIndex(y)));
   }, []);
 
+  const startDrag = useCallback(
+    (clientY: number) => {
+      const snappedY = getSnappedY(clientY);
+      dragState.current.startY = snappedY;
+      setDragStartY(snappedY);
+    },
+    [getSnappedY],
+  );
+
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
-    const snappedY = getSnappedY(e.clientY);
-    dragState.current.startY = snappedY;
-    setDragStartY(snappedY);
+    startDrag(e.clientY);
   };
 
-  const handleMouseMove = useCallback(
-    (e: MouseEvent) => {
+  const handleTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    if (touch) {
+      currentTouchIdRef.current = touch.identifier;
+      startDrag(touch.clientY);
+    }
+  };
+
+  const updateDrag = useCallback(
+    (clientY: number) => {
       const now = performance.now();
       if (now - dragState.current.lastUpdate < 16) return; // ~60fps
 
       dragState.current.lastUpdate = now;
-      const snappedY = getSnappedY(e.clientY);
+      const snappedY = getSnappedY(clientY);
 
-      currentMouseYRef.current = e.clientY;
+      currentMouseYRef.current = clientY;
       if (dragStartY === null || ref.current === null) return;
       // Only update state if value actually changed
       if (
@@ -89,7 +111,27 @@ export const useDragToCreateEvent = ({
     [dragStartY, getSnappedY],
   );
 
-  const handleMouseUp = useCallback(() => {
+  const handleMouseMove = useCallback(
+    (e: MouseEvent) => {
+      updateDrag(e.clientY);
+    },
+    [updateDrag],
+  );
+
+  const handleTouchMove = useCallback(
+    (e: TouchEvent) => {
+      e.preventDefault();
+      const touch = Array.from(e.touches).find(
+        (t) => t.identifier === currentTouchIdRef.current,
+      );
+      if (touch) {
+        updateDrag(touch.clientY);
+      }
+    },
+    [updateDrag],
+  );
+
+  const finalizeDrag = useCallback(() => {
     // Use ref values instead of state for final calculation
     const startY = dragState.current.startY;
     const endY = dragState.current.currentY;
@@ -113,22 +155,58 @@ export const useDragToCreateEvent = ({
         }),
       });
 
-      const draftOccurrence: DatedOccurrence = {
-        eventId: -1,
-        id: -1,
-        startTime: startDate,
-        endTime: endDate,
-        overrides: null,
+      const defaultValues = {
+        startTime: new Time(
+          startDate.toPlainTime().hour,
+          startDate.toPlainTime().minute,
+        ),
+        endTime: new Time(
+          endDate.toPlainTime().hour,
+          endDate.toPlainTime().minute,
+        ),
+        date: new CalendarDate(startDate.year, startDate.month, startDate.day),
       };
 
-      // addDraftOccurrence(draftOccurrence);
+      console.log("defaultValues", defaultValues);
+
+      setCreateSessionFormData({
+        startTime: new Time(
+          startDate.toPlainTime().hour,
+          startDate.toPlainTime().minute,
+        ),
+        endTime: new Time(
+          endDate.toPlainTime().hour,
+          endDate.toPlainTime().minute,
+        ),
+        date: new CalendarDate(startDate.year, startDate.month, startDate.day),
+      });
+
+      setIsCreateSessionModalOpen(true);
     }
 
     // Reset all state at once
     dragState.current = { startY: null, currentY: null, lastUpdate: 0 };
+    currentTouchIdRef.current = null;
     setDragStartY(null);
     setDragEndY(null);
-  }, [date]);
+  }, [date, setCreateSessionFormData, setIsCreateSessionModalOpen]);
+
+  const handleMouseUp = useCallback(() => {
+    finalizeDrag();
+  }, [finalizeDrag]);
+
+  const handleTouchEnd = useCallback(
+    (e: TouchEvent) => {
+      e.preventDefault();
+      const touch = Array.from(e.changedTouches).find(
+        (t) => t.identifier === currentTouchIdRef.current,
+      );
+      if (touch) {
+        finalizeDrag();
+      }
+    },
+    [finalizeDrag],
+  );
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -140,6 +218,18 @@ export const useDragToCreateEvent = ({
       });
       window.addEventListener("mouseup", handleMouseUp, {
         signal: abortController.signal,
+      });
+      window.addEventListener("touchmove", handleTouchMove, {
+        signal: abortController.signal,
+        passive: false,
+      });
+      window.addEventListener("touchend", handleTouchEnd, {
+        signal: abortController.signal,
+        passive: false,
+      });
+      window.addEventListener("touchcancel", handleTouchEnd, {
+        signal: abortController.signal,
+        passive: false,
       });
 
       const scrollLoop = () => {
@@ -182,12 +272,19 @@ export const useDragToCreateEvent = ({
         cancelAnimationFrame(animationFrameId);
       }
     };
-  }, [dragStartY, handleMouseMove, handleMouseUp]);
+  }, [
+    dragStartY,
+    handleMouseMove,
+    handleMouseUp,
+    handleTouchMove,
+    handleTouchEnd,
+  ]);
 
   return {
     ref,
     dragStartY,
     dragEndY,
     handleMouseDown,
+    handleTouchStart,
   };
 };

@@ -1,23 +1,24 @@
 "use client";
-import { Button } from "@/ui/button";
-import { Card } from "@/ui/card";
-import { Modal } from "@/ui/modal";
-import { TextField } from "@/ui/text-field";
-
-import { deleteUser } from "@/data-access/user/mutations";
-import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
-import { regularSpring } from "@/shared/lib/animation";
-import { cn } from "@/shared/lib/classes";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Alert01Icon,
   ArrowDown01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 import { AnimatePresence, motion } from "motion/react";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
+
+import { Button } from "@/ui/button";
+import { Card } from "@/ui/card";
+import { Modal } from "@/ui/modal";
+import { TextField } from "@/ui/text-field";
+import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
+import { regularSpring } from "@/shared/lib/animation";
+import { cn } from "@/shared/lib/classes";
+
+import { deleteUser } from "@/data-access/user/mutations";
 
 export const DangerZone = () => {
   const [isOpen, setIsOpen] = useState(false);

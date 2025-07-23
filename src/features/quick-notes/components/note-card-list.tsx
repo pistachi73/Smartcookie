@@ -1,10 +1,12 @@
-import type { CustomColor } from "@/db/schema/shared";
-import { cn } from "@/shared/lib/classes";
-import { getCustomColorClasses } from "@/shared/lib/custom-colors";
-import { NoteIcon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { NoteIcon } from "@hugeicons-pro/core-solid-rounded";
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, m } from "motion/react";
+
+import { cn } from "@/shared/lib/classes";
+import { getCustomColorClasses } from "@/shared/lib/custom-colors";
+
+import type { CustomColor } from "@/db/schema/shared";
 import { quickNotesByHubIdQueryOptions } from "../lib/quick-notes-query-options";
 import { NoteCard } from "./note-card";
 import { SkeletonNoteCard } from "./note-card/skeleton-note-card";

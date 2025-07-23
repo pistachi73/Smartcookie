@@ -1,15 +1,17 @@
 "use client";
 
-import { Button, buttonStyles } from "@/ui/button";
-import { Heading } from "@/ui/heading";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Alert02Icon,
   ArrowLeft02Icon,
   RefreshIcon,
 } from "@hugeicons-pro/core-solid-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 import type { ComponentProps } from "react";
+
+import { Button, buttonStyles } from "@/ui/button";
+import { Heading } from "@/ui/heading";
+
 import { PortalNav } from "./portal-nav/portal-nav";
 
 interface PortalErrorProps {

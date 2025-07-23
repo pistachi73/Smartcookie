@@ -1,7 +1,8 @@
+import { HugeiconsIcon } from "@hugeicons/react";
+import type { FolderLibraryIcon } from "@hugeicons-pro/core-solid-rounded";
+
 import { Heading } from "@/shared/components/ui/heading";
 import { cn } from "@/shared/lib/classes";
-import type { FolderLibraryIcon } from "@hugeicons-pro/core-solid-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 
 type PageHeaderProps = {
   icon: typeof FolderLibraryIcon;

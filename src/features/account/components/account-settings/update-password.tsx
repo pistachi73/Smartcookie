@@ -1,18 +1,10 @@
 "use client";
-import { useCurrentUser } from "@/shared/hooks/use-current-user";
-import { regularSpring } from "@/shared/lib/animation";
-import { cn } from "@/shared/lib/classes";
-import { Button } from "@/ui/button";
-import { Card } from "@/ui/card";
-import { Form } from "@/ui/form";
-import { PasswordFieldWithValidation } from "@/ui/password-field-with-validation";
-import { TextField } from "@/ui/text-field";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ArrowDown01Icon,
   LockKeyIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 import { Lock } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
@@ -20,11 +12,20 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
 
+import { ProgressCircle } from "@/shared/components/ui/progress-circle";
+import { Button } from "@/ui/button";
+import { Card } from "@/ui/card";
+import { Form } from "@/ui/form";
+import { PasswordFieldWithValidation } from "@/ui/password-field-with-validation";
+import { TextField } from "@/ui/text-field";
+import { useCurrentUser } from "@/shared/hooks/use-current-user";
+import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
+import { regularSpring } from "@/shared/lib/animation";
+import { cn } from "@/shared/lib/classes";
+
 import { updateUserAccountPassword } from "@/data-access/auth/mutations";
 import { UpdateUserAccountPasswordSchema } from "@/data-access/auth/schemas";
 import { isDataAccessError } from "@/data-access/errors";
-import { ProgressCircle } from "@/shared/components/ui/progress-circle";
-import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 import { UpdatePasswordSchema } from "../../lib/validation";
 
 export const UpdatePassword = () => {

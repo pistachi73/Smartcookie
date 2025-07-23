@@ -1,5 +1,8 @@
 "use client";
 
+import { createContext, type ReactNode, use, useState } from "react";
+import { useStore } from "zustand";
+
 import {
   createAuthStore,
   initAuthStore,
@@ -8,8 +11,6 @@ import type {
   AuthState,
   AuthStore,
 } from "@/features/auth/types/auth-store.types";
-import { type ReactNode, createContext, use, useState } from "react";
-import { useStore } from "zustand";
 
 export type AuthStoreApi = ReturnType<typeof createAuthStore>;
 

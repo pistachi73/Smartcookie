@@ -1,11 +1,11 @@
+import { HugeiconsIcon } from "@hugeicons/react";
+import { FolderLibraryIcon } from "@hugeicons-pro/core-solid-rounded";
+
 import { Heading } from "@/shared/components/ui/heading";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { cn } from "@/shared/lib/classes";
-import { FolderLibraryIcon } from "@hugeicons-pro/core-solid-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 
 export const CalendarSkeleton = () => {
-  const now = new Date();
   return (
     <div className="min-h-0 h-full flex flex-col bg-bg">
       {/* Header */}
@@ -47,7 +47,7 @@ export const CalendarSkeleton = () => {
           <div className="flex-1">
             {/* Day headers */}
             <div className="grid grid-cols-7 gap-1 border-b py-2">
-              {Array.from({ length: 7 }).map((_, index) => (
+              {Array.from({ length: 7 }, (_, index) => index).map((index) => (
                 <Skeleton
                   key={`day-header-${index}`}
                   className="h-4 w-2/3 mx-auto rounded-xs"
@@ -57,7 +57,7 @@ export const CalendarSkeleton = () => {
 
             {/* Calendar grid - simplified */}
             <div className="grid grid-cols-7 h-[calc(100%-2rem)]">
-              {Array.from({ length: 35 }).map((_, index) => (
+              {Array.from({ length: 35 }, (_, index) => index).map((index) => (
                 <div
                   key={`cell-${index}`}
                   className={cn(
@@ -78,7 +78,7 @@ export const CalendarSkeleton = () => {
           <div className="flex flex-col relative">
             <div className="border-b p-4 flex flex-col gap-3">
               <div className="space-y-2">
-                {Array.from({ length: 3 }).map((_, index) => (
+                {Array.from({ length: 3 }, (_, index) => index).map((index) => (
                   <Skeleton
                     key={`upcoming-session-${index}`}
                     className="h-14 w-full rounded-lg"

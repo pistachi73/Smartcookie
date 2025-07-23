@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+
 import { FeedbackHall } from "../feedback-hall";
 
 vi.mock("@/shared/hooks/use-navigate-with-params", () => ({

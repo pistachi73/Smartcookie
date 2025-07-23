@@ -1,3 +1,5 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import {
   cleanup,
   fireEvent,
@@ -5,10 +7,10 @@ import {
   screen,
 } from "@/shared/lib/testing/test-utils";
 import { mockZustandStoreImplementation } from "@/shared/lib/testing/zustand-utils";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import { useSubmitSurvey } from "../../hooks/use-submit-survey";
-import { useSurveyStore } from "../../store/survey-store-provider";
 import type { SurveyStoreState } from "../../store/survey.store";
+import { useSurveyStore } from "../../store/survey-store-provider";
 import { SurveyQuestion } from "../survey-question";
 
 const booleanQuestion = {

@@ -1,7 +1,6 @@
+import type { Column } from "drizzle-orm";
 import { sql } from "drizzle-orm";
 import { pgTable as pgTableCreator } from "drizzle-orm/pg-core";
-
-import type { Column } from "drizzle-orm";
 
 export const pgTable = pgTableCreator;
 

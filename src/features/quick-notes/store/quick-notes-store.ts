@@ -1,8 +1,9 @@
-import { superjsonStorage } from "@/core/stores/superjson-storage";
 import { enableMapSet } from "immer";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { createStore } from "zustand/vanilla";
+
+import { superjsonStorage } from "@/core/stores/superjson-storage";
 import type {
   InitialQuickNotesStateData,
   QuickNotesState,
@@ -84,7 +85,6 @@ export const createQuickNotesStore = (initState: QuickNotesState) => {
         },
         onRehydrateStorage: () => {
           return async (state, error) => {
-            console.log("onRehydrateStorage", error);
             if (!error) {
               state?.setHydrated();
             }

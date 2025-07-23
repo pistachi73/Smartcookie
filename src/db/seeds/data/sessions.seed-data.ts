@@ -1,5 +1,6 @@
-import type { InsertSession, InsertSessionNote } from "@/db/schema";
 import { addDays, addHours, addMinutes } from "date-fns";
+
+import type { InsertSession, InsertSessionNote } from "@/db/schema";
 
 const today = new Date();
 today.setHours(10, 0, 0, 0); // Set to 10:00 AM
@@ -18,20 +19,20 @@ const sessions: {
     },
     notes: [
       {
-        position: "past",
+        position: "plans",
         content: "Initial assessment of student's current language level",
       },
       {
-        position: "past",
+        position: "in-class",
         content:
           "Identified key areas for improvement in grammar and vocabulary",
       },
       {
-        position: "present",
+        position: "in-class",
         content: "Created personalied learning plan based on assessment",
       },
       {
-        position: "future",
+        position: "plans",
         content:
           "Prepare materials for next session focusing on basic conversation",
       },
@@ -46,23 +47,23 @@ const sessions: {
     },
     notes: [
       {
-        position: "past",
+        position: "plans",
         content: "Reviewed basic conversation patterns from previous session",
       },
       {
-        position: "past",
+        position: "in-class",
         content: "Student showed good progress with basic greetings",
       },
       {
-        position: "present",
+        position: "in-class",
         content: "Introduced new vocabulary related to daily activities",
       },
       {
-        position: "present",
+        position: "in-class",
         content: "Practiced forming simple sentences with new vocabulary",
       },
       {
-        position: "future",
+        position: "plans",
         content: "Create flashcards for new vocabulary words",
       },
     ],
@@ -76,23 +77,23 @@ const sessions: {
     },
     notes: [
       {
-        position: "past",
+        position: "plans",
         content: "Reviewed vocabulary flashcards from previous session",
       },
       {
-        position: "past",
+        position: "in-class",
         content: "Student demonstrated strong retention of new words",
       },
       {
-        position: "present",
+        position: "in-class",
         content: "Introduced basic grammar structures for present tense",
       },
       {
-        position: "present",
+        position: "in-class",
         content: "Practiced conjugation of regular verbs",
       },
       {
-        position: "future",
+        position: "plans",
         content: "Prepare exercises for irregular verb conjugations",
       },
     ],
@@ -105,23 +106,23 @@ const sessions: {
     },
     notes: [
       {
-        position: "past",
+        position: "plans",
         content: "Reviewed regular verb conjugations from previous session",
       },
       {
-        position: "past",
+        position: "in-class",
         content: "Student showed good understanding of present tense",
       },
       {
-        position: "present",
+        position: "in-class",
         content: "Introduced irregular verb patterns",
       },
       {
-        position: "present",
+        position: "in-class",
         content: "Practiced common irregular verbs in context",
       },
       {
-        position: "future",
+        position: "plans",
         content: "Create a list of most common irregular verbs for practice",
       },
     ],
@@ -134,24 +135,24 @@ const sessions: {
     },
     notes: [
       {
-        position: "past",
+        position: "plans",
         content: "Reviewed irregular verb list from previous session",
       },
       {
-        position: "past",
+        position: "in-class",
         content:
           "Student demonstrated improved confidence with irregular verbs",
       },
       {
-        position: "present",
+        position: "in-class",
         content: "Introduced past tense formation",
       },
       {
-        position: "present",
+        position: "in-class",
         content: "Practiced simple past tense with regular verbs",
       },
       {
-        position: "future",
+        position: "plans",
         content: "Prepare materials for past tense with irregular verbs",
       },
     ],
@@ -164,23 +165,23 @@ const sessions: {
     },
     notes: [
       {
-        position: "past",
+        position: "plans",
         content: "Reviewed past tense with regular verbs",
       },
       {
-        position: "past",
+        position: "in-class",
         content: "Student showed good progress with past tense formation",
       },
       {
-        position: "present",
+        position: "in-class",
         content: "Introduced past tense with irregular verbs",
       },
       {
-        position: "present",
+        position: "in-class",
         content: "Practiced common irregular verbs in past tense",
       },
       {
-        position: "future",
+        position: "plans",
         content: "Create a comprehensive review of all tenses covered",
       },
     ],

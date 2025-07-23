@@ -1,9 +1,6 @@
 "use client";
 
-import { Tabs } from "@/shared/components/ui/tabs";
-
-import { useNavigateWithParams } from "@/shared/hooks/use-navigate-with-params";
-import { cn } from "@/shared/lib/classes";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   BubbleChatQuestionIcon as BubbleChatQuestionIconSolid,
   NewsIcon as NewsIconSolid,
@@ -12,9 +9,13 @@ import {
   BubbleChatQuestionIcon,
   NewsIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
+
+import { Tabs } from "@/shared/components/ui/tabs";
+import { useNavigateWithParams } from "@/shared/hooks/use-navigate-with-params";
+import { cn } from "@/shared/lib/classes";
+
 import { QuestionsPanel } from "./questions/questions-panel";
 import { SurveyTemplatesPanel } from "./survey-templates/survey-template-panel";
 

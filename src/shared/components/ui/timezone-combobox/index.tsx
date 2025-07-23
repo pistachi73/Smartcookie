@@ -1,11 +1,12 @@
-import type { PgTimezone } from "@/data-access/pg";
-import { cn } from "@/shared/lib/classes";
-
-import { Globe02Icon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { Globe02Icon } from "@hugeicons-pro/core-solid-rounded";
 import { getLocalTimeZone } from "@internationalized/date";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
+
+import { cn } from "@/shared/lib/classes";
+
+import type { PgTimezone } from "@/data-access/pg";
 import {
   ComboBox,
   type ComboBoxListProps,

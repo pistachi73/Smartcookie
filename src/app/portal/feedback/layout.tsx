@@ -1,10 +1,12 @@
-import { FeedbackHeader } from "@/features/feedback/components/feedback-header";
-import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
 import { Comment01Icon } from "@hugeicons-pro/core-solid-rounded";
 import type { ReactNode } from "react";
 
+import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
+
+import { FeedbackHeader } from "@/features/feedback/components/feedback-header";
+
 export default async function FeedbackLayout({
-  children,
+  children: _children,
   sidebar,
   details,
 }: {

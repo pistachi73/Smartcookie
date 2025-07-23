@@ -1,9 +1,10 @@
 import { type QueryKey, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
+
 import { updateSessionNote } from "@/data-access/session-notes/mutations";
 import { UpdateSessionNoteSchema } from "@/data-access/session-notes/schemas";
-import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 import { getSessionNotesBySessionIdQueryOptions } from "../../lib/session-notes-query-options";
 import type { ClientSessionNotesMap } from "../../types/session-notes.types";
 

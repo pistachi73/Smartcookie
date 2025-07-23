@@ -1,5 +1,7 @@
-import { Heading } from "@/shared/components/ui/heading";
 import { TextIcon } from "@hugeicons-pro/core-stroke-rounded";
+
+import { Heading } from "@/shared/components/ui/heading";
+
 import type { Answer } from "../../../../types/answer.types";
 import { QuestionNoAnswers } from "./question-no-answers";
 import { DataCard, ResponseCard } from "./shared-cards";

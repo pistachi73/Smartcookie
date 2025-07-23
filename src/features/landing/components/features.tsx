@@ -1,7 +1,4 @@
-import { MaxWidthWrapper } from "@/shared/components/layout/max-width-wrapper";
-import { Card } from "@/shared/components/ui/card";
-import { Heading } from "@/shared/components/ui/heading";
-import { cn } from "@/shared/lib/classes";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ArrowRight02Icon,
   Calendar03Icon,
@@ -10,8 +7,12 @@ import {
   HealtcareIcon,
   StickyNote02Icon,
 } from "@hugeicons-pro/core-solid-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 import Image, { type ImageProps } from "next/image";
+
+import { Card } from "@/shared/components/ui/card";
+import { Heading } from "@/shared/components/ui/heading";
+import { MaxWidthWrapper } from "@/shared/components/layout/max-width-wrapper";
+import { cn } from "@/shared/lib/classes";
 
 export const Features = () => {
   return (
@@ -22,7 +23,7 @@ export const Features = () => {
           subtitle="Integrated Calendar"
           description="Streamline your booking process with intelligent scheduling that adapts to your availability"
           image={{
-            src: "/calendar.png",
+            src: "/images/features/calendar.png",
             alt: "Calendar interface",
             priority: true,
             loading: "eager",
@@ -34,7 +35,7 @@ export const Features = () => {
           subtitle="Next-Level Notes"
           description="Keep all your key details linked to students and lessons. Forget about messy or lost notes."
           image={{
-            src: "/quick_notes.png",
+            src: "/images/features/quick_notes.png",
             alt: "Quick Notes",
             priority: true,
             loading: "eager",
@@ -49,7 +50,7 @@ export const Features = () => {
           subtitle="Smart Dashboard"
           description="Keep all your courses organized in one place. Quickly switch between classes without losing focus."
           image={{
-            src: "/hubs.png",
+            src: "/images/features/hubs.png",
             alt: "Hubs",
             priority: false,
             loading: "lazy",
@@ -61,7 +62,7 @@ export const Features = () => {
           subtitle="Stay on Top of Workload"
           description="Get a clear overview of your tasks and lessons. Balance your schedule and avoid burnout."
           image={{
-            src: "/dashboard.png",
+            src: "/images/features/dashboard.png",
             alt: "Dashboard",
             priority: false,
             loading: "lazy",
@@ -191,7 +192,7 @@ export const HorizontalFeatureCard = () => {
       {/* Calendar Image with Gradient */}
       <div className="aspect-[64/27] relative lg:flex-1 w-full flex items-end justify-end lg:basis-[60%] shrink-0">
         <Image
-          src="/feedback.png"
+          src="/images/features/feedback.png"
           alt="Calendar interface"
           fill
           className="aspect-[64/27] object-cover object-top rounded-lg h-auto w-full group-hover:scale-102 transition-transform duration-300 origin-bottom-right"
