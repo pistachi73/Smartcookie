@@ -1,9 +1,16 @@
 "use client";
 
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
-  type GetSurveyTemplatesQueryResponse,
-  getSurveyTemplatesQueryOptions,
-} from "@/features/feedback/lib/survey-template-query-options";
+  Add01Icon,
+  Cancel01Icon,
+  CheckmarkCircle02Icon,
+  NewsIcon,
+  Rocket01Icon,
+} from "@hugeicons-pro/core-stroke-rounded";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+
 import { Button, buttonStyles } from "@/shared/components/ui/button";
 import { Heading } from "@/shared/components/ui/heading";
 import { Link } from "@/shared/components/ui/link";
@@ -16,16 +23,11 @@ import { SearchField } from "@/shared/components/ui/search-field";
 import { Sheet } from "@/shared/components/ui/sheet";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { useDebouncedValue } from "@/shared/hooks/use-debounced-value";
+
 import {
-  Add01Icon,
-  Cancel01Icon,
-  CheckmarkCircle02Icon,
-  NewsIcon,
-  Rocket01Icon,
-} from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+  type GetSurveyTemplatesQueryResponse,
+  getSurveyTemplatesQueryOptions,
+} from "@/features/feedback/lib/survey-template-query-options";
 import { useInitSurvey } from "../../hooks/feedback/use-init-survey";
 
 interface InitSurveyFromHubSheetProps {
@@ -83,7 +85,6 @@ export function InitSurveyFromHubSheet({
   onOpenChange,
   hubId,
   hubName,
-  onInitSurvey,
   onCancel,
 }: InitSurveyFromHubSheetProps) {
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>("");

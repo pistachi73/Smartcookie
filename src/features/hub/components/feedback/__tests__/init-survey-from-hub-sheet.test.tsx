@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { mockNextNavigation } from "@/shared/lib/testing/navigation-mocks";
 import {
   cleanup,
   fireEvent,
@@ -9,10 +8,9 @@ import {
   screen,
   waitFor,
 } from "@/shared/lib/testing/test-utils";
+
 import { useInitSurvey } from "../../../hooks/feedback/use-init-survey";
 import { InitSurveyFromHubSheet } from "../init-survey-from-hub-sheet";
-
-mockNextNavigation();
 
 // Mock dependencies
 vi.mock("@tanstack/react-query", async () => {

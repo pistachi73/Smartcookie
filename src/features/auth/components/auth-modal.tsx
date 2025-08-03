@@ -1,9 +1,11 @@
 "use client";
 
-import { AUTH_ROUTES } from "@/core/config/app-config";
+import { usePathname, useRouter } from "next/navigation";
+
 import { Modal } from "@/ui/modal";
 import { VisuallyHidden } from "@/ui/visually-hidden";
-import { usePathname, useRouter } from "next/navigation";
+
+import { AUTH_ROUTES } from "@/core/config/app-config";
 import { Auth } from ".";
 
 export const AuthModal = () => {

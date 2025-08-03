@@ -1,8 +1,10 @@
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Settings02Icon } from "@hugeicons-pro/core-stroke-rounded";
+import { useParams } from "next/navigation";
+
 import { Button } from "@/shared/components/ui/button";
 import { Heading } from "@/shared/components/ui/heading";
-import { Settings02Icon } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { useParams } from "next/navigation";
+
 import { useHubById } from "../hooks/use-hub-by-id";
 
 export function CourseCard() {

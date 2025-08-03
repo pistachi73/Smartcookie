@@ -1,12 +1,14 @@
 "use client";
 
+import { useCallback, useEffect, useRef } from "react";
+import { Controller, useFormContext } from "react-hook-form";
+import { tv } from "tailwind-variants";
+
 import {
   RadioToggle,
   RadioToggleGroup,
 } from "@/shared/components/ui/radio-toggle-group";
-import { useCallback, useEffect, useRef } from "react";
-import { Controller, useFormContext } from "react-hook-form";
-import { tv } from "tailwind-variants";
+
 import { GO_TO_NEXT_QUESTION_DELAY } from "../../lib/question-type-registry";
 import { useSurveyStore } from "../../store/survey-store-provider";
 

@@ -1,19 +1,17 @@
 "use client";
 
-import { ArrowLeft02Icon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
-
-import { Button } from "@/ui/button";
-import { ProgressCircle } from "@/ui/progress-circle";
-
-import { useCreateHub } from "@/features/hub/hooks/use-create-hub";
-
-import { cn } from "@/shared/lib/classes";
-
-import { Heading } from "@/shared/components/ui/heading";
+import { ArrowLeft02Icon } from "@hugeicons-pro/core-solid-rounded";
 import { AddIcon } from "@hugeicons-pro/core-stroke-rounded";
 import { useState } from "react";
 import { toast } from "sonner";
+
+import { Heading } from "@/shared/components/ui/heading";
+import { Button } from "@/ui/button";
+import { ProgressCircle } from "@/ui/progress-circle";
+import { cn } from "@/shared/lib/classes";
+
+import { useCreateHub } from "@/features/hub/hooks/use-create-hub";
 import { useHubFormStore } from "../../../store/hub-form-store";
 import { SessionModal } from "./session-modal";
 import { SessionsList } from "./sessions-list";

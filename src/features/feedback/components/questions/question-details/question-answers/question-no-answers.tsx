@@ -1,13 +1,14 @@
 import { HugeiconsIcon } from "@hugeicons/react";
-
-import type { QuestionType } from "@/db/schema";
-import { cn } from "@/shared/lib/classes";
 import {
   Calendar03Icon,
   RankingIcon,
   TextIcon,
   ThumbsUpIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
+
+import { cn } from "@/shared/lib/classes";
+
+import type { QuestionType } from "@/db/schema";
 
 const questionTypeIconMap: Record<
   QuestionType,

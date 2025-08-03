@@ -1,10 +1,11 @@
-import type { CalendarView } from "@/features/calendar/types/calendar.types";
 import { Temporal } from "temporal-polyfill";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
+import { createStore } from "zustand/vanilla";
 
 import { superjsonStorage } from "@/core/stores/superjson-storage";
-import { createStore } from "zustand/vanilla";
+import type { CalendarView } from "@/features/calendar/types/calendar.types";
+import { getCalendarCacheManager } from "../lib/calendar-cache";
 import type {
   CalendarState,
   CalendarStore,
@@ -33,6 +34,9 @@ export const initCalendarStore = (
     selectedDate: initialSelectedDate,
     visibleDates,
     calendarView,
+
+    isCreateSessionModalOpen: false,
+    defaultSessionFormData: null,
   };
 
   return initState;
@@ -48,13 +52,32 @@ export const createCalendarStore = (
         ...initState,
         _setHydrated: () => set({ _isHydrated: true }),
         toggleSidebar: () => set({ sidebarOpen: !get().sidebarOpen }),
+        setIsCreateSessionModalOpen: (open) =>
+          set({ isCreateSessionModalOpen: open }),
+        setDefaultSessionFormData: (values) => {
+          set((state) => {
+            state.defaultSessionFormData = values;
+          });
+        },
+
         selectDate: (date) => {
-          const { visibleDates } = get();
-          let newVisibleDates = undefined;
+          const { visibleDates, calendarView } = get();
+          let newVisibleDates: Temporal.PlainDate[] | undefined;
           if (!visibleDates.includes(date)) {
-            newVisibleDates = getDatesForCalendarView(date, get().calendarView);
+            newVisibleDates = getDatesForCalendarView(date, calendarView);
           }
-          updateURL({ calendarView: get().calendarView, selectedDate: date });
+          updateURL({ calendarView, selectedDate: date });
+
+          // Predictive prefetching for navigation
+          if (typeof window !== "undefined") {
+            try {
+              const cacheManager = getCalendarCacheManager();
+              cacheManager.prefetchAdjacentData(date, calendarView);
+            } catch {
+              // Cache manager not initialized yet, ignore
+            }
+          }
+
           set((state) => {
             state.selectedDate = date;
           });
@@ -70,7 +93,19 @@ export const createCalendarStore = (
             calendarView,
           );
 
-          updateURL({ calendarView, selectedDate: get().selectedDate });
+          updateURL({ calendarView, selectedDate });
+
+          // Predictive prefetching for view change
+          if (typeof window !== "undefined") {
+            try {
+              const cacheManager = getCalendarCacheManager();
+              cacheManager.ensureDataForView(selectedDate, calendarView);
+              cacheManager.prefetchAdjacentData(selectedDate, calendarView);
+            } catch {
+              // Cache manager not initialized yet, ignore
+            }
+          }
+
           set((state) => {
             state.calendarView = calendarView;
           });
@@ -79,6 +114,14 @@ export const createCalendarStore = (
         setVisibleDates: (dates) => {
           set((state) => {
             state.visibleDates = dates;
+          });
+        },
+
+        set1DayView: (date: Temporal.PlainDate) => {
+          const { setCalendarView } = get();
+          setCalendarView("day");
+          set((state) => {
+            state.selectedDate = date;
           });
         },
 
@@ -116,6 +159,19 @@ export const createCalendarStore = (
             selectedDate: newSelectedDate,
           });
 
+          // Smart prefetching based on navigation direction
+          if (typeof window !== "undefined") {
+            try {
+              const cacheManager = getCalendarCacheManager();
+              // Ensure current view data is available
+              cacheManager.ensureDataForView(newSelectedDate, calendarView);
+              // Prefetch in the direction of navigation (more likely to continue)
+              cacheManager.prefetchAdjacentData(newSelectedDate, calendarView);
+            } catch {
+              // Cache manager not initialized yet, ignore
+            }
+          }
+
           set((state) => {
             state.selectedDate = newSelectedDate;
             state.visibleDates = newVisibleDates;
@@ -123,19 +179,25 @@ export const createCalendarStore = (
         },
 
         onToday: () => {
-          let newVisibleDates = undefined;
+          const { calendarView } = get();
+          let newVisibleDates: Temporal.PlainDate[] | undefined;
           const today = Temporal.Now.plainDateISO();
 
           if (!get().visibleDates.includes(today)) {
-            newVisibleDates = getDatesForCalendarView(
-              today,
-              get().calendarView,
-            );
+            newVisibleDates = getDatesForCalendarView(today, calendarView);
           }
-          updateURL({
-            calendarView: get().calendarView,
-            selectedDate: today,
-          });
+          updateURL({ calendarView, selectedDate: today });
+
+          // Prefetch for "today" navigation
+          if (typeof window !== "undefined") {
+            try {
+              const cacheManager = getCalendarCacheManager();
+              cacheManager.ensureDataForView(today, calendarView);
+              cacheManager.prefetchAdjacentData(today, calendarView);
+            } catch {
+              // Cache manager not initialized yet, ignore
+            }
+          }
 
           set((state) => {
             state.selectedDate = today;
@@ -150,6 +212,13 @@ export const createCalendarStore = (
         name: "calendar-store",
         storage: superjsonStorage,
         skipHydration,
+        partialize: (state) => {
+          const { defaultSessionFormData, isCreateSessionModalOpen, ...rest } =
+            state;
+          return {
+            ...rest,
+          };
+        },
         onRehydrateStorage: () => {
           return (state, error) => {
             if (!error) state?._setHydrated();

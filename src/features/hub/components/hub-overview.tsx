@@ -1,4 +1,5 @@
 import { useHubById } from "../hooks/use-hub-by-id";
+import { CourseOverview } from "./overview/course-overview";
 
 type HubOverviewProps = {
   hubId: number;
@@ -11,5 +12,5 @@ export const HubOverview = ({ hubId }: HubOverviewProps) => {
     return null;
   }
 
-  return <div>HubOverview</div>;
+  return <CourseOverview hubId={hubId} />;
 };

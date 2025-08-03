@@ -1,10 +1,12 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import setMockViewport from "@/shared/components/layout/viewport-context/test-utils/setMockViewport";
 import { cleanup, render, screen } from "@/shared/lib/testing/test-utils";
 import { mockZustandStoreImplementation } from "@/shared/lib/testing/zustand-utils";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import { useSurvey } from "../../hooks/use-survey";
-import { useSurveyStore } from "../../store/survey-store-provider";
 import type { SurveyStoreState } from "../../store/survey.store";
+import { useSurveyStore } from "../../store/survey-store-provider";
 import { Survey } from "../survey";
 
 // Mock all child components

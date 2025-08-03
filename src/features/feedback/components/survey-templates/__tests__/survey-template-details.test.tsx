@@ -1,17 +1,15 @@
+import { useQueries } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { mockNextNavigation } from "@/shared/lib/testing/navigation-mocks";
 import {
   cleanup,
   fireEvent,
   render,
   screen,
 } from "@/shared/lib/testing/test-utils";
-import { useQueries } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { SurveyTemplateDetails } from "../survey-template-details";
 
-mockNextNavigation();
+import { SurveyTemplateDetails } from "../survey-template-details";
 
 vi.mock("@tanstack/react-query", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@tanstack/react-query")>();
@@ -249,7 +247,7 @@ describe("SurveyTemplateDetails", () => {
 
       // Check response time (2m 5s) - look for the text that contains both numbers and units
       expect(
-        screen.getByText((content, element) => {
+        screen.getByText((_content, element) => {
           return element?.textContent === "2m5s";
         }),
       ).toBeInTheDocument();

@@ -1,9 +1,10 @@
 import { type QueryKey, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
+
 import { deleteSessionNote } from "@/data-access/session-notes/mutations";
 import { DeleteSessionNoteSchema } from "@/data-access/session-notes/schemas";
-import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 import { getSessionNotesBySessionIdQueryOptions } from "../../lib/session-notes-query-options";
 import type { ClientSessionNotesMap } from "../../types/session-notes.types";
 
@@ -31,13 +32,12 @@ export function useDeleteSessionNote() {
         queryClient.getQueryData<ClientSessionNotesMap>(queryKey);
 
       queryClient.setQueryData<ClientSessionNotesMap>(queryKey, (old) => {
-        if (!old) return { past: [], present: [], future: [] };
+        if (!old) return { plans: [], "in-class": [] };
 
         return {
-          past: old.past?.filter((note) => note.id !== input.noteId) ?? [],
-          present:
-            old.present?.filter((note) => note.id !== input.noteId) ?? [],
-          future: old.future?.filter((note) => note.id !== input.noteId) ?? [],
+          plans: old.plans?.filter((note) => note.id !== input.noteId) ?? [],
+          "in-class":
+            old["in-class"]?.filter((note) => note.id !== input.noteId) ?? [],
         };
       });
 

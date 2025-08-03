@@ -1,6 +1,8 @@
-import { cleanup, render, screen } from "@/shared/lib/testing/test-utils";
 import { useQueries } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+import { cleanup, render, screen } from "@/shared/lib/testing/test-utils";
+
 import { SurveyTemplateResponseAnswers } from "../../survey-template-responses/survey-template-response-answers";
 
 vi.mock("@tanstack/react-query", async (importOriginal) => {
@@ -303,7 +305,7 @@ describe("SurveyResponseAnswers", () => {
       ["invalid boolean values", 2, "boolean", "maybe"],
     ])(
       "treats %s as not answered",
-      (description, questionId, questionType, value) => {
+      (_description, questionId, questionType, value) => {
         const answersWithInvalidValue = {
           ...mockSurveyResponseAnswers,
           answers: [

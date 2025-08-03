@@ -1,11 +1,12 @@
 "use client";
 
-import { Heading } from "@/shared/components/ui/heading";
-import { DashboardSquare01Icon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { NextSession } from "./next-session";
+import { DashboardSquare01Icon } from "@hugeicons-pro/core-solid-rounded";
+
+import { Heading } from "@/shared/components/ui/heading";
 
 import { AgendaCard } from "./agenda-card";
+import { NextSession } from "./next-session";
 import { WeeklyHoursCard } from "./weekly-hours-chart-card";
 
 export const Dashboard = () => {

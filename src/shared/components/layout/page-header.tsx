@@ -1,7 +1,8 @@
+import { HugeiconsIcon } from "@hugeicons/react";
+import type { FolderLibraryIcon } from "@hugeicons-pro/core-solid-rounded";
+
 import { Heading } from "@/shared/components/ui/heading";
 import { cn } from "@/shared/lib/classes";
-import type { FolderLibraryIcon } from "@hugeicons-pro/core-solid-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 
 type PageHeaderProps = {
   icon: typeof FolderLibraryIcon;
@@ -9,6 +10,7 @@ type PageHeaderProps = {
   subTitle?: string;
   actions?: React.ReactNode;
   className?: {
+    icon?: string;
     container?: string;
     actionsContainer?: string;
   };
@@ -28,12 +30,20 @@ export const PageHeader = ({
         className?.container,
       )}
     >
-      <div className="flex items-center gap-x-4">
-        <div className="size-12 rounded-lg bg-overlay shadow-md flex items-center justify-center">
-          <HugeiconsIcon icon={icon} size={20} className="text-primary" />
+      <div className="flex items-center gap-x-3 sm:gap-x-4">
+        <div
+          className={cn(
+            "size-10 sm:size-12 rounded-lg bg-overlay shadow-md flex items-center justify-center shrink-0",
+            className?.icon,
+          )}
+        >
+          <HugeiconsIcon
+            icon={icon}
+            className="text-primary size-4 sm:size-5"
+          />
         </div>
-        <div className="flex flex-col">
-          <Heading level={1} tracking="tight">
+        <div className="flex flex-col w-full">
+          <Heading level={1} tracking="tight" className="text-lg">
             {title}
           </Heading>
           {subTitle && (

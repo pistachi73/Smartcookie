@@ -1,18 +1,19 @@
 "use client";
 
-import { Breadcrumbs } from "@/ui/breadcrumbs";
-import { useEffect, useState } from "react";
-
-import { UserButton } from "@/features/auth/components/user-button";
-import { useCurrentUser } from "@/shared/hooks/use-current-user";
-import { cn } from "@/shared/lib/classes";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ArrowLeft02Icon,
   Diamond02Icon,
   Search01Icon,
 } from "@hugeicons-pro/core-solid-rounded";
 import { Notification01Icon } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { useEffect, useState } from "react";
+
+import { Breadcrumbs } from "@/ui/breadcrumbs";
+import { useCurrentUser } from "@/shared/hooks/use-current-user";
+import { cn } from "@/shared/lib/classes";
+
+import { UserButton } from "@/features/auth/components/user-button";
 import { ExplorePremiumModal } from "../../explore-premium-modal";
 import { Button } from "../../ui/button";
 import { FieldGroup, Input } from "../../ui/field";
@@ -55,7 +56,7 @@ export const PortalNav = ({
       <div className="flex items-center justify-between w-full h-full gap-8">
         {isMobile && <SidebarTrigger />}
         <div className="flex items-center gap-x-4 flex-shrink-0">
-          <Breadcrumbs className="@2xl:flex hidden">
+          <Breadcrumbs className="@4xl:flex hidden">
             <Breadcrumbs.Item
               key="back"
               href={lastUrl || "#"}
@@ -100,14 +101,13 @@ export const PortalNav = ({
           </Breadcrumbs>
         </div>
 
-        <div className="flex items-center gap-x-3">
+        <div className="flex items-center  gap-x-2 sm:gap-x-3 shrink-0">
           {showSearchField && (
             <div className="hidden md:block">
               <FieldGroup className="pl-3 pr-2 w-[400px]">
                 <HugeiconsIcon
                   icon={Search01Icon}
                   data-slot="icon"
-                  size={14}
                   className="inline text-muted-fg"
                 />
                 <Input placeholder="Search..." className="text-sm w-full" />
@@ -124,20 +124,19 @@ export const PortalNav = ({
             intent="outline"
             size="square-petite"
             shape="square"
-            className="size-10"
+            className="size-9 sm:size-10"
           >
             <HugeiconsIcon icon={Notification01Icon} size={16} />
           </Button>
 
           {!user?.hasActiveSubscription && (
             <ExplorePremiumModal>
-              <Button>
-                Explore premium
-                <HugeiconsIcon
-                  icon={Diamond02Icon}
-                  size={16}
-                  data-slot="icon"
-                />
+              <Button
+                className={cn("shrink-0", isMobile && "size-9")}
+                size={isMobile ? "square-petite" : "medium"}
+              >
+                {isMobile ? "" : "Explore premium"}
+                <HugeiconsIcon icon={Diamond02Icon} data-slot="icon" />
               </Button>
             </ExplorePremiumModal>
           )}

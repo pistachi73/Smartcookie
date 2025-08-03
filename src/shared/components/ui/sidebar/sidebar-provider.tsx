@@ -46,7 +46,6 @@ const SidebarProvider = ({
   const isMobile = useMediaQuery("(max-width: 767px)");
   const [openMobile, setOpenMobile] = useState(false);
 
-  console.log(defaultOpen);
   const [internalOpenState, setInternalOpenState] = useState(defaultOpen);
   const open = openProp ?? internalOpenState;
   const setOpen = useCallback(
@@ -59,6 +58,7 @@ const SidebarProvider = ({
         setInternalOpenState(openState);
       }
 
+      // biome-ignore lint/suspicious/noDocumentCookie: It is ok
       document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
     },
     [setOpenProp, open],

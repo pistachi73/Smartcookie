@@ -1,9 +1,11 @@
-import { cn } from "@/shared/lib/classes";
 import {
   MinusSignIcon,
   ThumbsDownIcon as ThumbsDownIconSolid,
   ThumbsUpIcon as ThumbsUpIconSolid,
 } from "@hugeicons-pro/core-solid-rounded";
+
+import { cn } from "@/shared/lib/classes";
+
 import type { Answer } from "../../../../types/answer.types";
 import { QuestionNoAnswers } from "./question-no-answers";
 import { DataCard, ResponseCard } from "./shared-cards";

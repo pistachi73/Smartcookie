@@ -1,5 +1,13 @@
 "use client";
 
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  ArrowLeft01Icon,
+  ArrowRight01Icon,
+} from "@hugeicons-pro/core-stroke-rounded";
+import type { CalendarDate } from "@internationalized/date";
+import { use } from "react";
+import { useDateFormatter } from "react-aria";
 import {
   CalendarCell,
   CalendarGrid,
@@ -9,23 +17,15 @@ import {
   Calendar as CalendarPrimitive,
   type CalendarProps as CalendarPrimitiveProps,
   CalendarStateContext,
+  composeRenderProps,
   type DateValue,
   Heading,
   Text,
-  composeRenderProps,
   useLocale,
 } from "react-aria-components";
+import type { CalendarState } from "react-stately";
 import { tv } from "tailwind-variants";
 
-import {
-  ArrowLeft01Icon,
-  ArrowRight01Icon,
-} from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-import type { CalendarDate } from "@internationalized/date";
-import { use } from "react";
-import { useDateFormatter } from "react-aria";
-import type { CalendarState } from "react-stately";
 import { Button } from "./button";
 import { composeTailwindRenderProps, focusRing } from "./primitive";
 import { Select } from "./select";
@@ -34,6 +34,9 @@ const cell = tv({
   extend: focusRing,
   base: "flex size-10 cursor-default items-center justify-center rounded-lg tabular-nums sm:size-9 sm:text-sm forced-colors:outline-0",
   variants: {
+    isToday: {
+      true: "bg-primary-tint data-today",
+    },
     isSelected: {
       false:
         "text-fg data-hovered:bg-secondary-fg/15 data-pressed:bg-secondary-fg/20 forced-colors:text-[ButtonText]",
@@ -52,11 +55,13 @@ interface CalendarProps<T extends DateValue>
   extends Omit<CalendarPrimitiveProps<T>, "visibleDuration"> {
   errorMessage?: string;
   className?: string;
+  spacing?: "none" | "medium" | "large";
 }
 
 const Calendar = <T extends DateValue>({
   errorMessage,
   className,
+  spacing = "none",
   ...props
 }: CalendarProps<T>) => {
   return (
@@ -69,7 +74,15 @@ const Calendar = <T extends DateValue>({
       {...props}
     >
       <CalendarHeader />
-      <CalendarGrid className="[&_td]:border-collapse [&_td]:px-0">
+      <CalendarGrid
+        className={`[&_td]:border-collapse ${
+          spacing === "medium"
+            ? "[&_td]:px-0.5 [&_td]:py-0.5"
+            : spacing === "large"
+              ? "[&_td]:px-1 [&_td]:py-1"
+              : ""
+        }`}
+      >
         <CalendarGridHeader />
         <CalendarGridBody>
           {(date) => (
@@ -200,7 +213,7 @@ const SelectMonth = ({ state }: { state: CalendarState }) => {
     >
       <Select.Trigger
         showArrow
-        className="h-8 w-22 text-xs focus:ring-3 **:data-[slot=select-value]:inline-block **:data-[slot=select-value]:truncate group-data-open:ring-3"
+        className="h-8 w-full text-xs focus:ring-3 **:data-[slot=select-value]:inline-block **:data-[slot=select-value]:truncate group-data-open:ring-3"
       />
       <Select.List
         className={{

@@ -1,7 +1,8 @@
 import { addMonths } from "date-fns";
-import { RRule, datetime } from "rrule";
+import { datetime, RRule } from "rrule";
 import { Temporal } from "temporal-polyfill";
 import { describe, expect, it } from "vitest";
+
 import { calculateRecurrentSessions } from "../calculate-recurrent-sessions";
 
 // Helper function to create expected timestamps using Temporal API
@@ -58,10 +59,11 @@ describe("calculateRecurrentSessions", () => {
     });
   });
 
-  it("should create multiple sessions based on daily recurrence rule", () => {
+  it("should create multiple sessions based on daily recurrence rule with count", () => {
     const rrule = new RRule({
       freq: RRule.DAILY,
       interval: 2, // Every 2 days
+      count: 5, // Only 5 occurrences
       dtstart: datetime(2023, 1, 15),
     });
 
@@ -70,10 +72,8 @@ describe("calculateRecurrentSessions", () => {
       rruleStr: rrule.toString(),
     });
 
-    // From Jan 15 to March 10 (inclusive), every 2 days
-    // Expected dates: Jan 15, 17, 19, 21, 23, 25, 27, 29, 31, Feb 2, 4, 6, 8, 10, 12, 14, 16,
-    // 20, 22, 24, 26, 28, March 2, 4, 6, 8, 10 = 28 sessions
-    expect(sessions).toHaveLength(28);
+    // Should have 5 sessions as specified by count
+    expect(sessions).toHaveLength(5);
 
     // Check the first session is correct
     const firstSession = sessions[0];
@@ -95,13 +95,51 @@ describe("calculateRecurrentSessions", () => {
       });
     }
 
-    // Check last session is on March 10
+    // Check last session is the 5th occurrence
     const lastSession = sessions[sessions.length - 1];
     expect(lastSession).toBeDefined();
     if (lastSession) {
       expect(lastSession).toEqual({
-        startTime: createExpectedTimestamp(2023, 3, 10, 10, 0),
-        endTime: createExpectedTimestamp(2023, 3, 10, 11, 30),
+        startTime: createExpectedTimestamp(2023, 1, 23, 10, 0),
+        endTime: createExpectedTimestamp(2023, 1, 23, 11, 30),
+      });
+    }
+  });
+
+  it("should create multiple sessions based on daily recurrence rule with until date", () => {
+    const rrule = new RRule({
+      freq: RRule.DAILY,
+      interval: 2, // Every 2 days
+      until: datetime(2023, 2, 15), // Until February 15
+      dtstart: datetime(2023, 1, 15),
+    });
+
+    const sessions = calculateRecurrentSessions({
+      ...baseParams,
+      rruleStr: rrule.toString(),
+    });
+
+    // From Jan 10 (hub start) to Feb 15 (until date), every 2 days
+    // Expected dates: Jan 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, Feb 2, 4, 6, 8, 10, 12, 14, 15 = 19 sessions
+    expect(sessions).toHaveLength(19);
+
+    // Check the first session is correct (starts from hub start date)
+    const firstSession = sessions[0];
+    expect(firstSession).toBeDefined();
+    if (firstSession) {
+      expect(firstSession).toEqual({
+        startTime: createExpectedTimestamp(2023, 1, 10, 10, 0),
+        endTime: createExpectedTimestamp(2023, 1, 10, 11, 30),
+      });
+    }
+
+    // Check last session is on Feb 15 (last occurrence on until date)
+    const lastSession = sessions[sessions.length - 1];
+    expect(lastSession).toBeDefined();
+    if (lastSession) {
+      expect(lastSession).toEqual({
+        startTime: createExpectedTimestamp(2023, 2, 15, 10, 0),
+        endTime: createExpectedTimestamp(2023, 2, 15, 11, 30),
       });
     }
   });
@@ -124,23 +162,17 @@ describe("calculateRecurrentSessions", () => {
       rruleStr: rrule.toString(),
     });
 
-    // From Jan 16 to March 10:
-    // Jan: 16(M), 18(W), 20(F), 23(M), 25(W), 27(F), 30(M)
+    // From Jan 10 (hub start) to March 10 (hub end):
+    // Jan: 11(W), 13(F), 16(M), 18(W), 20(F), 23(M), 25(W), 27(F), 30(M)
     // Feb: 1(W), 3(F), 6(M), 8(W), 10(F), 13(M), 15(W), 17(F), 20(M), 22(W), 24(F), 27(M)
     // Mar: 1(W), 3(F), 6(M), 8(W), 10(F)
-    // Total: 24 sessions
-    expect(sessions).toHaveLength(24);
+    // Total: 26 sessions
+    expect(sessions).toHaveLength(26);
 
-    // Verify first three sessions (Monday, Wednesday, Friday)
+    // Verify first session is on Jan 11 (Wednesday, first occurrence after hub start)
     expect(
       sessions[0]?.startTime ? new Date(sessions[0].startTime).getDay() : null,
-    ).toBe(1); // Monday (Jan 16)
-    expect(
-      sessions[1]?.startTime ? new Date(sessions[1].startTime).getDay() : null,
-    ).toBe(3); // Wednesday (Jan 18)
-    expect(
-      sessions[2]?.startTime ? new Date(sessions[2].startTime).getDay() : null,
-    ).toBe(5); // Friday (Jan 20)
+    ).toBe(3); // Wednesday (Jan 11)
 
     // Verify times for all sessions
     for (const session of sessions) {
@@ -171,7 +203,7 @@ describe("calculateRecurrentSessions", () => {
       rruleStr: rrule.toString(),
     });
 
-    // Should have sessions on the 15th of each month
+    // Should have sessions on the 15th of each month within hub period
     expect(sessions.length).toEqual(2);
 
     const firstSession = sessions[0];
@@ -207,8 +239,8 @@ describe("calculateRecurrentSessions", () => {
       rruleStr: rrule.toString(),
     });
 
-    // Sessions should span 6 months as the default in the implementation
-    expect(sessions.length).toBe(6);
+    // Should have sessions for 3 months from the start date (default behavior: 2 months from rrule start)
+    expect(sessions.length).toBe(3);
 
     if (sessions.length > 0) {
       // First session should be in January
@@ -219,14 +251,73 @@ describe("calculateRecurrentSessions", () => {
         expect(firstSessionDate.getDate()).toBe(15);
       }
 
-      // Last session should be 5 months later (in June)
+      // Last session should be in March
       const lastSession = sessions[sessions.length - 1];
       if (lastSession) {
         const lastSessionDate = new Date(lastSession.startTime);
-        expect(lastSessionDate.getMonth()).toBe(5); // June
+        expect(lastSessionDate.getMonth()).toBe(2); // March
         expect(lastSessionDate.getDate()).toBe(15);
       }
     }
+  });
+
+  it("should respect rrule until date when it's earlier than hub end date", () => {
+    const rrule = new RRule({
+      freq: RRule.DAILY,
+      interval: 1, // Every day
+      until: datetime(2023, 1, 20), // Until January 20
+      dtstart: datetime(2023, 1, 15),
+    });
+
+    const sessions = calculateRecurrentSessions({
+      ...baseParams,
+      rruleStr: rrule.toString(),
+    });
+
+    // Should have sessions from Jan 10 (hub start) to Jan 20 (until date) = 11 sessions
+    expect(sessions.length).toBe(11);
+
+    // Check first session
+    expect(sessions[0]).toEqual({
+      startTime: createExpectedTimestamp(2023, 1, 10, 10, 0),
+      endTime: createExpectedTimestamp(2023, 1, 10, 11, 30),
+    });
+
+    // Check last session
+    expect(sessions[sessions.length - 1]).toEqual({
+      startTime: createExpectedTimestamp(2023, 1, 20, 10, 0),
+      endTime: createExpectedTimestamp(2023, 1, 20, 11, 30),
+    });
+  });
+
+  it("should respect hub end date when it's earlier than rrule until date", () => {
+    const rrule = new RRule({
+      freq: RRule.DAILY,
+      interval: 1, // Every day
+      until: datetime(2023, 4, 15), // Until April 15
+      dtstart: datetime(2023, 1, 15),
+    });
+
+    const sessions = calculateRecurrentSessions({
+      ...baseParams,
+      rruleStr: rrule.toString(),
+    });
+
+    // Should have sessions from Jan 10 (hub start) to March 10 (hub end date)
+    // Jan: 10-31 (22 days), Feb: 1-28 (28 days), Mar: 1-10 (10 days) = 60 sessions
+    expect(sessions.length).toBe(60);
+
+    // Check first session
+    expect(sessions[0]).toEqual({
+      startTime: createExpectedTimestamp(2023, 1, 10, 10, 0),
+      endTime: createExpectedTimestamp(2023, 1, 10, 11, 30),
+    });
+
+    // Check last session should be on March 10
+    expect(sessions[sessions.length - 1]).toEqual({
+      startTime: createExpectedTimestamp(2023, 3, 10, 10, 0),
+      endTime: createExpectedTimestamp(2023, 3, 10, 11, 30),
+    });
   });
 
   it("should calculate duration correctly for sessions", () => {
@@ -244,7 +335,7 @@ describe("calculateRecurrentSessions", () => {
       rruleStr: rrule.toString(),
     });
 
-    expect(sessions.length).toBeGreaterThanOrEqual(1);
+    expect(sessions.length).toBe(3);
 
     sessions.forEach((session) => {
       if (session) {

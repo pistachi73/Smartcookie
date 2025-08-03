@@ -1,9 +1,11 @@
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
 import {
   createQueryClientWrapper,
   createTestQueryClient,
 } from "@/shared/lib/testing/query-client-utils";
 import { renderHook, waitFor } from "@/shared/lib/testing/test-utils";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+
 import { useHubNotes } from "../use-hub-notes";
 
 vi.mock("../../lib/quick-notes-query-options", () => ({

@@ -18,7 +18,7 @@ export function useCreateHub() {
     schema: CreateHubUseCaseSchema,
     mutationFn: createHub,
     onMutate: async () => {
-      const hubsQueryKey = getHubsByUserIdQueryOptions.queryKey;
+      const hubsQueryKey = getHubsByUserIdQueryOptions(queryClient).queryKey;
       await queryClient.cancelQueries({ queryKey: hubsQueryKey });
     },
 

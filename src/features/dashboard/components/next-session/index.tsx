@@ -1,22 +1,23 @@
 "use client";
 
-import { StudentProfile } from "@/shared/components/students/student-profile";
-import { AvatarStack } from "@/shared/components/ui/avatar-stack";
-import { buttonStyles } from "@/shared/components/ui/button";
-import { Heading } from "@/shared/components/ui/heading";
-import { Link } from "@/shared/components/ui/link";
-import { Separator } from "@/shared/components/ui/separator";
-import { cn } from "@/shared/lib/classes";
-import { getCustomColorClasses } from "@/shared/lib/custom-colors";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ArrowRight02Icon,
   CalendarCheckOut02Icon,
   LinkSquare02Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
-
-import { Card } from "@/shared/components/ui/card";
-import { HugeiconsIcon } from "@hugeicons/react";
 import { format, isToday, isTomorrow } from "date-fns";
+
+import { AvatarStack } from "@/shared/components/ui/avatar-stack";
+import { buttonStyles } from "@/shared/components/ui/button";
+import { Card } from "@/shared/components/ui/card";
+import { Heading } from "@/shared/components/ui/heading";
+import { Link } from "@/shared/components/ui/link";
+import { Separator } from "@/shared/components/ui/separator";
+import { StudentProfile } from "@/shared/components/students/student-profile";
+import { cn } from "@/shared/lib/classes";
+import { getCustomColorClasses } from "@/shared/lib/custom-colors";
+
 import { useGetNextSession } from "../../hooks/use-get-next-session";
 
 export const NextSession = () => {

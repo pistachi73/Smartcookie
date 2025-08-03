@@ -1,41 +1,51 @@
-import type { getHubById, getHubsByUserId } from "@/data-access/hubs/queries";
+import { type QueryClient, queryOptions } from "@tanstack/react-query";
+
 import { getUrl } from "@/shared/lib/get-url";
-import { queryOptions } from "@tanstack/react-query";
-import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
 
-export const getHubsByUserIdQueryOptions = queryOptions({
-  queryKey: ["hubs"],
-  queryFn: async () => {
-    const response = await fetch("/api/hubs", {
-      method: "GET",
-    });
+import type { getHubById, getHubsByUserId } from "@/data-access/hubs/queries";
 
-    const result = (await response.json()) as Awaited<
-      ReturnType<typeof getHubsByUserId>
-    >;
-    return result;
-  },
-});
+export const getHubsByUserIdQueryOptions = (queryClient: QueryClient) =>
+  queryOptions({
+    queryKey: ["hubs"],
+    queryFn: async () => {
+      const response = await fetch("/api/hubs", {
+        method: "GET",
+      });
 
-export const getHubByIdQueryOptions = (
-  hubId: number,
-  headers?: ReadonlyHeaders,
-) =>
+      const result = (await response.json()) as Awaited<
+        ReturnType<typeof getHubsByUserId>
+      >;
+      return result;
+    },
+    select: (hubs) => {
+      // Set the hub data in the query client for each hub
+      hubs.forEach((hub) => {
+        const hubQueryOptions = getHubByIdQueryOptions(hub.id);
+        const hubData = queryClient.getQueryData(hubQueryOptions.queryKey);
+        if (!hubData) {
+          queryClient.setQueryData(hubQueryOptions.queryKey, {
+            color: hub.color,
+            description: hub.description,
+            id: hub.id,
+            name: hub.name,
+            status: hub.status,
+            startDate: hub.startDate,
+            endDate: hub.endDate,
+          });
+        }
+      });
+
+      return hubs;
+    },
+  });
+
+export const getHubByIdQueryOptions = (hubId: number) =>
   queryOptions({
     queryKey: ["hub", hubId],
     queryFn: async () => {
-      const fetchHeaders: HeadersInit = {};
-
-      if (headers) {
-        const cookie = headers.get("cookie");
-        if (cookie) {
-          fetchHeaders.cookie = cookie;
-        }
-      }
-
+      console.log("getHubByIdQueryOptions", hubId);
       const response = await fetch(getUrl(`/api/hubs/${hubId}`), {
         method: "GET",
-        headers: fetchHeaders,
       });
 
       const result = (await response.json()) as Awaited<
@@ -44,5 +54,4 @@ export const getHubByIdQueryOptions = (
 
       return result;
     },
-    enabled: !!hubId,
   });

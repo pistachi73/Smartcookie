@@ -1,11 +1,11 @@
 "use client";
 
-import { ArrowRight02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowRight02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import {
   type CalendarDate,
-  type Time,
   parseDateTime,
+  type Time,
 } from "@internationalized/date";
 import {
   Controller,
@@ -15,13 +15,14 @@ import {
 } from "react-hook-form";
 import { z } from "zod";
 
-import type { SessionStatus } from "@/db/schema/session";
 import { ToggleGroup } from "@/shared/components/ui/toggle-group";
-import { cn } from "@/shared/lib/classes";
 import { DatePicker } from "@/ui/date-picker";
-import { Label, fieldStyles } from "@/ui/field";
+import { fieldStyles, Label } from "@/ui/field";
 import { TimeField } from "@/ui/time-field";
 import { Toggle } from "@/ui/toggle";
+import { cn } from "@/shared/lib/classes";
+
+import type { SessionStatus } from "@/db/schema/session";
 
 export const UpdateSessionFormSchema = z
   .object({

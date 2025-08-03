@@ -1,9 +1,10 @@
+import { HugeiconsIcon } from "@hugeicons/react";
+import { CalendarBlock02Icon } from "@hugeicons-pro/core-solid-rounded";
+import { format } from "date-fns";
+
 import { linkStyles } from "@/shared/components/ui/link";
 import { Modal } from "@/shared/components/ui/modal";
 import { Note } from "@/shared/components/ui/note";
-import { CalendarBlock02Icon } from "@hugeicons-pro/core-solid-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { format } from "date-fns";
 
 type SessionConflictModalContentProps = {
   isConflictModalOpen: boolean;
@@ -99,7 +100,7 @@ export const SessionConflictWarning = ({
   setIsConflictModalOpen: (open: boolean) => void;
 }) => {
   return (
-    <Note intent="danger">
+    <Note intent="warning">
       <p className="font-medium">
         Session time conflict detected.{" "}
         <button

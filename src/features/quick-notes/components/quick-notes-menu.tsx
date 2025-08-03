@@ -1,19 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import { toast } from "sonner";
-
-import { Button, buttonStyles } from "@/ui/button";
-import { Popover } from "@/ui/popover";
-import { Button as RAButton } from "react-aria-components";
-import { useAddQuickNote } from "../hooks/use-add-quick-note";
-
-import { cn } from "@/shared/lib/classes";
-import { getCustomColorClasses } from "@/shared/lib/custom-colors";
-import { Link } from "@/ui/link";
-import { Skeleton } from "@/ui/skeleton";
-import { Textarea } from "@/ui/textarea";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   CheckmarkCircle01Icon,
   NoteAddIcon,
@@ -23,10 +10,23 @@ import {
   ArrowLeft02Icon,
   StickyNote02Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";
+import { useState } from "react";
+import { Button as RAButton } from "react-aria-components";
+import { toast } from "sonner";
 import { tv } from "tailwind-variants";
+
+import { Button, buttonStyles } from "@/ui/button";
+import { Link } from "@/ui/link";
+import { Popover } from "@/ui/popover";
+import { Skeleton } from "@/ui/skeleton";
+import { Textarea } from "@/ui/textarea";
+import { cn } from "@/shared/lib/classes";
+import { getCustomColorClasses } from "@/shared/lib/custom-colors";
+
+import { useAddQuickNote } from "../hooks/use-add-quick-note";
 import { quickNotesHubsQueryOptions } from "../lib/quick-notes-query-options";
 
 type NoteFormState = {

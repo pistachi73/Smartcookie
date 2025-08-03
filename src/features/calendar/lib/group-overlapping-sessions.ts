@@ -1,14 +1,14 @@
+import Heap from "heap-js";
+import memoize from "lodash/memoize";
+
 import type {
   CalendarSession,
   LayoutCalendarSession,
   TimeBoundary,
 } from "@/features/calendar/types/calendar.types";
-import Heap from "heap-js";
-import memoize from "lodash/memoize";
 
 export const groupOverlappingSessions = memoize(
   (sessions: CalendarSession[]): LayoutCalendarSession[] => {
-    console.log("groupOverlappingSessions sessions", sessions);
     if (sessions.length === 0) {
       return [];
     }
@@ -111,11 +111,11 @@ export const groupOverlappingSessions = memoize(
 
     return groups.flat();
   },
-  // Custom resolver function that creates a cache key based on occurrence IDs
+  // Custom resolver function that creates a cache key based on session IDs and times
   (sessions: CalendarSession[]) => {
     return sessions
-      .map((s) => s.id)
-      .sort((a, b) => a - b)
+      .map((s) => `${s.id}-${s.startTime}-${s.endTime}`)
+      .sort()
       .join(",");
   },
 );

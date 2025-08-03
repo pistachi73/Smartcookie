@@ -1,4 +1,6 @@
-import { mockNextNavigation } from "@/shared/lib/testing/navigation-mocks";
+import { useRouter } from "next/navigation";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import {
   cleanup,
   fireEvent,
@@ -6,12 +8,9 @@ import {
   screen,
   waitFor,
 } from "@/shared/lib/testing/test-utils";
-import { useRouter } from "next/navigation";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import { useDeleteSurveyTemplate } from "../../../hooks/survey-templates/use-delete-survey-template";
 import { DeleteSurveyTemplateModal } from "../delete-survey-template-modal";
-
-mockNextNavigation();
 
 vi.mock("../../../hooks/survey-templates/use-delete-survey-template", () => ({
   useDeleteSurveyTemplate: vi.fn(),

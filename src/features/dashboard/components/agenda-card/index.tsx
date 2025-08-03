@@ -1,27 +1,28 @@
 "use client";
 
-import { Button, buttonStyles } from "@/shared/components/ui/button";
-import { Heading } from "@/shared/components/ui/heading";
-import { cn } from "@/shared/lib/classes";
-import { getCustomColorClasses } from "@/shared/lib/custom-colors";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ArrowLeft01Icon,
   ArrowRight01Icon,
   Settings01Icon,
-  UserIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
+import { addDays, format, subDays } from "date-fns";
+import { useState } from "react";
 
+import { Button, buttonStyles } from "@/shared/components/ui/button";
 import { Card } from "@/shared/components/ui/card";
+import { Heading } from "@/shared/components/ui/heading";
 import { Link } from "@/shared/components/ui/link";
 import { Menu } from "@/shared/components/ui/menu";
 import { Separator } from "@/shared/components/ui/separator";
-import { Tooltip } from "@/shared/components/ui/tooltip";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { addDays, format, subDays } from "date-fns";
-import { useState } from "react";
+import {
+  AgendaSessionCard,
+  EmptyAgendaSessionCard,
+} from "@/shared/components/sessions/agenda-session-card";
+import { AgendaSessionCardSkeleton } from "@/shared/components/sessions/agenda-session-skeleton";
+
 import { useGetAgendaSessions } from "../../hooks/use-get-agenda-sessions";
-import type { getAgendaSessionsUseCase } from "../../use-cases/dashboard.use-case";
-import { SkeletonAgendaSessionCard } from "./skeleton-agenda-card";
+import { transformToAgendaSessionData } from "../../lib/transform-agenda-data";
 
 const agendaDateRanges: { label: string; value: number }[] = [
   {
@@ -44,8 +45,10 @@ export const AgendaCard = () => {
     new Date(),
     addDays(new Date(), 6),
   ]);
-  const { data: agendaSessions, isPending } =
+  const { data: rawAgendaSessions, isPending } =
     useGetAgendaSessions(dateInterval);
+
+  const agendaSessions = transformToAgendaSessionData(rawAgendaSessions ?? {});
 
   const onNext = () => {
     const startDate = addDays(dateInterval[0], dateRange);
@@ -147,7 +150,7 @@ export const AgendaCard = () => {
             <div className="flex flex-col gap-2">
               {Array.from({ length: 5 }).map((_, index) => (
                 <>
-                  <SkeletonAgendaSessionCard key={`skeleton-agenda-${index}`} />
+                  <AgendaSessionCardSkeleton key={`skeleton-agenda-${index}`} />
                   {index < 4 && <Separator />}
                 </>
               ))}
@@ -185,73 +188,5 @@ export const AgendaCard = () => {
         </div>
       </Card.Content>
     </Card>
-  );
-};
-
-const AgendaSessionCard = ({
-  session,
-}: {
-  session: Awaited<ReturnType<typeof getAgendaSessionsUseCase>>[string][number];
-}) => {
-  const color = getCustomColorClasses(session.hub?.color);
-  const numberOfStudents = session.students?.length;
-
-  return (
-    <div className="flex flex-row gap-3 p-1">
-      <div className="flex flex-col gap-1 shrink-0">
-        <p className="text-sm font-medium tabular-nums">
-          {format(session.startTime, "hh:mm a")}
-        </p>
-        <p className="text-xs text-muted-fg tabular-nums">
-          {format(session.endTime, "hh:mm a")}
-        </p>
-      </div>
-      <div
-        className={cn(
-          " rounded-lg w-1 shrink-0 min-w-0 min-h-0 border",
-          color?.bg,
-          color?.border,
-        )}
-      />
-
-      <div className="space-y-1.5">
-        <p className="text-sm line-clamp-1 font-medium leading-tight">
-          {session.hub?.name ?? "Untitled"}
-        </p>
-        <div className="flex flex-row items-center gap-1.5  ">
-          {numberOfStudents > 0 ? (
-            <Tooltip delay={0} closeDelay={0}>
-              <Tooltip.Trigger className="flex items-center gap-1 text-muted-fg">
-                <HugeiconsIcon icon={UserIcon} size={12} />
-                <p className="text-xs">{numberOfStudents} students</p>
-              </Tooltip.Trigger>
-              <Tooltip.Content
-                placement="right"
-                className="flex flex-col gap-1"
-              >
-                {session.students.map((student) => (
-                  <p key={student.id} className="text-xs">
-                    {student.name}
-                  </p>
-                ))}
-              </Tooltip.Content>
-            </Tooltip>
-          ) : (
-            <p className="flex items-center gap-1 text-muted-fg">
-              <HugeiconsIcon icon={UserIcon} size={12} />
-              <span className="text-xs">No students</span>
-            </p>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const EmptyAgendaSessionCard = () => {
-  return (
-    <p className="p-4 text-sm text-muted-fg italic text-center text-balance">
-      No sessions scheduled for this period
-    </p>
   );
 };

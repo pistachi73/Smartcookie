@@ -52,6 +52,7 @@ export const useNavigationGuard = ({
     });
   }, [handleAnchorClick]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: No need
   useEffect(() => {
     const mutationObserver = new MutationObserver(addAnchorListeners);
     mutationObserver.observe(document.body, { childList: true, subtree: true });

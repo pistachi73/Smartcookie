@@ -1,14 +1,15 @@
 "use client";
 
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Tick01Icon } from "@hugeicons-pro/core-solid-rounded";
+import type { ValidationResult } from "react-aria-components";
+import { ListBoxItem } from "react-aria-components";
+
 import { Button } from "@/shared/components/ui/button";
 import type { PopoverContentProps } from "@/shared/components/ui/popover";
 import { Select, type SelectProps } from "@/shared/components/ui/select";
 import { cn } from "@/shared/lib/classes";
 import { DEFAULT_CUSTOM_COLOR } from "@/shared/lib/custom-colors";
-import { Tick01Icon } from "@hugeicons-pro/core-solid-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-import type { ValidationResult } from "react-aria-components";
-import { ListBoxItem } from "react-aria-components";
 
 // Define available custom colors
 export const CUSTOM_COLORS_MAP = new Map([

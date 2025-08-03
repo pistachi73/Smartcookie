@@ -1,9 +1,9 @@
-import type { QuestionType } from "@/db/schema";
 import { cn } from "@/shared/lib/classes";
+
+import type { QuestionType } from "@/db/schema";
 import { QuestionTypeBadge } from "../questions/question-type-badge";
 
 type TemplateQuestionProps = {
-  id: number;
   type: QuestionType;
   order: number;
   title: string;
@@ -13,7 +13,6 @@ type TemplateQuestionProps = {
 };
 
 export const TemplateQuestion = ({
-  id,
   type,
   order,
   title,

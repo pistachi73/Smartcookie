@@ -1,15 +1,17 @@
-import { regularSpring } from "@/shared/lib/animation";
-import { cn } from "@/shared/lib/classes";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   CalendarRemove01Icon,
   Tick01Icon,
   Tick02Icon,
   TimeScheduleIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 import * as m from "motion/react-m";
 import { Checkbox } from "react-aria-components";
 import { tv } from "tailwind-variants";
+
+import { regularSpring } from "@/shared/lib/animation";
+import { cn } from "@/shared/lib/classes";
+
 import { useSessionStore } from "../../store/session-store";
 import type { HubSession } from "../../types/hub.types";
 

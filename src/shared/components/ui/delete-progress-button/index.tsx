@@ -1,12 +1,14 @@
 "use client";
 
-import { cn } from "@/shared/lib/classes";
-import { ProgressCircle } from "@/ui/progress-circle";
-import { Delete01Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { Delete01Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";
 import { Button, type ButtonProps } from "react-aria-components";
+
+import { ProgressCircle } from "@/ui/progress-circle";
+import { cn } from "@/shared/lib/classes";
+
 import { useDeleteProgressButton } from "./use-delete-progress-button";
 
 type DeleteProgressButtonProps = Omit<

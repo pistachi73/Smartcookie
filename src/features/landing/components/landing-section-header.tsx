@@ -1,7 +1,8 @@
+import { HugeiconsIcon } from "@hugeicons/react";
+import type { UserGroupIcon } from "@hugeicons-pro/core-solid-rounded";
+
 import { Badge } from "@/shared/components/ui/badge";
 import { Heading } from "@/shared/components/ui/heading";
-import type { UserGroupIcon } from "@hugeicons-pro/core-solid-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 
 type LandingSectionHeaderProps = {
   title: string;

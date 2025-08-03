@@ -1,9 +1,10 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
+
 import { createQuickNote } from "@/data-access/quick-notes/mutations";
 import { CreateQuickNoteSchema } from "@/data-access/quick-notes/schemas";
-import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 import type { NoteSummary } from "../types/quick-notes.types";
 
 export type UseAddQuickNoteProps = {

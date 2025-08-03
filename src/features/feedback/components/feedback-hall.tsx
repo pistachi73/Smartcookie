@@ -1,11 +1,12 @@
 "use client";
 
+import { HugeiconsIcon } from "@hugeicons/react";
+import { HelpSquareIcon, News01Icon } from "@hugeicons-pro/core-stroke-rounded";
+
 import { Heading } from "@/shared/components/ui/heading";
 import { Link } from "@/shared/components/ui/link";
 import { Note } from "@/shared/components/ui/note";
 import { useNavigateWithParams } from "@/shared/hooks/use-navigate-with-params";
-import { HelpSquareIcon, News01Icon } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 
 export const FeedbackHall = () => {
   const { createHrefWithParams } = useNavigateWithParams();

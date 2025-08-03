@@ -1,16 +1,18 @@
 "use server";
 
-import { env } from "@/env";
-import { getUrl } from "@/shared/lib/get-url";
 import { Stripe } from "stripe";
+
+import { getUrl } from "@/shared/lib/get-url";
+
+import { env } from "@/env";
 import { createDataAccessError, isDataAccessError } from "../errors";
 import {
   withAuthenticationNoInput,
   withValidationAndAuth,
   withValidationOnly,
 } from "../protected-data-access";
-import { getUserSubscriptionByUserId } from "../user-subscription/queries";
 import { updateUser } from "../user/mutations";
+import { getUserSubscriptionByUserId } from "../user-subscription/queries";
 import {
   createCheckoutSessionSchema,
   createStripeCustomerSchema,
@@ -37,7 +39,7 @@ export const createStripeCustomer = withValidationOnly({
       });
 
       return customer;
-    } catch (error) {
+    } catch (_error) {
       return createDataAccessError(
         "UNEXPECTED_ERROR",
         "Failed to create stripe customer",

@@ -1,11 +1,12 @@
+import { queryOptions } from "@tanstack/react-query";
+import type { z } from "zod";
+
 import type { getQuestionAnswers } from "@/data-access/answers/queries";
 import type {
   getQuestionById,
   getQuestions,
 } from "@/data-access/questions/queries";
 import { GetQuestionsSchema } from "@/data-access/questions/schemas";
-import { queryOptions } from "@tanstack/react-query";
-import type { z } from "zod";
 
 export const questionQueryOptions = (id: number) =>
   queryOptions({

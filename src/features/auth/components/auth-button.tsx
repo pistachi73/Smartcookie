@@ -1,8 +1,8 @@
 "use client";
 
-import { cn } from "@/shared/lib/classes";
 import { type ButtonProps, buttonStyles } from "@/ui/button";
 import { Link } from "@/ui/link";
+import { cn } from "@/shared/lib/classes";
 
 type LoginButtonProps = {
   children: React.ReactNode;

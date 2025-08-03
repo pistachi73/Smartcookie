@@ -1,10 +1,12 @@
 "use client";
 
-import { useAddQuickNote } from "@/features/quick-notes/hooks/use-add-quick-note";
-import { Button, type ButtonProps } from "@/ui/button";
-import { NoteAddIcon as NoteAddIconSolid } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { NoteAddIcon as NoteAddIconSolid } from "@hugeicons-pro/core-solid-rounded";
 import { useCallback, useState } from "react";
+
+import { Button, type ButtonProps } from "@/ui/button";
+
+import { useAddQuickNote } from "@/features/quick-notes/hooks/use-add-quick-note";
 
 interface AddNoteCardProps extends ButtonProps {
   hubId: number;

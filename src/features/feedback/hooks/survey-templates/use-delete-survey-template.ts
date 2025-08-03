@@ -1,8 +1,10 @@
-import { deleteSurveyTemplate } from "@/data-access/survey-templates/mutations";
-import { DeleteSurveyTemplateSchema } from "@/data-access/survey-templates/schemas";
-import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+
+import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
+
+import { deleteSurveyTemplate } from "@/data-access/survey-templates/mutations";
+import { DeleteSurveyTemplateSchema } from "@/data-access/survey-templates/schemas";
 
 export const useDeleteSurveyTemplate = ({
   onSuccess,

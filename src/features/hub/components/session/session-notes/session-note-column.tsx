@@ -1,15 +1,17 @@
-import type { SessionNotePosition } from "@/db/schema";
-import { getSessionNotesBySessionIdQueryOptions } from "@/features/hub/lib/session-notes-query-options";
-import { Button } from "@/shared/components/ui/button";
-import { Heading } from "@/shared/components/ui/heading";
-import { regularSpring } from "@/shared/lib/animation";
-import { cn } from "@/shared/lib/classes";
-import { Add01Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { Add01Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, type Variants } from "motion/react";
 import * as m from "motion/react-m";
 import { useState } from "react";
+
+import { Button } from "@/shared/components/ui/button";
+import { Heading } from "@/shared/components/ui/heading";
+import { regularSpring } from "@/shared/lib/animation";
+import { cn } from "@/shared/lib/classes";
+
+import type { SessionNotePosition } from "@/db/schema";
+import { getSessionNotesBySessionIdQueryOptions } from "@/features/hub/lib/session-notes-query-options";
 import type { ClientSessionNote } from "../../../types/session-notes.types";
 import { AddSessionNoteForm } from "./add-session-note-form";
 import { DraggableSessionNote } from "./draggable-session-note";
@@ -37,9 +39,8 @@ type SessionNoteColumnProps<T extends SessionNotePosition> = {
 };
 
 const headerMap: Record<SessionNotePosition, string> = {
-  present: "Present",
-  future: "Future",
-  past: "Past",
+  plans: "Plans",
+  "in-class": "In-Class",
 } as const;
 
 export const SessionNoteColumn = <T extends SessionNotePosition>({
@@ -58,7 +59,7 @@ export const SessionNoteColumn = <T extends SessionNotePosition>({
     <DroppableSessionNoteColumn sessionId={sessionId} position={position}>
       <m.div
         layout
-        className="p-1 mb-1 pr-0 flex flex-row items-center justify-between gap-x-2"
+        className="mb-1 pr-0 flex flex-row items-center justify-between gap-x-2"
       >
         <Heading level={4} className="text-sm font-medium text-muted-fg">
           {headerMap[position]}

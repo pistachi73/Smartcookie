@@ -1,18 +1,62 @@
-import { useCalendarDay } from "@/features/calendar/hooks/use-calendar-sessions";
-import { cn } from "@/shared/lib/classes";
+import { useRef } from "react";
+import { useDrop } from "react-aria";
 import type { Temporal } from "temporal-polyfill";
-import { DayViewSession } from "./day-view-session";
-import { DragToCreateEvent } from "./drag-to-create-event";
+
+import { cn } from "@/shared/lib/classes";
+
+import { useOptimizedDaySessions } from "@/features/calendar/hooks/use-optimized-calendar-sessions";
+import { getSnapToNearest15MinutesIndex } from "@/features/calendar/lib/utils";
+import { useCalendarDragDropStore } from "@/features/calendar/store/calendar-drag-drop-store";
+import { useUpdateSession } from "@/features/hub/hooks/session/use-update-session";
+import { DayViewPreviewSession, DayViewSession } from "./day-view-session";
+import { DragToCreateSession } from "./drag-to-create-session";
 import { HourMarker } from "./hour-marker";
 
 export const DayColumn = ({ date }: { date: Temporal.PlainDate }) => {
-  const { sessions } = useCalendarDay(date);
+  const columnRef = useRef<HTMLDivElement>(null);
+  const { sessions } = useOptimizedDaySessions(date);
+  const { mutate: updateSession } = useUpdateSession();
 
-  console.log("day sessions", sessions);
+  const { draggedSession, updateDragPreview, endDrag } =
+    useCalendarDragDropStore();
+  const previewSession = useCalendarDragDropStore((state) =>
+    state.getPreviewSession(date),
+  );
+
+  const { dropProps } = useDrop({
+    ref: columnRef,
+    onDropMove: ({ y }) => {
+      const timeSlot = getSnapToNearest15MinutesIndex(y);
+      updateDragPreview(date, timeSlot);
+    },
+    onDrop: () => {
+      if (!draggedSession || !previewSession) return;
+      const { startTime, endTime } = previewSession;
+
+      updateSession({
+        sessionId: draggedSession.id,
+        hubId: draggedSession.hub.id,
+        data: {
+          startTime,
+          endTime,
+          status: draggedSession.status,
+          originalStartTime: draggedSession.startTime,
+        },
+      });
+
+      endDrag();
+    },
+  });
 
   return (
-    <div className={cn("h-full w-full relative")}>
-      <DragToCreateEvent date={date} />
+    <div
+      ref={columnRef}
+      {...dropProps}
+      className={cn("h-full w-full relative")}
+      role="application"
+      aria-label="Calendar day view"
+    >
+      <DragToCreateSession date={date} />
       <HourMarker date={date} />
 
       {sessions?.map((session) => (
@@ -21,6 +65,8 @@ export const DayColumn = ({ date }: { date: Temporal.PlainDate }) => {
           session={session}
         />
       ))}
+
+      {previewSession && <DayViewPreviewSession session={previewSession} />}
     </div>
   );
 };

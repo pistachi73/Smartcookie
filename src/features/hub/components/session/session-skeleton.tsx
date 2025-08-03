@@ -1,11 +1,7 @@
 import { Separator } from "@/shared/components/ui/separator";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
-type SessionSkeletonProps = {
-  position: number;
-};
-
-export const SessionSkeleton = ({ position }: SessionSkeletonProps) => {
+export const SessionSkeleton = () => {
   return (
     <div className="border border-border-skeleton rounded-lg flex-1 mb-2 sm:mb-4 shadow-xs bg-overlay">
       <div className="group rounded-lg w-full flex flex-row items-center justify-between p-2 sm:p-1 sm:pr-4">

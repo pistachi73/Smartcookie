@@ -1,6 +1,7 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import { SidebarPanel } from "../sidebar-panel";
 
 vi.mock("next/navigation", () => ({
@@ -13,7 +14,7 @@ vi.mock("@/shared/hooks/use-navigate-with-params");
 
 vi.mock("@/shared/hooks/use-debounced-value", () => ({
   useDebouncedValue: vi.fn(
-    (value: string, delay: number, callback: (value: string) => void) => {
+    (value: string, _delay: number, callback: (value: string) => void) => {
       callback(value);
     },
   ),

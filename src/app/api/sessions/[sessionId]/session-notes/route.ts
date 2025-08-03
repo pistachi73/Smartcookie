@@ -1,9 +1,10 @@
-import { getSessionNotesBySessionId } from "@/data-access/session-notes/queries";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
+import { getSessionNotesBySessionId } from "@/data-access/session-notes/queries";
+
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ sessionId: string }> },
 ) {
   try {

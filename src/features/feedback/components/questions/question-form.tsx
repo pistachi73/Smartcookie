@@ -1,7 +1,19 @@
 "use client";
 
-import type { CreateQuestionSchema } from "@/data-access/questions/schemas";
-import type { QuestionType } from "@/db/schema";
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  RankingIcon as RakingIconSolid,
+  TextIcon as TextIconSolid,
+  ThumbsUpIcon as ThumbsUpIconSolid,
+} from "@hugeicons-pro/core-solid-rounded";
+import {
+  RankingIcon,
+  TextIcon,
+  ThumbsUpIcon,
+} from "@hugeicons-pro/core-stroke-rounded";
+import { Controller, type UseFormReturn } from "react-hook-form";
+import type { z } from "zod";
+
 import { Button } from "@/shared/components/ui/button";
 import { Checkbox } from "@/shared/components/ui/checkbox";
 import { Form } from "@/shared/components/ui/form";
@@ -15,19 +27,9 @@ import { Separator } from "@/shared/components/ui/separator";
 import { TextField } from "@/shared/components/ui/text-field";
 import { Textarea } from "@/shared/components/ui/textarea";
 import { cn } from "@/shared/lib/classes";
-import {
-  RankingIcon as RakingIconSolid,
-  TextIcon as TextIconSolid,
-  ThumbsUpIcon as ThumbsUpIconSolid,
-} from "@hugeicons-pro/core-solid-rounded";
-import {
-  RankingIcon,
-  TextIcon,
-  ThumbsUpIcon,
-} from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Controller, type UseFormReturn } from "react-hook-form";
-import type { z } from "zod";
+
+import type { CreateQuestionSchema } from "@/data-access/questions/schemas";
+import type { QuestionType } from "@/db/schema";
 
 const questionTypes: {
   id: QuestionType;

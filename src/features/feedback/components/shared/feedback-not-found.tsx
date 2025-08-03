@@ -1,7 +1,8 @@
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowLeft02Icon, SearchIcon } from "@hugeicons-pro/core-solid-rounded";
+
 import { Heading } from "@/shared/components/ui/heading";
 import { Link } from "@/shared/components/ui/link";
-import { ArrowLeft02Icon, SearchIcon } from "@hugeicons-pro/core-solid-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 
 interface FeedbackNotFoundProps {
   title: string;

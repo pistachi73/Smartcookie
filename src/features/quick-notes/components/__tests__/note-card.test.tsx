@@ -1,10 +1,12 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import {
   cleanup,
   fireEvent,
   render,
   screen,
 } from "@/shared/lib/testing/test-utils";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import { noteFocusRegistry } from "../../hooks/use-add-quick-note";
 import { useDeleteQuickNote } from "../../hooks/use-delete-quick-note";
 import { useUpdateQuickNote } from "../../hooks/use-update-quick-note";

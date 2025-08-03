@@ -1,11 +1,13 @@
+import type { QueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import {
   createQueryClientWrapper,
   createTestQueryClient,
 } from "@/shared/lib/testing/query-client-utils";
 import { act, renderHook } from "@/shared/lib/testing/test-utils";
-import type { QueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
 import { DELETION_TIME_MS, useDeleteQuickNote } from "../use-delete-quick-note";
 
 const mocks = vi.hoisted(() => ({

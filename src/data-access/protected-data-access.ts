@@ -1,7 +1,9 @@
+import type { z } from "zod";
+
 import { currentUser } from "@/shared/lib/auth";
 import { PublicError } from "@/shared/services/errors";
+
 import type { AuthUser } from "@/types/next-auth";
-import type { z } from "zod";
 
 /**
  * Wraps a use case function with Zod schema validation and authentication

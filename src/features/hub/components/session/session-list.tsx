@@ -1,19 +1,21 @@
 "use client";
 
-import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
-import { Button } from "@/shared/components/ui/button";
-import { Heading } from "@/shared/components/ui/heading";
-import { Switch } from "@/shared/components/ui/switch";
-import { regularSpring } from "@/shared/lib/animation";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   CalendarAdd02Icon,
   DeleteIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 import { LayoutGroup } from "motion/react";
 import * as m from "motion/react-m";
 import dynamic from "next/dynamic";
 import { useShallow } from "zustand/react/shallow";
+
+import { Button } from "@/shared/components/ui/button";
+import { Heading } from "@/shared/components/ui/heading";
+import { Switch } from "@/shared/components/ui/switch";
+import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
+import { regularSpring } from "@/shared/lib/animation";
+
 import { useSessionsByHubId } from "../../hooks/session/use-sessions-by-hub-id";
 import { useSessionStore } from "../../store/session-store";
 import { DesktopSessionBubble, Session } from "./session";
@@ -43,6 +45,7 @@ export function SessionsList({ hubId }: { hubId: number }) {
     setIsEditingMode,
     setIsAddModalOpen,
     setIsDeleteModalOpen,
+    isAddModalOpen,
   } = useSessionStore(
     useShallow((store) => ({
       isEditingMode: store.isEditingMode,
@@ -50,6 +53,7 @@ export function SessionsList({ hubId }: { hubId: number }) {
       setIsEditingMode: store.setIsEditingMode,
       setIsAddModalOpen: store.setIsAddModalOpen,
       setIsDeleteModalOpen: store.setIsDeleteModalOpen,
+      isAddModalOpen: store.isAddModalOpen,
     })),
   );
 
@@ -114,10 +118,7 @@ export function SessionsList({ hubId }: { hubId: number }) {
 
         {isLoadingSessions ? (
           Array.from({ length: 5 }).map((_, index) => (
-            <SessionSkeleton
-              key={`session-skeleton-${index}`}
-              position={index + 1}
-            />
+            <SessionSkeleton key={`session-skeleton-${index}`} />
           ))
         ) : (
           <LayoutGroup>
@@ -150,7 +151,12 @@ export function SessionsList({ hubId }: { hubId: number }) {
           </LayoutGroup>
         )}
       </div>
-      <DynamicAddSessionsFormModal hubId={hubId} />
+      <DynamicAddSessionsFormModal
+        isOpen={isAddModalOpen}
+        onOpenChange={setIsAddModalOpen}
+        hubId={hubId}
+        disableHubSelection={true}
+      />
       <DynamicDeleteSessionsModal hubId={hubId} />
     </>
   );

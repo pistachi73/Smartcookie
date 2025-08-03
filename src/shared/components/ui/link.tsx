@@ -1,9 +1,9 @@
 "use client";
 
 import {
+  composeRenderProps,
   Link as LinkPrimitive,
   type LinkProps as LinkPrimitiveProps,
-  composeRenderProps,
 } from "react-aria-components";
 import { tv } from "tailwind-variants";
 

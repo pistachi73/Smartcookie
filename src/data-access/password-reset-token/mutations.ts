@@ -1,10 +1,11 @@
 "use server";
 
+import { eq } from "drizzle-orm";
+import { z } from "zod";
+
 import { TOKEN_LENGTH } from "@/core/config/app-config";
 import { db } from "@/db";
 import { passwordResetToken } from "@/db/schema";
-import { eq } from "drizzle-orm";
-import { z } from "zod";
 import { withValidationOnly } from "../protected-data-access";
 import { generateRandomToken } from "../utils";
 import { getPasswordResetTokenByEmail } from "./queries";
@@ -39,7 +40,7 @@ export const generatePasswordResetToken = withValidationOnly({
   }),
   callback: async ({ email }) => {
     const token = generateRandomToken(TOKEN_LENGTH);
-    const expires = new Date(new Date().getTime() + 3600 * 1000);
+    const expires = new Date(Date.now() + 3600 * 1000);
     const existingToken = await getPasswordResetTokenByEmail({ email });
 
     const [createdToken] = await Promise.all([

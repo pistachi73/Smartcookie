@@ -1,6 +1,7 @@
-import { SurveyTemplateDetails } from "@/features/feedback/components/survey-templates/survey-template-details";
 import isNumber from "lodash/isNumber";
 import { redirect } from "next/navigation";
+
+import { SurveyTemplateDetails } from "@/features/feedback/components/survey-templates/survey-template-details";
 
 type SurveyTemplateDetailsPageProps = {
   params: Promise<{

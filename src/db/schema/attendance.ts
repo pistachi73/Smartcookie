@@ -1,5 +1,6 @@
 import { relations } from "drizzle-orm";
 import { integer, pgEnum, serial, timestamp } from "drizzle-orm/pg-core";
+
 import { hub } from "./hub";
 import { session } from "./session";
 import { student } from "./student";

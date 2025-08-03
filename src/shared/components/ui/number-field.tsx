@@ -1,5 +1,12 @@
 "use client";
 
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  ArrowDown01Icon,
+  ArrowUp01Icon,
+  MinusSignIcon,
+  PlusSignIcon,
+} from "@hugeicons-pro/core-stroke-rounded";
 import {
   Button,
   type ButtonProps,
@@ -11,13 +18,7 @@ import { tv } from "tailwind-variants";
 
 import { useMediaQuery } from "@/shared/hooks/use-media-query";
 import { cn } from "@/shared/lib/classes";
-import {
-  ArrowDown01Icon,
-  ArrowUp01Icon,
-  MinusSignIcon,
-  PlusSignIcon,
-} from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
+
 import {
   Description,
   FieldError,

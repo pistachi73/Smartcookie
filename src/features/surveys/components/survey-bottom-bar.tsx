@@ -1,14 +1,16 @@
 "use client";
 
-import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
-import { Keyboard } from "@/shared/components/ui/keyboard";
-import { Link } from "@/shared/components/ui/link";
-import { Tooltip } from "@/shared/components/ui/tooltip";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ArrowLeft02Icon,
   InformationCircleIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
+
+import { Keyboard } from "@/shared/components/ui/keyboard";
+import { Link } from "@/shared/components/ui/link";
+import { Tooltip } from "@/shared/components/ui/tooltip";
+import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
+
 import { useSurveyStore } from "../store/survey-store-provider";
 
 // Shortcuts are now local

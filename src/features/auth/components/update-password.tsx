@@ -1,23 +1,23 @@
-import { useAuthStore } from "@/features/auth/store/auth-store-provider";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
 import { useShallow } from "zustand/react/shallow";
 
-import { authSchema } from "../lib/validation";
-import { FormWrapper } from "./form-wrapper";
-
-import { changePassword } from "@/data-access/auth/mutations";
-import { ChangePasswordSchema } from "@/data-access/auth/schemas";
-import { isDataAccessError } from "@/data-access/errors";
-import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 import { Button } from "@/ui/button";
 import { Form } from "@/ui/form";
 import { PasswordFieldWithValidation } from "@/ui/password-field-with-validation";
 import { ProgressCircle } from "@/ui/progress-circle";
 import { TextField } from "@/ui/text-field";
+import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
+
+import { changePassword } from "@/data-access/auth/mutations";
+import { ChangePasswordSchema } from "@/data-access/auth/schemas";
+import { isDataAccessError } from "@/data-access/errors";
+import { useAuthStore } from "@/features/auth/store/auth-store-provider";
+import { authSchema } from "../lib/validation";
+import { FormWrapper } from "./form-wrapper";
 
 const updatePasswordSchema = authSchema
   .pick({
@@ -39,7 +39,6 @@ const useAuthUpdatePassword = () =>
   );
 
 export const UpdatePassword = () => {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const { setStep } = useAuthUpdatePassword();

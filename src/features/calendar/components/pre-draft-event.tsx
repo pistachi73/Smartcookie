@@ -1,7 +1,8 @@
 import { cn } from "@/shared/lib/classes";
-import { getTimeLabelFromSnapIndex } from "../hooks/use-drag-to-create-event";
 
-export const PreDraftEvent = ({
+import { getTimeLabelFromSnapIndex } from "../hooks/use-drag-to-create-session";
+
+export const DraftSession = ({
   startIndex,
   endIndex,
 }: {
@@ -27,7 +28,7 @@ export const PreDraftEvent = ({
     >
       <div
         className={cn(
-          "flex border px-1.5 h-full border-fg/70 bg-overlay-elevated-highlight/70 w-full overflow-hidden",
+          "flex border px-1.5 h-full border-fg/50 bg-muted/70 w-full overflow-hidden",
           isShortEvent
             ? "rounded-sm flex-row justify-between gap-1 items-center"
             : "rounded-md flex-col py-1.5 gap-0.5",

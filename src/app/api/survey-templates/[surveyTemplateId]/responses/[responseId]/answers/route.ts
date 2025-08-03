@@ -1,5 +1,6 @@
-import { getSurveyTemplateResponseAnswers } from "@/data-access/survey-response/queries";
 import { NextResponse } from "next/server";
+
+import { getSurveyTemplateResponseAnswers } from "@/data-access/survey-response/queries";
 
 export async function GET(
   _: Request,

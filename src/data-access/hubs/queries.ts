@@ -1,13 +1,17 @@
 "use server";
 
+import { asc, eq, sql } from "drizzle-orm";
+
 import { db } from "@/db";
 import { hub } from "@/db/schema";
-import { asc, eq, sql } from "drizzle-orm";
 import {
   withAuthenticationNoInput,
   withValidationAndAuth,
 } from "../protected-data-access";
-import { parseDateWithTimezone } from "../utils";
+import {
+  parseOptionalDateWithTimezone,
+  parseRequiredDateWithTimezone,
+} from "../utils";
 import { GetHubByIdSchema } from "./schemas";
 
 export const getHubsByUserIdForQuickNotes = withAuthenticationNoInput({
@@ -31,11 +35,13 @@ export const getHubsByUserId = withAuthenticationNoInput({
         name: true,
         description: true,
         status: true,
-        startDate: true,
-        endDate: true,
         level: true,
         color: true,
         schedule: true,
+      },
+      extras: {
+        startDate: parseRequiredDateWithTimezone(hub.startDate, "startDate"),
+        endDate: parseOptionalDateWithTimezone(hub.endDate, "endDate"),
       },
       with: {
         studentHubs: {
@@ -77,8 +83,8 @@ export const getHubById = withValidationAndAuth({
         name: hub.name,
         description: hub.description,
         status: hub.status,
-        startDate: parseDateWithTimezone(hub.startDate, "startDate"),
-        endDate: parseDateWithTimezone(hub.endDate, "endDate"),
+        startDate: parseRequiredDateWithTimezone(hub.startDate, "startDate"),
+        endDate: parseOptionalDateWithTimezone(hub.endDate, "endDate"),
         color: hub.color,
       })
       .from(hub)

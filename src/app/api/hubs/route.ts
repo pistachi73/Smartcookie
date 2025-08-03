@@ -1,5 +1,6 @@
-import { getHubsByUserId } from "@/data-access/hubs/queries";
 import { NextResponse } from "next/server";
+
+import { getHubsByUserId } from "@/data-access/hubs/queries";
 
 export async function GET() {
   try {

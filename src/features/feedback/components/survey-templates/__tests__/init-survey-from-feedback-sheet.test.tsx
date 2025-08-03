@@ -1,8 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { useInitSurvey } from "@/features/hub/hooks/feedback/use-init-survey";
-import { useHubs } from "@/features/hub/hooks/use-hubs";
-import { mockNextNavigation } from "@/shared/lib/testing/navigation-mocks";
 import {
   cleanup,
   fireEvent,
@@ -10,9 +7,10 @@ import {
   screen,
   waitFor,
 } from "@/shared/lib/testing/test-utils";
-import { InitSurveyFromFeedbackSheet } from "../init-survey-from-feedback-sheet";
 
-mockNextNavigation();
+import { useInitSurvey } from "@/features/hub/hooks/feedback/use-init-survey";
+import { useHubs } from "@/features/hub/hooks/use-hubs";
+import { InitSurveyFromFeedbackSheet } from "../init-survey-from-feedback-sheet";
 
 // Mock dependencies
 vi.mock("@/features/hub/hooks/use-hubs", () => ({

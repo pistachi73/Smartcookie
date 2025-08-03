@@ -1,5 +1,10 @@
-import type { getSessionsByHubId } from "@/data-access/sessions/queries";
-import { queryOptions } from "@tanstack/react-query";
+import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
+
+import {
+  getHubOverviewSessions,
+  getInfiniteSessionsByHubId,
+  type getSessionsByHubId,
+} from "@/data-access/sessions/queries";
 
 export const getSessionsByHubIdQueryOptions = (hubId: number) =>
   queryOptions({
@@ -18,5 +23,37 @@ export const getSessionsByHubIdQueryOptions = (hubId: number) =>
       >;
 
       return json;
+    },
+  });
+
+export const getHubOverviewSessionsQueryOptions = (hubId: number) =>
+  queryOptions({
+    queryKey: ["hub-overview-sessions", hubId],
+    queryFn: async () => {
+      return await getHubOverviewSessions({ hubId });
+      // const response = await fetch(`/api/hubs/${hubId}/overview/sessions`, {
+      //   method: "GET",
+      // });
+    },
+  });
+
+type PageParam = [string | undefined, "next" | "prev" | undefined];
+
+export const getInfiniteSessionsByHubIdQueryOptions = (hubId: number) =>
+  infiniteQueryOptions({
+    queryKey: ["hub-infinite-sessions", hubId],
+    queryFn: async ({ pageParam }) => {
+      const [cursor, direction] = pageParam;
+      return getInfiniteSessionsByHubId({
+        hubId,
+        cursor: cursor ? new Date(cursor) : undefined,
+        limit: 5,
+        direction,
+      });
+    },
+    initialPageParam: [undefined, undefined] as PageParam,
+    getNextPageParam: (lastPage) => [lastPage.nextCursor, "next"] as PageParam,
+    getPreviousPageParam: (firstPage) => {
+      return [firstPage.prevCursor, "prev"] as PageParam;
     },
   });

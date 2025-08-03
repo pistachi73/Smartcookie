@@ -1,9 +1,9 @@
 import {
-  type MockedFunction,
   beforeEach,
   describe,
   expect,
   it,
+  type MockedFunction,
   vi,
 } from "vitest";
 
@@ -69,6 +69,8 @@ vi.mock("drizzle-orm", () => ({
   eq: vi.fn(),
 }));
 
+import { AuthError } from "next-auth";
+
 import { signIn } from "@/core/config/auth-config";
 import { createDataAccessError } from "@/data-access/errors";
 import { createMockTwoFactorConfirmation } from "@/data-access/two-factor-confirmation/__tests__/__mocks__";
@@ -82,7 +84,6 @@ import { getTwoFactorTokenByEmail } from "@/data-access/two-factor-token/queries
 import { createMockUser } from "@/data-access/user/__mocks__";
 import { getUserByEmail } from "@/data-access/user/queries";
 import { hashPassword } from "@/data-access/utils";
-import { AuthError } from "next-auth";
 import { credentialsSignIn } from "../mutations";
 
 const mockSignIn = signIn as MockedFunction<typeof signIn>;

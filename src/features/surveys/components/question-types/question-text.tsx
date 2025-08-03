@@ -1,7 +1,9 @@
 "use client";
 
-import { Textarea } from "@/shared/components/ui/textarea";
 import { Controller, useFormContext } from "react-hook-form";
+
+import { Textarea } from "@/shared/components/ui/textarea";
+
 import { useSurveyStore } from "../../store/survey-store-provider";
 
 interface QuestionTextProps {

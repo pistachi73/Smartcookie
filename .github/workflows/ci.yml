@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ master, develop ]
+  push:
+    branches: [ master, develop ]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: '9.7.1'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - name: Configure HugeIcons authentication
+        run: |
+          echo "@hugeicons-pro:registry=https://npm.hugeicons.com/" > ~/.npmrc
+          echo "//npm.hugeicons.com/:_authToken=${{ secrets.HUGEICONS_TOKEN }}" >> ~/.npmrc
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check code (lint, format, organize imports)
+        run: pnpm run check
+
+      - name: Run tests
+        run: pnpm run test:run 

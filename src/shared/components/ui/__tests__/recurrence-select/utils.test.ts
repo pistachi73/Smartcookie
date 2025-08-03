@@ -1,7 +1,12 @@
-import { getWeekdayCardinal } from "@/features/calendar/lib/calendar";
-import { parseRruleText } from "@/shared/components/ui/recurrence-select/utils";
 import { RRule } from "rrule";
 import { describe, expect, it } from "vitest";
+
+import {
+  parseRruleText,
+  rruleLanguage,
+} from "@/shared/components/ui/recurrence-select/utils";
+
+import { getWeekdayCardinal } from "@/features/calendar/lib/calendar";
 
 describe("getWeekdayCardinal", () => {
   it("returns correct cardinal for first occurrence of weekday", () => {
@@ -137,7 +142,13 @@ describe("parseRruleText", () => {
     const result = parseRruleText(rrule.toString());
 
     expect(result.label).toBe("Every week");
-    expect(result.auxLabel).toContain("until Dec 30, 2023");
+    // Make the test timezone-agnostic by checking what RRule actually generates with custom language
+    const expectedAuxText = rrule
+      .toText(undefined, rruleLanguage)
+      .split(" ")
+      .slice(2)
+      .join(" ");
+    expect(result.auxLabel).toBe(expectedAuxText);
   });
 
   it("correctly parses frequency with count", () => {

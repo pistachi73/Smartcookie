@@ -1,11 +1,13 @@
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Tick02Icon } from "@hugeicons-pro/core-solid-rounded";
+import * as m from "motion/react-m";
+
 import {
   UserAvatar,
   type UserAvatarProps,
 } from "@/shared/components/ui/user-avatar";
 import { cn } from "@/shared/lib/classes";
-import { Tick02Icon } from "@hugeicons-pro/core-solid-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-import * as m from "motion/react-m";
+
 import { avatarSizes } from "../ui/avatar";
 
 export const StudentProfile = ({

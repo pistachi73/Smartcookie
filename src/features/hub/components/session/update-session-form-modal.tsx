@@ -1,18 +1,18 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CalendarDate, Time } from "@internationalized/date";
+import { useQuery } from "@tanstack/react-query";
+import { useCallback, useEffect, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import type { z } from "zod";
+
 import { Button } from "@/shared/components/ui/button";
 import { Form } from "@/shared/components/ui/form";
 import { Modal } from "@/shared/components/ui/modal";
 import { ProgressCircle } from "@/shared/components/ui/progress-circle";
-import { serializeDateValue } from "@/shared/lib/serialize-react-aria/serialize-date-value";
-import { serializeTime } from "@/shared/lib/serialize-react-aria/serialize-time";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { CalendarDate, Time } from "@internationalized/date";
-import { useCallback, useEffect, useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
-import type { z } from "zod";
+
 import { useCheckSessionConflicts } from "../../hooks/session/use-check-session-conflicts";
 import { useUpdateSession } from "../../hooks/session/use-update-session";
-import { useHubById } from "../../hooks/use-hub-by-id";
-import { calculateRecurrentSessions } from "../../lib/calculate-recurrent-sessions";
+import { getHubByIdQueryOptions } from "../../lib/hub-query-options";
 import type { HubSession } from "../../types/hub.types";
 import {
   SessionConflictModalContent,
@@ -38,9 +38,10 @@ export const UpdateSessionFormModal = ({
 }: UpdateSessionFormModalProps) => {
   const [isConflictModalOpen, setIsConflictModalOpen] = useState(false);
 
-  const { data: hub } = useHubById(hubId);
-
-  if (!hub) return null;
+  const { data: hub } = useQuery({
+    ...getHubByIdQueryOptions(hubId),
+    enabled: isOpen,
+  });
 
   const {
     mutateAsync: checkSessionConflicts,
@@ -49,29 +50,27 @@ export const UpdateSessionFormModal = ({
     isPending: isCheckingConflicts,
   } = useCheckSessionConflicts();
 
-  const { mutateAsync: updateSession, isPending: isUpdatingSession } =
+  const { mutate: updateSession, isPending: isUpdatingSession } =
     useUpdateSession();
+
+  const startDate = new Date(session.startTime);
+  const endDate = new Date(session.endTime);
 
   const form = useForm<z.infer<typeof UpdateSessionFormSchema>>({
     resolver: zodResolver(UpdateSessionFormSchema),
+    defaultValues: {
+      date: new CalendarDate(
+        startDate.getFullYear(),
+        startDate.getMonth() + 1,
+        startDate.getDate(),
+      ),
+      startTime: new Time(startDate.getHours(), startDate.getMinutes()),
+      endTime: new Time(endDate.getHours(), endDate.getMinutes()),
+      status: session.status,
+    },
   });
 
-  const isDirty = form.formState.isDirty;
-
-  // Watch all changes
   useEffect(() => {
-    const subscription = form.watch((value, { type }) => {
-      if (type === "change") {
-        resetConflicts();
-      }
-    });
-    return () => subscription.unsubscribe();
-  }, [form.watch, resetConflicts]);
-
-  useEffect(() => {
-    const startDate = new Date(session.startTime);
-    const endDate = new Date(session.endTime);
-
     form.reset({
       date: new CalendarDate(
         startDate.getFullYear(),
@@ -82,39 +81,60 @@ export const UpdateSessionFormModal = ({
       endTime: new Time(endDate.getHours(), endDate.getMinutes()),
       status: session.status,
     });
-  }, [form, session]);
+  }, [session]);
+
+  const isDirty = form.formState.isDirty;
+
+  // Watch all changes
+  useEffect(() => {
+    const subscription = form.watch((_, { type }) => {
+      if (type === "change") {
+        resetConflicts();
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [form.watch, resetConflicts]);
 
   const onSubmit = async (data: z.infer<typeof UpdateSessionFormSchema>) => {
-    console.log({
-      startTime: serializeTime(data.startTime),
-      endTime: serializeTime(data.endTime),
-    });
-    const sessions = calculateRecurrentSessions({
-      date: serializeDateValue(data.date),
-      startTime: serializeTime(data.startTime),
-      endTime: serializeTime(data.endTime),
-      hubStartsOn: hub.startDate,
-    });
+    const startDate = new Date(
+      data.date.year,
+      data.date.month - 1,
+      data.date.day,
+      data.startTime.hour,
+      data.startTime.minute,
+    );
 
-    const { success } = await checkSessionConflicts({
-      sessions,
-      excludedSessionIds: [session.id],
-    });
+    const endDate = new Date(
+      data.date.year,
+      data.date.month - 1,
+      data.date.day,
+      data.endTime.hour,
+      data.endTime.minute,
+    );
 
-    const sessionToUpdate = sessions[0];
+    const sessionToUpdate = {
+      startTime: startDate.toISOString(),
+      endTime: endDate.toISOString(),
+      hub: {
+        id: hubId,
+        name: hub?.name,
+        color: hub?.color,
+      },
+    };
 
-    if (!success || !sessionToUpdate) return;
+    if (!conflictsData) {
+      const { success } = await checkSessionConflicts({
+        sessions: [sessionToUpdate],
+        excludedSessionIds: [session.id],
+      });
+      if (!success) return;
+    }
 
-    console.log({
-      startTime: serializeTime(data.startTime),
-      endTime: serializeTime(data.endTime),
-      sessionToUpdateStartTime: sessionToUpdate.startTime,
-      sessionToUpdateEndTime: sessionToUpdate.endTime,
-    });
-    await updateSession({
+    updateSession({
       sessionId: session.id,
       hubId,
       data: {
+        originalStartTime: session.startTime,
         startTime: sessionToUpdate.startTime,
         endTime: sessionToUpdate.endTime,
         status: data.status,
@@ -138,6 +158,13 @@ export const UpdateSessionFormModal = ({
   );
 
   const isPending = isCheckingConflicts || isUpdatingSession;
+  const hasConflicts = conflictsData && !conflictsData?.success;
+
+  const buttonText = isPending
+    ? "Saving..."
+    : hasConflicts
+      ? "Save with conflicts"
+      : "Save";
 
   return (
     <>
@@ -160,15 +187,17 @@ export const UpdateSessionFormModal = ({
                 />
               )}
             </Modal.Body>
-            <Modal.Footer>
-              <Modal.Close size="small">Close</Modal.Close>
+            <Modal.Footer className="flex flex-row">
+              <Modal.Close size="small" className={"w-full sm:w-fit"}>
+                Close
+              </Modal.Close>
               <Button
                 type="submit"
                 shape="square"
                 size="small"
-                className="px-6"
+                className="px-6 w-full sm:w-fitd"
                 isPending={isPending}
-                isDisabled={!isDirty}
+                isDisabled={!isDirty || !hub}
               >
                 {isPending && (
                   <ProgressCircle
@@ -176,7 +205,7 @@ export const UpdateSessionFormModal = ({
                     aria-label="Editing session..."
                   />
                 )}
-                {isPending ? "Editing..." : "Edit"}
+                {buttonText}
               </Button>
             </Modal.Footer>
           </Form>

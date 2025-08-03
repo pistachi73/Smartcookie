@@ -1,17 +1,23 @@
 "use client";
-import { formatCalendarHeaderTitle } from "@/features/calendar/lib/utils";
-import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
-import type { CalendarView } from "@/features/calendar/types/calendar.types";
-import { Heading } from "@/shared/components/ui/heading";
-import { Button } from "@/ui/button";
-import { Select } from "@/ui/select";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ArrowLeft01Icon,
   ArrowRight01Icon,
   SidebarRight01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { SelectValue } from "react-aria-components";
 import { useShallow } from "zustand/react/shallow";
+
+import { Heading } from "@/shared/components/ui/heading";
+import { Select } from "@/shared/components/ui/select";
+import { Button } from "@/ui/button";
+import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
+
+import { useCalendarHeaderTitle } from "@/features/calendar/hooks/use-calendar-header-title";
+import { useCalendarStore } from "@/features/calendar/providers/calendar-store-provider";
+import type { CalendarView } from "@/features/calendar/types/calendar.types";
+import { cn } from "@/lib/utils";
+
 const useCalendarHeader = () =>
   useCalendarStore(
     useShallow((store) => ({
@@ -34,11 +40,16 @@ export const CalendarHeader = () => {
     onNavigation,
     toggleSidebar,
   } = useCalendarHeader();
+  const { down } = useViewport();
 
-  const title = formatCalendarHeaderTitle(
+  const { title } = useCalendarHeaderTitle({
     selectedDate,
-    calendarView === "weekday" ? "week" : calendarView,
-  );
+    calendarView: calendarView === "weekday" ? "week" : calendarView,
+  });
+
+  const today = new Date();
+  const todayDay = today.getDate();
+  const isMobile = down("sm");
 
   return (
     <div className="w-full flex flex-row items-center justify-between p-4 py-3 gap-6 border-b">
@@ -48,38 +59,45 @@ export const CalendarHeader = () => {
         </Heading>
       </div>
 
-      <div className="flex flex-row gap-2">
-        <div className="flex">
+      <div className="flex flex-row sm:gap-2">
+        <div className="flex items-center">
           <Button
             intent="plain"
-            className="size-9 p-0 text-muted-fg hover:text-current"
+            size="square-petite"
+            className="size-9 p-0 sm:text-muted-fg hover:text-current"
             onPress={() => {
               onNavigation(-1);
             }}
           >
-            <HugeiconsIcon icon={ArrowLeft01Icon} size={18} />
+            <HugeiconsIcon
+              icon={ArrowLeft01Icon}
+              className="size-4 sm:size-4.5"
+            />
           </Button>
           <Button
             intent="plain"
-            className="size-9 p-0 text-muted-fg hover:text-current"
+            size="square-petite"
+            className="size-9 p-0 sm:text-muted-fg hover:text-current"
             onPress={() => {
               onNavigation(1);
             }}
           >
-            <HugeiconsIcon icon={ArrowRight01Icon} size={18} />
+            <HugeiconsIcon
+              icon={ArrowRight01Icon}
+              className="size-4 sm:size-4.5"
+            />
           </Button>
         </div>
         <Select
-          defaultSelectedKey={calendarView}
+          selectedKey={calendarView}
           onSelectionChange={(value) => {
             if (!value) return;
             setCalendarView(value as CalendarView);
           }}
         >
-          <Select.Trigger
-            showArrow
-            className="min-w-[60px] h-9 w-fit px-4 hover:bg-secondary"
-          />
+          <Button size="small" intent={isMobile ? "plain" : "outline"}>
+            <SelectValue />
+          </Button>
           <Select.List
             className={{
               popover: "w-[180px]!",
@@ -111,33 +129,43 @@ export const CalendarHeader = () => {
             ]}
           >
             {(item) => (
-              <Select.Option id={item.id} textValue={item.name}>
+              <Select.Option
+                id={item.id}
+                textValue={item.name}
+                className={cn("text-sm")}
+              >
                 {item.name}
               </Select.Option>
             )}
           </Select.List>
         </Select>
         <Button
-          intent="outline"
-          size="small"
+          intent={"outline"}
+          size={isMobile ? "square-petite" : "small"}
           shape="square"
           onPress={onToday}
-          className="h-9"
+          className={cn("h-9", isMobile && "size-9 text-sm")}
         >
-          Today
+          {isMobile ? todayDay : "Today"}
         </Button>
-        <Button
-          intent="outline"
-          shape="square"
-          size="square-petite"
-          className="size-9"
-          onPress={() => {
-            toggleSidebar();
-          }}
-          aria-label="Toggle sidebar"
-        >
-          <HugeiconsIcon icon={SidebarRight01Icon} size={18} data-slot="icon" />
-        </Button>
+        {!isMobile && (
+          <Button
+            intent="outline"
+            shape="square"
+            size="square-petite"
+            className="size-9"
+            onPress={() => {
+              toggleSidebar();
+            }}
+            aria-label="Toggle sidebar"
+          >
+            <HugeiconsIcon
+              icon={SidebarRight01Icon}
+              size={18}
+              data-slot="icon"
+            />
+          </Button>
+        )}
       </div>
     </div>
   );

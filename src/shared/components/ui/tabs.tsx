@@ -1,8 +1,7 @@
 "use client";
 
-import { useId } from "react";
-
 import { LayoutGroup, motion } from "motion/react";
+import { useId } from "react";
 import type {
   TabListProps as TabListPrimitiveProps,
   TabPanelProps as TabPanelPrimitiveProps,
@@ -10,11 +9,11 @@ import type {
   TabsProps as TabsPrimitiveProps,
 } from "react-aria-components";
 import {
+  composeRenderProps,
   TabList as TabListPrimitive,
   TabPanel as TabPanelPrimitive,
   Tab as TabPrimitive,
   Tabs as TabsPrimitive,
-  composeRenderProps,
 } from "react-aria-components";
 import { twJoin, twMerge } from "tailwind-merge";
 import { tv } from "tailwind-variants";
@@ -100,7 +99,7 @@ const tabStyles = tv({
 });
 
 interface TabProps extends TabPrimitiveProps {
-  ref?: React.RefObject<HTMLButtonElement>;
+  ref?: React.RefObject<HTMLDivElement>;
   children:
     | React.ReactNode
     | ((props: { isSelected: boolean }) => React.ReactNode);

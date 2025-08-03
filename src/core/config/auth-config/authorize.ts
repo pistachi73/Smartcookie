@@ -1,6 +1,7 @@
+import { z } from "zod";
+
 import { verifyPassword } from "@/data-access/auth/mutations";
 import { getUserByEmail } from "@/data-access/user/queries";
-import { z } from "zod";
 
 export const authorize = async (
   credentials: Partial<Record<"email" | "password", unknown>>,
@@ -28,7 +29,6 @@ export const authorize = async (
     });
 
     if (!passwordsMatch) return null;
-    console.log("returning user, authorized");
     return user;
   } catch (error) {
     console.error(error);

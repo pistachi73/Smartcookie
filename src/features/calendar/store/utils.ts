@@ -1,42 +1,7 @@
-import type { Event, Occurrence } from "@/db/schema";
-import type {
-  CalendarView,
-  UIOccurrence,
-} from "@/features/calendar/types/calendar.types";
-import memoize from "lodash/memoize";
 import { Temporal } from "temporal-polyfill";
 
-export const computeUIOccurrence = memoize(
-  (occ: Occurrence, evt: Event): UIOccurrence => {
-    const timezone = occ.overrides?.timezone || evt.timezone;
-    const startInstant = new Date(
-      Temporal.Instant.from(occ.startTime)
-        .toZonedDateTimeISO(timezone)
-        .toString({
-          timeZoneName: "never",
-        }),
-    );
-    const endInstant = new Date(
-      Temporal.Instant.from(occ.endTime).toZonedDateTimeISO(timezone).toString({
-        timeZoneName: "never",
-      }),
-    );
-
-    return {
-      ...evt,
-      eventId: evt.id,
-      occurrenceId: occ.id,
-      startTime: startInstant,
-      endTime: endInstant,
-      title: occ.overrides?.title || evt.title,
-      description: occ.overrides?.description || evt.description,
-      timezone: occ.overrides?.timezone || evt.timezone,
-      price: occ.overrides?.price || evt.price,
-      color: occ.overrides?.color || evt.color,
-    };
-  },
-  (occ, evt) => `${occ.id}-${evt.id}`,
-);
+import { getMonthViewDateRange } from "@/features/calendar/lib/utils";
+import type { CalendarView } from "@/features/calendar/types/calendar.types";
 
 export const windowPushHistory = (path: string) => {
   if (!window.history.pushState) return;
@@ -46,7 +11,10 @@ export const windowPushHistory = (path: string) => {
 export const updateURL = ({
   calendarView,
   selectedDate,
-}: { calendarView: CalendarView; selectedDate: Temporal.PlainDate }) => {
+}: {
+  calendarView: CalendarView;
+  selectedDate: Temporal.PlainDate;
+}) => {
   const [year, month, day] = [
     selectedDate.year,
     selectedDate.month,
@@ -77,10 +45,6 @@ export const getDatesForCalendarView = (
       // End on Sunday
       end = start.add({ days: 6 });
 
-      console.log({
-        start: start.day,
-        end: end.day,
-      });
       break;
     }
 
@@ -104,45 +68,10 @@ export const getDatesForCalendarView = (
     }
 
     case "month": {
-      // Get first day of the month
-      const firstDayOfMonth = date.with({ day: 1 });
-
-      // Get the day of week for the first day (1-7, where 1 is Monday and 7 is Sunday)
-      const firstDayOfWeek = firstDayOfMonth.dayOfWeek;
-
-      // Calculate how many days to go back to reach the previous Monday
-      // If it's already Monday (1), we don't need to go back
-      const daysToSubtract = firstDayOfWeek === 1 ? 0 : firstDayOfWeek - 1;
-
-      // Start from the Monday before or on the first day of the month
-      start = firstDayOfMonth.subtract({ days: daysToSubtract });
-
-      // Get the last day of the month
-      const lastDayOfMonth = firstDayOfMonth
-        .add({ months: 1 })
-        .subtract({ days: 1 });
-
-      // Get the day of week for the last day
-      const lastDayOfWeek = lastDayOfMonth.dayOfWeek;
-
-      // Calculate how many days to add to reach the next Sunday
-      // If it's already Sunday (7), we don't need to add any days
-      const daysToAdd = lastDayOfWeek === 7 ? 0 : 7 - lastDayOfWeek;
-
-      // End on the Sunday after or on the last day of the month
-      end = lastDayOfMonth.add({ days: daysToAdd });
-
-      // Calculate total days to ensure we have complete weeks (multiple of 7)
-      const totalDays =
-        Temporal.PlainDate.compare(start, end) === 0
-          ? 1
-          : Temporal.Duration.from(start.until(end)).days + 1;
-
-      // If not a multiple of 7, add more days to make complete weeks
-      if (totalDays % 7 !== 0) {
-        const additionalDays = 7 - (totalDays % 7);
-        end = end.add({ days: additionalDays });
-      }
+      // 🚀 Use shared utility function for consistent month grid calculation
+      const monthRange = getMonthViewDateRange(date);
+      start = monthRange.start;
+      end = monthRange.end;
       break;
     }
 

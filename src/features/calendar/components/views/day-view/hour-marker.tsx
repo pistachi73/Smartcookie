@@ -1,9 +1,11 @@
-import { useCurrentTime } from "@/features/calendar/hooks/use-current-time";
-import { cn } from "@/shared/lib/classes";
 import { Temporal } from "temporal-polyfill";
 
+import { cn } from "@/shared/lib/classes";
+
+import { useCurrentTime } from "@/features/calendar/hooks/use-current-time";
+
 export const HourMarker = ({ date }: { date: Temporal.PlainDate }) => {
-  const { top, label } = useCurrentTime();
+  const { top } = useCurrentTime();
   const today = date.equals(Temporal.Now.plainDateISO());
 
   return (

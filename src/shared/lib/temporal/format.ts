@@ -40,3 +40,24 @@ export const formatFullDate = (
   // Construct the formatted string with a comma
   return `${weekday}, ${day} ${month} ${year}`;
 };
+
+/**
+ * Formats a week range in the format "6-10 Jul" or "29 Jun-3 Jul" for cross-month weeks
+ */
+export const formatWeekRange = (
+  startDate: Temporal.PlainDate,
+  endDate: Temporal.PlainDate,
+  locale = "en-US",
+) => {
+  const startDay = startDate.day;
+  const endDay = endDate.day;
+  const startMonth = getMonthAbbrev(startDate, locale);
+  const endMonth = getMonthAbbrev(endDate, locale);
+
+  if (startDate.month === endDate.month) {
+    // Same month: "6-10 Jul"
+    return `${startDay}-${endDay} ${startMonth}`;
+  }
+  // Different months: "29 Jun-3 Jul"
+  return `${startDay} ${startMonth}-${endDay} ${endMonth}`;
+};

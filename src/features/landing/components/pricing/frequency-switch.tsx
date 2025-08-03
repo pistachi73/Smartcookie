@@ -1,11 +1,12 @@
 "use client";
 
+import * as motion from "motion/react-m";
+import { useEffect, useRef, useState } from "react";
+
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import { regularSpring } from "@/shared/lib/animation";
 import { cn } from "@/shared/lib/classes";
-import * as motion from "motion/react-m";
-import { useEffect, useRef, useState } from "react";
 import "./frequency-switch.css";
 
 export type PaymentFrequency = "M" | "A";

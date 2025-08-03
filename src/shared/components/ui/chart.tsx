@@ -1,7 +1,6 @@
 "use client";
 
 import { createContext, use, useId, useMemo } from "react";
-
 import type { LegendProps } from "recharts";
 import { Legend, ResponsiveContainer, Tooltip } from "recharts";
 import { twMerge } from "tailwind-merge";
@@ -84,6 +83,7 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
 
   return (
     <style
+      // biome-ignore lint/security/noDangerouslySetInnerHtml: No worrries
       dangerouslySetInnerHTML={{
         __html: Object.entries(THEMES)
           .map(

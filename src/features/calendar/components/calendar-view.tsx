@@ -1,20 +1,13 @@
 "use client";
 
-import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
-import { regularSpring } from "@/shared/lib/animation";
-import { cn } from "@/shared/lib/classes";
 import { memo } from "react";
-import { CalendarHeader } from "./calendar-header";
+
+import { cn } from "@/shared/lib/classes";
+
+import { useCalendarStore } from "@/features/calendar/providers/calendar-store-provider";
 import { AgendaView } from "./views/agenda-view/agenda-view";
 import { DayView } from "./views/day-view/day-view";
 import { MonthView } from "./views/month-view/month-view";
-
-const calendarAnimation = {
-  initial: { opacity: 0, x: -20 },
-  animate: { opacity: 1, x: 0 },
-  exit: { opacity: 0, x: 20 },
-  transition: regularSpring,
-};
 
 export const CalendarView = memo(() => {
   const calendarView = useCalendarStore((state) => state.calendarView);
@@ -28,7 +21,6 @@ export const CalendarView = memo(() => {
       )}
     >
       <div className="grow overflow-hidden flex flex-col">
-        <CalendarHeader />
         {calendarView === "day" && <DayView key="day-view" />}
         {calendarView === "weekday" && <DayView key="weekday-view" />}
         {calendarView === "week" && <DayView key="week-view" />}

@@ -1,6 +1,7 @@
+import { eq } from "drizzle-orm";
+
 import * as schema from "@/db/schema";
 import type { DB } from "@/db/seed";
-import { eq } from "drizzle-orm";
 import sessions from "./data/sessions.seed-data";
 
 export default async function seed(db: DB) {

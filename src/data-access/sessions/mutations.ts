@@ -1,9 +1,10 @@
 "use server";
 
-import { db } from "@/db";
-import { type InsertSession, hub, session, studentHub } from "@/db/schema";
 import { endOfDay, startOfDay } from "date-fns";
 import { and, between, eq, inArray, notInArray } from "drizzle-orm";
+
+import { db } from "@/db";
+import { hub, type InsertSession, session, studentHub } from "@/db/schema";
 import { addAttendance } from "../attendance/mutations";
 import { withValidationAndAuth } from "../protected-data-access";
 import {
@@ -17,7 +18,7 @@ import { findOverlappingIntervals, hasOverlappingIntervals } from "./utils";
 export const addSessions = withValidationAndAuth({
   schema: AddSessionsSchema,
   callback: async ({ sessions, hubId, trx = db }, user) => {
-    await trx.transaction(async (trx) => {
+    return await trx.transaction(async (trx) => {
       const toAddSessions: InsertSession[] = sessions.map((s) => ({
         ...s,
         userId: user.id,
@@ -48,9 +49,8 @@ export const addSessions = withValidationAndAuth({
         },
         trx,
       });
+      return addedSessions;
     });
-
-    return true;
   },
 });
 
@@ -128,11 +128,17 @@ export const checkSessionConflicts = withValidationAndAuth({
       new Date(s.endTime).getTime(),
     ]) as [number, number][];
 
+    console.log(newSessionIntervals, existingSessionIntervals);
+
     // Check if new sessions overlap with existing ones
-    const overlappingSessionIndexes = findOverlappingIntervals([
-      ...newSessionIntervals,
-      ...existingSessionIntervals,
-    ]);
+    const allIntervals = [...newSessionIntervals, ...existingSessionIntervals];
+    const overlappingSessionIndexes = findOverlappingIntervals(
+      allIntervals,
+    ).filter(
+      ([i1, i2]) =>
+        (i1 < sessions.length && i2 >= sessions.length) ||
+        (i2 < sessions.length && i1 >= sessions.length),
+    );
 
     if (overlappingSessionIndexes.length) {
       type OverlappingSession = {
@@ -157,6 +163,8 @@ export const checkSessionConflicts = withValidationAndAuth({
         },
       ) as { s1: OverlappingSession; s2: OverlappingSession }[];
 
+      console.log(overlappingSessions);
+
       return {
         success: false,
         overlappingSessions,
@@ -175,7 +183,7 @@ export const updateSession = withValidationAndAuth({
   callback: async (data, user) => {
     const { sessionId, data: updateData } = data;
 
-    const updatedSession = await db
+    const updatedSessions = await db
       .update(session)
       .set({
         startTime: updateData.startTime,
@@ -183,9 +191,13 @@ export const updateSession = withValidationAndAuth({
         status: updateData.status,
       })
       .where(and(eq(session.id, sessionId), eq(session.userId, user.id)))
-      .returning();
+      .returning({
+        startTime: session.startTime,
+        endTime: session.endTime,
+        status: session.status,
+      });
 
-    return { success: true, data: updatedSession[0] };
+    return updatedSessions[0];
   },
 });
 

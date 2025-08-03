@@ -1,15 +1,17 @@
 "use client";
 
-import { env } from "@/env";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowRight02Icon } from "@hugeicons-pro/core-solid-rounded";
+import { Menu01Icon } from "@hugeicons-pro/core-stroke-rounded";
+import Image from "next/image";
+import { Link } from "react-aria-components";
+
 import { buttonStyles } from "@/shared/components/ui/button";
 import { Menu } from "@/shared/components/ui/menu";
 import { cn } from "@/shared/lib/classes";
+
+import { env } from "@/env";
 import type { AuthUser } from "@/types/next-auth";
-import { ArrowRight02Icon } from "@hugeicons-pro/core-solid-rounded";
-import { Menu01Icon } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-import Image from "next/image";
-import { Link } from "react-aria-components";
 import { MaxWidthWrapper } from "./max-width-wrapper";
 
 const publicNavigation = [

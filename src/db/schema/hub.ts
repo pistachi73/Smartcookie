@@ -8,6 +8,7 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
+
 import { attendance } from "./attendance";
 import { quickNote } from "./quick-note";
 import { customColorEnum } from "./shared";

@@ -1,8 +1,15 @@
 "use client";
 
-import { cn } from "@/shared/lib/classes";
 import { HugeiconsIcon } from "@hugeicons/react";
-
+import {
+  Calendar03Icon as Calendar03IconSolid,
+  Comment01Icon as Comment01IconSolid,
+  DashboardSquare01Icon as DashboardSquare01IconSolid,
+  Diamond02Icon,
+  FolderLibraryIcon as FolderLibraryIconSolid,
+  NoteIcon as NoteIconSolid,
+  UserGroupIcon as UserGroupIconSolid,
+} from "@hugeicons-pro/core-solid-rounded";
 import {
   AccountSetting02Icon,
   Calendar03Icon,
@@ -14,18 +21,10 @@ import {
   NoteIcon,
   UserGroupIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 
-import {
-  Calendar03Icon as Calendar03IconSolid,
-  Comment01Icon as Comment01IconSolid,
-  DashboardSquare01Icon as DashboardSquare01IconSolid,
-  Diamond02Icon,
-  FolderLibraryIcon as FolderLibraryIconSolid,
-  NoteIcon as NoteIconSolid,
-  UserGroupIcon as UserGroupIconSolid,
-} from "@hugeicons-pro/core-solid-rounded";
-
-import type { AuthUser } from "@/types/next-auth";
 import {
   Sidebar,
   SidebarFooter,
@@ -38,9 +37,9 @@ import {
 import { SidebarContent } from "@/ui/sidebar/sidebar-content";
 import { SidebarItem } from "@/ui/sidebar/sidebar-item";
 import { SidebarSection } from "@/ui/sidebar/sidebar-section";
-import { signOut } from "next-auth/react";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { cn } from "@/shared/lib/classes";
+
+import type { AuthUser } from "@/types/next-auth";
 import { ExplorePremiumModal } from "../explore-premium-modal";
 import { Button } from "../ui/button";
 import { Menu } from "../ui/menu";

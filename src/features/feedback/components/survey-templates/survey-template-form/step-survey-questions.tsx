@@ -1,12 +1,6 @@
 "use client";
 
-import { Button } from "@/shared/components/ui/button";
-import { Popover } from "@/shared/components/ui/popover";
-import { Separator } from "@/shared/components/ui/separator";
-import { Switch } from "@/shared/components/ui/switch";
-import useNavigateWithParams from "@/shared/hooks/use-navigate-with-params";
-import { regularSpring } from "@/shared/lib/animation";
-import { cn } from "@/shared/lib/classes";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ArrowDown01Icon,
   ArrowLeft02Icon,
@@ -16,8 +10,7 @@ import {
   DragDropVerticalIcon,
   Settings01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { AnimatePresence, LayoutGroup, Reorder, motion } from "motion/react";
+import { AnimatePresence, LayoutGroup, motion, Reorder } from "motion/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { useDrop } from "react-aria";
@@ -25,6 +18,15 @@ import {
   type DroppableCollectionRootDropEvent,
   isTextDropItem,
 } from "react-aria-components";
+
+import { Button } from "@/shared/components/ui/button";
+import { Popover } from "@/shared/components/ui/popover";
+import { Separator } from "@/shared/components/ui/separator";
+import { Switch } from "@/shared/components/ui/switch";
+import useNavigateWithParams from "@/shared/hooks/use-navigate-with-params";
+import { regularSpring } from "@/shared/lib/animation";
+import { cn } from "@/shared/lib/classes";
+
 import { useSurveyTemplateFormStore } from "../../../store/survey-template-form.store";
 import type { FeedbackQuestion } from "../../questions/question-list-item";
 import { TemplateQuestion } from "../template-question";
@@ -50,7 +52,7 @@ export function StepSurveyQuestions() {
         }),
       );
     }
-  }, []);
+  }, [createHrefWithParams, searchParams, router, pathname]);
 
   return (
     <LayoutGroup>
@@ -219,7 +221,6 @@ const DroppableQuestionContainer = () => {
 
                     <div className="flex items-center justify-between gap-6 w-full">
                       <TemplateQuestion
-                        id={question.id}
                         type={question.type}
                         order={index + 1}
                         title={question.title}

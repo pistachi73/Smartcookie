@@ -1,16 +1,13 @@
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { redirect } from "next/navigation";
+
+import { getQueryClient } from "@/shared/lib/get-query-client";
+
 import { getHubById } from "@/data-access/hubs/queries";
 import { getNotesByHubId } from "@/data-access/quick-notes/queries";
 import { HubDashboard } from "@/features/hub/components/hub-dashboard";
 import { getHubByIdQueryOptions } from "@/features/hub/lib/hub-query-options";
 import { quickNotesByHubIdQueryOptions } from "@/features/quick-notes/lib/quick-notes-query-options";
-import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
-import { getQueryClient } from "@/shared/lib/get-query-client";
-import {
-  Folder02Icon,
-  FolderLibraryIcon,
-} from "@hugeicons-pro/core-solid-rounded";
-import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
-import { redirect } from "next/navigation";
 
 interface HubPageProps {
   params: Promise<{
@@ -19,6 +16,7 @@ interface HubPageProps {
 }
 
 const HubPage = async ({ params }: HubPageProps) => {
+  const queryClient = getQueryClient();
   const { hubId } = await params;
 
   const hubIdNumber = Number(hubId);
@@ -26,8 +24,6 @@ const HubPage = async ({ params }: HubPageProps) => {
   if (Number.isNaN(hubIdNumber)) {
     redirect("/portal/hubs");
   }
-
-  const queryClient = getQueryClient();
 
   const [hub, notes] = await Promise.all([
     getHubById({ hubId: hubIdNumber }),
@@ -46,22 +42,9 @@ const HubPage = async ({ params }: HubPageProps) => {
   );
 
   return (
-    <>
-      <PortalNav
-        breadcrumbs={[
-          { label: "Portal", href: "/portal" },
-          { label: "Hubs", href: "/portal/hubs", icon: FolderLibraryIcon },
-          {
-            label: hub.name,
-            href: `/portal/hubs/${hubId}`,
-            icon: Folder02Icon,
-          },
-        ]}
-      />
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <HubDashboard hubId={hubIdNumber} />
-      </HydrationBoundary>
-    </>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <HubDashboard hubId={hubIdNumber} />
+    </HydrationBoundary>
   );
 };
 

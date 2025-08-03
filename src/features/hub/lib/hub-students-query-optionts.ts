@@ -1,5 +1,6 @@
-import type { getStudentsByHubId } from "@/data-access/students/queries";
 import { queryOptions } from "@tanstack/react-query";
+
+import type { getStudentsByHubId } from "@/data-access/students/queries";
 
 export type GetStudentsByHubIdQueryResponse = Awaited<
   ReturnType<typeof getStudentsByHubId>

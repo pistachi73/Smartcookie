@@ -1,11 +1,10 @@
 "use client";
 
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   MultiplicationSignIcon,
   Search01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-
 import {
   SearchField as SearchFieldPrimitive,
   type SearchFieldProps as SearchFieldPrimitiveProps,

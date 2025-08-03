@@ -1,5 +1,5 @@
-import { NoteAddIcon } from "@hugeicons-pro/core-solid-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { NoteAddIcon } from "@hugeicons-pro/core-solid-rounded";
 import * as m from "motion/react-m";
 import { memo } from "react";
 

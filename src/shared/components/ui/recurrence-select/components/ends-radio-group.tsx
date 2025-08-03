@@ -1,6 +1,9 @@
+import { CalendarDate, type DateValue } from "@internationalized/date";
+import type { DatePickerProps } from "react-aria-components";
+import { datetime, type Options } from "rrule";
+
 import { cn } from "@/shared/lib/classes";
-import { CalendarDate } from "@internationalized/date";
-import { type Options, datetime } from "rrule";
+
 import { DatePicker } from "../../date-picker";
 import { NumberField } from "../../number-field";
 import { Radio, RadioGroup } from "../../radio";
@@ -10,8 +13,8 @@ type EndsRadioGroupProps = {
   setRruleOptions: SetRruleOptions;
   ends: EndsEnum;
   setEnds: React.Dispatch<React.SetStateAction<EndsEnum>>;
-  minDate?: CalendarDate;
-  maxDate?: CalendarDate;
+  minDate: DatePickerProps<DateValue>["minValue"];
+  maxDate?: DatePickerProps<DateValue>["maxValue"];
   until?: Options["until"];
   count?: Options["count"];
 };

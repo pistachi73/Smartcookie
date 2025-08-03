@@ -28,7 +28,7 @@ const createViewportHelpers = (currentViewport: Viewport) => {
 
   const down = (viewport: Viewport) => {
     const viewportIndex = VIEWPORTS.findIndex((key) => key === viewport);
-    return VIEWPORTS.slice(0, viewportIndex).includes(currentViewport);
+    return VIEWPORTS.slice(0, viewportIndex + 1).includes(currentViewport);
   };
 
   const between = ([from, to]: [Viewport, Viewport]) => {

@@ -1,24 +1,12 @@
-import { Calendar } from "@/features/calendar/components";
-import { getMonthSessionsQueryOptions } from "@/features/calendar/hooks/use-calendar-sessions";
-import { CalendarStoreProvider } from "@/features/calendar/store/calendar-store-provider";
-import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
 import { Calendar03Icon } from "@hugeicons-pro/core-solid-rounded";
-import {
-  HydrationBoundary,
-  QueryClient,
-  dehydrate,
-} from "@tanstack/react-query";
-import { Temporal } from "temporal-polyfill";
+
+import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
+
+import { Calendar } from "@/features/calendar/components";
+import { CalendarStoreProvider } from "@/features/calendar/providers/calendar-store-provider";
+import { OptimizedCalendarProvider } from "@/features/calendar/providers/optimized-calendar-provider";
 
 const CalendarPage = async () => {
-  const queryClient = new QueryClient();
-
-  const now = Temporal.Now.plainDateTimeISO();
-  await queryClient.prefetchQuery({
-    ...getMonthSessionsQueryOptions(now),
-    staleTime: 1000 * 60 * 60 * 24,
-  });
-
   return (
     <>
       <PortalNav
@@ -28,9 +16,9 @@ const CalendarPage = async () => {
         ]}
       />
       <CalendarStoreProvider skipHydration={false}>
-        <HydrationBoundary state={dehydrate(queryClient)}>
+        <OptimizedCalendarProvider>
           <Calendar />
-        </HydrationBoundary>
+        </OptimizedCalendarProvider>
       </CalendarStoreProvider>
     </>
   );

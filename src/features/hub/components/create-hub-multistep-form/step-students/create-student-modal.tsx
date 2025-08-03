@@ -1,12 +1,14 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { isValidPhoneNumber } from "libphonenumber-js/min";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
+
 import { Button } from "@/shared/components/ui/button";
 import { Form } from "@/shared/components/ui/form";
 import { Modal } from "@/shared/components/ui/modal";
 import { PhoneField } from "@/shared/components/ui/phone-field";
 import { TextField } from "@/shared/components/ui/text-field";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { isValidPhoneNumber } from "libphonenumber-js/min";
-import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
+
 import { useAddStudent } from "../../../hooks/use-add-student";
 
 const studentFormSchema = z.object({
@@ -17,7 +19,7 @@ const studentFormSchema = z.object({
       if (!phone) return true; // Allow empty phone
       try {
         return isValidPhoneNumber(phone);
-      } catch (e) {
+      } catch (_e) {
         return false;
       }
     },

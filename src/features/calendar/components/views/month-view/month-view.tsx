@@ -1,4 +1,4 @@
-import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
+import { useCalendarStore } from "@/features/calendar/providers/calendar-store-provider";
 import { MonthViewCell } from "./month-view-cell";
 
 export const MonthView = () => {
@@ -9,14 +9,13 @@ export const MonthView = () => {
   return (
     <div role="grid" className="h-full w-full flex flex-col grow">
       <div className="flex flex-row w-full border-calendar-border">
-        {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day, index) => (
-          <p
+        {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
+          <div
             key={`weekday-header-${day}`}
-            role="columnheader"
-            className="flex-1 text-muted-fg  text-xs text-center py-2 font-medium uppercase"
+            className="flex-1 text-xs text-center py-2 font-medium uppercase"
           >
             {day}
-          </p>
+          </div>
         ))}
       </div>
       {Array.from({ length: rows }).map((_, rowIndex) => (

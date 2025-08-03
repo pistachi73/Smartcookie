@@ -1,5 +1,34 @@
 import type { InsertHub } from "@/db/schema";
 
+// Calculate dynamic dates relative to today
+const today = new Date();
+const oneMonthAgo = new Date(
+  today.getFullYear(),
+  today.getMonth() - 1,
+  today.getDate(),
+);
+const twoMonthsAgo = new Date(
+  today.getFullYear(),
+  today.getMonth() - 2,
+  today.getDate(),
+);
+const threeMonthsAgo = new Date(
+  today.getFullYear(),
+  today.getMonth() - 3,
+  today.getDate(),
+);
+const oneMonthFuture = new Date(
+  today.getFullYear(),
+  today.getMonth() + 1,
+  today.getDate(),
+);
+
+const threeMonthsFuture = new Date(
+  today.getFullYear(),
+  today.getMonth() + 3,
+  today.getDate(),
+);
+
 const hubs: Omit<InsertHub, "userId">[] = [
   {
     name: "Català A2 - Abat Oliba",
@@ -9,8 +38,8 @@ const hubs: Omit<InsertHub, "userId">[] = [
     status: "active",
     color: "blueberry",
     level: "A2",
-    startDate: new Date("2025-02-01").toISOString(),
-    endDate: new Date("2025-06-20").toISOString(),
+    startDate: oneMonthAgo.toISOString(),
+    endDate: threeMonthsFuture.toISOString(),
   },
   {
     name: "Español A1 - UAB",
@@ -19,8 +48,8 @@ const hubs: Omit<InsertHub, "userId">[] = [
     status: "active",
     color: "graphite",
     level: "A1",
-    startDate: new Date("2025-03-01").toISOString(),
-    endDate: new Date("2025-05-01").toISOString(),
+    startDate: twoMonthsAgo.toISOString(),
+    endDate: oneMonthFuture.toISOString(),
   },
   {
     name: "Español A2 - Bogi",
@@ -30,8 +59,8 @@ const hubs: Omit<InsertHub, "userId">[] = [
     status: "active",
     color: "grape",
     level: "A2",
-    startDate: new Date("2025-02-01").toISOString(),
-    endDate: new Date("2025-06-20").toISOString(),
+    startDate: oneMonthAgo.toISOString(),
+    endDate: threeMonthsFuture.toISOString(),
   },
   {
     name: "Español B1 - Rabia",
@@ -40,7 +69,7 @@ const hubs: Omit<InsertHub, "userId">[] = [
     status: "active",
     color: "lavender",
     level: "B1",
-    startDate: new Date("2024-02-01").toISOString(),
+    startDate: threeMonthsAgo.toISOString(),
   },
   {
     name: "English B2 - Tech Team",
@@ -50,7 +79,7 @@ const hubs: Omit<InsertHub, "userId">[] = [
     status: "active",
     color: "flamingo",
     level: "B2",
-    startDate: new Date("2024-03-01").toISOString(),
+    startDate: oneMonthAgo.toISOString(),
   },
   {
     name: "English C1 - Marketing",
@@ -60,7 +89,7 @@ const hubs: Omit<InsertHub, "userId">[] = [
     status: "active",
     color: "tangerine",
     level: "C1",
-    startDate: new Date("2024-04-01").toISOString(),
+    startDate: twoMonthsAgo.toISOString(),
   },
   {
     name: "English A2 - Beginners",
@@ -69,7 +98,7 @@ const hubs: Omit<InsertHub, "userId">[] = [
     status: "active",
     color: "banana",
     level: "A2",
-    startDate: new Date("2024-05-01").toISOString(),
+    startDate: threeMonthsAgo.toISOString(),
   },
   {
     name: "English B1 - Intermediate",
@@ -78,7 +107,7 @@ const hubs: Omit<InsertHub, "userId">[] = [
     status: "active",
     color: "sage",
     level: "B1",
-    startDate: new Date("2024-06-01").toISOString(),
+    startDate: oneMonthAgo.toISOString(),
   },
   {
     name: "English C2 - Advanced",
@@ -88,7 +117,7 @@ const hubs: Omit<InsertHub, "userId">[] = [
     status: "active",
     color: "peacock",
     level: "C2",
-    startDate: new Date("2024-07-01").toISOString(),
+    startDate: twoMonthsAgo.toISOString(),
   },
   {
     name: "English A1 - Absolute Beginners",
@@ -98,7 +127,7 @@ const hubs: Omit<InsertHub, "userId">[] = [
     status: "active",
     color: "neutral",
     level: "A1",
-    startDate: new Date("2024-08-01").toISOString(),
+    startDate: threeMonthsAgo.toISOString(),
   },
   {
     name: "English B2 - Conversation",
@@ -107,7 +136,7 @@ const hubs: Omit<InsertHub, "userId">[] = [
     status: "active",
     color: "sunshine",
     level: "B2",
-    startDate: new Date("2024-09-01").toISOString(),
+    startDate: oneMonthAgo.toISOString(),
   },
   {
     name: "English C1 - Business",
@@ -117,7 +146,7 @@ const hubs: Omit<InsertHub, "userId">[] = [
     status: "active",
     color: "stone",
     level: "C1",
-    startDate: new Date("2024-10-01").toISOString(),
+    startDate: twoMonthsAgo.toISOString(),
   },
   {
     name: "English B1 - General",
@@ -126,7 +155,7 @@ const hubs: Omit<InsertHub, "userId">[] = [
     status: "active",
     color: "slate",
     level: "B1",
-    startDate: new Date("2024-11-01").toISOString(),
+    startDate: oneMonthAgo.toISOString(),
   },
 ];
 

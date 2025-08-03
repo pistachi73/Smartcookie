@@ -5,6 +5,7 @@ import {
   getMonth,
   startOfMonth,
 } from "date-fns";
+
 import type { CalendarView } from "../types/calendar.types";
 
 export const getWeekdayCardinal = (
@@ -39,9 +40,6 @@ export const getWeekdayCardinal = (
     cardinal: isLastWeekdayOccurrenceInMonth ? -1 : occurrenceCount,
   };
 };
-
-const isLastWeekdayOccurrenceInMonth = (date: Date) =>
-  getMonth(date) !== getMonth(addDays(date, 7));
 
 export const isCalendarView = (
   calendarView: any,

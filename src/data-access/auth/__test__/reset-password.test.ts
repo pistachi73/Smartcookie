@@ -1,9 +1,9 @@
 import {
-  type MockedFunction,
   beforeEach,
   describe,
   expect,
   it,
+  type MockedFunction,
   vi,
 } from "vitest";
 
@@ -43,11 +43,12 @@ vi.mock("@/data-access/password-reset-token/mutations", () => ({
   generatePasswordResetToken: vi.fn(),
 }));
 
+import { sendPasswordResetEmail } from "@/shared/lib/mail";
+
 import { createMockPasswordResetToken } from "@/data-access/password-reset-token/__mocks__";
 import { generatePasswordResetToken } from "@/data-access/password-reset-token/mutations";
 import { createMockUser } from "@/data-access/user/__mocks__";
 import { getUserByEmail } from "@/data-access/user/queries";
-import { sendPasswordResetEmail } from "@/shared/lib/mail";
 import { resetPassword } from "../mutations";
 
 const mockGetUserByEmail = getUserByEmail as MockedFunction<

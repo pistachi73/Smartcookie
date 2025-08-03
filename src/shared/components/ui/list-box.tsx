@@ -1,18 +1,19 @@
 "use client";
 
-import { Menu01Icon, Tick02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { Menu01Icon, Tick02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import type {
   ListBoxItemProps as ListBoxItemPrimitiveProps,
   ListBoxProps,
 } from "react-aria-components";
 import {
+  composeRenderProps,
   ListBoxItem as ListBoxItemPrimitive,
   ListBox as ListBoxPrimitive,
-  composeRenderProps,
 } from "react-aria-components";
 
 import { cn } from "@/shared/lib/classes";
+
 import {
   DropdownDescription,
   DropdownLabel,

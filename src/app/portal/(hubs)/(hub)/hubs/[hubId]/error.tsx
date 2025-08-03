@@ -1,7 +1,8 @@
 "use client";
 
-import { PortalError } from "@/shared/components/layout/portal-error";
 import { FolderLibraryIcon } from "@hugeicons-pro/core-solid-rounded";
+
+import { PortalError } from "@/shared/components/layout/portal-error";
 
 interface ErrorPageProps {
   error: Error & { digest?: string };

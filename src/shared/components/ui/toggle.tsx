@@ -1,41 +1,48 @@
-"use client"
+"use client";
 
-import { createContext, use } from "react"
-import type { ToggleButtonGroupProps, ToggleButtonProps } from "react-aria-components"
-import { ToggleButton, ToggleButtonGroup, composeRenderProps } from "react-aria-components"
-import type { VariantProps } from "tailwind-variants"
-import { tv } from "tailwind-variants"
+import { createContext, use } from "react";
+import type {
+  ToggleButtonGroupProps,
+  ToggleButtonProps,
+} from "react-aria-components";
+import {
+  composeRenderProps,
+  ToggleButton,
+  ToggleButtonGroup,
+} from "react-aria-components";
+import type { VariantProps } from "tailwind-variants";
+import { tv } from "tailwind-variants";
 
 type ToggleGroupContextProps = {
-  isDisabled?: boolean
-  gap?: 0 | 1 | 2 | 3 | 4
-  appearance?: "plain" | "outline" | "solid"
-  orientation?: "horizontal" | "vertical"
-  size?: "small" | "medium" | "large" | "square-petite"
-}
+  isDisabled?: boolean;
+  gap?: 0 | 1 | 2 | 3 | 4;
+  appearance?: "plain" | "outline" | "solid";
+  orientation?: "horizontal" | "vertical";
+  size?: "small" | "medium" | "large" | "square-petite";
+};
 
 const ToggleGroupContext = createContext<ToggleGroupContextProps>({
   gap: 1,
   appearance: "outline",
   orientation: "horizontal",
   size: "medium",
-})
+});
 
-type BaseToggleGroupProps = Omit<ToggleGroupContextProps, "gap" | "appearance">
+type BaseToggleGroupProps = Omit<ToggleGroupContextProps, "gap" | "appearance">;
 interface ToggleGroupPropsNonZeroGap extends BaseToggleGroupProps {
-  gap?: Exclude<ToggleGroupContextProps["gap"], 0>
-  appearance?: ToggleGroupContextProps["appearance"]
+  gap?: Exclude<ToggleGroupContextProps["gap"], 0>;
+  appearance?: ToggleGroupContextProps["appearance"];
 }
 
 interface ToggleGroupPropsGapZero extends BaseToggleGroupProps {
-  gap?: 0
-  appearance?: Exclude<ToggleGroupContextProps["appearance"], "plain">
+  gap?: 0;
+  appearance?: Exclude<ToggleGroupContextProps["appearance"], "plain">;
 }
 
 type ToggleGroupProps = ToggleButtonGroupProps &
   (ToggleGroupPropsGapZero | ToggleGroupPropsNonZeroGap) & {
-    ref?: React.RefObject<HTMLDivElement>
-  }
+    ref?: React.RefObject<HTMLDivElement>;
+  };
 
 const toggleGroupStyles = tv({
   base: "flex",
@@ -71,7 +78,7 @@ const toggleGroupStyles = tv({
         "*:[button]:-mr-px *:[button]:first:rounded-s-[calc(var(--radius-lg)-1px)] *:[button]:last:rounded-e-[calc(var(--radius-lg)-1px)]",
     },
   ],
-})
+});
 
 const ToggleGroup = ({
   className,
@@ -84,7 +91,13 @@ const ToggleGroup = ({
 }: ToggleGroupProps) => {
   return (
     <ToggleGroupContext.Provider
-      value={{ appearance, gap, orientation, size, isDisabled: props.isDisabled }}
+      value={{
+        appearance,
+        gap,
+        orientation,
+        size,
+        isDisabled: props.isDisabled,
+      }}
     >
       <ToggleButtonGroup
         ref={ref}
@@ -100,12 +113,12 @@ const ToggleGroup = ({
         {...props}
       />
     </ToggleGroupContext.Provider>
-  )
-}
+  );
+};
 
 const toggleStyles = tv({
   base: [
-    "inset-ring inset-ring-border cursor-pointer items-center gap-x-2 rounded-lg outline-hidden sm:text-sm",
+    "inset-ring inset-ring-border cursor-pointer items-center gap-x-2 rounded-lg outline-hidden text-sm",
     "forced-colors:[--button-icon:ButtonText] forced-colors:hover:[--button-icon:ButtonText]",
     "*:data-[slot=icon]:-mx-0.5 data-hovered:*:data-[slot=icon]:text-current/90 data-pressed:*:data-[slot=icon]:text-current *:data-[slot=icon]:my-1 *:data-[slot=icon]:size-4 *:data-[slot=icon]:shrink-0 *:data-[slot=icon]:text-current/60",
   ],
@@ -117,8 +130,11 @@ const toggleStyles = tv({
       true: "inset-ring-ring/70 z-20 ring-4 ring-ring/20",
     },
     appearance: {
-      plain: "inset-ring-0 data-selected:bg-secondary data-selected:text-secondary-fg",
-      solid: ["inset-ring data-selected:inset-ring-fg data-selected:bg-fg data-selected:text-bg"],
+      plain:
+        "inset-ring-0 data-selected:bg-secondary data-selected:text-secondary-fg",
+      solid: [
+        "inset-ring data-selected:inset-ring-fg data-selected:bg-fg data-selected:text-bg",
+      ],
       outline: [
         "data-hovered:border-secondary-fg/10 data-pressed:border-secondary-fg/10 data-selected:border-secondary-fg/10 data-hovered:bg-muted data-selected:bg-secondary data-hovered:text-secondary-fg data-selected:text-secondary-fg",
       ],
@@ -151,10 +167,12 @@ const toggleStyles = tv({
       className: "w-full",
     },
   ],
-})
+});
 
-interface ToggleProps extends ToggleButtonProps, VariantProps<typeof toggleStyles> {
-  ref?: React.RefObject<HTMLButtonElement>
+interface ToggleProps
+  extends ToggleButtonProps,
+    VariantProps<typeof toggleStyles> {
+  ref?: React.RefObject<HTMLButtonElement>;
 }
 
 const Toggle = ({ className, appearance, ref, ...props }: ToggleProps) => {
@@ -164,7 +182,7 @@ const Toggle = ({ className, appearance, ref, ...props }: ToggleProps) => {
     gap,
     size,
     isDisabled: isGroupDisabled,
-  } = use(ToggleGroupContext)
+  } = use(ToggleGroupContext);
   return (
     <ToggleButton
       ref={ref}
@@ -182,8 +200,8 @@ const Toggle = ({ className, appearance, ref, ...props }: ToggleProps) => {
       )}
       {...props}
     />
-  )
-}
+  );
+};
 
-export type { ToggleGroupProps, ToggleProps }
-export { ToggleGroup, Toggle }
+export type { ToggleGroupProps, ToggleProps };
+export { ToggleGroup, Toggle };

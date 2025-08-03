@@ -1,15 +1,17 @@
+import { HugeiconsIcon } from "@hugeicons/react";
+import { CheckmarkBadge01Icon } from "@hugeicons-pro/core-stroke-rounded";
+import { format } from "date-fns";
+
+import { Badge } from "@/shared/components/ui/badge";
+import { Card } from "@/shared/components/ui/card";
+import { Heading } from "@/shared/components/ui/heading";
+
 import type {
   Price,
   StripeProduct,
   Subscription,
 } from "@/data-access/payment/formatters";
 import { memberChecks } from "@/features/landing/components/pricing/constants";
-import { Badge } from "@/shared/components/ui/badge";
-import { Card } from "@/shared/components/ui/card";
-import { Heading } from "@/shared/components/ui/heading";
-import { CheckmarkBadge01Icon } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { format } from "date-fns";
 import { BillingPortalButton } from "./billing-portal-button";
 
 export const ProSubscriptionCard = ({

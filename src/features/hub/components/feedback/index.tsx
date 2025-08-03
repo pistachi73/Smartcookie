@@ -1,12 +1,14 @@
-import { Button } from "@/shared/components/ui/button";
-import { Heading } from "@/shared/components/ui/heading";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   CommentAdd01Icon,
   DeleteIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+
+import { Button } from "@/shared/components/ui/button";
+import { Heading } from "@/shared/components/ui/heading";
+
 import { useHubById } from "../../hooks/use-hub-by-id";
 import { getSurveysByHubIdQueryOptions } from "../../lib/hub-surveys-query-options";
 import { InitSurveyFromHubSheet } from "./init-survey-from-hub-sheet";
@@ -17,7 +19,6 @@ export const CourseFeedback = ({ hubId }: { hubId: number }) => {
   const { data: hub } = useHubById(hubId);
 
   const [isInitSurveySheetOpen, setIsInitSurveySheetOpen] = useState(false);
-  const noSurveys = data?.length === 0;
 
   return (
     <>

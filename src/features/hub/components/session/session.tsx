@@ -1,3 +1,16 @@
+import { HugeiconsIcon } from "@hugeicons/react";
+import {
+  ArrowDown01Icon,
+  Clock01Icon,
+  PropertyEditIcon,
+} from "@hugeicons-pro/core-stroke-rounded";
+import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
+import { AnimatePresence } from "motion/react";
+import * as m from "motion/react-m";
+import dynamic from "next/dynamic";
+import { useCallback, useState } from "react";
+
 import { Button, buttonStyles } from "@/shared/components/ui/button";
 import { Heading } from "@/shared/components/ui/heading";
 import { ProgressCircle } from "@/shared/components/ui/progress-circle";
@@ -5,18 +18,7 @@ import { Separator } from "@/shared/components/ui/separator";
 import { regularSpring } from "@/shared/lib/animation";
 import { cn } from "@/shared/lib/classes";
 import { getQueryClient } from "@/shared/lib/get-query-client";
-import {
-  ArrowDown01Icon,
-  Clock01Icon,
-  PropertyEditIcon,
-} from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
-import { AnimatePresence } from "motion/react";
-import * as m from "motion/react-m";
-import dynamic from "next/dynamic";
-import { useCallback, useState } from "react";
+
 import { getSessionNotesBySessionIdQueryOptions } from "../../lib/session-notes-query-options";
 import { useSessionStore } from "../../store/session-store";
 import type { HubSession } from "../../types/hub.types";
@@ -37,7 +39,11 @@ export const DesktopSessionBubble = ({
   session,
   index,
   totalSessions,
-}: { index: number; session: HubSession; totalSessions: number }) => {
+}: {
+  index: number;
+  session: HubSession;
+  totalSessions: number;
+}) => {
   return (
     <m.div
       layout
@@ -67,8 +73,6 @@ type SessionProps = {
   position: number;
 };
 
-const MotionButton = m.create(Button);
-
 export const Session = ({ session, position, hubId }: SessionProps) => {
   const queryClient = getQueryClient();
   const [isExpanded, setIsExpanded] = useState(false);
@@ -90,11 +94,6 @@ export const Session = ({ session, position, hubId }: SessionProps) => {
   const { isLoading: isLoadingSessionNotes } = useQuery({
     ...getSessionNotesBySessionIdQueryOptions(session.id),
     enabled: isExpanded,
-  });
-
-  console.log({
-    sessionStartTime: session.startTime,
-    sessionEndTime: session.endTime,
   });
 
   return (
@@ -201,10 +200,9 @@ export const Session = ({ session, position, hubId }: SessionProps) => {
               transition={regularSpring}
               className="overflow-hidden"
             >
-              <div className="p-2 flex flex-col sm:grid sm:grid-rows-1 sm:grid-cols-3">
-                <SessionNoteColumn position="past" sessionId={session.id} />
-                <SessionNoteColumn position="present" sessionId={session.id} />
-                <SessionNoteColumn position="future" sessionId={session.id} />
+              <div className="p-2 flex flex-col sm:grid sm:grid-rows-1 sm:grid-cols-2">
+                <SessionNoteColumn position="plans" sessionId={session.id} />
+                <SessionNoteColumn position="in-class" sessionId={session.id} />
               </div>
             </m.div>
           )}

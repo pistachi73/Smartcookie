@@ -1,3 +1,9 @@
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ArrowRight02Icon } from "@hugeicons-pro/core-stroke-rounded";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
+
 import { isDataAccessError } from "@/data-access/errors";
 import { createCheckoutSession } from "@/data-access/payment/mutations";
 import { createCheckoutSessionSchema } from "@/data-access/payment/schemas";
@@ -9,11 +15,6 @@ import {
   FreePlanCard,
   PremiumPlanCard,
 } from "@/features/landing/components/pricing/pricing-plan-card";
-import { ArrowRight02Icon } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { toast } from "sonner";
 import { useCurrentUser } from "../hooks/use-current-user";
 import { useProtectedMutation } from "../hooks/use-protected-mutation";
 import { Button } from "./ui/button";

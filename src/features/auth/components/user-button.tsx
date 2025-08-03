@@ -1,22 +1,23 @@
 "use client";
+import { HugeiconsIcon } from "@hugeicons/react";
 import {
   AccountSetting02Icon,
   DashboardSquare01Icon,
   Invoice02Icon,
   Logout01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { HugeiconsIcon } from "@hugeicons/react";
 import { signOut } from "next-auth/react";
 
-import { StudentProfile } from "@/shared/components/students/student-profile";
-import type { AuthUser } from "@/types/next-auth";
 import { Menu } from "@/ui/menu";
 import { UserAvatar } from "@/ui/user-avatar";
+import { StudentProfile } from "@/shared/components/students/student-profile";
+
+import type { AuthUser } from "@/types/next-auth";
 
 export const UserButton = ({ user }: { user: AuthUser }) => {
   return (
     <Menu>
-      <Menu.Trigger>
+      <Menu.Trigger className="shrink-0">
         <UserAvatar
           userImage={user?.image}
           userName={user?.name}

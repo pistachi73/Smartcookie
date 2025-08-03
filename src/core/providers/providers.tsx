@@ -1,13 +1,14 @@
 "use client";
 
 import { QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { LazyMotion } from "motion/react";
-import { ThemeProvider } from "next-themes";
 import { useRouter } from "next/navigation";
+import { ThemeProvider } from "next-themes";
 import { I18nProvider, RouterProvider } from "react-aria-components";
 
 import { getQueryClient } from "@/shared/lib/get-query-client";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
 const loadFeatures = () =>
   import("./animationFeatures.js").then((res) => res.default);
 
