@@ -1,7 +1,6 @@
 import "@/styles/globals.css";
 import "@/styles/scrollbar.css";
 
-import { Analytics } from "@vercel/analytics/next";
 import { SessionProvider } from "next-auth/react";
 
 import { Toast } from "@/ui/toast";
@@ -71,7 +70,6 @@ export default async function RootLayout({
     >
       {/* <ReactScan /> */}
       <body className={`${sans.variable} font-sans h-full`}>
-        <Analytics />
         <Providers>
           <SessionProvider session={session}>
             <ViewportProvider ssrViewport={ssrViewport}>

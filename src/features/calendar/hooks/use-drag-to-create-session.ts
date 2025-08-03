@@ -7,7 +7,7 @@ import {
   getCurrentTimezone,
   getSnapToNearest15MinutesIndex,
 } from "@/features/calendar/lib/utils";
-import { useCalendarStore } from "../store/calendar-store-provider";
+import { useCalendarStore } from "../providers/calendar-store-provider";
 
 export const getTimeLabelFromSnapIndex = (snapIndex: number) => {
   const minutes = snapIndex * 15;
@@ -28,20 +28,20 @@ const getScrollableParent = (
   return getScrollableParent(element.parentElement);
 };
 
-export const useDragToCreateEvent = ({
+export const useDragToCreateSession = ({
   date,
 }: {
   date: Temporal.PlainDate;
 }) => {
-  const { setCreateSessionFormData, setIsCreateSessionModalOpen } =
+  const { setDefaultSessionFormData, setIsCreateSessionModalOpen } =
     useCalendarStore(
       useShallow((store) => ({
-        setCreateSessionFormData: store.setCreateSessionFormData,
+        setDefaultSessionFormData: store.setDefaultSessionFormData,
         setIsCreateSessionModalOpen: store.setIsCreateSessionModalOpen,
       })),
     );
   const scrollableParent = useRef<HTMLElement | null>(null);
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLButtonElement>(null);
   const [dragStartY, setDragStartY] = useState<number | null>(null);
   const [dragEndY, setDragEndY] = useState<number | null>(null);
   const currentMouseYRef = useRef<number | null>(null);
@@ -155,21 +155,7 @@ export const useDragToCreateEvent = ({
         }),
       });
 
-      const defaultValues = {
-        startTime: new Time(
-          startDate.toPlainTime().hour,
-          startDate.toPlainTime().minute,
-        ),
-        endTime: new Time(
-          endDate.toPlainTime().hour,
-          endDate.toPlainTime().minute,
-        ),
-        date: new CalendarDate(startDate.year, startDate.month, startDate.day),
-      };
-
-      console.log("defaultValues", defaultValues);
-
-      setCreateSessionFormData({
+      setDefaultSessionFormData({
         startTime: new Time(
           startDate.toPlainTime().hour,
           startDate.toPlainTime().minute,
@@ -189,7 +175,7 @@ export const useDragToCreateEvent = ({
     currentTouchIdRef.current = null;
     setDragStartY(null);
     setDragEndY(null);
-  }, [date, setCreateSessionFormData, setIsCreateSessionModalOpen]);
+  }, [date, setDefaultSessionFormData, setIsCreateSessionModalOpen]);
 
   const handleMouseUp = useCallback(() => {
     finalizeDrag();

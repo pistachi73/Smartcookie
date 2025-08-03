@@ -73,8 +73,6 @@ type SessionProps = {
   position: number;
 };
 
-const MotionButton = m.create(Button);
-
 export const Session = ({ session, position, hubId }: SessionProps) => {
   const queryClient = getQueryClient();
   const [isExpanded, setIsExpanded] = useState(false);
@@ -96,11 +94,6 @@ export const Session = ({ session, position, hubId }: SessionProps) => {
   const { isLoading: isLoadingSessionNotes } = useQuery({
     ...getSessionNotesBySessionIdQueryOptions(session.id),
     enabled: isExpanded,
-  });
-
-  console.log({
-    sessionStartTime: session.startTime,
-    sessionEndTime: session.endTime,
   });
 
   return (

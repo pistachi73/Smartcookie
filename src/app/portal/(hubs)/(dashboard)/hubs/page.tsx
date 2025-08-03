@@ -1,20 +1,17 @@
 import { FolderLibraryIcon } from "@hugeicons-pro/core-solid-rounded";
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from "@tanstack/react-query";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
 import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
+import { getQueryClient } from "@/shared/lib/get-query-client";
 
 import { HubList } from "@/features/hub/components/hub-list";
 import { getHubsByUserIdQueryOptions } from "@/features/hub/lib/hub-query-options";
 
 const HubsPage = async () => {
-  const queryClient = new QueryClient();
+  const queryClient = getQueryClient();
 
   await queryClient.prefetchQuery({
-    ...getHubsByUserIdQueryOptions,
+    ...getHubsByUserIdQueryOptions(queryClient),
     staleTime: 1000 * 60 * 60 * 24,
   });
 

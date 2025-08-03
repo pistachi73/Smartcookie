@@ -99,7 +99,7 @@ const tabStyles = tv({
 });
 
 interface TabProps extends TabPrimitiveProps {
-  ref?: React.RefObject<HTMLButtonElement>;
+  ref?: React.RefObject<HTMLDivElement>;
   children:
     | React.ReactNode
     | ((props: { isSelected: boolean }) => React.ReactNode);

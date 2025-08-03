@@ -3,11 +3,14 @@
 import { createContext, type ReactNode, use, useRef } from "react";
 import { useStore } from "zustand";
 
+import {
+  createCalendarStore,
+  initCalendarStore,
+} from "../store/calendar-store";
 import type {
   CalendarStore,
   InitialCalendarStateData,
 } from "../types/calendar-store.types";
-import { createCalendarStore, initCalendarStore } from "./calendar-store";
 
 export type CalendarStoreApi = ReturnType<typeof createCalendarStore>;
 

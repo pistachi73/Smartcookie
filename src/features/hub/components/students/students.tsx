@@ -6,7 +6,6 @@ import { useState } from "react";
 import { Button } from "@/shared/components/ui/button";
 import { Heading } from "@/shared/components/ui/heading";
 import { Menu } from "@/shared/components/ui/menu";
-import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
 
 import { StudentsListView } from "./students-list-view";
 
@@ -28,7 +27,6 @@ const DynamicAddStudentModal = dynamic(
 );
 
 export const Students = ({ hubId }: { hubId: number }) => {
-  const { down } = useViewport();
   const [isAddStudentFormModalOpen, setIsAddStudentFormModalOpen] =
     useState(false);
   const [isAddStudentModalOpen, setIsAddStudentModalOpen] = useState(false);

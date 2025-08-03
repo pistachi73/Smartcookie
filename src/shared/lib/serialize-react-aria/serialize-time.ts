@@ -1,4 +1,4 @@
-import type { Time } from "@internationalized/date";
+import type { TimeValue } from "react-aria-components";
 import { z } from "zod";
 
 const serializedTime = z.object({
@@ -11,7 +11,7 @@ type SerializedTime = {
   minute: number;
 };
 
-const serializeTime = (time: Time): SerializedTime => {
+const serializeTime = (time: TimeValue): SerializedTime => {
   return {
     hour: time.hour,
     minute: time.minute,

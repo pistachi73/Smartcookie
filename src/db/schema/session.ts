@@ -46,8 +46,7 @@ export const session = pgTable(
       table.userId,
       table.startTime,
     ),
-    // For queries by status (upcoming/completed)
-    index("session_status_idx").on(table.status),
+    index("session_user_start_time_idx").on(table.userId, table.startTime),
   ],
 );
 

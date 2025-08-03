@@ -7,7 +7,6 @@ import {
   DatePicker as DatePickerPrimitive,
   type DatePickerProps as DatePickerPrimitiveProps,
   type DateValue,
-  type DialogProps,
   type PopoverProps,
   type ValidationResult,
 } from "react-aria-components";
@@ -42,8 +41,7 @@ const { base, datePickerIcon, calendarIcon, datePickerInput } =
   datePickerStyles();
 
 interface DatePickerOverlayProps
-  extends Omit<DialogProps, "children" | "className" | "style">,
-    Omit<PopoverProps, "children" | "className" | "style"> {
+  extends Omit<PopoverProps, "children" | "className" | "style"> {
   className?: string | ((values: { defaultClassName?: string }) => string);
   children?: React.ReactNode;
   closeButton?: boolean;

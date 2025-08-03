@@ -140,8 +140,7 @@ export const TwoFactor = () => {
             >
               <InputOTP.Group>
                 {[...Array(6)].map((_, index) => (
-                  // biome-ignore lint/suspicious/noArrayIndexKey: No other option
-                  <InputOTP.Slot key={index} index={index} />
+                  <InputOTP.Slot key={`otp-slot-${index}`} index={index} />
                 ))}
               </InputOTP.Group>
             </InputOTP>

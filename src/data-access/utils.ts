@@ -53,7 +53,31 @@ export const parseDateWithTimezone = (
   as: string,
   timestamp?: Column,
 ) =>
+  sql<
+    string | null
+  >`case when ${date} is null then null else trim(both '"' from to_json(${date}::timestamptz at time zone ${timestamp ?? "UTC"})::text) end`.as(
+    as,
+  );
+
+// For required columns (always returns string)
+export const parseRequiredDateWithTimezone = (
+  date: Column,
+  as: string,
+  timestamp?: Column,
+) =>
   sql<string>`trim(both '"' from to_json(${date}::timestamptz at time zone ${timestamp ?? "UTC"})::text)`.as(
+    as,
+  );
+
+// For optional columns (returns string | null)
+export const parseOptionalDateWithTimezone = (
+  date: Column,
+  as: string,
+  timestamp?: Column,
+) =>
+  sql<
+    string | null
+  >`case when ${date} is null then null else trim(both '"' from to_json(${date}::timestamptz at time zone ${timestamp ?? "UTC"})::text) end`.as(
     as,
   );
 

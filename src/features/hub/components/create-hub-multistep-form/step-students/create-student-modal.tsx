@@ -19,7 +19,7 @@ const studentFormSchema = z.object({
       if (!phone) return true; // Allow empty phone
       try {
         return isValidPhoneNumber(phone);
-      } catch (e) {
+      } catch (_e) {
         return false;
       }
     },

@@ -1,5 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { getLocalTimeZone, Time, today } from "@internationalized/date";
+import { getLocalTimeZone, today } from "@internationalized/date";
+import { useQuery } from "@tanstack/react-query";
+import { format, parseISO } from "date-fns";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
@@ -15,8 +17,8 @@ import { serializeTime } from "@/shared/lib/serialize-react-aria/serialize-time"
 
 import { useAddSessions } from "../../hooks/session/use-add-sessions";
 import { useCheckSessionConflicts } from "../../hooks/session/use-check-session-conflicts";
-import { useHubById } from "../../hooks/use-hub-by-id";
 import { calculateRecurrentSessions } from "../../lib/calculate-recurrent-sessions";
+import { getHubByIdQueryOptions } from "../../lib/hub-query-options";
 import { AddSessionFormSchema, AddSessionsForm } from "./add-sessions-form";
 import {
   SessionConflictModalContent,
@@ -38,7 +40,6 @@ export const AddSessionsFormModal = ({
   disableHubSelection,
   defaultValues,
 }: AddSessionsFormModalProps) => {
-  console.log("defaultValues", defaultValues);
   const [isConflictModalOpen, setIsConflictModalOpen] = useState(false);
 
   const form = useForm<z.infer<typeof AddSessionFormSchema>>({
@@ -46,8 +47,8 @@ export const AddSessionsFormModal = ({
     defaultValues: defaultValues ?? {
       hubId: hubId,
       date: today(getLocalTimeZone()),
-      startTime: new Time(12, 30, 0),
-      endTime: new Time(14, 30, 0),
+      startTime: undefined,
+      endTime: undefined,
       rrule: undefined,
     },
   });
@@ -57,11 +58,14 @@ export const AddSessionsFormModal = ({
     name: ["rrule", "hubId"],
   });
 
-  const { data: hub } = useHubById(selectedHubId);
+  const { data: hub } = useQuery({
+    ...getHubByIdQueryOptions(selectedHubId),
+    enabled: !!selectedHubId && isOpen,
+  });
 
   // Watch all changes
   useEffect(() => {
-    const subscription = form.watch((value, { type }) => {
+    const subscription = form.watch((_value, { type }) => {
       if (type === "change") {
         resetConflicts();
       }
@@ -75,8 +79,7 @@ export const AddSessionsFormModal = ({
     }
   }, [defaultValues, form]);
 
-  const { mutateAsync: addSessions, isPending: isAddingSessions } =
-    useAddSessions();
+  const { mutate: addSessions, isPending: isAddingSessions } = useAddSessions();
   const {
     mutateAsync: checkSessionConflicts,
     reset: resetConflicts,
@@ -89,28 +92,62 @@ export const AddSessionsFormModal = ({
       return;
     }
 
+    if (
+      (hub.startDate && data.date.toString() < hub.startDate) ||
+      (hub.endDate && data.date.toString() > hub.endDate)
+    ) {
+      const formatDate = (dateString: string) => {
+        const date = parseISO(dateString);
+        return format(date, "dd/MM/yyyy");
+      };
+
+      let dateRangeMessage = "Session date must be within the hub's date range";
+
+      if (hub.startDate && hub.endDate) {
+        dateRangeMessage += ` (${formatDate(hub.startDate)} to ${formatDate(hub.endDate)})`;
+      } else if (hub.startDate) {
+        dateRangeMessage += ` (from ${formatDate(hub.startDate)})`;
+      } else if (hub.endDate) {
+        dateRangeMessage += ` (until ${formatDate(hub.endDate)})`;
+      }
+
+      form.setError("date", {
+        message: dateRangeMessage,
+      });
+      return;
+    }
+
     const sessions = calculateRecurrentSessions({
       date: serializeDateValue(data.date),
       startTime: serializeTime(data.startTime),
       endTime: serializeTime(data.endTime),
       rruleStr: data.rrule,
       hubEndsOn: hub.endDate,
-      hubStartsOn: hub.startDate,
+      hubStartsOn: hub.startDate as string,
     });
 
-    const { success } = await checkSessionConflicts({
-      sessions,
-    });
+    if (!conflictsData) {
+      const { success } = await checkSessionConflicts({
+        sessions,
+      });
+      if (!success) return;
+    }
 
-    if (!success) return;
     if (!sessions.length) {
       toast.error("No sessions to add");
       return;
     }
 
-    await addSessions({
+    addSessions({
       hubId: data.hubId,
-      sessions,
+      sessions: sessions.map((s) => ({
+        ...s,
+        hub: {
+          id: data.hubId,
+          name: hub.name,
+          color: hub.color,
+        },
+      })),
     });
 
     handleOpenChange(false);
@@ -127,6 +164,13 @@ export const AddSessionsFormModal = ({
   };
 
   const showRecurrenceWarning = recurrence && !hub?.endDate;
+  const hasConflicts = conflictsData && !conflictsData?.success;
+
+  const buttonText = isAddingSessions
+    ? "Adding session..."
+    : hasConflicts
+      ? "Add with conflicts"
+      : "Add Session";
 
   return (
     <>
@@ -139,8 +183,8 @@ export const AddSessionsFormModal = ({
           <Form onSubmit={form.handleSubmit(onSubmit)}>
             <Modal.Body className="pb-1 space-y-4">
               <AddSessionsForm
-                minDate={hub?.startDate}
-                maxDate={hub?.endDate}
+                minDate={hub?.startDate ?? undefined}
+                maxDate={hub?.endDate ?? undefined}
                 disableHubSelection={disableHubSelection}
               />
 
@@ -150,7 +194,7 @@ export const AddSessionsFormModal = ({
                     <p className="font-medium">Recurrence limitation</p>
                     <p className="text-sm opacity-80">
                       Since this hub doesn't have an end date, recurring
-                      sessions will be calculated for a maximum of 6 months from
+                      sessions will be calculated for a maximum of 2 months from
                       the start date.
                     </p>
                   </div>
@@ -179,9 +223,7 @@ export const AddSessionsFormModal = ({
                     aria-label="Adding session..."
                   />
                 )}
-                {isCheckingConflicts || isAddingSessions
-                  ? "Adding session..."
-                  : "Add Session"}
+                {buttonText}
               </Button>
             </Modal.Footer>
           </Form>

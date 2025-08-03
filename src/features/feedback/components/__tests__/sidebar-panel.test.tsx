@@ -14,7 +14,7 @@ vi.mock("@/shared/hooks/use-navigate-with-params");
 
 vi.mock("@/shared/hooks/use-debounced-value", () => ({
   useDebouncedValue: vi.fn(
-    (value: string, delay: number, callback: (value: string) => void) => {
+    (value: string, _delay: number, callback: (value: string) => void) => {
       callback(value);
     },
   ),

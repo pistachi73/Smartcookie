@@ -9,12 +9,11 @@ import { redirect } from "next/navigation";
 import { Temporal } from "temporal-polyfill";
 
 import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
-import { currentUser } from "@/shared/lib/auth";
 
 import { Calendar } from "@/features/calendar/components";
-import { getMonthSessionsQueryOptions } from "@/features/calendar/hooks/use-calendar-sessions";
 import { isCalendarView } from "@/features/calendar/lib/calendar";
-import { CalendarStoreProvider } from "@/features/calendar/store/calendar-store-provider";
+import { CalendarStoreProvider } from "@/features/calendar/providers/calendar-store-provider";
+import { OptimizedCalendarProvider } from "@/features/calendar/providers/optimized-calendar-provider";
 
 type CalendarPageProps = {
   params: Promise<{
@@ -26,7 +25,6 @@ type CalendarPageProps = {
 };
 const CalendarPage = async ({ params }: CalendarPageProps) => {
   const queryClient = new QueryClient();
-  const _user = await currentUser();
   const { calendarView, year, month, day } = await params;
 
   if (
@@ -44,26 +42,6 @@ const CalendarPage = async ({ params }: CalendarPageProps) => {
     Number(day),
   );
 
-  const today = Temporal.Now.plainDateTimeISO();
-  const isDifferentMonth =
-    today.month !== plainDateTime.month ||
-    (today.month === plainDateTime.month && today.year !== plainDateTime.year);
-
-  // await Promise.all([
-  //   queryClient.prefetchQuery({
-  //     ...getMonthSessionsQueryOptions(plainDateTime),
-  //     staleTime: 1000 * 60 * 60 * 24,
-  //   }),
-  //   ...(isDifferentMonth
-  //     ? [
-  //         queryClient.prefetchQuery({
-  //           ...getMonthSessionsQueryOptions(today),
-  //           staleTime: 1000 * 60 * 60 * 24,
-  //         }),
-  //       ]
-  //     : []),
-  // ]);
-
   return (
     <>
       <PortalNav
@@ -80,9 +58,11 @@ const CalendarPage = async ({ params }: CalendarPageProps) => {
         }}
         skipHydration={true}
       >
-        <HydrationBoundary state={dehydrate(queryClient)}>
-          <Calendar />
-        </HydrationBoundary>
+        <OptimizedCalendarProvider>
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            <Calendar />
+          </HydrationBoundary>
+        </OptimizedCalendarProvider>
       </CalendarStoreProvider>
     </>
   );

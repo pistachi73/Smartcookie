@@ -4,8 +4,7 @@ import { memo } from "react";
 
 import { cn } from "@/shared/lib/classes";
 
-import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
-import { CalendarHeader } from "./calendar-header";
+import { useCalendarStore } from "@/features/calendar/providers/calendar-store-provider";
 import { AgendaView } from "./views/agenda-view/agenda-view";
 import { DayView } from "./views/day-view/day-view";
 import { MonthView } from "./views/month-view/month-view";
@@ -22,7 +21,6 @@ export const CalendarView = memo(() => {
       )}
     >
       <div className="grow overflow-hidden flex flex-col">
-        <CalendarHeader />
         {calendarView === "day" && <DayView key="day-view" />}
         {calendarView === "weekday" && <DayView key="weekday-view" />}
         {calendarView === "week" && <DayView key="week-view" />}

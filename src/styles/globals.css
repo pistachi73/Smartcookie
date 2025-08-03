@@ -522,3 +522,22 @@
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+/* Hide drag previews globally */
+[data-rac-drag-preview],
+[data-rac-drag-preview] * {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Hide browser default drag preview */
+* {
+  -webkit-user-drag: element;
+}
+
+*::before,
+*::after {
+  -webkit-user-drag: none;
+}

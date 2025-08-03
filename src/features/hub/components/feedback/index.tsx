@@ -19,7 +19,6 @@ export const CourseFeedback = ({ hubId }: { hubId: number }) => {
   const { data: hub } = useHubById(hubId);
 
   const [isInitSurveySheetOpen, setIsInitSurveySheetOpen] = useState(false);
-  const noSurveys = data?.length === 0;
 
   return (
     <>

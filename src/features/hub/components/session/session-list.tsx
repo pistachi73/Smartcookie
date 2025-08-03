@@ -118,10 +118,7 @@ export function SessionsList({ hubId }: { hubId: number }) {
 
         {isLoadingSessions ? (
           Array.from({ length: 5 }).map((_, index) => (
-            <SessionSkeleton
-              key={`session-skeleton-${index}`}
-              position={index + 1}
-            />
+            <SessionSkeleton key={`session-skeleton-${index}`} />
           ))
         ) : (
           <LayoutGroup>

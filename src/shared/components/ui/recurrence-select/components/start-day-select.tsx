@@ -1,13 +1,13 @@
-import { CalendarDate } from "@internationalized/date";
+import { CalendarDate, type DateValue } from "@internationalized/date";
 import { datetime } from "rrule";
 
-import { DatePicker } from "../../date-picker";
+import { DatePicker, type DatePickerProps } from "../../date-picker";
 import type { SetRruleOptions } from "../utils";
 
 type StartDaySelectProps = {
   setRruleOptions: SetRruleOptions;
-  minDate?: CalendarDate;
-  maxDate?: CalendarDate;
+  minDate: DatePickerProps<DateValue>["minValue"];
+  maxDate: DatePickerProps<DateValue>["maxValue"];
   startDate?: Date | null;
   onStartDateChange?: (date: CalendarDate | null) => void;
 };

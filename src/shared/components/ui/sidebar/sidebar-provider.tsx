@@ -46,7 +46,6 @@ const SidebarProvider = ({
   const isMobile = useMediaQuery("(max-width: 767px)");
   const [openMobile, setOpenMobile] = useState(false);
 
-  console.log(defaultOpen);
   const [internalOpenState, setInternalOpenState] = useState(defaultOpen);
   const open = openProp ?? internalOpenState;
   const setOpen = useCallback(

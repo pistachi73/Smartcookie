@@ -247,7 +247,7 @@ describe("SurveyTemplateDetails", () => {
 
       // Check response time (2m 5s) - look for the text that contains both numbers and units
       expect(
-        screen.getByText((content, element) => {
+        screen.getByText((_content, element) => {
           return element?.textContent === "2m5s";
         }),
       ).toBeInTheDocument();

@@ -7,7 +7,7 @@ import {
   parseDateTime,
   type Time,
 } from "@internationalized/date";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Controller,
   useFormContext,
@@ -89,7 +89,10 @@ export function AddSessionsForm({
   maxDate,
   disableHubSelection,
 }: AddSessionsFormProps) {
-  const { data: hubs, isLoading } = useQuery(getHubsByUserIdQueryOptions);
+  const queryClient = useQueryClient();
+  const { data: hubs, isLoading } = useQuery(
+    getHubsByUserIdQueryOptions(queryClient),
+  );
 
   const form = useFormContext<z.infer<typeof AddSessionFormSchema>>();
   const [date, startTime, selectedHubId] = useWatch({
@@ -104,8 +107,10 @@ export function AddSessionsForm({
   const endStartTimeError =
     formState.errors.startTime?.message || formState.errors.endTime?.message;
 
-  const maxCalendarDate = maxDate ? parseDateTime(maxDate) : undefined;
-  const minCalendarDate = minDate ? parseDateTime(minDate) : undefined;
+  console.log({ maxDate, minDate });
+
+  const maxCalendarDate = maxDate ? parseDateTime(maxDate) : null;
+  const minCalendarDate = minDate ? parseDateTime(minDate) : null;
 
   const hubOptions =
     hubs?.map((hub) => ({
@@ -181,6 +186,7 @@ export function AddSessionsForm({
             }}
             minValue={minCalendarDate}
             maxValue={maxCalendarDate}
+            value={field.value}
           />
         )}
       />
@@ -222,9 +228,9 @@ export function AddSessionsForm({
                 onChange={onChange}
                 hourCycle={24}
                 isInvalid={invalid}
-                minValue={startTime}
                 className="flex-1"
                 aria-label="End time"
+                {...(startTime && { minValue: startTime })}
               />
             )}
           />
@@ -243,8 +249,8 @@ export function AddSessionsForm({
             onStartDateChange={(date) =>
               form.setValue("date", date as CalendarDate)
             }
-            minDate={minCalendarDate as unknown as CalendarDate}
-            maxDate={maxCalendarDate as unknown as CalendarDate}
+            minDate={minCalendarDate}
+            maxDate={maxCalendarDate}
           />
         )}
       />

@@ -100,7 +100,7 @@ export const SessionConflictWarning = ({
   setIsConflictModalOpen: (open: boolean) => void;
 }) => {
   return (
-    <Note intent="danger">
+    <Note intent="warning">
       <p className="font-medium">
         Session time conflict detected.{" "}
         <button

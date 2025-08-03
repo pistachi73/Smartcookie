@@ -18,7 +18,7 @@ export type CalendarState = {
   calendarView: CalendarView;
 
   // Create session modal
-  createSessionFormData: Partial<z.infer<typeof AddSessionFormSchema>> | null;
+  defaultSessionFormData: Partial<z.infer<typeof AddSessionFormSchema>> | null;
 };
 
 export type CalendarActions = {
@@ -31,11 +31,12 @@ export type CalendarActions = {
   selectDate: (date: Temporal.PlainDate) => void;
   setCalendarView: (calendarView: CalendarView) => void;
   setVisibleDates: (dates: Temporal.PlainDate[]) => void;
+  set1DayView: (date: Temporal.PlainDate) => void;
 
   onNavigation: (direction: number) => void;
   onToday: () => void;
 
-  setCreateSessionFormData: (
+  setDefaultSessionFormData: (
     values: Partial<z.infer<typeof AddSessionFormSchema>>,
   ) => void;
 };

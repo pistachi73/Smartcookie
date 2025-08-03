@@ -85,7 +85,6 @@ export function InitSurveyFromHubSheet({
   onOpenChange,
   hubId,
   hubName,
-  onInitSurvey,
   onCancel,
 }: InitSurveyFromHubSheetProps) {
   const [selectedTemplateId, setSelectedTemplateId] = useState<string>("");

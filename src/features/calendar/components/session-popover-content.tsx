@@ -2,22 +2,43 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ArrowRight02Icon,
   Clock01Icon,
+  Delete01Icon,
+  Pen01Icon,
   UserGroupIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import { format } from "date-fns";
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import { Separator } from "react-aria-components";
 
 import { AvatarStack } from "@/shared/components/ui/avatar-stack";
 import { Button } from "@/ui/button";
-import { Modal } from "@/ui/modal";
+import { Link } from "@/ui/link";
 import { Popover, type PopoverContentProps } from "@/ui/popover";
 import { cn } from "@/shared/lib/classes";
 
 import { getCalendarColor } from "@/features/calendar/lib/utils";
 import type { CalendarSession } from "@/features/calendar/types/calendar.types";
-import { UpdateSessionFormModal } from "@/features/hub/components/session/update-session-form-modal";
-import { DeleteEventModalContent } from "./delete-event-modal-content";
+
+const DynamicUpdateSessionFormModal = dynamic(
+  () =>
+    import("@/features/hub/components/session/update-session-form-modal").then(
+      (mod) => mod.UpdateSessionFormModal,
+    ),
+  {
+    ssr: false,
+  },
+);
+
+const DynamicDeleteEventModalContent = dynamic(
+  () =>
+    import("./delete-event-modal-content").then(
+      (mod) => mod.DeleteEventModalContent,
+    ),
+  {
+    ssr: false,
+  },
+);
 
 type SessionPopoverProps = {
   session: CalendarSession;
@@ -32,6 +53,8 @@ export const SessionPopover = ({
 }: SessionPopoverProps) => {
   const [isUpdateSessionModalOpen, setIsUpdateSessionModalOpen] =
     useState(false);
+  const [isDeleteSessionModalOpen, setIsDeleteSessionModalOpen] =
+    useState(false);
   const { className: popoverClassName, ...restPopoverProps } =
     popoverProps ?? {};
 
@@ -42,7 +65,7 @@ export const SessionPopover = ({
     id: session.id,
     startTime: session.startTime,
     endTime: session.endTime,
-    status: "upcoming" as const, // Default status since CalendarSession doesn't have this
+    status: session.status,
     duration: {
       hours: Math.floor(
         (new Date(session.endTime).getTime() -
@@ -66,7 +89,7 @@ export const SessionPopover = ({
   return (
     <>
       <Popover.Content
-        className={cn("sm:w-[300px]", popoverClassName)}
+        className={cn("sm:w-[300px] shadow-lg", popoverClassName)}
         {...restPopoverProps}
       >
         <Popover.Header className="space-y-2">
@@ -76,7 +99,17 @@ export const SessionPopover = ({
                 className={cn("size-3 rounded-full border", color?.className)}
               />
             </div>
-            {session.hub?.name}
+            {session.hub ? (
+              <Link
+                href={`/portal/hubs/${session.hub.id}`}
+                className="flex items-center gap-2"
+                intent="primary"
+              >
+                {session.hub.name}
+              </Link>
+            ) : (
+              "Untitled"
+            )}
           </Popover.Title>
           <div className="text-sm flex items-start gap-2">
             <div className="w-5 flex items-center justify-center h-5">
@@ -101,7 +134,7 @@ export const SessionPopover = ({
             </div>
           </div>
         </Popover.Header>
-        <Popover.Body className="space-y-3">
+        <Popover.Body className="space-y-4">
           <Separator className="bg-border/20" />
           <div className="text-sm flex items-start gap-2">
             <div className="w-5 flex items-center justify-center h-5">
@@ -122,30 +155,45 @@ export const SessionPopover = ({
             </div>
           </div>
         </Popover.Body>
-        <Popover.Footer className="flex items-center justify-end gap-2">
-          <Modal>
-            <Button intent="plain" size="small">
-              Delete
-            </Button>
-            <DeleteEventModalContent />
-          </Modal>
+        <Popover.Footer className="flex items-center flex-row justify-start gap-2 ml-6">
+          <Button
+            intent="outline"
+            size="small"
+            slot="close"
+            onPress={() => {
+              setIsDeleteSessionModalOpen(true);
+            }}
+          >
+            <HugeiconsIcon
+              icon={Delete01Icon}
+              size={16}
+              className="text-danger"
+            />
+            Delete
+          </Button>
           <Button
             size="small"
+            intent="outline"
             className="px-4"
             slot="close"
             onPress={() => {
               setIsUpdateSessionModalOpen(true);
             }}
           >
+            <HugeiconsIcon icon={Pen01Icon} size={16} />
             Edit
           </Button>
         </Popover.Footer>
       </Popover.Content>
-      <UpdateSessionFormModal
+      <DynamicUpdateSessionFormModal
         session={hubSession}
         hubId={session.hub.id}
         isOpen={isUpdateSessionModalOpen}
         setIsOpen={setIsUpdateSessionModalOpen}
+      />
+      <DynamicDeleteEventModalContent
+        isOpen={isDeleteSessionModalOpen}
+        onOpenChange={setIsDeleteSessionModalOpen}
       />
     </>
   );

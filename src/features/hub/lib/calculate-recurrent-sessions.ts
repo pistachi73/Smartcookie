@@ -1,3 +1,4 @@
+import { getLocalTimeZone } from "@internationalized/date";
 import { addMonths } from "date-fns";
 import { datetime, rrulestr } from "rrule";
 import { Temporal } from "temporal-polyfill";
@@ -34,7 +35,7 @@ export const calculateRecurrentSessions = (
     (endTime.hour - startTime.hour) * 60 + endTime.minute - startTime.minute;
 
   if (rruleStr) {
-    const userTimezone = Temporal.Now.timeZoneId();
+    const userTimezone = getLocalTimeZone();
     const hubStartsOnDate = new Date(hubStartsOn);
     const hubEndsOnDate = hubEndsOn ? new Date(hubEndsOn) : undefined;
 
@@ -46,15 +47,39 @@ export const calculateRecurrentSessions = (
       hubStartsOnDate.getMonth() + 1,
       hubStartsOnDate.getDate(),
     );
-    const rruleEndsOn = hubEndsOnDate
-      ? datetime(
-          hubEndsOnDate.getFullYear(),
-          hubEndsOnDate.getMonth() + 1,
-          hubEndsOnDate.getDate(),
-        )
-      : addMonths(dstart, 6);
 
-    const rruleDates = rrule.between(rruleStartsOn, rruleEndsOn, true);
+    let rruleDates: Date[];
+
+    // Check if the rrule has a count (COUNT parameter)
+    if (rrule.options.count) {
+      // For count-based rules, use rrule.all() to get all occurrences
+      // then filter to only include dates from our calculated start date onwards
+      const allDates = rrule.all();
+      rruleDates = allDates.filter((date) => date >= rruleStartsOn);
+    } else {
+      // For date-based rules, use between with start and end dates
+      // Calculate the maximum allowed end date (hub end date or 2 months from start)
+      const maxEndDate = hubEndsOnDate
+        ? datetime(
+            hubEndsOnDate.getFullYear(),
+            hubEndsOnDate.getMonth() + 1,
+            hubEndsOnDate.getDate(),
+          )
+        : addMonths(dstart, 2);
+
+      // Use the earlier of the rrule's UNTIL date or our maximum end date
+      const rruleEndsOn = rrule.options.until
+        ? rrule.options.until < maxEndDate
+          ? rrule.options.until
+          : maxEndDate
+        : maxEndDate;
+
+      // Create a new rrule starting from our calculated start date
+      const adjustedRrule = rrule.clone();
+      adjustedRrule.options.dtstart = rruleStartsOn;
+
+      rruleDates = adjustedRrule.between(rruleStartsOn, rruleEndsOn, true);
+    }
 
     rruleDates.forEach((rruleDate: Date) => {
       // Create PlainDateTime from the rrule date and specified times

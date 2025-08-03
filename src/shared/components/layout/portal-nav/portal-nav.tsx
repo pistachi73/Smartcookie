@@ -56,7 +56,7 @@ export const PortalNav = ({
       <div className="flex items-center justify-between w-full h-full gap-8">
         {isMobile && <SidebarTrigger />}
         <div className="flex items-center gap-x-4 flex-shrink-0">
-          <Breadcrumbs className="@2xl:flex hidden">
+          <Breadcrumbs className="@4xl:flex hidden">
             <Breadcrumbs.Item
               key="back"
               href={lastUrl || "#"}

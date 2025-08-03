@@ -41,9 +41,6 @@ export const getWeekdayCardinal = (
   };
 };
 
-const isLastWeekdayOccurrenceInMonth = (date: Date) =>
-  getMonth(date) !== getMonth(addDays(date, 7));
-
 export const isCalendarView = (
   calendarView: any,
 ): calendarView is CalendarView => {

@@ -5,11 +5,13 @@ import {
 } from "@hugeicons-pro/core-solid-rounded";
 import {
   type CalendarDate,
+  type DateValue,
   getDayOfWeek,
   getLocalTimeZone,
   today,
 } from "@internationalized/date";
 import { useCallback, useEffect, useState } from "react";
+import type { DatePickerProps } from "react-aria-components";
 import { datetime, Frequency, RRule } from "rrule";
 
 import { Button } from "../button";
@@ -65,8 +67,8 @@ export const RecurrenceSelect = ({
   onChange: (rrule: string | undefined) => void;
   value?: string;
   label?: string;
-  minDate?: CalendarDate;
-  maxDate?: CalendarDate;
+  minDate?: DatePickerProps<DateValue>["minValue"];
+  maxDate?: DatePickerProps<DateValue>["maxValue"];
   onStartDateChange?: (date: CalendarDate | null) => void;
 }) => {
   const [rrule, setRrule] = useState<RRule | null>(

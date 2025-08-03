@@ -11,56 +11,13 @@ import {
   YAxis,
 } from "recharts";
 
-import {
-  Chart,
-  type ChartConfig,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/ui/chart";
+import { Chart, ChartTooltip, ChartTooltipContent } from "@/ui/chart";
 
 import { useGetWeeklyHours } from "../../hooks/use-get-weekly-hours";
 
 type WeeklyHoursChartProps = {
   date: CalendarDate;
 };
-
-const chartData = Array.from({ length: 12 }, (_, i) => {
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  return {
-    month: months[i],
-    sales: 1000 + Math.floor(Math.random() * 300), // Random value for Sales
-    expenses: 800 + Math.floor(Math.random() * 400), // Random value for Expenses
-    profit: 200 + Math.floor(Math.random() * 900), // Random value for Profit
-  };
-});
-
-const chartConfig = {
-  sales: {
-    label: "Sales",
-    color: "var(--chart-1)",
-  },
-  expenses: {
-    label: "Expenses",
-    color: "var(--chart-2)",
-  },
-  profit: {
-    label: "Profit",
-    color: "var(--chart-4)",
-  },
-} satisfies ChartConfig;
 
 export function WeeklyHoursCard({ date }: WeeklyHoursChartProps) {
   const { data: chartData } = useGetWeeklyHours(
@@ -136,7 +93,7 @@ export function WeeklyHoursCard({ date }: WeeklyHoursChartProps) {
             );
           }}
         />
-        {Object.entries(chartData!.chartConfig).map(([key, value], index) => (
+        {Object.entries(chartData!.chartConfig).map(([key, value]) => (
           <Bar
             key={key}
             dataKey={key}

@@ -29,11 +29,14 @@ export const PageHeader = ({
         className?.container,
       )}
     >
-      <div className="flex items-center gap-x-4">
-        <div className="size-12 rounded-lg bg-overlay shadow-md flex items-center justify-center">
-          <HugeiconsIcon icon={icon} size={20} className="text-primary" />
+      <div className="flex items-center gap-x-3 sm:gap-x-4">
+        <div className="size-10 sm:size-12 rounded-lg bg-overlay shadow-md flex items-center justify-center shrink-0">
+          <HugeiconsIcon
+            icon={icon}
+            className="text-primary size-4 sm:size-5"
+          />
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col w-full">
           <Heading level={1} tracking="tight">
             {title}
           </Heading>

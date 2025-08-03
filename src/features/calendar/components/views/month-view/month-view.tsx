@@ -1,4 +1,4 @@
-import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
+import { useCalendarStore } from "@/features/calendar/providers/calendar-store-provider";
 import { MonthViewCell } from "./month-view-cell";
 
 export const MonthView = () => {
@@ -12,7 +12,7 @@ export const MonthView = () => {
         {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
           <div
             key={`weekday-header-${day}`}
-            className="flex-1 text-muted-fg  text-xs text-center py-2 font-medium uppercase"
+            className="flex-1 text-xs text-center py-2 font-medium uppercase"
           >
             {day}
           </div>

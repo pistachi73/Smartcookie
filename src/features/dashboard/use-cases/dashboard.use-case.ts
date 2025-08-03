@@ -290,9 +290,3 @@ export const getWeeklyHoursUseCase = withValidationAndAuth({
     return result;
   },
 });
-
-const example = {
-  day: "string",
-  "hub-1": 10,
-  "hub-2": 20,
-};

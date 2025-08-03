@@ -1,6 +1,6 @@
 import { useShallow } from "zustand/react/shallow";
 
-import { useCalendarStore } from "@/features/calendar/store/calendar-store-provider";
+import { useCalendarStore } from "@/features/calendar/providers/calendar-store-provider";
 import { AgendaViewDay } from "./agenda-view-day";
 
 export const AgendaView = () => {
@@ -11,12 +11,10 @@ export const AgendaView = () => {
   );
 
   return (
-    <div className="h-full overflow-y-scroll pl-[var(--left-spacing)] p-4 pb-[var(--left-spacing)]">
-      <div className="space-y-2 ">
-        {visibleDates.map((date) => (
-          <AgendaViewDay key={date.toString()} date={date} />
-        ))}
-      </div>
+    <div className="h-full overflow-y-scroll pl-2 sm:pl-[var(--left-spacing)] pb-[var(--left-spacing)] space-y-6 sm:space-y-0 py-4 sm:py-2 pr-4 sm:pr-0">
+      {visibleDates.map((date) => (
+        <AgendaViewDay key={date.toString()} date={date} />
+      ))}
     </div>
   );
 };

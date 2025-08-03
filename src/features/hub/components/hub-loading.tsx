@@ -69,7 +69,7 @@ const SessionsSkeleton = () => (
     </div>
     <div className="space-y-2">
       {Array.from({ length: 5 }).map((_, i) => (
-        <SessionSkeleton key={i} position={i + 1} />
+        <SessionSkeleton key={i} />
       ))}
     </div>
   </div>

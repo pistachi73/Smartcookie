@@ -26,7 +26,7 @@ export const SkeletonStudentListView = () => {
         <Table.Column />
       </Table.Header>
       <Table.Body items={items}>
-        {(item) => (
+        {() => (
           <Table.Row>
             <Table.Cell>
               <div className="flex items-center gap-3">

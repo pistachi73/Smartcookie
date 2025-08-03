@@ -11,6 +11,13 @@ export const AddSessionsSchema = z.object({
     z.object({
       startTime: z.string(),
       endTime: z.string(),
+      hub: z
+        .object({
+          id: z.number(),
+          name: z.string().optional(),
+          color: z.string().optional(),
+        })
+        .optional(),
     }),
   ),
   hubId: z.number(),
@@ -21,6 +28,7 @@ export const UpdateSessionSchema = z.object({
   sessionId: z.number(),
   hubId: z.number(),
   data: z.object({
+    originalStartTime: z.string(),
     startTime: z.string(),
     endTime: z.string(),
     status: z.enum(["upcoming", "completed", "cancelled"]),
@@ -42,4 +50,9 @@ export const GetInfiniteSessionsByHubIdSchema = z.object({
   cursor: z.date().optional(),
   direction: z.enum(["next", "prev"]).optional(),
   limit: z.number().min(1).max(50).default(5),
+});
+
+export const GetCalendarSessionsByDateRangeSchema = z.object({
+  startDate: z.string(),
+  endDate: z.string(),
 });

@@ -1,13 +1,14 @@
 "use server";
 
 import { differenceInMinutes } from "date-fns";
-import { and, asc, count, desc, eq, gt, lt } from "drizzle-orm";
+import { and, asc, between, count, desc, eq, gt, lt } from "drizzle-orm";
 
 import { db } from "@/db";
 import { session, sessionNote } from "@/db/schema";
 import { withValidationAndAuth } from "../protected-data-access";
 import { getTimestampISO } from "../utils";
 import {
+  GetCalendarSessionsByDateRangeSchema,
   GetInfiniteSessionsByHubIdSchema,
   GetSessionsByHubIdSchema,
 } from "./schemas";
@@ -309,5 +310,55 @@ export const getInfiniteSessionsByHubId = withValidationAndAuth({
           : undefined,
       prevCursor: items.length > 0 ? items[0]!.endTime : undefined,
     };
+  },
+});
+
+export const getCalendarSessionsByDateRange = withValidationAndAuth({
+  schema: GetCalendarSessionsByDateRangeSchema,
+  callback: async ({ startDate, endDate }, user) => {
+    const sessions = await db.query.session.findMany({
+      where: and(
+        eq(session.userId, user.id),
+        between(session.startTime, startDate, endDate),
+      ),
+      columns: {
+        id: true,
+        startTime: true,
+        endTime: true,
+        status: true,
+      },
+      with: {
+        hub: {
+          columns: {
+            id: true,
+            name: true,
+            color: true,
+          },
+        },
+        attendance: {
+          columns: {},
+          with: {
+            student: {
+              columns: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const formattedSessions = sessions.map((s) => {
+      const { attendance, ...rest } = s;
+      return {
+        ...rest,
+        students: attendance.map((a) => a.student),
+      };
+    });
+
+    return formattedSessions;
   },
 });

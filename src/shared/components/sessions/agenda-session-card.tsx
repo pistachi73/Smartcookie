@@ -5,6 +5,7 @@ import { UserIcon } from "@hugeicons-pro/core-stroke-rounded";
 import { format } from "date-fns";
 
 import { Tooltip } from "@/shared/components/ui/tooltip";
+import { Link } from "@/ui/link";
 import { cn } from "@/shared/lib/classes";
 import { getCustomColorClasses } from "@/shared/lib/custom-colors";
 
@@ -56,9 +57,19 @@ export const AgendaSessionCard = ({ session }: AgendaSessionCardProps) => {
       />
 
       <div className="space-y-1.5">
-        <p className="text-sm line-clamp-1 font-medium leading-tight">
-          {session.hub?.name ?? "Untitled"}
-        </p>
+        {session.hub ? (
+          <Link
+            href={`/portal/hubs/${session.hub.id}`}
+            className="text-sm line-clamp-1 font-medium leading-tight"
+            intent="primary"
+          >
+            {session.hub.name}
+          </Link>
+        ) : (
+          <p className="text-sm line-clamp-1 font-medium leading-tight">
+            Untitled
+          </p>
+        )}
         <div className="flex flex-row items-center gap-1.5">
           {numberOfStudents > 0 ? (
             <Tooltip delay={0} closeDelay={0}>

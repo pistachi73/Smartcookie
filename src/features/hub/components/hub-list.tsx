@@ -12,7 +12,7 @@ import {
   SortingAZ02Icon,
   SortingZA01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useMemo, useState } from "react";
 import { Link } from "react-aria-components";
 
@@ -34,7 +34,10 @@ type SortOption = {
 };
 
 export function HubList() {
-  const { data: hubs, isLoading } = useQuery(getHubsByUserIdQueryOptions);
+  const queryClient = useQueryClient();
+  const { data: hubs, isLoading } = useQuery(
+    getHubsByUserIdQueryOptions(queryClient),
+  );
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption["key"]>("name");
 

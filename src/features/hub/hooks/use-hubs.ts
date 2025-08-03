@@ -1,7 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { getHubsByUserIdQueryOptions } from "../lib/hub-query-options";
 
 export const useHubs = () => {
-  return useQuery(getHubsByUserIdQueryOptions);
+  const queryClient = useQueryClient();
+  return useQuery({
+    ...getHubsByUserIdQueryOptions(queryClient),
+  });
 };

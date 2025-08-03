@@ -1,8 +1,8 @@
 import { cn } from "@/shared/lib/classes";
 
-import { getTimeLabelFromSnapIndex } from "../hooks/use-drag-to-create-event";
+import { getTimeLabelFromSnapIndex } from "../hooks/use-drag-to-create-session";
 
-export const PreDraftEvent = ({
+export const DraftSession = ({
   startIndex,
   endIndex,
 }: {
