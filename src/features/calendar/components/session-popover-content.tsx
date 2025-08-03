@@ -15,6 +15,7 @@ import { AvatarStack } from "@/shared/components/ui/avatar-stack";
 import { Button } from "@/ui/button";
 import { Link } from "@/ui/link";
 import { Popover, type PopoverContentProps } from "@/ui/popover";
+import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
 import { cn } from "@/shared/lib/classes";
 
 import { getCalendarColor } from "@/features/calendar/lib/utils";
@@ -59,6 +60,8 @@ export const SessionPopover = ({
     popoverProps ?? {};
 
   const color = getCalendarColor(session.hub?.color);
+  const { down } = useViewport();
+  const isMobile = down("sm");
 
   // Convert CalendarSession to HubSession format for UpdateSessionFormModal
   const hubSession = {
@@ -159,10 +162,12 @@ export const SessionPopover = ({
           <Button
             intent="outline"
             size="small"
-            slot="close"
             onPress={() => {
               setIsDeleteSessionModalOpen(true);
             }}
+            {...(!isMobile && {
+              slot: "close",
+            })}
           >
             <HugeiconsIcon
               icon={Delete01Icon}
@@ -175,10 +180,12 @@ export const SessionPopover = ({
             size="small"
             intent="outline"
             className="px-4"
-            slot="close"
             onPress={() => {
               setIsUpdateSessionModalOpen(true);
             }}
+            {...(!isMobile && {
+              slot: "close",
+            })}
           >
             <HugeiconsIcon icon={Pen01Icon} size={16} />
             Edit

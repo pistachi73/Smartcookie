@@ -13,10 +13,10 @@ export const SidebarToggle = () => {
   const toggleSidebar = useCalendarStore(
     useShallow((store) => store.toggleSidebar),
   );
-  const { down } = useViewport();
-  const isMobile = down("sm");
+  const { up } = useViewport();
+  const showSidebarViewport = up("lg");
 
-  if (isMobile) {
+  if (!showSidebarViewport) {
     return null;
   }
 
@@ -25,13 +25,13 @@ export const SidebarToggle = () => {
       intent="outline"
       shape="square"
       size="square-petite"
-      className="size-9"
+      className="size-10"
       onPress={() => {
         toggleSidebar();
       }}
       aria-label="Toggle sidebar"
     >
-      <HugeiconsIcon icon={SidebarRight01Icon} size={18} data-slot="icon" />
+      <HugeiconsIcon icon={SidebarRight01Icon} size={16} />
     </Button>
   );
 };

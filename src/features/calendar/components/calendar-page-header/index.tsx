@@ -24,13 +24,14 @@ export const CalendarPageHeader = () => {
       })),
     );
 
-  const { down } = useViewport();
+  const { down, currentViewport } = useViewport();
   const { title } = useCalendarHeaderTitle({
     selectedDate,
     calendarView: calendarView === "weekday" ? "week" : calendarView,
   });
 
   const isMobile = down("sm");
+  console.log({ currentViewport, isMobile });
 
   const actions = isMobile ? (
     // Mobile order: Navigation Buttons, View Selector, Today, Sidebar Toggle, Add Session

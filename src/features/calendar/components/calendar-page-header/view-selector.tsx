@@ -36,7 +36,7 @@ export const ViewSelector = () => {
       className="w-fit"
     >
       <Button
-        size={isMobile ? "square-petite" : "small"}
+        size={isMobile ? "square-petite" : "medium"}
         intent={isMobile ? "plain" : "outline"}
         shape={isMobile ? "square" : undefined}
         className={cn(isMobile && "size-9")}

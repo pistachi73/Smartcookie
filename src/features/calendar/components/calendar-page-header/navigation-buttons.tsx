@@ -21,7 +21,7 @@ export const NavigationButtons = () => {
       <Button
         intent="plain"
         size="square-petite"
-        className="size-9 p-0 sm:text-muted-fg hover:text-current"
+        className="size-9 sm:size-10 p-0 sm:text-muted-fg hover:text-current"
         onPress={() => {
           onNavigation(-1);
         }}
@@ -31,7 +31,7 @@ export const NavigationButtons = () => {
       <Button
         intent="plain"
         size="square-petite"
-        className="size-9 p-0 sm:text-muted-fg hover:text-current"
+        className="size-9 sm:size-10 p-0 sm:text-muted-fg hover:text-current"
         onPress={() => {
           onNavigation(1);
         }}

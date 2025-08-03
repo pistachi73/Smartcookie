@@ -66,15 +66,17 @@ export const DayView = () => {
                   })}
                   onPress={() => set1DayView(date)}
                 >
-                  <p className={cn("text-xs   uppercase tabular-nums")}>
+                  <p
+                    className={cn(
+                      "text-[10px] sm:text-xs   uppercase tabular-nums",
+                    )}
+                  >
                     {date.toLocaleString("en-US", {
                       weekday: isMobile ? "narrow" : "short",
                     })}
                   </p>
                   <p
-                    className={cn(
-                      "text-sm sm:text-xs   uppercase tabular-nums",
-                    )}
+                    className={cn("text-sm sm:text-xs  uppercase tabular-nums")}
                   >
                     {date.day.toString().padStart(2, "0")}
                   </p>

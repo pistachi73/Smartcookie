@@ -1,6 +1,7 @@
 import { Button } from "react-aria-components";
 import { Temporal } from "temporal-polyfill";
 
+import { Skeleton } from "@/shared/components/ui/skeleton";
 import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
 import { cn } from "@/shared/lib/classes";
 import {
@@ -52,11 +53,19 @@ const DayHeader = ({ date }: { date: Temporal.PlainDate }) => {
   );
 };
 
+const AgendaViewOccurrenceSkeletonMobile = () => (
+  <Skeleton className="p-2 h-14 w-full rounded-md" />
+);
+
+const AgendaViewOccurrenceSkeleton = () => (
+  <Skeleton className="p-3 h-11 w-full rounded-md" />
+);
+
 export const AgendaViewDay = ({ date }: { date: Temporal.PlainDate }) => {
   const { down } = useViewport();
   const isMobile = down("sm");
 
-  const { sessions } = useOptimizedDaySessions(date);
+  const { sessions, isLoading } = useOptimizedDaySessions(date);
 
   const isWeekStart = date.dayOfWeek === 1;
   const startOfWeek = date.subtract({ days: date.dayOfWeek - 1 });
@@ -86,7 +95,16 @@ export const AgendaViewDay = ({ date }: { date: Temporal.PlainDate }) => {
         <DayHeader date={date} />
 
         <div className="flex flex-col gap-2 sm:gap-0.5 w-full">
-          {sessions.length > 0 ? (
+          {isLoading ? (
+            // Show 2 skeleton items while loading
+            Array.from({ length: 2 }).map((_, index) =>
+              isMobile ? (
+                <AgendaViewOccurrenceSkeletonMobile key={`skeleton-${index}`} />
+              ) : (
+                <AgendaViewOccurrenceSkeleton key={`skeleton-${index}`} />
+              ),
+            )
+          ) : sessions.length > 0 ? (
             sessions.map((session) =>
               isMobile ? (
                 <AgendaViewOccurrenceMobile

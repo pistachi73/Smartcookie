@@ -29,18 +29,19 @@ export const HourColumn = () => {
           );
         })}
       </div>
-
-      <Badge
-        intent="primary"
-        shape="square"
-        className={cn(
-          "absolute h-5 left-1.5 tabular-nums",
-          "after:content-[''] after:absolute after:inset-x-full after:top-1/2 after:-translate-y-1/2 after:w-6 after:h-0.5 after:bg-primary/50",
-        )}
-        style={{ top: `calc(${top}px - (var(--spacing) * 5 / 2) + 1px)` }}
-      >
-        {label}
-      </Badge>
+      {!isMobile && (
+        <Badge
+          intent="primary"
+          shape="square"
+          className={cn(
+            "absolute h-5 left-1.5 tabular-nums",
+            "after:content-[''] after:absolute after:inset-x-full after:top-1/2 after:-translate-y-1/2 after:w-6 after:h-0.5 after:bg-primary/50",
+          )}
+          style={{ top: `calc(${top}px - (var(--spacing) * 5 / 2) + 1px)` }}
+        >
+          {label}
+        </Badge>
+      )}
     </div>
   );
 };

@@ -118,7 +118,7 @@ const ToggleGroup = ({
 
 const toggleStyles = tv({
   base: [
-    "inset-ring inset-ring-border cursor-pointer items-center gap-x-2 rounded-lg outline-hidden sm:text-sm",
+    "inset-ring inset-ring-border cursor-pointer items-center gap-x-2 rounded-lg outline-hidden text-sm",
     "forced-colors:[--button-icon:ButtonText] forced-colors:hover:[--button-icon:ButtonText]",
     "*:data-[slot=icon]:-mx-0.5 data-hovered:*:data-[slot=icon]:text-current/90 data-pressed:*:data-[slot=icon]:text-current *:data-[slot=icon]:my-1 *:data-[slot=icon]:size-4 *:data-[slot=icon]:shrink-0 *:data-[slot=icon]:text-current/60",
   ],

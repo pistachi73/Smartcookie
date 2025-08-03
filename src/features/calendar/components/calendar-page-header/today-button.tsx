@@ -19,10 +19,10 @@ export const TodayButton = () => {
   return (
     <Button
       intent={"outline"}
-      size={isMobile ? "square-petite" : "small"}
+      size={isMobile ? "square-petite" : "medium"}
       shape="square"
       onPress={onToday}
-      className={cn("h-9", isMobile && "size-9 text-sm")}
+      className={cn(isMobile && "size-9 text-sm")}
     >
       {isMobile ? todayDay : "Today"}
     </Button>

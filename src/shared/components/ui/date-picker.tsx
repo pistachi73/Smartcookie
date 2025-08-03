@@ -29,9 +29,9 @@ const datePickerStyles = tv({
     datePickerIcon:
       "group mr-1 h-7 w-8 rounded outline-offset-0data-hovered:bg-transparent data-pressed:bg-transparent **:data-[slot=icon]:text-muted-fg",
     calendarIcon: "group-open:text-fg",
-    datePickerInput: "w-full px-3 text-base sm:text-sm",
-    dateRangePickerInputStart: "px-3 text-base sm:text-sm",
-    dateRangePickerInputEnd: "flex-1 px-2 py-1.5 text-base sm:text-sm",
+    datePickerInput: "w-full px-3 text-base text-sm",
+    dateRangePickerInputStart: "px-3 text-base text-sm",
+    dateRangePickerInputEnd: "flex-1 px-2 py-1.5 text-base text-sm",
     dateRangePickerDash:
       "text-fg group-data-disabled:opacity-50 forced-colors:text-[ButtonText] forced-colors:group-data-disabled:text-[GrayText]",
   },
