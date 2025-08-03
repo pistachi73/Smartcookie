@@ -10,6 +10,7 @@ type PageHeaderProps = {
   subTitle?: string;
   actions?: React.ReactNode;
   className?: {
+    icon?: string;
     container?: string;
     actionsContainer?: string;
   };
@@ -30,14 +31,19 @@ export const PageHeader = ({
       )}
     >
       <div className="flex items-center gap-x-3 sm:gap-x-4">
-        <div className="size-10 sm:size-12 rounded-lg bg-overlay shadow-md flex items-center justify-center shrink-0">
+        <div
+          className={cn(
+            "size-10 sm:size-12 rounded-lg bg-overlay shadow-md flex items-center justify-center shrink-0",
+            className?.icon,
+          )}
+        >
           <HugeiconsIcon
             icon={icon}
             className="text-primary size-4 sm:size-5"
           />
         </div>
         <div className="flex flex-col w-full">
-          <Heading level={1} tracking="tight">
+          <Heading level={1} tracking="tight" className="text-lg">
             {title}
           </Heading>
           {subTitle && (

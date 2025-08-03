@@ -17,7 +17,7 @@ import type { AuthUser } from "@/types/next-auth";
 export const UserButton = ({ user }: { user: AuthUser }) => {
   return (
     <Menu>
-      <Menu.Trigger>
+      <Menu.Trigger className="shrink-0">
         <UserAvatar
           userImage={user?.image}
           userName={user?.name}

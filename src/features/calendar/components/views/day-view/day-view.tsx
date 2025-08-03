@@ -49,8 +49,8 @@ export const DayView = () => {
     <div className="flex flex-col h-full relative overflow-hidden ">
       {!hideDayHeader && (
         <div className="w-full flex items-center border-b">
-          <div className="w-16 shrink-0 h-full flex items-center pl-3 border-r py-2">
-            <p className="text-xs text-muted-fg">Time</p>
+          <div className="w-10 sm:w-16 shrink-0 h-full flex items-center pl-3 border-r py-2">
+            <p className="text-xs text-muted-fg">{isMobile ? "" : "Time"}</p>
           </div>
           <div className="flex items-center w-full p-1 gap-1 ">
             {visibleDates.map((date) => {

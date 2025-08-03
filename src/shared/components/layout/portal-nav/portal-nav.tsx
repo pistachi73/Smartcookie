@@ -101,14 +101,13 @@ export const PortalNav = ({
           </Breadcrumbs>
         </div>
 
-        <div className="flex items-center gap-x-3">
+        <div className="flex items-center  gap-x-2 sm:gap-x-3 shrink-0">
           {showSearchField && (
             <div className="hidden md:block">
               <FieldGroup className="pl-3 pr-2 w-[400px]">
                 <HugeiconsIcon
                   icon={Search01Icon}
                   data-slot="icon"
-                  size={14}
                   className="inline text-muted-fg"
                 />
                 <Input placeholder="Search..." className="text-sm w-full" />
@@ -125,20 +124,19 @@ export const PortalNav = ({
             intent="outline"
             size="square-petite"
             shape="square"
-            className="size-10"
+            className="size-9 sm:size-10"
           >
             <HugeiconsIcon icon={Notification01Icon} size={16} />
           </Button>
 
           {!user?.hasActiveSubscription && (
             <ExplorePremiumModal>
-              <Button className="shrink-0">
-                Explore premium
-                <HugeiconsIcon
-                  icon={Diamond02Icon}
-                  size={16}
-                  data-slot="icon"
-                />
+              <Button
+                className={cn("shrink-0", isMobile && "size-9")}
+                size={isMobile ? "square-petite" : "medium"}
+              >
+                {isMobile ? "" : "Explore premium"}
+                <HugeiconsIcon icon={Diamond02Icon} data-slot="icon" />
               </Button>
             </ExplorePremiumModal>
           )}

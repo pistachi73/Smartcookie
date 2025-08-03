@@ -57,7 +57,8 @@ export const CalendarPageHeader = () => {
       icon={Calendar03Icon}
       actions={actions}
       className={{
-        container: "flex-row justify-between items-center",
+        icon: "hidden sm:flex",
+        container: "flex-row justify-between items-center py-3 sm:py-5",
         actionsContainer: "w-auto",
       }}
     />

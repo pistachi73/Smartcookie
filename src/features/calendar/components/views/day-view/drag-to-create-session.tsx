@@ -4,10 +4,11 @@ import { useDragToCreateSession } from "@/features/calendar/hooks/use-drag-to-cr
 import { DraftSession } from "../../pre-draft-event";
 
 export const DragToCreateSession = ({ date }: { date: Temporal.PlainDate }) => {
-  const { ref, dragStartY, dragEndY, handleMouseDown, handleTouchStart } =
-    useDragToCreateSession({
+  const { ref, dragStartY, dragEndY, handleMouseDown } = useDragToCreateSession(
+    {
       date,
-    });
+    },
+  );
 
   return (
     <>
@@ -15,7 +16,6 @@ export const DragToCreateSession = ({ date }: { date: Temporal.PlainDate }) => {
         ref={ref}
         className="absolute top-0 left-0 h-full w-full bg-transparent border-none p-0 cursor-default"
         onMouseDown={handleMouseDown}
-        onTouchStart={handleTouchStart}
         aria-label="Drag to create new event"
         type="button"
         tabIndex={-1}

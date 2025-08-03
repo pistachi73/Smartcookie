@@ -45,7 +45,6 @@ export const useDragToCreateSession = ({
   const [dragStartY, setDragStartY] = useState<number | null>(null);
   const [dragEndY, setDragEndY] = useState<number | null>(null);
   const currentMouseYRef = useRef<number | null>(null);
-  const currentTouchIdRef = useRef<number | null>(null);
 
   const dragState = useRef({
     startY: null as number | null,
@@ -80,15 +79,6 @@ export const useDragToCreateSession = ({
     startDrag(e.clientY);
   };
 
-  const handleTouchStart = (e: React.TouchEvent) => {
-    e.preventDefault();
-    const touch = e.touches[0];
-    if (touch) {
-      currentTouchIdRef.current = touch.identifier;
-      startDrag(touch.clientY);
-    }
-  };
-
   const updateDrag = useCallback(
     (clientY: number) => {
       const now = performance.now();
@@ -114,19 +104,6 @@ export const useDragToCreateSession = ({
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
       updateDrag(e.clientY);
-    },
-    [updateDrag],
-  );
-
-  const handleTouchMove = useCallback(
-    (e: TouchEvent) => {
-      e.preventDefault();
-      const touch = Array.from(e.touches).find(
-        (t) => t.identifier === currentTouchIdRef.current,
-      );
-      if (touch) {
-        updateDrag(touch.clientY);
-      }
     },
     [updateDrag],
   );
@@ -172,7 +149,6 @@ export const useDragToCreateSession = ({
 
     // Reset all state at once
     dragState.current = { startY: null, currentY: null, lastUpdate: 0 };
-    currentTouchIdRef.current = null;
     setDragStartY(null);
     setDragEndY(null);
   }, [date, setDefaultSessionFormData, setIsCreateSessionModalOpen]);
@@ -180,19 +156,6 @@ export const useDragToCreateSession = ({
   const handleMouseUp = useCallback(() => {
     finalizeDrag();
   }, [finalizeDrag]);
-
-  const handleTouchEnd = useCallback(
-    (e: TouchEvent) => {
-      e.preventDefault();
-      const touch = Array.from(e.changedTouches).find(
-        (t) => t.identifier === currentTouchIdRef.current,
-      );
-      if (touch) {
-        finalizeDrag();
-      }
-    },
-    [finalizeDrag],
-  );
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -204,18 +167,6 @@ export const useDragToCreateSession = ({
       });
       window.addEventListener("mouseup", handleMouseUp, {
         signal: abortController.signal,
-      });
-      window.addEventListener("touchmove", handleTouchMove, {
-        signal: abortController.signal,
-        passive: false,
-      });
-      window.addEventListener("touchend", handleTouchEnd, {
-        signal: abortController.signal,
-        passive: false,
-      });
-      window.addEventListener("touchcancel", handleTouchEnd, {
-        signal: abortController.signal,
-        passive: false,
       });
 
       const scrollLoop = () => {
@@ -258,19 +209,12 @@ export const useDragToCreateSession = ({
         cancelAnimationFrame(animationFrameId);
       }
     };
-  }, [
-    dragStartY,
-    handleMouseMove,
-    handleMouseUp,
-    handleTouchMove,
-    handleTouchEnd,
-  ]);
+  }, [dragStartY, handleMouseMove, handleMouseUp]);
 
   return {
     ref,
     dragStartY,
     dragEndY,
     handleMouseDown,
-    handleTouchStart,
   };
 };
