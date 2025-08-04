@@ -195,7 +195,7 @@ export const UpdateSessionFormModal = ({
                 type="submit"
                 shape="square"
                 size="small"
-                className="px-6 w-full sm:w-fitd"
+                className="px-6 w-full sm:w-fit"
                 isPending={isPending}
                 isDisabled={!isDirty || !hub}
               >
