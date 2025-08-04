@@ -11,7 +11,7 @@ import { cn } from "@/shared/lib/classes";
 
 const noteStyles = tv({
   base: [
-    "inset-ring-1 inset-ring-current/10 w-full overflow-hidden rounded-lg p-4 sm:text-sm/6",
+    "inset-ring-1 inset-ring-current/10 w-full overflow-hidden rounded-lg p-4 text-sm/6",
     "[&_a]:underline hover:[&_a]:underline **:[strong]:font-semibold",
   ],
   variants: {

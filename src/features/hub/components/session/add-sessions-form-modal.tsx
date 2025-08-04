@@ -31,6 +31,7 @@ type AddSessionsFormModalProps = {
   hubId?: number;
   disableHubSelection?: boolean;
   defaultValues?: Partial<z.infer<typeof AddSessionFormSchema>>;
+  skipConflictsCheck?: boolean;
 };
 
 export const AddSessionsFormModal = ({
@@ -39,6 +40,7 @@ export const AddSessionsFormModal = ({
   hubId,
   disableHubSelection,
   defaultValues,
+  skipConflictsCheck = false,
 }: AddSessionsFormModalProps) => {
   const [isConflictModalOpen, setIsConflictModalOpen] = useState(false);
 
@@ -126,7 +128,7 @@ export const AddSessionsFormModal = ({
       hubStartsOn: hub.startDate as string,
     });
 
-    if (!conflictsData) {
+    if (!conflictsData && !skipConflictsCheck) {
       const { success } = await checkSessionConflicts({
         sessions,
       });
