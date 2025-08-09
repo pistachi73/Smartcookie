@@ -316,8 +316,11 @@ describe("CalendarCacheManager - Core Logic", () => {
     it("should skip fetching when data is already cached", async () => {
       const testDate = Temporal.PlainDate.from("2024-06-15");
 
-      // Pre-populate cache for the entire range
+      // Pre-populate cache for the entire range (6 days prefetch on each side)
       const dayKeys = [
+        "2024-6-9",
+        "2024-6-10",
+        "2024-6-11",
         "2024-6-12",
         "2024-6-13",
         "2024-6-14",
@@ -325,6 +328,9 @@ describe("CalendarCacheManager - Core Logic", () => {
         "2024-6-16",
         "2024-6-17",
         "2024-6-18",
+        "2024-6-19",
+        "2024-6-20",
+        "2024-6-21",
       ];
       dayKeys.forEach((key) => {
         cacheManager["memoryCache"].set(key, []);

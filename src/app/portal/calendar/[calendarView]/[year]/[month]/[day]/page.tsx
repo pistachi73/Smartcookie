@@ -1,9 +1,4 @@
 import { Calendar03Icon } from "@hugeicons-pro/core-solid-rounded";
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from "@tanstack/react-query";
 import isNumber from "lodash/isNumber";
 import { redirect } from "next/navigation";
 import { Temporal } from "temporal-polyfill";
@@ -13,7 +8,6 @@ import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
 import { Calendar } from "@/features/calendar/components";
 import { isCalendarView } from "@/features/calendar/lib/calendar";
 import { CalendarStoreProvider } from "@/features/calendar/providers/calendar-store-provider";
-import { OptimizedCalendarProvider } from "@/features/calendar/providers/optimized-calendar-provider";
 
 type CalendarPageProps = {
   params: Promise<{
@@ -24,7 +18,6 @@ type CalendarPageProps = {
   }>;
 };
 const CalendarPage = async ({ params }: CalendarPageProps) => {
-  const queryClient = new QueryClient();
   const { calendarView, year, month, day } = await params;
 
   if (
@@ -53,16 +46,10 @@ const CalendarPage = async ({ params }: CalendarPageProps) => {
       <CalendarStoreProvider
         initialCalendarStore={{
           calendarView,
-          _isHydrated: true,
           selectedDate: plainDateTime.toString(),
         }}
-        skipHydration={true}
       >
-        <OptimizedCalendarProvider>
-          <HydrationBoundary state={dehydrate(queryClient)}>
-            <Calendar />
-          </HydrationBoundary>
-        </OptimizedCalendarProvider>
+        <Calendar />
       </CalendarStoreProvider>
     </>
   );

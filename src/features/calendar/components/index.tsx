@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useShallow } from "zustand/react/shallow";
 
 import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
 
@@ -8,7 +9,6 @@ import { useCalendarStore } from "@/features/calendar/providers/calendar-store-p
 import { useOptimizedCalendarSessions } from "../hooks/use-optimized-calendar-sessions";
 import { CalendarPageHeader } from "./calendar-page-header";
 import { CalendarSidebar } from "./calendar-sidebar";
-import { CalendarSkeleton } from "./calendar-skeleton";
 import { CalendarView } from "./calendar-view";
 
 const DynamicAddSessionsFormModal = dynamic(
@@ -23,23 +23,29 @@ const DynamicAddSessionsFormModal = dynamic(
 
 export const Calendar = () => {
   // Initialize the optimized calendar system
-  useOptimizedCalendarSessions();
   const { up } = useViewport();
-  const _isHydrated = useCalendarStore((state) => state._isHydrated);
-  const sidebarOpen = useCalendarStore((store) => store.sidebarOpen);
-  const setIsCreateSessionModalOpen = useCalendarStore(
-    (store) => store.setIsCreateSessionModalOpen,
-  );
-  const isCreateSessionModalOpen = useCalendarStore(
-    (store) => store.isCreateSessionModalOpen,
-  );
-  const defaultSessionFormData = useCalendarStore(
-    (store) => store.defaultSessionFormData,
+  const {
+    sidebarOpen,
+    calendarView,
+    selectedDate,
+    isCreateSessionModalOpen,
+    defaultSessionFormData,
+    setIsCreateSessionModalOpen,
+  } = useCalendarStore(
+    useShallow((store) => ({
+      sidebarOpen: store.sidebarOpen,
+      calendarView: store.calendarView,
+      selectedDate: store.selectedDate,
+      isCreateSessionModalOpen: store.isCreateSessionModalOpen,
+      defaultSessionFormData: store.defaultSessionFormData,
+      setIsCreateSessionModalOpen: store.setIsCreateSessionModalOpen,
+    })),
   );
 
-  if (!_isHydrated) {
-    return <CalendarSkeleton />;
-  }
+  useOptimizedCalendarSessions({
+    viewType: calendarView,
+    date: selectedDate,
+  });
 
   const showSidebarViewport = up("lg");
 

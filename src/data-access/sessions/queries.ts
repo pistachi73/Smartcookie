@@ -323,9 +323,9 @@ export const getCalendarSessionsByDateRange = withValidationAndAuth({
       ),
       columns: {
         id: true,
+        status: true,
         startTime: true,
         endTime: true,
-        status: true,
       },
       with: {
         hub: {

@@ -1,5 +1,6 @@
+import { getLocalTimeZone } from "@internationalized/date";
 import { add } from "date-fns";
-import type { Temporal } from "temporal-polyfill";
+import { Temporal } from "temporal-polyfill";
 import { create } from "zustand";
 
 import type { LayoutCalendarSession } from "@/features/calendar/types/calendar.types";
@@ -14,9 +15,14 @@ export const useCalendarDragDropStore = create<DragDropStore>((set, get) => ({
   dragStartSession: null,
   lastTimeSlot: null,
   dragOffset: 0,
+  cachedDraggedSessionDate: null,
 
   // Actions
   startDrag: (session: LayoutCalendarSession, offset = 0) => {
+    const draggedSessionDate = Temporal.Instant.from(session.startTime)
+      .toZonedDateTimeISO(getLocalTimeZone())
+      .toPlainDate();
+
     set({
       isDragging: true,
       draggedSession: session,
@@ -24,6 +30,7 @@ export const useCalendarDragDropStore = create<DragDropStore>((set, get) => ({
       dropTarget: null,
       lastTimeSlot: null,
       dragOffset: offset,
+      cachedDraggedSessionDate: draggedSessionDate,
     });
   },
 
@@ -80,6 +87,60 @@ export const useCalendarDragDropStore = create<DragDropStore>((set, get) => ({
     });
   },
 
+  updateMonthViewDragPreview: (date: Temporal.PlainDate) => {
+    const { draggedSession, dropTarget, cachedDraggedSessionDate } = get();
+
+    if (!draggedSession) return;
+    if (dropTarget?.date.equals(date)) return;
+
+    const draggedSessionDate =
+      cachedDraggedSessionDate ||
+      Temporal.Instant.from(draggedSession.startTime)
+        .toZonedDateTimeISO(getLocalTimeZone())
+        .toPlainDate();
+
+    if (draggedSessionDate.equals(date)) {
+      set({
+        previewSession: null,
+        dropTarget: { date, timeSlot: 0 },
+      });
+      return;
+    }
+
+    const originalStart = new Date(draggedSession.startTime);
+    const originalEnd = new Date(draggedSession.endTime);
+
+    const newStartTime = new Date(date.year, date.month - 1, date.day);
+    newStartTime.setHours(
+      originalStart.getHours(),
+      originalStart.getMinutes(),
+      originalStart.getSeconds(),
+      originalStart.getMilliseconds(),
+    );
+
+    const newEndTime = new Date(date.year, date.month - 1, date.day);
+    newEndTime.setHours(
+      originalEnd.getHours(),
+      originalEnd.getMinutes(),
+      originalEnd.getSeconds(),
+      originalEnd.getMilliseconds(),
+    );
+
+    const previewSession: LayoutCalendarSession = {
+      ...draggedSession,
+      startTime: newStartTime.toISOString(),
+      endTime: newEndTime.toISOString(),
+      id: -1,
+    };
+
+    console.log({ previewSession });
+
+    set({
+      previewSession,
+      dropTarget: { date, timeSlot: 0 },
+    });
+  },
+
   endDrag: () => {
     set({
       isDragging: false,
@@ -88,6 +149,7 @@ export const useCalendarDragDropStore = create<DragDropStore>((set, get) => ({
       dropTarget: null,
       lastTimeSlot: null,
       dragOffset: 0,
+      cachedDraggedSessionDate: null,
     });
   },
   getPreviewSession: (date: Temporal.PlainDate) => {

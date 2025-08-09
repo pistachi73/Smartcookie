@@ -43,24 +43,17 @@ export const NextSession = () => {
   return (
     <Card className="shrink-0 flex flex-col h-full bg-overlay">
       <Card.Header className="flex flex-row items-center justify-between">
-        <div className="flex gap-4 items-center">
-          <Heading
-            level={4}
-            className="text-base font-semibold flex items-center gap-1.5"
-          >
+        <Card.Title className="flex gap-4 items-center">
+          <span className="flex items-center gap-1.5">
             <HugeiconsIcon icon={CalendarCheckOut02Icon} size={18} />
             Upcoming Session
-          </Heading>
+          </span>
           <Separator orientation="vertical" className="h-4" />
           <div className="flex items-start gap-2">
-            {/* <div className="h-6 flex items-center justify-center">
-              <HugeiconsIcon icon={Clock01Icon} size={16} />
-            </div> */}
-
             <div className="flex gap-4 items-center">
-              <p className="text-base font-medium">{label}</p>
+              <span>{label}</span>
               <div className="font-medium text-muted-fg flex items-center gap-1.5 tabular-nums">
-                <p>{format(nextSession.startTime, "HH:mm")}</p>
+                <span>{format(nextSession.startTime, "HH:mm")}</span>
                 <HugeiconsIcon
                   icon={ArrowRight02Icon}
                   color="var(--color-muted-fg)"
@@ -70,18 +63,20 @@ export const NextSession = () => {
               </div>
             </div>
           </div>
-        </div>
+        </Card.Title>
 
-        <Link
-          href={`/portal/hubs/${hub?.id}`}
-          className={buttonStyles({
-            intent: "outline",
-            size: "extra-small",
-          })}
-        >
-          Go to course
-          <HugeiconsIcon icon={LinkSquare02Icon} data-slot="icon" size={14} />
-        </Link>
+        <Card.Action>
+          <Link
+            href={`/portal/hubs/${hub?.id}`}
+            className={buttonStyles({
+              intent: "outline",
+              size: "small",
+            })}
+          >
+            Go to course
+            <HugeiconsIcon icon={LinkSquare02Icon} data-slot="icon" size={14} />
+          </Link>
+        </Card.Action>
       </Card.Header>
 
       <Card.Content className="grid grid-cols-[1fr_2fr] gap-8">

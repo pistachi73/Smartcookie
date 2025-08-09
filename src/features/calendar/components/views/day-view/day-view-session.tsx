@@ -76,7 +76,6 @@ export const DayViewSession = ({ session }: DayViewSessionProps) => {
 
   const widthPercentage = 100 / session.totalColumns;
   const isShortEvent = heightPx / PIXELS_PER_15_MINUTES <= 2;
-  const isEditing = false;
 
   return (
     <>
@@ -97,7 +96,6 @@ export const DayViewSession = ({ session }: DayViewSessionProps) => {
               "flex items-start relative h-full w-full overflow-hidden group-focus-visible:outline-2 group-focus-visible:outline-primary group-focus-visible:outline-offset-2",
               eventColor?.className,
               isShortEvent ? "rounded-sm" : "rounded-sm sm:rounded-md",
-              isEditing && "border-fg",
               isDragging && "opacity-50",
             )}
           >

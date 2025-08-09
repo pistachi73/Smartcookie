@@ -32,21 +32,21 @@ export function WeeklyHoursCard() {
 
   return (
     <Card>
-      <Card.Header className="flex flex-row items-center justify-between">
-        <Heading level={4} className="text-base font-semibold">
-          Weekly teaching hours
-        </Heading>
-        <DatePicker
-          onChange={(value) => value && setDate(value)}
-          value={date}
-          overlayProps={{
-            placement: "bottom end",
-          }}
-          className={{
-            fieldGroup: "h-8",
-            input: "text-xs/4 lg:text-[0.800rem]/4",
-          }}
-        />
+      <Card.Header>
+        <Card.Title>Weekly teaching hours</Card.Title>
+        <Card.Action>
+          <DatePicker
+            onChange={(value) => value && setDate(value)}
+            value={date}
+            overlayProps={{
+              placement: "bottom end",
+            }}
+            className={{
+              fieldGroup: "h-9",
+              input: "text-xs/4 lg:text-sm",
+            }}
+          />
+        </Card.Action>
       </Card.Header>
       <Card.Content className="space-y-4">
         <div className="flex flex-row items-center justify-between">
