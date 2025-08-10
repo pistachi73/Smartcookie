@@ -4,9 +4,10 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { MultiplicationSignIcon } from "@hugeicons-pro/core-solid-rounded";
 import { CalendarDate } from "@internationalized/date";
 import { useEffect, useRef, useState } from "react";
+import { useDrop } from "react-aria";
 import { Button as AriaButton } from "react-aria-components";
 import { tv } from "tailwind-variants";
-import { Temporal } from "temporal-polyfill";
+import type { Temporal } from "temporal-polyfill";
 
 import { Button } from "@/shared/components/ui/button";
 import { Popover } from "@/ui/popover";
@@ -15,7 +16,12 @@ import { getWeekdayAbbrev } from "@/shared/lib/temporal/format";
 
 import { useOptimizedDaySessions } from "@/features/calendar/hooks/use-optimized-calendar-sessions";
 import { useCalendarStore } from "@/features/calendar/providers/calendar-store-provider";
-import { MonthViewOccurrence } from "./month-view-occurrence";
+import { useCalendarDragDropStore } from "@/features/calendar/store/calendar-drag-drop-store";
+import { useUpdateSession } from "@/features/hub/hooks/session/use-update-session";
+import {
+  MonthViewOccurrence,
+  MonthViewPreviewOccurrence,
+} from "./month-view-occurrence";
 
 export const monthViewCellStyles = tv({
   base: [
@@ -30,13 +36,17 @@ export const monthViewCellStyles = tv({
       0: "border-l-0",
       6: "border-r-0",
     },
-    isToday: {
-      true: "bg-primary-tint",
+    isSelected: {
+      true: "bg-primary-tint/50 before:absolute before:inset-0 before:border-1 before:border-primary before:pointer-events-none before:content-['']",
+    },
+    isDropTarget: {
+      true: "bg-primary-tint/50",
     },
   },
   defaultVariants: {
     isCurrentMonth: true,
     isToday: false,
+    isSelected: false,
   },
 });
 
@@ -54,8 +64,11 @@ export const MonthViewCell = ({
   date,
   isCurrentMonth,
 }: MonthCalendarDayCellProps) => {
+  const cellRef = useRef<HTMLDivElement>(null);
   const { sessions } = useOptimizedDaySessions(date);
 
+  const selectedDate = useCalendarStore((store) => store.selectedDate);
+  const selectDate = useCalendarStore((store) => store.selectDate);
   const set1DayView = useCalendarStore((store) => store.set1DayView);
   const setDefaultSessionFormData = useCalendarStore(
     (store) => store.setDefaultSessionFormData,
@@ -63,15 +76,46 @@ export const MonthViewCell = ({
   const setIsCreateSessionModalOpen = useCalendarStore(
     (store) => store.setIsCreateSessionModalOpen,
   );
+  const { mutate: updateSession } = useUpdateSession();
 
   const sessionsContainerRef = useRef<HTMLDivElement>(null);
 
-  const totalOccurrences = sessions?.length ?? 0;
-
-  const [visibleOccurrences, setVisibleOccurrences] =
-    useState<number>(totalOccurrences);
+  const [visibleOccurrences, setVisibleOccurrences] = useState<number>(0);
   const [isViewAllOpen, setIsViewAllOpen] = useState(false);
 
+  const { draggedSession, updateMonthViewDragPreview, endDrag } =
+    useCalendarDragDropStore();
+  const previewSession = useCalendarDragDropStore((state) =>
+    state.getPreviewSession(date),
+  );
+
+  const { dropProps, isDropTarget } = useDrop({
+    ref: cellRef,
+    onDropMove: () => {
+      updateMonthViewDragPreview(date);
+    },
+    onDrop: () => {
+      if (!draggedSession || !previewSession) return;
+      const { startTime, endTime } = previewSession;
+
+      updateSession({
+        sessionId: draggedSession.id,
+        hubId: draggedSession.hub.id,
+        data: {
+          startTime,
+          endTime,
+          status: draggedSession.status,
+          originalStartTime: draggedSession.startTime,
+        },
+      });
+
+      setTimeout(() => {
+        endDrag();
+      }, 10);
+    },
+  });
+
+  const totalOccurrences = sessions?.length ?? 0;
   useEffect(() => {
     const observer = new ResizeObserver((entries) => {
       const entry = entries[0] as ResizeObserverEntry;
@@ -97,11 +141,11 @@ export const MonthViewCell = ({
     return () => {
       observer.disconnect();
     };
-  }, []);
+  }, [totalOccurrences, visibleOccurrences]);
 
-  const isToday = date.equals(Temporal.Now.plainDateISO());
+  const isSelected = date.equals(selectedDate);
 
-  const handleCellClick = () => {
+  const handleCellDoubleClick = () => {
     setDefaultSessionFormData({
       date: new CalendarDate(date.year, date.month, date.day),
       startTime: undefined,
@@ -112,10 +156,13 @@ export const MonthViewCell = ({
 
   return (
     <div
+      ref={cellRef}
+      {...dropProps}
       className={monthViewCellStyles({
         isCurrentMonth,
         dayIndex: dayIndex === 0 ? 0 : dayIndex === 6 ? 6 : undefined,
-        isToday,
+        isSelected,
+        isDropTarget,
       })}
     >
       <div className="relative z-10 w-full flex items-start px-1">
@@ -137,16 +184,23 @@ export const MonthViewCell = ({
           "absolute z-0 top-0 right-0 w-full h-full",
           "focus-visible:bg-primary-tint/80",
         )}
-        onPress={handleCellClick}
+        onPress={() => selectDate(date)}
+        onDoubleClick={handleCellDoubleClick}
       />
       <div
         ref={sessionsContainerRef}
         className="z-10 relative overflow-hidden grow p-0.5 sm:p-1 w-full space-y-1 pointer-events-none"
       >
+        {previewSession && (
+          <div className="absolute left-0 top-0 w-full h-full p-0.5 sm:p-1">
+            <MonthViewPreviewOccurrence session={previewSession} />
+          </div>
+        )}
         {sessions?.slice(0, visibleOccurrences).map((session) => (
           <MonthViewOccurrence
             key={`month-session-${session.id}`}
             session={session}
+            showTime={false}
           />
         ))}
         {visibleOccurrences < totalOccurrences && (
@@ -154,14 +208,15 @@ export const MonthViewCell = ({
             isOpen={isViewAllOpen}
             onOpenChange={(open) => setIsViewAllOpen(open)}
           >
-            <AriaButton className="h-6 w-full hover:bg-overlay-highlight rounded-md transition-colors text-xs">
+            <AriaButton
+              onPress={() => {
+                console.log("pressed");
+              }}
+              className="p-0.5 sm:p-1 px-1 text-left pointer-events-auto h-6 w-full hover:bg-muted rounded-sm transition-colors text-xs font-medium"
+            >
               {totalOccurrences - visibleOccurrences} more
             </AriaButton>
-            <Popover.Content
-              placement="top"
-              respectScreen={false}
-              className="w-[300px] relative overflow-visible"
-            >
+            <Popover.Content placement="bottom" className="sm:w-[300px]">
               <Popover.Close
                 intent="plain"
                 size="square-petite"
@@ -182,14 +237,12 @@ export const MonthViewCell = ({
                   <MonthViewOccurrence
                     key={`month-session-${session.id}`}
                     session={session}
-                    className="text-sm h-7 px-2 w-full"
+                    className="text-xs h-6 px-2 w-full"
                     popoverProps={{
                       offset: 8,
                       placement: "left top",
                     }}
-                    onEditPress={() => {
-                      setIsViewAllOpen(false);
-                    }}
+                    showTime
                   />
                 ))}
               </Popover.Body>

@@ -8,7 +8,7 @@ import { Calendar } from "@/ui/calendar";
 import { ResizablePanelRoot } from "@/ui/resizable-panel";
 
 import { useCalendarStore } from "@/features/calendar/providers/calendar-store-provider";
-import { SessionsForDate } from "./sessions-for-date";
+import { UpcomingSessions } from "./upcoming-sessions";
 
 export const CalendarSidebar = () => {
   const selectedDate = useCalendarStore((store) => store.selectedDate);
@@ -38,28 +38,27 @@ export const CalendarSidebar = () => {
   }, [selectedDate]);
 
   return (
-    <div className="min-h-0 shrink-0 relative overflow-y-auto border-l w-80">
-      <div className="flex flex-col relative w-full">
-        <div className="sticky bottom-0 left-0 h-full w-full p-4 border-b">
-          <ResizablePanelRoot value="calendar">
-            <Calendar
-              value={calendarValue}
-              onChange={(date) => {
-                setCalendarValue(date);
-                selectDate(Temporal.PlainDate.from(date.toString()));
-              }}
-              focusedValue={focusedDate}
-              onFocusChange={setFocusedDate}
-              spacing="medium"
-            />
-          </ResizablePanelRoot>
-        </div>
-        <div className="p-4 border-b w-full">
+    <div className="min-h-0 shrink-0 relative border-l h-full flex flex-col w-[312px]">
+      <div className="sticky left-0 w-full p-4 border-b">
+        <ResizablePanelRoot value="calendar">
+          <Calendar
+            value={calendarValue}
+            onChange={(date) => {
+              setCalendarValue(date);
+              selectDate(Temporal.PlainDate.from(date.toString()));
+            }}
+            focusedValue={focusedDate}
+            onFocusChange={setFocusedDate}
+            spacing="medium"
+            showSelectors={false}
+          />
+        </ResizablePanelRoot>
+      </div>
+      {/* <div className="p-4 border-b w-full">
           <SessionsForDate />
-        </div>
-        {/* <div className="p-4 w-full">
-          <UpcomingSessions />
         </div> */}
+      <div className="p-4 w-full overflow-y-auto h-full bg-white">
+        <UpcomingSessions />
       </div>
     </div>
   );

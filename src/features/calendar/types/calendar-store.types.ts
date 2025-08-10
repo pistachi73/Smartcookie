@@ -7,12 +7,8 @@ import type { AddSessionFormSchema } from "@/features/hub/components/session/add
 export type CalendarStore = CalendarState & CalendarActions;
 
 export type CalendarState = {
-  // Internal
-  _isHydrated: boolean;
   sidebarOpen: boolean;
-
   isCreateSessionModalOpen: boolean;
-
   selectedDate: Temporal.PlainDate;
   visibleDates: Temporal.PlainDate[];
   calendarView: CalendarView;
@@ -22,9 +18,6 @@ export type CalendarState = {
 };
 
 export type CalendarActions = {
-  // Internal
-  _setHydrated: () => void;
-
   toggleSidebar: () => void;
   setIsCreateSessionModalOpen: (open: boolean) => void;
 

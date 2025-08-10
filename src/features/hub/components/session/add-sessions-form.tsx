@@ -20,7 +20,7 @@ import { ComboBox } from "@/shared/components/ui/combo-box";
 import { DatePicker } from "@/shared/components/ui/date-picker";
 import { fieldStyles, Label } from "@/shared/components/ui/field";
 import { RecurrenceSelect } from "@/shared/components/ui/recurrence-select";
-import { TimeField } from "@/shared/components/ui/time-field";
+import { TimeFieldWithSelect } from "@/shared/components/ui/time-field-with-select";
 import { cn } from "@/shared/lib/classes";
 import { colorStyleMap } from "@/shared/lib/custom-colors";
 
@@ -201,7 +201,7 @@ export function AddSessionsForm({
               field: { onChange, value, ...restField },
               fieldState: { invalid },
             }) => (
-              <TimeField
+              <TimeFieldWithSelect
                 {...restField}
                 value={value}
                 onChange={onChange}
@@ -222,7 +222,7 @@ export function AddSessionsForm({
               field: { onChange, value, ...restField },
               fieldState: { invalid },
             }) => (
-              <TimeField
+              <TimeFieldWithSelect
                 {...restField}
                 value={value}
                 onChange={onChange}

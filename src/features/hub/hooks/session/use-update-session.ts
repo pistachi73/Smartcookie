@@ -9,12 +9,12 @@ import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 
 import { updateSession } from "@/data-access/sessions/mutations";
 import { UpdateSessionSchema } from "@/data-access/sessions/schemas";
-import { getCalendarCacheManager } from "@/features/calendar/lib/calendar-cache";
+import { useOptimizedCalendar } from "@/features/calendar/providers/optimized-calendar-provider";
 import type { LayoutCalendarSession } from "@/features/calendar/types/calendar.types";
 
 export const useUpdateSession = () => {
   const queryClient = useQueryClient();
-  const cacheManager = getCalendarCacheManager();
+  const { cacheManager } = useOptimizedCalendar();
 
   return useProtectedMutation({
     schema: UpdateSessionSchema,

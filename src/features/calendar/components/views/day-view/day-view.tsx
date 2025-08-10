@@ -86,7 +86,7 @@ export const DayView = () => {
           </div>
         </div>
       )}
-      <div className="relative flex flex-col overflow-y-scroll">
+      <div className="relative flex flex-col overflow-y-scroll no-scrollbar">
         <div className="items-stretch flex flex-auto ">
           <HourColumn />
           <div className="ml-1 flex flex-row w-full h-auto relative">

@@ -41,15 +41,15 @@ describe("DateRangeCalculator", () => {
         expect(range.end.toString()).toBe("2024-06-15");
       });
 
-      it("should limit prefetch for day view to maximum 3 days", () => {
+      it("should limit prefetch for day view to maximum 6 days", () => {
         const range = DateRangeCalculator.getOptimalFetchRange(
           testDate,
           "day",
           10, // Should be capped at 3
         );
 
-        expect(range.start.toString()).toBe("2024-06-12");
-        expect(range.end.toString()).toBe("2024-06-18");
+        expect(range.start.toString()).toBe("2024-06-09");
+        expect(range.end.toString()).toBe("2024-06-21");
       });
     });
 

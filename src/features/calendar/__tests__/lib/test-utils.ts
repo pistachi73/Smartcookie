@@ -28,7 +28,7 @@ export const createMockSession = (
 export const createTestConfig = (
   overrides: Partial<CalendarCacheConfig> = {},
 ): CalendarCacheConfig => ({
-  maxMemoryCacheSize: 10,
+  maxMemoryCacheSize: 50,
   maxMemoryCacheAge: 5000, // 5 seconds
   prefetchDistance: 7,
   batchSize: 7,

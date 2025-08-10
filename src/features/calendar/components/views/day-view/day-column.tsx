@@ -44,7 +44,9 @@ export const DayColumn = ({ date }: { date: Temporal.PlainDate }) => {
         },
       });
 
-      endDrag();
+      setTimeout(() => {
+        endDrag();
+      }, 10);
     },
   });
 

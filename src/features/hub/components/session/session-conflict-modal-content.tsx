@@ -2,7 +2,6 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { CalendarBlock02Icon } from "@hugeicons-pro/core-solid-rounded";
 import { format } from "date-fns";
 
-import { linkStyles } from "@/shared/components/ui/link";
 import { Modal } from "@/shared/components/ui/modal";
 import { Note } from "@/shared/components/ui/note";
 
@@ -101,19 +100,20 @@ export const SessionConflictWarning = ({
 }) => {
   return (
     <Note intent="warning">
-      <p className="font-medium">
-        Session time conflict detected.{" "}
+      <div className="space-y-2">
+        <p className="font-medium">Session time conflict detected.</p>
         <button
-          className={linkStyles({
-            intent: "unstyled",
-            className: "hover:underline cursor-pointer",
-          })}
+          className="cursor-pointer bg-amber-700 text-amber-50 rounded-md px-3 py-1.5 text-sm font-medium flex items-center gap-1"
           onClick={() => setIsConflictModalOpen(true)}
           type="button"
         >
+          <HugeiconsIcon
+            icon={CalendarBlock02Icon}
+            className="size-3.5 text-background"
+          />
           View conflicts
         </button>
-      </p>
+      </div>
     </Note>
   );
 };

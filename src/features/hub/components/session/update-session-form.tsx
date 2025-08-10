@@ -7,18 +7,13 @@ import {
   parseDateTime,
   type Time,
 } from "@internationalized/date";
-import {
-  Controller,
-  useFormContext,
-  useFormState,
-  useWatch,
-} from "react-hook-form";
+import { Controller, useFormContext, useFormState } from "react-hook-form";
 import { z } from "zod";
 
+import { TimeFieldWithSelect } from "@/shared/components/ui/time-field-with-select";
 import { ToggleGroup } from "@/shared/components/ui/toggle-group";
 import { DatePicker } from "@/ui/date-picker";
 import { fieldStyles, Label } from "@/ui/field";
-import { TimeField } from "@/ui/time-field";
 import { Toggle } from "@/ui/toggle";
 import { cn } from "@/shared/lib/classes";
 
@@ -92,10 +87,6 @@ export function UpdateSessionsForm({
   maxDate,
 }: UpdateSessionsFormProps) {
   const form = useFormContext<z.infer<typeof UpdateSessionFormSchema>>();
-  const [startTime] = useWatch({
-    control: form.control,
-    name: ["startTime"],
-  });
 
   const formState = useFormState({
     control: form.control,
@@ -145,7 +136,7 @@ export function UpdateSessionsForm({
               field: { onChange, value, ...restField },
               fieldState: { invalid },
             }) => (
-              <TimeField
+              <TimeFieldWithSelect
                 {...restField}
                 value={value}
                 onChange={onChange}
@@ -166,13 +157,12 @@ export function UpdateSessionsForm({
               field: { onChange, value, ...restField },
               fieldState: { invalid },
             }) => (
-              <TimeField
+              <TimeFieldWithSelect
                 {...restField}
                 value={value}
                 onChange={onChange}
                 hourCycle={24}
                 isInvalid={invalid}
-                minValue={startTime}
                 className="flex-1"
                 aria-label="End time"
               />

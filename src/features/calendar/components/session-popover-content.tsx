@@ -43,13 +43,11 @@ const DynamicDeleteEventModalContent = dynamic(
 
 type SessionPopoverProps = {
   session: CalendarSession;
-  onEditPress?: () => void;
   popoverProps?: Omit<PopoverContentProps, "children">;
 };
 
 export const SessionPopover = ({
   session,
-  onEditPress: _onEditPress,
   popoverProps,
 }: SessionPopoverProps) => {
   const [isUpdateSessionModalOpen, setIsUpdateSessionModalOpen] =

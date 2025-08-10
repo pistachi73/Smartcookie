@@ -1,3 +1,4 @@
+import { getLocalTimeZone, today } from "@internationalized/date";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { Temporal } from "temporal-polyfill";
@@ -9,7 +10,6 @@ import {
   createCalendarCacheManager,
   getCalendarCacheManager,
 } from "../lib/calendar-cache";
-import { useCalendarStore } from "../providers/calendar-store-provider";
 import type { CalendarView } from "../types/calendar.types";
 
 /**
@@ -56,6 +56,8 @@ export const useCacheSubscription = (date: Temporal.PlainDate) => {
 
 export interface UseOptimizedCalendarSessionsOptions {
   cacheConfig?: Partial<CalendarCacheConfig>;
+  viewType: CalendarView;
+  date: Temporal.PlainDate;
   enablePrefetching?: boolean;
   enableOptimisticUpdates?: boolean;
 }
@@ -63,6 +65,8 @@ export interface UseOptimizedCalendarSessionsOptions {
 const DEFAULT_OPTIONS: UseOptimizedCalendarSessionsOptions = {
   enablePrefetching: true,
   enableOptimisticUpdates: true,
+  viewType: "week",
+  date: Temporal.PlainDate.from(today(getLocalTimeZone()).toString()),
 };
 
 // ===============================
@@ -90,19 +94,18 @@ const createQueryKey = (
 export const useOptimizedCalendarSessions = (
   options: UseOptimizedCalendarSessionsOptions = DEFAULT_OPTIONS,
 ) => {
+  const { viewType, date, enablePrefetching, cacheConfig } = options;
   const queryClient = useQueryClient();
-  const selectedDate = useCalendarStore((state) => state.selectedDate);
-  const calendarView = useCalendarStore((state) => state.calendarView);
 
   // Initialize cache manager (singleton)
   const cacheManager = useMemo(() => {
-    return createCalendarCacheManager(queryClient, options.cacheConfig);
-  }, [queryClient, options.cacheConfig]);
+    return createCalendarCacheManager(queryClient, cacheConfig);
+  }, [queryClient, cacheConfig]);
 
   // Create stable query key
   const queryKey = useMemo(
-    () => createQueryKey(calendarView, selectedDate),
-    [calendarView, selectedDate],
+    () => createQueryKey(viewType, date),
+    [viewType, date],
   );
 
   // ===============================
@@ -112,7 +115,7 @@ export const useOptimizedCalendarSessions = (
   const query = useQuery({
     queryKey,
     queryFn: async () => {
-      await cacheManager.ensureDataForView(selectedDate, calendarView);
+      await cacheManager.ensureDataForView(date, viewType);
       return null;
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -128,20 +131,14 @@ export const useOptimizedCalendarSessions = (
   // ===============================
 
   useEffect(() => {
-    if (!options.enablePrefetching || query.isLoading) return;
+    if (!enablePrefetching || query.isLoading) return;
 
     const prefetchTimer = setTimeout(() => {
-      cacheManager.prefetchAdjacentData(selectedDate, calendarView);
+      cacheManager.prefetchAdjacentData(date, viewType);
     }, 100); // Small delay to prioritize current view
 
     return () => clearTimeout(prefetchTimer);
-  }, [
-    selectedDate,
-    calendarView,
-    options.enablePrefetching,
-    query.isLoading,
-    cacheManager,
-  ]);
+  }, [date, viewType, enablePrefetching, query.isLoading, cacheManager]);
 
   return;
 };

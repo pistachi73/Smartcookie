@@ -4,7 +4,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { DashboardSquare01Icon } from "@hugeicons-pro/core-solid-rounded";
 
 import { Heading } from "@/shared/components/ui/heading";
-import { AgendaSessionCardSkeleton } from "@/shared/components/sessions/agenda-session-skeleton";
+import { AgendaSessionCardSkeleton } from "@/shared/components/sessions/agenda-session-card-skeleton";
 
 import { SkeletonNextSession } from "./next-session/skeleton-next-session";
 import { SkeletonWeeklyHoursChartCard } from "./weekly-hours-chart-card/skeleton-weekly-hours-chart-card";

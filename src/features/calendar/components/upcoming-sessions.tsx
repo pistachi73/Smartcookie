@@ -1,74 +1,86 @@
 "use client";
 
 import { format } from "date-fns";
+import { Button } from "react-aria-components";
 import { Temporal } from "temporal-polyfill";
 
 import { Heading } from "@/shared/components/ui/heading";
+import { Popover } from "@/shared/components/ui/popover";
 import { AgendaSessionCard } from "@/shared/components/sessions/agenda-session-card";
-import { AgendaSessionCardSkeleton } from "@/shared/components/sessions/agenda-session-skeleton";
+import { AgendaSessionCardSkeleton } from "@/shared/components/sessions/agenda-session-card-skeleton";
+import { cn } from "@/shared/lib/classes";
 
 import { useOptimizedDaySessions } from "../hooks/use-optimized-calendar-sessions";
 import { transformCalendarSessionToAgendaData } from "../lib/transform-calendar-data";
-import type { CalendarSession } from "../types/calendar.types";
+import { useCalendarStore } from "../providers/calendar-store-provider";
+import { SessionPopover } from "./session-popover-content";
 
 interface DayEventsProps {
   date: Temporal.PlainDate;
-  nowDateTime: Temporal.PlainDateTime;
 }
 
-const DaySessions = ({ date, nowDateTime }: DayEventsProps) => {
-  const { sessions, isLoading } = useOptimizedDaySessions(date);
+export const DaySessions = ({ date }: DayEventsProps) => {
+  const { sessions } = useOptimizedDaySessions(date);
 
-  // Filter out sessions that have already ended
-  const upcomingSessions = sessions?.filter((session) => {
-    return new Date(session.endTime) > new Date(nowDateTime.toString());
-  });
+  const today = Temporal.Now.plainDateISO();
+  const tomorrow = today.add({ days: 1 });
 
-  if (isLoading) {
-    return (
-      <div className="space-y-2 w-full min-w-0">
-        <p className="text-sm font-medium text-muted-fg truncate">
-          {format(new Date(date.toString()), "EEEE, MMMM dd")}
-        </p>
-        <div className="space-y-2 w-full min-w-0">
-          <AgendaSessionCardSkeleton />
-        </div>
-      </div>
-    );
-  }
+  const isToday = date.equals(today);
+  const isTomorrow = date.equals(tomorrow);
 
-  if (upcomingSessions?.length === 0) {
-    return null;
-  }
+  const getDateLabel = () => {
+    const formattedDate = format(new Date(date.toString()), "EEEE, MMMM dd");
+    if (isToday) return `Today · ${formattedDate}`;
+    if (isTomorrow) return `Tomorrow · ${formattedDate}`;
+    return formattedDate;
+  };
 
   return (
     <div className="space-y-2 w-full min-w-0">
-      <p className="text-sm font-medium text-muted-fg truncate">
-        {format(new Date(date.toString()), "EEEE, MMMM dd")}
+      <p className="text-sm font-medium  truncate bg-muted p-2 py-1 rounded-sm">
+        {getDateLabel()}
       </p>
       <div className="space-y-2 w-full min-w-0">
-        {upcomingSessions?.map((session: CalendarSession) => (
-          <AgendaSessionCard
-            key={`upcoming-session-${session.id}`}
-            session={transformCalendarSessionToAgendaData(session)}
-          />
-        ))}
+        {sessions?.length > 0 ? (
+          sessions.map((session) => (
+            <Popover key={`upcoming-session-${session.id}`}>
+              <Button
+                className={(props) =>
+                  cn(
+                    "block text-left p-0.5 w-full rounded-md transition-colors",
+                    props.isHovered && "bg-muted/50",
+                    props.isPressed && "bg-primary-tint",
+                  )
+                }
+              >
+                <AgendaSessionCard
+                  session={transformCalendarSessionToAgendaData(session)}
+                  showStudentTooltips={false}
+                />
+              </Button>
+              <SessionPopover
+                session={session}
+                popoverProps={{
+                  placement: "right",
+                }}
+              />
+            </Popover>
+          ))
+        ) : (
+          <p className="text-sm px-2">No programed sessions</p>
+        )}
       </div>
     </div>
   );
 };
 
 export const UpcomingSessions = () => {
-  const nowDateTime = Temporal.Now.plainDateTimeISO();
-  const nowDate = Temporal.Now.plainDateISO();
+  const selectedDate = useCalendarStore((store) => store.selectedDate);
+  const { isLoading } = useOptimizedDaySessions(selectedDate);
 
-  // Get the next 7 days starting from today (including today)
   const next7Days = Array.from({ length: 7 }, (_, i) =>
-    nowDate.add({ days: i }),
+    selectedDate.add({ days: i }),
   );
-
-  // Check if any day has upcoming sessions
-  const hasUpcomingSessions = true; // We'll let each DayEvents component handle its own loading state
 
   return (
     <div className="flex flex-col gap-4 relative items-stretch w-full min-w-0">
@@ -81,22 +93,17 @@ export const UpcomingSessions = () => {
         </p>
       </div>
 
-      <div className="space-y-2.5 w-full min-w-0">
-        {hasUpcomingSessions ? (
-          next7Days.map((date) => (
-            <DaySessions
-              key={date.toString()}
-              date={date}
-              nowDateTime={nowDateTime}
-            />
-          ))
-        ) : (
-          <div className="flex flex-col items-center justify-center p-4 text-center bg-accent rounded-lg">
-            <p className="text-sm font-medium mb-1">No upcoming events</p>
-            <p className="text-xs text-muted-fg">
-              Your schedule is clear for the next 7 days
-            </p>
+      <div className="space-y-4 w-full min-w-0">
+        {isLoading ? (
+          <div className="space-y-2 w-full min-w-0">
+            {Array.from({ length: 3 }, (_, i) => (
+              <AgendaSessionCardSkeleton key={i} />
+            ))}
           </div>
+        ) : (
+          next7Days.map((date) => (
+            <DaySessions key={date.toString()} date={date} />
+          ))
         )}
       </div>
     </div>

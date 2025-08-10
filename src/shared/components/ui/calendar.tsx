@@ -56,24 +56,22 @@ interface CalendarProps<T extends DateValue>
   errorMessage?: string;
   className?: string;
   spacing?: "none" | "medium" | "large";
+  showSelectors?: boolean;
 }
 
 const Calendar = <T extends DateValue>({
   errorMessage,
   className,
   spacing = "none",
+  showSelectors = true,
   ...props
 }: CalendarProps<T>) => {
   return (
     <CalendarPrimitive
-      className={composeTailwindRenderProps(
-        className,
-        // "max-w-[17.5rem] sm:max-w-[15.8rem]",
-        "p-1",
-      )}
+      className={composeTailwindRenderProps(className, "")}
       {...props}
     >
-      <CalendarHeader />
+      <CalendarHeader showSelectors={showSelectors} />
       <CalendarGrid
         className={`[&_td]:border-collapse ${
           spacing === "medium"
@@ -112,7 +110,7 @@ const Calendar = <T extends DateValue>({
 const calendarHeaderStyles = tv({
   slots: {
     header: "flex w-full justify-center gap-1 px-1 pb-5 sm:pb-4 items-center",
-    heading: "mr-2 flex-1 text-left font-medium text-muted-fg sm:text-sm",
+    heading: "mr-2 flex-1 text-left font-medium text-base text-current",
     calendarGridHeaderCell: "font-semibold text-sm lg:text-sm",
   },
 });
@@ -122,23 +120,43 @@ const { header, heading, calendarGridHeaderCell } = calendarHeaderStyles();
 const CalendarHeader = ({
   className,
   isRange,
+  showSelectors = true,
   ...props
-}: React.ComponentProps<"header"> & { isRange?: boolean }) => {
+}: React.ComponentProps<"header"> & {
+  isRange?: boolean;
+  showSelectors?: boolean;
+}) => {
   const { direction } = useLocale();
   const state = use(CalendarStateContext)!;
+
+  const formatter = useDateFormatter({
+    month: "long",
+    year: "numeric",
+    timeZone: state.timeZone,
+  });
+
+  const currentMonthYear = formatter.format(
+    state.focusedDate.toDate(state.timeZone),
+  );
+
   return (
     <header
       data-slot="calendar-header"
       className={header({ className })}
       {...props}
     >
-      {!isRange && (
+      {showSelectors && !isRange && (
         <>
           <SelectMonth state={state} />
           <SelectYear state={state} />
         </>
       )}
-      <Heading className={heading({ className: !isRange && "sr-only" })} />
+
+      <Heading
+        className={heading({
+          className: showSelectors && !isRange && "sr-only",
+        })}
+      />
 
       <div className="flex items-center gap-1">
         <Button

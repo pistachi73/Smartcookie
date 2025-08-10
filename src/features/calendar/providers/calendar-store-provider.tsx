@@ -21,19 +21,17 @@ export const CalendarStoreContext = createContext<CalendarStoreApi | undefined>(
 export interface CalendarStoreProviderProps {
   children: ReactNode;
   initialCalendarStore?: InitialCalendarStateData;
-  skipHydration?: boolean;
 }
 
 export const CalendarStoreProvider = ({
   children,
   initialCalendarStore,
-  skipHydration,
 }: CalendarStoreProviderProps) => {
   const storeRef = useRef<CalendarStoreApi | undefined>(undefined);
 
   if (!storeRef.current) {
     const initialState = initCalendarStore(initialCalendarStore);
-    storeRef.current = createCalendarStore(initialState, skipHydration);
+    storeRef.current = createCalendarStore(initialState);
   }
 
   return (

@@ -23,7 +23,7 @@ export const MonthView = () => {
           key={`month-row-${rowIndex}`}
           role="row"
           tabIndex={0}
-          className="flex flex-row w-full border-calendar-border basis-full overflow-hidden"
+          className="flex flex-row w-full basis-full overflow-hidden"
         >
           {visibleDates
             .slice(rowIndex * 7, (rowIndex + 1) * 7)

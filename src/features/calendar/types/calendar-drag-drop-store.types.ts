@@ -12,11 +12,13 @@ export interface DragDropState {
   } | null;
   lastTimeSlot: number | null;
   dragOffset: number; // Offset in 15-minute slots from the top of the session
+  cachedDraggedSessionDate: Temporal.PlainDate | null;
 }
 
 export interface DragDropActions {
   startDrag: (session: LayoutCalendarSession, offset?: number) => void;
   updateDragPreview: (date: Temporal.PlainDate, timeSlot: number) => void;
+  updateMonthViewDragPreview: (date: Temporal.PlainDate) => void;
   endDrag: () => void;
   getPreviewSession: (date: Temporal.PlainDate) => LayoutCalendarSession | null;
 }
