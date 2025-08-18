@@ -2,7 +2,6 @@ import { Heading } from "@/shared/components/ui/heading";
 
 import type { TABS } from "../../lib/constants";
 import { CourseOverview } from "./course-overview";
-import { SessionTimeline } from "./session-timeline";
 
 export const HubOverview = ({
   hubId,
@@ -18,11 +17,6 @@ export const HubOverview = ({
       </div>
 
       <CourseOverview hubId={hubId} />
-
-      <SessionTimeline
-        hubId={hubId}
-        onGoToSessions={() => setSelectedTab("sessions")}
-      />
     </div>
   );
 };

@@ -65,7 +65,7 @@ export const StudentsListView = ({ hubId }: { hubId: number }) => {
               </Table.Cell>
               <Table.Cell className="max-w-[56px]">
                 <div className="flex justify-end">
-                  <Menu>
+                  <Menu respectScreen={false}>
                     <Button
                       intent="outline"
                       size="square-petite"
@@ -79,7 +79,7 @@ export const StudentsListView = ({ hubId }: { hubId: number }) => {
                     </Button>
                     <Menu.Content aria-label="Actions" placement="bottom end">
                       <Menu.Item href={`/portal/students/${id}`}>
-                        View
+                        View student
                       </Menu.Item>
                       <Menu.Separator />
                       <Menu.Item

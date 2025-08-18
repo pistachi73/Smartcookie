@@ -66,9 +66,6 @@ const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
 
   const onBlur = () => {
     setIsEditingNote(false);
-    if (content.trim() === "") {
-      deleteNote({ id: note.id });
-    }
   };
 
   if (!note) return null;
@@ -77,11 +74,11 @@ const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
     <div
       data-hub-id={note.hubId}
       className={cn(
-        "flex flex-col bg-overlay-highlight rounded-lg border-1 border-border relative transition duration-250",
+        "flex flex-col  rounded-lg border-1 border-border relative transition duration-250",
         "note-card focus-within:opacity-100! ",
-        isEditingNote && `${colorClasses.border} dark:bg-overlay-elevated`,
         "bg-overlay shadow-sm",
         "dark:bg-overlay-highlight dark:hover:bg-overlay-elevated",
+        isEditingNote && `${colorClasses.border} ${colorClasses.bg}`,
       )}
     >
       <div className="absolute top-0 right-0 z-10">

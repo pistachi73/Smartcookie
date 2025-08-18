@@ -170,7 +170,7 @@ export const Session = ({ session, position, hubId }: SessionProps) => {
                 </Button>
               </div>
             )}
-            <div className="size-9 flex items-center justify-center">
+            <div className="size-8 flex items-center justify-center">
               {isLoadingSessionNotes && isExpanded ? (
                 <ProgressCircle
                   isIndeterminate

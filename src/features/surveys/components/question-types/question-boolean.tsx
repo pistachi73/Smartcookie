@@ -9,8 +9,9 @@ import {
   ThumbsDownIcon as ThumbsDownIconStroke,
   ThumbsUpIcon as ThumbsUpIconStroke,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import { useHotkeys } from "react-hotkeys-hook";
 
 import {
   RadioToggle,
@@ -53,11 +54,12 @@ export const QuestionBoolean = ({ questionId }: QuestionBooleanProps) => {
     (state) => state.setIsTransitioning,
   );
 
-  const { control, setValue, getValues } = useFormContext();
+  const { control, setValue } = useFormContext();
+
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const handleSelect = useCallback(
     (value: string) => {
-      if (isTransitioning) return;
       const boolValue = value as "true" | "false";
       setValue(questionId.toString(), boolValue);
       setResponse(questionId, boolValue);
@@ -69,30 +71,60 @@ export const QuestionBoolean = ({ questionId }: QuestionBooleanProps) => {
         }, GO_TO_NEXT_QUESTION_DELAY);
       }
     },
-    [isTransitioning],
+    [
+      setValue,
+      questionId,
+      setResponse,
+      step,
+      totalQuestions,
+      setIsTransitioning,
+      goToNextQuestion,
+    ],
   );
 
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key.toLowerCase() === "y") {
-        handleSelect("true");
-      } else if (e.key.toLowerCase() === "n") {
-        handleSelect("false");
+  const handleDelayedSelect = useCallback(
+    (value: string) => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
       }
+
+      timerRef.current = setTimeout(() => {
+        handleSelect(value);
+      }, 300);
     },
     [handleSelect],
   );
 
-  useEffect(() => {
-    const abortController = new AbortController();
-    window.addEventListener("keydown", handleKeyDown, {
-      signal: abortController.signal,
-    });
+  useHotkeys(
+    "y",
+    () => handleDelayedSelect("true"),
+    {
+      enabled: !isTransitioning,
+      enableOnFormTags: false,
+      preventDefault: true,
+    },
+    [handleDelayedSelect, isTransitioning],
+  );
 
+  useHotkeys(
+    "n",
+    () => handleDelayedSelect("false"),
+    {
+      enabled: !isTransitioning,
+      enableOnFormTags: false,
+      preventDefault: true,
+    },
+    [handleDelayedSelect, isTransitioning],
+  );
+
+  // Cleanup timer on unmount
+  useEffect(() => {
     return () => {
-      abortController.abort();
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
     };
-  }, [handleKeyDown]);
+  }, []);
 
   return (
     <Controller

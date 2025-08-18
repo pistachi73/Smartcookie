@@ -54,7 +54,7 @@ function SurveyTemplateRadioItem({ template }: SurveyTemplateRadioItemProps) {
         <>
           <div className="flex flex-col items-start gap-0.5 flex-1 min-w-0">
             <div className="w-full">
-              <p className="font-medium text-base truncate first-letter:uppercase">
+              <p className="font-medium text-sm truncate first-letter:uppercase">
                 {template.title}
               </p>
             </div>
@@ -121,32 +121,35 @@ export function InitSurveyFromHubSheet({
   };
 
   return (
-    <Sheet isOpen={isOpen} onOpenChange={onOpenChange}>
+    <Sheet
+      isOpen={isOpen}
+      onOpenChange={(open) => {
+        if (open) {
+          onOpenChange(open);
+        } else {
+          handleClose();
+        }
+      }}
+    >
       <Sheet.Content
         side="right"
         classNames={{
-          content: "w-[480px] max-w-[90vw]",
+          content: "w-[480px] max-w-[96vw]",
         }}
       >
         <Sheet.Header className="border-b">
           <Sheet.Title className="flex items-start gap-2">
-            <HugeiconsIcon
-              icon={Rocket01Icon}
-              size={20}
-              color="var(--color-primary)"
-              className="shrink-0 h-7"
-            />
-            Initialize Survey for {hubName}
+            Initialize Survey
           </Sheet.Title>
           <Sheet.Description className="text-pretty">
             Select a survey template to create a new survey for this course.
           </Sheet.Description>
         </Sheet.Header>
 
-        <Sheet.Body className="p-6 space-y-6">
+        <Sheet.Body className="pt-6 space-y-6">
           <div className="space-y-6">
             <div className="space-y-3">
-              <Heading level={3} className="text-base font-medium">
+              <Heading level={3} className="font-medium">
                 Available Templates ({data?.totalCount})
               </Heading>
               <SearchField
@@ -155,7 +158,7 @@ export function InitSurveyFromHubSheet({
                 onChange={setSearchQuery}
                 className={{
                   primitive: "w-full",
-                  fieldGroup: "h-12",
+                  input: "text-sm",
                 }}
               />
             </div>
@@ -234,6 +237,7 @@ export function InitSurveyFromHubSheet({
             intent="outline"
             onPress={handleClose}
             isDisabled={isInitializing}
+            size="small"
           >
             <HugeiconsIcon icon={Cancel01Icon} size={16} data-slot="icon" />
             Cancel
@@ -241,6 +245,7 @@ export function InitSurveyFromHubSheet({
 
           <Button
             intent="primary"
+            size="small"
             onPress={handleInitSurvey}
             isDisabled={!selectedTemplateId || isInitializing}
           >

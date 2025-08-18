@@ -23,7 +23,7 @@ import { Keyboard } from "./keyboard";
 const dropdownItemStyles = tv({
   base: [
     "col-span-full grid grid-cols-[auto_1fr_1.5rem_0.5rem_auto] not-has-[[slot=description]]:items-center has-data-[[slot=description]]:**:data-[slot=checked-icon]:mt-[1.5px] supports-[grid-template-columns:subgrid]:grid-cols-subgrid",
-    "group relative cursor-default select-none rounded-[calc(var(--radius-lg)-1px)] px-[calc(var(--spacing)*2.3)] py-[calc(var(--spacing)*1.3)] forced-color:text-[Highlight] text-base text-fg outline-0 forced-color-adjust-none sm:text-sm/6 forced-colors:text-[LinkText]",
+    "group relative cursor-default select-none rounded-[calc(var(--radius-lg)-1px)] px-[calc(var(--spacing)*2.3)] py-[calc(var(--spacing)*1.3)] forced-color:text-[Highlight] text-base text-fg outline-0 forced-color-adjust-none text-sm/6 forced-colors:text-[LinkText]",
     "data-danger:**:data-[slot=icon]:text-danger/60 **:data-[slot=icon]:size-4 **:data-[slot=icon]:shrink-0 **:data-[slot=icon]:text-muted-fg focus:data-danger:**:data-[slot=icon]:text-danger",
     "*:data-[slot=icon]:mr-2",
     "forced-colors:**:data-[slot=icon]:text-[CanvasText] forced-colors:group-focus:**:data-[slot=icon]:text-[Canvas] ",

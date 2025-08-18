@@ -9,7 +9,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 
-import { Heading } from "@/shared/components/ui/heading";
+import { Card } from "@/shared/components/ui/card";
 import { Tabs } from "@/shared/components/ui/tabs";
 import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
 import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
@@ -22,6 +22,7 @@ import { TABS } from "../lib/constants";
 import { getHubByIdQueryOptions } from "../lib/hub-query-options";
 import { CourseFeedback } from "./feedback";
 import { HubHeader } from "./hub-header";
+import { HubPanelHeader } from "./hub-panel-header";
 import { HubOverview } from "./overview";
 import { SessionsList } from "./session/session-list";
 import { Students } from "./students/students";
@@ -50,86 +51,97 @@ export function HubDashboard({ hubId }: { hubId: number }) {
           },
         ]}
       />
-      <div className="h-full overflow-auto flex flex-col">
+      <div className="h-full overflow-auto flex flex-col bg-bg">
         <HubHeader hubName={hub.name} />
-        <div className="lg:flex-1 flex flex-col lg:flex-row bg-overlay">
-          <Tabs
-            aria-label="Hub Dashboard"
-            selectedKey={selectedTab}
-            onSelectionChange={(key) => setSelectedTab(key as Tab)}
-            className="flex-1 gap-4 sm:gap-6"
-          >
-            <Tabs.List className={"sticky top-0 px-6 pt-3 bg-overlay z-20"}>
-              {TABS.map((tab) => {
-                if (tab.id === "quick-notes" && !isDownLg) return null;
-                return (
-                  <Tabs.Tab key={tab.id} id={tab.id} className="px-2 ">
-                    {({ isSelected }) => {
-                      return (
-                        <p
-                          className={cn(
-                            "flex items-center gap-2",
-                            isSelected && "text-primary",
-                          )}
-                        >
-                          <HugeiconsIcon
-                            icon={tab.icon}
-                            altIcon={tab.altIcon}
-                            showAlt={isSelected}
-                            strokeWidth={!isSelected ? 1.5 : undefined}
-                            size={16}
-                          />
-                          {tab.label}
-                        </p>
-                      );
-                    }}
-                  </Tabs.Tab>
-                );
-              })}
-            </Tabs.List>
-            <Tabs.Panel id="overview" className={"p-6 pt-0"}>
-              <HubOverview hubId={hubId} setSelectedTab={setSelectedTab} />
-            </Tabs.Panel>
-            <Tabs.Panel id="students" className={"px-2 sm:px-5 pt-0 py-2"}>
-              <Students hubId={hubId} />
-            </Tabs.Panel>
-            <Tabs.Panel id="sessions" className={"px-2 sm:px-5 pt-0 py-2"}>
-              <SessionsList hubId={hubId} />
-            </Tabs.Panel>
-            <Tabs.Panel id="feedback" className={"px-4 sm:px-6"}>
-              <CourseFeedback hubId={hubId} />
-            </Tabs.Panel>
-            <ViewportOnly down="lg">
-              <Tabs.Panel id="quick-notes" className={"p-4 py-2 "}>
-                <div className="flex flex-row items-center justify-between mb-6">
+        <div className="lg:flex-1 flex flex-col lg:flex-row p-6 pt-0 gap-6">
+          <div className="bg-white rounded-lg border flex-1">
+            <Tabs
+              aria-label="Hub Dashboard"
+              selectedKey={selectedTab}
+              onSelectionChange={(key) => setSelectedTab(key as Tab)}
+              className="flex-1 gap-4 sm:gap-6"
+            >
+              <Tabs.List className={"sticky top-0 px-6 pt-3 z-20"}>
+                {TABS.map((tab) => {
+                  if (tab.id === "quick-notes" && !isDownLg) return null;
+                  return (
+                    <Tabs.Tab key={tab.id} id={tab.id} className="px-2 ">
+                      {({ isSelected }) => {
+                        return (
+                          <p
+                            className={cn(
+                              "flex items-center gap-2",
+                              isSelected && "text-primary",
+                            )}
+                          >
+                            {tab.label}
+                          </p>
+                        );
+                      }}
+                    </Tabs.Tab>
+                  );
+                })}
+              </Tabs.List>
+              <Tabs.Panel id="overview" className={"p-6 pt-0"}>
+                <HubOverview hubId={hubId} setSelectedTab={setSelectedTab} />
+              </Tabs.Panel>
+              <Tabs.Panel id="students" className={"px-4 sm:px-6"}>
+                <Students hubId={hubId} />
+              </Tabs.Panel>
+              <Tabs.Panel id="sessions" className={"px-4 sm:px-6"}>
+                <SessionsList hubId={hubId} />
+              </Tabs.Panel>
+              <Tabs.Panel id="feedback" className={"px-4 sm:px-6"}>
+                <CourseFeedback hubId={hubId} />
+              </Tabs.Panel>
+              <ViewportOnly down="lg">
+                <Tabs.Panel id="quick-notes" className={"px-4 sm:px-6"}>
+                  <HubPanelHeader
+                    title="Quick Notes"
+                    actions={
+                      <AddNoteCard
+                        hubId={hubId}
+                        className={"w-full sm:w-fit"}
+                        size="small"
+                        intent="primary"
+                      >
+                        <HugeiconsIcon icon={NoteAddIcon} size={16} />
+                        Add note
+                      </AddNoteCard>
+                    }
+                  />
+                  {/* <div className="flex flex-row items-center justify-between mb-6">
                   <Heading level={2}>Quick Notes</Heading>
                   <AddNoteCard hubId={hubId} size="small" intent="primary">
                     <HugeiconsIcon icon={NoteAddIcon} size={16} />
                     Add note
                   </AddNoteCard>
-                </div>
-                <NoteCardList hubId={Number(hubId)} hubColor={hub.color} />
-              </Tabs.Panel>
-            </ViewportOnly>
-          </Tabs>
+                </div> */}
+                  <NoteCardList hubId={Number(hubId)} hubColor={hub.color} />
+                </Tabs.Panel>
+              </ViewportOnly>
+            </Tabs>
+          </div>
           {!isDownLg && (
-            <div className="w-full lg:w-[350px]">
-              {/* Quick Notes Section */}
-              <div className="border-t lg:border-t-0 lg:border-l sticky top-0 z-20 bg-overlay h-12 px-4 border-b flex flex-row items-center justify-between gap-2">
-                <Heading level={2} className="text-base! font-medium!">
-                  Quick Notes
-                </Heading>
-                <AddNoteCard
-                  hubId={hubId}
-                  intent="plain"
-                  size="square-petite"
-                  className="size-9"
-                />
-              </div>
-              <div className="lg:border-l h-full p-3">
+            <Card className="w-full lg:w-[350px]">
+              <Card.Header>
+                <Card.Title>Quick Notes</Card.Title>
+                <Card.Description>View the course notes</Card.Description>
+                <Card.Action>
+                  <AddNoteCard
+                    hubId={hubId}
+                    intent="plain"
+                    size="square-petite"
+                    className="size-9"
+                  >
+                    <HugeiconsIcon icon={NoteAddIcon} size={16} />
+                  </AddNoteCard>
+                </Card.Action>
+              </Card.Header>
+              <Card.Content>
                 <NoteCardList hubId={Number(hubId)} hubColor={hub.color} />
-              </div>
-            </div>
+              </Card.Content>
+            </Card>
           )}
         </div>
       </div>

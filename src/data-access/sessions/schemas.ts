@@ -47,7 +47,7 @@ export const CheckSessionConflictsSchema = AddSessionsSchema.pick({
 
 export const GetInfiniteSessionsByHubIdSchema = z.object({
   hubId: z.coerce.number(),
-  cursor: z.date().optional(),
+  cursor: z.string().optional(),
   direction: z.enum(["next", "prev"]).optional(),
   limit: z.number().min(1).max(50).default(5),
 });

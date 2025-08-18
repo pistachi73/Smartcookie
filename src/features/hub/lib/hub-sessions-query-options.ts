@@ -2,7 +2,7 @@ import { infiniteQueryOptions, queryOptions } from "@tanstack/react-query";
 
 import {
   getHubOverviewSessions,
-  getInfiniteSessionsByHubId,
+  getPaginatedSessionsByHubId,
   type getSessionsByHubId,
 } from "@/data-access/sessions/queries";
 
@@ -39,15 +39,15 @@ export const getHubOverviewSessionsQueryOptions = (hubId: number) =>
 
 type PageParam = [string | undefined, "next" | "prev" | undefined];
 
-export const getInfiniteSessionsByHubIdQueryOptions = (hubId: number) =>
+export const getPaginatedSessionsByHubIdQueryOptions = (hubId: number) =>
   infiniteQueryOptions({
     queryKey: ["hub-infinite-sessions", hubId],
     queryFn: async ({ pageParam }) => {
       const [cursor, direction] = pageParam;
-      return getInfiniteSessionsByHubId({
+      return getPaginatedSessionsByHubId({
         hubId,
-        cursor: cursor ? new Date(cursor) : undefined,
-        limit: 5,
+        cursor,
+        limit: 10,
         direction,
       });
     },

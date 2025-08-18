@@ -212,7 +212,7 @@ export const MonthViewCell = ({
               onPress={() => {
                 console.log("pressed");
               }}
-              className="p-0.5 sm:p-1 px-1 text-left pointer-events-auto h-6 w-full hover:bg-muted rounded-sm transition-colors text-xs font-medium"
+              className="p-0.5 sm:p-1 px-1 text-left pointer-events-auto h-6 w-full hover:bg-secondary rounded-sm transition-colors text-xs font-medium"
             >
               {totalOccurrences - visibleOccurrences} more
             </AriaButton>
