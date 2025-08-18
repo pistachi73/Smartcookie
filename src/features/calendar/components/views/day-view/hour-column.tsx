@@ -18,7 +18,7 @@ export const HourColumn = () => {
               key={`hour-${index}`}
               className={cn(
                 "shrink-0 w-10 sm:w-16 boder-t border-r border-border/50 pt-2 pl-3 font-medium not-first:border-t",
-                "h-[var(--row-height,calc(var(--spacing)*12))]",
+                "h-(--row-height,calc(var(--spacing)*12))",
                 "flex items-start  relative",
               )}
             >

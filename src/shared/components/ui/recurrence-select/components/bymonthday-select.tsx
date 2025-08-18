@@ -36,7 +36,7 @@ export const BymonthdaySelect = ({
         />
 
         <Select.List
-          className={{ popover: "min-w-[var(--trigger-width)] rounded-md" }}
+          className={{ popover: "min-w-(--trigger-width) rounded-md" }}
           items={monthDayItems}
           popoverProps={{
             placement: "bottom start",

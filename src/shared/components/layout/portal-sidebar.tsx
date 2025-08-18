@@ -175,7 +175,7 @@ export default function AppSidebar({ user, ...props }: AppSidebarProps) {
           </Menu.Trigger>
           <Menu.Content
             placement="bottom end"
-            popoverClassName="w-full sm:w-[var(--trigger-width)]"
+            popoverClassName="w-full sm:w-(--trigger-width)"
           >
             <Menu.Header>
               <p className="text-sm font-medium">{user.name}</p>

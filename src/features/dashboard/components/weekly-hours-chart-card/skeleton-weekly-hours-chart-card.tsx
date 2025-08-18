@@ -33,7 +33,7 @@ export function SkeletonWeeklyHoursChartCard() {
           <Skeleton className="h-8 w-12" />
         </div>
         {/* <Skeleton className="h-48 w-full" /> */}
-        <SkeletonBarChart className="aspect-[2_/_1]" />
+        <SkeletonBarChart className="aspect-2/1" />
       </div>
     </div>
   );

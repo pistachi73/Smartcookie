@@ -42,7 +42,7 @@ export const FrequencySelect = ({
       />
 
       <Select.List
-        className={{ popover: "min-w-[var(--trigger-width)] rounded-md" }}
+        className={{ popover: "min-w-(--trigger-width) rounded-md" }}
         items={frequencyItems}
         popoverProps={{
           placement: "bottom start",

@@ -37,7 +37,7 @@ export const monthViewCellStyles = tv({
       6: "border-r-0",
     },
     isSelected: {
-      true: "bg-primary-tint/50 before:absolute before:inset-0 before:border-1 before:border-primary before:pointer-events-none before:content-['']",
+      true: "bg-primary-tint/50 before:absolute before:inset-0 before:border before:border-primary before:pointer-events-none before:content-['']",
     },
     isDropTarget: {
       true: "bg-primary-tint/50",

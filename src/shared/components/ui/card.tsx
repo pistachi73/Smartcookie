@@ -6,9 +6,9 @@ type CardProps = React.HTMLAttributes<HTMLDivElement> & {
 
 const Card = ({ className, spacing = "md", ...props }: CardProps) => {
   const spacingClasses = {
-    sm: "[--card-spacing:theme(spacing.4)]",
-    md: "[--card-spacing:theme(spacing.6)]",
-    lg: "[--card-spacing:theme(spacing.8)]",
+    sm: "[--card-spacing:--spacing(4)]",
+    md: "[--card-spacing:--spacing(6)]",
+    lg: "[--card-spacing:--spacing(8)]",
   };
 
   return (
@@ -108,7 +108,7 @@ const CardContent = ({
     <div
       data-slot="card-content"
       className={twMerge(
-        "px-(--card-spacing) has-[[data-slot=table-header]]:bg-muted/40 has-[table]:p-0 group-has-[table]/card:border-t **:data-[slot=table-cell]:px-(--card-spacing) **:data-[slot=table-column]:px-(--card-spacing) [&:has(table)+[data-slot=card-footer]]:pt-(--card-spacing)",
+        "px-(--card-spacing) has-data-[slot=table-header]:bg-muted/40 has-[table]:p-0 group-has-[table]/card:border-t **:data-[slot=table-cell]:px-(--card-spacing) **:data-[slot=table-column]:px-(--card-spacing) [&:has(table)+[data-slot=card-footer]]:pt-(--card-spacing)",
         className,
       )}
       {...props}

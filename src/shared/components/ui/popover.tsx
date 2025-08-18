@@ -93,14 +93,14 @@ const drawer = tv({
   ],
   variants: {
     isMenu: {
-      true: "rounded-t-xl p-0 [&_[role=dialog]]:*:not-has-[[data-slot=dialog-body]]:px-1",
+      true: "rounded-t-xl p-0 **:[&_[role=dialog]]:*:not-has-data-[slot=dialog-body]:px-1",
       false: "rounded-t-2xl",
     },
     isEntering: {
       true: [
-        "[transition:transform_0.5s_cubic-bezier(0.32,_0.72,_0,_1)] [will-change:transform]",
+        "[transition:transform_0.5s_cubic-bezier(0.32,0.72,0,1)] will-change-transform",
         "fade-in-0 slide-in-from-bottom-56 animate-in duration-200",
-        "[transition:translate3d(0,_100%,_0)]",
+        "[transition:translate3d(0,100%,0)]",
         "sm:slide-in-from-bottom-auto sm:slide-in-from-top-[20%]",
       ],
     },

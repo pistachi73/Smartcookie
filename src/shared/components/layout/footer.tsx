@@ -56,7 +56,7 @@ export const Footer = () => {
             <Heading
               level={2}
               tracking="tight"
-              className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight bg-gradient-to-r from-primary via-primary-shade to-primary bg-clip-text text-transparent text-center"
+              className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight bg-linear-to-r from-primary via-primary-shade to-primary bg-clip-text text-transparent text-center"
             >
               Teach smarter with SmartCookie
             </Heading>

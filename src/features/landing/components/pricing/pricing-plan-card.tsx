@@ -71,7 +71,7 @@ export const PremiumPlanCard = ({
         {showButton && (
           <Button
             intent="primary"
-            className="w-full justify-between px-6 h-13 group bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl transition-all duration-200"
+            className="w-full justify-between px-6 h-13 group bg-linear-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl transition-all duration-200"
             size="large"
           >
             Get Started

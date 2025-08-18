@@ -86,7 +86,7 @@ export function WeeklyHoursCard() {
                           } as React.CSSProperties
                         }
                       >
-                        <div className="size-2.5 shrink-0 rounded-[2px] bg-[var(--color-bg)]" />
+                        <div className="size-2.5 shrink-0 rounded-[2px] bg-bg" />
                         <span className="text-xs font-medium">{key}</span>
                       </div>
                     ),

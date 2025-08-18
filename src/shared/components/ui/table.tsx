@@ -235,7 +235,7 @@ const TableRow = <T extends object>({
       id={id}
       {...props}
       className={twMerge(
-        "tr group relative cursor-default border-b outline-2 bg-overlay data-[selected]:bg-(--table-selected-bg) outline-hidden ring-primary data-[selected]:hover:bg-(--table-selected-bg)/70 focus:ring-0 focus-visible:ring-1 dark:data-[selected]:hover:bg-[color-mix(in_oklab,var(--color-primary)_30%,black_70%)]",
+        "tr group relative cursor-default border-b outline-2 bg-overlay data-selected:bg-(--table-selected-bg) outline-hidden ring-primary data-selected:hover:bg-(--table-selected-bg)/70 focus:ring-0 focus-visible:ring-1 dark:data-selected:hover:bg-[color-mix(in_oklab,var(--color-primary)_30%,black_70%)]",
         "href" in props
           ? "cursor-pointer hover:bg-secondary/50 hover:text-secondary-fg"
           : "",
@@ -256,7 +256,7 @@ const TableRow = <T extends object>({
         <Cell className="pl-4">
           <span
             aria-hidden
-            className="absolute inset-y-0 left-0 hidden h-full w-0.5 bg-primary group-data-[selected]:block"
+            className="absolute inset-y-0 left-0 hidden h-full w-0.5 bg-primary group-data-selected:block"
           />
           <Checkbox slot="selection" />
         </Cell>

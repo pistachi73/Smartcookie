@@ -177,7 +177,7 @@ export function Hero() {
                             paddingBottom: "0.3em",
                             marginBottom: "-0.3em",
                           }}
-                          className="inline-block bg-gradient-to-r from-primary to-primary-shade bg-clip-text text-transparent"
+                          className="inline-block bg-linear-to-r from-primary to-primary-shade bg-clip-text text-transparent"
                         >
                           {word}
                         </motion.span>

@@ -64,8 +64,8 @@ const DatePickerOverlay = ({
     <Popover.Content
       showArrow={false}
       className={cn(
-        "flex justify-center p-4 sm:min-w-[17rem] sm:p-2 sm:pt-3",
-        visibleDuration?.months === 1 ? "sm:max-w-[17.5rem]" : "sm:max-w-none",
+        "flex justify-center p-4 sm:min-w-68 sm:p-2 sm:pt-3",
+        visibleDuration?.months === 1 ? "sm:max-w-70" : "sm:max-w-none",
       )}
       {...props}
     >

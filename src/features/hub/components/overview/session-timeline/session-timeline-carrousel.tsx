@@ -27,7 +27,7 @@ const SESSION_STYLES = {
     cardBg: "border-success/60 bg-success/10",
     accent: "border-t-success/60",
     dotColor: "bg-success",
-    connector: "bg-gradient-to-r from-success/60 to-primary",
+    connector: "bg-linear-to-r from-success/60 to-primary",
     badgeText: "Class Notes",
   },
   upcoming: {
@@ -36,7 +36,7 @@ const SESSION_STYLES = {
     cardBg: "border-primary bg-primary/10",
     accent: "border-t-primary",
     dotColor: "bg-primary",
-    connector: "bg-gradient-to-r from-primary to-secondary",
+    connector: "bg-linear-to-r from-primary to-secondary",
     badgeText: "Session Plans",
   },
   future: {

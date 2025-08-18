@@ -108,7 +108,7 @@ export const ExplorePremiumModal = ({
 
           <Button
             intent="primary"
-            className="w-full md:w-fit md:justify-between px-6 group bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl transition-all duration-200"
+            className="w-full md:w-fit md:justify-between px-6 group bg-linear-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl transition-all duration-200"
             onPress={() =>
               createCheckoutSessionMutation({
                 paymentFrequency,

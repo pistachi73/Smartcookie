@@ -149,7 +149,7 @@ export function AddSessionsForm({
             <ComboBox.List
               items={hubOptions}
               shouldFlip={false}
-              className={{ popoverContent: "w-[var(--trigger-width)]" }}
+              className={{ popoverContent: "w-(--trigger-width)" }}
             >
               {(item) => (
                 <ComboBox.Option

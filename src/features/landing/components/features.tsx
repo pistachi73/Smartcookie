@@ -140,7 +140,7 @@ export const VerticalFeatureCard = ({
       </div>
       <div
         className={cn(
-          "absolute h-[30px] w-full bottom-0 left-0 bg-gradient-to-t",
+          "absolute h-[30px] w-full bottom-0 left-0 bg-linear-to-t",
           "from-muted/70 to-muted/0",
         )}
       />
@@ -190,19 +190,19 @@ export const HorizontalFeatureCard = () => {
       </div>
 
       {/* Calendar Image with Gradient */}
-      <div className="aspect-[64/27] relative lg:flex-1 w-full flex items-end justify-end lg:basis-[60%] shrink-0">
+      <div className="aspect-64/27 relative lg:flex-1 w-full flex items-end justify-end lg:basis-[60%] shrink-0">
         <Image
           src="/images/features/feedback.png"
           alt="Calendar interface"
           fill
-          className="aspect-[64/27] object-cover object-top rounded-lg h-auto w-full group-hover:scale-102 transition-transform duration-300 origin-bottom-right"
+          className="aspect-64/27 object-cover object-top rounded-lg h-auto w-full group-hover:scale-102 transition-transform duration-300 origin-bottom-right"
           sizes="(max-width: 1024px) 80vw, 600px"
           priority={false}
           loading="lazy"
         />
         <div
           className={cn(
-            "absolute h-[30px] w-full bottom-0 left-0 bg-gradient-to-t from-primary-tint/70 to-primary-tint/0",
+            "absolute h-[30px] w-full bottom-0 left-0 bg-linear-to-t from-primary-tint/70 to-primary-tint/0",
           )}
         />
       </div>
