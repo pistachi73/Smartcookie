@@ -84,7 +84,7 @@ export const Subscription = () => {
             </Card.Header>
             <Card.Content className="space-y-6">
               <ExplorePremiumModal>
-                <Button size="large" className="w-full">
+                <Button size="lg" className="w-full">
                   Upgrade to Pro plan
                   <HugeiconsIcon
                     icon={Diamond02Icon}

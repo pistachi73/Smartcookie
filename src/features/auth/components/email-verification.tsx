@@ -163,8 +163,7 @@ export const EmailVerification = () => {
               aria-label="Email verification code"
             >
               <InputOTP.Group>
-                {[...Array(6)].map((_, index) => (
-                  // biome-ignore lint/suspicious/noArrayIndexKey: No other option
+                {Array.from({ length: 6 }).map((_, index) => (
                   <InputOTP.Slot key={index} index={index} />
                 ))}
               </InputOTP.Group>

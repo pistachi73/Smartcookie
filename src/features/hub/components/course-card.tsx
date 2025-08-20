@@ -26,9 +26,8 @@ export function CourseCard() {
           </Heading>
         </div>
         <Button
-          size="square-petite"
+          size="sq-sm"
           intent="plain"
-          shape="square"
           className="absolute top-1 right-1 size-9"
         >
           <HugeiconsIcon icon={Settings02Icon} size={16} data-slot="icon" />

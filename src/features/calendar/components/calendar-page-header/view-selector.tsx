@@ -11,10 +11,10 @@ import { useShallow } from "zustand/react/shallow";
 import { Button } from "@/shared/components/ui/button";
 import { Select } from "@/shared/components/ui/select";
 import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
+import { cn } from "@/shared/lib/utils";
 
 import { useCalendarStore } from "@/features/calendar/providers/calendar-store-provider";
 import type { CalendarView } from "@/features/calendar/types/calendar.types";
-import { cn } from "@/lib/utils";
 
 export const ViewSelector = () => {
   const { calendarView, setCalendarView } = useCalendarStore(
@@ -36,9 +36,8 @@ export const ViewSelector = () => {
       className="w-fit"
     >
       <Button
-        size={isMobile ? "square-petite" : "medium"}
+        size={isMobile ? "sq-md" : "md"}
         intent={isMobile ? "plain" : "outline"}
-        shape={isMobile ? "square" : undefined}
         className={cn(isMobile && "size-9")}
       >
         {isMobile ? (
@@ -56,10 +55,7 @@ export const ViewSelector = () => {
         )}
       </Button>
       <Select.List
-        className={{
-          popover: "w-[180px]!",
-        }}
-        popoverProps={{
+        popover={{
           placement: "bottom right",
         }}
         items={[

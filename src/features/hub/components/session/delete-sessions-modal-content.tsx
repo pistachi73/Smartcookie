@@ -60,8 +60,8 @@ export function DeleteSessionsModalContent({ hubId }: { hubId: number }) {
       </Modal.Body>
 
       <Modal.Footer>
-        <Modal.Close size="small">Cancel</Modal.Close>
-        <Button intent="danger" size="small" onPress={handleDeleteSessions}>
+        <Modal.Close size="sm">Cancel</Modal.Close>
+        <Button intent="danger" size="sm" onPress={handleDeleteSessions}>
           {isPending && (
             <ProgressCircle isIndeterminate aria-label="Deleting sessions..." />
           )}

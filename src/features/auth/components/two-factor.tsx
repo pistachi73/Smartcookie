@@ -136,7 +136,7 @@ export const TwoFactor = () => {
               {...field}
               autoFocus
               aria-label="Two-factor code"
-              className="w-full"
+              containerClassName="w-full"
             >
               <InputOTP.Group>
                 {[...Array(6)].map((_, index) => (

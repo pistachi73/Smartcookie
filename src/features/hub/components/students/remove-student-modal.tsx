@@ -72,11 +72,10 @@ export const RemoveStudentModal = ({
       </div>
 
       <Modal.Footer>
-        <Modal.Close size="small">Cancel</Modal.Close>
+        <Modal.Close size="sm">Cancel</Modal.Close>
         <Button
           type="button"
-          shape="square"
-          size="small"
+          size="sm"
           intent="danger"
           className="px-6"
           isPending={isPending}

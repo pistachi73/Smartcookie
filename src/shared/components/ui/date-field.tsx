@@ -77,7 +77,7 @@ const DateInput = ({
     <DateInputPrimitive
       className={composeTailwindRenderProps(
         className,
-        "bg-transparent p-2 text-base text-fg placeholder-muted-fg sm:text-sm",
+        "bg-transparent p-2 text-sm text-fg placeholder-muted-fg",
       )}
       {...props}
     >

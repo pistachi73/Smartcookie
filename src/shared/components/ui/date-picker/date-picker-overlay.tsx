@@ -49,7 +49,7 @@ const DatePickerOverlay = ({
       )}
       {closeButton && (
         <div className="mx-auto flex w-full max-w-[inherit] justify-center py-2.5 sm:hidden">
-          <Popover.Close shape="circle" className="w-full">
+          <Popover.Close isCircle className="w-full">
             Close
           </Popover.Close>
         </div>

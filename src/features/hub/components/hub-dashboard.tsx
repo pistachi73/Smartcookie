@@ -88,7 +88,7 @@ export function HubDashboard({ hubId }: { hubId: number }) {
               })}
             </Tabs.List>
             <Tabs.Panel id="overview" className={"p-6 pt-0"}>
-              <HubOverview hubId={hubId} setSelectedTab={setSelectedTab} />
+              <HubOverview hubId={hubId} />
             </Tabs.Panel>
             <Tabs.Panel id="students" className={"px-2 sm:px-5 pt-0 py-2"}>
               <Students hubId={hubId} />
@@ -103,7 +103,7 @@ export function HubDashboard({ hubId }: { hubId: number }) {
               <Tabs.Panel id="quick-notes" className={"p-4 py-2 "}>
                 <div className="flex flex-row items-center justify-between mb-6">
                   <Heading level={2}>Quick Notes</Heading>
-                  <AddNoteCard hubId={hubId} size="small" intent="primary">
+                  <AddNoteCard hubId={hubId} size="sm" intent="primary">
                     <HugeiconsIcon icon={NoteAddIcon} size={16} />
                     Add note
                   </AddNoteCard>
@@ -122,7 +122,7 @@ export function HubDashboard({ hubId }: { hubId: number }) {
                 <AddNoteCard
                   hubId={hubId}
                   intent="plain"
-                  size="square-petite"
+                  size="sq-sm"
                   className="size-9"
                 />
               </div>

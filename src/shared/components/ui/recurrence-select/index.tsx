@@ -37,7 +37,7 @@ const ModalTrigger = ({ value }: { value?: string }) => {
     <Button
       className="overflow-hidden w-full justify-start pr-2"
       intent="outline"
-      size="small"
+      size="sm"
     >
       <div className="shrink-0">
         <HugeiconsIcon icon={RepeatIcon} size={16} className="shrink-0" />
@@ -231,36 +231,18 @@ export const RecurrenceSelect = ({
             </div>
           </Modal.Body>
           <Modal.Footer className="flex items-center justify-end gap-2 flex-row">
-            <Button
-              intent="plain"
-              size="small"
-              className="text-muted-fg hover:text-current"
-              // onPress={() => {
-              //   if (rrule === null) return;
-              //   setRruleOptions({
-              //     ...rruleOptions,
-              //     ...convertRRuleOptionsToCustom(rrule.options),
-              //     dstart: selectedDate?.toDate("UTC"),
-              //   });
-              // }}
-              slot="close"
-            >
+            <Modal.Close intent="plain" size="md">
               Cancel
-            </Button>
-            <Button
-              size="small"
-              className="px-6 group"
+            </Modal.Close>
+            <Modal.Close
+              intent="primary"
+              size="md"
               type="button"
               onPress={() => saveCustomRecurrenceRule()}
-              slot="close"
             >
               Save
-              <HugeiconsIcon
-                icon={ArrowRight02Icon}
-                size={14}
-                data-slot="icon"
-              />
-            </Button>
+              <HugeiconsIcon icon={ArrowRight02Icon} data-slot="icon" />
+            </Modal.Close>
           </Modal.Footer>
         </Modal.Content>
       </Modal>

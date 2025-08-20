@@ -149,7 +149,7 @@ export const SurveyPresentation = ({ surveyId }: SurveyPresentationProps) => {
         <div className="flex flex-col items-center">
           <Button
             intent="primary"
-            size="large"
+            size="lg"
             className="h-14 px-6 text-xl! text-primary-fg mb-4 w-52 justify-between"
             type="submit"
             isPending={isPending}

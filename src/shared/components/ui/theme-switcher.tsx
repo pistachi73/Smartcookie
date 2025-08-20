@@ -10,7 +10,6 @@ import { useIsMounted } from "@/shared/hooks/use-is-mounted";
 import { Button } from "./button";
 
 export function ThemeSwitcher({
-  shape = "square",
   intent = "outline",
   className,
   ...props
@@ -29,9 +28,8 @@ export function ThemeSwitcher({
 
   return (
     <Button
-      shape={shape}
       intent={intent}
-      size="square-petite"
+      size="sq-sm"
       aria-label="Switch theme"
       onPress={toggleTheme}
       className={className}

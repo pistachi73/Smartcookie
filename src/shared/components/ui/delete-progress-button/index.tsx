@@ -6,7 +6,7 @@ import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";
 import { Button, type ButtonProps } from "react-aria-components";
 
-import { ProgressCircle } from "@/ui/progress-circle";
+import { ProgressCircle } from "@/shared/components/ui/progress-circle";
 import { cn } from "@/shared/lib/classes";
 
 import { useDeleteProgressButton } from "./use-delete-progress-button";

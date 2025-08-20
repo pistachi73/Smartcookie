@@ -152,25 +152,23 @@ const TableColumn = ({
     >
       {({ allowsSorting, sortDirection, isHovered }) => (
         <div className="flex items-center gap-2 **:data-[slot=icon]:shrink-0">
-          <>
-            {props.children as React.ReactNode}
-            {allowsSorting && (
-              <span
-                className={twMerge(
-                  "grid size-[1.15rem] flex-none shrink-0 place-content-center rounded bg-secondary text-fg *:data-[slot=icon]:size-3.5 *:data-[slot=icon]:shrink-0 *:data-[slot=icon]:transition-transform *:data-[slot=icon]:duration-200",
-                  isHovered ? "bg-secondary-fg/10" : "",
-                  className,
-                )}
-              >
-                <HugeiconsIcon
-                  icon={ArrowDown01Icon}
-                  className={sortDirection === "ascending" ? "rotate-180" : ""}
-                  data-slot="icon"
-                />
-              </span>
-            )}
-            {isResizable && <ColumnResizer />}
-          </>
+          {props.children as React.ReactNode}
+          {allowsSorting && (
+            <span
+              className={twMerge(
+                "grid size-[1.15rem] flex-none shrink-0 place-content-center rounded bg-secondary text-fg *:data-[slot=icon]:size-3.5 *:data-[slot=icon]:shrink-0 *:data-[slot=icon]:transition-transform *:data-[slot=icon]:duration-200",
+                isHovered ? "bg-secondary-fg/10" : "",
+                className,
+              )}
+            >
+              <HugeiconsIcon
+                icon={ArrowDown01Icon}
+                className={sortDirection === "ascending" ? "rotate-180" : ""}
+                data-slot="icon"
+              />
+            </span>
+          )}
+          {isResizable && <ColumnResizer />}
         </div>
       )}
     </Column>

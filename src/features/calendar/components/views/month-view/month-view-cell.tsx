@@ -167,7 +167,7 @@ export const MonthViewCell = ({
     >
       <div className="relative z-10 w-full flex items-start px-1">
         <Button
-          size="square-petite"
+          size="sq-sm"
           intent="plain"
           className={cn(
             "size-fit p-0.5 text-xs font-medium tabular-nums cursor-pointer ",
@@ -219,7 +219,7 @@ export const MonthViewCell = ({
             <Popover.Content placement="bottom" className="sm:w-[300px]">
               <Popover.Close
                 intent="plain"
-                size="square-petite"
+                size="sq-sm"
                 className="absolute top-1 right-1 size-8 shrink-0"
               >
                 <HugeiconsIcon icon={MultiplicationSignIcon} size={16} />

@@ -122,12 +122,7 @@ export function InitSurveyFromHubSheet({
 
   return (
     <Sheet isOpen={isOpen} onOpenChange={onOpenChange}>
-      <Sheet.Content
-        side="right"
-        classNames={{
-          content: "w-[480px] max-w-[90vw]",
-        }}
-      >
+      <Sheet.Content side="right" className="w-[480px] max-w-[90vw]">
         <Sheet.Header className="border-b">
           <Sheet.Title className="flex items-start gap-2">
             <HugeiconsIcon
@@ -187,9 +182,7 @@ export function InitSurveyFromHubSheet({
                 <Link
                   href="/portal/feedback/survey-templates/new"
                   intent="primary"
-                  className={buttonStyles({
-                    shape: "square",
-                  })}
+                  className={buttonStyles()}
                 >
                   <HugeiconsIcon icon={Add01Icon} size={16} data-slot="icon" />
                   Create Survey Template

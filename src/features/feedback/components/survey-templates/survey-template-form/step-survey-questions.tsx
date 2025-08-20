@@ -230,7 +230,7 @@ const DroppableQuestionContainer = () => {
                       <div className="flex gap-1">
                         <Button
                           intent="plain"
-                          size="square-petite"
+                          size="sq-sm"
                           className="size-7 flex sm:hidden"
                           onPress={() => handleMoveUp(question.id)}
                           isDisabled={index === 0}
@@ -239,7 +239,7 @@ const DroppableQuestionContainer = () => {
                         </Button>
                         <Button
                           intent="plain"
-                          size="square-petite"
+                          size="sq-sm"
                           className="size-7 flex sm:hidden"
                           onPress={() => handleMoveDown(question.id)}
                           isDisabled={index === questions.length - 1}
@@ -247,24 +247,19 @@ const DroppableQuestionContainer = () => {
                           <HugeiconsIcon icon={ArrowDown01Icon} size={16} />
                         </Button>
                         <Popover>
-                          <Button
-                            intent="plain"
-                            size="square-petite"
-                            className="size-7"
-                          >
+                          <Button intent="plain" size="sq-xs">
                             <HugeiconsIcon icon={Settings01Icon} size={16} />
                           </Button>
                           <Popover.Content
+                            showArrow
                             placement="bottom"
-                            className={"w-[200px]"}
+                            className={"w-[200px] [--gutter:--spacing(4)]"}
                           >
                             <Popover.Header>
-                              <Popover.Title level={4} className="text-sm!">
-                                Settings
-                              </Popover.Title>
+                              <Popover.Title level={4}>Settings</Popover.Title>
                             </Popover.Header>
-                            <Separator />
-                            <Popover.Footer className="w-full flex flex-col! gap-4">
+                            <Separator className="my-2" />
+                            <Popover.Body className="w-full flex flex-col! gap-4 pb-[var(--gutter)]">
                               <Switch
                                 className={
                                   "flex-row-reverse justify-between w-full"
@@ -278,12 +273,12 @@ const DroppableQuestionContainer = () => {
                               >
                                 Required
                               </Switch>
-                            </Popover.Footer>
+                            </Popover.Body>
                           </Popover.Content>
                         </Popover>
                         <Button
                           intent="plain"
-                          size="square-petite"
+                          size="sq-sm"
                           className="size-7 text-danger"
                           onPress={() => handleRemoveQuestion(question.id)}
                         >

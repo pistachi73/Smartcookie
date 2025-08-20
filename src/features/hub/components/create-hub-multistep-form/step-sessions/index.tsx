@@ -62,7 +62,7 @@ export function StepSessions() {
           <Heading level={3} className="font-semibold">
             Scheduled Sessions
           </Heading>
-          <Button shape="square" onPress={() => setIsSessionModalOpen(true)}>
+          <Button onPress={() => setIsSessionModalOpen(true)}>
             <HugeiconsIcon icon={AddIcon} size={16} data-slot="icon" />
             <span className="hidden sm:block">Add Sessions</span>
           </Button>
@@ -77,19 +77,13 @@ export function StepSessions() {
             "sm:relative sm:p-0 sm:flex-row sm:justify-between sm:border-none",
           )}
         >
-          <Button
-            intent="outline"
-            onPress={prevStep}
-            shape="square"
-            isDisabled={isPending}
-          >
+          <Button intent="outline" onPress={prevStep} isDisabled={isPending}>
             <HugeiconsIcon icon={ArrowLeft02Icon} size={16} />
             Back
           </Button>
 
           <Button
             onPress={handleCreateHub}
-            shape="square"
             className="px-6"
             isDisabled={isPending}
           >

@@ -92,7 +92,7 @@ export const AgendaSessionCard = ({
                 name: student.name,
                 image: null,
               }))}
-              size="small"
+              size="sm"
               spacing="loose"
               maxAvatars={5}
               showTooltips={showStudentTooltips}

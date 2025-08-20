@@ -145,11 +145,10 @@ export const SessionModal = ({ isOpen, onOpenChange }: SessionModalProps) => {
               )}
             </Modal.Body>
             <Modal.Footer>
-              <Modal.Close size="small">Cancel</Modal.Close>
+              <Modal.Close size="sm">Cancel</Modal.Close>
               <Button
                 type="submit"
-                shape="square"
-                size="small"
+                size="sm"
                 className="px-6"
                 isPending={isCheckingConflicts}
               >

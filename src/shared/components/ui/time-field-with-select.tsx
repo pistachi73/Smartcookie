@@ -238,32 +238,19 @@ const TimeSelect = <T extends TimeValue>({
       }}
     >
       <Button
-        size="square-petite"
+        size="sq-sm"
         intent="plain"
-        className="group mr-1 size-8 rounded-sm outline-offset-0data-hovered:bg-transparent data-pressed:bg-transparent **:data-[slot=icon]:text-muted-fg aspect-square shrink-0"
-        excludeFromTabOrder
+        className="size-7 shrink-0 rounded pressed:bg-transparent outline-hidden outline-offset-0 hover:bg-transparent focus-visible:text-fg focus-visible:ring-0 group-open:text-fg **:data-[slot=icon]:text-muted-fg group-open:*:data-[slot=icon]:text-fg"
       >
-        <HugeiconsIcon
-          icon={ArrowDown01Icon}
-          size={14}
-          data-slot="icon"
-          aria-hidden
-          className={"group-open:text-fg"}
-        />
+        <HugeiconsIcon icon={ArrowDown01Icon} data-slot="icon" />
       </Button>
 
       <Select.List
         items={timeOptions}
-        className={{
-          list: "max-h-80",
-        }}
-        popoverProps={{
-          showArrow: false,
-          respectScreen: false,
+        className="max-h-80"
+        popover={{
           style: { width: containerWidth },
           placement: "top end",
-          offset: 8,
-          crossOffset: 4,
         }}
       >
         {(time) => (

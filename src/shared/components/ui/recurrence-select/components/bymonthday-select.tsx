@@ -31,16 +31,14 @@ export const BymonthdaySelect = ({
       >
         <Select.Trigger
           data-testid="bymonthday-select-trigger"
-          className="w-25 hover:bg-overlay-elevated"
-          showArrow
+          className="w-25 h-10"
         />
 
         <Select.List
-          className={{ popover: "min-w-(--trigger-width) rounded-md" }}
-          items={monthDayItems}
-          popoverProps={{
+          popover={{
             placement: "bottom start",
           }}
+          items={monthDayItems}
         >
           {({ id, label }) => <Select.Option id={id}>{label}</Select.Option>}
         </Select.List>

@@ -136,10 +136,10 @@ export const CreateStudentModal = ({
           </div>
         </Modal.Body>
         <Modal.Footer className="justify-end">
-          <Modal.Close size="small" intent="outline" shape="square">
+          <Modal.Close size="sm" intent="outline">
             Cancel
           </Modal.Close>
-          <Button size="small" type="submit" shape="square" className="px-4">
+          <Button size="sm" type="submit" className="px-4">
             Add Student
           </Button>
         </Modal.Footer>

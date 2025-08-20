@@ -3,9 +3,9 @@ import { InvoiceIcon } from "@hugeicons-pro/core-stroke-rounded";
 import { format } from "date-fns";
 
 import { Card } from "@/shared/components/ui/card";
+import { cn } from "@/shared/lib/utils";
 
 import type { Invoice, Subscription } from "@/data-access/payment/formatters";
-import { cn } from "@/lib/utils";
 import { BillingPortalButton } from "./billing-portal-button";
 
 type UpcomingProps = {

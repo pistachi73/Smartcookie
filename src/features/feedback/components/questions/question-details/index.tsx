@@ -160,14 +160,14 @@ export const QuestionDetails = ({ questionId }: QuestionDetailsProps) => {
               </div>
 
               <Menu>
-                <Button intent="outline" shape="square" size="square-petite">
+                <Button intent="outline" size="sq-sm" className={"shrink-0"}>
                   <HugeiconsIcon
                     icon={MoreHorizontalIcon}
                     size={18}
                     data-slot="icon"
                   />
                 </Button>
-                <Menu.Content placement="bottom end" showArrow>
+                <Menu.Content placement="bottom end">
                   <Menu.Item
                     onAction={() => {
                       router.push(editHref);
@@ -193,7 +193,7 @@ export const QuestionDetails = ({ questionId }: QuestionDetailsProps) => {
             </div>
             <div className="flex items-center gap-3">
               <QuestionTypeBadge label type={question.type} />
-              <Badge intent="secondary" shape="square">
+              <Badge intent="secondary">
                 {question.totalAnswers}{" "}
                 {question.totalAnswers === 1 ? "response" : "responses"}
               </Badge>
@@ -218,7 +218,7 @@ export const QuestionDetails = ({ questionId }: QuestionDetailsProps) => {
               <Button
                 onPress={toggleFilters}
                 intent="outline"
-                size="small"
+                size="sm"
                 className="flex items-center gap-2"
               >
                 <HugeiconsIcon icon={FilterIcon} size={16} />
@@ -289,20 +289,18 @@ export const QuestionDetails = ({ questionId }: QuestionDetailsProps) => {
                             }
                           }}
                           maxValue={today(getLocalTimeZone()).add({ days: 1 })}
-                          className={{
-                            fieldGroup: "w-fit bg-overlay",
-                          }}
                           validate={(range) =>
                             range.end.compare(range.start) > 6 * 31
                               ? "Date range cannot exceed 6 months"
                               : null
                           }
+                          aria-label="Date range filter picker"
                         />
 
                         <Button
                           type="submit"
                           intent="primary"
-                          size="medium"
+                          size="md"
                           isDisabled={!hasUnappliedChanges}
                         >
                           Apply Filters

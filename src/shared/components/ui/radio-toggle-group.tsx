@@ -126,10 +126,8 @@ const RadioToggleGroup = ({
       <RadioGroupPrimitive
         ref={ref}
         orientation={orientation}
-        className={composeRenderProps(
-          className?.primitive,
-          (className, renderProps) =>
-            cn("group flex flex-col gap-2", className),
+        className={composeRenderProps(className?.primitive, (className) =>
+          cn("group flex flex-col gap-2", className),
         )}
         {...props}
       >

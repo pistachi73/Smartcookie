@@ -15,17 +15,7 @@ export function SkeletonWeeklyHoursChartCard() {
         <Heading level={4} className="text-base font-semibold">
           Weekly teaching hours
         </Heading>
-        <DatePicker
-          defaultValue={now}
-          overlayProps={{
-            placement: "bottom end",
-          }}
-          className={{
-            fieldGroup: "h-8",
-            input:
-              "h-8 px-[calc(var(--spacing)*2.7)] text-xs/4 lg:text-[0.800rem]/4",
-          }}
-        />
+        <DatePicker defaultValue={now} placement="bottom end" className="h-9" />
       </div>
       <div className="space-y-6">
         <div className="flex flex-row items-center justify-between">

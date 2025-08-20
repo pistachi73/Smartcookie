@@ -244,7 +244,7 @@ export const PhoneField = ({
     const countryData = allCountries.find((c) => c.code === selectedCountry);
     return (
       <Button
-        size="small"
+        size="sm"
         intent="plain"
         className="flex items-center gap-1 px-1.5 outline-none"
         onPress={() => setIsOpen(!isOpen)}
@@ -284,8 +284,6 @@ export const PhoneField = ({
           isOpen={isOpen}
           onOpenChange={setIsOpen}
           triggerRef={triggerRef}
-          showArrow={false}
-          respectScreen={false}
           className="sm:w-[260px] w-[260px]"
         >
           <Virtualizer layout={layout}>

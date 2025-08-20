@@ -54,9 +54,8 @@ export const SelectedStudentsTable = () => {
                   image={image ?? null}
                 />
                 <Button
-                  size="square-petite"
+                  size="sq-sm"
                   intent="danger"
-                  shape="square"
                   className="text-danger hover:bg-danger/10 bg-transparent"
                   onPress={() => onStudentRemove(id)}
                 >

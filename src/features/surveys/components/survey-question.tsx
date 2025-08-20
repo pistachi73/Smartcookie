@@ -144,7 +144,7 @@ export const SurveyQuestion = ({ question, step }: SurveyQuestionProps) => {
           <div className="flex flex-row gap-3 items-center">
             <Button
               type="submit"
-              size="large"
+              size="lg"
               className={cn("px-4 group gap-4")}
               isPending={isSubmitting}
             >

@@ -80,8 +80,7 @@ export const SurveyTemplateListItem = ({
           <Menu>
             <Button
               intent="plain"
-              shape="square"
-              size="square-petite"
+              size="sq-sm"
               className="sm:opacity-0 group-hover:opacity-100 size-8 data-pressed:opacity-100 transition-opacity"
             >
               <HugeiconsIcon icon={MoreVerticalIcon} size={18} />
