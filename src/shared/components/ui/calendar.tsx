@@ -5,9 +5,18 @@ import {
   ArrowLeft01Icon,
   ArrowRight01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import type { CalendarDate } from "@internationalized/date";
+import {
+  type CalendarDate,
+  getLocalTimeZone,
+  today,
+} from "@internationalized/date";
+import { useDateFormatter } from "@react-aria/i18n";
+import type { CalendarState } from "@react-stately/calendar";
 import { use } from "react";
-import { useDateFormatter } from "react-aria";
+import type {
+  CalendarProps as CalendarPrimitiveProps,
+  DateValue,
+} from "react-aria-components";
 import {
   CalendarCell,
   CalendarGrid,
@@ -15,72 +24,44 @@ import {
   CalendarGridHeader as CalendarGridHeaderPrimitive,
   CalendarHeaderCell,
   Calendar as CalendarPrimitive,
-  type CalendarProps as CalendarPrimitiveProps,
   CalendarStateContext,
   composeRenderProps,
-  type DateValue,
   Heading,
   Text,
   useLocale,
 } from "react-aria-components";
-import type { CalendarState } from "react-stately";
-import { tv } from "tailwind-variants";
+import { twMerge } from "tailwind-merge";
 
 import { Button } from "./button";
-import { composeTailwindRenderProps, focusRing } from "./primitive";
 import { Select } from "./select";
-
-const cell = tv({
-  extend: focusRing,
-  base: "flex size-10 cursor-default items-center justify-center rounded-lg tabular-nums sm:size-9 sm:text-sm forced-colors:outline-0",
-  variants: {
-    isToday: {
-      true: "bg-primary-tint data-today",
-    },
-    isSelected: {
-      false:
-        "text-fg data-hovered:bg-secondary-fg/15 data-pressed:bg-secondary-fg/20 forced-colors:text-[ButtonText]",
-      true: "bg-primary text-primary-fg data-invalid:bg-danger data-invalid:text-danger-fg forced-colors:bg-[Highlight] forced-colors:text-[Highlight] forced-colors:data-invalid:bg-[Mark]",
-    },
-    isDisabled: {
-      true: "text-muted-fg/70 forced-colors:text-[GrayText]",
-    },
-    isUnavailable: {
-      true: "text-muted-fg/70 forced-colors:text-[GrayText]",
-    },
-  },
-});
 
 interface CalendarProps<T extends DateValue>
   extends Omit<CalendarPrimitiveProps<T>, "visibleDuration"> {
   errorMessage?: string;
   className?: string;
-  spacing?: "none" | "medium" | "large";
+  spacing?: "md" | "lg";
   showSelectors?: boolean;
 }
 
 const Calendar = <T extends DateValue>({
   errorMessage,
   className,
-  spacing = "none",
-  showSelectors = true,
+  spacing,
+  showSelectors = false,
   ...props
 }: CalendarProps<T>) => {
+  const now = today(getLocalTimeZone());
+  const spacingClassname =
+    spacing === "md"
+      ? "[&_td]:px-0.5 [&_td]:py-0.5"
+      : spacing === "lg"
+        ? "[&_td]:px-1 [&_td]:py-1"
+        : "";
+
   return (
-    <CalendarPrimitive
-      className={composeTailwindRenderProps(className, "")}
-      {...props}
-    >
+    <CalendarPrimitive data-slot="calendar" {...props}>
       <CalendarHeader showSelectors={showSelectors} />
-      <CalendarGrid
-        className={`[&_td]:border-collapse ${
-          spacing === "medium"
-            ? "[&_td]:px-0.5 [&_td]:py-0.5"
-            : spacing === "large"
-              ? "[&_td]:px-1 [&_td]:py-1"
-              : ""
-        }`}
-      >
+      <CalendarGrid className={spacingClassname}>
         <CalendarGridHeader />
         <CalendarGridBody>
           {(date) => (
@@ -88,18 +69,25 @@ const Calendar = <T extends DateValue>({
               date={date}
               className={composeRenderProps(
                 className,
-                (className, renderProps) =>
-                  cell({
-                    ...renderProps,
+                (className, { isSelected, isFocused, isDisabled }) =>
+                  twMerge(
+                    "relative flex size-12 cursor-default items-center justify-center rounded-lg text-fg tabular-nums outline-hidden hover:bg-secondary-fg/15 sm:size-9 sm:text-sm/6 forced-colors:text-[ButtonText] forced-colors:outline-0",
+                    isFocused && "bg-primary-tint",
+                    isSelected &&
+                      "bg-primary pressed:bg-primary text-primary-fg hover:bg-primary/90 data-invalid:bg-danger data-invalid:text-danger-fg forced-colors:bg-[Highlight] forced-colors:text-[Highlight] forced-colors:data-invalid:bg-[Mark]",
+                    isDisabled && "text-muted-fg forced-colors:text-[GrayText]",
+                    date.compare(now) === 0 &&
+                      "after:-translate-x-1/2 after:pointer-events-none after:absolute after:start-1/2 after:bottom-1 after:z-10 after:size-[3px] after:rounded-full after:bg-primary selected:after:bg-primary-fg focus-visible:after:bg-primary-fg",
+
                     className,
-                  }),
+                  ),
               )}
             />
           )}
         </CalendarGridBody>
       </CalendarGrid>
       {errorMessage && (
-        <Text slot="errorMessage" className="text-red-600 text-sm">
+        <Text slot="errorMessage" className="text-danger text-sm/6">
           {errorMessage}
         </Text>
       )}
@@ -107,20 +95,10 @@ const Calendar = <T extends DateValue>({
   );
 };
 
-const calendarHeaderStyles = tv({
-  slots: {
-    header: "flex w-full justify-center gap-1 px-1 pb-5 sm:pb-4 items-center",
-    heading: "mr-2 flex-1 text-left font-medium text-base text-current",
-    calendarGridHeaderCell: "font-semibold text-sm lg:text-sm",
-  },
-});
-
-const { header, heading, calendarGridHeaderCell } = calendarHeaderStyles();
-
 const CalendarHeader = ({
-  className,
   isRange,
-  showSelectors = true,
+  className,
+  showSelectors,
   ...props
 }: React.ComponentProps<"header"> & {
   isRange?: boolean;
@@ -129,76 +107,57 @@ const CalendarHeader = ({
   const { direction } = useLocale();
   const state = use(CalendarStateContext)!;
 
-  const formatter = useDateFormatter({
-    month: "long",
-    year: "numeric",
-    timeZone: state.timeZone,
-  });
-
-  const currentMonthYear = formatter.format(
-    state.focusedDate.toDate(state.timeZone),
-  );
-
   return (
     <header
       data-slot="calendar-header"
-      className={header({ className })}
+      className={twMerge(
+        "flex w-full justify-between gap-1.5 pt-1 pr-1 pb-5 pl-1.5 sm:pb-4",
+        className,
+      )}
       {...props}
     >
       {showSelectors && !isRange && (
-        <>
+        <div className="flex items-center gap-1.5">
           <SelectMonth state={state} />
           <SelectYear state={state} />
-        </>
+        </div>
       )}
-
       <Heading
-        className={heading({
-          className: showSelectors && !isRange && "sr-only",
-        })}
+        className={twMerge(
+          "mr-2 flex-1 text-left font-medium text-base text-current",
+          showSelectors && !isRange && "sr-only",
+          className,
+        )}
       />
-
       <div className="flex items-center gap-1">
         <Button
-          size="square-petite"
+          size="sq-sm"
           className="size-8 **:data-[slot=icon]:text-fg sm:size-7"
-          shape="circle"
+          isCircle
           intent="plain"
           slot="previous"
         >
           {direction === "rtl" ? (
-            <HugeiconsIcon icon={ArrowRight01Icon} size={16} aria-hidden />
+            <HugeiconsIcon icon={ArrowRight01Icon} data-slot="icon" />
           ) : (
-            <HugeiconsIcon icon={ArrowLeft01Icon} size={16} aria-hidden />
+            <HugeiconsIcon icon={ArrowLeft01Icon} data-slot="icon" />
           )}
         </Button>
         <Button
-          size="square-petite"
+          size="sq-sm"
           className="size-8 **:data-[slot=icon]:text-fg sm:size-7"
-          shape="circle"
+          isCircle
           intent="plain"
           slot="next"
         >
           {direction === "rtl" ? (
-            <HugeiconsIcon icon={ArrowLeft01Icon} size={16} aria-hidden />
+            <HugeiconsIcon icon={ArrowLeft01Icon} data-slot="icon" />
           ) : (
-            <HugeiconsIcon icon={ArrowRight01Icon} size={16} aria-hidden />
+            <HugeiconsIcon icon={ArrowRight01Icon} data-slot="icon" />
           )}
         </Button>
       </div>
     </header>
-  );
-};
-
-const CalendarGridHeader = () => {
-  return (
-    <CalendarGridHeaderPrimitive>
-      {(day) => (
-        <CalendarHeaderCell className={calendarGridHeaderCell()}>
-          {day}
-        </CalendarHeaderCell>
-      )}
-    </CalendarGridHeaderPrimitive>
   );
 };
 
@@ -229,16 +188,8 @@ const SelectMonth = ({ state }: { state: CalendarState }) => {
         state.setFocusedDate(state.focusedDate.set({ month: Number(value) }));
       }}
     >
-      <Select.Trigger
-        showArrow
-        className="h-8 w-full text-xs focus:ring-3 **:data-[slot=select-value]:inline-block **:data-[slot=select-value]:truncate group-data-open:ring-3"
-      />
-      <Select.List
-        className={{
-          list: "w-34 min-w-34 max-w-34",
-          popover: "w-34 max-w-34 min-w-34",
-        }}
-      >
+      <Select.Trigger className="w-22 text-sm/5 **:data-[slot=select-value]:inline-block **:data-[slot=select-value]:truncate sm:px-2.5 sm:py-1.5 sm:*:text-sm/5" />
+      <Select.List className="min-w-0">
         {months.map((month, index) => (
           <Select.Option
             key={index}
@@ -272,20 +223,11 @@ const SelectYear = ({ state }: { state: CalendarState }) => {
       aria-label="Select year"
       selectedKey={20}
       onSelectionChange={(value) => {
-        // @ts-expect-error
-        state.setFocusedDate(years[Number(value)]?.value);
+        state.setFocusedDate(years[Number(value)]?.value as CalendarDate);
       }}
     >
-      <Select.Trigger
-        showArrow
-        className="h-8 text-xs focus:ring-3 group-data-open:ring-3"
-      />
-      <Select.List
-        className={{
-          list: "w-34 min-w-34 max-w-34",
-          popover: "w-34 max-w-34 min-w-34",
-        }}
-      >
+      <Select.Trigger className="text-sm/5 sm:px-2.5 sm:py-1.5 sm:*:text-sm/5" />
+      <Select.List>
         {years.map((year, i) => (
           <Select.Option key={i} id={i} textValue={year.formatted}>
             <Select.Label>{year.formatted}</Select.Label>
@@ -296,8 +238,17 @@ const SelectYear = ({ state }: { state: CalendarState }) => {
   );
 };
 
-Calendar.Header = CalendarHeader;
-Calendar.GridHeader = CalendarGridHeader;
+const CalendarGridHeader = () => {
+  return (
+    <CalendarGridHeaderPrimitive>
+      {(day) => (
+        <CalendarHeaderCell className="pb-2 text-center font-semibold text-muted-fg text-sm/6 sm:px-0 sm:py-0.5 lg:text-xs">
+          {day}
+        </CalendarHeaderCell>
+      )}
+    </CalendarGridHeaderPrimitive>
+  );
+};
 
-export { Calendar, CalendarGridHeader, CalendarHeader };
 export type { CalendarProps };
+export { Calendar, CalendarHeader, CalendarGridHeader };

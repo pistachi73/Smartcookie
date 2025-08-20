@@ -20,7 +20,7 @@ export const Auth = ({ className }: { className?: string }) => {
   return (
     <div
       className={cn(
-        "bg-overlay flex h-full w-full  flex-row overflow-hidden rounded-none p-0 sm:h-[800px] sm:max-h-[80vh] sm:w-[475px] sm:rounded-lg lg:w-[900px] shadow-xs border border-border",
+        "sm:max-w-4xl bg-overlay flex h-full w-full  flex-row overflow-hidden rounded-none p-0 sm:h-[800px] sm:max-h-[80vh]  sm:rounded-lg  shadow-xs border border-border",
         className,
       )}
     >

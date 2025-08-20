@@ -83,12 +83,7 @@ export const AddStudentModal = ({
                 allowsEmptyCollection={true}
                 autoFocus
               >
-                <ComboBox.Input
-                  showArrow
-                  className={{
-                    input: "text-sm",
-                  }}
-                />
+                <ComboBox.Input className="text-sm" />
 
                 <ComboBox.List
                   renderEmptyState={() => (
@@ -100,10 +95,7 @@ export const AddStudentModal = ({
                     </div>
                   )}
                   items={comboboxItems}
-                  className={{
-                    popoverContent: "w-[calc(var(--trigger-width))]",
-                  }}
-                  showArrow={false}
+                  popover={{ className: "w-[calc(var(--trigger-width))]" }}
                 >
                   {(item) => {
                     return (
@@ -126,11 +118,10 @@ export const AddStudentModal = ({
           />
         </Modal.Body>
         <Modal.Footer>
-          <Modal.Close size="small">Cancel</Modal.Close>
+          <Modal.Close size="sm">Cancel</Modal.Close>
           <Button
             type="submit"
-            shape="square"
-            size="small"
+            size="sm"
             className="px-6"
             isPending={isPending}
           >

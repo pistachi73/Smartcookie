@@ -42,9 +42,9 @@ const gap = tv({
       fleet:
         "group-data-[sidebar-collapsible=dock]/sidebar-container:w-(--sidebar-width-dock)",
       float:
-        "group-data-[sidebar-collapsible=dock]/sidebar-container:w-[calc(var(--sidebar-width-dock)+theme(spacing.4))]",
+        "group-data-[sidebar-collapsible=dock]/sidebar-container:w-[calc(var(--sidebar-width-dock)+(--spacing(4)))]",
       inset:
-        "group-data-[sidebar-collapsible=dock]/sidebar-container:w-[calc(var(--sidebar-width-dock)+theme(spacing.2))]",
+        "group-data-[sidebar-collapsible=dock]/sidebar-container:w-[calc(var(--sidebar-width-dock)+(--spacing(2)))]",
     },
   },
 });
@@ -151,7 +151,7 @@ const header = tv({
   base: "mb-2 flex flex-col **:data-[slot=sidebar-label-mask]:hidden",
   variants: {
     collapsed: {
-      false: "px-4 py-[calc(var(--spacing)*4)]",
+      false: "px-4 py-4",
     },
   },
 });
@@ -413,7 +413,7 @@ const SidebarSeparator = ({ className, ...props }: SidebarSeparatorProps) => {
     <Separator
       orientation="horizontal"
       className={cn(
-        "col-span-full mx-auto my-2.5 h-px w-[calc(var(--sidebar-width)-theme(spacing.6))] bg-border",
+        "col-span-full mx-auto my-2.5 h-px w-[calc(var(--sidebar-width)-(--spacing(6)))] bg-border",
         className,
       )}
       {...props}

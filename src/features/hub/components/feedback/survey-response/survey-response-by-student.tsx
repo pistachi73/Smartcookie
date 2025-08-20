@@ -146,7 +146,7 @@ const StudentResponseCard = ({
           name={student.name}
           email={student.email}
           image={student.image}
-          avatarSize="medium"
+          avatarSize="md"
         />
 
         <div className="hidden sm:block text-right space-y-1">

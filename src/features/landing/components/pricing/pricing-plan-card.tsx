@@ -13,8 +13,8 @@ import {
   CardTitle,
 } from "@/shared/components/ui/card";
 import { Separator } from "@/shared/components/ui/separator";
+import { cn } from "@/shared/lib/utils";
 
-import { cn } from "@/lib/utils";
 import { guestChecks, memberChecks } from "./constants";
 import type { PaymentFrequency } from "./frequency-switch";
 
@@ -32,10 +32,10 @@ export const PremiumPlanCard = ({
   return (
     <Card
       className={cn(
-        "w-full overflow-hidden transition-transform flex flex-col justify-between relative border-2 border-primary shadow-lg",
+        "[--card-spacing:--spacing(8)]",
+        "w-full overflow-hidden  transition-transform flex flex-col justify-between relative border-2 border-primary shadow-lg",
         className,
       )}
-      spacing="lg"
     >
       <CardHeader className={cn(showDescription ? "gap-4" : "gap-0")}>
         <CardTitle className="text-2xl font-bold flex items-center gap-2">
@@ -71,8 +71,8 @@ export const PremiumPlanCard = ({
         {showButton && (
           <Button
             intent="primary"
-            className="w-full justify-between px-6 h-13 group bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl transition-all duration-200"
-            size="large"
+            className="w-full justify-between px-6 h-13 group bg-linear-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl transition-all duration-200"
+            size="lg"
           >
             Get Started
             <HugeiconsIcon
@@ -115,10 +115,10 @@ export const FreePlanCard = ({
   return (
     <Card
       className={cn(
+        "[--card-spacing:--spacing(8)]",
         "w-full overflow-hidden transition-transform flex flex-col justify-between",
         className,
       )}
-      spacing="lg"
     >
       <CardHeader className={cn(showDescription ? "gap-4" : "gap-0")}>
         <CardTitle className="text-2xl font-bold flex items-center gap-x-2">
@@ -154,7 +154,7 @@ export const FreePlanCard = ({
           <Button
             intent="secondary"
             className="w-full justify-between px-6 h-13 group"
-            size="large"
+            size="lg"
           >
             Start Fere Trial
             <HugeiconsIcon

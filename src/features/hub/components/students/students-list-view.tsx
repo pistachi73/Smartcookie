@@ -66,11 +66,7 @@ export const StudentsListView = ({ hubId }: { hubId: number }) => {
               <Table.Cell className="max-w-[56px]">
                 <div className="flex justify-end">
                   <Menu>
-                    <Button
-                      intent="outline"
-                      size="square-petite"
-                      className={"size-7"}
-                    >
+                    <Button intent="outline" size="sq-sm" className={"size-7"}>
                       <HugeiconsIcon
                         icon={MoreHorizontalIcon}
                         data-slot="icon"

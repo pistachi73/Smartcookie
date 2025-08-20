@@ -37,13 +37,8 @@ export function WeeklyHoursCard() {
           <DatePicker
             onChange={(value) => value && setDate(value)}
             value={date}
-            overlayProps={{
-              placement: "bottom end",
-            }}
-            className={{
-              fieldGroup: "h-9",
-              input: "text-xs/4 lg:text-sm",
-            }}
+            placement="bottom end"
+            className="h-9"
           />
         </Card.Action>
       </Card.Header>
@@ -86,7 +81,7 @@ export function WeeklyHoursCard() {
                           } as React.CSSProperties
                         }
                       >
-                        <div className="size-2.5 shrink-0 rounded-[2px] bg-[var(--color-bg)]" />
+                        <div className="size-2.5 shrink-0 rounded-[2px] bg-bg" />
                         <span className="text-xs font-medium">{key}</span>
                       </div>
                     ),

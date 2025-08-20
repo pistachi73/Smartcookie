@@ -92,7 +92,7 @@ export function StepStudents() {
                 onStudentSelectionChange(key as string)
               }
             >
-              <ComboBox.Input className={{}} />
+              <ComboBox.Input />
               {isFetching && (
                 <div className="absolute right-4 top-1/2 -translate-y-1/2 animate-spin">
                   <Loader />
@@ -105,10 +105,9 @@ export function StepStudents() {
                   </div>
                 )}
                 items={getStudentsWithSelection()}
-                className={{
-                  popoverContent: "w-[calc(var(--trigger-width))]",
+                popover={{
+                  className: "w-[calc(var(--trigger-width))]",
                 }}
-                showArrow={false}
               >
                 {(item) => {
                   return (
@@ -117,7 +116,7 @@ export function StepStudents() {
                         name={item.name}
                         email={item.email}
                         image={item.image}
-                        avatarSize="medium"
+                        avatarSize="md"
                         isSelected={item.isSelected}
                       />
                     </ComboBox.Option>
@@ -126,7 +125,7 @@ export function StepStudents() {
               </ComboBox.List>
             </ComboBox>
           </div>
-          <Button shape="square" onPress={() => setIsCreateModalOpen(true)}>
+          <Button onPress={() => setIsCreateModalOpen(true)}>
             <HugeiconsIcon icon={UserAdd01Icon} size={16} data-slot="icon" />
             <span className="hidden sm:block">New Student</span>
           </Button>
@@ -144,17 +143,15 @@ export function StepStudents() {
         >
           <Button
             intent="outline"
-            size={isMobile ? "small" : "medium"}
+            size={isMobile ? "sm" : "md"}
             onPress={prevStep}
-            shape="square"
           >
             <HugeiconsIcon icon={ArrowLeft02Icon} size={16} data-slot="icon" />
             Back
           </Button>
           <Button
-            size={isMobile ? "small" : "medium"}
+            size={isMobile ? "sm" : "md"}
             onPress={nextStep}
-            shape="square"
             className="px-6"
           >
             Continue to sessions

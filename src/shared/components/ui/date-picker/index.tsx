@@ -45,7 +45,7 @@ const { base, datePickerIcon, calendarIcon, datePickerInput } =
 
 const DatePickerIcon = () => (
   <Button
-    size="square-petite"
+    size="sq-sm"
     intent="plain"
     className={cn(datePickerIcon(), "aspect-square shrink-0")}
   >

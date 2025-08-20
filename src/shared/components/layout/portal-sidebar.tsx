@@ -33,10 +33,10 @@ import {
   SidebarRail,
   SidebarSectionGroup,
   useSidebar,
-} from "@/ui/sidebar/index";
-import { SidebarContent } from "@/ui/sidebar/sidebar-content";
-import { SidebarItem } from "@/ui/sidebar/sidebar-item";
-import { SidebarSection } from "@/ui/sidebar/sidebar-section";
+} from "@/shared/components/ui/sidebar/index";
+import { SidebarContent } from "@/shared/components/ui/sidebar/sidebar-content";
+import { SidebarItem } from "@/shared/components/ui/sidebar/sidebar-item";
+import { SidebarSection } from "@/shared/components/ui/sidebar/sidebar-section";
 import { cn } from "@/shared/lib/classes";
 
 import type { AuthUser } from "@/types/next-auth";
@@ -90,12 +90,7 @@ export default function AppSidebar({ user, ...props }: AppSidebarProps) {
           )}
         </div>
         {state.state !== "collapsed" && (
-          <SidebarTrigger
-            className="size-8"
-            intent="plain"
-            size="square-petite"
-            shape="square"
-          />
+          <SidebarTrigger className="size-8" intent="plain" size="sq-sm" />
         )}
       </SidebarHeader>
 
@@ -141,9 +136,11 @@ export default function AppSidebar({ user, ...props }: AppSidebarProps) {
         {!user.hasActiveSubscription && (
           <ExplorePremiumModal>
             <Button
-              size={state.state === "collapsed" ? "square-petite" : "medium"}
-              shape="square"
-              className="justify-between"
+              size={state.state === "collapsed" ? "sq-sm" : "md"}
+              className={cn(
+                "justify-between text-nowrap",
+                state.state === "collapsed" && "justify-center",
+              )}
             >
               {state.state === "collapsed" ? "" : "Explore premium"}
               <HugeiconsIcon icon={Diamond02Icon} size={16} data-slot="icon" />
@@ -157,11 +154,7 @@ export default function AppSidebar({ user, ...props }: AppSidebarProps) {
               state.state === "collapsed" && "justify-center",
             )}
           >
-            <UserAvatar
-              userImage={user.image}
-              userName={user.name}
-              size="large"
-            />
+            <UserAvatar userImage={user.image} userName={user.name} size="md" />
             {state.open && (
               <div className="space-y-0.5 text-left">
                 <p className="text-sm font-medium">{user.name}</p>
@@ -175,7 +168,7 @@ export default function AppSidebar({ user, ...props }: AppSidebarProps) {
           </Menu.Trigger>
           <Menu.Content
             placement="bottom end"
-            popoverClassName="w-full sm:w-[var(--trigger-width)]"
+            popover={{ className: "w-full sm:w-(--trigger-width)" }}
           >
             <Menu.Header>
               <p className="text-sm font-medium">{user.name}</p>

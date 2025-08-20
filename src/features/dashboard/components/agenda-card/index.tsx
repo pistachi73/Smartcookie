@@ -53,7 +53,7 @@ export const AgendaCard = () => {
             href="/portal/calendar"
             className={buttonStyles({
               intent: "outline",
-              size: "small",
+              size: "sm",
             })}
           >
             See all
@@ -64,7 +64,7 @@ export const AgendaCard = () => {
         <div className="flex flex-row items-center justify-between gap-2 p-1 bg-secondary dark:bg-overlay-highlight rounded-lg">
           <Button
             intent="plain"
-            size="square-petite"
+            size="sq-sm"
             className={"size-7 bg-overlay dark:bg-overlay-elevated"}
             onPress={onYesterday}
           >
@@ -76,7 +76,7 @@ export const AgendaCard = () => {
           </p>
           <Button
             intent="plain"
-            size="square-petite"
+            size="sq-sm"
             className={"size-7 bg-overlay  dark:bg-overlay-elevated"}
             onPress={onNext}
           >

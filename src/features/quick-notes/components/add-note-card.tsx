@@ -41,9 +41,8 @@ export const AddNoteCard = ({
 
   return (
     <Button
-      size="square-petite"
+      size="sq-sm"
       intent="outline"
-      shape="square"
       onPress={handleAddEmptyNote}
       isDisabled={isDisabled}
       {...props}

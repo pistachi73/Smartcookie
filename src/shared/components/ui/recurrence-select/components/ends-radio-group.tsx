@@ -94,16 +94,8 @@ export const EndsRadioGroup = ({
                 : undefined,
             }));
           }}
-          className={{
-            fieldGroup: cn(
-              "text-sm",
-              ends === EndsEnum.ENDS_ON && "hover:bg-overlay-elevated",
-            ),
-          }}
           isDisabled={ends !== EndsEnum.ENDS_ON}
-          overlayProps={{
-            placement: "right top",
-          }}
+          placement="right top"
           isDateUnavailable={(date) =>
             !!(minDate && date.compare(minDate) < 0) ||
             !!(maxDate && date.compare(maxDate) > 0)

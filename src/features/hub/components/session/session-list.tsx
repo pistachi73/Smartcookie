@@ -80,7 +80,6 @@ export function SessionsList({ hubId }: { hubId: number }) {
             </Switch>
 
             <Button
-              shape="square"
               intent={isEditingMode ? "danger" : "primary"}
               onPress={() => {
                 if (isEditingMode) {

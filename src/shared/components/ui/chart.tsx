@@ -182,7 +182,7 @@ const ChartTooltipContent = ({
     <div
       ref={ref}
       className={twMerge(
-        "grid min-w-[12rem] items-start gap-1.5 rounded-lg border bg-overlay px-3 py-2 text-overlay-fg text-xs shadow-xl",
+        "grid min-w-48 items-start gap-1.5 rounded-lg border bg-overlay px-3 py-2 text-overlay-fg text-xs shadow-xl",
         className,
       )}
     >
@@ -211,7 +211,7 @@ const ChartTooltipContent = ({
                     !hideIndicator && (
                       <div
                         className={twMerge(
-                          "shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg)",
+                          "shrink-0 rounded-[2px] border-border bg-bg",
                           indicator === "dot" && "size-2.5",
                           indicator === "line" && "w-1",
                           indicator === "dashed" &&

@@ -124,8 +124,7 @@ export function HubList() {
           <Menu>
             <Button
               intent="outline"
-              size="small"
-              shape="square"
+              size="sm"
               className="px-0 size-10 @2xl:h-10 @2xl:w-auto @2xl:px-4 bg-overlay"
               aria-label="Sort hubs"
             >
@@ -166,8 +165,7 @@ export function HubList() {
             className={cn(
               buttonStyles({
                 intent: "primary",
-                size: "small",
-                shape: "square",
+                size: "sm",
               }),
               "px-0 size-10 @2xl:h-10 @2xl:w-auto @2xl:px-4",
             )}
@@ -207,8 +205,7 @@ export function HubList() {
             className={cn(
               buttonStyles({
                 intent: "primary",
-                size: "small",
-                shape: "square",
+                size: "sm",
               }),
             )}
             href="/portal/hubs/new"

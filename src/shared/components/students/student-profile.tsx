@@ -16,7 +16,7 @@ export const StudentProfile = ({
   image,
   isSelected,
   className,
-  avatarSize = "medium",
+  avatarSize = "md",
 }: {
   name: string;
   email?: string;

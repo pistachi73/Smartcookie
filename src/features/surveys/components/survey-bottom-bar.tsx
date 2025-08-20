@@ -56,7 +56,7 @@ export const SurveyBottomBar = () => {
                   className="flex items-center text-sm gap-8 justify-between"
                 >
                   <span>{s.label}</span>
-                  <Keyboard keys={s.key} className={{ base: "block" }} />
+                  <Keyboard keys={s.key} />
                 </li>
               ))}
             </ul>

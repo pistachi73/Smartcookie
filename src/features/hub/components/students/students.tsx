@@ -37,7 +37,7 @@ export const Students = ({ hubId }: { hubId: number }) => {
         <div className="flex flex-row items-center justify-between mb-8 flex-wrap gap-3 ">
           <Heading level={2}>Course Students </Heading>
           <Menu>
-            <Button shape="square" intent="primary">
+            <Button intent="primary">
               <HugeiconsIcon
                 icon={UserAdd02Icon}
                 altIcon={DeleteIcon}

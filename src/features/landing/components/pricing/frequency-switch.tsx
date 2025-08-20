@@ -66,7 +66,7 @@ export const PlanFrequencySwitch = ({
         }}
         type="button"
         intent="plain"
-        size="medium"
+        size="md"
         className={cn(
           "hover:bg-transparent flex items-center gap-1 font-medium transition-colors relative z-10",
           paymentFrequency === "M" ? "" : "text-muted-fg",
@@ -83,7 +83,7 @@ export const PlanFrequencySwitch = ({
         }}
         type="button"
         intent="plain"
-        size="medium"
+        size="md"
         className={cn(
           "hover:bg-transparent flex items-center gap-1 font-medium transition-colors relative z-10",
           paymentFrequency === "A" ? "" : "text-muted-fg",

@@ -270,7 +270,7 @@ const MultipleSelect = <T extends SelectedKey>({
                   type="button"
                   aria-label="Remove"
                   intent="plain"
-                  size="square-petite"
+                  size="sq-sm"
                   ref={triggerButtonRef}
                 >
                   <HugeiconsIcon icon={ArrowDown01Icon} data-slot="icon" />

@@ -116,10 +116,7 @@ export function UpdateSessionsForm({
             validationBehavior="aria"
             isInvalid={invalid}
             errorMessage={error?.message}
-            overlayProps={{
-              placement: "bottom",
-              offset: 8,
-            }}
+            placement="bottom"
             minValue={minCalendarDate}
             maxValue={maxCalendarDate}
           />

@@ -18,13 +18,14 @@ export const UserButton = ({ user }: { user: AuthUser }) => {
   return (
     <Menu>
       <Menu.Trigger className="shrink-0">
-        <UserAvatar
-          userImage={user?.image}
-          userName={user?.name}
-          size="large"
-        />
+        <UserAvatar userImage={user?.image} userName={user?.name} size="lg" />
       </Menu.Trigger>
-      <Menu.Content placement="bottom end" popoverClassName="w-[300px]">
+      <Menu.Content
+        placement="bottom end"
+        popover={{
+          className: "w-[300px]",
+        }}
+      >
         <Menu.Header>
           <StudentProfile
             name={user?.name}

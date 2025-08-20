@@ -40,9 +40,7 @@ export const StartDaySelect = ({
         }));
         onStartDateChange?.(startDate);
       }}
-      overlayProps={{
-        placement: "right top",
-      }}
+      placement="right top"
       minValue={minDate}
       maxValue={maxDate}
     />

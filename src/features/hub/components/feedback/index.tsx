@@ -26,7 +26,6 @@ export const CourseFeedback = ({ hubId }: { hubId: number }) => {
         <div className="flex flex-row items-center justify-between mb-4 flex-wrap gap-3 ">
           <Heading level={2}>Course Feedback</Heading>
           <Button
-            shape="square"
             intent="primary"
             onPress={() => {
               setIsInitSurveySheetOpen(true);

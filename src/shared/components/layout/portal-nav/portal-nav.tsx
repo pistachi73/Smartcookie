@@ -9,7 +9,7 @@ import {
 import { Notification01Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { useEffect, useState } from "react";
 
-import { Breadcrumbs } from "@/ui/breadcrumbs";
+import { Breadcrumbs } from "@/shared/components/ui/breadcrumbs";
 import { useCurrentUser } from "@/shared/hooks/use-current-user";
 import { cn } from "@/shared/lib/classes";
 
@@ -55,7 +55,7 @@ export const PortalNav = ({
     >
       <div className="flex items-center justify-between w-full h-full gap-8">
         {isMobile && <SidebarTrigger />}
-        <div className="flex items-center gap-x-4 flex-shrink-0">
+        <div className="flex items-center gap-x-4 shrink-0">
           <Breadcrumbs className="@4xl:flex hidden">
             <Breadcrumbs.Item
               key="back"
@@ -111,32 +111,22 @@ export const PortalNav = ({
                   className="inline text-muted-fg"
                 />
                 <Input placeholder="Search..." className="text-sm w-full" />
-                <Keyboard
-                  keys="⌘+K"
-                  className={{
-                    kbd: "text-sm text-muted-fg",
-                  }}
-                />
+                <Keyboard keys="⌘+K" />
               </FieldGroup>
             </div>
           )}
-          <Button
-            intent="outline"
-            size="square-petite"
-            shape="square"
-            className="size-9 sm:size-10"
-          >
+          <Button intent="outline" size="sq-md" className="size-9 sm:size-10">
             <HugeiconsIcon icon={Notification01Icon} size={16} />
           </Button>
 
           {!user?.hasActiveSubscription && (
             <ExplorePremiumModal>
               <Button
-                className={cn("shrink-0", isMobile && "size-9")}
-                size={isMobile ? "square-petite" : "medium"}
+                className={cn("shrink-0")}
+                size={isMobile ? "sq-md" : "md"}
               >
-                {isMobile ? "" : "Explore premium"}
                 <HugeiconsIcon icon={Diamond02Icon} data-slot="icon" />
+                {isMobile ? "" : "Explore premium"}
               </Button>
             </ExplorePremiumModal>
           )}

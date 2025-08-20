@@ -125,7 +125,7 @@ export const QuickNotesMenu = () => {
     <Popover onOpenChange={handleOpenChange} isOpen={isPopoverOpen}>
       <Button
         intent="secondary"
-        size="square-petite"
+        size="sq-sm"
         className="flex items-center gap-2 fixed bottom-4 right-4"
       >
         <HugeiconsIcon icon={NoteAddIcon} className="size-5" data-slot="icon" />
@@ -151,10 +151,9 @@ export const QuickNotesMenu = () => {
                   <Button
                     aria-label="Back to hub selection"
                     intent="plain"
-                    shape="square"
                     onPress={resetMenu}
                     className="size-8"
-                    size="square-petite"
+                    size="sq-sm"
                   >
                     <HugeiconsIcon
                       icon={ArrowLeft02Icon}
@@ -190,7 +189,7 @@ export const QuickNotesMenu = () => {
                 />
               </Popover.Body>
               <Popover.Footer className="py-2! border-t border-border ">
-                <Button shape="square" onPress={handleCreateNote}>
+                <Button onPress={handleCreateNote}>
                   <HugeiconsIcon
                     icon={StickyNote02Icon}
                     className="size-4"
@@ -257,7 +256,6 @@ export const QuickNotesMenu = () => {
                 <Link
                   className={buttonStyles({
                     intent: "plain",
-                    shape: "square",
                   })}
                   href="/portal/quick-notes"
                 >

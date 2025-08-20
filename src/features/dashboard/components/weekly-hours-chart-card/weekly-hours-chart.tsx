@@ -129,7 +129,7 @@ export function WeeklyHoursCard({ date }: WeeklyHoursChartProps) {
                 return (
                   <>
                     <div
-                      className="size-2.5 shrink-0 rounded-[2px] bg-[var(--color-bg)]"
+                      className="size-2.5 shrink-0 rounded-[2px] bg-bg"
                       style={
                         {
                           "--color-bg": item.color,

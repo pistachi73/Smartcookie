@@ -24,7 +24,7 @@ const InputOTP = ({
       containerClassName,
     )}
     className={cn(
-      "mt-auto h-[2.5rem] bg-red-500 disabled:cursor-not-allowed",
+      "mt-auto h-10 bg-red-500 disabled:cursor-not-allowed",
       className,
     )}
     {...props}

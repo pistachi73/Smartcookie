@@ -179,7 +179,7 @@ const Tag = ({ className, intent, shape, ...props }: TagProps) => {
             {allowsRemoving && (
               <Button
                 slot="remove"
-                className="-mr-0.5 grid size-3.5 place-content-center rounded focus:outline-none focus-visible:ring-1 focus-visible:ring-primary [&>[data-slot=icon]]:size-3 [&>[data-slot=icon]]:shrink-0"
+                className="-mr-0.5 grid size-3.5 place-content-center rounded focus:outline-none focus-visible:ring-1 focus-visible:ring-primary *:data-[slot=icon]:size-3 *:data-[slot=icon]:shrink-0"
               >
                 <HugeiconsIcon icon={MultiplicationSignIcon} data-slot="icon" />
               </Button>

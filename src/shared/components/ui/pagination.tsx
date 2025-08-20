@@ -89,7 +89,7 @@ interface PaginationItemProps extends ListBoxItemProps {
   children?: React.ReactNode;
   className?: string;
   intent?: "primary" | "secondary" | "outline" | "plain";
-  size?: "medium" | "large" | "square-petite" | "extra-small" | "small";
+  size?: "md" | "xs" | "sq-xs" | "sm" | "lg" | "sq-sm" | "sq-md" | "sq-lg";
   shape?: "square" | "circle";
   isCurrent?: boolean;
   segment?:
@@ -105,7 +105,7 @@ interface PaginationItemProps extends ListBoxItemProps {
 
 const PaginationItem = ({
   segment = "default",
-  size = "small",
+  size = "sq-sm",
   intent = "outline",
   className,
   isCurrent,
@@ -128,7 +128,7 @@ const PaginationItem = ({
         isDisabled: isCurrent || isDisabled,
         className: buttonStyles({
           intent: "outline",
-          size: "square-petite",
+          size: "sq-sm",
           isDisabled: isCurrent || isDisabled,
           className: twMerge(
             "cursor-pointer font-normal text-fg focus-visible:border-primary focus-visible:bg-primary/10 focus-visible:ring-4 focus-visible:ring-primary/20",
@@ -162,7 +162,7 @@ const PaginationItem = ({
         },
         <Separator
           orientation="vertical"
-          className="h-5 w-[1.5px] shrink-0 rotate-[14deg] bg-secondary-fg/40"
+          className="h-5 w-[1.5px] shrink-0 rotate-14 bg-secondary-fg/40"
         />,
       );
     case "ellipsis":

@@ -145,7 +145,7 @@ export const InvoiceList = ({
                       <Menu>
                         <Button
                           intent="outline"
-                          size="small"
+                          size="sm"
                           className="h-7 w-7 p-0"
                         >
                           <HugeiconsIcon icon={MoreHorizontalIcon} size={12} />

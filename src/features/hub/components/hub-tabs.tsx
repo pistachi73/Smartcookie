@@ -142,7 +142,7 @@ export const HubTabs = ({ isLoading, hub }: HubTabs) => {
           <Tabs.Panel id="quick-notes" className={"p-4 py-2 "}>
             <div className="flex flex-row items-center justify-between mb-6">
               <Heading level={2}>Quick Notes</Heading>
-              <AddNoteCard hubId={hub?.id} size="small" intent="primary">
+              <AddNoteCard hubId={hub?.id} size="sm" intent="primary">
                 <HugeiconsIcon icon={NoteAddIcon} size={16} />
                 Add note
               </AddNoteCard>

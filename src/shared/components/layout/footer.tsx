@@ -49,14 +49,14 @@ const scrollToTop = () => {
 
 export const Footer = () => {
   return (
-    <footer className="p-[2%] md:p-6">
+    <footer className="p-[2%] md:p-6 bg-white">
       <div className="bg-muted rounded-2xl p-6">
         <MaxWidthWrapper className="py-8 lg:py-12">
           <div className="space-y-12">
             <Heading
               level={2}
               tracking="tight"
-              className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight bg-gradient-to-r from-primary via-primary-shade to-primary bg-clip-text text-transparent text-center"
+              className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight bg-linear-to-r from-primary via-primary-shade to-primary bg-clip-text text-transparent text-center"
             >
               Teach smarter with SmartCookie
             </Heading>
@@ -157,7 +157,7 @@ export const Footer = () => {
                 <Button
                   onPress={scrollToTop}
                   intent="secondary"
-                  size="small"
+                  size="sm"
                   className={cn(
                     "group flex items-center gap-2 px-4 py-2",
                     "hover:bg-primary-tint hover:text-primary transition-all duration-200",

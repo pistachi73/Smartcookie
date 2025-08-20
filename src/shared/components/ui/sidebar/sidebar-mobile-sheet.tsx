@@ -24,9 +24,7 @@ const SidebarMobileSheet = ({
         closeButton={closeButton}
         aria-label="Sidebar"
         data-sidebar-intent="default"
-        classNames={{
-          content: "w-(--sidebar-width-mobile) [&>button]:hidden",
-        }}
+        className="w-(--sidebar-width-mobile) [&>button]:hidden"
         isFloat={intent === "float"}
         side={side}
       >

@@ -44,144 +44,142 @@ export function StepHubInfo() {
   console.log(errors);
 
   return (
-    <>
-      <Form
-        id="step-form"
-        onSubmit={handleSubmit(onSubmit)}
-        className="w-full space-y-4"
-      >
-        <div className="flex flex-col gap-1.5">
-          <Label isRequired>Name</Label>
-          <div className="flex gap-2 items-center">
-            <Controller
-              name="color"
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <div className={cn(Boolean(errors.name?.message) && "-mt-7.5")}>
-                  <CustomColorPicker
-                    selectedKey={value}
-                    onSelectionChange={onChange}
-                    aria-label="Hub color picker"
-                  />
-                </div>
-              )}
-            />
-            <Controller
-              name="name"
-              control={control}
-              render={({ field, fieldState }) => (
-                <TextField
-                  placeholder="My Hub"
-                  isRequired
-                  isInvalid={fieldState.invalid}
-                  errorMessage={fieldState.error?.message}
-                  className={{
-                    primitive: "flex-1 w-full",
-                  }}
-                  {...field}
+    <Form
+      id="step-form"
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-full space-y-4"
+    >
+      <div className="flex flex-col gap-1.5">
+        <Label isRequired>Name</Label>
+        <div className="flex gap-2 items-center">
+          <Controller
+            name="color"
+            control={control}
+            render={({ field: { onChange, value } }) => (
+              <div className={cn(Boolean(errors.name?.message) && "-mt-7.5")}>
+                <CustomColorPicker
+                  selectedKey={value}
+                  onSelectionChange={onChange}
+                  aria-label="Hub color picker"
                 />
-              )}
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-col sm:flex-row gap-4">
+              </div>
+            )}
+          />
           <Controller
-            name="startDate"
+            name="name"
             control={control}
-            render={({ field: { onChange, value }, fieldState }) => (
-              <DatePicker
-                label="Start Date"
+            render={({ field, fieldState }) => (
+              <TextField
+                placeholder="My Hub"
                 isRequired
-                className={{
-                  primitive: "flex-1",
-                }}
-                value={value}
-                onChange={onChange}
-                validationBehavior="aria"
                 isInvalid={fieldState.invalid}
                 errorMessage={fieldState.error?.message}
-              />
-            )}
-          />
-          <Controller
-            name="endDate"
-            control={control}
-            render={({ field: { onChange, value }, fieldState }) => (
-              <DatePicker
-                label="End Date"
                 className={{
-                  primitive: "flex-1",
+                  primitive: "flex-1 w-full",
                 }}
-                value={value}
-                onChange={onChange}
-                minValue={startDate}
-                isInvalid={fieldState.invalid}
-                errorMessage={fieldState.error?.message}
+                {...field}
               />
             )}
           />
         </div>
+      </div>
 
+      <div className="flex flex-col sm:flex-row gap-4">
         <Controller
-          name="description"
+          name="startDate"
+          control={control}
+          render={({ field: { onChange, value }, fieldState }) => (
+            <DatePicker
+              label="Start Date"
+              isRequired
+              className={{
+                primitive: "flex-1",
+              }}
+              value={value}
+              onChange={onChange}
+              validationBehavior="aria"
+              isInvalid={fieldState.invalid}
+              errorMessage={fieldState.error?.message}
+            />
+          )}
+        />
+        <Controller
+          name="endDate"
+          control={control}
+          render={({ field: { onChange, value }, fieldState }) => (
+            <DatePicker
+              label="End Date"
+              className={{
+                primitive: "flex-1",
+              }}
+              value={value}
+              onChange={onChange}
+              minValue={startDate}
+              isInvalid={fieldState.invalid}
+              errorMessage={fieldState.error?.message}
+            />
+          )}
+        />
+      </div>
+
+      <Controller
+        name="description"
+        control={control}
+        render={({ field, fieldState }) => (
+          <Textarea
+            label="Description"
+            placeholder="This hub is for..."
+            errorMessage={fieldState.error?.message}
+            description="Briefly describe what this hub is about"
+            {...field}
+          />
+        )}
+      />
+
+      <div className="flex flex-col sm:flex-row gap-4">
+        <Controller
+          name="level"
           control={control}
           render={({ field, fieldState }) => (
-            <Textarea
-              label="Description"
-              placeholder="This hub is for..."
+            <TextField
+              label="Level"
+              placeholder="Beginner"
               errorMessage={fieldState.error?.message}
-              description="Briefly describe what this hub is about"
+              description="Max 20 characters"
+              maxLength={20}
+              className={{ primitive: "flex-1" }}
               {...field}
             />
           )}
         />
-
-        <div className="flex flex-col sm:flex-row gap-4">
-          <Controller
-            name="level"
-            control={control}
-            render={({ field, fieldState }) => (
-              <TextField
-                label="Level"
-                placeholder="Beginner"
-                errorMessage={fieldState.error?.message}
-                description="Max 20 characters"
-                maxLength={20}
-                className={{ primitive: "flex-1" }}
-                {...field}
-              />
-            )}
-          />
-          <Controller
-            name="schedule"
-            control={control}
-            render={({ field, fieldState }) => (
-              <TextField
-                label="Schedule"
-                placeholder="Weekly on Mondays"
-                errorMessage={fieldState.error?.message}
-                description="Optional schedule information"
-                className={{ primitive: "flex-1" }}
-                {...field}
-              />
-            )}
-          />
-        </div>
-
-        <div className="mb-0! h-20 w-full block sm:hidden" aria-hidden="true" />
-        <div
-          className={cn(
-            "flex flex-col fixed bottom-0 border-t left-0 bg-overlay p-4 w-full",
-            "sm:relative sm:p-0 sm:flex-row sm:justify-end sm:border-none",
+        <Controller
+          name="schedule"
+          control={control}
+          render={({ field, fieldState }) => (
+            <TextField
+              label="Schedule"
+              placeholder="Weekly on Mondays"
+              errorMessage={fieldState.error?.message}
+              description="Optional schedule information"
+              className={{ primitive: "flex-1" }}
+              {...field}
+            />
           )}
-        >
-          <Button type="submit" shape="square" className="px-6">
-            Continue to students
-            <HugeiconsIcon icon={ArrowRight02Icon} size={16} data-slot="icon" />
-          </Button>
-        </div>
-      </Form>
-    </>
+        />
+      </div>
+
+      <div className="mb-0! h-20 w-full block sm:hidden" aria-hidden="true" />
+      <div
+        className={cn(
+          "flex flex-col fixed bottom-0 border-t left-0 bg-overlay p-4 w-full",
+          "sm:relative sm:p-0 sm:flex-row sm:justify-end sm:border-none",
+        )}
+      >
+        <Button type="submit" className="px-6">
+          Continue to students
+          <HugeiconsIcon icon={ArrowRight02Icon} size={16} data-slot="icon" />
+        </Button>
+      </div>
+    </Form>
   );
 }

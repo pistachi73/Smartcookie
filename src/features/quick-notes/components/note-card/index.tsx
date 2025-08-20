@@ -77,7 +77,7 @@ const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
     <div
       data-hub-id={note.hubId}
       className={cn(
-        "flex flex-col bg-overlay-highlight rounded-lg border-1 border-border relative transition duration-250",
+        "flex flex-col bg-overlay-highlight rounded-lg border border-border relative transition duration-250",
         "note-card focus-within:opacity-100! ",
         isEditingNote && `${colorClasses.border} dark:bg-overlay-elevated`,
         "bg-overlay shadow-sm",
