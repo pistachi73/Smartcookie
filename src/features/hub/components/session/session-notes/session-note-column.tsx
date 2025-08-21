@@ -75,8 +75,7 @@ export const SessionNoteColumn = <T extends SessionNotePosition>({
         </Heading>
         <Button
           intent="plain"
-          size="square-petite"
-          shape="square"
+          size="sq-sm"
           className="size-6"
           onPress={() => setIsAddingNote(true)}
           isDisabled={isAddingNote}

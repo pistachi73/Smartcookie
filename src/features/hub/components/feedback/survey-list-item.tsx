@@ -175,8 +175,7 @@ export const SurveyListItem = ({
             <Menu>
               <Button
                 intent="plain"
-                shape="square"
-                size="square-petite"
+                size="sq-sm"
                 className="size-8 data-pressed:opacity-100 transition-opacity group-hover:opacity-100"
               >
                 <HugeiconsIcon icon={MoreVerticalIcon} size={18} />

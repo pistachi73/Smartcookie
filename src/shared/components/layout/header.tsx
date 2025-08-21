@@ -65,7 +65,7 @@ export const Header = ({ user }: { user?: AuthUser }) => {
                     href={item.href}
                     className={buttonStyles({
                       intent: "plain",
-                      size: "large",
+                      size: "lg",
                       className:
                         "sm:text-base shrink-0 tracking-tight hover:bg-primary-tint",
                     })}
@@ -79,7 +79,7 @@ export const Header = ({ user }: { user?: AuthUser }) => {
             <Menu>
               <Menu.Trigger
                 className={cn(
-                  buttonStyles({ size: "small", intent: "plain" }),
+                  buttonStyles({ size: "sm", intent: "plain" }),
                   "p-2 md:hidden",
                 )}
               >
@@ -144,7 +144,7 @@ export const Header = ({ user }: { user?: AuthUser }) => {
                 <Link
                   href="/portal/dashboard"
                   className={cn(
-                    buttonStyles({ size: "large", intent: "primary" }),
+                    buttonStyles({ size: "lg", intent: "primary" }),
                     "group",
                     "sm:text-base shrink-0 tracking-tight",
                   )}
@@ -161,7 +161,7 @@ export const Header = ({ user }: { user?: AuthUser }) => {
                   <Link
                     href="/login"
                     className={cn(
-                      buttonStyles({ size: "large", intent: "plain" }),
+                      buttonStyles({ size: "lg", intent: "plain" }),
                       "text-base shrink-0 tracking-tight hover:bg-primary-tint",
                     )}
                   >
@@ -170,7 +170,7 @@ export const Header = ({ user }: { user?: AuthUser }) => {
                   <Link
                     href="/login"
                     className={cn(
-                      buttonStyles({ size: "large", intent: "primary" }),
+                      buttonStyles({ size: "lg", intent: "primary" }),
                       "group",
                       "sm:text-base shrink-0 tracking-tight",
                     )}

@@ -150,14 +150,17 @@ export const SurveyTemplateDetails = ({
               </div>
 
               <Menu>
-                <Button intent="outline" shape="square" size="square-petite">
+                <Button intent="outline" size="sq-sm">
                   <HugeiconsIcon
                     icon={MoreHorizontalIcon}
                     size={18}
                     data-slot="icon"
                   />
                 </Button>
-                <Menu.Content placement="bottom end" showArrow>
+                <Menu.Content
+                  placement="bottom end"
+                  popover={{ showArrow: true }}
+                >
                   <Menu.Item
                     onAction={() => {
                       setShowInitSurveySheet(true);
@@ -196,11 +199,7 @@ export const SurveyTemplateDetails = ({
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <Badge
-              className="flex items-center gap-2"
-              intent="primary"
-              shape="square"
-            >
+            <Badge className="flex items-center gap-2" intent="primary">
               <HugeiconsIcon
                 icon={BubbleChatQuestionIcon}
                 size={16}
@@ -209,11 +208,7 @@ export const SurveyTemplateDetails = ({
               {surveyTemplate.questions.length}{" "}
               {surveyTemplate.questions.length === 1 ? "question" : "questions"}
             </Badge>
-            <Badge
-              className="flex items-center gap-2"
-              intent="secondary"
-              shape="square"
-            >
+            <Badge className="flex items-center gap-2" intent="secondary">
               {responses?.length || 0}{" "}
               {responses?.length === 1 ? "response" : "responses"}
             </Badge>
@@ -287,8 +282,7 @@ export const SurveyTemplateDetails = ({
             {surveyTemplate.questions.map((question) => (
               <Card
                 key={`survey-template-question-${question.id}`}
-                spacing="sm"
-                className="flex items-center gap-3 flex-row px-4"
+                className="flex items-center gap-3 flex-row px-4 [--card-spacing:--spacing(4)]"
               >
                 <TemplateQuestion {...question} />
               </Card>

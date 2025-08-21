@@ -61,12 +61,7 @@ export const ExplorePremiumModal = ({
   return (
     <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
       {children}
-      <Modal.Content
-        isDismissable={true}
-        classNames={{
-          content: "gap-12 sm:max-w-[900px]",
-        }}
-      >
+      <Modal.Content isDismissable={true} size="4xl">
         <Modal.Header className="space-y-1">
           <Modal.Title className="sm:text-2xl text-pretty font-bold">
             Upgrade to SmartCookie Pro and experience our premium business
@@ -108,7 +103,7 @@ export const ExplorePremiumModal = ({
 
           <Button
             intent="primary"
-            className="w-full md:w-fit md:justify-between px-6 group bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl transition-all duration-200"
+            className="w-full md:w-fit md:justify-between px-6 group bg-linear-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl transition-all duration-200"
             onPress={() =>
               createCheckoutSessionMutation({
                 paymentFrequency,

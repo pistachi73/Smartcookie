@@ -3,8 +3,7 @@ import type { Comment01Icon } from "@hugeicons-pro/core-solid-rounded";
 
 import { Heading } from "@/shared/components/ui/heading";
 import { Link } from "@/shared/components/ui/link";
-
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/utils";
 
 interface EmptyStateProps {
   title: string;

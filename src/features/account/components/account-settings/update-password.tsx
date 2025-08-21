@@ -4,8 +4,8 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ArrowDown01Icon,
   LockKeyIcon,
+  SquareLock02Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { Lock } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -78,7 +78,7 @@ export const UpdatePassword = () => {
           <div className="p-4 flex flex-row gap-2 items-center justify-between">
             <div className="space-y-1">
               <Card.Title className="flex flex-row gap-2 items-center">
-                <Lock className="w-5 h-5" />
+                <HugeiconsIcon icon={SquareLock02Icon} size={20} />
                 Security
               </Card.Title>
               <Card.Description>

@@ -11,7 +11,7 @@ export const AgendaView = () => {
   );
 
   return (
-    <div className="h-full overflow-y-scroll pl-2 sm:pl-[var(--left-spacing)] pb-[var(--left-spacing)] space-y-6 sm:space-y-0 py-4 sm:py-2 pr-4 sm:pr-0">
+    <div className="h-full overflow-y-scroll pl-2 sm:pl-(--left-spacing) pb-(--left-spacing) space-y-6 sm:space-y-0 py-4 sm:py-2 pr-4 sm:pr-0">
       {visibleDates.map((date) => (
         <AgendaViewDay key={date.toString()} date={date} />
       ))}

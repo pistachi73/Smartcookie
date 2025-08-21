@@ -18,16 +18,16 @@ const avatarStack = tv({
       loose: "-space-x-0.5",
     },
     size: {
-      "extra-small": "",
-      small: "",
-      medium: "",
-      large: "",
-      "extra-large": "",
+      xs: "",
+      sm: "",
+      md: "",
+      lg: "",
+      xl: "",
     },
   },
   defaultVariants: {
     spacing: "normal",
-    size: "medium",
+    size: "md",
   },
 });
 
@@ -54,7 +54,7 @@ export const AvatarStack = <TUser extends User>({
   users,
   maxAvatars = 5,
   spacing = "normal",
-  size = "medium",
+  size = "md",
   className,
   showTooltips = true,
 }: AvatarStackProps<TUser>) => {

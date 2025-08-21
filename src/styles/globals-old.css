@@ -1,0 +1,552 @@
+/*
+* Uncomment the following line to use the Inter font when not working on a Next.js project.
+* @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+* Then replace var(--font-inter) to Inter
+*/
+
+@import "tailwindcss";
+@plugin 'tailwindcss-animate';
+
+@theme {
+  --breakpoint-xs: 540px;
+
+  --font-sans: "Urbanist", "Urbanist Fallback";
+  --font-mono:
+    "Geist Mono", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco",
+    "Consolas", '"Liberation Mono"', '"Courier New"', "monospace";
+
+  --color-border: var(--border);
+  --color-border-skeleton: var(--border-skeleton);
+  --color-input: var(--input);
+
+  --color-ring: var(--ring);
+
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+
+  --color-primary: var(--primary);
+  --color-primary-fg: var(--primary-fg);
+  --color-primary-shade: var(--primary-shade);
+  --color-primary-tint: var(--primary-tint);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-fg: var(--secondary-fg);
+
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+
+  --color-success: var(--success);
+  --color-success-fg: var(--success-fg);
+
+  --color-danger: var(--danger);
+  --color-danger-fg: var(--danger-fg);
+
+  --color-warning: var(--warning);
+  --color-warning-fg: var(--warning-fg);
+
+  --color-muted: var(--muted);
+  --color-muted-fg: var(--muted-fg);
+
+  --color-overlay: var(--overlay);
+  --color-overlay-fg: var(--overlay-fg);
+  --color-overlay-highlight: var(--overlay-highlight);
+  --color-overlay-elevated: var(--overlay-elevated);
+  --color-overlay-elevated-highlight: var(--overlay-elevated-highlight);
+
+  --color-navbar: var(--navbar);
+  --color-navbar-fg: var(--navbar-fg);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-fg: var(--sidebar-fg);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* Custom color variables for reuse across the application */
+  /* Flamingo (Rose) */
+  --color-custom-flamingo-bg: var(--custom-flamingo-bg);
+  --color-custom-flamingo-bg-tint: var(--custom-flamingo-bg-tint);
+  --color-custom-flamingo-bg-shade: var(--custom-flamingo-bg-shade);
+  --color-custom-flamingo-border: var(--custom-flamingo-border);
+
+  /* Tangerine (Orange) */
+  --color-custom-tangerine-bg: var(--custom-tangerine-bg);
+  --color-custom-tangerine-bg-tint: var(--custom-tangerine-bg-tint);
+  --color-custom-tangerine-bg-shade: var(--custom-tangerine-bg-shade);
+  --color-custom-tangerine-border: var(--custom-tangerine-border);
+
+  /* Banana (Lemon) */
+  --color-custom-banana-bg: var(--custom-banana-bg);
+  --color-custom-banana-bg-tint: var(--custom-banana-bg-tint);
+  --color-custom-banana-bg-shade: var(--custom-banana-bg-shade);
+  --color-custom-banana-border: var(--custom-banana-border);
+
+  /* Sunshine */
+  --color-custom-sunshine-bg: var(--custom-sunshine-bg);
+  --color-custom-sunshine-bg-tint: var(--custom-sunshine-bg-tint);
+  --color-custom-sunshine-bg-shade: var(--custom-sunshine-bg-shade);
+  --color-custom-sunshine-border: var(--custom-sunshine-border);
+
+  /* Sage (Jade) */
+  --color-custom-sage-bg: var(--custom-sage-bg);
+  --color-custom-sage-bg-tint: var(--custom-sage-bg-tint);
+  --color-custom-sage-bg-shade: var(--custom-sage-bg-shade);
+  --color-custom-sage-border: var(--custom-sage-border);
+
+  /* Peacock (Teal) */
+  --color-custom-peacock-bg: var(--custom-peacock-bg);
+  --color-custom-peacock-bg-tint: var(--custom-peacock-bg-tint);
+  --color-custom-peacock-bg-shade: var(--custom-peacock-bg-shade);
+  --color-custom-peacock-border: var(--custom-peacock-border);
+
+  /* Blueberry (Sapphire) */
+  --color-custom-blueberry-bg: var(--custom-blueberry-bg);
+  --color-custom-blueberry-bg-tint: var(--custom-blueberry-bg-tint);
+  --color-custom-blueberry-bg-shade: var(--custom-blueberry-bg-shade);
+  --color-custom-blueberry-border: var(--custom-blueberry-border);
+
+  /* Lavender (Violet) */
+  --color-custom-lavender-bg: var(--custom-lavender-bg);
+  --color-custom-lavender-bg-tint: var(--custom-lavender-bg-tint);
+  --color-custom-lavender-bg-shade: var(--custom-lavender-bg-shade);
+  --color-custom-lavender-border: var(--custom-lavender-border);
+
+  /* Grape (Berry) */
+  --color-custom-grape-bg: var(--custom-grape-bg);
+  --color-custom-grape-bg-tint: var(--custom-grape-bg-tint);
+  --color-custom-grape-bg-shade: var(--custom-grape-bg-shade);
+  --color-custom-grape-border: var(--custom-grape-border);
+
+  /* Graphite (Steel Gray) */
+  --color-custom-graphite-bg: var(--custom-graphite-bg);
+  --color-custom-graphite-bg-tint: var(--custom-graphite-bg-tint);
+  --color-custom-graphite-bg-shade: var(--custom-graphite-bg-shade);
+  --color-custom-graphite-border: var(--custom-graphite-border);
+
+  /* Neutral (Cool Gray) */
+  --color-custom-neutral-bg: var(--custom-neutral-bg);
+  --color-custom-neutral-bg-tint: var(--custom-neutral-bg-tint);
+  --color-custom-neutral-bg-shade: var(--custom-neutral-bg-shade);
+  --color-custom-neutral-border: var(--custom-neutral-border);
+
+  /* Stone (Warm Gray) */
+  --color-custom-stone-bg: var(--custom-stone-bg);
+  --color-custom-stone-bg-tint: var(--custom-stone-bg-tint);
+  --color-custom-stone-bg-shade: var(--custom-stone-bg-shade);
+  --color-custom-stone-border: var(--custom-stone-border);
+
+  /* Slate (Cool Gray) */
+  --color-custom-slate-bg: var(--custom-slate-bg);
+  --color-custom-slate-bg-tint: var(--custom-slate-bg-tint);
+  --color-custom-slate-bg-shade: var(--custom-slate-bg-shade);
+  --color-custom-slate-border: var(--custom-slate-border);
+
+  --animate-password-input-div-down: password-input-div-down 250ms ease-out 0s 1
+    normal none running;
+  --animate-password-input-p-down: password-input-p-down 250ms ease-out 100ms 1
+    normal forwards running;
+
+  @keyframes password-input-div-down {
+    from {
+      opacity: 0;
+      transform: translateY(-5px);
+      max-height: 0px;
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0px);
+      max-height: 100px;
+    }
+  }
+
+  @keyframes password-input-p-down {
+    from {
+      opacity: 0;
+      transform: translateY(-5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0px);
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    50% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  --animate-shimmer: shimmer 3s ease-in-out infinite;
+}
+
+@layer base {
+  :root {
+    /* Custom color definitions for light mode */
+    --custom-grape-bg: oklch(92% 0.22 310); /* More vibrant berry */
+    --custom-grape-bg-tint: oklch(94% 0.08 310); /* Light berry */
+    --custom-grape-bg-shade: oklch(75% 0.22 310); /* Dark berry */
+
+    /* Lavender */
+    --custom-lavender-bg: oklch(92% 0.2 280); /* More saturated violet */
+    --custom-lavender-bg-tint: oklch(92% 0.08 280); /* Light violet */
+    --custom-lavender-bg-shade: oklch(82% 0.2 280); /* Dark violet */
+
+    /* Blueberry */
+    --custom-blueberry-bg: oklch(85% 0.12 245); /* Muted sapphire */
+    --custom-blueberry-bg-tint: oklch(92% 0.08 245); /* Light sapphire */
+    --custom-blueberry-bg-shade: oklch(65% 0.12 245); /* Dark sapphire */
+
+    /* Peacock */
+    --custom-peacock-bg: oklch(82% 0.12 195); /* Muted teal */
+    --custom-peacock-bg-tint: oklch(90% 0.08 195); /* Light teal */
+    --custom-peacock-bg-shade: oklch(62% 0.12 195); /* Dark teal */
+
+    /* Graphite */
+    --custom-graphite-bg: oklch(78% 0.08 235); /* Muted steel gray */
+    --custom-graphite-bg-tint: oklch(85% 0.08 235); /* Light steel gray */
+    --custom-graphite-bg-shade: oklch(58% 0.08 235); /* Dark steel gray */
+
+    /* Neutral */
+    --custom-neutral-bg: oklch(85% 0.03 250); /* Muted cool gray */
+    --custom-neutral-bg-tint: oklch(92% 0.02 250); /* Light cool gray */
+    --custom-neutral-bg-shade: oklch(65% 0.03 250); /* Dark cool gray */
+
+    /* Banana */
+    --custom-banana-bg: oklch(92% 0.15 100); /* Muted lemon */
+    --custom-banana-bg-tint: oklch(96% 0.08 100); /* Light lemon */
+    --custom-banana-bg-shade: oklch(75% 0.15 100); /* Dark lemon */
+
+    /* Sage */
+    --custom-sage-bg: oklch(82% 0.15 155); /* Muted jade */
+    --custom-sage-bg-tint: oklch(90% 0.08 155); /* Light jade */
+    --custom-sage-bg-shade: oklch(60% 0.15 155); /* Dark jade */
+
+    /* Tangerine */
+    --custom-tangerine-bg: oklch(88% 0.12 53); /* Muted orange */
+    --custom-tangerine-bg-tint: oklch(94% 0.08 53); /* Light orange */
+    --custom-tangerine-bg-shade: oklch(68% 0.12 53); /* Dark orange */
+
+    /* Flamingo */
+    --custom-flamingo-bg: oklch(85% 0.1 36.23); /* Muted rose */
+    --custom-flamingo-bg-tint: oklch(92% 0.08 36.23); /* Light rose */
+    --custom-flamingo-bg-shade: oklch(65% 0.1 36.23); /* Dark rose */
+
+    /* Sunshine */
+    --custom-sunshine-bg: oklch(85% 0.1 75); /* Muted sunshine */
+    --custom-sunshine-bg-tint: oklch(92% 0.08 75); /* Light sunshine */
+    --custom-sunshine-bg-shade: oklch(65% 0.1 75); /* Dark sunshine */
+
+    /* Stone */
+    --custom-stone-bg: oklch(95% 0.12 0); /* More distinct warm gray */
+    --custom-stone-bg-tint: oklch(96% 0.08 0); /* Light warm gray */
+    --custom-stone-bg-shade: oklch(78% 0.12 0); /* Dark warm gray */
+
+    /* Slate */
+    --custom-slate-bg: oklch(90% 0.12 0); /* More distinct cool gray */
+    --custom-slate-bg-tint: oklch(94% 0.08 0); /* Light cool gray */
+    --custom-slate-bg-shade: oklch(75% 0.12 0); /* Dark cool gray */
+
+    /* Other variables */
+    --bg: oklch(96.5% 1.2% 220);
+    --fg: oklch(0.141 0.005 285.823);
+
+    --primary: oklch(63.16% 0.2 36.23); /* Base primary color */
+    --primary-fg: oklch(98% 0 0); /* Text color on primary background */
+    --primary-shade: oklch(53.16% 0.22 36.23); /* Darker variant for hover/active states */
+    --primary-tint: oklch(95.16% 0.03 36.23); /* Lighter variant for backgrounds/accents */
+
+    /* --secondary: oklch(0.92 0.004 286.32); */
+    --secondary: oklch(0.92 0.004 220);
+    --secondary-fg: oklch(0.141 0.005 285.823);
+
+    --overlay: oklch(100% 0.006 250);
+    --overlay-fg: oklch(0.141 0.005 285.823);
+    --overlay-highlight: oklch(92.5% 1.1% 250);
+
+    /* --accent: oklch(0.94 0.004 286.32); */
+    --accent: oklch(0.94 0.004 220);
+    --accent-fg: oklch(0.141 0.005 285.823);
+
+    /* --muted: oklch(0.967 0.001 286.375); */
+    --muted: oklch(96.5% 1.2% 220);
+    --muted-fg: oklch(0.552 0.016 285.938);
+
+    --success: oklch(0.596 0.145 163.225);
+    --success-fg: oklch(1 0 0);
+
+    --warning: oklch(0.828 0.189 84.429);
+    --warning-fg: oklch(0.279 0.077 45.635);
+
+    --danger: oklch(0.577 0.245 27.325);
+    --danger-fg: oklch(0.971 0.013 17.38);
+
+    /* --border: oklch(0.87 0.008 286.286);
+    --border-skeleton: oklch(0.911 0.006 286.286 / 0.4);
+    --input: oklch(0.871 0.006 286.286); */
+
+    --border: oklch(0.87 0.008 220);
+    --border-skeleton: oklch(0.911 0.006 220 / 0.4);
+    --input: oklch(0.871 0.006 220);
+
+    --ring: oklch(0.646 0.222 36.23);
+
+    /* --navbar: oklch(0.967 0.001 286.375); */
+    --navbar: oklch(0.967 0.001 220);
+    --navbar-fg: oklch(0.141 0.005 285.823);
+
+    --sidebar: var(--bg);
+    --sidebar-fg: var(--fg);
+
+    --chart-1: oklch(0.546 0.245 262.881);
+    --chart-2: oklch(0.707 0.165 254.624);
+    --chart-3: oklch(0.809 0.105 251.813);
+    --chart-4: oklch(0.882 0.059 254.128);
+    --chart-5: oklch(0.932 0.032 255.585);
+
+    --radius-lg: 0.5rem;
+    --radius-xs: calc(var(--radius-lg) * 0.5);
+    --radius-sm: calc(var(--radius-lg) * 0.75);
+    --radius-md: calc(var(--radius-lg) * 0.9);
+    --radius-xl: calc(var(--radius-lg) * 1.25);
+    --radius-2xl: calc(var(--radius-lg) * 1.5);
+    --radius-3xl: calc(var(--radius-lg) * 2);
+    --radius-4xl: calc(var(--radius-lg) * 3);
+  }
+
+  .dark {
+    /* Custom color definitions for dark mode */
+    --custom-grape-bg: oklch(32% 0.08 310); /* More vibrant berry */
+    --custom-grape-bg-tint: oklch(20% 0.08 310); /* Darker berry */
+    --custom-grape-bg-shade: oklch(38% 0.08 310); /* Lighter berry */
+
+    /* Lavender */
+    --custom-lavender-bg: oklch(36% 0.07 280); /* More saturated violet */
+    --custom-lavender-bg-tint: oklch(22% 0.09 280); /* Darker violet */
+    --custom-lavender-bg-shade: oklch(42% 0.07 280); /* Lighter violet */
+
+    /* Blueberry */
+    --custom-blueberry-bg: oklch(32% 0.1 245); /* Deeper sapphire */
+    --custom-blueberry-bg-tint: oklch(18% 0.12 245); /* Darker sapphire */
+    --custom-blueberry-bg-shade: oklch(38% 0.1 245); /* Lighter sapphire */
+
+    /* Peacock */
+    --custom-peacock-bg: oklch(36% 0.1 195); /* Richer teal */
+    --custom-peacock-bg-tint: oklch(20% 0.12 195); /* Darker teal */
+    --custom-peacock-bg-shade: oklch(42% 0.1 195); /* Lighter teal */
+
+    /* Graphite */
+    --custom-graphite-bg: oklch(28% 0.05 220); /* More pronounced steel gray */
+    --custom-graphite-bg-tint: oklch(16% 0.08 220); /* Darker steel gray */
+    --custom-graphite-bg-shade: oklch(34% 0.05 220); /* Lighter steel gray */
+
+    /* Sage */
+    --custom-sage-bg: oklch(32% 0.1 155); /* More pronounced jade */
+    --custom-sage-bg-tint: oklch(18% 0.09 155); /* Darker jade */
+    --custom-sage-bg-shade: oklch(32% 0.07 155); /* Lighter jade */
+
+    /* Banana */
+    --custom-banana-bg: oklch(44% 0.1 100); /* More vibrant lemon */
+    --custom-banana-bg-tint: oklch(26% 0.12 100); /* Darker lemon */
+    --custom-banana-bg-shade: oklch(50% 0.1 100); /* Lighter lemon */
+
+    /* Tangerine */
+    --custom-tangerine-bg: oklch(42% 0.08 53); /* More saturated orange */
+    --custom-tangerine-bg-tint: oklch(26% 0.1 53); /* Darker orange */
+    --custom-tangerine-bg-shade: oklch(48% 0.08 53); /* Lighter orange */
+
+    /* Sunshine */
+    --custom-sunshine-bg: oklch(44% 0.08 75); /* More distinct from banana */
+    --custom-sunshine-bg-tint: oklch(26% 0.1 75); /* Darker sunshine */
+    --custom-sunshine-bg-shade: oklch(50% 0.08 75); /* Lighter sunshine */
+
+    /* Flamingo */
+    --custom-flamingo-bg: oklch(32% 0.06 15); /* More vibrant rose */
+    --custom-flamingo-bg-tint: oklch(20% 0.1 15); /* Darker rose */
+    --custom-flamingo-bg-shade: oklch(40% 0.06 15); /* Lighter rose */
+
+    /* Neutral */
+    --custom-neutral-bg: oklch(26% 0.02 250); /* More distinct cool gray */
+    --custom-neutral-bg-tint: oklch(16% 0.03 250); /* Darker cool gray */
+    --custom-neutral-bg-shade: oklch(35% 0.02 250); /* Lighter cool gray */
+
+    /* Stone */
+    --custom-stone-bg: oklch(35% 0.04 0); /* More distinct warm gray */
+    --custom-stone-bg-tint: oklch(20% 0.06 0); /* Darker warm gray */
+    --custom-stone-bg-shade: oklch(41% 0.04 0); /* Lighter warm gray */
+
+    /* Slate */
+    --custom-slate-bg: oklch(30% 0.02 0); /* More distinct cool gray */
+    --custom-slate-bg-tint: oklch(16% 0.04 0); /* Darker cool gray */
+    --custom-slate-bg-shade: oklch(36% 0.02 0); /* Lighter cool gray */
+
+    --primary: oklch(63.16% 0.2 36.23); /* Base primary color */
+    --primary-fg: oklch(98% 0 0); /* Text color on primary background */
+    --primary-shade: oklch(53.16% 0.22 36.23); /* Darker variant for hover/active states */
+    --primary-tint: oklch(8% 0.18 36.23); /* Lighter variant for backgrounds/accents */
+
+    --secondary: oklch(0.244 0.006 286.033);
+    --secondary-fg: oklch(0.985 0 0);
+
+    --accent: oklch(0.274 0.006 286.033);
+    --accent-fg: oklch(0.985 0 0);
+
+    --muted: oklch(0.21 0.006 285.885);
+    --muted-fg: oklch(0.705 0.015 286.067);
+
+    /* Other variables */
+    --bg: oklch(15% 2% 260);
+    --fg: oklch(0.985 0 0);
+
+    --overlay: oklch(0.17 0.006 250);
+    --overlay-fg: oklch(0.985 0 0);
+    --overlay-highlight: oklch(0.2 0.006 250); /* Aligned with bg hue, slightly lighter */
+    --overlay-elevated: oklch(0.22 0.009 250); /* Brightest elevation, same hue */
+    --overlay-elevated-highlight: oklch(0.25 0.006 250); /* Slightly lighter than highlight */
+
+    --success: oklch(0.596 0.145 163.225);
+    --success-fg: oklch(1 0 0);
+
+    --warning: oklch(0.828 0.189 84.429);
+    --warning-fg: oklch(0.279 0.077 45.635);
+
+    --danger: oklch(0.577 0.245 27.325);
+    --danger-fg: oklch(0.971 0.013 17.38);
+
+    --border: oklch(0.27 0.013 285.805);
+    --border-skeleton: oklch(0.27 0.013 285.805 / 0.4);
+    --input: oklch(0.32 0.013 285.805);
+    --ring: oklch(0.646 0.222 36.23);
+
+    --navbar: oklch(0.17 0.006 285.885);
+    --navbar-fg: oklch(0.985 0 0);
+
+    --sidebar: var(--bg);
+    --sidebar-fg: var(--fg);
+
+    --chart-1: oklch(0.553 0.195 38.402);
+    --chart-2: oklch(0.705 0.213 47.604);
+    --chart-3: oklch(0.75 0.183 55.934);
+    --chart-4: oklch(0.837 0.128 66.29);
+    --chart-5: oklch(0.901 0.076 70.697);
+  }
+}
+
+@variant dark {
+  &:where(.dark, .dark *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(.system, .system *) {
+      @slot;
+    }
+  }
+}
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-border, currentColor);
+  }
+
+  * {
+    text-rendering: optimizeLegibility;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+    border-color: var(--color-border, currentColor);
+  }
+
+  html {
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    font-variation-settings: normal;
+    scroll-behavior: smooth;
+    height: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  *:focus:not(.focus-visible) {
+    outline: none;
+  }
+
+  body {
+    /* background-color: var(--bg); */
+    color: var(--fg);
+  }
+
+  ::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+  }
+}
+
+:root {
+  color-scheme: light dark;
+}
+
+.dark {
+  color-scheme: dark;
+}
+
+.light {
+  color-scheme: light;
+}
+
+.bg-lines-pattern {
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      var(--color-muted),
+      var(--color-muted) 8px,
+      transparent 8px,
+      transparent 20px
+    ), color-mix(in oklch, var(--color-muted) 10%, transparent);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Hide drag previews globally */
+[data-rac-drag-preview],
+[data-rac-drag-preview] * {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Hide browser default drag preview */
+* {
+  -webkit-user-drag: element;
+}
+
+*::before,
+*::after {
+  -webkit-user-drag: none;
+}

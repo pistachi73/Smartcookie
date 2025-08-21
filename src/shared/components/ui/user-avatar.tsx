@@ -4,17 +4,17 @@ import { Avatar, type AvatarProps } from "@/shared/components/ui/avatar";
 
 // Using custom color CSS variables from globals.css
 const AVATAR_COLORS = [
-  "bg-[var(--color-custom-flamingo-bg)] text-[var(--fg)]/70",
-  "bg-[var(--color-custom-tangerine-bg)] text-[var(--fg)]/70",
-  "bg-[var(--color-custom-banana-bg)] text-[var(--fg)]/70",
-  "bg-[var(--color-custom-sage-bg)] text-[var(--fg)]/70",
-  "bg-[var(--color-custom-peacock-bg)] text-[var(--fg)]/70",
-  "bg-[var(--color-custom-blueberry-bg)] text-[var(--fg)]/70",
-  "bg-[var(--color-custom-lavender-bg)] text-[var(--fg)]/70",
-  "bg-[var(--color-custom-grape-bg)] text-[var(--fg)]/70",
-  "bg-[var(--color-custom-graphite-bg)] text-[var(--fg)]/70",
-  "bg-[var(--color-custom-sunshine-bg)] text-[var(--fg)]/70",
-  "bg-[var(--color-custom-neutral-bg)] text-[var(--fg)]/70",
+  "bg-custom-flamingo-bg text-(--fg)/70",
+  "bg-custom-tangerine-bg text-(--fg)/70",
+  "bg-custom-banana-bg text-(--fg)/70",
+  "bg-custom-sage-bg text-(--fg)/70",
+  "bg-custom-peacock-bg text-(--fg)/70",
+  "bg-custom-blueberry-bg text-(--fg)/70",
+  "bg-custom-lavender-bg text-(--fg)/70",
+  "bg-custom-grape-bg text-(--fg)/70",
+  "bg-custom-graphite-bg text-(--fg)/70",
+  "bg-custom-sunshine-bg text-(--fg)/70",
+  "bg-custom-neutral-bg text-(--fg)/70",
 ];
 
 export interface UserAvatarProps extends AvatarProps {

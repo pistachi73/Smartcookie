@@ -4,9 +4,9 @@ import { useShallow } from "zustand/react/shallow";
 
 import { Button } from "@/shared/components/ui/button";
 import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
+import { cn } from "@/shared/lib/utils";
 
 import { useCalendarStore } from "@/features/calendar/providers/calendar-store-provider";
-import { cn } from "@/lib/utils";
 
 export const TodayButton = () => {
   const onToday = useCalendarStore(useShallow((store) => store.onToday));
@@ -19,8 +19,7 @@ export const TodayButton = () => {
   return (
     <Button
       intent={"outline"}
-      size={isMobile ? "square-petite" : "medium"}
-      shape="square"
+      size={isMobile ? "sq-sm" : "md"}
       onPress={onToday}
       className={cn(isMobile && "size-9 text-sm")}
     >

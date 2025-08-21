@@ -31,7 +31,7 @@ interface ColorDotProps {
   className?: string;
 }
 
-function ColorDot({ color, className }: ColorDotProps) {
+function ColorDot({ color, className, ...props }: ColorDotProps) {
   return (
     <div
       className={cn(
@@ -40,6 +40,7 @@ function ColorDot({ color, className }: ColorDotProps) {
           colorStyleMap.neutral.dot,
         className,
       )}
+      {...props}
     />
   );
 }
@@ -142,26 +143,16 @@ export function AddSessionsForm({
           >
             <ComboBox.Input
               placeholder={isLoading ? "Loading hubs..." : "Select a hub"}
-              prefix={
-                selectedHub ? <ColorDot color={selectedHub.color} /> : null
-              }
             />
-            <ComboBox.List
-              items={hubOptions}
-              shouldFlip={false}
-              className={{ popoverContent: "w-[var(--trigger-width)]" }}
-            >
+            <ComboBox.List items={hubOptions}>
               {(item) => (
                 <ComboBox.Option
                   key={item.value}
                   id={item.value}
                   textValue={item.label}
-                  showSelectedIcon={false}
                 >
-                  <div className="flex items-center gap-2">
-                    <ColorDot color={item.color} />
-                    {item.label}
-                  </div>
+                  <ColorDot color={item.color} data-slot="icon" />
+                  <ComboBox.Label>{item.label}</ComboBox.Label>
                 </ComboBox.Option>
               )}
             </ComboBox.List>
@@ -180,10 +171,7 @@ export function AddSessionsForm({
             validationBehavior="aria"
             isInvalid={invalid}
             errorMessage={error?.message}
-            overlayProps={{
-              placement: "bottom",
-              offset: 8,
-            }}
+            placement="bottom"
             minValue={minCalendarDate}
             maxValue={maxCalendarDate}
             value={field.value}

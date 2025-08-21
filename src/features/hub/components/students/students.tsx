@@ -37,13 +37,8 @@ export const Students = ({ hubId }: { hubId: number }) => {
         <HubPanelHeader
           title="Course Students"
           actions={
-            <Menu respectScreen={false}>
-              <Button
-                className={"w-full sm:w-fit"}
-                size="small"
-                shape="square"
-                intent="primary"
-              >
+            <Menu>
+              <Button className={"w-full sm:w-fit"} size="sm" intent="primary">
                 <HugeiconsIcon
                   icon={UserAdd02Icon}
                   altIcon={DeleteIcon}
@@ -52,10 +47,7 @@ export const Students = ({ hubId }: { hubId: number }) => {
                 />
                 <p>Add student</p>
               </Button>
-              <Menu.Content
-                placement="bottom end"
-                popoverClassName="max-w-full w-[var(--trigger-width)]"
-              >
+              <Menu.Content placement="bottom end">
                 <Menu.Item
                   onAction={() => setIsAddStudentModalOpen(true)}
                   id="from-students"

@@ -136,39 +136,38 @@ export const getPaginatedSessionsByHubId = withValidationAndAuth({
   callback: async ({ hubId, cursor, direction = "next", limit = 10 }, user) => {
     console.log({ cursor, hubId, direction, limit });
 
+    const now = new Date();
     const baseWhere = and(
       eq(session.hubId, hubId),
       eq(session.userId, user.id),
     );
 
     let whereClause = baseWhere;
-    let orderBy = [asc(session.startTime)]; // Default: newest first
+    let orderBy: any[];
 
-    // Handle cursor-based pagination
     if (cursor) {
       if (direction === "next") {
-        console.log("next", cursor);
-        // Get older sessions (cursor < startTime)
+        // Get more future sessions (sessions with startTime > cursor)
         whereClause = and(baseWhere, gt(session.startTime, cursor));
+        orderBy = [asc(session.startTime)]; // Future sessions: closest first
       } else {
-        // Get newer sessions (cursor > startTime)
+        // Get past sessions (sessions with startTime < cursor)
         whereClause = and(baseWhere, lt(session.startTime, cursor));
-        orderBy = [desc(session.startTime)]; // For prev, we need ascending order
+        orderBy = [desc(session.startTime)]; // Past sessions: most recent first
       }
     } else {
-      const now = new Date();
+      // Initial load: Get both past and future sessions, but return them in the desired display order
+      // We'll fetch upcoming sessions first, then past sessions can be loaded via prev button
       whereClause = and(baseWhere, gt(session.startTime, now.toISOString()));
+      orderBy = [asc(session.startTime)]; // Upcoming sessions: closest first
     }
 
     // Fetch limit + 1 to determine if there are more pages
     const rawSessions = await db
       .select({
         id: session.id,
-        startTime: parseRequiredDateWithTimezone(
-          session.startTime,
-          "startTime",
-        ),
-        endTime: parseRequiredDateWithTimezone(session.endTime, "endTime"),
+        startTime: session.startTime,
+        endTime: session.endTime,
         status: session.status,
       })
       .from(session)
@@ -179,11 +178,6 @@ export const getPaginatedSessionsByHubId = withValidationAndAuth({
     // Check if there are more pages
     const hasMore = rawSessions.length > limit;
     const sessions = hasMore ? rawSessions.slice(0, limit) : rawSessions;
-
-    // If we fetched in ascending order (prev direction), reverse to maintain newest-first
-    if (direction === "prev") {
-      sessions.reverse();
-    }
 
     // Format sessions with duration calculation
     const formattedSessions = sessions.map((session) => {
@@ -203,18 +197,36 @@ export const getPaginatedSessionsByHubId = withValidationAndAuth({
       };
     });
 
-    // Determine cursors for next/prev pages
-    const nextCursor = sessions[sessions.length - 1]?.startTime;
-    const prevCursor = sessions[0]?.startTime;
+    if (direction === "prev") {
+      formattedSessions.reverse();
+    }
 
-    console.log({ nextCursor, prevCursor });
+    // Determine cursors for next/prev pages
+    const nextCursor =
+      sessions.length > 0
+        ? sessions[sessions.length - 1]?.startTime
+        : undefined;
+    const prevCursor = sessions.length > 0 ? sessions[0]?.startTime : undefined;
+
+    // For initial load, set prevCursor to "now" so past sessions can be loaded
+    let finalPrevCursor = prevCursor;
+    if (!cursor && direction === "next") {
+      finalPrevCursor = now.toISOString();
+    }
+
+    console.log({
+      nextCursor,
+      prevCursor: finalPrevCursor,
+      hasMore,
+      direction,
+    });
 
     return {
       sessions: formattedSessions,
       hasNextPage: direction === "next" ? hasMore : false,
-      hasPreviousPage: direction === "prev" ? hasMore : false,
+      hasPreviousPage: direction === "prev" ? hasMore : !cursor, // Initial load allows past sessions
       nextCursor,
-      prevCursor,
+      prevCursor: finalPrevCursor,
     };
   },
 });

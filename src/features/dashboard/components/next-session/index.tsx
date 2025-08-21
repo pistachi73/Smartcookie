@@ -70,7 +70,7 @@ export const NextSession = () => {
             href={`/portal/hubs/${hub?.id}`}
             className={buttonStyles({
               intent: "outline",
-              size: "small",
+              size: "sm",
             })}
           >
             Go to course
@@ -110,7 +110,7 @@ export const NextSession = () => {
               ))
             ) : (
               <AvatarStack
-                size="large"
+                size="lg"
                 users={nextSession.students ?? []}
                 maxAvatars={5}
                 className={{
@@ -119,7 +119,7 @@ export const NextSession = () => {
               />
             )}
             {/* <AvatarStack
-              size="large"
+              size="lg"
               users={nextSession.students ?? []}
               className={{
                 avatar: "outline-overlay outline-2",
@@ -137,7 +137,7 @@ export const NextSession = () => {
               />
             ))}
             <AvatarStack
-              size="medium"
+              size="md"
               users={nextSession.students ?? []}
               className={{
                 avatar: "outline-overlay",

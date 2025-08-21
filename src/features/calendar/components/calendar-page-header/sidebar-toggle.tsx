@@ -23,9 +23,7 @@ export const SidebarToggle = () => {
   return (
     <Button
       intent="outline"
-      shape="square"
-      size="square-petite"
-      className="size-10"
+      size="sq-md"
       onPress={() => {
         toggleSidebar();
       }}

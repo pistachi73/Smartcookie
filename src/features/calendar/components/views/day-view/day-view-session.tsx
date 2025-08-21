@@ -133,7 +133,8 @@ export const DayViewSession = ({ session }: DayViewSessionProps) => {
         <LazyPopoverContent
           session={session}
           popoverProps={{
-            placement: "right",
+            placement: "top",
+            showArrow: true,
           }}
         />
       </Popover>

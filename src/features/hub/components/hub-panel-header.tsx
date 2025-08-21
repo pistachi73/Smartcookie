@@ -1,6 +1,5 @@
 import { Heading } from "@/shared/components/ui/heading";
-
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/lib/classes";
 
 type HubPanelHeaderProps = {
   title: string;

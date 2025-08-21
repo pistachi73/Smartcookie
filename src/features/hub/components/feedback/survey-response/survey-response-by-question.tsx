@@ -168,7 +168,7 @@ const ResponseItem = ({
       <StudentProfile
         name={response.studentName}
         image={response.studentImage}
-        avatarSize="small"
+        avatarSize="sm"
         className="shrink-0"
       />
 

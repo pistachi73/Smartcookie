@@ -9,8 +9,8 @@ import {
 import Link from "next/link";
 import type { ComponentProps } from "react";
 
-import { Button, buttonStyles } from "@/ui/button";
-import { Heading } from "@/ui/heading";
+import { Button, buttonStyles } from "@/shared/components/ui/button";
+import { Heading } from "@/shared/components/ui/heading";
 
 import { PortalNav } from "./portal-nav/portal-nav";
 
@@ -79,7 +79,7 @@ export function PortalError({
           </div>
           <div className="flex flex-col sm:flex-row gap-4 animate-in slide-in-from-bottom-4 duration-500 delay-400">
             {onRetry && (
-              <Button onPress={onRetry} size="large" intent="primary">
+              <Button onPress={onRetry} size="lg" intent="primary">
                 <HugeiconsIcon icon={RefreshIcon} size={16} data-slot="icon" />
                 Try again
               </Button>
@@ -90,7 +90,7 @@ export function PortalError({
                 href={backLink.href}
                 className={buttonStyles({
                   intent: "outline",
-                  size: "large",
+                  size: "lg",
                 })}
               >
                 <HugeiconsIcon

@@ -4,12 +4,12 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { LazyMotion } from "motion/react";
 import { useRouter } from "next/navigation";
-import { ThemeProvider } from "next-themes";
 import { I18nProvider, RouterProvider } from "react-aria-components";
 
 import { getQueryClient } from "@/shared/lib/get-query-client";
 
 import { OptimizedCalendarProvider } from "@/features/calendar/providers/optimized-calendar-provider";
+import { ThemeProvider } from "./theme-provider";
 
 const loadFeatures = () =>
   import("./animationFeatures.js").then((res) => res.default);

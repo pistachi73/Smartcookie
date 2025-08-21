@@ -209,13 +209,12 @@ export const AddSessionsFormModal = ({
               )}
             </Modal.Body>
             <Modal.Footer>
-              <Modal.Close size="small" isDisabled={isAddingSessions}>
+              <Modal.Close size="sm" isDisabled={isAddingSessions}>
                 Cancel
               </Modal.Close>
               <Button
                 type="submit"
-                shape="square"
-                size="small"
+                size="sm"
                 className="px-6"
                 isPending={isAddingSessions || isCheckingConflicts}
               >

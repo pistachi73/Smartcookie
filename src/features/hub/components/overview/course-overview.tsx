@@ -33,7 +33,7 @@ export const CourseOverview = ({ hubId }: CourseOverviewProps) => {
 
   if (!hub) {
     return (
-      <Card className="border-dashed" spacing="md">
+      <Card className="border-dashed">
         <Card.Content className="text-center py-12">
           <HugeiconsIcon
             icon={InformationCircleIcon}

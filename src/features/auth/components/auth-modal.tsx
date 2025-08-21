@@ -20,7 +20,7 @@ export const AuthModal = () => {
 
   return (
     <Modal.Content
-      size="5xl"
+      size="4xl"
       isOpen={true}
       onOpenChange={(open) => {
         if (!open) {
@@ -28,9 +28,6 @@ export const AuthModal = () => {
         }
       }}
       isBlurred
-      classNames={{
-        content: "h-full  max-w-max sm:border-none sm:h-auto sm:w-auto p-0",
-      }}
     >
       <VisuallyHidden>
         <Modal.Title>Authentication modal</Modal.Title>

@@ -51,7 +51,7 @@ const Switch = ({ children, className, size, ref, ...props }: SwitchProps) => {
           >
             <span
               className={cn(
-                "block origin-right rounded-full bg-primary-fg shadow-sm transition-all duration-200 group-data-selected:group-data-[pressed]:ml-2 group-data-selected:ml-3 forced-colors:data-disabled:outline-[GrayText]",
+                "block origin-right rounded-full bg-primary-fg shadow-sm transition-all duration-200 group-data-selected:group-data-pressed:ml-2 group-data-selected:ml-3 forced-colors:data-disabled:outline-[GrayText]",
                 "size-[calc((var(--dimension)-1)*var(--spacing))] group-data-pressed:w-[calc(var(--spacing)*var(--dimension))]",
               )}
             />

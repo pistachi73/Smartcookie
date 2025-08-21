@@ -107,9 +107,8 @@ export function SessionsList() {
             </div>
 
             <Button
-              size="square-petite"
+              size="sq-sm"
               intent="danger"
-              shape="square"
               className="text-danger hover:bg-danger/10 bg-transparent"
               onPress={() => {
                 // Since sessions from calculateRecurrentSessions don't have IDs,

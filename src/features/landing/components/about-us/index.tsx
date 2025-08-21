@@ -103,7 +103,7 @@ export const AboutUs = () => {
               <div
                 className={cn(
                   "aspect-video",
-                  "md:aspect-[9/16] lg:aspect-[9/12]",
+                  "md:aspect-9/16 lg:aspect-9/12",
                   "xl:aspect-square relative rounded-xl overflow-hidden",
                   reversed ? " md:col-start-2" : "row-start-1 col-start-1",
                 )}

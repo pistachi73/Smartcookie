@@ -20,7 +20,7 @@ export const NavigationButtons = () => {
     <div className="flex items-center">
       <Button
         intent="plain"
-        size="square-petite"
+        size="sq-sm"
         className="size-9 sm:size-10 p-0 sm:text-muted-fg hover:text-current"
         onPress={() => {
           onNavigation(-1);
@@ -30,7 +30,7 @@ export const NavigationButtons = () => {
       </Button>
       <Button
         intent="plain"
-        size="square-petite"
+        size="sq-sm"
         className="size-9 sm:size-10 p-0 sm:text-muted-fg hover:text-current"
         onPress={() => {
           onNavigation(1);

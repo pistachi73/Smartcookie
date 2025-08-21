@@ -32,7 +32,7 @@ type Tab = (typeof TABS)[number]["id"];
 export function HubDashboard({ hubId }: { hubId: number }) {
   const { down } = useViewport();
   const { data: hub } = useQuery(getHubByIdQueryOptions(hubId));
-  const [selectedTab, setSelectedTab] = useState<Tab>("overview");
+  const [selectedTab, setSelectedTab] = useState<Tab>("sessions");
 
   const isDownLg = useMemo(() => down("lg"), [down]);
 
@@ -61,11 +61,11 @@ export function HubDashboard({ hubId }: { hubId: number }) {
               onSelectionChange={(key) => setSelectedTab(key as Tab)}
               className="flex-1 gap-4 sm:gap-6"
             >
-              <Tabs.List className={"sticky top-0 px-6 pt-3 z-20"}>
+              <Tabs.List className={"px-4 sm:px-6 h-10 "}>
                 {TABS.map((tab) => {
                   if (tab.id === "quick-notes" && !isDownLg) return null;
                   return (
-                    <Tabs.Tab key={tab.id} id={tab.id} className="px-2 ">
+                    <Tabs.Tab key={tab.id} id={tab.id} className="px-2 pb-0!">
                       {({ isSelected }) => {
                         return (
                           <p
@@ -83,7 +83,7 @@ export function HubDashboard({ hubId }: { hubId: number }) {
                 })}
               </Tabs.List>
               <Tabs.Panel id="overview" className={"p-6 pt-0"}>
-                <HubOverview hubId={hubId} setSelectedTab={setSelectedTab} />
+                <HubOverview hubId={hubId} />
               </Tabs.Panel>
               <Tabs.Panel id="students" className={"px-4 sm:px-6"}>
                 <Students hubId={hubId} />
@@ -102,7 +102,7 @@ export function HubDashboard({ hubId }: { hubId: number }) {
                       <AddNoteCard
                         hubId={hubId}
                         className={"w-full sm:w-fit"}
-                        size="small"
+                        size="sm"
                         intent="primary"
                       >
                         <HugeiconsIcon icon={NoteAddIcon} size={16} />
@@ -112,7 +112,7 @@ export function HubDashboard({ hubId }: { hubId: number }) {
                   />
                   {/* <div className="flex flex-row items-center justify-between mb-6">
                   <Heading level={2}>Quick Notes</Heading>
-                  <AddNoteCard hubId={hubId} size="small" intent="primary">
+                  <AddNoteCard hubId={hubId} size="sm" intent="primary">
                     <HugeiconsIcon icon={NoteAddIcon} size={16} />
                     Add note
                   </AddNoteCard>
@@ -131,7 +131,7 @@ export function HubDashboard({ hubId }: { hubId: number }) {
                   <AddNoteCard
                     hubId={hubId}
                     intent="plain"
-                    size="square-petite"
+                    size="sq-sm"
                     className="size-9"
                   >
                     <HugeiconsIcon icon={NoteAddIcon} size={16} />

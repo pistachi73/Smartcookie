@@ -94,8 +94,7 @@ export const CustomColorPicker = <T extends object>({
     >
       <Button
         intent="outline"
-        shape="square"
-        size="square-petite"
+        size="sq-sm"
         className="size-10 aspect-square data-hovered:bg-overlay-highlight border-input"
       >
         <div
@@ -106,12 +105,9 @@ export const CustomColorPicker = <T extends object>({
         />
       </Button>
       <Select.List
-        className={{
-          popover: "min-w-auto p-2",
-          list: "grid grid-cols-4 gap-2",
-        }}
+        popover={{ className: "min-w-auto p-2", ...popoverProps }}
+        className="grid grid-cols-4 gap-2"
         items={CUSTOM_COLORS_ARRAY}
-        popoverProps={popoverProps}
       >
         {({ name, id, className }) => (
           <ListBoxItem id={id} textValue={name}>

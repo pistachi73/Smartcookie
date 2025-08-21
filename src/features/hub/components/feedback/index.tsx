@@ -30,8 +30,7 @@ export const CourseFeedback = ({ hubId }: { hubId: number }) => {
           title="Course Feedback"
           actions={
             <Button
-              shape="square"
-              size="small"
+              size="sm"
               intent="primary"
               className="w-full sm:w-fit"
               onPress={() => {

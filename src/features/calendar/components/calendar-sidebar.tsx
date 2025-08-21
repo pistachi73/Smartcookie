@@ -49,7 +49,7 @@ export const CalendarSidebar = () => {
             }}
             focusedValue={focusedDate}
             onFocusChange={setFocusedDate}
-            spacing="medium"
+            spacing="md"
             showSelectors={false}
           />
         </ResizablePanelRoot>

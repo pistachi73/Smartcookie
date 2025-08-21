@@ -60,7 +60,7 @@ export const SurveyTemplateListItem = ({
           href={viewHref}
           className="flex-1 flex items-center gap-4 p-4 pr-0"
         >
-          <p className="flex-shrink-0 size-8 flex items-center justify-center  text-sm font-medium tabular-nums bg-muted rounded-sm">
+          <p className="shrink-0 size-8 flex items-center justify-center  text-sm font-medium tabular-nums bg-muted rounded-sm">
             {surveyTemplate.totalResponses}
           </p>
 
@@ -76,12 +76,11 @@ export const SurveyTemplateListItem = ({
           </div>
         </Link>
 
-        <div className="flex-shrink-0">
+        <div className="shrink-0">
           <Menu>
             <Button
               intent="plain"
-              shape="square"
-              size="square-petite"
+              size="sq-sm"
               className="sm:opacity-0 group-hover:opacity-100 size-8 data-pressed:opacity-100 transition-opacity"
             >
               <HugeiconsIcon icon={MoreVerticalIcon} size={18} />

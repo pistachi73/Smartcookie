@@ -63,7 +63,7 @@ export const FormWrapper = ({
               await setAnimationDir(-1);
               backButtonOnClick?.();
             }}
-            size="small"
+            size="sm"
             intent="plain"
             type="button"
           >

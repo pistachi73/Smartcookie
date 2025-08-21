@@ -3,21 +3,20 @@
 import { Keyboard as KeyboardPrimitive } from "react-aria-components";
 import { twMerge } from "tailwind-merge";
 
-interface KeyboardProps
-  extends Omit<React.HTMLAttributes<HTMLElement>, "className"> {
+interface KeyboardProps extends React.HTMLAttributes<HTMLElement> {
   keys: string | string[];
-  className?: {
+  classNames?: {
     base?: string;
     kbd?: string;
   };
 }
 
-const Keyboard = ({ keys, className, ...props }: KeyboardProps) => {
+const Keyboard = ({ keys, classNames, className, ...props }: KeyboardProps) => {
   return (
     <KeyboardPrimitive
       className={twMerge(
-        "hidden font-mono text-current group-hover:text-fg group-focus:text-fg group-focus:opacity-90 group-disabled:opacity-50 lg:inline-flex forced-colors:group-focus:text-[HighlightText] forced-colors:group-focus:text-[HighlightText]",
-        className?.base,
+        "hidden font-mono text-current/60 group-hover:text-fg group-focus:text-fg group-focus:opacity-90 group-disabled:opacity-50 lg:inline-flex forced-colors:group-focus:text-[HighlightText] forced-colors:group-focus:text-[HighlightText]",
+        classNames?.base,
       )}
       {...props}
     >
@@ -27,7 +26,7 @@ const Keyboard = ({ keys, className, ...props }: KeyboardProps) => {
           className={twMerge(
             "tracking-widest",
             index > 0 && char.length > 1 && "pl-1",
-            className?.kbd,
+            classNames?.kbd,
           )}
         >
           {char}
@@ -37,5 +36,5 @@ const Keyboard = ({ keys, className, ...props }: KeyboardProps) => {
   );
 };
 
-export { Keyboard };
 export type { KeyboardProps };
+export { Keyboard };

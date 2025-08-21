@@ -37,7 +37,7 @@ const toggleStyles = tv({
   },
 });
 
-const dotStyles = "size-2.5 rounded-full border flex-shrink-0";
+const dotStyles = "size-2.5 rounded-full border shrink-0";
 
 export function HubToggle({
   label,
@@ -123,7 +123,7 @@ export function HubToggle({
 
       <h3
         className={cn(
-          "line-clamp-1 text-sm font-medium text-left transition-colors flex-grow",
+          "line-clamp-1 text-sm font-medium text-left transition-colors grow",
           isVisible
             ? `${colorClasses?.text}`
             : "text-muted-fg group-hover:text-secondary-fg",

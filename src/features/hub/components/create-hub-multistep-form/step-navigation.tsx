@@ -18,13 +18,13 @@ export function StepNavigation() {
   return (
     <div className="flex justify-end w-full gap-4 shrink-0">
       {!isFirstStep && (
-        <Button intent="plain" onPress={prevStep} shape="square">
+        <Button intent="plain" onPress={prevStep}>
           <HugeiconsIcon icon={ArrowLeft02Icon} size={16} />
           Back
         </Button>
       )}
 
-      <Button type="submit" form="step-form" shape="square" className="px-6">
+      <Button type="submit" form="step-form" className="px-6">
         {isLastStep ? "Create Hub" : "Next"}
       </Button>
     </div>

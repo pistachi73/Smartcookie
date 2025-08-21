@@ -37,16 +37,15 @@ export const FrequencySelect = ({
     >
       <Select.Trigger
         data-testid="frequency-select-trigger"
-        className="w-fit hover:bg-overlay-elevated"
-        showArrow
+        className="w-fit h-10"
       />
 
       <Select.List
-        className={{ popover: "min-w-[var(--trigger-width)] rounded-md" }}
-        items={frequencyItems}
-        popoverProps={{
+        popover={{
           placement: "bottom start",
+          className: "min-w-(--trigger-width) rounded-md",
         }}
+        items={frequencyItems}
       >
         {({ id, label }) => <Select.Option id={id}>{label}</Select.Option>}
       </Select.List>

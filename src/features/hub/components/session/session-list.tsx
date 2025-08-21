@@ -19,7 +19,7 @@ import { useViewport } from "@/shared/components/layout/viewport-context/viewpor
 import { useInfiniteScroll } from "@/shared/hooks/use-infinite-scroll";
 import { regularSpring } from "@/shared/lib/animation";
 
-import { getPaginatedSessionsByHubIdQueryOptions } from "../../lib/hub-sessions-query-options";
+import { getPaginatedSessionsByHubId } from "@/data-access/sessions/queries";
 import { useSessionStore } from "../../store/session-store";
 import { HubPanelHeader } from "../hub-panel-header";
 import { DesktopSessionBubble, Session } from "./session";
@@ -61,6 +61,8 @@ export function SessionsList({ hubId }: { hubId: number }) {
     })),
   );
 
+  type PageParam = [string | undefined, "next" | "prev"];
+
   const {
     data,
     fetchNextPage,
@@ -70,12 +72,35 @@ export function SessionsList({ hubId }: { hubId: number }) {
     isFetchingNextPage,
     isFetchingPreviousPage,
     isPending: isLoadingSessions,
-  } = useInfiniteQuery(getPaginatedSessionsByHubIdQueryOptions(hubId));
+  } = useInfiniteQuery({
+    queryKey: ["hub-infinite-sessions", hubId],
+    queryFn: async ({ pageParam }) => {
+      const [cursor, direction] = pageParam;
+      return getPaginatedSessionsByHubId({
+        hubId,
+        cursor,
+        limit: 7, // Show 7 sessions initially as requested
+        direction,
+      });
+    },
+    initialPageParam: [undefined, "next"] as PageParam,
+    getNextPageParam: (lastPage) => {
+      // Only return next page param if there are more pages
+      return lastPage.hasNextPage && lastPage.nextCursor
+        ? ([lastPage.nextCursor, "next"] as PageParam)
+        : undefined;
+    },
+    getPreviousPageParam: (firstPage) => {
+      // Use the first session from the first page as cursor for past sessions
+      return firstPage.prevCursor
+        ? ([firstPage.prevCursor, "prev"] as PageParam)
+        : undefined;
+    },
+  });
 
   console.log({ data });
 
-  // Flatten all sessions from all pages
-  // Type assertion to handle infinite query data structure
+  // Flatten all sessions from all pages - backend handles correct ordering
   const sessions = (data as any)?.pages
     ? (data as any).pages.flatMap((page: any) => page.sessions)
     : [];
@@ -105,8 +130,7 @@ export function SessionsList({ hubId }: { hubId: number }) {
   const actions = (
     <div className="flex gap-2 sm:flex-row justify-between sm:justify-end flex-1">
       <Button
-        shape="square"
-        size={isMobile ? "square-petite" : "small"}
+        size={isMobile ? "sq-sm" : "sm"}
         intent={isEditingMode ? "primary" : "secondary"}
         onPress={handleEditModeToggle}
         isDisabled={isLoadingSessions}
@@ -125,11 +149,10 @@ export function SessionsList({ hubId }: { hubId: number }) {
       </Button>
 
       <Button
-        shape="square"
         intent={isEditingMode ? "danger" : "primary"}
         onPress={handleActionButtonPress}
         className={"w-full sm:w-fit"}
-        size="small"
+        size="sm"
         isDisabled={isEditingMode && selectedSessions.length === 0}
       >
         <HugeiconsIcon
@@ -151,21 +174,21 @@ export function SessionsList({ hubId }: { hubId: number }) {
 
         <Button
           intent="plain"
-          size="extra-small"
+          size="xs"
           className="mb-4"
           onPress={() => fetchPreviousPage()}
           isDisabled={!hasPreviousPage || isFetchingPreviousPage}
         >
-          {isFetchingPreviousPage ? "Loading..." : "Show older sessions"}
+          {isFetchingPreviousPage ? "Loading..." : "Show past sessions"}
         </Button>
         {sessions?.length === 0 && (
           <div className="border bg-bg dark:bg-overlay-highlight rounded-lg border-dashed flex flex-col items-center justify-center w-full h-full p-6">
             <Heading level={3} className="mb-1">
-              No sessions created yet
+              No upcoming sessions
             </Heading>
             <p className="text-muted-fg text-center max-w-xs">
-              Create your first session to start tracking your tutoring
-              activities.
+              Create your next session to see it here. Past sessions can be
+              viewed using the "Show past sessions" button above.
             </p>
           </div>
         )}

@@ -66,7 +66,7 @@ export const Highlights = () => {
           className={cn(
             "flex flex-col relative bg-muted rounded-xl p-6 md:p-8 overflow-hidden",
             "aspect-auto row-start-1 col-start-1 col-span-2 row-span-1 space-y-4",
-            "sm:justify-between sm:aspect-[2/1] sm:row-start-2 sm:col-start-3 sm:col-span-2 sm:row-span-1",
+            "sm:justify-between sm:aspect-2/1 sm:row-start-2 sm:col-start-3 sm:col-span-2 sm:row-span-1",
             "lg:aspect-video lg:row-start-1 lg:col-start-1 lg:col-span-2 lg:row-span-1",
           )}
         >

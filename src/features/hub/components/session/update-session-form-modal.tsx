@@ -188,13 +188,12 @@ export const UpdateSessionFormModal = ({
               )}
             </Modal.Body>
             <Modal.Footer className="flex flex-row">
-              <Modal.Close size="small" className={"w-full sm:w-fit"}>
+              <Modal.Close size="sm" className={"w-full sm:w-fit"}>
                 Close
               </Modal.Close>
               <Button
                 type="submit"
-                shape="square"
-                size="small"
+                size="sm"
                 className="px-6 w-full sm:w-fit"
                 isPending={isPending}
                 isDisabled={!isDirty || !hub}

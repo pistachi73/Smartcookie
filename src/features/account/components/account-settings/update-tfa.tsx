@@ -1,6 +1,7 @@
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Fingerprint } from "lucide-react";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { FingerPrintIcon } from "@hugeicons-pro/core-stroke-rounded";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -47,7 +48,7 @@ export const UpdateTFA = () => {
       <Card>
         <Card.Header>
           <Card.Title className="flex items-center gap-2">
-            <Fingerprint className="w-5 h-5" />
+            <HugeiconsIcon icon={FingerPrintIcon} size={20} />
             Two factor authentication
           </Card.Title>
           <Card.Description>
@@ -63,7 +64,7 @@ export const UpdateTFA = () => {
     <Card>
       <Card.Header>
         <Card.Title className="flex items-center gap-2">
-          <Fingerprint className="w-5 h-5" />
+          <HugeiconsIcon icon={FingerPrintIcon} size={20} />
           Two factor authentication
         </Card.Title>
         <Card.Description>

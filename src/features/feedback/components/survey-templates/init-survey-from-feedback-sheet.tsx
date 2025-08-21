@@ -122,9 +122,8 @@ export function InitSurveyFromFeedbackSheet({
     <Sheet isOpen={isOpen} onOpenChange={onOpenChange}>
       <Sheet.Content
         side="right"
-        classNames={{
-          content: "w-[480px] max-w-[90vw]",
-        }}
+        className="w-[480px] max-w-[90vw]"
+        closeButton={false}
       >
         <Sheet.Header className="border-b">
           <Sheet.Title className="flex items-center gap-2">
@@ -141,7 +140,7 @@ export function InitSurveyFromFeedbackSheet({
           </Sheet.Description>
         </Sheet.Header>
 
-        <Sheet.Body className="p-6 space-y-6">
+        <Sheet.Body className="p-[var(--gutter)] space-y-6">
           {isLoading ? (
             <div className="space-y-3">
               {Array.from({ length: 3 }).map((_, i) => (
@@ -168,48 +167,46 @@ export function InitSurveyFromFeedbackSheet({
               </p>
             </div>
           ) : (
-            <>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <Heading level={3} className="text-base font-medium">
-                    Available Hubs ({filteredHubs.length})
-                  </Heading>
-                </div>
-
-                <SearchField
-                  aria-label="Search hubs by name"
-                  placeholder="Search hubs by name..."
-                  value={searchQuery}
-                  onChange={setSearchQuery}
-                  className={{
-                    primitive: "w-full",
-                    fieldGroup: "h-12",
-                  }}
-                />
-
-                {filteredHubs.length === 0 ? (
-                  <p className="text-muted-fg text-sm w-full text-center py-6">
-                    No hubs found matching "{deferredSearchQuery}"
-                  </p>
-                ) : (
-                  <RadioToggleGroup
-                    aria-label="Select hub"
-                    value={selectedHubId}
-                    onChange={setSelectedHubId}
-                    orientation="vertical"
-                    gap={2}
-                    appearance="outline"
-                    className={{
-                      content: "w-full",
-                    }}
-                  >
-                    {filteredHubs.map((hub) => (
-                      <HubRadioItem key={`hub-${hub.id}`} hub={hub} />
-                    ))}
-                  </RadioToggleGroup>
-                )}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <Heading level={3} className="text-base font-medium">
+                  Available Hubs ({filteredHubs.length})
+                </Heading>
               </div>
-            </>
+
+              <SearchField
+                aria-label="Search hubs by name"
+                placeholder="Search hubs by name..."
+                value={searchQuery}
+                onChange={setSearchQuery}
+                className={{
+                  primitive: "w-full",
+                  fieldGroup: "h-12",
+                }}
+              />
+
+              {filteredHubs.length === 0 ? (
+                <p className="text-muted-fg text-sm w-full text-center py-6">
+                  No hubs found matching "{deferredSearchQuery}"
+                </p>
+              ) : (
+                <RadioToggleGroup
+                  aria-label="Select hub"
+                  value={selectedHubId}
+                  onChange={setSelectedHubId}
+                  orientation="vertical"
+                  gap={2}
+                  appearance="outline"
+                  className={{
+                    content: "w-full",
+                  }}
+                >
+                  {filteredHubs.map((hub) => (
+                    <HubRadioItem key={`hub-${hub.id}`} hub={hub} />
+                  ))}
+                </RadioToggleGroup>
+              )}
+            </div>
           )}
         </Sheet.Body>
 

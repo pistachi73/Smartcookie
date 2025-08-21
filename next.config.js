@@ -4,8 +4,6 @@
  */
 await import("./src/env.js");
 
-import bundleAnalyzer from "@next/bundle-analyzer";
-
 /** @type {import("next").NextConfig} */
 const config = {
   trailingSlash: true,
@@ -13,11 +11,6 @@ const config = {
 
   experimental: {
     reactCompiler: true,
-    optimizePackageImports: [
-      "@hugeicons/react",
-      "@hugeicons-pro/core-solid-rounded",
-      "@hugeicons-pro/core-stroke-rounded",
-    ],
   },
 
   images: {
@@ -40,16 +33,6 @@ const config = {
       },
     ],
   },
-  webpack: (config) => {
-    config.optimization.sideEffects = true;
-    config.optimization.usedExports = true;
-
-    return config;
-  },
 };
 
-const withBundleAnalyzer = bundleAnalyzer({
-  enabled: process.env.ANALYZE === "true",
-});
-
-export default withBundleAnalyzer(config);
+export default config;

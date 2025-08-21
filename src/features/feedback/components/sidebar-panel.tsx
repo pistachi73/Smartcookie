@@ -90,7 +90,7 @@ export const SidebarPanel = ({
   }, [validTotalPages, page, pathname, router, createHrefWithParams, sortBy]);
 
   return (
-    <div className="h-full grid grid-cols-1 grid-rows-[auto_1fr_auto]">
+    <div className="h-full grid grid-cols-1 grid-rows-[auto_1fr_auto] ">
       <div className="border-b p-4 py-3 flex flex-row items-center gap-2">
         <div className="flex items-center gap-3 flex-1">
           <HugeiconsIcon
@@ -107,14 +107,21 @@ export const SidebarPanel = ({
           />
         </div>
         <Menu>
-          <Button size="square-petite" intent="outline">
+          <Button size="sq-sm" intent="outline">
             <HugeiconsIcon
               icon={PreferenceHorizontalIcon}
               size={16}
               data-slot="icon"
             />
           </Button>
-          <Menu.Content placement="bottom" showArrow className="w-[200px]">
+          <Menu.Content
+            selectionMode="single"
+            placement="bottom"
+            popover={{
+              showArrow: true,
+              className: "w-[200px]",
+            }}
+          >
             <Menu.Header separator>Sort by</Menu.Header>
             {sortByOptions.map((option) => (
               <Menu.Item
@@ -125,19 +132,12 @@ export const SidebarPanel = ({
                   page: null,
                 })}
                 isSelected={sortBy === option.value}
-                className="flex items-center justify-between gap-2"
+                className="flex items-center gap-2"
               >
-                <p className="flex items-center gap-2">
-                  <HugeiconsIcon
-                    icon={option.icon}
-                    size={16}
-                    data-slot="icon"
-                  />
+                <HugeiconsIcon icon={option.icon} size={16} data-slot="icon" />
+                <Menu.Label className="flex items-center gap-2">
                   {option.label}
-                </p>
-                {sortBy === option.value && (
-                  <span className="size-2 rounded-full bg-primary" />
-                )}
+                </Menu.Label>
               </Menu.Item>
             ))}
           </Menu.Content>

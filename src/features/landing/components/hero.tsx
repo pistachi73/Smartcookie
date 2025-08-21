@@ -177,7 +177,7 @@ export function Hero() {
                             paddingBottom: "0.3em",
                             marginBottom: "-0.3em",
                           }}
-                          className="inline-block bg-gradient-to-r from-primary to-primary-shade bg-clip-text text-transparent"
+                          className="inline-block bg-linear-to-r from-primary to-primary-shade bg-clip-text text-transparent"
                         >
                           {word}
                         </motion.span>
@@ -195,7 +195,7 @@ export function Hero() {
         </p>
 
         {/* <div className="mt-6 flex flex-row items-center justify-center gap-2">
-          <Button intent="primary" size="large" className="group h-13 px-8">
+          <Button intent="primary" size="lg" className="group h-13 px-8">
             Get Started
             <HugeiconsIcon
               icon={ArrowRight02Icon}
@@ -203,7 +203,7 @@ export function Hero() {
               className="shrink-0 group-hover:translate-x-1 transition-transform"
             />
           </Button>
-          <Button intent="secondary" size="large" className="h-13 px-8">
+          <Button intent="secondary" size="lg" className="h-13 px-8">
             Learn More
           </Button>
         </div> */}
@@ -262,7 +262,7 @@ export const EmailMarketingForm = () => {
 
       <Button
         intent="primary"
-        size="large"
+        size="lg"
         type="submit"
         isPending={isPending}
         className="group h-13 w-full sm:w-auto max-w-[400px] sm:max-w-none gap-6"

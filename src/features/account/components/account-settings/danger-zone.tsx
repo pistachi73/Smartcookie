@@ -83,7 +83,7 @@ export const DangerZone = () => {
               </Card.Content>
               <Card.Footer className="pb-4 ml-auto">
                 <Button
-                  size="small"
+                  size="sm"
                   type="button"
                   intent="secondary"
                   onPress={() => setIsAlertOpen(true)}
