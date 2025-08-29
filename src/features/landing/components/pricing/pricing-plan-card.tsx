@@ -62,7 +62,7 @@ export const PremiumPlanCard = ({
             <span className="font-semibold text-sm text-muted-fg">/ month</span>
           </p>
           {paymentFrequency === "A" && (
-            <Badge intent="primary" className="p-1 px-2" shape="square">
+            <Badge intent="primary" className="p-1 px-2">
               15% off
             </Badge>
           )}

@@ -2,6 +2,7 @@
 
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
+  Calendar02Icon,
   CalendarAdd02Icon,
   DeleteIcon,
   Pen01Icon,
@@ -14,12 +15,13 @@ import dynamic from "next/dynamic";
 import { useShallow } from "zustand/react/shallow";
 
 import { Button } from "@/shared/components/ui/button";
-import { Heading } from "@/shared/components/ui/heading";
+import { EmptyState } from "@/shared/components/ui/empty-state";
+import { Loader } from "@/shared/components/ui/loader";
 import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
 import { useInfiniteScroll } from "@/shared/hooks/use-infinite-scroll";
 import { regularSpring } from "@/shared/lib/animation";
 
-import { getPaginatedSessionsByHubId } from "@/data-access/sessions/queries";
+import { getPaginatedSessionsByHubIdQueryOptions } from "../../lib/hub-sessions-query-options";
 import { useSessionStore } from "../../store/session-store";
 import { HubPanelHeader } from "../hub-panel-header";
 import { DesktopSessionBubble, Session } from "./session";
@@ -43,6 +45,8 @@ const DynamicDeleteSessionsModal = dynamic(
 );
 
 export function SessionsList({ hubId }: { hubId: number }) {
+  const { down } = useViewport();
+
   const {
     isEditingMode,
     selectedSessions,
@@ -61,8 +65,6 @@ export function SessionsList({ hubId }: { hubId: number }) {
     })),
   );
 
-  type PageParam = [string | undefined, "next" | "prev"];
-
   const {
     data,
     fetchNextPage,
@@ -72,40 +74,13 @@ export function SessionsList({ hubId }: { hubId: number }) {
     isFetchingNextPage,
     isFetchingPreviousPage,
     isPending: isLoadingSessions,
-  } = useInfiniteQuery({
-    queryKey: ["hub-infinite-sessions", hubId],
-    queryFn: async ({ pageParam }) => {
-      const [cursor, direction] = pageParam;
-      return getPaginatedSessionsByHubId({
-        hubId,
-        cursor,
-        limit: 7, // Show 7 sessions initially as requested
-        direction,
-      });
-    },
-    initialPageParam: [undefined, "next"] as PageParam,
-    getNextPageParam: (lastPage) => {
-      // Only return next page param if there are more pages
-      return lastPage.hasNextPage && lastPage.nextCursor
-        ? ([lastPage.nextCursor, "next"] as PageParam)
-        : undefined;
-    },
-    getPreviousPageParam: (firstPage) => {
-      // Use the first session from the first page as cursor for past sessions
-      return firstPage.prevCursor
-        ? ([firstPage.prevCursor, "prev"] as PageParam)
-        : undefined;
-    },
-  });
-
-  console.log({ data });
+  } = useInfiniteQuery(getPaginatedSessionsByHubIdQueryOptions(hubId));
 
   // Flatten all sessions from all pages - backend handles correct ordering
   const sessions = (data as any)?.pages
     ? (data as any).pages.flatMap((page: any) => page.sessions)
     : [];
 
-  const { down } = useViewport();
   const isMobile = down("sm");
 
   // Infinite scroll hook for loading more sessions
@@ -127,26 +102,30 @@ export function SessionsList({ hubId }: { hubId: number }) {
     }
   };
 
+  const hasSessions = sessions?.length > 0 && !isLoadingSessions;
+
   const actions = (
     <div className="flex gap-2 sm:flex-row justify-between sm:justify-end flex-1">
-      <Button
-        size={isMobile ? "sq-sm" : "sm"}
-        intent={isEditingMode ? "primary" : "secondary"}
-        onPress={handleEditModeToggle}
-        isDisabled={isLoadingSessions}
-      >
-        {isEditingMode ? (
-          <>
-            <HugeiconsIcon icon={Tick01Icon} size={16} data-slot="icon" />
-            {!isMobile && <span>Done</span>}
-          </>
-        ) : (
-          <>
-            <HugeiconsIcon icon={Pen01Icon} size={16} data-slot="icon" />
-            {!isMobile && <span>Edit</span>}
-          </>
-        )}
-      </Button>
+      {hasSessions && (
+        <Button
+          size={isMobile ? "sq-sm" : "sm"}
+          intent={isEditingMode ? "primary" : "secondary"}
+          onPress={handleEditModeToggle}
+          isDisabled={isLoadingSessions}
+        >
+          {isEditingMode ? (
+            <>
+              <HugeiconsIcon icon={Tick01Icon} size={16} data-slot="icon" />
+              {!isMobile && <span>Done</span>}
+            </>
+          ) : (
+            <>
+              <HugeiconsIcon icon={Pen01Icon} size={16} data-slot="icon" />
+              {!isMobile && <span>Edit</span>}
+            </>
+          )}
+        </Button>
+      )}
 
       <Button
         intent={isEditingMode ? "danger" : "primary"}
@@ -171,26 +150,30 @@ export function SessionsList({ hubId }: { hubId: number }) {
     <>
       <div className="min-h-0">
         <HubPanelHeader title="Sessions timeline" actions={actions} />
+        {sessions?.length !== 0 && !isLoadingSessions && (
+          <Button
+            intent="plain"
+            size="xs"
+            className="mb-4"
+            onPress={() => fetchPreviousPage()}
+            isDisabled={!hasPreviousPage || isFetchingPreviousPage}
+          >
+            {isFetchingPreviousPage ? "Loading..." : "Show past sessions"}
+          </Button>
+        )}
 
-        <Button
-          intent="plain"
-          size="xs"
-          className="mb-4"
-          onPress={() => fetchPreviousPage()}
-          isDisabled={!hasPreviousPage || isFetchingPreviousPage}
-        >
-          {isFetchingPreviousPage ? "Loading..." : "Show past sessions"}
-        </Button>
-        {sessions?.length === 0 && (
-          <div className="border bg-bg dark:bg-overlay-highlight rounded-lg border-dashed flex flex-col items-center justify-center w-full h-full p-6">
-            <Heading level={3} className="mb-1">
-              No upcoming sessions
-            </Heading>
-            <p className="text-muted-fg text-center max-w-xs">
-              Create your next session to see it here. Past sessions can be
-              viewed using the "Show past sessions" button above.
-            </p>
-          </div>
+        {sessions?.length === 0 && !isLoadingSessions && (
+          <EmptyState
+            title="No upcoming sessions"
+            description="Create your next session to see it here. Past sessions can be
+            viewed using the 'Show past sessions' button above."
+            icon={Calendar02Icon}
+            action={
+              <Button intent="primary" onPress={() => setIsAddModalOpen(true)}>
+                Create session
+              </Button>
+            }
+          />
         )}
 
         {isLoadingSessions ? (
@@ -229,13 +212,22 @@ export function SessionsList({ hubId }: { hubId: number }) {
         )}
 
         {/* Infinite scroll trigger */}
-        <div ref={loadMoreRef} className="py-4">
-          {isFetchingNextPage && (
-            <div className="text-center">
-              <SessionSkeleton />
-            </div>
-          )}
-        </div>
+
+        {hasNextPage && (
+          <div className="flex justify-center py-2 pb-4">
+            <Button
+              intent="plain"
+              onPress={() => fetchNextPage()}
+              isPending={isFetchingNextPage}
+            >
+              {isFetchingNextPage ? (
+                <Loader size="sm" intent="secondary" />
+              ) : (
+                "Load more"
+              )}
+            </Button>
+          </div>
+        )}
       </div>
       <DynamicAddSessionsFormModal
         isOpen={isAddModalOpen}

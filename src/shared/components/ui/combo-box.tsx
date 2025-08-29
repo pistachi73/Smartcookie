@@ -46,6 +46,7 @@ const ComboBox = <T extends object>({
   description,
   errorMessage,
   children,
+  isRequired,
   className,
   ...props
 }: ComboBoxProps<T>) => {
@@ -58,7 +59,7 @@ const ComboBox = <T extends object>({
         "group flex w-full flex-col gap-y-1 *:data-[slot=label]:font-medium",
       )}
     >
-      {label && <Label>{label}</Label>}
+      {label && <Label isRequired={isRequired}>{label}</Label>}
       {children}
       {description && <Description>{description}</Description>}
       <FieldError>{errorMessage}</FieldError>

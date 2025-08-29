@@ -23,7 +23,6 @@ import { getHubByIdQueryOptions } from "../lib/hub-query-options";
 import { CourseFeedback } from "./feedback";
 import { HubHeader } from "./hub-header";
 import { HubPanelHeader } from "./hub-panel-header";
-import { HubOverview } from "./overview";
 import { SessionsList } from "./session/session-list";
 import { Students } from "./students/students";
 
@@ -53,8 +52,8 @@ export function HubDashboard({ hubId }: { hubId: number }) {
       />
       <div className="h-full overflow-auto flex flex-col bg-bg">
         <HubHeader hubName={hub.name} />
-        <div className="lg:flex-1 flex flex-col lg:flex-row p-6 pt-0 gap-6">
-          <div className="bg-white rounded-lg border flex-1">
+        <div className="flex-1 flex flex-col lg:flex-row p-0 sm:p-6 sm:pt-0 gap-6">
+          <div className="bg-white sm:rounded-lg border flex-1">
             <Tabs
               aria-label="Hub Dashboard"
               selectedKey={selectedTab}
@@ -82,9 +81,7 @@ export function HubDashboard({ hubId }: { hubId: number }) {
                   );
                 })}
               </Tabs.List>
-              <Tabs.Panel id="overview" className={"p-6 pt-0"}>
-                <HubOverview hubId={hubId} />
-              </Tabs.Panel>
+
               <Tabs.Panel id="students" className={"px-4 sm:px-6"}>
                 <Students hubId={hubId} />
               </Tabs.Panel>
@@ -110,13 +107,6 @@ export function HubDashboard({ hubId }: { hubId: number }) {
                       </AddNoteCard>
                     }
                   />
-                  {/* <div className="flex flex-row items-center justify-between mb-6">
-                  <Heading level={2}>Quick Notes</Heading>
-                  <AddNoteCard hubId={hubId} size="sm" intent="primary">
-                    <HugeiconsIcon icon={NoteAddIcon} size={16} />
-                    Add note
-                  </AddNoteCard>
-                </div> */}
                   <NoteCardList hubId={Number(hubId)} hubColor={hub.color} />
                 </Tabs.Panel>
               </ViewportOnly>

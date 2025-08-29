@@ -95,7 +95,7 @@ export const PhoneField = ({
   const [selectedCountry, setSelectedCountry] =
     useState<CountryCode>(initialCountry);
   const [displayValue, setDisplayValue] = useState("");
-  const [isValid, setIsValid] = useState(false);
+  const [isValid, setIsValid] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
@@ -263,6 +263,8 @@ export const PhoneField = ({
     });
   }, []);
 
+  console.log({ value });
+
   return (
     <div className="relative">
       <TextField
@@ -273,6 +275,7 @@ export const PhoneField = ({
         placeholder={placeholder}
         prefix={countryPrefix}
         errorMessage={!isValid && value ? "Invalid phone number" : undefined}
+        isInvalid={Boolean(!isValid && value)}
       />
 
       <Select onSelectionChange={handleSelectionChange}>

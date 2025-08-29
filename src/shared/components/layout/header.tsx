@@ -66,8 +66,7 @@ export const Header = ({ user }: { user?: AuthUser }) => {
                     className={buttonStyles({
                       intent: "plain",
                       size: "lg",
-                      className:
-                        "sm:text-base shrink-0 tracking-tight hover:bg-primary-tint",
+                      className: "sm:text-base shrink-0 tracking-tight",
                     })}
                   >
                     <span>{item.label}</span>
@@ -162,7 +161,7 @@ export const Header = ({ user }: { user?: AuthUser }) => {
                     href="/login"
                     className={cn(
                       buttonStyles({ size: "lg", intent: "plain" }),
-                      "text-base shrink-0 tracking-tight hover:bg-primary-tint",
+                      "text-base shrink-0 tracking-tight",
                     )}
                   >
                     Log in

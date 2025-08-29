@@ -1,13 +1,8 @@
 "use client";
 
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Delete01Icon } from "@hugeicons-pro/core-stroke-rounded";
-import { AnimatePresence } from "motion/react";
-import * as m from "motion/react-m";
 import { memo, useEffect, useRef, useState } from "react";
-import { Button, TextArea } from "react-aria-components";
+import { TextArea } from "react-aria-components";
 
-import { ProgressCircle } from "@/ui/progress-circle";
 import { cn } from "@/shared/lib/classes";
 import { getCustomColorClasses } from "@/shared/lib/custom-colors";
 
@@ -17,6 +12,8 @@ import { useDeleteQuickNote } from "../../hooks/use-delete-quick-note";
 import { useUpdateQuickNote } from "../../hooks/use-update-quick-note";
 import type { NoteSummary } from "../../types/quick-notes.types";
 import "./note-card.css";
+
+import { DeleteProgressButton } from "@/shared/components/ui/delete-progress-button";
 
 interface NoteCardProps {
   note: NoteSummary;
@@ -36,13 +33,7 @@ const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
       clientId: note.clientId, // Add clientId for optimistic note retry mechanism
     });
 
-  const {
-    isDeleting,
-    deleteProgress,
-    handleDeletePress,
-    deleteNote,
-    handleDeleteRelease,
-  } = useDeleteQuickNote({
+  const { mutate: deleteNote } = useDeleteQuickNote({
     noteId: note.id,
     clientId: note.clientId,
     hubId: note.hubId || 0,
@@ -68,20 +59,36 @@ const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
     setIsEditingNote(false);
   };
 
+  const onDelete = () => {
+    deleteNote({ id: note.id });
+  };
+
   if (!note) return null;
 
   return (
     <div
       data-hub-id={note.hubId}
       className={cn(
-        "flex flex-col  rounded-lg border-1 border-border relative transition duration-250",
+        "bg-white group flex flex-col  rounded-lg border-1 border-border relative transition duration-250",
         "note-card focus-within:opacity-100! ",
-        "bg-overlay shadow-sm",
-        "dark:bg-overlay-highlight dark:hover:bg-overlay-elevated",
-        isEditingNote && `${colorClasses.border} ${colorClasses.bg}`,
+        isEditingNote && `${colorClasses.border}`,
       )}
     >
-      <div className="absolute top-0 right-0 z-10">
+      <DeleteProgressButton
+        pressDuration={400}
+        intent="plain"
+        size="sq-xs"
+        className={{
+          container: cn(
+            "block sm:hidden sm:group-hover:block absolute top-1.5 right-1.5",
+          ),
+          button:
+            "size-6 **:data-[slot=icon]:size-3 **:data-[slot=icon]:text-danger rounded-full",
+          progressCircle: "size-8",
+        }}
+        onDelete={onDelete}
+      />
+      {/* <div className="hidden absolute top-0 right-0 z-10">
         <Button
           excludeFromTabOrder
           isDisabled={note.id < 0}
@@ -119,7 +126,7 @@ const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
             </m.div>
           )}
         </AnimatePresence>
-      </div>
+      </div> */}
       <TextArea
         ref={textAreaRef}
         value={content}

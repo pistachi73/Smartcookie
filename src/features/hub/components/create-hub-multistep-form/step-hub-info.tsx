@@ -74,9 +74,7 @@ export function StepHubInfo() {
                 isRequired
                 isInvalid={fieldState.invalid}
                 errorMessage={fieldState.error?.message}
-                className={{
-                  primitive: "flex-1 w-full",
-                }}
+                className="flex-1 w-full"
                 {...field}
               />
             )}
@@ -147,7 +145,7 @@ export function StepHubInfo() {
               errorMessage={fieldState.error?.message}
               description="Max 20 characters"
               maxLength={20}
-              className={{ primitive: "flex-1" }}
+              className="flex-1"
               {...field}
             />
           )}
@@ -161,7 +159,7 @@ export function StepHubInfo() {
               placeholder="Weekly on Mondays"
               errorMessage={fieldState.error?.message}
               description="Optional schedule information"
-              className={{ primitive: "flex-1" }}
+              className="flex-1"
               {...field}
             />
           )}

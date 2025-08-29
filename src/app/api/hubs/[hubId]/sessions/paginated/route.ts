@@ -15,7 +15,7 @@ export async function GET(
 
     const result = await getPaginatedSessionsByHubId({
       hubId,
-      cursor: cursor ? new Date(cursor) : undefined,
+      cursor: cursor ? cursor : undefined,
       direction: direction || "next",
       limit: limit || 10,
     });

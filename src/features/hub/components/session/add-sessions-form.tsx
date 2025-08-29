@@ -123,7 +123,7 @@ export function AddSessionsForm({
   const selectedHub = hubOptions.find((hub) => hub.value === selectedHubId);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <Controller
         control={form.control}
         name="hubId"
@@ -139,7 +139,7 @@ export function AddSessionsForm({
             validationBehavior="aria"
             isInvalid={invalid}
             errorMessage={error?.message}
-            isDisabled={disableHubSelection || isLoading}
+            isReadOnly={disableHubSelection || isLoading}
           >
             <ComboBox.Input
               placeholder={isLoading ? "Loading hubs..." : "Select a hub"}
@@ -178,8 +178,10 @@ export function AddSessionsForm({
           />
         )}
       />
-      <div className="flex flex-col gap-1.5">
-        <Label isRequired={true}>Start & End Time</Label>
+      <div className="flex flex-col gap-y-1">
+        <Label isRequired={true} className="font-medium">
+          Start & End Time
+        </Label>
 
         <div className="flex items-center gap-2 w-full">
           <Controller

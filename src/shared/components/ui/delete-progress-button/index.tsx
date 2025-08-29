@@ -4,11 +4,11 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Delete01Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";
-import { Button, type ButtonProps } from "react-aria-components";
 
 import { ProgressCircle } from "@/shared/components/ui/progress-circle";
 import { cn } from "@/shared/lib/classes";
 
+import { Button, type ButtonProps } from "../button";
 import { useDeleteProgressButton } from "./use-delete-progress-button";
 
 type DeleteProgressButtonProps = Omit<
@@ -42,9 +42,10 @@ export const DeleteProgressButton = ({
         onPressStart={handleDeletePress}
         onPressEnd={handleDeleteRelease}
         aria-label="Delete note"
+        isCircle
         className={({ isDisabled }) =>
           cn(
-            "size-9 z-20 flex items-center justify-center text-muted-fg hover:bg-transparent!",
+            "z-20 flex items-center justify-center",
             isDisabled && "opacity-50",
             className?.button,
           )
@@ -53,8 +54,7 @@ export const DeleteProgressButton = ({
       >
         <HugeiconsIcon
           icon={Delete01Icon}
-          size={14}
-          data-slot="icon"
+          size={12}
           className={cn("transition-colors", isDeleting && "text-danger")}
         />
       </Button>

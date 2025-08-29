@@ -51,9 +51,15 @@ export const getPaginatedSessionsByHubIdQueryOptions = (hubId: number) =>
         direction,
       });
     },
-    initialPageParam: [undefined, undefined] as PageParam,
-    getNextPageParam: (lastPage) => [lastPage.nextCursor, "next"] as PageParam,
+    initialPageParam: [undefined, "next"] as PageParam,
+    getNextPageParam: (lastPage) => {
+      return lastPage.hasNextPage && lastPage.nextCursor
+        ? ([lastPage.nextCursor, "next"] as PageParam)
+        : undefined;
+    },
     getPreviousPageParam: (firstPage) => {
-      return [firstPage.prevCursor, "prev"] as PageParam;
+      return firstPage.prevCursor
+        ? ([firstPage.prevCursor, "prev"] as PageParam)
+        : undefined;
     },
   });

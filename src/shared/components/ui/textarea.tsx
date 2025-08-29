@@ -1,32 +1,18 @@
 "use client";
 
 import {
-  composeRenderProps,
-  TextArea as TextAreaPrimitive,
-  TextField as TextFieldPrimitive,
-  type TextFieldProps as TextFieldPrimitiveProps,
-  type ValidationResult,
+  TextArea,
+  TextField,
+  type TextFieldProps,
 } from "react-aria-components";
-import { tv } from "tailwind-variants";
+import { twJoin } from "tailwind-merge";
 
-import { Description, FieldError, Label } from "./field";
-import { composeTailwindRenderProps, focusStyles } from "./primitive";
+import { composeTailwindRenderProps } from "@/shared/lib/primitive";
 
-const textareaStyles = tv({
-  extend: focusStyles,
-  base: "min-h-10 flex-1 field-sizing-content resize-none w-full min-w-0 rounded-lg border border-input px-2.5 py-2 text-base shadow-xs outline-hidden transition-colors duration-200 data-disabled:opacity-50",
-});
+import { Description, FieldError, type FieldProps, Label } from "./field";
 
-interface TextareaProps extends Omit<TextFieldPrimitiveProps, "className"> {
-  autoSize?: boolean;
-  label?: string;
-  placeholder?: string;
-  description?: string;
-  errorMessage?: string | ((validation: ValidationResult) => string);
-  className?: {
-    primitive?: string;
-    textarea?: string;
-  };
+interface TextareaProps extends Omit<TextFieldProps, "className">, FieldProps {
+  className?: string | ((v: TextFieldProps) => string);
 }
 
 const Textarea = ({
@@ -38,30 +24,33 @@ const Textarea = ({
   ...props
 }: TextareaProps) => {
   return (
-    <TextFieldPrimitive
+    <TextField
       {...props}
       className={composeTailwindRenderProps(
-        className?.primitive,
-        "group flex flex-col gap-y-1.5",
+        className,
+        "group flex flex-col gap-y-1 *:data-[slot=label]:font-medium",
       )}
     >
       {label && <Label>{label}</Label>}
-      <TextAreaPrimitive
+      <TextArea
         placeholder={placeholder}
-        className={composeRenderProps(
-          className?.textarea,
-          (className, renderProps) =>
-            textareaStyles({
-              ...renderProps,
-              className,
-            }),
+        className={composeTailwindRenderProps(
+          className,
+          twJoin([
+            "field-sizing-content max-h-96 min-h-16 w-full min-w-0 rounded-lg border border-input px-2.5 py-2 text-base placeholder-muted-fg shadow-xs outline-hidden transition duration-200 sm:text-sm/6",
+            "focus:border-ring/70 focus:ring-3 focus:ring-ring/20",
+            "focus:invalid:border-danger/70 focus:invalid:ring-3 focus:invalid:ring-danger/20",
+            "invalid:border-danger/70",
+            "disabled:opacity-50 disabled:forced-colors:border-[GrayText]",
+            "hover:border-current/20 invalid:hover:border-danger/70",
+          ]),
         )}
       />
       {description && <Description>{description}</Description>}
       <FieldError>{errorMessage}</FieldError>
-    </TextFieldPrimitive>
+    </TextField>
   );
 };
 
-export { Textarea };
 export type { TextareaProps };
+export { Textarea };

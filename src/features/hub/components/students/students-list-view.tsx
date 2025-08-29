@@ -7,10 +7,10 @@ import { Button } from "@/shared/components/ui/button";
 import { Menu } from "@/shared/components/ui/menu";
 import { Table } from "@/shared/components/ui/table";
 import { StudentProfile } from "@/shared/components/students/student-profile";
+import { cn } from "@/shared/lib/utils";
 
 import { useStudentsByHubId } from "../../hooks/students/use-students-by-hub-id";
 import { AttendanceBar } from "./attendance-bar";
-import { SkeletonStudentListView } from "./skeleton-student-list-view";
 
 const DynamicRemoveStudentModal = dynamic(
   () => import("./remove-student-modal").then((mod) => mod.RemoveStudentModal),
@@ -20,7 +20,7 @@ const DynamicRemoveStudentModal = dynamic(
 );
 
 export const StudentsListView = ({ hubId }: { hubId: number }) => {
-  const { data: students, isPending } = useStudentsByHubId(hubId);
+  const { data: students } = useStudentsByHubId(hubId);
   const [selectedStudent, setSelectedStudent] = useState<number>();
   const [isRemoveStudentModalOpen, setIsRemoveStudentModalOpen] =
     useState(false);
@@ -30,12 +30,18 @@ export const StudentsListView = ({ hubId }: { hubId: number }) => {
     setIsRemoveStudentModalOpen(true);
   };
 
-  if (isPending) return <SkeletonStudentListView />;
-
   return (
     <>
-      <Table aria-label="Students">
-        <Table.Header>
+      <Table
+        aria-label="Students"
+        bleed
+        className={cn(
+          " border-t",
+          "[--gutter:--spacing(4)] sm:[--gutter:--spacing(6)]",
+          "[--gutter-y:--spacing(3)]",
+        )}
+      >
+        <Table.Header className={"bg-muted "}>
           <Table.Column isRowHeader id="name">
             Student Name
           </Table.Column>

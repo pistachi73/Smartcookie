@@ -426,3 +426,8 @@
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+
+*:focus:not(.focus-visible) {
+  outline: none;
+}

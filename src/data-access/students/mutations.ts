@@ -8,13 +8,16 @@ import {
   addAttendance,
   removeAllStudentAttendance,
 } from "../attendance/mutations";
+import { createDataAccessError } from "../errors";
 import { withValidationAndAuth } from "../protected-data-access";
 import { archiveStudentSurveyResponsesInHub } from "../survey-response/mutations";
 import {
   AddStudentSchema,
   AddStudentToHubSchema,
   CreateStudentInHubSchema,
+  DeleteStudentSchema,
   RemoveStudentFromHubSchema,
+  UpdateStudentSchema,
 } from "./schemas";
 
 export const addStudent = withValidationAndAuth({
@@ -154,5 +157,31 @@ export const createStudentInHub = withValidationAndAuth({
       message: "Student created successfully",
       data: { studentId: createdStudentId! },
     };
+  },
+});
+
+export const deleteStudent = withValidationAndAuth({
+  schema: DeleteStudentSchema,
+  callback: async ({ studentId }, user) => {
+    await db
+      .delete(student)
+      .where(and(eq(student.id, studentId), eq(student.userId, user.id)));
+  },
+});
+
+export const updateStudent = withValidationAndAuth({
+  schema: UpdateStudentSchema,
+  callback: async ({ id, ...studentData }, user) => {
+    const [updatedStudent] = await db
+      .update(student)
+      .set(studentData)
+      .where(and(eq(student.id, id), eq(student.userId, user.id)))
+      .returning();
+
+    if (!updatedStudent) {
+      return createDataAccessError("NOT_FOUND", "Student not found");
+    }
+
+    return updatedStudent;
   },
 });

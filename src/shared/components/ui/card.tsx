@@ -8,7 +8,7 @@ const Card = ({
     <div
       data-slot="card"
       className={twMerge(
-        "group/card  flex flex-col gap-(--card-spacing) rounded-lg border bg-white py-(--card-spacing) text-fg shadow-xs [--card-spacing:--spacing(6)] has-[table]:overflow-hidden has-[table]:not-has-data-[slot=card-footer]:pb-0 **:data-[slot=table-header]:bg-muted/50 has-[table]:**:data-[slot=card-footer]:border-t **:[table]:overflow-hidden",
+        "group/card  flex flex-col gap-(--card-spacing) rounded-lg border bg-white py-(--card-spacing) text-fg shadow-xs [--card-spacing:--spacing(6)] has-[table]:overflow-hidden has-[table]:not-has-data-[slot=card-footer]:pb-0 **:data-[slot=table-header]:bg-muted/50 **:[table]:overflow-hidden",
         className,
       )}
       {...props}
@@ -51,7 +51,7 @@ const CardTitle = ({ className, ...props }: React.ComponentProps<"div">) => {
     <div
       data-slot="card-title"
       className={twMerge(
-        "text-balance font-semibold text-fg text-lg/6 sm:text-base/6",
+        "text-balance font-semibold text-fg sm:text-lg/6 text-base/6",
         className,
       )}
       {...props}
@@ -112,10 +112,7 @@ const CardFooter = ({
   return (
     <div
       data-slot="card-footer"
-      className={twMerge(
-        "flex items-center px-(--card-spacing) group-has-[table]/card:pt-(--card-spacing) [.border-t]:pt-6",
-        className,
-      )}
+      className={twMerge("flex items-center px-(--card-spacing)", className)}
       {...props}
     />
   );

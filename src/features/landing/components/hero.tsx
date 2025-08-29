@@ -250,10 +250,12 @@ export const EmailMarketingForm = () => {
         name="email"
         render={({ field }) => (
           <TextField
+            autoComplete="email"
             placeholder="Enter your email"
             className={{
               primitive: "w-full max-w-[400px]",
-              fieldGroup: "w-full sm:w-[400px] h-13",
+              fieldGroup: "h-13",
+              input: "sm:text-base! h-full",
             }}
             {...field}
           />
@@ -265,7 +267,7 @@ export const EmailMarketingForm = () => {
         size="lg"
         type="submit"
         isPending={isPending}
-        className="group h-13 w-full sm:w-auto max-w-[400px] sm:max-w-none gap-6"
+        className="group h-13 w-full sm:w-auto max-w-[400px] sm:max-w-none gap-6 text-base"
       >
         {isPending ? "Sending..." : "Get a Demo"}
         {isPending ? (

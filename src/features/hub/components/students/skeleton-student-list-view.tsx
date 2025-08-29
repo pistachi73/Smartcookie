@@ -2,6 +2,7 @@
 
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { Table } from "@/shared/components/ui/table";
+import { cn } from "@/shared/lib/utils";
 
 const columns = [
   { id: "name", name: "Name" },
@@ -19,10 +20,20 @@ export const SkeletonStudentListView = () => {
   }));
 
   return (
-    <Table aria-label="Loading students">
-      <Table.Header columns={columns}>
+    <Table
+      aria-label="Loading students"
+      bleed
+      className={cn(
+        " border-t",
+        "[--gutter:--spacing(4)] sm:[--gutter:--spacing(6)]",
+        "[--gutter-y:--spacing(3)]",
+      )}
+    >
+      <Table.Header columns={columns} className={"bg-muted"}>
         <Table.Column isRowHeader>Student Name</Table.Column>
-        <Table.Column className="h-full">Attended Sessions</Table.Column>
+        <Table.Column className="h-full">
+          Attended Sessions (completed sessions)
+        </Table.Column>
         <Table.Column />
       </Table.Header>
       <Table.Body items={items}>

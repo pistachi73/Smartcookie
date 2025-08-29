@@ -206,7 +206,10 @@ export const getPaginatedSessionsByHubId = withValidationAndAuth({
       sessions.length > 0
         ? sessions[sessions.length - 1]?.startTime
         : undefined;
-    const prevCursor = sessions.length > 0 ? sessions[0]?.startTime : undefined;
+    const prevCursor =
+      sessions.length > 0
+        ? sessions[sessions.length - 1]?.startTime
+        : undefined;
 
     // For initial load, set prevCursor to "now" so past sessions can be loaded
     let finalPrevCursor = prevCursor;

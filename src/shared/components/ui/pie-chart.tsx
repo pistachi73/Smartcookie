@@ -122,33 +122,30 @@ const PieChart = <TValue extends ValueType, TName extends NameType>({
             </text>
           )}
 
-          {!children ? (
-            <Pie
-              name={nameKey}
-              dataKey={dataKey}
-              data={data}
-              cx={pieProps?.cx ?? "50%"}
-              cy={pieProps?.cy ?? "50%"}
-              startAngle={pieProps?.startAngle ?? 90}
-              endAngle={pieProps?.endAngle ?? -270}
-              strokeLinejoin="round"
-              innerRadius={variant === "donut" ? "50%" : "0%"}
-              isAnimationActive
-              {...pieProps}
-            >
-              {data.map((_, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={getColorValue(
-                    config?.[data[index]?.code || data[index]?.name]?.color ??
-                      colors[index % colors.length],
-                  )}
-                />
-              ))}
-            </Pie>
-          ) : (
-            children
-          )}
+          <Pie
+            name={nameKey}
+            dataKey={dataKey}
+            data={data}
+            cx={pieProps?.cx ?? "50%"}
+            cy={pieProps?.cy ?? "50%"}
+            startAngle={pieProps?.startAngle ?? 90}
+            endAngle={pieProps?.endAngle ?? -270}
+            strokeLinejoin="round"
+            innerRadius={variant === "donut" ? "50%" : "0%"}
+            isAnimationActive
+            {...pieProps}
+          >
+            {data.map((_, index) => (
+              <Cell
+                key={`cell-${index}`}
+                fill={getColorValue(
+                  config?.[data[index]?.code || data[index]?.name]?.color ??
+                    colors[index % colors.length],
+                )}
+              />
+            ))}
+          </Pie>
+          {children}
 
           {tooltip && (
             <ChartTooltip

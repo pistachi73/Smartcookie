@@ -69,12 +69,15 @@ export const DraggableSessionNote = ({
       <p className="text-sm pr-4 overflow-hidden">{note.content}</p>
       <DeleteProgressButton
         pressDuration={400}
+        intent="plain"
+        size="sq-xs"
         className={{
-          container:
-            "block sm:hidden sm:group-hover:block absolute top-0 right-0",
+          container: cn(
+            "block sm:hidden sm:group-hover:block absolute top-1.5 right-1.5",
+          ),
           button:
-            "size-7 **:data-[slot=icon]:size-3 hover:bg-overlay-elevated bg-overlay-elevated rounded-full",
-          progressCircle: "size-7",
+            "size-6 **:data-[slot=icon]:size-3 **:data-[slot=icon]:text-danger rounded-full",
+          progressCircle: "size-8",
         }}
         onDelete={onDelete}
       />

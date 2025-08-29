@@ -22,7 +22,7 @@ export const SidebarSection = ({
           </Header>
         ) : (
           <div className="h-4">
-            <div className="h-0.5 w-10 bg-sidebar" />
+            <div className="mx-auto h-0.5 w-8 bg-accent" />
           </div>
         ))}
       <div className="flex flex-col gap-y-0.5">{props.children}</div>

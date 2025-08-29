@@ -1,12 +1,19 @@
 import { HugeiconsIcon } from "@hugeicons/react";
-import { DeleteIcon, UserAdd02Icon } from "@hugeicons-pro/core-stroke-rounded";
+import {
+  DeleteIcon,
+  UserAdd01Icon,
+  UserAdd02Icon,
+} from "@hugeicons-pro/core-stroke-rounded";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 
 import { Button } from "@/shared/components/ui/button";
+import { EmptyState } from "@/shared/components/ui/empty-state";
 import { Menu } from "@/shared/components/ui/menu";
 
+import { useStudentsByHubId } from "../../hooks/students/use-students-by-hub-id";
 import { HubPanelHeader } from "../hub-panel-header";
+import { SkeletonStudentListView } from "./skeleton-student-list-view";
 import { StudentsListView } from "./students-list-view";
 
 const DynamicCreateStudentFormModal = dynamic(
@@ -30,6 +37,7 @@ export const Students = ({ hubId }: { hubId: number }) => {
   const [isAddStudentFormModalOpen, setIsAddStudentFormModalOpen] =
     useState(false);
   const [isAddStudentModalOpen, setIsAddStudentModalOpen] = useState(false);
+  const { data: students, isPending } = useStudentsByHubId(hubId);
 
   return (
     <>
@@ -67,7 +75,25 @@ export const Students = ({ hubId }: { hubId: number }) => {
           }
         />
 
-        <StudentsListView hubId={hubId} />
+        {isPending ? (
+          <SkeletonStudentListView />
+        ) : students?.length === 0 ? (
+          <EmptyState
+            title="No students enrolled"
+            description="Add students to your course to see them here."
+            icon={UserAdd01Icon}
+            action={
+              <Button
+                intent="primary"
+                onPress={() => setIsAddStudentModalOpen(true)}
+              >
+                Add student
+              </Button>
+            }
+          />
+        ) : (
+          <StudentsListView hubId={hubId} />
+        )}
       </div>
       <DynamicCreateStudentFormModal
         hubId={hubId}

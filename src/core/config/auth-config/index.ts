@@ -6,6 +6,7 @@ import Google from "next-auth/providers/google";
 
 import { db } from "@/db";
 import { account, user, userSession } from "@/db/schema";
+import { env } from "@/env";
 import { authorize } from "./authorize";
 import { jwtCallback, sessionCallback, signInCallback } from "./callbacks";
 
@@ -24,14 +25,10 @@ export const authConfig = {
       authorize: authorize,
     }),
   ],
+  secret: env.AUTH_SECRET,
 } satisfies NextAuthConfig;
 
-export const {
-  handlers: { GET, POST },
-  auth,
-  signIn,
-  signOut,
-} = NextAuth({
+export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: {
     signIn: "/login",
     error: "/error",
