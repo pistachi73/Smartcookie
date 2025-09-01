@@ -1,5 +1,4 @@
 import { NextResponse, userAgent } from "next/server";
-import NextAuth from "next-auth";
 
 import {
   API_AUTH_PREFIX,
@@ -8,10 +7,8 @@ import {
   PRIVATE_ROUTES,
   VERCEL_HEADERS,
 } from "@/core/config/app-config";
-import { authConfig } from "@/core/config/auth-config";
+import { auth } from "@/core/config/auth-config";
 import type { DeviceType } from "./shared/components/layout/viewport-context/types";
-
-const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
   const {

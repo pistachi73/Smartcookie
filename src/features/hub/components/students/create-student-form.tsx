@@ -56,9 +56,6 @@ export const CreateStudentForm = ({
             isInvalid={fieldState.invalid}
             errorMessage={fieldState.error?.message}
             autoFocus={autoFocus}
-            className={{
-              input: "text-sm",
-            }}
             {...field}
           />
         )}
@@ -75,9 +72,6 @@ export const CreateStudentForm = ({
             validationBehavior="aria"
             isInvalid={fieldState.invalid}
             errorMessage={fieldState.error?.message}
-            className={{
-              input: "text-sm",
-            }}
             {...field}
           />
         )}
@@ -95,9 +89,6 @@ export const CreateStudentForm = ({
             validationBehavior="aria"
             isInvalid={fieldState.invalid}
             errorMessage={fieldState.error?.message}
-            className={{
-              input: "text-sm",
-            }}
           />
         )}
       />

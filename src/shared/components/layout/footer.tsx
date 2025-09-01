@@ -158,15 +158,11 @@ export const Footer = () => {
                   onPress={scrollToTop}
                   intent="secondary"
                   size="sm"
-                  className={cn(
-                    "group flex items-center gap-2 px-4 py-2",
-                    "hover:bg-primary-tint hover:text-primary transition-all duration-200",
-                    "border-border/40 hover:border-primary/30",
-                  )}
+                  className={cn("group")}
                 >
                   <HugeiconsIcon
                     icon={ArrowUp01Icon}
-                    size={16}
+                    data-slot="icon"
                     className="group-hover:-translate-y-0.5 transition-transform duration-200"
                   />
                   Back to top

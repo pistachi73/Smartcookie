@@ -18,12 +18,8 @@ export const IntervalInput = ({
           interval: Number.isNaN(interval) ? 1 : interval,
         }));
       }}
-      size="small"
       value={interval}
       defaultValue={1}
-      className={{
-        fieldGroup: "hover:bg-overlay-elevated",
-      }}
       aria-label="Every x days"
       step={1}
       minValue={1}

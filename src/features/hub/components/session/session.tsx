@@ -132,10 +132,10 @@ export const Session = ({ session, position, hubId }: SessionProps) => {
                 isExpanded && "bg-overlay-highlight dark:bg-overlay-elevated",
               )}
             >
-              <p className="text-xs text-muted-fg">
+              <p className="text-xs text-muted-fg tabular-nums">
                 {format(session.startTime, "MMM")}
               </p>
-              <p className="text-base font-semibold">
+              <p className="text-base font-semibold tabular-nums">
                 {format(session.startTime, "dd")}
               </p>
             </m.div>
@@ -146,7 +146,7 @@ export const Session = ({ session, position, hubId }: SessionProps) => {
               Session {position}
             </Heading>
             <Separator orientation="vertical" className="h-4" />
-            <p className="text-sm text-muted-fg flex flex-row items-center gap-1">
+            <p className="tabular-nums text-sm text-muted-fg flex flex-row items-center gap-1">
               <HugeiconsIcon
                 icon={Clock01Icon}
                 size={14}
@@ -170,7 +170,7 @@ export const Session = ({ session, position, hubId }: SessionProps) => {
                 </Button>
               </div>
             )}
-            <div className="size-9 flex items-center justify-center">
+            <div className="size-8 flex items-center justify-center">
               {isLoadingSessionNotes && isExpanded ? (
                 <ProgressCircle
                   isIndeterminate

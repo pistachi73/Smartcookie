@@ -10,7 +10,6 @@ import { buttonStyles } from "@/shared/components/ui/button";
 import { Menu } from "@/shared/components/ui/menu";
 import { cn } from "@/shared/lib/classes";
 
-import { env } from "@/env";
 import type { AuthUser } from "@/types/next-auth";
 import { MaxWidthWrapper } from "./max-width-wrapper";
 
@@ -33,10 +32,13 @@ const publicNavigation = [
   },
 ];
 
-export const Header = ({ user }: { user?: AuthUser }) => {
-  const isPortalBlocked = env.NEXT_PUBLIC_BLOCK_PORTAL === "true";
-  console.log(user);
-
+export const Header = ({
+  user,
+  portalEnabled = false,
+}: {
+  user?: AuthUser;
+  portalEnabled: boolean;
+}) => {
   return (
     <>
       <div aria-hidden="true" className="h-17 bg-white" />
@@ -66,8 +68,7 @@ export const Header = ({ user }: { user?: AuthUser }) => {
                     className={buttonStyles({
                       intent: "plain",
                       size: "lg",
-                      className:
-                        "sm:text-base shrink-0 tracking-tight hover:bg-primary-tint",
+                      className: "sm:text-base shrink-0 tracking-tight",
                     })}
                   >
                     <span>{item.label}</span>
@@ -138,7 +139,7 @@ export const Header = ({ user }: { user?: AuthUser }) => {
               </Menu.Content>
             </Menu>
           </div>
-          {!isPortalBlocked && (
+          {portalEnabled && (
             <div className="h-full shadow-md bg-overlay rounded-2xl flex gap-1 p-1 items-center shrink-0">
               {user ? (
                 <Link
@@ -162,7 +163,7 @@ export const Header = ({ user }: { user?: AuthUser }) => {
                     href="/login"
                     className={cn(
                       buttonStyles({ size: "lg", intent: "plain" }),
-                      "text-base shrink-0 tracking-tight hover:bg-primary-tint",
+                      "text-base shrink-0 tracking-tight",
                     )}
                   >
                     Log in

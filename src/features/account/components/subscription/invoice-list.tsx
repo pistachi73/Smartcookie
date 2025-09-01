@@ -117,11 +117,7 @@ export const InvoiceList = ({
                   </Table.Cell>
 
                   <Table.Cell>
-                    <Badge
-                      intent={statusProps.intent}
-                      shape="square"
-                      className="text-xs"
-                    >
+                    <Badge intent={statusProps.intent} className="text-xs">
                       {statusProps.label}
                     </Badge>
                   </Table.Cell>

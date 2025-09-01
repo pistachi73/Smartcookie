@@ -41,15 +41,18 @@ export const NextSession = () => {
       : format(new Date(nextSession.startTime), "EEEE, dd MMMM");
 
   return (
-    <Card className="shrink-0 flex flex-col h-full bg-overlay">
+    <Card className="shrink-0 flex flex-col h-full bg-overlay @container">
       <Card.Header className="flex flex-row items-center justify-between">
-        <Card.Title className="flex gap-4 items-center">
+        <Card.Title className="flex gap-2 @2xl:gap-4  flex-col @2xl:items-center  @2xl:flex-row">
           <span className="flex items-center gap-1.5">
             <HugeiconsIcon icon={CalendarCheckOut02Icon} size={18} />
             Upcoming Session
           </span>
-          <Separator orientation="vertical" className="h-4" />
-          <div className="flex items-start gap-2">
+          <Separator
+            orientation="vertical"
+            className="h-4 hidden @2xl:block "
+          />
+          <div className="flex items-start gap-2 text-sm @2xl:text-lg">
             <div className="flex gap-4 items-center">
               <span>{label}</span>
               <div className="font-medium text-muted-fg flex items-center gap-1.5 tabular-nums">
@@ -73,13 +76,13 @@ export const NextSession = () => {
               size: "sm",
             })}
           >
-            Go to course
+            <span className="hidden @2xl:block">Go to course</span>
             <HugeiconsIcon icon={LinkSquare02Icon} data-slot="icon" size={14} />
           </Link>
         </Card.Action>
       </Card.Header>
 
-      <Card.Content className="grid grid-cols-[1fr_2fr] gap-8">
+      <Card.Content className="grid grid-cols-1 @2xl:grid-cols-[1fr_2fr] gap-8">
         <div className="space-y-4 min-w-0">
           <div className="flex items-center gap-2">
             <div
@@ -118,32 +121,7 @@ export const NextSession = () => {
                 }}
               />
             )}
-            {/* <AvatarStack
-              size="lg"
-              users={nextSession.students ?? []}
-              className={{
-                avatar: "outline-overlay outline-2",
-              }}
-            /> */}
           </section>
-          {/* <section className="space-y-3">
-            
-            {nextSession.students.map((student) => (
-              <StudentProfile
-                key={student.id}
-                name={student.name}
-                email={student.email}
-                image={student.image}
-              />
-            ))}
-            <AvatarStack
-              size="md"
-              users={nextSession.students ?? []}
-              className={{
-                avatar: "outline-overlay",
-              }}
-            />
-          </section> */}
         </div>
         <div className="shrink-0 flex flex-col gap-4">
           {/* <p className="text-xs font-medium text-muted-fg uppercase">

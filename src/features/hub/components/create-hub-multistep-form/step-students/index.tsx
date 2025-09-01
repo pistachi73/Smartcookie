@@ -92,7 +92,7 @@ export function StepStudents() {
                 onStudentSelectionChange(key as string)
               }
             >
-              <ComboBox.Input />
+              <ComboBox.Input className={"h-10"} />
               {isFetching && (
                 <div className="absolute right-4 top-1/2 -translate-y-1/2 animate-spin">
                   <Loader />

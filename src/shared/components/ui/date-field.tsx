@@ -15,12 +15,17 @@ import { Description, FieldError, FieldGroup, Label } from "./field";
 import { composeTailwindRenderProps } from "./primitive";
 
 interface DateFieldProps<T extends DateValue>
-  extends DateFieldPrimitiveProps<T> {
+  extends Omit<DateFieldPrimitiveProps<T>, "className"> {
   label?: string;
   description?: string;
   errorMessage?: string | ((validation: ValidationResult) => string);
   prefix?: React.ReactNode;
   suffix?: React.ReactNode;
+  className?: {
+    primitive?: string;
+    fieldGroup?: string;
+    input?: string;
+  };
 }
 
 const DateField = <T extends DateValue>({
@@ -29,20 +34,26 @@ const DateField = <T extends DateValue>({
   label,
   description,
   errorMessage,
+  className,
   ...props
 }: DateFieldProps<T>) => {
   return (
     <DateFieldPrimitive
       {...props}
       className={composeTailwindRenderProps(
-        props.className,
+        className?.primitive,
         "group flex flex-col gap-y-1.5",
       )}
+      validationBehavior="aria"
     >
       {label && <Label>{label}</Label>}
-      <FieldGroup>
-        {prefix ? <span data-slot="prefix">{prefix}</span> : null}
-        <DateInput />
+      <FieldGroup className={className?.fieldGroup}>
+        {prefix && typeof prefix === "string" ? (
+          <span className="pl-2 text-muted-fg">{prefix}</span>
+        ) : (
+          prefix
+        )}
+        <DateInput className={className?.input} />
         {suffix ? <span data-slot="suffix">{suffix}</span> : null}
       </FieldGroup>
       {description && <Description>{description}</Description>}

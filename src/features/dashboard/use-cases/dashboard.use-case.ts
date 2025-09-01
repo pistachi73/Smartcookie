@@ -1,6 +1,6 @@
 "use server";
 
-import { addDays, lastDayOfWeek, startOfWeek } from "date-fns";
+import { addDays, format, lastDayOfWeek, startOfWeek } from "date-fns";
 import { and, asc, eq, gte, lt, sql } from "drizzle-orm";
 import { z } from "zod";
 
@@ -231,12 +231,14 @@ export const getWeeklyHoursUseCase = withValidationAndAuth({
         sessionsByDay[dayKey]![hubName] = 0;
       }
 
-      sessionsByDay[dayKey]![hubName] += durationInHours;
+      sessionsByDay[dayKey]![hubName] +=
+        Math.round(durationInHours * 100) / 100;
     }
 
     const formattedData: DayHours[] = Object.entries(sessionsByDay).map(
       ([day, hubs]) => ({
-        day,
+        day: format(day, "MMM d"),
+
         ...hubs,
       }),
     );
@@ -261,8 +263,8 @@ export const getWeeklyHoursUseCase = withValidationAndAuth({
       if (hubName) {
         acc[hubName] = {
           label: hubName,
-          color: hubColors[hubName] ?? "neutral",
-          colorVariable: `var(--color-custom-${hubColors[hubName]}-bg)`,
+          colorVariable: hubColors[hubName] ?? "neutral",
+          color: `var(--custom-${hubColors[hubName]}-bg)`,
         };
       }
       return acc;

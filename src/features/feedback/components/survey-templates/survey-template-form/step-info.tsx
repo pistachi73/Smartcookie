@@ -70,7 +70,6 @@ export function StepInfo() {
             autoFocus
             placeholder="e.g., Student Experience Survey"
             maxLength={255}
-            className={{ input: "text-sm" }}
             errorMessage={fieldState.error?.message}
             isInvalid={!!fieldState.error}
           />
@@ -87,8 +86,7 @@ export function StepInfo() {
             placeholder="Brief explanation of the survey purpose"
             maxLength={1000}
             className={{
-              primitive: "h-32",
-              textarea: "resize-none text-sm",
+              textarea: "h-32 resize-none",
             }}
             errorMessage={fieldState.error?.message}
             isInvalid={!!fieldState.error}

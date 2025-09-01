@@ -23,9 +23,7 @@ export const env = createEnv({
     STRIPE_PRO_ANNUAL_PRICE_ID: z.string(),
   },
 
-  client: {
-    NEXT_PUBLIC_BLOCK_PORTAL: z.string().optional(),
-  },
+  client: {},
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
@@ -40,8 +38,6 @@ export const env = createEnv({
     STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
     STRIPE_PRO_MONTHLY_PRICE_ID: process.env.STRIPE_PRO_MONTHLY_PRICE_ID,
     STRIPE_PRO_ANNUAL_PRICE_ID: process.env.STRIPE_PRO_ANNUAL_PRICE_ID,
-
-    NEXT_PUBLIC_BLOCK_PORTAL: process.env.NEXT_PUBLIC_BLOCK_PORTAL,
   },
 
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,

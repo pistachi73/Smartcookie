@@ -161,8 +161,7 @@ export const QuestionForm = ({
             {...field}
             placeholder="Provide additional context or instructions for this question (optional)"
             className={{
-              primitive: "h-42",
-              textarea: "resize-none",
+              textarea: "h-32 resize-none",
             }}
             errorMessage={fieldState.error?.message}
             isInvalid={!!fieldState.error}

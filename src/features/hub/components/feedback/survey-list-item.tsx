@@ -130,7 +130,7 @@ export const SurveyListItem = ({
               </div>
               <div className="flex flex-col gap-2">
                 <div className="flex gap-3 items-center">
-                  <div className="flex items-center gap-1.5 text-sm text-muted-fg">
+                  <div className="flex items-center gap-1.5 text-xs sm:text-sm text-muted-fg">
                     <HugeiconsIcon icon={UserMultipleIcon} size={14} />
                     <span className="text-muted-fg">
                       <span className="font-semibold">
@@ -142,9 +142,11 @@ export const SurveyListItem = ({
                   </div>
                   <Badge
                     intent={completedPercentage > 50 ? "success" : "warning"}
+                    className="text-xs sm:text-sm"
                   >
                     <HugeiconsIcon icon={Analytics02Icon} size={14} />
-                    {Math.round(completedPercentage)}% completion
+                    {Math.round(completedPercentage)}%{" "}
+                    <span className="hidden sm:inline">completion</span>
                   </Badge>
                 </div>
               </div>

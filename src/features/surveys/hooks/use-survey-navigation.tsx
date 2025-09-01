@@ -1,11 +1,9 @@
-import { useEffect } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 
 import { useSurveyStore } from "../store/survey-store-provider";
 
 type SurveyNavigationOptions = {
-  preventDefault?: boolean;
   onSubmit: () => void;
-
   keys?: {
     next?: string[];
     previous?: string[];
@@ -26,41 +24,36 @@ export const useSurveyNavigation = ({
   const isFirstQuestion = currentStep === 1;
   const isTransitioning = useSurveyStore((state) => state.isTransitioning);
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (isTransitioning) return;
-      const { key } = event;
+  // Handle next navigation (arrow right, enter)
+  useHotkeys(
+    keys.next ?? defaultKeys.next,
+    (event) => {
+      // Block Shift+Enter in form fields
+      if (event.shiftKey && event.key === "Enter") return;
 
-      // If we're in an input field (except for Enter key), don't navigate
-      const activeElement = document.activeElement;
-      const isInputActive =
-        activeElement?.tagName === "INPUT" ||
-        activeElement?.tagName === "TEXTAREA";
+      event.preventDefault();
+      onSubmit();
+    },
+    {
+      enabled: !isTransitioning,
+      enableOnFormTags: ["input", "textarea"], // Allow Enter in form fields
+      preventDefault: true,
+    },
+    [onSubmit, isTransitioning],
+  );
 
-      if (
-        (isInputActive && key !== "Enter") ||
-        (isInputActive && event.shiftKey)
-      ) {
-        return;
-      }
-
-      // Handle next question or submit
-      if (keys.next?.includes(key)) {
-        event.preventDefault();
-        onSubmit();
-      }
-
-      // Handle previous question (left arrow)
-      if (keys.previous?.includes(key) && !isFirstQuestion) {
-        event.preventDefault();
-        goToPrevStep();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [goToPrevStep, isFirstQuestion, keys, onSubmit, isTransitioning]);
+  // Handle previous navigation (arrow left)
+  useHotkeys(
+    keys.previous ?? defaultKeys.previous,
+    (event) => {
+      event.preventDefault();
+      goToPrevStep();
+    },
+    {
+      enabled: !isTransitioning && !isFirstQuestion,
+      enableOnFormTags: false, // Don't allow arrow keys in form fields
+      preventDefault: true,
+    },
+    [goToPrevStep, isFirstQuestion, isTransitioning],
+  );
 };

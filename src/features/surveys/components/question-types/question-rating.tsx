@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef } from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import { useHotkeys } from "react-hotkeys-hook";
 import { tv } from "tailwind-variants";
 
 import {
@@ -32,8 +33,6 @@ type QuestionRatingProps = {
 export const QuestionRating = ({ questionId }: QuestionRatingProps) => {
   const goToNextStep = useSurveyStore((state) => state.goToNextStep);
   const setResponse = useSurveyStore((state) => state.setResponse);
-  const keyTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const keyBufferRef = useRef<string>("");
   const step = useSurveyStore((state) => state.step);
   const totalQuestions = useSurveyStore((state) => state.totalQuestions);
   const isTransitioning = useSurveyStore((state) => state.isTransitioning);
@@ -45,7 +44,6 @@ export const QuestionRating = ({ questionId }: QuestionRatingProps) => {
 
   const handleSelect = useCallback(
     (rating: string) => {
-      if (isTransitioning) return;
       setValue(questionId.toString(), rating);
       setResponse(questionId, rating);
 
@@ -56,49 +54,62 @@ export const QuestionRating = ({ questionId }: QuestionRatingProps) => {
         }, GO_TO_NEXT_QUESTION_DELAY);
       }
     },
-    [isTransitioning],
+    [
+      setValue,
+      questionId,
+      setResponse,
+      step,
+      totalQuestions,
+      setIsTransitioning,
+      goToNextStep,
+    ],
   );
 
-  const handleKeyDown = useCallback(
-    (e: KeyboardEvent) => {
-      if (isTransitioning) return;
-      if (keyTimerRef.current) {
-        clearTimeout(keyTimerRef.current);
+  // Refs for universal number input buffering (no re-renders needed)
+  const keyBufferRef = useRef("");
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Handle all number keys with universal buffering
+  useHotkeys(
+    "0,1,2,3,4,5,6,7,8,9",
+    (event) => {
+      const digit = event.key;
+      console.log("digit", digit);
+
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
       }
 
-      if (/^[0-9]$/.test(e.key)) {
-        keyBufferRef.current += e.key;
-        keyTimerRef.current = setTimeout(() => {
-          const bufferValue = keyBufferRef.current;
+      keyBufferRef.current += digit;
+      const newBuffer = keyBufferRef.current;
 
-          if (bufferValue === "10") {
-            handleSelect("10");
-          } else if (bufferValue.length === 1 && /^[1-9]$/.test(bufferValue)) {
-            handleSelect(bufferValue);
-          } else if (bufferValue === "0") {
-            handleSelect("10");
-          }
-
-          keyBufferRef.current = "";
-        }, 200);
-      }
+      // Set timeout to process the buffer
+      timerRef.current = setTimeout(() => {
+        if (newBuffer === "10") {
+          handleSelect("10");
+        } else if (newBuffer === "0") {
+          handleSelect("10");
+        } else if (/^[1-9]$/.test(newBuffer)) {
+          handleSelect(newBuffer);
+        }
+        keyBufferRef.current = ""; // Reset buffer
+      }, 300);
     },
-    [handleSelect, isTransitioning],
+    {
+      enabled: !isTransitioning,
+      preventDefault: true,
+    },
+    [isTransitioning, handleSelect],
   );
 
+  // Cleanup timer on unmount
   useEffect(() => {
-    const abortController = new AbortController();
-    window.addEventListener("keydown", handleKeyDown, {
-      signal: abortController.signal,
-    });
-
     return () => {
-      abortController.abort();
-      if (keyTimerRef.current) {
-        clearTimeout(keyTimerRef.current);
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
       }
     };
-  }, [handleKeyDown]);
+  }, []);
 
   return (
     <Controller

@@ -10,7 +10,7 @@ import { WeeklyHoursCard } from "./weekly-hours-chart-card";
 
 export const Dashboard = () => {
   return (
-    <div className="min-h-0 h-full w-full bg-bg p-5 space-y-4 overflow-y-auto">
+    <div className="min-h-0 h-full w-full bg-bg p-4 sm:p-6 sm:space-y-4 space-y-6 overflow-y-auto @container">
       <PageHeader
         icon={DashboardSquare01Icon}
         title="Dashboard"
@@ -20,22 +20,18 @@ export const Dashboard = () => {
         }}
       />
 
-      <div className="grid grid-cols-[2fr_1fr] gap-4">
-        <div className="flex flex-col gap-4">
+      <div className="grid grid-cols-1 @4xl:grid-cols-3 gap-4 sm:gap-6">
+        <div className="space-y-4 sm:space-y-6 col-span-1 @4xl:col-span-2">
           <div>
             <NextSession />
           </div>
 
-          <div className="flex flex-row gap-4">
-            <div className="basis-1/2">
-              <WeeklyHoursCard />
-            </div>
-            <div className="basis-1/2">
-              <div className="h-full border rounded-lg shadow-sm p-4 bg-overlay" />
-            </div>
+          <div>
+            <WeeklyHoursCard />
           </div>
         </div>
-        <div className="h-full">
+
+        <div className="col-span-1">
           <AgendaCard />
         </div>
       </div>

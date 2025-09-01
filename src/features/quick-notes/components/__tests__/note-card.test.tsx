@@ -34,9 +34,8 @@ vi.mock("../../hooks/use-add-quick-note", () => ({
 
 describe("NoteCard", () => {
   const mockHandleContentChange = vi.fn();
-  const mockHandleDeletePress = vi.fn();
-  const mockHandleDeleteRelease = vi.fn();
   const mockSetEdittingHub = vi.fn();
+  const mockDeleteNote = vi.fn();
 
   const mockNote = {
     id: 1,
@@ -57,10 +56,7 @@ describe("NoteCard", () => {
     });
 
     (useDeleteQuickNote as any).mockReturnValue({
-      isDeleting: false,
-      deleteProgress: 0,
-      handleDeletePress: mockHandleDeletePress,
-      handleDeleteRelease: mockHandleDeleteRelease,
+      mutate: mockDeleteNote,
     });
 
     (useQuickNotesStore as any).mockReturnValue({
@@ -115,29 +111,10 @@ describe("NoteCard", () => {
     expect(mockHandleContentChange).toHaveBeenCalledWith("New content");
   });
 
-  it("calls press handlers when delete button is pressed", async () => {
+  it("renders delete button", () => {
     render(<NoteCard note={mockNote} hubColor={"banana"} />);
 
     const deleteButton = screen.getByRole("button", { name: "Delete note" });
-
-    fireEvent.mouseDown(deleteButton);
-    expect(mockHandleDeletePress).toHaveBeenCalled();
-
-    fireEvent.mouseLeave(deleteButton);
-    expect(mockHandleDeleteRelease).toHaveBeenCalled();
-  });
-
-  it("shows delete progress when isDeleting is true", () => {
-    (useDeleteQuickNote as any).mockReturnValue({
-      isDeleting: true,
-      deleteProgress: 50,
-      handleDeletePress: mockHandleDeletePress,
-      handleDeleteRelease: mockHandleDeleteRelease,
-    });
-
-    render(<NoteCard note={mockNote} hubColor={"banana"} />);
-
-    const progressCircle = screen.getByRole("progressbar");
-    expect(progressCircle).toHaveAttribute("aria-valuenow", "50");
+    expect(deleteButton).toBeInTheDocument();
   });
 });

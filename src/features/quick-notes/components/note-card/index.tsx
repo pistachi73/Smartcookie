@@ -1,13 +1,8 @@
 "use client";
 
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Delete01Icon } from "@hugeicons-pro/core-stroke-rounded";
-import { AnimatePresence } from "motion/react";
-import * as m from "motion/react-m";
 import { memo, useEffect, useRef, useState } from "react";
-import { Button, TextArea } from "react-aria-components";
+import { TextArea } from "react-aria-components";
 
-import { ProgressCircle } from "@/ui/progress-circle";
 import { cn } from "@/shared/lib/classes";
 import { getCustomColorClasses } from "@/shared/lib/custom-colors";
 
@@ -17,6 +12,8 @@ import { useDeleteQuickNote } from "../../hooks/use-delete-quick-note";
 import { useUpdateQuickNote } from "../../hooks/use-update-quick-note";
 import type { NoteSummary } from "../../types/quick-notes.types";
 import "./note-card.css";
+
+import { DeleteProgressButton } from "@/shared/components/ui/delete-progress-button";
 
 interface NoteCardProps {
   note: NoteSummary;
@@ -36,13 +33,7 @@ const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
       clientId: note.clientId, // Add clientId for optimistic note retry mechanism
     });
 
-  const {
-    isDeleting,
-    deleteProgress,
-    handleDeletePress,
-    deleteNote,
-    handleDeleteRelease,
-  } = useDeleteQuickNote({
+  const { mutate: deleteNote } = useDeleteQuickNote({
     noteId: note.id,
     clientId: note.clientId,
     hubId: note.hubId || 0,
@@ -66,9 +57,10 @@ const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
 
   const onBlur = () => {
     setIsEditingNote(false);
-    if (content.trim() === "") {
-      deleteNote({ id: note.id });
-    }
+  };
+
+  const onDelete = () => {
+    deleteNote({ id: note.id });
   };
 
   if (!note) return null;
@@ -77,52 +69,26 @@ const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
     <div
       data-hub-id={note.hubId}
       className={cn(
-        "flex flex-col bg-overlay-highlight rounded-lg border border-border relative transition duration-250",
+        "bg-white group flex flex-col  rounded-lg border-1 border-border relative transition duration-250",
         "note-card focus-within:opacity-100! ",
-        isEditingNote && `${colorClasses.border} dark:bg-overlay-elevated`,
-        "bg-overlay shadow-sm",
-        "dark:bg-overlay-highlight dark:hover:bg-overlay-elevated",
+        isEditingNote && `${colorClasses.border}`,
       )}
     >
-      <div className="absolute top-0 right-0 z-10">
-        <Button
-          excludeFromTabOrder
-          isDisabled={note.id < 0}
-          onPressStart={handleDeletePress}
-          onPressEnd={handleDeleteRelease}
-          aria-label="Delete note"
-          className={({ isDisabled }) =>
-            cn(
-              "size-9 z-20 flex items-center justify-center text-muted-fg hover:bg-transparent!",
-              isDisabled && "opacity-50",
-            )
-          }
-        >
-          <HugeiconsIcon
-            icon={Delete01Icon}
-            size={14}
-            className={cn("transition-colors", isDeleting && "text-danger")}
-          />
-        </Button>
-        <AnimatePresence>
-          {isDeleting && (
-            <m.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.2 }}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none"
-            >
-              <ProgressCircle
-                value={deleteProgress}
-                strokeWidth={2}
-                aria-label="Delete progress circle"
-                className="size-8 text-danger"
-              />
-            </m.div>
-          )}
-        </AnimatePresence>
-      </div>
+      <DeleteProgressButton
+        pressDuration={400}
+        intent="plain"
+        size="sq-xs"
+        className={{
+          container: cn(
+            "block sm:hidden sm:group-hover:block absolute top-1.5 right-1.5",
+          ),
+          button:
+            "size-6 **:data-[slot=icon]:size-3 **:data-[slot=icon]:text-danger rounded-full",
+          progressCircle: "size-8",
+        }}
+        onDelete={onDelete}
+      />
+
       <TextArea
         ref={textAreaRef}
         value={content}

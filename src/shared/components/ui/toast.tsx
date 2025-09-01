@@ -13,12 +13,12 @@ import { useTheme } from "@/core/providers/theme-provider";
 import { Loader } from "./loader";
 
 const Toast = ({ ...props }: ToasterProps) => {
-  const { theme = "system" } = useTheme();
+  const { theme = "dark" } = useTheme();
   return (
     <ToasterPrimitive
       theme={theme as ToasterProps["theme"]}
       className="toaster group"
-      position="bottom-left"
+      position="top-center"
       richColors
       icons={{
         info: (

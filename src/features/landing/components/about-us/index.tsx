@@ -146,6 +146,7 @@ export const AboutUs = () => {
                   </p>
                   <div className="flex items-center gap-6 flex-wrap mt-4">
                     {companies.map((company) => (
+                      // biome-ignore lint/performance/noImgElement: Its fine
                       <img
                         key={company.id}
                         id={company.id}

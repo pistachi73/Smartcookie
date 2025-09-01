@@ -85,7 +85,7 @@ export const PhoneField = ({
       try {
         const parsedNumber = parsePhoneNumberFromString(value);
         if (parsedNumber?.country) return parsedNumber.country;
-      } catch (e) {}
+      } catch (_) {}
     }
     return defaultCountry;
   }, [value, defaultCountry]);
@@ -95,7 +95,7 @@ export const PhoneField = ({
   const [selectedCountry, setSelectedCountry] =
     useState<CountryCode>(initialCountry);
   const [displayValue, setDisplayValue] = useState("");
-  const [isValid, setIsValid] = useState(false);
+  const [isValid, setIsValid] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
@@ -115,7 +115,7 @@ export const PhoneField = ({
         } else {
           setDisplayValue(value);
         }
-      } catch (e) {
+      } catch (_) {
         setDisplayValue(value);
       }
     }
@@ -143,7 +143,7 @@ export const PhoneField = ({
         defaultCountry: selectedCountry,
       });
       return parsedNumber?.nationalNumber?.toString() || "";
-    } catch (e) {
+    } catch (_) {
       // Basic fallback for initial render
       const countryData = COMMON_COUNTRIES.find(
         (c) => c.code === selectedCountry,
@@ -182,7 +182,7 @@ export const PhoneField = ({
       try {
         validationResult = isValidPhoneNumber(fullNumber, selectedCountry);
         setIsValid(validationResult);
-      } catch (e) {
+      } catch (_) {
         setIsValid(false);
         validationResult = false;
       }
@@ -226,7 +226,7 @@ export const PhoneField = ({
             validationResult = isValidPhoneNumber(fullNumber, newCountry);
             setIsValid(validationResult);
             onValidityChange?.(validationResult);
-          } catch (e) {
+          } catch (_) {
             setIsValid(false);
             onValidityChange?.(false);
           }
@@ -263,6 +263,8 @@ export const PhoneField = ({
     });
   }, []);
 
+  console.log({ value });
+
   return (
     <div className="relative">
       <TextField
@@ -273,6 +275,7 @@ export const PhoneField = ({
         placeholder={placeholder}
         prefix={countryPrefix}
         errorMessage={!isValid && value ? "Invalid phone number" : undefined}
+        isInvalid={Boolean(!isValid && value)}
       />
 
       <Select onSelectionChange={handleSelectionChange}>

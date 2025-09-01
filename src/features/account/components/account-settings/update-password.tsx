@@ -136,7 +136,6 @@ export const UpdatePassword = () => {
                         isRevealable={true}
                         label="Current password"
                         autoComplete="current-password"
-                        className={{ input: "text-sm" }}
                         isDisabled={isPending}
                         autoFocus
                         errorMessage={fieldState.error?.message}

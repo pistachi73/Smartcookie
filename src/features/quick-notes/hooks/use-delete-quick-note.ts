@@ -9,6 +9,7 @@ import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 import { deleteQuickNote } from "@/data-access/quick-notes/mutations";
 import { DeleteQuickNoteSchema } from "@/data-access/quick-notes/schemas";
 import type { NoteSummary } from "@/features/quick-notes/types/quick-notes.types";
+import { quickNotesByHubIdQueryOptions } from "../lib/quick-notes-query-options";
 
 export const DELETION_TIME_MS = 500;
 
@@ -22,7 +23,7 @@ interface MutationContext {
   previousData: NoteSummary[] | undefined;
 }
 
-export const useDeleteQuickNote = ({
+export const useDeleteQuickNote_ = ({
   noteId,
   clientId,
   hubId,
@@ -121,4 +122,38 @@ export const useDeleteQuickNote = ({
     handleDeletePress,
     handleDeleteRelease,
   };
+};
+
+export const useDeleteQuickNote = ({
+  noteId,
+  clientId,
+  hubId,
+}: UseDeleteQuickNoteProps) => {
+  const queryClient = useQueryClient();
+
+  return useProtectedMutation({
+    schema: DeleteQuickNoteSchema,
+    mutationKey: ["deleteQupickNote", noteId, clientId],
+    mutationFn: deleteQuickNote,
+    onMutate: async ({ id }) => {
+      const queryKey = quickNotesByHubIdQueryOptions(hubId).queryKey;
+      await queryClient.cancelQueries({ queryKey });
+
+      const previousData = queryClient.getQueryData(queryKey);
+
+      queryClient.setQueryData(queryKey, (old) => {
+        if (!old) return old;
+        return old.filter((note) => note.id !== id);
+      });
+
+      return { previousData, queryKey };
+    },
+
+    onError: (_, __, context) => {
+      toast.error("Failed to delete note");
+      if (context?.previousData) {
+        queryClient.setQueryData(context.queryKey, context.previousData);
+      }
+    },
+  });
 };

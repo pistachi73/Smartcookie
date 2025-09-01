@@ -10,9 +10,11 @@ export const getHeaders = async () => {
   ) as DeviceType;
   const authorization =
     parsedHeaders.get("authorization") || parsedHeaders.get("Authorization");
+  const portalEnabled = parsedHeaders.get(VERCEL_HEADERS.PORTAL_ENABLED) ?? "0";
 
   return {
     deviceType,
     authorization,
+    portalEnabled: portalEnabled === "1",
   };
 };

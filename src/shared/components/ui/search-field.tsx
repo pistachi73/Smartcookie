@@ -1,43 +1,30 @@
 "use client";
 
 import { HugeiconsIcon } from "@hugeicons/react";
+import { CancelIcon, SearchIcon } from "@hugeicons-pro/core-stroke-rounded";
+import type { SearchFieldProps as SearchFieldPrimitiveProps } from "react-aria-components";
 import {
-  MultiplicationSignIcon,
-  Search01Icon,
-} from "@hugeicons-pro/core-stroke-rounded";
-import {
+  Button,
   SearchField as SearchFieldPrimitive,
-  type SearchFieldProps as SearchFieldPrimitiveProps,
-  type ValidationResult,
 } from "react-aria-components";
-import { tv } from "tailwind-variants";
 
-import { Button } from "./button";
-import { Description, FieldError, FieldGroup, Input, Label } from "./field";
+import { composeTailwindRenderProps } from "@/shared/lib/primitive";
+
+import {
+  Description,
+  FieldError,
+  FieldGroup,
+  type FieldProps,
+  Input,
+  Label,
+} from "./field";
 import { Loader } from "./loader";
-import { composeTailwindRenderProps } from "./primitive";
-
-const searchFieldStyles = tv({
-  slots: {
-    base: "group flex min-w-10 flex-col gap-y-1.5",
-    searchIcon:
-      "ml-2.5 size-4 shrink-0 text-muted-fg group-data-disabled:text-muted-fg forced-colors:text-[ButtonText] forced-colors:group-data-disabled:text-[GrayText]",
-    clearButton: [
-      "mr-1 size-8 text-muted-fg data-hovered:bg-transparent data-pressed:bg-transparent data-hovered:text-fg data-pressed:text-fg group-data-empty:invisible",
-    ],
-    input: "[&::-webkit-search-cancel-button]:hidden",
-  },
-});
-
-const { base, searchIcon, clearButton, input } = searchFieldStyles();
 
 interface SearchFieldProps
-  extends Omit<SearchFieldPrimitiveProps, "className"> {
-  label?: string;
-  placeholder?: string;
-  description?: string;
-  errorMessage?: string | ((validation: ValidationResult) => string);
+  extends Omit<SearchFieldPrimitiveProps, "className">,
+    FieldProps {
   isPending?: boolean;
+  ref?: React.RefObject<HTMLInputElement>;
   className?: {
     primitive?: string;
     fieldGroup?: string;
@@ -46,6 +33,8 @@ interface SearchFieldProps
 }
 
 const SearchField = ({
+  ref,
+  children,
   className,
   placeholder,
   label,
@@ -56,39 +45,45 @@ const SearchField = ({
 }: SearchFieldProps) => {
   return (
     <SearchFieldPrimitive
-      aria-label={placeholder ?? props["aria-label"] ?? "Search..."}
       {...props}
-      className={composeTailwindRenderProps(className?.primitive, base())}
+      className={composeTailwindRenderProps(
+        className?.primitive,
+        "group/search-field relative flex flex-col gap-y-1 *:data-[slot=label]:font-medium",
+      )}
     >
-      {label && <Label>{label}</Label>}
-      <FieldGroup className={className?.fieldGroup}>
-        <HugeiconsIcon
-          icon={Search01Icon}
-          aria-hidden
-          data-slot="icon"
-          className={searchIcon()}
-        />
-        <Input
-          placeholder={placeholder ?? "Search..."}
-          className={composeTailwindRenderProps(className?.input, input())}
-        />
-        {isPending ? (
-          <Loader variant="spin" />
-        ) : (
-          <Button size="sq-sm" intent="plain" className={clearButton()}>
-            <HugeiconsIcon
-              icon={MultiplicationSignIcon}
-              aria-hidden
-              data-slot="icon"
-            />
-          </Button>
-        )}
-      </FieldGroup>
-      {description && <Description>{description}</Description>}
-      <FieldError>{errorMessage}</FieldError>
+      {(values) => (
+        <>
+          {label && <Label>{label}</Label>}
+          {typeof children === "function" ? (
+            children(values)
+          ) : children ? (
+            children
+          ) : (
+            <FieldGroup className={className?.fieldGroup}>
+              {isPending ? (
+                <Loader variant="spin" />
+              ) : (
+                <HugeiconsIcon icon={SearchIcon} data-slot="icon" />
+              )}
+              <Input
+                ref={ref}
+                placeholder={placeholder ?? "Search..."}
+                className={className?.input}
+              />
+
+              <Button className="grid place-content-center pressed:text-fg text-muted-fg hover:text-fg group-empty/search-field:invisible">
+                <HugeiconsIcon icon={CancelIcon} data-slot="icon" />
+              </Button>
+            </FieldGroup>
+          )}
+
+          {description && <Description>{description}</Description>}
+          <FieldError>{errorMessage}</FieldError>
+        </>
+      )}
     </SearchFieldPrimitive>
   );
 };
 
-export { SearchField };
 export type { SearchFieldProps };
+export { SearchField };

@@ -131,167 +131,64 @@ export const getSessionsCountByHubId = withValidationAndAuth({
   },
 });
 
-const getInitialInfiniteSessionsByHubId = async (
-  hubId: number,
-  userId: string,
-) => {
-  const now = new Date();
-
-  const lowerLimit = 1;
-  const upperLimit = 4;
-
-  // Single optimized query using Promise.all for parallel execution
-  const [futureSessions, pastSession] = await Promise.all([
-    // Future sessions (3 most recent)
-    db.query.session.findMany({
-      where: and(
-        eq(session.hubId, hubId),
-        eq(session.userId, userId),
-        gt(session.endTime, now.toISOString()),
-      ),
-      columns: {
-        id: true,
-        status: true,
-      },
-      extras: {
-        startTime: getTimestampISO(session.startTime, "startTime"),
-        endTime: getTimestampISO(session.endTime, "endTime"),
-      },
-
-      orderBy: [asc(session.startTime)],
-      limit: upperLimit + 1,
-      with: {
-        notes: {
-          columns: {
-            id: true,
-            content: true,
-            position: true,
-          },
-          where: eq(sessionNote.position, "plans"),
-        },
-      },
-    }),
-    // Past sessions (1 most recent)
-    db.query.session.findMany({
-      where: and(
-        eq(session.hubId, hubId),
-        eq(session.userId, userId),
-        lt(session.endTime, now.toISOString()),
-      ),
-      columns: {
-        id: true,
-        status: true,
-      },
-      extras: {
-        startTime: getTimestampISO(session.startTime, "startTime"),
-        endTime: getTimestampISO(session.endTime, "endTime"),
-      },
-      orderBy: [desc(session.startTime)],
-      with: {
-        notes: {
-          columns: {
-            id: true,
-            content: true,
-            position: true,
-          },
-          where: eq(sessionNote.position, "in-class"),
-        },
-      },
-      limit: lowerLimit + 1,
-    }),
-  ]);
-
-  const hasMore = futureSessions.length > upperLimit;
-  const hasLess = pastSession.length > lowerLimit;
-
-  const prevSessions = hasLess ? pastSession.slice(0, 1) : pastSession;
-  const nextSessions = hasMore ? futureSessions.slice(0, 1) : futureSessions;
-
-  return {
-    sessions: [...prevSessions, ...nextSessions],
-    hasMore,
-    hasLess,
-  };
-};
-
-export const getInfiniteSessionsByHubId = withValidationAndAuth({
+export const getPaginatedSessionsByHubId = withValidationAndAuth({
   schema: GetInfiniteSessionsByHubIdSchema,
-  callback: async ({ hubId, cursor, direction, limit }, user) => {
+  callback: async ({ hubId, cursor, direction = "next", limit = 10 }, user) => {
+    console.log({ cursor, hubId, direction, limit });
+
+    const now = new Date();
     const baseWhere = and(
       eq(session.hubId, hubId),
       eq(session.userId, user.id),
     );
 
-    console.log({ cursor, direction, limit });
-
     let whereClause = baseWhere;
+    let orderBy: any[];
 
-    if (!cursor) {
-      const { sessions, hasMore, hasLess } =
-        await getInitialInfiniteSessionsByHubId(hubId, user.id);
-
-      return {
-        sessions,
-        hasNext: hasMore,
-        hasPrev: hasLess,
-        nextCursor:
-          hasMore && sessions.length > 0
-            ? sessions[sessions.length - 1]!.endTime
-            : undefined,
-        prevCursor:
-          hasLess && sessions.length > 0 ? sessions[0]!.endTime : undefined,
-      };
-    }
-
-    if (direction === "next") {
-      whereClause = and(baseWhere, gt(session.endTime, cursor.toISOString()));
+    if (cursor) {
+      if (direction === "next") {
+        // Get more future sessions (sessions with startTime > cursor)
+        whereClause = and(baseWhere, gt(session.startTime, cursor));
+        orderBy = [asc(session.startTime)]; // Future sessions: closest first
+      } else {
+        // Get past sessions (sessions with startTime < cursor)
+        whereClause = and(baseWhere, lt(session.startTime, cursor));
+        orderBy = [desc(session.startTime)]; // Past sessions: most recent first
+      }
     } else {
-      whereClause = and(baseWhere, lt(session.endTime, cursor.toISOString()));
+      // Initial load: Get both past and future sessions, but return them in the desired display order
+      // We'll fetch upcoming sessions first, then past sessions can be loaded via prev button
+      whereClause = and(baseWhere, gt(session.startTime, now.toISOString()));
+      orderBy = [asc(session.startTime)]; // Upcoming sessions: closest first
     }
 
-    const sessions = await db.query.session.findMany({
-      where: whereClause,
-      columns: {
-        id: true,
-        status: true,
-      },
-      extras: {
-        startTime: getTimestampISO(session.startTime, "startTime"),
-        endTime: getTimestampISO(session.endTime, "endTime"),
-      },
-      orderBy: [
-        direction === "next" ? desc(session.endTime) : asc(session.endTime),
-      ],
-      with: {
-        notes: {
-          columns: {
-            id: true,
-            content: true,
-            position: true,
-          },
-          where: eq(
-            sessionNote.position,
-            direction === "next" ? "plans" : "in-class",
-          ),
-        },
-      },
-      limit: limit + 1,
-    });
+    // Fetch limit + 1 to determine if there are more pages
+    const rawSessions = await db
+      .select({
+        id: session.id,
+        startTime: session.startTime,
+        endTime: session.endTime,
+        status: session.status,
+      })
+      .from(session)
+      .where(whereClause)
+      .orderBy(...orderBy)
+      .limit(limit + 1);
 
-    console.log("sessions", sessions);
+    // Check if there are more pages
+    const hasMore = rawSessions.length > limit;
+    const sessions = hasMore ? rawSessions.slice(0, limit) : rawSessions;
 
-    const hasMore = sessions.length > limit;
-    const items = hasMore ? sessions.slice(0, limit) : sessions;
-
-    const formattedSessions = items.map((sessionItem) => {
-      const endTime = new Date(sessionItem.endTime);
-      const startTime = new Date(sessionItem.startTime);
+    // Format sessions with duration calculation
+    const formattedSessions = sessions.map((session) => {
+      const endTime = new Date(session.endTime);
+      const startTime = new Date(session.startTime);
       const totalMinutes = differenceInMinutes(endTime, startTime);
       const hours = Math.floor(totalMinutes / 60);
       const minutes = totalMinutes % 60;
 
       return {
-        ...sessionItem,
+        ...session,
         duration: {
           hours,
           minutes,
@@ -300,15 +197,39 @@ export const getInfiniteSessionsByHubId = withValidationAndAuth({
       };
     });
 
+    if (direction === "prev") {
+      formattedSessions.reverse();
+    }
+
+    // Determine cursors for next/prev pages
+    const nextCursor =
+      sessions.length > 0
+        ? sessions[sessions.length - 1]?.startTime
+        : undefined;
+    const prevCursor =
+      sessions.length > 0
+        ? sessions[sessions.length - 1]?.startTime
+        : undefined;
+
+    // For initial load, set prevCursor to "now" so past sessions can be loaded
+    let finalPrevCursor = prevCursor;
+    if (!cursor && direction === "next") {
+      finalPrevCursor = now.toISOString();
+    }
+
+    console.log({
+      nextCursor,
+      prevCursor: finalPrevCursor,
+      hasMore,
+      direction,
+    });
+
     return {
       sessions: formattedSessions,
-      hasNext: direction === "next" ? hasMore : false,
-      hasPrev: direction === "prev" ? hasMore : false,
-      nextCursor:
-        hasMore && items.length > 0
-          ? items[items.length - 1]!.endTime
-          : undefined,
-      prevCursor: items.length > 0 ? items[0]!.endTime : undefined,
+      hasNextPage: direction === "next" ? hasMore : false,
+      hasPreviousPage: direction === "prev" ? hasMore : !cursor, // Initial load allows past sessions
+      nextCursor,
+      prevCursor: finalPrevCursor,
     };
   },
 });

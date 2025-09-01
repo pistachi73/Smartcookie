@@ -1,12 +1,19 @@
 import { HugeiconsIcon } from "@hugeicons/react";
-import { DeleteIcon, UserAdd02Icon } from "@hugeicons-pro/core-stroke-rounded";
+import {
+  DeleteIcon,
+  UserAdd01Icon,
+  UserAdd02Icon,
+} from "@hugeicons-pro/core-stroke-rounded";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 
 import { Button } from "@/shared/components/ui/button";
-import { Heading } from "@/shared/components/ui/heading";
+import { EmptyState } from "@/shared/components/ui/empty-state";
 import { Menu } from "@/shared/components/ui/menu";
 
+import { useStudentsByHubId } from "../../hooks/students/use-students-by-hub-id";
+import { HubPanelHeader } from "../hub-panel-header";
+import { SkeletonStudentListView } from "./skeleton-student-list-view";
 import { StudentsListView } from "./students-list-view";
 
 const DynamicCreateStudentFormModal = dynamic(
@@ -30,39 +37,63 @@ export const Students = ({ hubId }: { hubId: number }) => {
   const [isAddStudentFormModalOpen, setIsAddStudentFormModalOpen] =
     useState(false);
   const [isAddStudentModalOpen, setIsAddStudentModalOpen] = useState(false);
+  const { data: students, isPending } = useStudentsByHubId(hubId);
 
   return (
     <>
       <div className="min-h-0">
-        <div className="flex flex-row items-center justify-between mb-8 flex-wrap gap-3 ">
-          <Heading level={2}>Course Students </Heading>
-          <Menu>
-            <Button intent="primary">
-              <HugeiconsIcon
-                icon={UserAdd02Icon}
-                altIcon={DeleteIcon}
-                size={16}
-                data-slot="icon"
-              />
-              <p>Add student</p>
-            </Button>
-            <Menu.Content placement="bottom end">
-              <Menu.Item
-                onAction={() => setIsAddStudentModalOpen(true)}
-                id="from-students"
+        <HubPanelHeader
+          title="Course Students"
+          actions={
+            <Menu>
+              <Button className={"w-full sm:w-fit"} size="sm" intent="primary">
+                <HugeiconsIcon
+                  icon={UserAdd02Icon}
+                  altIcon={DeleteIcon}
+                  size={16}
+                  data-slot="icon"
+                />
+                <p>Add student</p>
+              </Button>
+              <Menu.Content placement="bottom end">
+                <Menu.Item
+                  onAction={() => setIsAddStudentModalOpen(true)}
+                  id="from-students"
+                  className="text-sm"
+                >
+                  From students
+                </Menu.Item>
+                <Menu.Item
+                  onAction={() => setIsAddStudentFormModalOpen(true)}
+                  id="from-scratch"
+                  className="text-sm"
+                >
+                  From scratch
+                </Menu.Item>
+              </Menu.Content>
+            </Menu>
+          }
+        />
+
+        {isPending ? (
+          <SkeletonStudentListView />
+        ) : students?.length === 0 ? (
+          <EmptyState
+            title="No students enrolled"
+            description="Add students to your course to see them here."
+            icon={UserAdd01Icon}
+            action={
+              <Button
+                intent="primary"
+                onPress={() => setIsAddStudentModalOpen(true)}
               >
-                From students
-              </Menu.Item>
-              <Menu.Item
-                onAction={() => setIsAddStudentFormModalOpen(true)}
-                id="from-scratch"
-              >
-                From scratch
-              </Menu.Item>
-            </Menu.Content>
-          </Menu>
-        </div>
-        <StudentsListView hubId={hubId} />
+                Add student
+              </Button>
+            }
+          />
+        ) : (
+          <StudentsListView hubId={hubId} />
+        )}
       </div>
       <DynamicCreateStudentFormModal
         hubId={hubId}

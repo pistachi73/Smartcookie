@@ -99,7 +99,7 @@ export function SessionsList() {
                     {format(startDate, "h:mm a")} - {format(endDate, "h:mm a")}
                   </div>
 
-                  <Badge intent="secondary" shape="square">
+                  <Badge intent="secondary" isCircle={false}>
                     {formatDuration(session.startTime, session.endTime)}
                   </Badge>
                 </div>

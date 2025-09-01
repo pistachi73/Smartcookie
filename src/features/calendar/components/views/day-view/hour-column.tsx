@@ -32,7 +32,7 @@ export const HourColumn = () => {
       {!isMobile && (
         <Badge
           intent="primary"
-          shape="square"
+          isCircle={false}
           className={cn(
             "absolute h-5 left-1.5 tabular-nums",
             "after:content-[''] after:absolute after:inset-x-full after:top-1/2 after:-translate-y-1/2 after:w-6 after:h-0.5 after:bg-primary/50",

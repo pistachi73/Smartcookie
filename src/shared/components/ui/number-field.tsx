@@ -16,40 +16,23 @@ import {
 } from "react-aria-components";
 import { tv } from "tailwind-variants";
 
-import { useMediaQuery } from "@/shared/hooks/use-media-query";
-import { cn } from "@/shared/lib/classes";
+import { composeTailwindRenderProps } from "@/shared/lib/primitive";
+import { cn } from "@/shared/lib/utils";
 
-import {
-  Description,
-  FieldError,
-  FieldGroup,
-  type FieldGroupProps,
-  Input,
-  Label,
-} from "./field";
-import { composeTailwindRenderProps } from "./primitive";
+import { useViewport } from "../layout/viewport-context/viewport-context";
+import { Description, FieldError, FieldGroup, Input, Label } from "./field";
 
 const fieldBorderStyles = tv({
-  base: "group-data-focused:border-primary/70 forced-colors:border-[Highlight]",
+  base: "group-focus:border-primary/70 forced-colors:border-[Highlight]",
   variants: {
     isInvalid: {
-      true: "group-data-focused:border-danger/70 forced-colors:border-[Mark]",
+      true: "group-focus:border-danger/70 forced-colors:border-[Mark]",
     },
     isDisabled: {
-      true: "group-data-focused:border-input/70",
+      true: "group-focus:border-input/70",
     },
   },
 });
-
-const numberFieldStyles = tv({
-  slots: {
-    base: "group flex flex-col gap-y-1.5",
-    stepperButton:
-      "h-10 cursor-default px-3 text-muted-fg data-pressed:bg-primary data-pressed:text-primary-fg group-data-disabled:bg-secondary/70 forced-colors:group-data-disabled:text-[GrayText]",
-  },
-});
-
-const { base, stepperButton } = numberFieldStyles();
 
 interface NumberFieldProps
   extends Omit<NumberFieldPrimitiveProps, "className"> {
@@ -57,14 +40,11 @@ interface NumberFieldProps
   description?: string;
   placeholder?: string;
   errorMessage?: string | ((validation: ValidationResult) => string);
-  size?: FieldGroupProps["size"];
   className?: {
+    primitive?: string;
     fieldGroup?: string;
     input?: string;
-    primitive?: string;
   };
-  ref?: any;
-  showStepperButtons?: boolean;
 }
 
 const NumberField = ({
@@ -73,47 +53,49 @@ const NumberField = ({
   description,
   className,
   errorMessage,
-  size,
-  showStepperButtons = true,
-  ref,
-
   ...props
 }: NumberFieldProps) => {
-  const isMobile = useMediaQuery("(max-width: 768px)");
+  const { down } = useViewport();
+  const isMobile = down("sm");
+
   return (
     <NumberFieldPrimitive
       {...props}
-      className={composeTailwindRenderProps(className?.primitive, base())}
+      className={cn(className?.primitive, "group flex flex-col gap-y-1.5")}
     >
       {label && <Label>{label}</Label>}
       <FieldGroup
-        className={cn("overflow-hidden", className?.fieldGroup)}
-        size={size}
+        className={cn(
+          className?.fieldGroup,
+          isMobile && [
+            "**:[button]:inset-ring **:[button]:inset-ring-fg/5 **:[button]:grid **:[button]:size-8 **:[button]:place-content-center",
+            "*:[button]:first:ml-1 *:[button]:last:mr-1",
+            "**:[button]:bg-secondary **:[button]:pressed:bg-secondary/80",
+          ],
+        )}
       >
         {(renderProps) => (
           <>
-            {isMobile && showStepperButtons ? (
-              <StepperButton slot="decrement" className="border-r" />
-            ) : null}
+            {isMobile ? <StepperButton slot="decrement" /> : null}
             <Input
-              ref={ref}
-              className={cn("tabular-nums", className?.input)}
+              className={cn(
+                className?.input,
+                "px-[calc(--spacing(12)-1px)] tabular-nums",
+              )}
               placeholder={placeholder}
             />
-            <div
-              className={fieldBorderStyles({
-                ...renderProps,
-                className: "grid h-10 place-content-center border-s",
-              })}
-            >
-              {isMobile && showStepperButtons ? (
-                <StepperButton slot="increment" />
-              ) : (
+            {!isMobile ? (
+              <div
+                className={fieldBorderStyles({
+                  ...renderProps,
+                  className: "grid place-content-center sm:border-l",
+                })}
+              >
                 <div className="flex h-full flex-col">
                   <StepperButton
                     slot="increment"
                     emblemType="chevron"
-                    className="h-5 px-1"
+                    className="h-4 px-1"
                   />
                   <div
                     className={fieldBorderStyles({
@@ -124,11 +106,13 @@ const NumberField = ({
                   <StepperButton
                     slot="decrement"
                     emblemType="chevron"
-                    className="h-5 px-1"
+                    className="h-4 px-1"
                   />
                 </div>
-              )}
-            </div>
+              </div>
+            ) : (
+              <StepperButton slot="increment" />
+            )}
           </>
         )}
       </FieldGroup>
@@ -153,21 +137,28 @@ const StepperButton = ({
   const icon =
     emblemType === "chevron" ? (
       slot === "increment" ? (
-        <HugeiconsIcon icon={ArrowUp01Icon} size={12} />
+        <HugeiconsIcon icon={ArrowUp01Icon} data-slot="icon" />
       ) : (
-        <HugeiconsIcon icon={ArrowDown01Icon} size={12} />
+        <HugeiconsIcon icon={ArrowDown01Icon} data-slot="icon" />
       )
     ) : slot === "increment" ? (
-      <HugeiconsIcon icon={PlusSignIcon} size={12} />
+      <HugeiconsIcon icon={PlusSignIcon} data-slot="icon" />
     ) : (
-      <HugeiconsIcon icon={MinusSignIcon} size={12} />
+      <HugeiconsIcon icon={MinusSignIcon} data-slot="icon" />
     );
   return (
-    <Button className={stepperButton({ className })} slot={slot} {...props}>
+    <Button
+      className={composeTailwindRenderProps(
+        className,
+        "relative z-10 h-10 cursor-default pressed:text-primary-fg text-muted-fg group-disabled:bg-secondary/70 sm:pressed:bg-primary forced-colors:group-disabled:text-[GrayText]",
+      )}
+      slot={slot}
+      {...props}
+    >
       {icon}
     </Button>
   );
 };
 
-export { NumberField };
 export type { NumberFieldProps };
+export { NumberField };

@@ -74,9 +74,7 @@ export function StepHubInfo() {
                 isRequired
                 isInvalid={fieldState.invalid}
                 errorMessage={fieldState.error?.message}
-                className={{
-                  primitive: "flex-1 w-full",
-                }}
+                className={{ primitive: "flex-1 w-full" }}
                 {...field}
               />
             )}

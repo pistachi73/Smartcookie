@@ -105,7 +105,6 @@ export const UpdateNameAvatar = () => {
                   {...field}
                   label="Name"
                   autoComplete="name"
-                  className={{ input: "text-sm" }}
                   isDisabled={isUpdatingName}
                   errorMessage={fieldState.error?.message}
                 />

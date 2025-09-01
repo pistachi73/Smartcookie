@@ -106,11 +106,7 @@ export const UpdateEmail = () => {
           </div>
         </Card.Header>
         <Card.Content className="pt-0 space-y-6">
-          <TextField
-            value={user?.email ?? ""}
-            className={{ input: "text-sm" }}
-            isDisabled
-          />
+          <TextField value={user?.email ?? ""} isDisabled />
         </Card.Content>
       </Card>
     );
