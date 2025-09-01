@@ -13,7 +13,7 @@ const LoadingHubsPage = () => {
           { label: "Hubs", href: "/portal/hubs", icon: FolderLibraryIcon },
         ]}
       />
-    <SkeletonHubList />
+      <SkeletonHubList />
     </>
   );
 };

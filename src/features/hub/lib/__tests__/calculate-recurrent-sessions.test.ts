@@ -226,7 +226,7 @@ describe("calculateRecurrentSessions", () => {
   });
 
   it("should use default end date when hubEndsOn is not provided", () => {
-    const { hubEndsOn, ...paramsWithoutEndDate } = baseParams;
+    const { hubEndsOn: _, ...paramsWithoutEndDate } = baseParams;
 
     const rrule = new RRule({
       freq: RRule.MONTHLY,

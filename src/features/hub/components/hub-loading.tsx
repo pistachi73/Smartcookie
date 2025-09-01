@@ -1,6 +1,5 @@
 "use client";
 
-import { HugeiconsIcon } from "@hugeicons/react";
 import { FolderLibraryIcon } from "@hugeicons-pro/core-solid-rounded";
 
 import { Heading } from "@/shared/components/ui/heading";
@@ -153,13 +152,6 @@ export const HubLoading = () => {
                             isSelected && "text-primary",
                           )}
                         >
-                          <HugeiconsIcon
-                            icon={tab.icon}
-                            altIcon={tab.altIcon}
-                            showAlt={isSelected}
-                            strokeWidth={!isSelected ? 1.5 : undefined}
-                            size={16}
-                          />
                           {tab.label}
                         </p>
                       );

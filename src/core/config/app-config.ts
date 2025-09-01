@@ -11,6 +11,7 @@ export const VERCEL_HEADERS = {
   URL: "x-url",
   PATHNAME: "x-pathname",
   DEVICE_TYPE: "x-device-type",
+  PORTAL_ENABLED: "x-portal-enabled",
 } as const;
 
 export const API_AUTH_PREFIX = "/api/auth";

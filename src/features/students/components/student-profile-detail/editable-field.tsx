@@ -136,7 +136,6 @@ export const EditableTextField = ({
   };
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log("submit", data.field, value);
     if (isRequired && !data.field) {
       handleCancel();
       return;
@@ -218,7 +217,7 @@ export const EditableDateField = ({
   };
 
   const handleBlur = () => {
-    if (fieldValue === value) {
+    if (value && fieldValue?.compare(value) === 0) {
       handleCancel();
     }
   };

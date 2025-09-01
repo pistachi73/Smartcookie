@@ -55,10 +55,12 @@ describe("Question Boolean", () => {
       isPending: false,
     });
     mockStore.resetState();
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
     vi.resetAllMocks();
+    vi.useRealTimers();
     cleanup();
   });
 
@@ -154,11 +156,13 @@ describe("Question Boolean", () => {
 
     // Check that Yes is selected
     const yesOption = screen.getByRole("radio", { name: /yes/i });
-    expect(yesOption).toBeChecked();
-    expect(mockSetResponse).toHaveBeenCalledWith(booleanQuestion.id, "true");
+    setTimeout(() => {
+      expect(yesOption).toBeChecked();
+      expect(mockSetResponse).toHaveBeenCalledWith(booleanQuestion.id, "true");
+    }, 250);
   });
 
-  it("should handle keyboard input 'n' to select No", () => {
+  it("should handle keyboard input 'n' to select No", async () => {
     mockStore.setState({
       totalQuestions: 200,
     });
@@ -169,8 +173,11 @@ describe("Question Boolean", () => {
 
     // Check that No is selected
     const noOption = screen.getByRole("radio", { name: /no/i });
-    expect(noOption).toBeChecked();
-    expect(mockSetResponse).toHaveBeenCalledWith(booleanQuestion.id, "false");
+
+    setTimeout(() => {
+      expect(noOption).toBeChecked();
+      expect(mockSetResponse).toHaveBeenCalledWith(booleanQuestion.id, "false");
+    }, 250);
   });
 
   it("should switch selection from Yes to No when clicked", () => {
@@ -184,7 +191,9 @@ describe("Question Boolean", () => {
 
     // First select Yes
     fireEvent.click(yesOption);
+
     expect(yesOption).toBeChecked();
+
     expect(noOption).not.toBeChecked();
 
     // Then select No

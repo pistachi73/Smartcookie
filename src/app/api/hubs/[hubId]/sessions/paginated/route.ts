@@ -5,10 +5,10 @@ import { getPaginatedSessionsByHubId } from "@/data-access/sessions/queries";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { hubId: string } },
+  { params }: { params: Promise<{ hubId: string }> },
 ) {
   try {
-    const hubId = Number.parseInt(params.hubId);
+    const hubId = Number.parseInt((await params).hubId);
     const body = await request.json();
 
     const { cursor, direction, limit } = body;

@@ -48,7 +48,7 @@ export const useAddStudent = () => {
       // Return context for onError
       return { placeholderId };
     },
-    onSuccess: (data, variables, context) => {
+    onSuccess: (data, _, context) => {
       if (!context || !data) return;
 
       const student = data;
@@ -77,7 +77,7 @@ export const useAddStudent = () => {
 
       toast.success("Student added successfully");
     },
-    onError: (error, variables, context) => {
+    onError: (error, _, context) => {
       if (context) {
         // Remove the optimistic entry if there was an error
         removeStudent(context.placeholderId);

@@ -74,6 +74,7 @@ export const QuestionRating = ({ questionId }: QuestionRatingProps) => {
     "0,1,2,3,4,5,6,7,8,9",
     (event) => {
       const digit = event.key;
+      console.log("digit", digit);
 
       if (timerRef.current) {
         clearTimeout(timerRef.current);
@@ -96,7 +97,6 @@ export const QuestionRating = ({ questionId }: QuestionRatingProps) => {
     },
     {
       enabled: !isTransitioning,
-      enableOnFormTags: false,
       preventDefault: true,
     },
     [isTransitioning, handleSelect],

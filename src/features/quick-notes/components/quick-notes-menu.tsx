@@ -4,7 +4,6 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import {
   CheckmarkCircle01Icon,
   NoteAddIcon,
-  NoteAddIcon as NoteAddIconSolid,
 } from "@hugeicons-pro/core-solid-rounded";
 import {
   ArrowLeft02Icon,
@@ -116,11 +115,6 @@ export const QuickNotesMenu = () => {
     }
   };
 
-  const selectedHubDetails = hubs?.find((hub) => hub.id === selectedHub);
-  const selectedHubClasses = getCustomColorClasses(
-    selectedHubDetails?.color || "neutral",
-  );
-
   return (
     <Popover onOpenChange={handleOpenChange} isOpen={isPopoverOpen}>
       <Button
@@ -131,14 +125,20 @@ export const QuickNotesMenu = () => {
         <HugeiconsIcon icon={NoteAddIcon} className="size-5" data-slot="icon" />
       </Button>
 
-      <Popover.Content className={"w-[400px]!"} showArrow={false}>
+      <Popover.Content
+        className={cn(
+          "max-w-sm w-full overflow-hidden",
+          "[--gutter:--spacing(4)]",
+        )}
+        showArrow={false}
+      >
         <AnimatePresence mode="popLayout" initial={false}>
           {isAddingNote ? (
             <m.div
               key="adding-note"
-              initial={{ x: "100%" }}
+              initial={{ x: "-100%" }}
               animate={{ x: 0 }}
-              exit={{ x: "100%" }}
+              exit={{ x: "-100%" }}
               transition={{
                 type: "spring",
                 stiffness: 400,
@@ -146,32 +146,24 @@ export const QuickNotesMenu = () => {
                 mass: 0.8,
               }}
             >
-              <Popover.Header className="pb-0!">
+              <Popover.Header>
                 <Popover.Title className="flex items-center gap-2">
                   <Button
                     aria-label="Back to hub selection"
                     intent="plain"
                     onPress={resetMenu}
-                    className="size-8"
-                    size="sq-sm"
+                    className={"size-6"}
+                    size="sq-xs"
                   >
-                    <HugeiconsIcon
-                      icon={ArrowLeft02Icon}
-                      className="size-4"
-                      data-slot="icon"
-                    />
+                    <HugeiconsIcon icon={ArrowLeft02Icon} data-slot="icon" />
                   </Button>
-                  Add note to{" "}
-                  {hubs?.find((hub) => hub.id === selectedHub)?.name}
-                  <div
-                    className={cn(
-                      "size-3 rounded-full brightness-125",
-                      selectedHubClasses.bg,
-                    )}
-                  />
+                  <span className="line-clamp-1">
+                    Add note to{" "}
+                    {hubs?.find((hub) => hub.id === selectedHub)?.name}
+                  </span>
                 </Popover.Title>
               </Popover.Header>
-              <Popover.Body className="py-4! sm:h-[240px]">
+              <Popover.Body className="py-4! sm:h-[300px]">
                 <Textarea
                   value={noteForm.content}
                   onChange={(value) =>
@@ -183,18 +175,13 @@ export const QuickNotesMenu = () => {
                   autoFocus
                   placeholder="Enter your note here..."
                   className={{
-                    textarea:
-                      "resize-none sm:text-base bg-overlay-highlight p-4",
+                    textarea: "resize-none sm:text-base bg-overlay-highlight",
                   }}
                 />
               </Popover.Body>
-              <Popover.Footer className="py-2! border-t border-border ">
-                <Button onPress={handleCreateNote}>
-                  <HugeiconsIcon
-                    icon={StickyNote02Icon}
-                    className="size-4"
-                    data-slot="icon"
-                  />
+              <Popover.Footer>
+                <Button onPress={handleCreateNote} className={"w-full"}>
+                  <HugeiconsIcon icon={StickyNote02Icon} data-slot="icon" />
                   Save note
                 </Button>
               </Popover.Footer>
@@ -202,9 +189,9 @@ export const QuickNotesMenu = () => {
           ) : (
             <m.div
               key="hub-selection"
-              initial={{ x: "-100%" }}
+              initial={{ x: "100%" }}
               animate={{ x: 0 }}
-              exit={{ x: "-100%" }}
+              exit={{ x: "100%" }}
               transition={{
                 type: "spring",
                 stiffness: 400,
@@ -212,25 +199,14 @@ export const QuickNotesMenu = () => {
                 mass: 0.8,
               }}
             >
-              <Popover.Header className="pb-0!">
-                <Popover.Title>
-                  <div className="size-8 flex items-center justify-center">
-                    <HugeiconsIcon
-                      icon={NoteAddIconSolid}
-                      className="size-4"
-                      data-slot="icon"
-                    />
-                  </div>
-                  Add Quick Notes
-                </Popover.Title>
-              </Popover.Header>
-              <Popover.Body className="grid grid-cols-3 auto-rows-[minmax(60px,auto)] gap-2 py-4! sm:h-[240px] overflow-y-auto">
+              <Popover.Header title="Add Quick Notes" />
+              <Popover.Body className=" gap-2 py-4! sm:h-[300px] overflow-y-auto">
                 {isLoadingHubs
-                  ? Array.from({ length: 9 }).map((_, index) => (
+                  ? Array.from({ length: 5 }).map((_, index) => (
                       <Skeleton
                         data-testid="hub-skeleton"
                         key={`hub-skeleton-${index}`}
-                        className="w-full h-full"
+                        className="w-full h-8"
                       />
                     ))
                   : hubs?.map((hub) => {
@@ -244,7 +220,7 @@ export const QuickNotesMenu = () => {
                             hubButtonStyles(),
                             colorClasses.focusVisible,
                             colorClasses.bg,
-                            "flex items-center justify-center gap-2 hover:brightness-110 transition-all duration-200",
+                            "text-left gap-2 hover:brightness-110 transition-all duration-200",
                           )}
                         >
                           {hub.name}
@@ -252,10 +228,11 @@ export const QuickNotesMenu = () => {
                       );
                     })}
               </Popover.Body>
-              <Popover.Footer className="py-2! border-t border-border ">
+              <Popover.Footer>
                 <Link
                   className={buttonStyles({
-                    intent: "plain",
+                    intent: "outline",
+                    className: "w-full",
                   })}
                   href="/portal/quick-notes"
                 >

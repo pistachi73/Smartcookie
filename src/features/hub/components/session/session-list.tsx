@@ -18,7 +18,6 @@ import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import { Loader } from "@/shared/components/ui/loader";
 import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
-import { useInfiniteScroll } from "@/shared/hooks/use-infinite-scroll";
 import { regularSpring } from "@/shared/lib/animation";
 
 import { getPaginatedSessionsByHubIdQueryOptions } from "../../lib/hub-sessions-query-options";
@@ -82,13 +81,6 @@ export function SessionsList({ hubId }: { hubId: number }) {
     : [];
 
   const isMobile = down("sm");
-
-  // Infinite scroll hook for loading more sessions
-  const { loadMoreRef } = useInfiniteScroll({
-    hasNextPage: !!hasNextPage,
-    isFetchingNextPage,
-    fetchNextPage,
-  });
 
   const handleEditModeToggle = () => {
     setIsEditingMode(!isEditingMode);

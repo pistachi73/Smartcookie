@@ -88,45 +88,7 @@ const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
         }}
         onDelete={onDelete}
       />
-      {/* <div className="hidden absolute top-0 right-0 z-10">
-        <Button
-          excludeFromTabOrder
-          isDisabled={note.id < 0}
-          onPressStart={handleDeletePress}
-          onPressEnd={handleDeleteRelease}
-          aria-label="Delete note"
-          className={({ isDisabled }) =>
-            cn(
-              "size-9 z-20 flex items-center justify-center text-muted-fg hover:bg-transparent!",
-              isDisabled && "opacity-50",
-            )
-          }
-        >
-          <HugeiconsIcon
-            icon={Delete01Icon}
-            size={14}
-            className={cn("transition-colors", isDeleting && "text-danger")}
-          />
-        </Button>
-        <AnimatePresence>
-          {isDeleting && (
-            <m.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              transition={{ duration: 0.2 }}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none"
-            >
-              <ProgressCircle
-                value={deleteProgress}
-                strokeWidth={2}
-                aria-label="Delete progress circle"
-                className="size-8 text-danger"
-              />
-            </m.div>
-          )}
-        </AnimatePresence>
-      </div> */}
+
       <TextArea
         ref={textAreaRef}
         value={content}

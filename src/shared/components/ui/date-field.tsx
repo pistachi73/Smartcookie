@@ -11,8 +11,6 @@ import {
 } from "react-aria-components";
 import { tv } from "tailwind-variants";
 
-import { cn } from "@/shared/lib/utils";
-
 import { Description, FieldError, FieldGroup, Label } from "./field";
 import { composeTailwindRenderProps } from "./primitive";
 

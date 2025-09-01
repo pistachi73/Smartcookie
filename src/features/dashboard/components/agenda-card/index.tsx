@@ -44,7 +44,7 @@ export const AgendaCard = () => {
   const next7Days = Array.from({ length: 7 }, (_, i) => date.add({ days: i }));
 
   return (
-    <Card className="h-full">
+    <Card className="min-h-full overflow-auto @4xl:h-0 w-full">
       <Card.Header>
         <Card.Title>Schedule</Card.Title>
         <Card.Description>Showing events for the next 7 days</Card.Description>
@@ -70,7 +70,7 @@ export const AgendaCard = () => {
           >
             <HugeiconsIcon icon={ArrowLeft01Icon} size={14} strokeWidth={2} />
           </Button>
-          <p className="text-sm font-medium flex-1 text-center tabular-nums">
+          <p className="text-sm font-medium flex-1 text-center tabular-nums truncate">
             {next7Days[0] && format(next7Days[0].toString(), "dd MMM yyyy")} -{" "}
             {next7Days[6] && format(next7Days[6].toString(), "dd MMM yyyy")}
           </p>

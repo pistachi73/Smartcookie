@@ -83,12 +83,14 @@ interface AddSessionsFormProps {
   minDate?: string;
   maxDate?: string | null;
   disableHubSelection?: boolean;
+  removeHubSelection?: boolean;
 }
 
 export function AddSessionsForm({
   minDate,
   maxDate,
   disableHubSelection,
+  removeHubSelection = false,
 }: AddSessionsFormProps) {
   const queryClient = useQueryClient();
   const { data: hubs, isLoading } = useQuery(
@@ -108,8 +110,6 @@ export function AddSessionsForm({
   const endStartTimeError =
     formState.errors.startTime?.message || formState.errors.endTime?.message;
 
-  console.log({ maxDate, minDate });
-
   const maxCalendarDate = maxDate ? parseDateTime(maxDate) : null;
   const minCalendarDate = minDate ? parseDateTime(minDate) : null;
 
@@ -120,45 +120,47 @@ export function AddSessionsForm({
       color: hub.color,
     })) ?? [];
 
-  const selectedHub = hubOptions.find((hub) => hub.value === selectedHubId);
-
   return (
     <div className="space-y-3">
-      <Controller
-        control={form.control}
-        name="hubId"
-        render={({ field, fieldState: { invalid, error } }) => (
-          <ComboBox
-            {...field}
-            selectedKey={field.value}
-            onSelectionChange={(key) => field.onChange(key as number)}
-            aria-label="Select hub"
-            menuTrigger="focus"
-            label="Hub"
-            isRequired={true}
-            validationBehavior="aria"
-            isInvalid={invalid}
-            errorMessage={error?.message}
-            isReadOnly={disableHubSelection || isLoading}
-          >
-            <ComboBox.Input
-              placeholder={isLoading ? "Loading hubs..." : "Select a hub"}
-            />
-            <ComboBox.List items={hubOptions}>
-              {(item) => (
-                <ComboBox.Option
-                  key={item.value}
-                  id={item.value}
-                  textValue={item.label}
-                >
-                  <ColorDot color={item.color} data-slot="icon" />
-                  <ComboBox.Label>{item.label}</ComboBox.Label>
-                </ComboBox.Option>
-              )}
-            </ComboBox.List>
-          </ComboBox>
-        )}
-      />
+      {!removeHubSelection && (
+        <Controller
+          control={form.control}
+          name="hubId"
+          render={({ field, fieldState: { invalid, error } }) => (
+            <ComboBox
+              {...field}
+              selectedKey={field.value}
+              onSelectionChange={(key) => field.onChange(key as number)}
+              aria-label="Select hub"
+              menuTrigger="focus"
+              label="Hub"
+              isRequired={true}
+              validationBehavior="aria"
+              isInvalid={invalid}
+              errorMessage={error?.message}
+              isDisabled={disableHubSelection}
+              isReadOnly={disableHubSelection || isLoading}
+            >
+              <ComboBox.Input
+                placeholder={isLoading ? "Loading hubs..." : "Select a hub"}
+              />
+              <ComboBox.List items={hubOptions}>
+                {(item) => (
+                  <ComboBox.Option
+                    key={item.value}
+                    id={item.value}
+                    textValue={item.label}
+                  >
+                    <ColorDot color={item.color} data-slot="icon" />
+                    <ComboBox.Label>{item.label}</ComboBox.Label>
+                  </ComboBox.Option>
+                )}
+              </ComboBox.List>
+            </ComboBox>
+          )}
+        />
+      )}
+
       <Controller
         control={form.control}
         name="date"

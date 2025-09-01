@@ -68,6 +68,7 @@ export const SessionModal = ({ isOpen, onOpenChange }: SessionModalProps) => {
   } = useCheckSessionConflicts();
 
   const onSubmit = async (data: z.infer<typeof AddSessionFormSchema>) => {
+    console.log({ data });
     const sessions = calculateRecurrentSessions({
       date: serializeDateValue(data.date),
       startTime: serializeTime(data.startTime),
@@ -124,6 +125,7 @@ export const SessionModal = ({ isOpen, onOpenChange }: SessionModalProps) => {
               <AddSessionsForm
                 minDate={hubInfo.startDate?.toString()}
                 maxDate={hubInfo.endDate?.toString()}
+                removeHubSelection
               />
 
               {showRecurrenceWarning && (

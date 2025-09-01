@@ -148,7 +148,7 @@ describe("QuickNotesMenu", () => {
     openPopover();
 
     const skeletons = screen.getAllByTestId("hub-skeleton");
-    expect(skeletons.length).toEqual(9);
+    expect(skeletons.length).toEqual(5);
   });
 
   it("allows selecting a hub and moving to note creation state", () => {

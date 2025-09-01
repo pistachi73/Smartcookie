@@ -1,4 +1,3 @@
-import { HugeiconsIcon } from "@hugeicons/react";
 import { UserMultiple02Icon } from "@hugeicons-pro/core-stroke-rounded";
 
 import { EmptyState } from "@/shared/components/ui/empty-state";

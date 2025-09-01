@@ -49,6 +49,7 @@ export function Hero() {
     return () => clearInterval(interval);
   }, []);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Need this rerender
   useEffect(() => {
     if (measureRef.current) {
       setContainerWidth(measureRef.current.offsetWidth);

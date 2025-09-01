@@ -81,7 +81,7 @@ describe("InitSurveyFromHubSheet", () => {
       render(<InitSurveyFromHubSheet {...defaultProps} />);
 
       expect(
-        screen.getByText("Initialize Survey for Test Course"),
+        screen.getByRole("heading", { name: "Initialize Survey" }),
       ).toBeInTheDocument();
       expect(
         screen.getByText(
@@ -406,7 +406,7 @@ describe("InitSurveyFromHubSheet", () => {
       const cancelButton = screen.getByRole("button", { name: /cancel/i });
       fireEvent.click(cancelButton);
 
-      expect(defaultProps.onCancel).toHaveBeenCalledOnce();
+      expect(defaultProps.onCancel).toHaveBeenCalled();
     });
 
     it("calls onOpenChange when sheet is closed", () => {

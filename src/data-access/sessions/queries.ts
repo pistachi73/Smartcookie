@@ -6,7 +6,7 @@ import { and, asc, between, count, desc, eq, gt, lt } from "drizzle-orm";
 import { db } from "@/db";
 import { session, sessionNote } from "@/db/schema";
 import { withValidationAndAuth } from "../protected-data-access";
-import { getTimestampISO, parseRequiredDateWithTimezone } from "../utils";
+import { getTimestampISO } from "../utils";
 import {
   GetCalendarSessionsByDateRangeSchema,
   GetInfiniteSessionsByHubIdSchema,

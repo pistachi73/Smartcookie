@@ -85,7 +85,9 @@ export function StepInfo() {
             label="Description"
             placeholder="Brief explanation of the survey purpose"
             maxLength={1000}
-            className="h-32 resize-none"
+            className={{
+              textarea: "h-32 resize-none",
+            }}
             errorMessage={fieldState.error?.message}
             isInvalid={!!fieldState.error}
           />

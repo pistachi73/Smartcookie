@@ -12,7 +12,10 @@ import { composeTailwindRenderProps } from "@/shared/lib/primitive";
 import { Description, FieldError, type FieldProps, Label } from "./field";
 
 interface TextareaProps extends Omit<TextFieldProps, "className">, FieldProps {
-  className?: string | ((v: TextFieldProps) => string);
+  className?: {
+    primitive?: string;
+    textarea?: string;
+  };
 }
 
 const Textarea = ({
@@ -27,7 +30,7 @@ const Textarea = ({
     <TextField
       {...props}
       className={composeTailwindRenderProps(
-        className,
+        className?.primitive,
         "group flex flex-col gap-y-1 *:data-[slot=label]:font-medium",
       )}
     >
@@ -35,7 +38,7 @@ const Textarea = ({
       <TextArea
         placeholder={placeholder}
         className={composeTailwindRenderProps(
-          className,
+          className?.textarea,
           twJoin([
             "field-sizing-content max-h-96 min-h-16 w-full min-w-0 rounded-lg border border-input px-2.5 py-2 text-base placeholder-muted-fg shadow-xs outline-hidden transition duration-200 sm:text-sm/6",
             "focus:border-ring/70 focus:ring-3 focus:ring-ring/20",

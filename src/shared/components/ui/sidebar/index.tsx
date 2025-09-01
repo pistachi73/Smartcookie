@@ -332,7 +332,7 @@ const SidebarItem = ({
           {badge &&
             (state !== "collapsed" ? (
               <Badge
-                shape="square"
+                isCircle={false}
                 intent="primary"
                 data-slot="sidebar-badge"
                 className="-translate-y-1/2 absolute inset-ring-1 inset-ring-primary/20 inset-y-1/2 right-1.5 h-5.5 w-auto text-[10px] transition-colors group-data-current:inset-ring-transparent"

@@ -86,7 +86,7 @@ const ModalContent = ({
             "[--visual-viewport-vertical-padding:16px] sm:[--visual-viewport-vertical-padding:32px]",
             "relative bg-overlay text-overlay-fg",
             "shadow-lg ring ring-fg/5 dark:ring-border",
-            "rounded-t-2xl md:rounded-xl",
+            "rounded-t-2xl sm:rounded-xl",
             sizes[size],
             isEntering && [
               "slide-in-from-bottom animate-in duration-300 ease-out",

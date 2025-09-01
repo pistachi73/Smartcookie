@@ -16,7 +16,7 @@ import { db } from "@/db";
 
 export async function signInCallback(params: {
   user: NextAuthUser;
-  account: Account | null;
+  account?: Account | null;
 }) {
   try {
     const { user, account } = params;
