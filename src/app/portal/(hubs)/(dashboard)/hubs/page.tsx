@@ -1,7 +1,5 @@
-import { FolderLibraryIcon } from "@hugeicons-pro/core-solid-rounded";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
-import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
 import { getQueryClient } from "@/shared/lib/get-query-client";
 
 import { HubList } from "@/features/hub/components/hub-list";
@@ -16,17 +14,9 @@ const HubsPage = async () => {
   });
 
   return (
-    <>
-      <PortalNav
-        breadcrumbs={[
-          { label: "Portal", href: "/portal" },
-          { label: "Hubs", href: "/portal/hubs", icon: FolderLibraryIcon },
-        ]}
-      />
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <HubList />
-      </HydrationBoundary>
-    </>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <HubList />
+    </HydrationBoundary>
   );
 };
 

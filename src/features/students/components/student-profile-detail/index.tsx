@@ -29,11 +29,9 @@ import { cn } from "@/shared/lib/utils";
 import type { UpdateStudentSchema } from "@/data-access/students/schemas";
 import { useUpdateStudent } from "../../hooks/use-update-student";
 import { getUserStudentByIdQueryOptions } from "../../lib/user-students-query-options";
-import {
-  EditableDateField,
-  EditablePhoneField,
-  EditableTextField,
-} from "./editable-field";
+import { EditableDateField } from "./editable-field/editable-date-field";
+import { EditablePhoneField } from "./editable-field/editable-phone-field";
+import { EditableTextField } from "./editable-field/editable-text-field";
 import { StudentProfileLayout } from "./student-profile-layout";
 
 type UpdatableStudentFields = keyof Omit<
@@ -51,11 +49,7 @@ export const StudentProfileDetail = ({ id }: { id: number }) => {
 
   if (!student)
     return (
-      <StudentProfileLayout
-        isLoading={false}
-        studentId={0}
-        studentName="Not found"
-      >
+      <StudentProfileLayout>
         <EmptyState
           title="Student not found"
           description="The student you are looking for does not exist."
@@ -88,11 +82,7 @@ export const StudentProfileDetail = ({ id }: { id: number }) => {
     : null;
 
   return (
-    <StudentProfileLayout
-      studentId={id}
-      studentName={student.name}
-      isLoading={false}
-    >
+    <StudentProfileLayout>
       <div className="grid grid-cols-1 @6xl:grid-cols-3 gap-6">
         <div className="@6xl:col-span-2 space-y-6">
           <Card className="relative @container">

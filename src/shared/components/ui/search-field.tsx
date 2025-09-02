@@ -25,6 +25,7 @@ interface SearchFieldProps
     FieldProps {
   isPending?: boolean;
   ref?: React.RefObject<HTMLInputElement>;
+  suffix?: React.ReactNode | string;
   className?: {
     primitive?: string;
     fieldGroup?: string;
@@ -41,6 +42,7 @@ const SearchField = ({
   description,
   errorMessage,
   isPending,
+  suffix,
   ...props
 }: SearchFieldProps) => {
   return (
@@ -70,6 +72,13 @@ const SearchField = ({
                 placeholder={placeholder ?? "Search..."}
                 className={className?.input}
               />
+              {suffix ? (
+                typeof suffix === "string" ? (
+                  <span className="mr-2 text-muted-fg">{suffix}</span>
+                ) : (
+                  suffix
+                )
+              ) : null}
 
               <Button className="grid place-content-center pressed:text-fg text-muted-fg hover:text-fg group-empty/search-field:invisible">
                 <HugeiconsIcon icon={CancelIcon} data-slot="icon" />

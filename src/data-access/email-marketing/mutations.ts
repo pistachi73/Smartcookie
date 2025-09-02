@@ -1,14 +1,21 @@
 "use server";
 
+import MailerLite from "@mailerlite/mailerlite-nodejs";
 import { eq } from "drizzle-orm";
 
 import { db } from "@/db";
 import { emailMarketing } from "@/db/schema";
+import { env } from "@/env";
+import { createDataAccessError } from "../errors";
 import { withValidationOnly } from "../protected-data-access";
-import { CreateEmailMarketingSchema } from "./schemas";
+import { AddEmailMarketingSubscriberSchema } from "./schemas";
 
-export const createEmailMarketing = withValidationOnly({
-  schema: CreateEmailMarketingSchema,
+const mailerlite = new MailerLite({
+  api_key: env.MAILER_API_KEY,
+});
+
+export const addEmailMarketingSubscriber = withValidationOnly({
+  schema: AddEmailMarketingSubscriberSchema,
   callback: async ({ email }) => {
     // Check if email already exists
     const existingEmail = await db
@@ -18,21 +25,19 @@ export const createEmailMarketing = withValidationOnly({
       .limit(1);
 
     if (existingEmail.length > 0) {
-      return {
-        success: false,
-        message: "Thanks for your interest! We'll be in touch soon.",
-      };
+      return createDataAccessError("USER_ALREADY_HAS_SUBSCRIPTION");
     }
-    await db
-      .insert(emailMarketing)
-      .values({
-        email,
-      })
-      .returning();
 
-    return {
-      success: true,
-      message: "Thanks! We'll be in touch soon.",
-    };
+    await Promise.all([
+      db.insert(emailMarketing).values({
+        email,
+      }),
+
+      mailerlite.subscribers.createOrUpdate({
+        email,
+      }),
+    ]);
+
+    return true;
   },
 });

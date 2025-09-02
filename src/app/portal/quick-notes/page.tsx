@@ -1,11 +1,8 @@
-import { NoteIcon } from "@hugeicons-pro/core-solid-rounded";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-
-import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
 
 import { QuickNotes } from "@/features/quick-notes/components/quick-notes";
 import { quickNotesHubsQueryOptions } from "@/features/quick-notes/lib/quick-notes-query-options";
@@ -31,24 +28,12 @@ export default async function QuickNotesPage({
   });
 
   return (
-    <>
-      <PortalNav
-        breadcrumbs={[
-          { label: "Portal", href: "/portal" },
-          {
-            label: "Quick Notes",
-            href: "/portal/quick-notes",
-            icon: NoteIcon,
-          },
-        ]}
-      />
-      <QuickNotesStoreProvider
-        initialVisibleHubs={hubId !== undefined ? [hubId] : undefined}
-      >
-        <HydrationBoundary state={dehydrate(queryClient)}>
-          <QuickNotes />
-        </HydrationBoundary>
-      </QuickNotesStoreProvider>
-    </>
+    <QuickNotesStoreProvider
+      initialVisibleHubs={hubId !== undefined ? [hubId] : undefined}
+    >
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <QuickNotes />
+      </HydrationBoundary>
+    </QuickNotesStoreProvider>
   );
 }

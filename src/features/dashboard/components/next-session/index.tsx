@@ -4,24 +4,23 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import {
   ArrowRight02Icon,
   CalendarCheckOut02Icon,
-  LinkSquare02Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
+import { useQuery } from "@tanstack/react-query";
 import { format, isToday, isTomorrow } from "date-fns";
 
 import { AvatarStack } from "@/shared/components/ui/avatar-stack";
-import { buttonStyles } from "@/shared/components/ui/button";
 import { Card } from "@/shared/components/ui/card";
 import { Heading } from "@/shared/components/ui/heading";
-import { Link } from "@/shared/components/ui/link";
 import { Separator } from "@/shared/components/ui/separator";
 import { StudentProfile } from "@/shared/components/students/student-profile";
 import { cn } from "@/shared/lib/classes";
 import { getCustomColorClasses } from "@/shared/lib/custom-colors";
 
-import { useGetNextSession } from "../../hooks/use-get-next-session";
+import { getNextSessionQueryOptions } from "../../lib/get-next-session-query-options";
+import { GoToCourseLink } from "./go-to-course-button";
 
 export const NextSession = () => {
-  const { data: nextSession } = useGetNextSession();
+  const { data: nextSession } = useQuery(getNextSessionQueryOptions());
 
   if (!nextSession) {
     return null;
@@ -69,16 +68,7 @@ export const NextSession = () => {
         </Card.Title>
 
         <Card.Action>
-          <Link
-            href={`/portal/hubs/${hub?.id}`}
-            className={buttonStyles({
-              intent: "outline",
-              size: "sm",
-            })}
-          >
-            <span className="hidden @2xl:block">Go to course</span>
-            <HugeiconsIcon icon={LinkSquare02Icon} data-slot="icon" size={14} />
-          </Link>
+          <GoToCourseLink hubId={hub?.id} />
         </Card.Action>
       </Card.Header>
 

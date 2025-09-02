@@ -4,6 +4,8 @@
  */
 await import("./src/env.js");
 
+import bundleAnalyzer from "@next/bundle-analyzer";
+
 /** @type {import("next").NextConfig} */
 const config = {
   trailingSlash: true,
@@ -35,4 +37,6 @@ const config = {
   },
 };
 
-export default config;
+export default bundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+})(config);

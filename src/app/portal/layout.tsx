@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation";
 
 import { SidebarInset } from "@/shared/components/ui/sidebar/index";
+import { DynamicPortalNav } from "@/shared/components/layout/portal-nav/dynamic-portal-nav";
 import AppSidebar from "@/shared/components/layout/portal-sidebar";
-import { currentUser } from "@/shared/lib/auth";
 import { getHeaders } from "@/shared/lib/get-headers";
 
 import { PortalProviders } from "@/core/providers/portal-providers";
@@ -14,20 +14,16 @@ export default async function PortalLayout({
   children: React.ReactNode;
 }) {
   const headers = await getHeaders();
-  const user = await currentUser();
 
   if (!headers.portalEnabled) {
     redirect("/");
   }
 
-  if (!user) {
-    redirect("/login");
-  }
-
   return (
     <PortalProviders>
-      <AppSidebar collapsible="dock" closeButton={true} user={user} />
+      <AppSidebar collapsible="dock" closeButton={true} />
       <SidebarInset className="h-full min-h-0 flex-col">
+        <DynamicPortalNav />
         {children}
       </SidebarInset>
       <QuickNotesMenu />

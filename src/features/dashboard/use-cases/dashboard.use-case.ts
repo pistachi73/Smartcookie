@@ -15,7 +15,7 @@ import { session, sessionNote } from "@/db/schema";
 import { organizeSessionsByDay } from "@/features/calendar/lib/organize-sessions-by-day";
 import { getDayKeyFromDateString } from "@/features/calendar/lib/utils";
 
-export const getNextSessionUseCase = withAuthenticationNoInput({
+export const getNextSession = withAuthenticationNoInput({
   useCase: async (user) => {
     const now = new Date();
 

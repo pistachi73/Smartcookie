@@ -62,7 +62,7 @@ export const Account = () => {
   return (
     <div className="relative overflow-y-auto">
       <Tabs
-        className={"relative h-full overflow-hidden"}
+        className={"relative h-full overflow-hidden "}
         selectedKey={validTab}
         onSelectionChange={(key) => {
           router.push(

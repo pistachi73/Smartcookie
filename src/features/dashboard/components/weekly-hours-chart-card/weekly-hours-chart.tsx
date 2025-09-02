@@ -77,8 +77,8 @@ export function WeeklyHoursCard2({ date }: WeeklyHoursChartProps) {
     return (
       <EmptyState
         className="aspect-video h-56 sm:h-80 flex items-center justify-center text-muted-fg w-full"
-        title="No data"
-        description="No data available for this week"
+        title="No sessions"
+        description="No sessions scheduled this week"
       />
     );
 

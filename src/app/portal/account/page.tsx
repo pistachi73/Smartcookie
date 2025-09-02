@@ -1,23 +1,12 @@
 import { AccountSetting02Icon } from "@hugeicons-pro/core-solid-rounded";
 
 import { PageHeader } from "@/shared/components/layout/page-header";
-import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
 
 import { Account } from "@/features/account/components";
 
 export default async function AccountPage() {
   return (
     <>
-      <PortalNav
-        breadcrumbs={[
-          { label: "Portal", href: "/portal" },
-          {
-            label: "Account",
-            href: "/portal/account",
-            icon: AccountSetting02Icon,
-          },
-        ]}
-      />
       <PageHeader
         title="Account"
         subTitle="Manage your account"

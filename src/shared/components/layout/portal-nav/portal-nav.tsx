@@ -22,19 +22,17 @@ import { SidebarNav } from "../../ui/sidebar";
 import { SidebarTrigger } from "../../ui/sidebar/sidebar-trigger";
 import { Skeleton } from "../../ui/skeleton";
 import { useViewport } from "../viewport-context/viewport-context";
+import type { BreadcrumbConfig } from "./breadcrumb-config";
 
 export interface PortalNavProps {
   className?: string;
   showSearchField?: boolean;
-  breadcrumbs: (
-    | { label: string; href: string; icon?: typeof ArrowLeft02Icon }
-    | "skeleton"
-  )[];
+  breadcrumbs: BreadcrumbConfig[];
 }
 
 export const PortalNav = ({
   className,
-  showSearchField = true,
+  showSearchField = false,
   breadcrumbs,
 }: PortalNavProps) => {
   const [lastUrl, setLastUrl] = useState<string | null>(null);
@@ -72,13 +70,16 @@ export const PortalNav = ({
               if (crumb === "skeleton") {
                 return (
                   <Breadcrumbs.Item
-                    key={crumb}
-                    className="flex items-center gap-x-2 w-20 h-6"
+                    key={`breacrumbs-skeleton-${crumb}`}
+                    className="flex items-center gap-x-2 w-18 h-6"
                   >
-                    <Skeleton className="w-24 h-5" />
+                    <Skeleton className="w-full h-4 rounded-sm" />
                   </Breadcrumbs.Item>
                 );
               }
+
+              const isLastCrumb = crumb === breadcrumbs[breadcrumbs.length - 1];
+              const Icon = isLastCrumb ? crumb.iconSolid : crumb.icon;
 
               return (
                 <Breadcrumbs.Item
@@ -86,9 +87,9 @@ export const PortalNav = ({
                   {...crumb}
                   className="flex items-center gap-x-2"
                 >
-                  {crumb.icon && (
+                  {Icon && (
                     <HugeiconsIcon
-                      icon={crumb.icon}
+                      icon={Icon}
                       data-slot="icon"
                       size={16}
                       className="inline"
