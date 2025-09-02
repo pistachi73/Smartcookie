@@ -25,8 +25,8 @@ import { useViewport } from "@/shared/components/layout/viewport-context/viewpor
 import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 import { cn } from "@/shared/lib/classes";
 
-import { createEmailMarketing } from "@/data-access/email-marketing/mutations";
-import { CreateEmailMarketingSchema } from "@/data-access/email-marketing/schemas";
+import { addEmailMarketingSubscriber } from "@/data-access/email-marketing/mutations";
+import { AddEmailMarketingSubscriberSchema } from "@/data-access/email-marketing/schemas";
 
 const animatedTexts = [
   { text: "admin.", icon: UserSettingsIcon },
@@ -222,10 +222,10 @@ const formSchema = z.object({
 export const EmailMarketingForm = () => {
   const { mutate, isPending } = useProtectedMutation({
     requireAuth: false,
-    schema: CreateEmailMarketingSchema,
-    mutationFn: createEmailMarketing,
-    onSuccess: (data) => {
-      toast.success(data.message, { position: "bottom-center" });
+    schema: AddEmailMarketingSubscriberSchema,
+    mutationFn: addEmailMarketingSubscriber,
+    onSuccess: () => {
+      toast.success("Thanks for your interest! We'll be in touch soon.");
       form.reset();
     },
   });

@@ -1,9 +1,6 @@
-import { Calendar03Icon } from "@hugeicons-pro/core-solid-rounded";
 import isNumber from "lodash/isNumber";
 import { redirect } from "next/navigation";
 import { Temporal } from "temporal-polyfill";
-
-import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
 
 import { Calendar } from "@/features/calendar/components";
 import { isCalendarView } from "@/features/calendar/lib/calendar";
@@ -36,22 +33,14 @@ const CalendarPage = async ({ params }: CalendarPageProps) => {
   );
 
   return (
-    <>
-      <PortalNav
-        breadcrumbs={[
-          { label: "Portal", href: "/portal" },
-          { label: "Calendar", href: "/portal/calendar", icon: Calendar03Icon },
-        ]}
-      />
-      <CalendarStoreProvider
-        initialCalendarStore={{
-          calendarView,
-          selectedDate: plainDateTime.toString(),
-        }}
-      >
-        <Calendar />
-      </CalendarStoreProvider>
-    </>
+    <CalendarStoreProvider
+      initialCalendarStore={{
+        calendarView,
+        selectedDate: plainDateTime.toString(),
+      }}
+    >
+      <Calendar />
+    </CalendarStoreProvider>
   );
 };
 

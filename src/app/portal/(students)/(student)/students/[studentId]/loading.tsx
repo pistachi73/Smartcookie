@@ -2,7 +2,7 @@ import { StudentProfileLayout } from "@/features/students/components/student-pro
 
 export default function StudentPageLoading() {
   return (
-    <StudentProfileLayout isLoading={true}>
+    <StudentProfileLayout>
       <p>Loading...</p>
     </StudentProfileLayout>
   );

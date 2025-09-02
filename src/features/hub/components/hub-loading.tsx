@@ -1,11 +1,8 @@
 "use client";
 
-import { FolderLibraryIcon } from "@hugeicons-pro/core-solid-rounded";
-
 import { Heading } from "@/shared/components/ui/heading";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { Tabs } from "@/shared/components/ui/tabs";
-import { PortalNav } from "@/shared/components/layout/portal-nav/portal-nav";
 import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
 import ViewportOnly from "@/shared/components/layout/viewport-context/viewport-only";
 import { cn } from "@/shared/lib/classes";
@@ -123,13 +120,6 @@ export const HubLoading = () => {
 
   return (
     <>
-      <PortalNav
-        breadcrumbs={[
-          { label: "Portal", href: "/portal" },
-          { label: "Hubs", href: "/portal/hubs", icon: FolderLibraryIcon },
-          "skeleton",
-        ]}
-      />
       <HubHeader />
 
       <div className="h-full overflow-auto flex flex-col">

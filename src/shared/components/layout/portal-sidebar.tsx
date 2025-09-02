@@ -5,29 +5,23 @@ import {
   Calendar03Icon as Calendar03IconSolid,
   Comment01Icon as Comment01IconSolid,
   DashboardSquare01Icon as DashboardSquare01IconSolid,
-  Diamond02Icon,
   FolderLibraryIcon as FolderLibraryIconSolid,
   NoteIcon as NoteIconSolid,
   UserGroupIcon as UserGroupIconSolid,
 } from "@hugeicons-pro/core-solid-rounded";
 import {
-  AccountSetting02Icon,
   Calendar03Icon,
   Comment01Icon,
   DashboardSquare01Icon,
   FolderLibraryIcon,
-  Invoice02Icon,
-  Logout01Icon,
   NoteIcon,
   UserGroupIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
 
 import {
   Sidebar,
-  SidebarFooter,
   SidebarHeader,
   SidebarLabel,
   SidebarRail,
@@ -39,20 +33,14 @@ import { SidebarItem } from "@/shared/components/ui/sidebar/sidebar-item";
 import { SidebarSection } from "@/shared/components/ui/sidebar/sidebar-section";
 import { cn } from "@/shared/lib/classes";
 
-import type { AuthUser } from "@/types/next-auth";
-import { ExplorePremiumModal } from "../explore-premium-modal";
-import { Button } from "../ui/button";
-import { Menu } from "../ui/menu";
 import { SidebarTrigger } from "../ui/sidebar/sidebar-trigger";
-import { UserAvatar } from "../ui/user-avatar";
 
-type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
-  user: AuthUser;
-};
+type AppSidebarProps = React.ComponentProps<typeof Sidebar>;
 
-export default function AppSidebar({ user, ...props }: AppSidebarProps) {
+export default function AppSidebar({ ...props }: AppSidebarProps) {
   const pathname = usePathname();
   const state = useSidebar();
+
   return (
     <Sidebar {...props}>
       <SidebarHeader
@@ -105,7 +93,6 @@ export default function AppSidebar({ user, ...props }: AppSidebarProps) {
                   key={item.href}
                   isCurrent={isCurrent}
                   href={item.href}
-                  badge={item?.badge}
                   className={cn("group")}
                 >
                   <HugeiconsIcon
@@ -124,81 +111,8 @@ export default function AppSidebar({ user, ...props }: AppSidebarProps) {
               );
             })}
           </SidebarSection>
-          {/* <SidebarSection title="Courses"></SidebarSection> */}
         </SidebarSectionGroup>
       </SidebarContent>
-
-      <SidebarFooter
-        className={cn(
-          state.state === "collapsed" ? "items-center gap-2" : "gap-3",
-        )}
-      >
-        {!user.hasActiveSubscription && (
-          <ExplorePremiumModal>
-            <Button
-              size={state.state === "collapsed" ? "sq-sm" : "md"}
-              className={cn(
-                "justify-between text-nowrap",
-                state.state === "collapsed" && "justify-center",
-              )}
-            >
-              {state.state === "collapsed" ? "" : "Explore premium"}
-              <HugeiconsIcon icon={Diamond02Icon} size={16} data-slot="icon" />
-            </Button>
-          </ExplorePremiumModal>
-        )}
-        <Menu>
-          <Menu.Trigger
-            className={cn(
-              "flex items-center shrink-0 h-auto",
-              state.state === "collapsed" && "justify-center",
-            )}
-          >
-            <UserAvatar userImage={user.image} userName={user.name} size="md" />
-            {state.open && (
-              <div className="space-y-0.5 text-left">
-                <p className="text-sm font-medium">{user.name}</p>
-                {user.email && (
-                  <p className="text-xs font-normal text-muted-fg line-clamp-1">
-                    {user.email}
-                  </p>
-                )}
-              </div>
-            )}
-          </Menu.Trigger>
-          <Menu.Content
-            placement="bottom end"
-            popover={{ className: "w-full sm:w-(--trigger-width)" }}
-          >
-            <Menu.Header>
-              <p className="text-sm font-medium">{user.name}</p>
-              {user.email && (
-                <p className="text-xs font-normal text-muted-fg line-clamp-1">
-                  {user.email}
-                </p>
-              )}
-            </Menu.Header>
-            <Menu.Separator />
-            <Menu.Item href="/portal/dashboard">
-              <HugeiconsIcon icon={DashboardSquare01Icon} data-slot="icon" />
-              Dashboard
-            </Menu.Item>
-            <Menu.Item href="/portal/account">
-              <HugeiconsIcon icon={AccountSetting02Icon} data-slot="icon" />
-              Account
-            </Menu.Item>
-            <Menu.Item href="/portal/account?t=subscription">
-              <HugeiconsIcon icon={Invoice02Icon} data-slot="icon" />
-              Billing and subscription
-            </Menu.Item>
-            <Menu.Separator />
-            <Menu.Item onAction={() => signOut({ redirectTo: "/" })}>
-              <HugeiconsIcon icon={Logout01Icon} data-slot="icon" />
-              Logout
-            </Menu.Item>
-          </Menu.Content>
-        </Menu>
-      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );
@@ -210,7 +124,6 @@ const navigation = [
     href: "/portal/dashboard",
     icon: DashboardSquare01Icon,
     iconActive: DashboardSquare01IconSolid,
-    badge: "New",
   },
   {
     label: "Calendar",

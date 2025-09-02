@@ -1,5 +1,3 @@
-"use client";
-
 import { DashboardSquare01Icon } from "@hugeicons-pro/core-solid-rounded";
 
 import { PageHeader } from "@/shared/components/layout/page-header";

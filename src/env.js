@@ -21,6 +21,9 @@ export const env = createEnv({
     STRIPE_WEBHOOK_SECRET: z.string(),
     STRIPE_PRO_MONTHLY_PRICE_ID: z.string(),
     STRIPE_PRO_ANNUAL_PRICE_ID: z.string(),
+
+    // MAILER
+    MAILER_API_KEY: z.string(),
   },
 
   client: {},
@@ -38,6 +41,9 @@ export const env = createEnv({
     STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
     STRIPE_PRO_MONTHLY_PRICE_ID: process.env.STRIPE_PRO_MONTHLY_PRICE_ID,
     STRIPE_PRO_ANNUAL_PRICE_ID: process.env.STRIPE_PRO_ANNUAL_PRICE_ID,
+
+    // MAILER
+    MAILER_API_KEY: process.env.MAILER_API_KEY,
   },
 
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,

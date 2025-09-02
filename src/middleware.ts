@@ -4,7 +4,7 @@ import {
   API_AUTH_PREFIX,
   AUTH_ROUTES,
   DEFAULT_LOGIN_REDIRECT,
-  PRIVATE_ROUTES,
+  PORTAL_ROUTES_PREFIX,
   VERCEL_HEADERS,
 } from "@/core/config/app-config";
 import { auth } from "@/core/config/auth-config";
@@ -34,7 +34,7 @@ export default auth((req) => {
   const { nextUrl } = req;
 
   const isApiAuthRoute = nextUrl.pathname.startsWith(API_AUTH_PREFIX);
-  const isPrivateRoute = PRIVATE_ROUTES.includes(nextUrl.pathname);
+  const isPortalRoute = nextUrl.pathname.startsWith(PORTAL_ROUTES_PREFIX);
   const isAuthRoute = AUTH_ROUTES.includes(nextUrl.pathname);
 
   if (isApiAuthRoute) {
@@ -52,7 +52,7 @@ export default auth((req) => {
     });
   }
 
-  if (!isLoggedIn && isPrivateRoute) {
+  if (!isLoggedIn && isPortalRoute) {
     let callbackUrl = nextUrl.pathname;
     if (nextUrl.search) {
       callbackUrl += nextUrl.search;

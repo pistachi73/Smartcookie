@@ -1,11 +1,14 @@
 "use server";
 
 import { differenceInMinutes } from "date-fns";
-import { and, asc, between, count, desc, eq, gt, lt } from "drizzle-orm";
+import { and, asc, between, count, desc, eq, gt, gte, lt } from "drizzle-orm";
 
 import { db } from "@/db";
 import { session, sessionNote } from "@/db/schema";
-import { withValidationAndAuth } from "../protected-data-access";
+import {
+  withAuthenticationNoInput,
+  withValidationAndAuth,
+} from "../protected-data-access";
 import { getTimestampISO } from "../utils";
 import {
   GetCalendarSessionsByDateRangeSchema,
@@ -281,5 +284,66 @@ export const getCalendarSessionsByDateRange = withValidationAndAuth({
     });
 
     return formattedSessions;
+  },
+});
+
+export const getNextSession = withAuthenticationNoInput({
+  callback: async (user) => {
+    const now = new Date();
+
+    const n = await db.query.session.findFirst({
+      where: and(
+        eq(session.userId, user.id),
+        gte(session.startTime, now.toISOString()),
+      ),
+      columns: {
+        id: true,
+        startTime: true,
+        endTime: true,
+        hubId: true,
+      },
+      orderBy: [asc(session.startTime)],
+
+      with: {
+        notes: {
+          columns: {
+            id: true,
+            content: true,
+          },
+          where: eq(sessionNote.position, "plans"),
+        },
+        attendance: {
+          columns: {},
+          with: {
+            student: {
+              columns: {
+                id: true,
+                name: true,
+                email: true,
+                image: true,
+              },
+            },
+          },
+        },
+        hub: {
+          columns: {
+            id: true,
+            name: true,
+            description: true,
+            color: true,
+          },
+        },
+      },
+    });
+
+    if (!n) return null;
+
+    const { attendance, ...rest } = n;
+    const formattedNextSession = {
+      ...rest,
+      students: attendance?.map((a) => a.student),
+    };
+
+    return formattedNextSession;
   },
 });
