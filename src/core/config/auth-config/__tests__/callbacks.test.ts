@@ -15,8 +15,11 @@ vi.mock("@/data-access/accounts/mutations", () => ({
 }));
 
 vi.mock("@/data-access/accounts/queries", () => ({
-  getAccountByUserId: vi.fn(),
   getAccountByProviderAndUserId: vi.fn(),
+}));
+
+vi.mock("@/data-access/accounts/internal", () => ({
+  getAccountByUserIdInternal: vi.fn(),
 }));
 
 vi.mock("@/data-access/two-factor-confirmation/mutations", () => ({
@@ -29,15 +32,18 @@ vi.mock("@/data-access/two-factor-confirmation/queries", () => ({
 
 vi.mock("@/data-access/user/queries", () => ({
   getUserByEmail: vi.fn(),
-  getUserById: vi.fn(),
+}));
+
+vi.mock("@/data-access/user/internal", () => ({
+  getUserByIdInternal: vi.fn(),
 }));
 
 vi.mock("@/data-access/user/mutations", () => ({
   updateUser: vi.fn(),
 }));
 
-vi.mock("@/data-access/user-subscription/queries", () => ({
-  getUserSubscriptionByUserId: vi.fn(),
+vi.mock("@/data-access/user-subscription/internal", () => ({
+  getUserSubscriptionByUserIdInternal: vi.fn(),
 }));
 
 // Mock the database
@@ -51,18 +57,17 @@ import type { Account as NextAuthAccount, Session } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 
 import { createMockAccount } from "@/data-access/accounts/__mocks__";
+import { getAccountByUserIdInternal } from "@/data-access/accounts/internal";
 import { linkOAuthAccount } from "@/data-access/accounts/mutations";
-import {
-  getAccountByProviderAndUserId,
-  getAccountByUserId,
-} from "@/data-access/accounts/queries";
+import { getAccountByProviderAndUserId } from "@/data-access/accounts/queries";
 import { deleteTwoFactorConfirmationByToken } from "@/data-access/two-factor-confirmation/mutations";
 import { getTwoFactorConirmationByUserId } from "@/data-access/two-factor-confirmation/queries";
 import { createMockUser } from "@/data-access/user/__mocks__";
+import { getUserByIdInternal } from "@/data-access/user/internal";
 import { updateUser } from "@/data-access/user/mutations";
-import { getUserByEmail, getUserById } from "@/data-access/user/queries";
+import { getUserByEmail } from "@/data-access/user/queries";
 import { createMockUserSubscription } from "@/data-access/user-subscription/__mocks__";
-import { getUserSubscriptionByUserId } from "@/data-access/user-subscription/queries";
+import { getUserSubscriptionByUserIdInternal } from "@/data-access/user-subscription/internal";
 import { db } from "@/db";
 import { jwtCallback, sessionCallback, signInCallback } from "../callbacks";
 
@@ -71,9 +76,10 @@ import { jwtCallback, sessionCallback, signInCallback } from "../callbacks";
 const mockLinkOAuthAccount = linkOAuthAccount as MockedFunction<
   typeof linkOAuthAccount
 >;
-const mockGetAccountByUserId = getAccountByUserId as MockedFunction<
-  typeof getAccountByUserId
->;
+const mockGetAccountByUserIdInternal =
+  getAccountByUserIdInternal as MockedFunction<
+    typeof getAccountByUserIdInternal
+  >;
 const mockGetAccountByProviderAndUserId =
   getAccountByProviderAndUserId as MockedFunction<
     typeof getAccountByProviderAndUserId
@@ -89,11 +95,13 @@ const mockGetTwoFactorConirmationByUserId =
 const mockGetUserByEmail = getUserByEmail as MockedFunction<
   typeof getUserByEmail
 >;
-const mockGetUserById = getUserById as MockedFunction<typeof getUserById>;
+const mockGetUserByIdInternal = getUserByIdInternal as MockedFunction<
+  typeof getUserByIdInternal
+>;
 const mockUpdateUser = updateUser as MockedFunction<typeof updateUser>;
-const mockGetUserSubscriptionByUserId =
-  getUserSubscriptionByUserId as MockedFunction<
-    typeof getUserSubscriptionByUserId
+const mockGetUserSubscriptionByUserIdInternal =
+  getUserSubscriptionByUserIdInternal as MockedFunction<
+    typeof getUserSubscriptionByUserIdInternal
   >;
 const mockDbTransaction = db.transaction as MockedFunction<
   typeof db.transaction
@@ -713,22 +721,22 @@ describe("jwtCallback", () => {
     const result = await jwtCallback({ token });
 
     expect(result).toEqual(token);
-    expect(mockGetUserById).not.toHaveBeenCalled();
-    expect(mockGetAccountByUserId).not.toHaveBeenCalled();
-    expect(mockGetUserSubscriptionByUserId).not.toHaveBeenCalled();
+    expect(mockGetUserByIdInternal).not.toHaveBeenCalled();
+    expect(mockGetAccountByUserIdInternal).not.toHaveBeenCalled();
+    expect(mockGetUserSubscriptionByUserIdInternal).not.toHaveBeenCalled();
   });
 
   it("should return token unchanged when user not found", async () => {
     const token = { sub: "user-123" } as JWT;
 
-    mockGetUserById.mockResolvedValue(undefined);
+    mockGetUserByIdInternal.mockResolvedValue(undefined);
 
     const result = await jwtCallback({ token });
 
     expect(result).toEqual(token);
-    expect(mockGetUserById).toHaveBeenCalledWith({ id: token.sub });
-    expect(mockGetAccountByUserId).not.toHaveBeenCalled();
-    expect(mockGetUserSubscriptionByUserId).not.toHaveBeenCalled();
+    expect(mockGetUserByIdInternal).toHaveBeenCalledWith(token.sub);
+    expect(mockGetAccountByUserIdInternal).not.toHaveBeenCalled();
+    expect(mockGetUserSubscriptionByUserIdInternal).not.toHaveBeenCalled();
   });
 
   it("should update token with user data when user exists without OAuth account or subscription", async () => {
@@ -743,9 +751,9 @@ describe("jwtCallback", () => {
       stripeCustomerId: "cus_123",
     });
 
-    mockGetUserById.mockResolvedValue(user);
-    mockGetAccountByUserId.mockResolvedValue(undefined);
-    mockGetUserSubscriptionByUserId.mockResolvedValue(undefined);
+    mockGetUserByIdInternal.mockResolvedValue(user);
+    mockGetAccountByUserIdInternal.mockResolvedValue(undefined);
+    mockGetUserSubscriptionByUserIdInternal.mockResolvedValue(undefined);
 
     const result = await jwtCallback({ token: token as any });
 
@@ -761,15 +769,11 @@ describe("jwtCallback", () => {
       subscriptionTier: undefined,
       subscriptionStatus: undefined,
     });
-    expect(mockGetUserById).toHaveBeenCalledWith({ id: token.sub });
-    expect(mockGetAccountByUserId).toHaveBeenCalledWith({
-      userId: token.sub,
-      columns: { provider: true },
-    });
-    expect(mockGetUserSubscriptionByUserId).toHaveBeenCalledWith({
-      userId: token.sub,
-      columns: { tier: true, status: true },
-    });
+    expect(mockGetUserByIdInternal).toHaveBeenCalledWith(token.sub);
+    expect(mockGetAccountByUserIdInternal).toHaveBeenCalledWith(token.sub);
+    expect(mockGetUserSubscriptionByUserIdInternal).toHaveBeenCalledWith(
+      token.sub,
+    );
   });
 
   it("should update token with user data when user exists with OAuth account", async () => {
@@ -790,9 +794,9 @@ describe("jwtCallback", () => {
       providerAccountId: "google-123",
     });
 
-    mockGetUserById.mockResolvedValue(user);
-    mockGetAccountByUserId.mockResolvedValue(account);
-    mockGetUserSubscriptionByUserId.mockResolvedValue(undefined);
+    mockGetUserByIdInternal.mockResolvedValue(user);
+    mockGetAccountByUserIdInternal.mockResolvedValue(account);
+    mockGetUserSubscriptionByUserIdInternal.mockResolvedValue(undefined);
 
     const result = await jwtCallback({ token });
 
@@ -828,9 +832,9 @@ describe("jwtCallback", () => {
         tier: "pro",
       });
 
-      mockGetUserById.mockResolvedValue(user);
-      mockGetAccountByUserId.mockResolvedValue(undefined);
-      mockGetUserSubscriptionByUserId.mockResolvedValue(subscription);
+      mockGetUserByIdInternal.mockResolvedValue(user);
+      mockGetAccountByUserIdInternal.mockResolvedValue(undefined);
+      mockGetUserSubscriptionByUserIdInternal.mockResolvedValue(subscription);
 
       const result = await jwtCallback({ token });
 
@@ -864,9 +868,9 @@ describe("jwtCallback", () => {
         tier: "pro",
       });
 
-      mockGetUserById.mockResolvedValue(user);
-      mockGetAccountByUserId.mockResolvedValue(undefined);
-      mockGetUserSubscriptionByUserId.mockResolvedValue(subscription);
+      mockGetUserByIdInternal.mockResolvedValue(user);
+      mockGetAccountByUserIdInternal.mockResolvedValue(undefined);
+      mockGetUserSubscriptionByUserIdInternal.mockResolvedValue(subscription);
 
       const result = await jwtCallback({ token });
 
@@ -907,9 +911,9 @@ describe("jwtCallback", () => {
         tier: "pro",
       });
 
-      mockGetUserById.mockResolvedValue(user);
-      mockGetAccountByUserId.mockResolvedValue(account);
-      mockGetUserSubscriptionByUserId.mockResolvedValue(subscription);
+      mockGetUserByIdInternal.mockResolvedValue(user);
+      mockGetAccountByUserIdInternal.mockResolvedValue(account);
+      mockGetUserSubscriptionByUserIdInternal.mockResolvedValue(subscription);
 
       const result = await jwtCallback({ token });
 
@@ -937,9 +941,9 @@ describe("jwtCallback", () => {
         stripeCustomerId: null,
       });
 
-      mockGetUserById.mockResolvedValue(user);
-      mockGetAccountByUserId.mockResolvedValue(undefined);
-      mockGetUserSubscriptionByUserId.mockResolvedValue(undefined);
+      mockGetUserByIdInternal.mockResolvedValue(user);
+      mockGetAccountByUserIdInternal.mockResolvedValue(undefined);
+      mockGetUserSubscriptionByUserIdInternal.mockResolvedValue(undefined);
 
       const result = await jwtCallback({ token });
 

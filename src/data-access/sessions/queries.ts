@@ -1,22 +1,29 @@
 "use server";
 
-import { differenceInMinutes } from "date-fns";
+import {
+  addDays,
+  differenceInMinutes,
+  format,
+  lastDayOfWeek,
+  startOfWeek,
+} from "date-fns";
 import { and, asc, between, count, desc, eq, gt, gte, lt } from "drizzle-orm";
+import { z } from "zod";
+
+import type { ChartConfig } from "@/shared/components/ui/chart";
 
 import { db } from "@/db";
 import { session, sessionNote } from "@/db/schema";
-import {
-  withAuthenticationNoInput,
-  withValidationAndAuth,
-} from "../protected-data-access";
+import { getDayKeyFromDateString } from "@/features/calendar/lib/utils";
 import { getTimestampISO } from "../utils";
+import { withProtectedDataAccess } from "../with-protected-data-access";
 import {
   GetCalendarSessionsByDateRangeSchema,
   GetInfiniteSessionsByHubIdSchema,
   GetSessionsByHubIdSchema,
 } from "./schemas";
 
-export const getSessionsByHubId = withValidationAndAuth({
+export const getSessionsByHubId = withProtectedDataAccess({
   schema: GetSessionsByHubIdSchema,
   callback: async ({ hubId }, user) => {
     const sessions = await db
@@ -51,7 +58,7 @@ export const getSessionsByHubId = withValidationAndAuth({
   },
 });
 
-export const getHubOverviewSessions = withValidationAndAuth({
+export const getHubOverviewSessions = withProtectedDataAccess({
   schema: GetSessionsByHubIdSchema,
   callback: async ({ hubId }, user) => {
     const now = new Date();
@@ -122,7 +129,7 @@ export const getHubOverviewSessions = withValidationAndAuth({
   },
 });
 
-export const getSessionsCountByHubId = withValidationAndAuth({
+export const getSessionsCountByHubId = withProtectedDataAccess({
   schema: GetSessionsByHubIdSchema,
   callback: async ({ hubId }, user) => {
     const result = await db
@@ -134,7 +141,7 @@ export const getSessionsCountByHubId = withValidationAndAuth({
   },
 });
 
-export const getPaginatedSessionsByHubId = withValidationAndAuth({
+export const getPaginatedSessionsByHubId = withProtectedDataAccess({
   schema: GetInfiniteSessionsByHubIdSchema,
   callback: async ({ hubId, cursor, direction = "next", limit = 10 }, user) => {
     console.log({ cursor, hubId, direction, limit });
@@ -237,7 +244,7 @@ export const getPaginatedSessionsByHubId = withValidationAndAuth({
   },
 });
 
-export const getCalendarSessionsByDateRange = withValidationAndAuth({
+export const getCalendarSessionsByDateRange = withProtectedDataAccess({
   schema: GetCalendarSessionsByDateRangeSchema,
   callback: async ({ startDate, endDate }, user) => {
     const sessions = await db.query.session.findMany({
@@ -287,7 +294,7 @@ export const getCalendarSessionsByDateRange = withValidationAndAuth({
   },
 });
 
-export const getNextSession = withAuthenticationNoInput({
+export const getNextSession = withProtectedDataAccess({
   callback: async (user) => {
     const now = new Date();
 
@@ -345,5 +352,134 @@ export const getNextSession = withAuthenticationNoInput({
     };
 
     return formattedNextSession;
+  },
+});
+
+export const getWeeklyHours = withProtectedDataAccess({
+  schema: z.object({
+    date: z.string().datetime(),
+  }),
+  callback: async ({ date }, user) => {
+    const firstDay = startOfWeek(date, { weekStartsOn: 1 });
+    const lastDay = lastDayOfWeek(date, { weekStartsOn: 1 });
+    lastDay.setHours(23, 59, 59, 999);
+
+    const sessions = await db.query.session.findMany({
+      where: and(
+        eq(session.userId, user.id),
+        gte(session.startTime, firstDay.toISOString()),
+        lt(session.startTime, lastDay.toISOString()),
+      ),
+      columns: {
+        startTime: true,
+        endTime: true,
+      },
+      with: {
+        hub: {
+          columns: {
+            name: true,
+            color: true,
+          },
+        },
+      },
+      orderBy: [asc(session.startTime)],
+    });
+
+    type DayHours = {
+      day: string;
+      [hubName: string]: number | string;
+    };
+
+    type SessionsByDay = {
+      [key: string]: {
+        [hubName: string]: number;
+      };
+    };
+
+    const sessionsByDay: SessionsByDay = {};
+
+    // Create an array of all days in the week
+    let currentDay = new Date(firstDay);
+    while (currentDay <= lastDay) {
+      const dayKey = getDayKeyFromDateString(
+        currentDay.toISOString(),
+      ) as string;
+      sessionsByDay[dayKey] = {};
+      currentDay = addDays(currentDay, 1);
+    }
+
+    for (const session of sessions) {
+      if (!session.hub?.name) continue;
+
+      const startDate = new Date(session.startTime);
+      const endDate = new Date(session.endTime);
+      const durationInHours =
+        (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60);
+
+      const dayKey = getDayKeyFromDateString(session.startTime) as string;
+      const hubName = session.hub.name;
+
+      if (!sessionsByDay[dayKey]![hubName]) {
+        sessionsByDay[dayKey]![hubName] = 0;
+      }
+
+      sessionsByDay[dayKey]![hubName] +=
+        Math.round(durationInHours * 100) / 100;
+    }
+
+    const formattedData: DayHours[] = Object.entries(sessionsByDay).map(
+      ([day, hubs]) => ({
+        day: format(day, "MMM d"),
+        ...hubs,
+      }),
+    );
+
+    // Get unique hubs with their colors
+    const uniqueHubs = Array.from(
+      new Set(sessions.map((s) => s.hub?.name).filter(Boolean)),
+    );
+    const hubColors = sessions.reduce<Record<string, string>>(
+      (acc, session) => {
+        if (session.hub?.name && session.hub?.color && !acc[session.hub.name]) {
+          acc[session.hub.name] = session.hub.color;
+        }
+        return acc;
+      },
+      {},
+    );
+
+    const chartConfig = uniqueHubs.reduce<
+      Record<string, { label: string; color: string; colorVariable: string }>
+    >((acc, hubName) => {
+      if (hubName) {
+        acc[hubName] = {
+          label: hubName,
+          colorVariable: hubColors[hubName] ?? "neutral",
+          color: `var(--custom-${hubColors[hubName]}-bg)`,
+        };
+      }
+      return acc;
+    }, {}) satisfies ChartConfig;
+
+    let averageHoursPerDay = 0;
+    let totalHours = 0;
+
+    for (const day of formattedData) {
+      const totalHoursPerDay = Object.entries(day)
+        .filter(([key]) => key !== "day")
+        .reduce((sum, [_, hours]) => sum + (hours as number), 0);
+      totalHours += totalHoursPerDay;
+    }
+
+    averageHoursPerDay = totalHours / formattedData.length;
+
+    const result = {
+      data: formattedData,
+      chartConfig,
+      averageHoursPerDay,
+      totalHours,
+    };
+
+    return result;
   },
 });

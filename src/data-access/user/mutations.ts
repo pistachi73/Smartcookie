@@ -2,20 +2,18 @@
 
 import { eq } from "drizzle-orm";
 
-import {
-  withAuthenticationNoInput,
-  withValidationOnly,
-} from "@/data-access/protected-data-access";
 import { db } from "@/db";
 import { user } from "@/db/schema";
 import { hashPassword } from "../utils";
+import { withProtectedDataAccess } from "../with-protected-data-access";
 import {
   CreateUserSchema,
   UpdateUserPasswordSchema,
   UpdateUserSchema,
 } from "./schemas";
 
-export const createUser = withValidationOnly({
+export const createUser = withProtectedDataAccess({
+  options: { requireAuth: false },
   schema: CreateUserSchema,
   callback: async ({ data: { password, ...values }, trx = db }) => {
     const { hashedPassword, salt } = await hashPassword(password);
@@ -33,7 +31,8 @@ export const createUser = withValidationOnly({
   },
 });
 
-export const updateUser = withValidationOnly({
+export const updateUser = withProtectedDataAccess({
+  options: { requireAuth: false },
   schema: UpdateUserSchema,
   callback: async ({ trx = db, id, data }) => {
     const [updatedUser] = await trx
@@ -46,7 +45,8 @@ export const updateUser = withValidationOnly({
   },
 });
 
-export const updateUserPassword = withValidationOnly({
+export const updateUserPassword = withProtectedDataAccess({
+  options: { requireAuth: false },
   schema: UpdateUserPasswordSchema,
   callback: async ({ data: { userId, password }, trx = db }) => {
     const { hashedPassword, salt } = await hashPassword(password);
@@ -58,7 +58,7 @@ export const updateUserPassword = withValidationOnly({
   },
 });
 
-export const deleteUser = withAuthenticationNoInput({
+export const deleteUser = withProtectedDataAccess({
   callback: async (authUser) => {
     await db.delete(user).where(eq(user.id, authUser.id));
   },

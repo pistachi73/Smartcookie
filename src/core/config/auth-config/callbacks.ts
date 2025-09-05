@@ -2,16 +2,15 @@ import type { AdapterAccountType } from "@auth/core/adapters";
 import type { Account, User as NextAuthUser, Session } from "next-auth";
 import type { JWT } from "next-auth/jwt";
 
+import { getAccountByUserIdInternal } from "@/data-access/accounts/internal";
 import { linkOAuthAccount } from "@/data-access/accounts/mutations";
-import {
-  getAccountByProviderAndUserId,
-  getAccountByUserId,
-} from "@/data-access/accounts/queries";
+import { getAccountByProviderAndUserId } from "@/data-access/accounts/queries";
 import { deleteTwoFactorConfirmationByToken } from "@/data-access/two-factor-confirmation/mutations";
 import { getTwoFactorConirmationByUserId } from "@/data-access/two-factor-confirmation/queries";
+import { getUserByIdInternal } from "@/data-access/user/internal";
 import { updateUser } from "@/data-access/user/mutations";
-import { getUserByEmail, getUserById } from "@/data-access/user/queries";
-import { getUserSubscriptionByUserId } from "@/data-access/user-subscription/queries";
+import { getUserByEmail } from "@/data-access/user/queries";
+import { getUserSubscriptionByUserIdInternal } from "@/data-access/user-subscription/internal";
 import { db } from "@/db";
 
 export async function signInCallback(params: {
@@ -112,24 +111,13 @@ export async function jwtCallback(params: { token: JWT }): Promise<JWT> {
     return token;
   }
 
-  const user = await getUserById({ id: token.sub });
+  const user = await getUserByIdInternal(token.sub);
 
   if (!user) return token;
 
   const [existingAccount, userSubscription] = await Promise.all([
-    getAccountByUserId({
-      userId: user.id,
-      columns: {
-        provider: true,
-      },
-    }),
-    getUserSubscriptionByUserId({
-      userId: user.id,
-      columns: {
-        tier: true,
-        status: true,
-      },
-    }),
+    getAccountByUserIdInternal(user.id),
+    getUserSubscriptionByUserIdInternal(user.id),
   ]);
 
   return {

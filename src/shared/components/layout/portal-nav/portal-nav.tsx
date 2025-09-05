@@ -66,11 +66,11 @@ export const PortalNav = ({
                 size={16}
               />
             </Breadcrumbs.Item>
-            {breadcrumbs.map((crumb) => {
+            {breadcrumbs.map((crumb, index) => {
               if (crumb === "skeleton") {
                 return (
                   <Breadcrumbs.Item
-                    key={`breacrumbs-skeleton-${crumb}`}
+                    key={`breacrumbs-skeleton-${index}`}
                     className="flex items-center gap-x-2 w-18 h-6"
                   >
                     <Skeleton className="w-full h-4 rounded-sm" />
@@ -83,7 +83,7 @@ export const PortalNav = ({
 
               return (
                 <Breadcrumbs.Item
-                  key={crumb.href}
+                  key={crumb.label}
                   {...crumb}
                   className="flex items-center gap-x-2"
                 >

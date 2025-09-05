@@ -3,12 +3,9 @@
 import { and, asc, count, eq, ilike, or, sql } from "drizzle-orm";
 import { cache } from "react";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { attendance, session, student, studentHub } from "@/db/schema";
-import {
-  withAuthenticationNoInput,
-  withValidationAndAuth,
-} from "../protected-data-access";
 import {
   GetPaginatedUserStudentsSchema,
   GetStudentByIdSchema,
@@ -38,7 +35,7 @@ const getCachedStudentCount = cache(async (userId: string, q?: string) => {
   return countResult[0]?.value || 0;
 });
 
-export const getStudentsByHubId = withValidationAndAuth({
+export const getStudentsByHubId = withProtectedDataAccess({
   schema: GetStudentsByHubIdSchema,
   callback: async ({ hubId }) => {
     const hubStudents = await db
@@ -70,7 +67,7 @@ export const getStudentsByHubId = withValidationAndAuth({
   },
 });
 
-export const getStudentsByUserId = withAuthenticationNoInput({
+export const getStudentsByUserId = withProtectedDataAccess({
   callback: async (user) => {
     const students = await db
       .select({
@@ -85,7 +82,7 @@ export const getStudentsByUserId = withAuthenticationNoInput({
   },
 });
 
-export const getPaginatedUserStudents = withValidationAndAuth({
+export const getPaginatedUserStudents = withProtectedDataAccess({
   schema: GetPaginatedUserStudentsSchema,
   callback: async ({ page, pageSize, q }, user) => {
     // Base condition for current user's students
@@ -132,7 +129,7 @@ export const getPaginatedUserStudents = withValidationAndAuth({
   },
 });
 
-export const getStudentById = withValidationAndAuth({
+export const getStudentById = withProtectedDataAccess({
   schema: GetStudentByIdSchema,
   callback: async ({ id }, user) => {
     const res = await db.query.student.findFirst({

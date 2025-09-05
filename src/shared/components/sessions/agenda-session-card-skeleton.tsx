@@ -3,9 +3,6 @@
 import { AvatarStackSkeleton } from "@/shared/components/ui/avatar-stack/avatar-stack-skeleton";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
-/**
- * Skeleton component for AgendaSessionCard loading state
- */
 export const AgendaSessionCardSkeleton = () => {
   return (
     <div className="flex flex-row gap-2 p-1">

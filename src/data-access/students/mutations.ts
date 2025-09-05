@@ -9,8 +9,8 @@ import {
   removeAllStudentAttendance,
 } from "../attendance/mutations";
 import { createDataAccessError } from "../errors";
-import { withValidationAndAuth } from "../protected-data-access";
 import { archiveStudentSurveyResponsesInHub } from "../survey-response/mutations";
+import { withProtectedDataAccess } from "../with-protected-data-access";
 import {
   AddStudentSchema,
   AddStudentToHubSchema,
@@ -20,7 +20,7 @@ import {
   UpdateStudentSchema,
 } from "./schemas";
 
-export const addStudent = withValidationAndAuth({
+export const addStudent = withProtectedDataAccess({
   schema: AddStudentSchema,
   callback: async (data, user) => {
     const [createdStudent] = await db
@@ -35,7 +35,7 @@ export const addStudent = withValidationAndAuth({
   },
 });
 
-export const addStudentToHub = withValidationAndAuth({
+export const addStudentToHub = withProtectedDataAccess({
   schema: AddStudentToHubSchema,
   callback: async ({ studentId, hubId }) => {
     await db.transaction(async (trx) => {
@@ -62,7 +62,7 @@ export const addStudentToHub = withValidationAndAuth({
   },
 });
 
-export const removeStudentFromHub = withValidationAndAuth({
+export const removeStudentFromHub = withProtectedDataAccess({
   schema: RemoveStudentFromHubSchema,
   callback: async ({ studentId, hubId }) => {
     await db.transaction(async (trx) => {
@@ -91,7 +91,7 @@ export const removeStudentFromHub = withValidationAndAuth({
   },
 });
 
-export const createStudentInHub = withValidationAndAuth({
+export const createStudentInHub = withProtectedDataAccess({
   schema: CreateStudentInHubSchema,
   callback: async ({ student: studentData, hubId }, user) => {
     // Check for existing student first to avoid unnecessary transaction
@@ -160,7 +160,7 @@ export const createStudentInHub = withValidationAndAuth({
   },
 });
 
-export const deleteStudent = withValidationAndAuth({
+export const deleteStudent = withProtectedDataAccess({
   schema: DeleteStudentSchema,
   callback: async ({ studentId }, user) => {
     await db
@@ -169,7 +169,7 @@ export const deleteStudent = withValidationAndAuth({
   },
 });
 
-export const updateStudent = withValidationAndAuth({
+export const updateStudent = withProtectedDataAccess({
   schema: UpdateStudentSchema,
   callback: async ({ id, ...studentData }, user) => {
     const [updatedStudent] = await db
@@ -179,7 +179,10 @@ export const updateStudent = withValidationAndAuth({
       .returning();
 
     if (!updatedStudent) {
-      return createDataAccessError("NOT_FOUND", "Student not found");
+      return createDataAccessError({
+        type: "NOT_FOUND",
+        message: "Student not found",
+      });
     }
 
     return updatedStudent;

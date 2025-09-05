@@ -1,21 +1,18 @@
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
-import { withValidationOnly } from "@/data-access/protected-data-access";
 import { db } from "@/db";
 import { twoFactorToken } from "@/db/schema";
+import { withProtectedDataAccess } from "../with-protected-data-access";
 
-export const getTwoFactorTokenByEmail = withValidationOnly({
+export const getTwoFactorTokenByEmail = withProtectedDataAccess({
+  options: { requireAuth: false },
   schema: z.object({
     email: z.string().email(),
   }),
   callback: async ({ email }) => {
-    try {
-      return await db.query.twoFactorToken.findFirst({
-        where: eq(twoFactorToken.email, email),
-      });
-    } catch {
-      return null;
-    }
+    return await db.query.twoFactorToken.findFirst({
+      where: eq(twoFactorToken.email, email),
+    });
   },
 });

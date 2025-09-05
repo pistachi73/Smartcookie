@@ -4,6 +4,7 @@ import { getHubsByUserId } from "@/data-access/hubs/queries";
 
 export async function GET() {
   try {
+    console.log("Fetching hubs");
     const hubs = await getHubsByUserId();
     return NextResponse.json(hubs);
   } catch (error) {

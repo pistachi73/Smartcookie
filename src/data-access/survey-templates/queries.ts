@@ -6,7 +6,7 @@ import { z } from "zod";
 
 import { db } from "@/db";
 import { surveyTemplateQuestions, surveyTemplates } from "@/db/schema";
-import { withValidationAndAuth } from "../protected-data-access";
+import { withProtectedDataAccess } from "../with-protected-data-access";
 import { GetSurveyTemplatesSchema } from "./schemas";
 
 const buildSearchCondition = (q?: string) => {
@@ -35,7 +35,7 @@ const getCachedSurveyTemplatesCount = cache(
   },
 );
 
-export const getSurveyTemplates = withValidationAndAuth({
+export const getSurveyTemplates = withProtectedDataAccess({
   schema: GetSurveyTemplatesSchema,
   callback: async ({ page, pageSize, sortBy, q }, user) => {
     const userCondition = eq(surveyTemplates.userId, user.id);
@@ -77,7 +77,7 @@ export const getSurveyTemplates = withValidationAndAuth({
   },
 });
 
-export const getSurveyTemplateById = withValidationAndAuth({
+export const getSurveyTemplateById = withProtectedDataAccess({
   schema: z.object({
     id: z.number(),
   }),

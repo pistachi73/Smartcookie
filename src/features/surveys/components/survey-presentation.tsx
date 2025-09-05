@@ -13,6 +13,7 @@ import { Note } from "@/shared/components/ui/note";
 import { ProgressCircle } from "@/shared/components/ui/progress-circle";
 import { TextField } from "@/shared/components/ui/text-field";
 
+import { isDataAccessError } from "@/data-access/errors";
 import { useStudentHasSurveyAccess } from "../hooks/use-student-has-survey-access";
 import { useSurvey } from "../hooks/use-survey";
 import { useSurveyNavigation } from "../hooks/use-survey-navigation";
@@ -65,7 +66,7 @@ export const SurveyPresentation = ({ surveyId }: SurveyPresentationProps) => {
       surveyId,
     });
 
-    if (!res.success) {
+    if (isDataAccessError(res)) {
       setIsTransitioning(false);
       return;
     }
@@ -73,10 +74,10 @@ export const SurveyPresentation = ({ surveyId }: SurveyPresentationProps) => {
     goToNextStep();
     setSurveyResponseData({
       email: data.email,
-      id: res.data?.id,
-      studentId: res.data?.studentId,
+      id: res?.id,
+      studentId: res?.studentId,
       surveyTemplateId: survey?.id,
-      startedAt: res.data?.startedAt || new Date().toISOString(),
+      startedAt: res?.startedAt || new Date().toISOString(),
     });
   };
 
@@ -114,7 +115,7 @@ export const SurveyPresentation = ({ surveyId }: SurveyPresentationProps) => {
                 {...rest}
                 onChange={(v) => {
                   onChange(v);
-                  if (!accessData?.success) {
+                  if (isDataAccessError(accessData)) {
                     reset();
                   }
                 }}
@@ -124,7 +125,7 @@ export const SurveyPresentation = ({ surveyId }: SurveyPresentationProps) => {
                   primitive: "w-full",
                   fieldGroup: "h-16 bg-overlay w-full px-2",
                 }}
-                isInvalid={fieldState.invalid || accessData?.success === false}
+                isInvalid={fieldState.invalid || isDataAccessError(accessData)}
               />
             )}
           />
@@ -133,7 +134,7 @@ export const SurveyPresentation = ({ surveyId }: SurveyPresentationProps) => {
               {error}
             </Note>
           )}
-          {accessData && !accessData?.success && (
+          {accessData && isDataAccessError(accessData) && (
             <Note
               intent="danger"
               className={{

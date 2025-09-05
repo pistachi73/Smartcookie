@@ -3,10 +3,13 @@ import { z } from "zod";
 
 import { db } from "@/db";
 import { userSubscription } from "@/db/schema";
-import { withValidationOnly } from "../protected-data-access";
 import { createColumnSelectionSchema } from "../shared-schemas";
+import { withProtectedDataAccess } from "../with-protected-data-access";
 
-export const getUserSubscriptionByUserId = withValidationOnly({
+export const getUserSubscriptionByUserId = withProtectedDataAccess({
+  options: {
+    requireAuth: false,
+  },
   schema: z.object({
     userId: z.string(),
     columns: createColumnSelectionSchema(userSubscription).optional(),

@@ -4,10 +4,10 @@ import { and, desc, eq } from "drizzle-orm";
 
 import { db } from "@/db";
 import { type SessionNotePosition, sessionNote } from "@/db/schema";
-import { withValidationAndAuth } from "../protected-data-access";
+import { withProtectedDataAccess } from "../with-protected-data-access";
 import { GetSessionNotesBySessionIdSchema } from "./schemas";
 
-export const getSessionNotesBySessionId = withValidationAndAuth({
+export const getSessionNotesBySessionId = withProtectedDataAccess({
   schema: GetSessionNotesBySessionIdSchema,
   callback: async ({ sessionId }, user) => {
     const notes = await db

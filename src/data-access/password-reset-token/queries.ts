@@ -3,9 +3,12 @@ import z from "zod";
 
 import { db } from "@/db";
 import { passwordResetToken } from "@/db/schema";
-import { withValidationOnly } from "../protected-data-access";
+import { withProtectedDataAccess } from "../with-protected-data-access";
 
-export const getPasswordResetTokenByToken = withValidationOnly({
+export const getPasswordResetTokenByToken = withProtectedDataAccess({
+  options: {
+    requireAuth: false,
+  },
   schema: z.object({
     token: z.string(),
   }),
@@ -16,7 +19,10 @@ export const getPasswordResetTokenByToken = withValidationOnly({
   },
 });
 
-export const getPasswordResetTokenByEmail = withValidationOnly({
+export const getPasswordResetTokenByEmail = withProtectedDataAccess({
+  options: {
+    requireAuth: false,
+  },
   schema: z.object({
     email: z.string().email(),
   }),

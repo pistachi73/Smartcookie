@@ -6,7 +6,7 @@ import { and, between, eq, inArray, notInArray } from "drizzle-orm";
 import { db } from "@/db";
 import { hub, type InsertSession, session, studentHub } from "@/db/schema";
 import { addAttendance } from "../attendance/mutations";
-import { withValidationAndAuth } from "../protected-data-access";
+import { withProtectedDataAccess } from "../with-protected-data-access";
 import {
   AddSessionsSchema,
   CheckSessionConflictsSchema,
@@ -15,7 +15,7 @@ import {
 } from "./schemas";
 import { findOverlappingIntervals, hasOverlappingIntervals } from "./utils";
 
-export const addSessions = withValidationAndAuth({
+export const addSessions = withProtectedDataAccess({
   schema: AddSessionsSchema,
   callback: async ({ sessions, hubId, trx = db }, user) => {
     return await trx.transaction(async (trx) => {
@@ -54,7 +54,7 @@ export const addSessions = withValidationAndAuth({
   },
 });
 
-export const checkSessionConflicts = withValidationAndAuth({
+export const checkSessionConflicts = withProtectedDataAccess({
   schema: CheckSessionConflictsSchema,
   callback: async (data, user) => {
     const { sessions, excludedSessionIds } = data;
@@ -163,8 +163,6 @@ export const checkSessionConflicts = withValidationAndAuth({
         },
       ) as { s1: OverlappingSession; s2: OverlappingSession }[];
 
-      console.log(overlappingSessions);
-
       return {
         success: false,
         overlappingSessions,
@@ -178,7 +176,7 @@ export const checkSessionConflicts = withValidationAndAuth({
   },
 });
 
-export const updateSession = withValidationAndAuth({
+export const updateSession = withProtectedDataAccess({
   schema: UpdateSessionSchema,
   callback: async (data, user) => {
     const { sessionId, data: updateData } = data;
@@ -201,7 +199,7 @@ export const updateSession = withValidationAndAuth({
   },
 });
 
-export const deleteSession = withValidationAndAuth({
+export const deleteSession = withProtectedDataAccess({
   schema: DeleteSessionsSchema,
   callback: async (data, user) => {
     await db

@@ -11,7 +11,7 @@ import type {
 import { BarChart } from "@/shared/components/ui/bar-chart";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 
-import { getWeeklyHoursQueryOptions } from "../../hooks/hook-options";
+import { getWeeklyHoursQueryOptions } from "@/features/dashboard/hooks/hook-options";
 
 type WeeklyHoursChartProps = {
   date: CalendarDate;
@@ -68,7 +68,7 @@ function CustomTooltip({ active, payload, label }: CustomTooltipProps) {
   );
 }
 
-export function WeeklyHoursCard2({ date }: WeeklyHoursChartProps) {
+export function WeeklyHoursChart({ date }: WeeklyHoursChartProps) {
   const { data: chartData } = useQuery(
     getWeeklyHoursQueryOptions(date.toDate(getLocalTimeZone()).toISOString()),
   );

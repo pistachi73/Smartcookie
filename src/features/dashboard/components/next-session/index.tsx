@@ -5,7 +5,7 @@ import {
   ArrowRight02Icon,
   CalendarCheckOut02Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { format, isToday, isTomorrow } from "date-fns";
 
 import { AvatarStack } from "@/shared/components/ui/avatar-stack";
@@ -20,7 +20,7 @@ import { getNextSessionQueryOptions } from "../../lib/get-next-session-query-opt
 import { GoToCourseLink } from "./go-to-course-button";
 
 export const NextSession = () => {
-  const { data: nextSession } = useQuery(getNextSessionQueryOptions());
+  const { data: nextSession } = useSuspenseQuery(getNextSessionQueryOptions());
 
   if (!nextSession) {
     return null;

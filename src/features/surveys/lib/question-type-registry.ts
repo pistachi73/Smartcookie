@@ -1,16 +1,16 @@
 import { z } from "zod";
 
+import type { getSurveyById } from "@/data-access/surveys/queries";
 import type { QuestionType } from "@/db/schema";
 import { QuestionBoolean } from "../components/question-types/question-boolean";
 import { QuestionRating } from "../components/question-types/question-rating";
 import { QuestionText } from "../components/question-types/question-text";
-import type { getSurveyByIdUseCase } from "../use-cases/surveys.use-case";
 
 export const GO_TO_NEXT_QUESTION_DELAY = 400;
 
 // Define the Question type based on your existing structure
 type Question = NonNullable<
-  Awaited<ReturnType<typeof getSurveyByIdUseCase>>
+  Awaited<ReturnType<typeof getSurveyById>>
 >["questions"][number];
 
 export interface QuestionTypeConfig {

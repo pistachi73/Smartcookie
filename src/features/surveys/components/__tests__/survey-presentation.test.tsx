@@ -106,8 +106,9 @@ describe("SurveyPresentation", () => {
 
     // Set up default mock response
     mockMutateAsync.mockResolvedValue({
-      success: true,
-      data: { id: 1, studentId: 123 },
+      id: 1,
+      studentId: 123,
+      startedAt: "2025-01-01T00:00:00.000Z",
     });
   });
 
@@ -224,8 +225,9 @@ describe("SurveyPresentation", () => {
 
   it("should reset isTransitioning when access check fails", async () => {
     mockMutateAsync.mockResolvedValue({
-      success: false,
+      type: "NOT_FOUND",
       message: "Access denied",
+      meta: undefined,
     });
 
     render(<SurveyPresentation surveyId={surveyId} />);
@@ -237,9 +239,9 @@ describe("SurveyPresentation", () => {
 
   it("should proceed to next step when student has survey access", async () => {
     mockMutateAsync.mockResolvedValue({
-      success: true,
-      data: { id: 1, studentId: 123 },
-      message: "Student has survey access",
+      id: 1,
+      studentId: 123,
+      startedAt: "2025-01-01T00:00:00.000Z",
     });
 
     render(<SurveyPresentation surveyId={surveyId} />);
@@ -252,7 +254,7 @@ describe("SurveyPresentation", () => {
       id: 1,
       studentId: 123,
       surveyTemplateId: mockSurveyData.id,
-      startedAt: expect.any(String),
+      startedAt: "2025-01-01T00:00:00.000Z",
     });
   });
 
@@ -264,7 +266,7 @@ describe("SurveyPresentation", () => {
       mutateAsync: mockMutateAsync,
       isPending: false,
       data: {
-        success: false,
+        type: "DUPLICATE_RESOURCE",
         message: errorMessage,
       },
       reset: mockReset,
@@ -278,7 +280,10 @@ describe("SurveyPresentation", () => {
     vi.mocked(useStudentHasSurveyAccess).mockReturnValue({
       mutateAsync: mockMutateAsync,
       isPending: false,
-      data: { success: false, message: "Access denied" },
+      data: {
+        type: "NOT_FOUND",
+        message: "Access denied",
+      },
       reset: mockReset,
     } as any);
 

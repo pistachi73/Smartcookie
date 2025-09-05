@@ -4,14 +4,14 @@ import { and, eq } from "drizzle-orm";
 
 import { db } from "@/db";
 import { sessionNote } from "@/db/schema";
-import { withValidationAndAuth } from "../protected-data-access";
+import { withProtectedDataAccess } from "../with-protected-data-access";
 import {
   CreateSessionNoteSchema,
   DeleteSessionNoteSchema,
   UpdateSessionNoteSchema,
 } from "./schemas";
 
-export const addSessionNote = withValidationAndAuth({
+export const addSessionNote = withProtectedDataAccess({
   schema: CreateSessionNoteSchema,
   callback: async (data, user) => {
     const [createdSessonNote] = await db
@@ -23,7 +23,7 @@ export const addSessionNote = withValidationAndAuth({
   },
 });
 
-export const updateSessionNote = withValidationAndAuth({
+export const updateSessionNote = withProtectedDataAccess({
   schema: UpdateSessionNoteSchema,
   callback: async (data, user) => {
     const { noteId, target } = data;
@@ -49,7 +49,7 @@ export const updateSessionNote = withValidationAndAuth({
   },
 });
 
-export const deleteSessionNote = withValidationAndAuth({
+export const deleteSessionNote = withProtectedDataAccess({
   schema: DeleteSessionNoteSchema,
   callback: async ({ noteId, sessionId: _sessionId }, user) => {
     const [deletedNote] = await db

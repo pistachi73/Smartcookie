@@ -6,15 +6,18 @@ import { z } from "zod";
 import { TOKEN_LENGTH } from "@/core/config/app-config";
 import { db } from "@/db";
 import { passwordResetToken } from "@/db/schema";
-import { withValidationOnly } from "../protected-data-access";
 import { generateRandomToken } from "../utils";
+import { withProtectedDataAccess } from "../with-protected-data-access";
 import { getPasswordResetTokenByEmail } from "./queries";
 import {
   CreatePasswordResetTokenSchema,
   DeletePasswordResetTokenByTokenSchema,
 } from "./schemas";
 
-export const createPasswordResetToken = withValidationOnly({
+export const createPasswordResetToken = withProtectedDataAccess({
+  options: {
+    requireAuth: false,
+  },
   schema: CreatePasswordResetTokenSchema,
   callback: async ({ token, email, expires }) => {
     const [createdToken] = await db
@@ -25,7 +28,10 @@ export const createPasswordResetToken = withValidationOnly({
   },
 });
 
-export const deletePasswordResetTokenByToken = withValidationOnly({
+export const deletePasswordResetTokenByToken = withProtectedDataAccess({
+  options: {
+    requireAuth: false,
+  },
   schema: DeletePasswordResetTokenByTokenSchema,
   callback: async ({ token, trx = db }) => {
     await trx
@@ -34,7 +40,10 @@ export const deletePasswordResetTokenByToken = withValidationOnly({
   },
 });
 
-export const generatePasswordResetToken = withValidationOnly({
+export const generatePasswordResetToken = withProtectedDataAccess({
+  options: {
+    requireAuth: false,
+  },
   schema: z.object({
     email: z.string().email(),
   }),

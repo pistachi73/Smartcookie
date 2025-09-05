@@ -2,13 +2,13 @@ import { and, eq } from "drizzle-orm";
 
 import { db } from "@/db";
 import { attendance } from "@/db/schema";
-import { withValidationAndAuth } from "../protected-data-access";
+import { withProtectedDataAccess } from "../with-protected-data-access";
 import {
   AddAttendanceSchema,
   RemoveAllStudentAttendanceSchema,
 } from "./schemas";
 
-export const addAttendance = withValidationAndAuth({
+export const addAttendance = withProtectedDataAccess({
   schema: AddAttendanceSchema,
   callback: async ({ trx = db, data }) => {
     const { sessionIds, studentIds, hubId } = data;
@@ -30,7 +30,7 @@ export const addAttendance = withValidationAndAuth({
   },
 });
 
-export const removeAllStudentAttendance = withValidationAndAuth({
+export const removeAllStudentAttendance = withProtectedDataAccess({
   schema: RemoveAllStudentAttendanceSchema,
   callback: async ({ trx = db, data }) => {
     const { studentId, hubId } = data;

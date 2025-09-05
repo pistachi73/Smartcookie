@@ -25,6 +25,7 @@ const Toast = ({ ...props }: ToasterProps) => {
           <HugeiconsIcon
             icon={InformationCircleIcon}
             data-slot="icon"
+            size={20}
             className="text-sky-500"
           />
         ),
@@ -32,6 +33,7 @@ const Toast = ({ ...props }: ToasterProps) => {
           <HugeiconsIcon
             icon={Alert02Icon}
             data-slot="icon"
+            size={20}
             className="text-danger"
           />
         ),
@@ -39,6 +41,7 @@ const Toast = ({ ...props }: ToasterProps) => {
           <HugeiconsIcon
             icon={AlertCircleIcon}
             data-slot="icon"
+            size={20}
             className="text-warning"
           />
         ),
@@ -46,6 +49,7 @@ const Toast = ({ ...props }: ToasterProps) => {
           <HugeiconsIcon
             icon={CheckmarkCircle01Icon}
             data-slot="icon"
+            size={20}
             className="text-success"
           />
         ),
