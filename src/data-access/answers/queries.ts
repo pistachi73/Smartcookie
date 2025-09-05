@@ -5,9 +5,9 @@ import { z } from "zod";
 
 import { db } from "@/db";
 import { questions } from "@/db/schema";
-import { withValidationAndAuth } from "../protected-data-access";
+import { withProtectedDataAccess } from "../with-protected-data-access";
 
-export const getQuestionAnswers = withValidationAndAuth({
+export const getQuestionAnswers = withProtectedDataAccess({
   schema: z.object({
     id: z.number(),
     dateFrom: z.date().optional(),

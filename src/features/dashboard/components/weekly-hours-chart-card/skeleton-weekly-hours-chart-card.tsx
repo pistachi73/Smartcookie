@@ -1,30 +1,32 @@
 "use client";
 
-import { getLocalTimeZone, today } from "@internationalized/date";
-
-import { SkeletonBarChart } from "@/shared/components/ui/chart/skeleton-bar-chart";
-import { DatePicker } from "@/shared/components/ui/date-picker";
-import { Heading } from "@/shared/components/ui/heading";
+import { Card } from "@/shared/components/ui/card";
+import { Loader } from "@/shared/components/ui/loader";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
 export function SkeletonWeeklyHoursChartCard() {
-  const now = today(getLocalTimeZone());
   return (
-    <div className="border bg-overlay rounded-lg shadow-sm p-4 space-y-4">
-      <div className="flex flex-row items-center justify-between">
-        <Heading level={4} className="text-base font-semibold">
-          Weekly teaching hours
-        </Heading>
-        <DatePicker defaultValue={now} placement="bottom end" className="h-9" />
-      </div>
-      <div className="space-y-6">
+    <Card className="@container">
+      <Card.Header>
+        <Card.Title>Weekly teaching hours</Card.Title>
+        <Card.Description className="hidden @2xl:block">
+          View your weekly teaching hours and how they are distributed across
+          different hubs.
+        </Card.Description>
+        <Card.Action>
+          <Skeleton className="h-9 w-20" />
+        </Card.Action>
+      </Card.Header>
+      <Card.Content className="space-y-4">
         <div className="flex flex-row items-center justify-between">
           <Skeleton className="h-9 w-20" />
           <Skeleton className="h-8 w-12" />
         </div>
-        {/* <Skeleton className="h-48 w-full" /> */}
-        <SkeletonBarChart className="aspect-2/1" />
-      </div>
-    </div>
+
+        <div className="aspect-video h-56 sm:h-80 flex items-center justify-center w-full">
+          <Loader size="lg" variant="spin" intent="secondary" />
+        </div>
+      </Card.Content>
+    </Card>
   );
 }

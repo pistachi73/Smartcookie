@@ -6,7 +6,7 @@ import {
 
 import { Survey } from "@/features/surveys/components/survey";
 import { SurveyNotFound } from "@/features/surveys/components/survey-not-found";
-import { getSurveyByIdQueryOptions } from "@/features/surveys/hooks/use-survey";
+import { getSurveyByIdQueryOptions } from "@/features/surveys/lib/survey-query-options";
 import { SurveyStoreProvider } from "@/features/surveys/store/survey-store-provider";
 
 type SurveyPageProps = {

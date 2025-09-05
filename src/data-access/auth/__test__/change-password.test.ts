@@ -9,6 +9,7 @@ import {
 
 vi.mock("@/core/config/auth-config", () => ({
   signIn: vi.fn(),
+  auth: vi.fn(),
 }));
 
 // Mock database imports to prevent environment variable access during module import

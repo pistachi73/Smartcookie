@@ -6,10 +6,11 @@ import { z } from "zod";
 import { TOKEN_LENGTH } from "@/core/config/app-config";
 import { db } from "@/db";
 import { twoFactorConirmation } from "@/db/schema";
-import { withValidationOnly } from "../protected-data-access";
 import { generateRandomToken } from "../utils";
+import { withProtectedDataAccess } from "../with-protected-data-access";
 
-export const getTwoFactorConfirmationByUserId = withValidationOnly({
+export const getTwoFactorConfirmationByUserId = withProtectedDataAccess({
+  options: { requireAuth: false },
   schema: z.object({
     userId: z.string(),
   }),
@@ -20,7 +21,8 @@ export const getTwoFactorConfirmationByUserId = withValidationOnly({
   },
 });
 
-export const deleteTwoFactorConfirmationByToken = withValidationOnly({
+export const deleteTwoFactorConfirmationByToken = withProtectedDataAccess({
+  options: { requireAuth: false },
   schema: z.object({
     token: z.string(),
   }),
@@ -31,7 +33,8 @@ export const deleteTwoFactorConfirmationByToken = withValidationOnly({
   },
 });
 
-export const generateTwoFactorConfirmation = withValidationOnly({
+export const generateTwoFactorConfirmation = withProtectedDataAccess({
+  options: { requireAuth: false },
   schema: z.object({
     userId: z.string(),
   }),

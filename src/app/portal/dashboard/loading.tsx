@@ -1,5 +1,7 @@
+import { SkeletonDashboard } from "@/features/dashboard/components/skeleton-dashboard";
+
 const LoadingDashboardPage = async () => {
-  return <p>loading...</p>;
+  return <SkeletonDashboard />;
 };
 
 export default LoadingDashboardPage;

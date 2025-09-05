@@ -10,6 +10,7 @@ import {
 // Mock NextAuth and related dependencies
 vi.mock("@/core/config/auth-config", () => ({
   signIn: vi.fn(),
+  auth: vi.fn(),
 }));
 
 vi.mock("@/data-access/utils", () => ({
@@ -298,7 +299,10 @@ describe("credentialsSignIn", () => {
 
     it("should return error when 2FA email could not be sent", async () => {
       mockSendTwoFactorEmail.mockResolvedValue(
-        createDataAccessError("EMAIL_SENDING_FAILED"),
+        createDataAccessError({
+          type: "EMAIL_SENDING_FAILED",
+          message: "Email sending failed",
+        }),
       );
 
       const result = await credentialsSignIn({

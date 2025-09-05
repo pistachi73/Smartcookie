@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { db } from "@/db";
 import { questions } from "@/db/schema";
-import { withValidationAndAuth } from "../protected-data-access";
+import { withProtectedDataAccess } from "../with-protected-data-access";
 import { GetQuestionsSchema } from "./schemas";
 
 const buildSearchCondition = (q?: string) => {
@@ -30,7 +30,7 @@ const getCachedQuestionCount = cache(async (userId: string, q?: string) => {
   return countResult[0]?.value || 0;
 });
 
-export const getQuestions = withValidationAndAuth({
+export const getQuestions = withProtectedDataAccess({
   schema: GetQuestionsSchema,
   callback: async ({ page, pageSize, sortBy, q }, user) => {
     // Base condition for current user's questions
@@ -76,7 +76,7 @@ export const getQuestions = withValidationAndAuth({
   },
 });
 
-export const getQuestionById = withValidationAndAuth({
+export const getQuestionById = withProtectedDataAccess({
   schema: z.object({
     id: z.number(),
   }),

@@ -2,10 +2,13 @@ import { and, eq } from "drizzle-orm";
 
 import { db } from "@/db";
 import { account } from "@/db/schema";
-import { withValidationOnly } from "../protected-data-access";
+import { withProtectedDataAccess } from "../with-protected-data-access";
 import { LinkOAuthAccountSchema } from "./schemas";
 
-export const linkOAuthAccount = withValidationOnly({
+export const linkOAuthAccount = withProtectedDataAccess({
+  options: {
+    requireAuth: false,
+  },
   schema: LinkOAuthAccountSchema,
   callback: async ({ data, trx = db }) => {
     const [linkedAccount] = await trx.insert(account).values(data).returning();

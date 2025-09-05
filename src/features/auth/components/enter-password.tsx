@@ -50,6 +50,9 @@ export const EnterPassword = () => {
     requireAuth: false,
     schema: CredentialsSignInSchema,
     mutationFn: credentialsSignIn,
+    onMutate: () => {
+      console.log("onMutate");
+    },
     onSuccess: (result) => {
       if (isDataAccessError(result)) {
         console.log({ result });

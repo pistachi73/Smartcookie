@@ -12,7 +12,7 @@ import {
   SortingAZ02Icon,
   SortingZA01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { useCallback, useMemo, useState } from "react";
 import { Link } from "react-aria-components";
 
@@ -20,12 +20,12 @@ import { Button, buttonStyles } from "@/shared/components/ui/button";
 import { Menu } from "@/shared/components/ui/menu";
 import { SearchField } from "@/shared/components/ui/search-field";
 import { Heading } from "@/ui/heading";
+import { PageHeader } from "@/shared/components/layout/page-header";
 import { cn } from "@/shared/lib/classes";
 
 import { getHubsByUserIdQueryOptions } from "../lib/hub-query-options";
 import type { Hub } from "../types/hub.types";
 import { HubCard } from "./hub-card";
-import { HubCardSkeleton } from "./hub-card-skeleton";
 
 type SortOption = {
   key: keyof Hub | "name-desc";
@@ -35,7 +35,7 @@ type SortOption = {
 
 export function HubList() {
   const queryClient = useQueryClient();
-  const { data: hubs, isLoading } = useQuery(
+  const { data: hubs } = useSuspenseQuery(
     getHubsByUserIdQueryOptions(queryClient),
   );
   const [searchQuery, setSearchQuery] = useState("");
@@ -93,23 +93,17 @@ export function HubList() {
   }, []);
 
   return (
-    <div className="@container h-full overflow-y-auto p-5 space-y-6 bg-bg">
+    <div className="@container h-full overflow-y-auto p-4 sm:p-6 space-y-6 bg-bg">
       <div className="flex flex-col @2xl:flex-row justify-between gap-4 items-start @2xl:items-center">
-        <div className="flex items-center gap-x-4">
-          <div className="size-12 rounded-lg bg-overlay shadow-md flex items-center justify-center">
-            <HugeiconsIcon
-              icon={FolderLibraryIcon}
-              size={24}
-              className="text-primary"
-            />
-          </div>
-          <div className="flex flex-col">
-            <Heading level={1}>Hubs</Heading>
-            <span className="text-muted-fg text-sm">
-              Manage your hubs and content
-            </span>
-          </div>
-        </div>
+        <PageHeader
+          icon={FolderLibraryIcon}
+          title="Hubs"
+          subTitle="Manage your hubs and content"
+          className={{
+            container: "p-0! border-none",
+          }}
+        />
+
         <div className="flex gap-2 items-center justify-end w-full @2xl:w-auto">
           <SearchField
             placeholder="Search hubs..."
@@ -177,13 +171,7 @@ export function HubList() {
         </div>
       </div>
 
-      {isLoading ? (
-        <div className="grid grid-cols-1 @lg:grid-cols-2 @4xl:grid-cols-3 gap-4">
-          {Array.from({ length: 9 }).map((_, i) => (
-            <HubCardSkeleton key={`hub-skeleton-${i}`} />
-          ))}
-        </div>
-      ) : filteredAndSortedHubs?.length === 0 ? (
+      {filteredAndSortedHubs?.length === 0 ? (
         <div className="flex flex-col items-center justify-center w-full p-6 mt-10">
           <div className="mb-4 text-primary">
             <HugeiconsIcon

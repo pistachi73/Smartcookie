@@ -5,10 +5,10 @@ import { and, desc, eq, isNull } from "drizzle-orm";
 import { db } from "@/db";
 import { quickNote } from "@/db/schema";
 import type { NoteSummary } from "@/features/quick-notes/types/quick-notes.types";
-import { withValidationAndAuth } from "../protected-data-access";
+import { withProtectedDataAccess } from "../with-protected-data-access";
 import { GetNotesByHubIdSchema } from "./schemas";
 
-export const getNotesByHubId = withValidationAndAuth({
+export const getNotesByHubId = withProtectedDataAccess({
   schema: GetNotesByHubIdSchema,
   callback: async ({ hubId }, user) => {
     const notes = await db

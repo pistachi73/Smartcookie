@@ -33,6 +33,7 @@ vi.mock("next-auth", () => ({
 
 vi.mock("@/core/config/auth-config", () => ({
   signIn: vi.fn(),
+  auth: vi.fn(),
 }));
 
 vi.mock("@/data-access/user/queries", () => ({
@@ -127,7 +128,10 @@ describe("credentialsSignUp", () => {
 
     it("should return error when email sending fails", async () => {
       mockSendEmailVerificationEmail.mockResolvedValue(
-        createDataAccessError("EMAIL_SENDING_FAILED"),
+        createDataAccessError({
+          type: "EMAIL_SENDING_FAILED",
+          message: "Failed to send email verification",
+        }),
       );
 
       const result = await credentialsSignUp({

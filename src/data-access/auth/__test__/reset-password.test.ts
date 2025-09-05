@@ -33,6 +33,7 @@ vi.mock("next-auth", () => ({
 
 vi.mock("@/core/config/auth-config", () => ({
   signIn: vi.fn(),
+  auth: vi.fn(),
 }));
 
 vi.mock("@/data-access/user/queries", () => ({

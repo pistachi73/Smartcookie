@@ -2,11 +2,11 @@
 
 import { db } from "@/db";
 import { hub, studentHub } from "@/db/schema";
-import { withValidationAndAuth } from "../protected-data-access";
 import { addSessions } from "../sessions/mutations";
+import { withProtectedDataAccess } from "../with-protected-data-access";
 import { CreateHubUseCaseSchema } from "./schemas";
 
-export const createHub = withValidationAndAuth({
+export const createHub = withProtectedDataAccess({
   schema: CreateHubUseCaseSchema,
   callback: async (data, user) => {
     const { sessions, studentIds, hubInfo } = data;

@@ -5,9 +5,9 @@ import { z } from "zod";
 
 import { db } from "@/db";
 import { student, surveyResponses, surveys as surveysTable } from "@/db/schema";
-import { withValidationAndAuth } from "../protected-data-access";
+import { withProtectedDataAccess } from "../with-protected-data-access";
 
-export const getSurveyTemplateResponses = withValidationAndAuth({
+export const getSurveyTemplateResponses = withProtectedDataAccess({
   schema: z.object({
     surveyTemplateId: z.number(),
   }),
@@ -53,7 +53,7 @@ export const getSurveyTemplateResponses = withValidationAndAuth({
   },
 });
 
-export const getSurveyTemplateResponseAnswers = withValidationAndAuth({
+export const getSurveyTemplateResponseAnswers = withProtectedDataAccess({
   schema: z.object({
     surveyResponseId: z.number(),
   }),
@@ -105,7 +105,7 @@ export const getSurveyTemplateResponseAnswers = withValidationAndAuth({
   },
 });
 
-export const getSurveyResponsesBySurveyId = withValidationAndAuth({
+export const getSurveyResponsesBySurveyId = withProtectedDataAccess({
   schema: z.object({
     surveyId: z.string(),
   }),
