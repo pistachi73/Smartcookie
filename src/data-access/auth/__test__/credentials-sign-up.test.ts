@@ -91,7 +91,7 @@ describe("credentialsSignUp", () => {
 
       expect(result).toEqual({
         type: "DUPLICATE_RESOURCE",
-        message: "Resource already exists",
+        message: "An account with this email already exists",
       });
       expect(mockGetUserByEmail).toHaveBeenCalledWith({
         email: "existing@example.com",
@@ -141,7 +141,7 @@ describe("credentialsSignUp", () => {
 
       expect(result).toEqual({
         type: "EMAIL_SENDING_FAILED",
-        message: "Email sending failed",
+        message: "Failed to send email verification",
       });
       expect(mockSendEmailVerificationEmail).toHaveBeenCalledWith({
         email: "test@example.com",
@@ -165,7 +165,7 @@ describe("credentialsSignUp", () => {
 
       expect(result).toEqual({
         type: "INVALID_TOKEN",
-        message: "Invalid or malformed token",
+        message: "Invalid verification token",
       });
       expect(mockGetVerificationTokenByTokenAndEmail).toHaveBeenCalledWith({
         token: "123456",
@@ -187,7 +187,7 @@ describe("credentialsSignUp", () => {
 
       expect(result).toEqual({
         type: "TOKEN_EXPIRED",
-        message: "Token has expired",
+        message: "Verification token has expired",
       });
     });
 
@@ -210,7 +210,7 @@ describe("credentialsSignUp", () => {
 
       expect(result).toEqual({
         type: "DUPLICATE_RESOURCE",
-        message: "Resource already exists",
+        message: "An account with this email already exists",
       });
       expect(mockGetUserByEmail).toHaveBeenCalledTimes(2);
       expect(mockGetUserByEmail).toHaveBeenNthCalledWith(2, {
@@ -236,7 +236,7 @@ describe("credentialsSignUp", () => {
 
       expect(result).toEqual({
         type: "DATABASE_ERROR",
-        message: "Database operation failed",
+        message: "Failed to create user account",
       });
       expect(mockCreateUser).toHaveBeenCalledWith({
         data: {

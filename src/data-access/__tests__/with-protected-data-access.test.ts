@@ -56,7 +56,7 @@ describe("withProtectedDataAccess", () => {
 
       expect(result).toEqual({
         type: "AUTHENTICATION_ERROR",
-        message: "Not authenticated! Please login.",
+        message: "You must be logged in to access this resource",
       });
       expect(callback).not.toHaveBeenCalled();
     });
@@ -74,7 +74,8 @@ describe("withProtectedDataAccess", () => {
 
       expect(result).toEqual({
         type: "AUTHENTICATION_ERROR",
-        message: "Not authenticated! Please login.",
+        message: "You must be logged in to access this resource",
+        meta: undefined,
       });
       expect(callback).not.toHaveBeenCalled();
     });
@@ -141,6 +142,7 @@ describe("withProtectedDataAccess", () => {
       expect(result).toEqual({
         type: "VALIDATION_ERROR",
         message: "Invalid input data",
+        meta: undefined,
       });
       expect(callback).not.toHaveBeenCalled();
     });
@@ -160,6 +162,7 @@ describe("withProtectedDataAccess", () => {
       expect(result).toEqual({
         type: "VALIDATION_ERROR",
         message: "Invalid input data",
+        meta: undefined,
       });
       expect(callback).not.toHaveBeenCalled();
     });
@@ -224,7 +227,8 @@ describe("withProtectedDataAccess", () => {
 
       expect(result).toEqual({
         type: "AUTHENTICATION_ERROR",
-        message: "Not authenticated! Please login.",
+        message: "You must be logged in to access this resource",
+        meta: undefined,
       });
       expect(callback).not.toHaveBeenCalled();
     });
@@ -244,6 +248,7 @@ describe("withProtectedDataAccess", () => {
       expect(result).toEqual({
         type: "VALIDATION_ERROR",
         message: "Invalid input data",
+        meta: undefined,
       });
       expect(callback).not.toHaveBeenCalled();
     });
@@ -418,7 +423,8 @@ describe("withProtectedDataAccess", () => {
 
       expect(result).toEqual({
         type: "AUTHENTICATION_ERROR",
-        message: "Not authenticated! Please login.",
+        message: "You must be logged in to access this resource",
+        meta: undefined,
       });
       expect(callback).not.toHaveBeenCalled();
     });

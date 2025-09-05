@@ -128,7 +128,7 @@ describe("credentialsSignIn", () => {
 
       expect(result).toEqual({
         type: "NOT_FOUND",
-        message: "Resource not found",
+        message: "User not found",
       });
       expect(mockGetUserByEmail).toHaveBeenCalledWith({
         email: "nonexistent@example.com",
@@ -146,7 +146,7 @@ describe("credentialsSignIn", () => {
 
       expect(result).toEqual({
         type: "NOT_FOUND",
-        message: "Resource not found",
+        message: "User not found",
       });
     });
 
@@ -161,7 +161,7 @@ describe("credentialsSignIn", () => {
 
       expect(result).toEqual({
         type: "NOT_FOUND",
-        message: "Resource not found",
+        message: "User not found",
       });
     });
   });
@@ -182,7 +182,7 @@ describe("credentialsSignIn", () => {
 
       expect(result).toEqual({
         type: "INVALID_LOGIN",
-        message: "Invalid username or password",
+        message: "Invalid email or password",
       });
       expect(mockHashPassword).toHaveBeenCalledWith(
         "wrongpassword",
@@ -255,7 +255,7 @@ describe("credentialsSignIn", () => {
 
       expect(result).toEqual({
         type: "INVALID_TOKEN",
-        message: "Invalid or malformed token",
+        message: "Invalid two-factor authentication code",
       });
       expect(mockGetTwoFactorTokenByEmail).toHaveBeenCalledWith({
         email: "test@example.com",
@@ -274,7 +274,7 @@ describe("credentialsSignIn", () => {
 
       expect(result).toEqual({
         type: "INVALID_TOKEN",
-        message: "Invalid or malformed token",
+        message: "Invalid two-factor authentication code",
       });
     });
 
@@ -293,7 +293,7 @@ describe("credentialsSignIn", () => {
 
       expect(result).toEqual({
         type: "TOKEN_EXPIRED",
-        message: "Token has expired",
+        message: "Two-factor authentication code has expired",
       });
     });
 
@@ -312,7 +312,7 @@ describe("credentialsSignIn", () => {
 
       expect(result).toEqual({
         type: "EMAIL_SENDING_FAILED",
-        message: "Email sending failed",
+        message: "Failed to send two-factor authentication email",
       });
       expect(mockSendTwoFactorEmail).toHaveBeenCalledWith({
         email: "test@example.com",
@@ -398,7 +398,7 @@ describe("credentialsSignIn", () => {
 
       expect(result).toEqual({
         type: "INVALID_LOGIN",
-        message: "Invalid username or password",
+        message: "Invalid email or password",
       });
       expect(mockSignIn).toHaveBeenCalledWith("credentials", {
         email: "test@example.com",

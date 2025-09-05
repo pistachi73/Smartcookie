@@ -117,7 +117,7 @@ describe("changePassword", () => {
 
       expect(result).toEqual({
         type: "INVALID_TOKEN",
-        message: "Invalid or malformed token",
+        message: "Invalid password reset token",
       });
       expect(mockGetPasswordResetTokenByToken).toHaveBeenCalledWith({
         token: "invalid-token",
@@ -138,7 +138,7 @@ describe("changePassword", () => {
 
       expect(result).toEqual({
         type: "TOKEN_EXPIRED",
-        message: "Token has expired",
+        message: "Password reset token has expired",
       });
       expect(mockGetPasswordResetTokenByToken).toHaveBeenCalledWith({
         token: "expired-token",
@@ -187,7 +187,7 @@ describe("changePassword", () => {
 
       expect(result).toEqual({
         type: "NOT_FOUND",
-        message: "Resource not found",
+        message: "User account not found",
       });
       expect(mockGetUserByEmail).toHaveBeenCalledWith({
         email: "test@example.com",
