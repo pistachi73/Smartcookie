@@ -1,11 +1,14 @@
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from "@tanstack/react-query";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { cookies } from "next/headers";
+
+import { getQueryClient } from "@/shared/lib/get-query-client";
 
 import { QuickNotes } from "@/features/quick-notes/components/quick-notes";
-import { quickNotesHubsQueryOptions } from "@/features/quick-notes/lib/quick-notes-query-options";
+import {
+  quickNotesByHubIdQueryOptions,
+  quickNotesHubsQueryOptions,
+} from "@/features/quick-notes/lib/quick-notes-query-options";
+import { VISIBLE_HUBS_COOKIE_NAME } from "@/features/quick-notes/store/quick-notes-store";
 import { QuickNotesStoreProvider } from "@/features/quick-notes/store/quick-notes-store-provider";
 
 export const metadata = {
@@ -18,22 +21,44 @@ export default async function QuickNotesPage({
 }: {
   searchParams: Promise<{ hubId: string | undefined }>;
 }) {
-  const queryClient = new QueryClient();
+  const queryClient = getQueryClient();
   const params = await searchParams;
-  const hubId = params?.hubId !== undefined ? Number(params?.hubId) : undefined;
+  const cookieStore = await cookies();
+  const hubId = params?.hubId ? Number(params.hubId) : undefined;
 
-  await queryClient.prefetchQuery({
+  const cookiesVisibleHubs = cookieStore.get(VISIBLE_HUBS_COOKIE_NAME)?.value;
+  const initialCookieVisibleHubs = cookiesVisibleHubs
+    ?.toString()
+    .split(",")
+    .map(Number);
+
+  const vHubs = new Set([
+    ...(initialCookieVisibleHubs || []),
+    ...(hubId !== undefined ? [hubId] : []),
+  ]);
+
+  const allVisibleHubs = Array.from(vHubs);
+
+  void queryClient.prefetchQuery({
     ...quickNotesHubsQueryOptions,
     staleTime: 1000 * 60 * 60 * 24,
   });
 
+  if (allVisibleHubs) {
+    for (const visibleHubId of allVisibleHubs) {
+      void queryClient.prefetchQuery(
+        quickNotesByHubIdQueryOptions(visibleHubId),
+      );
+    }
+  }
+
+  const dehydratedState = dehydrate(queryClient);
+
   return (
-    <QuickNotesStoreProvider
-      initialVisibleHubs={hubId !== undefined ? [hubId] : undefined}
-    >
-      <HydrationBoundary state={dehydrate(queryClient)}>
+    <HydrationBoundary state={dehydratedState}>
+      <QuickNotesStoreProvider initialVisibleHubs={allVisibleHubs}>
         <QuickNotes />
-      </HydrationBoundary>
-    </QuickNotesStoreProvider>
+      </QuickNotesStoreProvider>
+    </HydrationBoundary>
   );
 }

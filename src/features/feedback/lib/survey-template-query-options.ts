@@ -1,7 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import type { z } from "zod";
 
-import type {
+import {
   getSurveyTemplateById,
   getSurveyTemplates,
 } from "@/data-access/survey-templates/queries";
@@ -40,16 +40,12 @@ export const getSurveyTemplatesQueryOptions = ({
 
       const validatedParams = validationResult.data;
 
-      const searchParams = new URLSearchParams({
-        page: validatedParams.page.toString(),
-        pageSize: validatedParams.pageSize.toString(),
+      return getSurveyTemplates({
+        page: validatedParams.page,
+        pageSize: validatedParams.pageSize,
         sortBy: validatedParams.sortBy,
-        q: validatedParams.q || "",
+        q: validatedParams.q,
       });
-
-      const response = await fetch(`/api/survey-templates?${searchParams}`);
-      const result = (await response.json()) as GetSurveyTemplatesQueryResponse;
-      return result;
     },
     placeholderData: (previousData) => {
       if (!previousData) return undefined;
@@ -67,13 +63,6 @@ export const getSurveyTemplatesQueryOptions = ({
 export const surveyTemplateByIdQueryOptions = (surveyTemplateId: number) =>
   queryOptions({
     queryKey: ["survey-template", surveyTemplateId],
-    queryFn: async () => {
-      const response = await fetch(`/api/survey-templates/${surveyTemplateId}`);
-      const json = (await response.json()) as Awaited<
-        ReturnType<typeof getSurveyTemplateById>
-      >;
-
-      return json;
-    },
+    queryFn: () => getSurveyTemplateById({ id: surveyTemplateId }),
     enabled: !!surveyTemplateId,
   });

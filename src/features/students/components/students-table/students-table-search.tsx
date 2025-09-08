@@ -16,7 +16,7 @@ export const StudentsTableSearch = () => {
 
   const [query, setQuery] = useState(q);
 
-  useDebouncedValue(query, 300, (value) => {
+  useDebouncedValue(query, 200, (value) => {
     let query: string | null = value;
     if (!value || !value.trim()) {
       query = null;
@@ -30,7 +30,8 @@ export const StudentsTableSearch = () => {
       onChange={(value) => setQuery(value)}
       placeholder="Search students..."
       className={{
-        fieldGroup: "h-10 w-64",
+        primitive: "w-full md:w-64",
+        fieldGroup: "md:h-10  *:text-sm",
       }}
     />
   );

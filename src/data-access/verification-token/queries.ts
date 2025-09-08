@@ -1,11 +1,12 @@
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { verificationToken } from "@/db/schema";
-import { withValidationOnly } from "../protected-data-access";
 
-export const getVerificationTokenByTokenAndEmail = withValidationOnly({
+export const getVerificationTokenByTokenAndEmail = withProtectedDataAccess({
+  options: { requireAuth: false },
   schema: z.object({
     token: z.string(),
     email: z.string().email(),
@@ -20,7 +21,8 @@ export const getVerificationTokenByTokenAndEmail = withValidationOnly({
   },
 });
 
-export const getVerificationTokenByEmail = withValidationOnly({
+export const getVerificationTokenByEmail = withProtectedDataAccess({
+  options: { requireAuth: false },
   schema: z.object({
     email: z.string().email(),
   }),

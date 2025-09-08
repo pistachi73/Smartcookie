@@ -33,6 +33,7 @@ vi.mock("next-auth", () => ({
 
 vi.mock("@/core/config/auth-config", () => ({
   signIn: vi.fn(),
+  auth: vi.fn(),
 }));
 
 vi.mock("@/data-access/user/queries", () => ({
@@ -77,7 +78,8 @@ describe("resetPassword", () => {
 
       expect(result).toEqual({
         type: "NOT_FOUND",
-        message: "Resource not found",
+        message: "No account found with this email address",
+        meta: undefined,
       });
       expect(mockGetUserByEmail).toHaveBeenCalledWith({
         email: "nonexistent@example.com",
@@ -120,6 +122,7 @@ describe("resetPassword", () => {
       expect(result).toEqual({
         type: "DATABASE_ERROR",
         message: "Error generating password reset token",
+        meta: undefined,
       });
       expect(mockGeneratePasswordResetToken).toHaveBeenCalledWith({
         email: "test@example.com",
@@ -161,7 +164,7 @@ describe("resetPassword", () => {
 
       expect(result).toEqual({
         type: "EMAIL_SENDING_FAILED",
-        message: "Email sending failed",
+        message: "Failed to send password reset email",
       });
       expect(mockSendPasswordResetEmail).toHaveBeenCalledWith({
         token: "reset-token-123",
@@ -251,6 +254,7 @@ describe("resetPassword", () => {
       expect(result).toEqual({
         type: "DATABASE_ERROR",
         message: "Error generating password reset token",
+        meta: undefined,
       });
     });
 
@@ -266,6 +270,7 @@ describe("resetPassword", () => {
       expect(result).toEqual({
         type: "DATABASE_ERROR",
         message: "Error generating password reset token",
+        meta: undefined,
       });
     });
   });

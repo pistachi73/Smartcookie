@@ -48,7 +48,7 @@ type QuestionDetailsProps = {
   questionId: number;
 };
 
-const getInitialDateRange = (): RangeValue<CalendarDate> => {
+export const getInitialDateRange = (): RangeValue<CalendarDate> => {
   const todayDate = today(getLocalTimeZone()).add({ days: 1 });
   const twoMonthsAgo = todayDate.subtract({ months: 2 });
   return {

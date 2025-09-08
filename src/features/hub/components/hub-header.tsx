@@ -7,7 +7,7 @@ import { Skeleton } from "@/shared/components/ui/skeleton";
 
 export const HubHeader = ({ hubName }: { hubName?: string }) => {
   return (
-    <div className="shrink-0 overflow-auto p-6 space-y-4 bg-bg">
+    <div className="shrink-0 overflow-auto sm:p-6 p-4 space-y-4 bg-bg">
       <Link
         href="/portal/hubs"
         className="flex items-center gap-2 text-sm text-muted-fg"

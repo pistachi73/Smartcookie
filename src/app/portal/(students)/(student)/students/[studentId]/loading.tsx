@@ -1,9 +1,5 @@
-import { StudentProfileLayout } from "@/features/students/components/student-profile-detail/student-profile-layout";
+import { StudentProfileLoading } from "@/features/students/components/student-profile-detail/student-profile-loading";
 
 export default function StudentPageLoading() {
-  return (
-    <StudentProfileLayout>
-      <p>Loading...</p>
-    </StudentProfileLayout>
-  );
+  return <StudentProfileLoading />;
 }

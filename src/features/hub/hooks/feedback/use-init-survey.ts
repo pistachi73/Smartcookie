@@ -3,26 +3,27 @@ import { toast } from "sonner";
 
 import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 
+import { isDataAccessError } from "@/data-access/errors";
+import { createHubSurvey } from "@/data-access/surveys/mutations";
 import { createHubSurveySchema } from "../../lib/feedback.schema";
-import { createHubSurveyUseCase } from "../../use-cases/feedback.use-case";
 
 export const useInitSurvey = ({ onSuccess }: { onSuccess?: () => void }) => {
   const queryClient = useQueryClient();
 
   return useProtectedMutation({
     schema: createHubSurveySchema,
-    mutationFn: async (data) => createHubSurveyUseCase(data),
+    mutationFn: createHubSurvey,
     onSuccess: (res, data) => {
-      const { success, message } = res;
-      if (success) {
-        toast.success("Survey created successfully");
-        queryClient.invalidateQueries({
-          queryKey: ["hub-surveys", data.hubId],
-        });
-        onSuccess?.();
-      } else {
-        toast.error(message);
+      if (isDataAccessError(res)) {
+        toast.error(res.message);
+        return;
       }
+
+      toast.success("Survey created successfully");
+      queryClient.invalidateQueries({
+        queryKey: ["hub-surveys", data.hubId],
+      });
+      onSuccess?.();
     },
     onError: () => {
       toast.error("Failed to create survey");

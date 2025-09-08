@@ -8,13 +8,12 @@ import { getHubsByUserIdQueryOptions } from "@/features/hub/lib/hub-query-option
 const HubsPage = async () => {
   const queryClient = getQueryClient();
 
-  await queryClient.prefetchQuery({
-    ...getHubsByUserIdQueryOptions(queryClient),
-    staleTime: 1000 * 60 * 60 * 24,
-  });
+  void queryClient.prefetchQuery(getHubsByUserIdQueryOptions);
+
+  const dehydratedState = dehydrate(queryClient);
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
+    <HydrationBoundary state={dehydratedState}>
       <HubList />
     </HydrationBoundary>
   );

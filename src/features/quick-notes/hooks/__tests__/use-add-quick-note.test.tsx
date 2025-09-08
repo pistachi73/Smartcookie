@@ -189,8 +189,6 @@ describe("useAddQuickNote", () => {
   it("should handle server returning null data", async () => {
     const { result } = renderHookWithQueryClient(queryClient);
 
-    const originalData = queryClient.getQueryData(["hub-notes", 123]);
-
     const nullDataNote = {
       content: "SERVER_ERROR",
       hubId: 123,

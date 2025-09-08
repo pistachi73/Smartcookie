@@ -5,7 +5,6 @@ import dynamic from "next/dynamic";
 import { useState } from "react";
 
 import { Card } from "@/shared/components/ui/card";
-import { SkeletonBarChart } from "@/shared/components/ui/chart/skeleton-bar-chart";
 import { DatePicker } from "@/shared/components/ui/date-picker";
 import { Loader } from "@/shared/components/ui/loader";
 import { Skeleton } from "@/shared/components/ui/skeleton";
@@ -13,11 +12,15 @@ import { Tooltip } from "@/shared/components/ui/tooltip";
 
 import { useGetWeeklyHours } from "../../hooks/use-get-weekly-hours";
 
-const DynamicWeeklyHoursCard = dynamic(
-  () => import("./weekly-hours-chart").then((mod) => mod.WeeklyHoursCard2),
+const DynamicWeeklyHoursChart = dynamic(
+  () => import("./weekly-hours-chart").then((mod) => mod.WeeklyHoursChart),
   {
     ssr: true,
-    loading: () => <SkeletonBarChart className="aspect-video" />,
+    loading: () => (
+      <div className="aspect-video h-56 sm:h-80 flex items-center justify-center w-full">
+        <Loader size="lg" variant="spin" intent="secondary" />
+      </div>
+    ),
   },
 );
 
@@ -101,7 +104,7 @@ export function WeeklyHoursCard() {
             <Loader size="lg" variant="spin" intent="secondary" />
           </div>
         ) : (
-          <DynamicWeeklyHoursCard date={date} />
+          <DynamicWeeklyHoursChart date={date} />
         )}
       </Card.Content>
     </Card>

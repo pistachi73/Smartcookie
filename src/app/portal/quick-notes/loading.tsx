@@ -1,6 +1,6 @@
 import { QuickNotesLoading } from "@/features/quick-notes/components/loading";
 
-const LoadingQuickNotesPage = async () => {
+const LoadingQuickNotesPage = () => {
   return <QuickNotesLoading />;
 };
 

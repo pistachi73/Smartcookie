@@ -17,6 +17,8 @@ export default auth((req) => {
   const deviceType: DeviceType | "string" = (type as DeviceType) || "desktop";
 
   const requestHeaders = new Headers(req.headers);
+  const portalEnabled =
+    (requestHeaders.get(VERCEL_HEADERS.PORTAL_ENABLED) ?? "0") === "1";
 
   requestHeaders.set(VERCEL_HEADERS.DEVICE_TYPE, deviceType);
 
@@ -64,6 +66,11 @@ export default auth((req) => {
       new URL(`/login?callbackUrl=${encodedCallbackUrl}`, nextUrl),
     );
   }
+
+  if (isPortalRoute && !portalEnabled) {
+    return Response.redirect(new URL("/", nextUrl));
+  }
+
   return NextResponse.next({
     headers: requestHeaders,
   });

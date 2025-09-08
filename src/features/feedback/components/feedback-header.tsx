@@ -1,7 +1,7 @@
 "use client";
 
 import { HugeiconsIcon } from "@hugeicons/react";
-import { Comment01Icon } from "@hugeicons-pro/core-solid-rounded";
+import { HealtcareIcon } from "@hugeicons-pro/core-solid-rounded";
 import { AddIcon } from "@hugeicons-pro/core-stroke-rounded";
 
 import { buttonStyles } from "@/shared/components/ui/button";
@@ -23,7 +23,7 @@ export const FeedbackHeader = () => {
     <PageHeader
       title="Feedback"
       subTitle="Manage your feedback"
-      icon={Comment01Icon}
+      icon={HealtcareIcon}
       className={{
         container: "bg-bg",
       }}

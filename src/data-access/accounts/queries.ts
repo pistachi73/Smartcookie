@@ -2,15 +2,18 @@
 
 import { and, eq } from "drizzle-orm";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { account } from "@/db/schema";
-import { withValidationOnly } from "../protected-data-access";
 import {
   GetAccountByProviderAndUserIdSchema,
   GetAccountByUserIdSchema,
 } from "./schemas";
 
-export const getAccountByUserId = withValidationOnly({
+export const getAccountByUserId = withProtectedDataAccess({
+  options: {
+    requireAuth: false,
+  },
   schema: GetAccountByUserIdSchema,
   callback: async ({ userId, columns }) => {
     return await db.query.account.findFirst({
@@ -20,7 +23,10 @@ export const getAccountByUserId = withValidationOnly({
   },
 });
 
-export const getAccountByProviderAndUserId = withValidationOnly({
+export const getAccountByProviderAndUserId = withProtectedDataAccess({
+  options: {
+    requireAuth: false,
+  },
   schema: GetAccountByProviderAndUserIdSchema,
   callback: async ({ userId, provider, providerAccountId, columns }) => {
     return await db.query.account.findFirst({

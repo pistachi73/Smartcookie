@@ -7,10 +7,6 @@ import { sendPasswordResetEmail } from "@/shared/lib/mail";
 import { signIn } from "@/core/config/auth-config";
 import { createDataAccessError, isDataAccessError } from "@/data-access/errors";
 import { getPasswordResetTokenByToken } from "@/data-access/password-reset-token/queries";
-import {
-  withValidationAndAuth,
-  withValidationOnly,
-} from "@/data-access/protected-data-access";
 import { generateTwoFactorConfirmation } from "@/data-access/two-factor-confirmation/mutations";
 import {
   deleteTwoFactorTokenByToken,
@@ -25,6 +21,7 @@ import {
 import { getUserByEmail, getUserById } from "@/data-access/user/queries";
 import { sendEmailVerificationEmail } from "@/data-access/verification-token/mutations";
 import { getVerificationTokenByTokenAndEmail } from "@/data-access/verification-token/queries";
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import {
   deletePasswordResetTokenByToken,
@@ -41,7 +38,10 @@ import {
   VerifyPasswordSchema,
 } from "./schemas";
 
-export const verifyPassword = withValidationOnly({
+export const verifyPassword = withProtectedDataAccess({
+  options: {
+    requireAuth: false,
+  },
   schema: VerifyPasswordSchema,
   callback: async ({ plainTextPassword, salt, hashedPassword }) => {
     const { hashedPassword: hash } = await hashPassword(
@@ -53,15 +53,28 @@ export const verifyPassword = withValidationOnly({
   },
 });
 
-export const credentialsSignIn = withValidationOnly({
+export const credentialsSignIn = withProtectedDataAccess({
+  options: {
+    requireAuth: false,
+  },
   schema: CredentialsSignInSchema,
   callback: async (data) => {
     try {
       const { email, password, code } = data;
-      const user = await getUserByEmail({ email });
+      const userResult = await getUserByEmail({ email });
+
+      if (isDataAccessError(userResult)) {
+        console.log({ userResult });
+        return userResult;
+      }
+
+      const user = userResult;
 
       if (!user || !user.salt || !user.password) {
-        return createDataAccessError("NOT_FOUND");
+        return createDataAccessError({
+          type: "NOT_FOUND",
+          message: "User not found",
+        });
       }
 
       const passwordsMatch = await verifyPassword({
@@ -71,20 +84,29 @@ export const credentialsSignIn = withValidationOnly({
       });
 
       if (!passwordsMatch) {
-        return createDataAccessError("INVALID_LOGIN");
+        return createDataAccessError({
+          type: "INVALID_LOGIN",
+          message: "Invalid email or password",
+        });
       }
 
       if (user.isTwoFactorEnabled && user.email) {
         if (code) {
           const twoFactorToken = await getTwoFactorTokenByEmail({ email });
           if (!twoFactorToken || twoFactorToken.token !== code) {
-            return createDataAccessError("INVALID_TOKEN");
+            return createDataAccessError({
+              type: "INVALID_TOKEN",
+              message: "Invalid two-factor authentication code",
+            });
           }
 
           const hasExpired = new Date(twoFactorToken.expires) < new Date();
 
           if (hasExpired) {
-            return createDataAccessError("TOKEN_EXPIRED");
+            return createDataAccessError({
+              type: "TOKEN_EXPIRED",
+              message: "Two-factor authentication code has expired",
+            });
           }
 
           await Promise.all([
@@ -96,7 +118,10 @@ export const credentialsSignIn = withValidationOnly({
         } else {
           const result = await sendTwoFactorEmail({ email: user.email });
           if (isDataAccessError(result)) {
-            return createDataAccessError("EMAIL_SENDING_FAILED");
+            return createDataAccessError({
+              type: "EMAIL_SENDING_FAILED",
+              message: "Failed to send two-factor authentication email",
+            });
           }
           return {
             twoFactor: true,
@@ -114,14 +139,17 @@ export const credentialsSignIn = withValidationOnly({
         if (error instanceof AuthError) {
           switch (error.type) {
             case "CredentialsSignin":
-              return createDataAccessError("INVALID_LOGIN");
+              return createDataAccessError({
+                type: "INVALID_LOGIN",
+                message: "Invalid email or password",
+              });
           }
         }
 
-        return createDataAccessError(
-          "DATABASE_ERROR",
-          "Something went wrong! Please try again.",
-        );
+        return createDataAccessError({
+          type: "DATABASE_ERROR",
+          message: "Something went wrong! Please try again.",
+        });
       }
 
       return {
@@ -135,19 +163,28 @@ export const credentialsSignIn = withValidationOnly({
   },
 });
 
-export const credentialsSignUp = withValidationOnly({
+export const credentialsSignUp = withProtectedDataAccess({
+  options: {
+    requireAuth: false,
+  },
   schema: CredentialsSignUpSchema,
   callback: async ({ email, password, emailVerificationCode }) => {
     let existingUser = await getUserByEmail({ email });
 
     if (existingUser) {
-      return createDataAccessError("DUPLICATE_RESOURCE");
+      return createDataAccessError({
+        type: "DUPLICATE_RESOURCE",
+        message: "An account with this email already exists",
+      });
     }
 
     if (!emailVerificationCode) {
       const result = await sendEmailVerificationEmail({ email });
       if (isDataAccessError(result)) {
-        return createDataAccessError("EMAIL_SENDING_FAILED");
+        return createDataAccessError({
+          type: "EMAIL_SENDING_FAILED",
+          message: "Failed to send email verification",
+        });
       }
 
       return { emailVerification: true, user: null };
@@ -159,19 +196,28 @@ export const credentialsSignUp = withValidationOnly({
     });
 
     if (!existingToken) {
-      return createDataAccessError("INVALID_TOKEN");
+      return createDataAccessError({
+        type: "INVALID_TOKEN",
+        message: "Invalid verification token",
+      });
     }
 
     const hasExpired = new Date(existingToken.expires) < new Date();
 
     if (hasExpired) {
-      return createDataAccessError("TOKEN_EXPIRED");
+      return createDataAccessError({
+        type: "TOKEN_EXPIRED",
+        message: "Verification token has expired",
+      });
     }
 
     existingUser = await getUserByEmail({ email: existingToken.email });
 
     if (existingUser) {
-      return createDataAccessError("DUPLICATE_RESOURCE");
+      return createDataAccessError({
+        type: "DUPLICATE_RESOURCE",
+        message: "An account with this email already exists",
+      });
     }
 
     const createdUserResult = await createUser({
@@ -183,29 +229,38 @@ export const credentialsSignUp = withValidationOnly({
     });
 
     if (!createdUserResult) {
-      return createDataAccessError("DATABASE_ERROR");
+      return createDataAccessError({
+        type: "DATABASE_ERROR",
+        message: "Failed to create user account",
+      });
     }
 
     return { emailVerification: false, user: createdUserResult };
   },
 });
 
-export const resetPassword = withValidationOnly({
+export const resetPassword = withProtectedDataAccess({
+  options: {
+    requireAuth: false,
+  },
   schema: ResetPasswordSchema,
   callback: async ({ email }) => {
     const existingUser = await getUserByEmail({ email });
 
     if (!existingUser) {
-      return createDataAccessError("NOT_FOUND");
+      return createDataAccessError({
+        type: "NOT_FOUND",
+        message: "No account found with this email address",
+      });
     }
 
     const passwordResetToken = await generatePasswordResetToken({ email });
 
     if (!passwordResetToken) {
-      return createDataAccessError(
-        "DATABASE_ERROR",
-        "Error generating password reset token",
-      );
+      return createDataAccessError({
+        type: "DATABASE_ERROR",
+        message: "Error generating password reset token",
+      });
     }
 
     try {
@@ -214,32 +269,47 @@ export const resetPassword = withValidationOnly({
         email: passwordResetToken.email,
       });
     } catch (_e) {
-      return createDataAccessError("EMAIL_SENDING_FAILED");
+      return createDataAccessError({
+        type: "EMAIL_SENDING_FAILED",
+        message: "Failed to send password reset email",
+      });
     }
 
     return true;
   },
 });
 
-export const changePassword = withValidationOnly({
+export const changePassword = withProtectedDataAccess({
+  options: {
+    requireAuth: false,
+  },
   schema: ChangePasswordSchema,
   callback: async ({ token, password }) => {
     const existingToken = await getPasswordResetTokenByToken({ token });
 
     if (!existingToken) {
-      return createDataAccessError("INVALID_TOKEN");
+      return createDataAccessError({
+        type: "INVALID_TOKEN",
+        message: "Invalid password reset token",
+      });
     }
 
     const hasExpired = new Date(existingToken.expires) < new Date();
 
     if (hasExpired) {
-      return createDataAccessError("TOKEN_EXPIRED");
+      return createDataAccessError({
+        type: "TOKEN_EXPIRED",
+        message: "Password reset token has expired",
+      });
     }
 
     const existingUser = await getUserByEmail({ email: existingToken.email });
 
     if (!existingUser) {
-      return createDataAccessError("NOT_FOUND");
+      return createDataAccessError({
+        type: "NOT_FOUND",
+        message: "User account not found",
+      });
     }
 
     await db.transaction(async (trx) => {
@@ -259,21 +329,30 @@ export const changePassword = withValidationOnly({
   },
 });
 
-export const updateUserAccountEmail = withValidationAndAuth({
+export const updateUserAccountEmail = withProtectedDataAccess({
   schema: UpdateUserAccountEmailSchema,
   callback: async ({ newEmail, verificationToken }, currentUser) => {
     const existingUser = await getUserByEmail({ email: newEmail });
 
     if (existingUser) {
-      return createDataAccessError("DUPLICATE_RESOURCE");
+      return createDataAccessError({
+        type: "DUPLICATE_RESOURCE",
+        message: "An account with this email already exists",
+      });
     }
 
     if (!currentUser) {
-      return createDataAccessError("NOT_FOUND", "User not found!");
+      return createDataAccessError({
+        type: "NOT_FOUND",
+        message: "User not found!",
+      });
     }
 
     if (!currentUser.email || currentUser.email === newEmail) {
-      return createDataAccessError("EMAIL_MUST_BE_DIFFERENT");
+      return createDataAccessError({
+        type: "EMAIL_MUST_BE_DIFFERENT",
+        message: "New email must be different from current email",
+      });
     }
 
     if (!verificationToken) {
@@ -294,13 +373,19 @@ export const updateUserAccountEmail = withValidationAndAuth({
     });
 
     if (!existingToken) {
-      return createDataAccessError("INVALID_TOKEN");
+      return createDataAccessError({
+        type: "INVALID_TOKEN",
+        message: "Invalid email verification token",
+      });
     }
 
     const hasExpired = new Date(existingToken.expires) < new Date();
 
     if (hasExpired) {
-      return createDataAccessError("TOKEN_EXPIRED");
+      return createDataAccessError({
+        type: "TOKEN_EXPIRED",
+        message: "Email verification token has expired",
+      });
     }
 
     await updateUser({
@@ -316,13 +401,16 @@ export const updateUserAccountEmail = withValidationAndAuth({
   },
 });
 
-export const updateUserAccountPassword = withValidationAndAuth({
+export const updateUserAccountPassword = withProtectedDataAccess({
   schema: UpdateUserAccountPasswordSchema,
   callback: async ({ currentPassword, newPassword }, user) => {
     const currentUser = await getUserById({ id: user.id });
 
     if (!currentUser?.salt || !currentUser.password) {
-      return createDataAccessError("NOT_FOUND");
+      return createDataAccessError({
+        type: "NOT_FOUND",
+        message: "User account not found",
+      });
     }
 
     const passwordsMatch = await verifyPassword({
@@ -332,7 +420,10 @@ export const updateUserAccountPassword = withValidationAndAuth({
     });
 
     if (!passwordsMatch) {
-      return createDataAccessError("INVALID_LOGIN");
+      return createDataAccessError({
+        type: "INVALID_LOGIN",
+        message: "Current password is incorrect",
+      });
     }
 
     await updateUserPassword({

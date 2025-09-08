@@ -13,15 +13,16 @@ import { Note } from "@/shared/components/ui/note";
 import { ProgressCircle } from "@/shared/components/ui/progress-circle";
 import { cn } from "@/shared/lib/classes";
 
+import { isDataAccessError } from "@/data-access/errors";
+import type { getSurveyById } from "@/data-access/surveys/queries";
 import { useSubmitSurvey } from "../hooks/use-submit-survey";
 import { useSurveyNavigation } from "../hooks/use-survey-navigation";
 import { getQuestionConfig } from "../lib/question-type-registry";
 import { useSurveyStore } from "../store/survey-store-provider";
-import type { getSurveyByIdUseCase } from "../use-cases/surveys.use-case";
 
 interface SurveyQuestionProps {
   question: NonNullable<
-    Awaited<ReturnType<typeof getSurveyByIdUseCase>>
+    Awaited<ReturnType<typeof getSurveyById>>
   >["questions"][number];
   step: number;
 }
@@ -60,14 +61,16 @@ export const SurveyQuestion = ({ question, step }: SurveyQuestionProps) => {
   });
 
   const { mutate: submitSurvey, isPending: isSubmitting } = useSubmitSurvey({
-    onSuccess: () => {
+    onSuccess: (res) => {
+      if (isDataAccessError(res)) {
+        form.setError(String(question.id), {
+          message: res.message,
+        });
+        return;
+      }
+
       goToNextStep();
       resetSurvey();
-    },
-    onError: (message) => {
-      form.setError(String(question.id), {
-        message,
-      });
     },
   });
 

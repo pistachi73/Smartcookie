@@ -1,39 +1,22 @@
 import { queryOptions } from "@tanstack/react-query";
 import type { z } from "zod";
 
-import type { getQuestionAnswers } from "@/data-access/answers/queries";
-import type {
-  getQuestionById,
-  getQuestions,
-} from "@/data-access/questions/queries";
+import { getQuestionAnswers } from "@/data-access/answers/queries";
+import { getQuestionById, getQuestions } from "@/data-access/questions/queries";
 import { GetQuestionsSchema } from "@/data-access/questions/schemas";
 
 export const questionQueryOptions = (id: number) =>
   queryOptions({
     queryKey: ["question", id],
-    queryFn: async () => {
-      const response = await fetch(`/api/questions/${id}`);
-      const json = (await response.json()) as Awaited<
-        ReturnType<typeof getQuestionById>
-      >;
-
-      return json;
-    },
+    queryFn: () => getQuestionById({ id }),
   });
 
 export const questionAnswersQueryOptions = (
   id: number,
   dateFrom?: Date,
   dateTo?: Date,
-) => {
-  const params = new URLSearchParams();
-  if (dateFrom) params.set("dateFrom", dateFrom.toISOString());
-  if (dateTo) params.set("dateTo", dateTo.toISOString());
-
-  const queryString = params.toString();
-  const url = `/api/questions/${id}/answers${queryString ? `?${queryString}` : ""}`;
-
-  return {
+) =>
+  queryOptions({
     queryKey: [
       "question",
       id,
@@ -41,16 +24,8 @@ export const questionAnswersQueryOptions = (
       dateFrom?.toISOString(),
       dateTo?.toISOString(),
     ],
-    queryFn: async () => {
-      const response = await fetch(url);
-      const json = (await response.json()) as Awaited<
-        ReturnType<typeof getQuestionAnswers>
-      >;
-
-      return json;
-    },
-  };
-};
+    queryFn: () => getQuestionAnswers({ id, dateFrom, dateTo }),
+  });
 
 export const questionsQueryOptions = ({
   page = 1,
@@ -59,7 +34,7 @@ export const questionsQueryOptions = ({
   q = "",
 }: Partial<z.infer<typeof GetQuestionsSchema>>) =>
   queryOptions({
-    queryKey: ["feedback", "questions", page, pageSize, sortBy, q],
+    queryKey: ["feedback", "questions", { page, pageSize, sortBy, q }],
     queryFn: async () => {
       // Validate parameters before making the API call
       const validationResult = GetQuestionsSchema.safeParse({
@@ -81,22 +56,12 @@ export const questionsQueryOptions = ({
 
       const validatedParams = validationResult.data;
 
-      const params = new URLSearchParams({
-        page: validatedParams.page.toString(),
-        pageSize: validatedParams.pageSize.toString(),
+      return getQuestions({
+        page: validatedParams.page,
+        pageSize: validatedParams.pageSize,
         sortBy: validatedParams.sortBy,
-        q: validatedParams.q || "",
+        q: validatedParams.q,
       });
-
-      const response = await fetch(`/api/questions?${params.toString()}`, {
-        method: "GET",
-      });
-
-      const json = (await response.json()) as Awaited<
-        ReturnType<typeof getQuestions>
-      >;
-
-      return json;
     },
     placeholderData: (previousData) => {
       if (!previousData) return undefined;

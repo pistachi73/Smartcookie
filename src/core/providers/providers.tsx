@@ -40,7 +40,7 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
           </ThemeProvider>
         </I18nProvider>
       </RouterProvider>
-      <ReactQueryDevtools initialIsOpen={true} position="right" />
+      <ReactQueryDevtools initialIsOpen={true} position="left" />
     </QueryClientProvider>
   );
 };

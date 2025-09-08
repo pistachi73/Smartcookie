@@ -1,6 +1,6 @@
 "use client";
 
-import { UserGroupIcon } from "@hugeicons-pro/core-solid-rounded";
+import { UserIcon } from "@hugeicons-pro/core-solid-rounded";
 
 import { PageHeader } from "@/shared/components/layout/page-header";
 
@@ -15,7 +15,7 @@ export const StudentProfileLayout = ({
     <PageHeader
       title="Student Profile"
       subTitle="Manage student information and track progress"
-      icon={UserGroupIcon}
+      icon={UserIcon}
       className={{
         container: "border-none p-0!",
       }}

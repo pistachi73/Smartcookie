@@ -2,9 +2,9 @@
 
 import Stripe from "stripe";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { env } from "@/env";
 import { createDataAccessError } from "../errors";
-import { withAuthenticationNoInput } from "../protected-data-access";
 import { getUserById } from "../user/queries";
 import { getUserSubscriptionByUserId } from "../user-subscription/queries";
 import {
@@ -20,7 +20,7 @@ const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
   apiVersion: "2025-06-30.basil",
 });
 
-export const getSubscription = withAuthenticationNoInput({
+export const getSubscription = withProtectedDataAccess({
   callback: async (user) => {
     const userSubscription = await getUserSubscriptionByUserId({
       userId: user.id,
@@ -29,15 +29,20 @@ export const getSubscription = withAuthenticationNoInput({
     const userRecord = await getUserById({ id: user.id });
 
     if (!userRecord) {
-      console.log("User not found");
-      return createDataAccessError("NOT_FOUND");
+      return createDataAccessError({
+        type: "NOT_FOUND",
+        message: "User not found",
+      });
     }
 
     const customerId = userRecord.stripeCustomerId;
     const subscriptionId = userSubscription?.stripeSubscriptionId;
 
     if (!customerId) {
-      return createDataAccessError("NOT_FOUND", "User has no customer iD");
+      return createDataAccessError({
+        type: "NOT_FOUND",
+        message: "User has no customer ID",
+      });
     }
 
     if (!subscriptionId) {

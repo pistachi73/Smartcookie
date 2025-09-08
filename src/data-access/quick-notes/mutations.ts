@@ -2,17 +2,17 @@
 
 import { and, eq } from "drizzle-orm";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import type { InsertQuickNote } from "@/db/schema";
 import { quickNote } from "@/db/schema";
-import { withValidationAndAuth } from "../protected-data-access";
 import {
   CreateQuickNoteSchema,
   DeleteQuickNoteSchema,
   UpdateQuickNoteSchema,
 } from "./schemas";
 
-export const createQuickNote = withValidationAndAuth({
+export const createQuickNote = withProtectedDataAccess({
   schema: CreateQuickNoteSchema,
   callback: async ({ hubId, content, updatedAt }, user) => {
     const actualHubId = hubId === 0 ? null : hubId;
@@ -31,7 +31,7 @@ export const createQuickNote = withValidationAndAuth({
   },
 });
 
-export const updateQuickNote = withValidationAndAuth({
+export const updateQuickNote = withProtectedDataAccess({
   schema: UpdateQuickNoteSchema,
   callback: async ({ id, content, updatedAt }, user) => {
     const updateData: Partial<InsertQuickNote> = {
@@ -58,7 +58,7 @@ export const updateQuickNote = withValidationAndAuth({
   },
 });
 
-export const deleteQuickNote = withValidationAndAuth({
+export const deleteQuickNote = withProtectedDataAccess({
   schema: DeleteQuickNoteSchema,
   callback: async ({ id }, user) => {
     await db

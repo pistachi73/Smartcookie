@@ -5,15 +5,16 @@ import { z } from "zod";
 
 import { sendVerificationEmail } from "@/shared/lib/mail";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { verificationToken } from "@/db/schema";
 import { createDataAccessError } from "../errors";
-import { withValidationOnly } from "../protected-data-access";
 import { generateSecureRandomInt } from "../utils";
 import { getVerificationTokenByEmail } from "./queries";
 import { SendEmailVerificationEmailSchema } from "./schemas";
 
-export const generateVerificationToken = withValidationOnly({
+export const generateVerificationToken = withProtectedDataAccess({
+  options: { requireAuth: false },
   schema: z.object({
     email: z.string().email(),
   }),
@@ -39,7 +40,8 @@ export const generateVerificationToken = withValidationOnly({
   },
 });
 
-export const sendEmailVerificationEmail = withValidationOnly({
+export const sendEmailVerificationEmail = withProtectedDataAccess({
+  options: { requireAuth: false },
   schema: SendEmailVerificationEmailSchema,
   callback: async ({ email }) => {
     const response = await generateVerificationToken({ email });
@@ -50,7 +52,10 @@ export const sendEmailVerificationEmail = withValidationOnly({
         token: response.token,
       });
     } catch (_e) {
-      return createDataAccessError("EMAIL_SENDING_FAILED");
+      return createDataAccessError({
+        type: "EMAIL_SENDING_FAILED",
+        message: "Failed to send email verification",
+      });
     }
 
     return true;

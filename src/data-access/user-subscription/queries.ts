@@ -1,12 +1,15 @@
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { userSubscription } from "@/db/schema";
-import { withValidationOnly } from "../protected-data-access";
 import { createColumnSelectionSchema } from "../shared-schemas";
 
-export const getUserSubscriptionByUserId = withValidationOnly({
+export const getUserSubscriptionByUserId = withProtectedDataAccess({
+  options: {
+    requireAuth: false,
+  },
   schema: z.object({
     userId: z.string(),
     columns: createColumnSelectionSchema(userSubscription).optional(),

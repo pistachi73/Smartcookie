@@ -1,11 +1,7 @@
 "use client";
 
 import { HugeiconsIcon } from "@hugeicons/react";
-import {
-  ArrowLeft02Icon,
-  Diamond02Icon,
-  Search01Icon,
-} from "@hugeicons-pro/core-solid-rounded";
+import { Diamond02Icon, Search01Icon } from "@hugeicons-pro/core-solid-rounded";
 import { Notification01Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { useEffect, useState } from "react";
 
@@ -46,31 +42,17 @@ export const PortalNav = ({
 
   return (
     <SidebarNav
-      className={cn(
-        "border-b h-14 sticky shrink-0 top-0 z-20 bg-overlay",
-        className,
-      )}
+      className={cn(" h-14 sticky shrink-0 top-0 z-20 bg-white", className)}
     >
       <div className="flex items-center justify-between w-full h-full gap-8">
         {isMobile && <SidebarTrigger />}
         <div className="flex items-center gap-x-4 shrink-0">
           <Breadcrumbs className="@4xl:flex hidden">
-            <Breadcrumbs.Item
-              key="back"
-              href={lastUrl || "#"}
-              separator="slash"
-            >
-              <HugeiconsIcon
-                icon={ArrowLeft02Icon}
-                data-slot="icon"
-                size={16}
-              />
-            </Breadcrumbs.Item>
-            {breadcrumbs.map((crumb) => {
+            {breadcrumbs.map((crumb, index) => {
               if (crumb === "skeleton") {
                 return (
                   <Breadcrumbs.Item
-                    key={`breacrumbs-skeleton-${crumb}`}
+                    key={`breacrumbs-skeleton-${index}`}
                     className="flex items-center gap-x-2 w-18 h-6"
                   >
                     <Skeleton className="w-full h-4 rounded-sm" />
@@ -83,7 +65,7 @@ export const PortalNav = ({
 
               return (
                 <Breadcrumbs.Item
-                  key={crumb.href}
+                  key={crumb.label}
                   {...crumb}
                   className="flex items-center gap-x-2"
                 >
@@ -105,7 +87,7 @@ export const PortalNav = ({
         <div className="flex items-center  gap-x-2 sm:gap-x-3 shrink-0">
           {showSearchField && (
             <div className="hidden md:block">
-              <FieldGroup className="pl-3 pr-2 w-[400px]">
+              <FieldGroup className="pl-3 pr-2 w-[400px] bg-white h-10">
                 <HugeiconsIcon
                   icon={Search01Icon}
                   data-slot="icon"
@@ -116,7 +98,11 @@ export const PortalNav = ({
               </FieldGroup>
             </div>
           )}
-          <Button intent="outline" size="sq-md" className="size-9 sm:size-10">
+          <Button
+            intent="outline"
+            size="sq-md"
+            className="size-9 sm:size-10 bg-white"
+          >
             <HugeiconsIcon icon={Notification01Icon} size={16} />
           </Button>
 

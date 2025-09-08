@@ -95,7 +95,7 @@ export function useUpdateSessionNote() {
         targetSessionNotesQueryKey: targetQueryKey,
       };
     },
-    onError: (error, variables, context) => {
+    onError: (error, _, context) => {
       // If the mutation fails, roll back both source and target
       if (context?.sourcePreviousNotes) {
         queryClient.setQueryData(

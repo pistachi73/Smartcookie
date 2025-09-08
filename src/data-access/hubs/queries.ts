@@ -2,19 +2,16 @@
 
 import { asc, eq, sql } from "drizzle-orm";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { hub } from "@/db/schema";
-import {
-  withAuthenticationNoInput,
-  withValidationAndAuth,
-} from "../protected-data-access";
 import {
   parseOptionalDateWithTimezone,
   parseRequiredDateWithTimezone,
 } from "../utils";
 import { GetHubByIdSchema } from "./schemas";
 
-export const getHubsByUserIdForQuickNotes = withAuthenticationNoInput({
+export const getHubsByUserIdForQuickNotes = withProtectedDataAccess({
   callback: async (user) => {
     return await db
       .select({
@@ -27,7 +24,7 @@ export const getHubsByUserIdForQuickNotes = withAuthenticationNoInput({
   },
 });
 
-export const getHubsByUserId = withAuthenticationNoInput({
+export const getHubsByUserId = withProtectedDataAccess({
   callback: async (user) => {
     const hubs = await db.query.hub.findMany({
       columns: {
@@ -74,7 +71,7 @@ export const getHubsByUserId = withAuthenticationNoInput({
   },
 });
 
-export const getHubById = withValidationAndAuth({
+export const getHubById = withProtectedDataAccess({
   schema: GetHubByIdSchema,
   callback: async ({ hubId }) => {
     const res = await db
@@ -91,6 +88,6 @@ export const getHubById = withValidationAndAuth({
       .where(eq(hub.id, hubId))
       .limit(1);
 
-    return res[0];
+    return res[0] ?? null;
   },
 });

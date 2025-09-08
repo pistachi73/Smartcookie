@@ -85,13 +85,7 @@ export const StudentsTableSkeleton = () => {
 
 // Table component with phone formatting, loading states, and error handling
 
-export const StudentsTable = ({
-  students,
-  hubId,
-}: {
-  students: Student[];
-  hubId?: number;
-}) => {
+export const StudentsTable = ({ students }: { students: Student[] }) => {
   const [deleteStudent, setDeleteStudent] = useState<Student | undefined>(
     undefined,
   );

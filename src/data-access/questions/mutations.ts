@@ -2,16 +2,16 @@
 
 import { and, eq } from "drizzle-orm";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { questions } from "@/db/schema";
-import { withValidationAndAuth } from "../protected-data-access";
 import {
   CreateQuestionSchema,
   DeleteQuestionSchema,
   UpdateQuestionSchema,
 } from "./schemas";
 
-export const createQuestion = withValidationAndAuth({
+export const createQuestion = withProtectedDataAccess({
   schema: CreateQuestionSchema,
   callback: async (
     { title, description, enableAdditionalComment, questionType },
@@ -32,7 +32,7 @@ export const createQuestion = withValidationAndAuth({
   },
 });
 
-export const deleteQuestion = withValidationAndAuth({
+export const deleteQuestion = withProtectedDataAccess({
   schema: DeleteQuestionSchema,
   callback: async ({ id }, user) => {
     await db
@@ -41,7 +41,7 @@ export const deleteQuestion = withValidationAndAuth({
   },
 });
 
-export const updateQuestion = withValidationAndAuth({
+export const updateQuestion = withProtectedDataAccess({
   schema: UpdateQuestionSchema,
   callback: async (data, user) => {
     await db

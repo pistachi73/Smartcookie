@@ -4,13 +4,9 @@ import { Stripe } from "stripe";
 
 import { getUrl } from "@/shared/lib/get-url";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { env } from "@/env";
 import { createDataAccessError, isDataAccessError } from "../errors";
-import {
-  withAuthenticationNoInput,
-  withValidationAndAuth,
-  withValidationOnly,
-} from "../protected-data-access";
 import { updateUser } from "../user/mutations";
 import { getUserSubscriptionByUserId } from "../user-subscription/queries";
 import {
@@ -22,7 +18,10 @@ const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
   apiVersion: "2025-06-30.basil",
 });
 
-export const createStripeCustomer = withValidationOnly({
+export const createStripeCustomer = withProtectedDataAccess({
+  options: {
+    requireAuth: false,
+  },
   schema: createStripeCustomerSchema,
   callback: async ({ email, name, userId }) => {
     try {
@@ -40,15 +39,15 @@ export const createStripeCustomer = withValidationOnly({
 
       return customer;
     } catch (_error) {
-      return createDataAccessError(
-        "UNEXPECTED_ERROR",
-        "Failed to create stripe customer",
-      );
+      return createDataAccessError({
+        type: "UNEXPECTED_ERROR",
+        message: "Failed to create stripe customer",
+      });
     }
   },
 });
 
-export const createCheckoutSession = withValidationAndAuth({
+export const createCheckoutSession = withProtectedDataAccess({
   schema: createCheckoutSessionSchema,
   callback: async ({ paymentFrequency }, user) => {
     const existingSubscription = await getUserSubscriptionByUserId({
@@ -56,7 +55,10 @@ export const createCheckoutSession = withValidationAndAuth({
     });
 
     if (existingSubscription) {
-      return createDataAccessError("USER_ALREADY_HAS_SUBSCRIPTION");
+      return createDataAccessError({
+        type: "USER_ALREADY_HAS_SUBSCRIPTION",
+        message: "User already has an active subscription",
+      });
     }
 
     const priceId =
@@ -103,10 +105,10 @@ export const createCheckoutSession = withValidationAndAuth({
     });
 
     if (!checkoutSession.url) {
-      return createDataAccessError(
-        "UNEXPECTED_ERROR",
-        "Could not create checkout session",
-      );
+      return createDataAccessError({
+        type: "UNEXPECTED_ERROR",
+        message: "Could not create checkout session",
+      });
     }
 
     return {
@@ -119,13 +121,13 @@ export const createCheckoutSession = withValidationAndAuth({
   },
 });
 
-export const createBillingPortalSession = withAuthenticationNoInput({
+export const createBillingPortalSession = withProtectedDataAccess({
   callback: async (user) => {
     if (!user.stripeCustomerId) {
-      return createDataAccessError(
-        "UNEXPECTED_ERROR",
-        "User does not have a stripe customer id",
-      );
+      return createDataAccessError({
+        type: "UNEXPECTED_ERROR",
+        message: "User does not have a stripe customer id",
+      });
     }
     const billingPortalSession = await stripe.billingPortal.sessions.create({
       customer: user.stripeCustomerId,
@@ -133,10 +135,10 @@ export const createBillingPortalSession = withAuthenticationNoInput({
     });
 
     if (!billingPortalSession.url) {
-      return createDataAccessError(
-        "UNEXPECTED_ERROR",
-        "Could not create billing portal session",
-      );
+      return createDataAccessError({
+        type: "UNEXPECTED_ERROR",
+        message: "Could not create billing portal session",
+      });
     }
 
     return {

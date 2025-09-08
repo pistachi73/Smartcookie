@@ -5,10 +5,10 @@ import { z } from "zod";
 
 import { sendTwoFactorTokenEmail } from "@/shared/lib/mail";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { twoFactorToken } from "@/db/schema";
 import { createDataAccessError } from "../errors";
-import { withValidationOnly } from "../protected-data-access";
 import { generateSecureRandomInt } from "../utils";
 import { getTwoFactorTokenByEmail } from "./queries";
 import { SendTwoFactorTokenEmailSchema } from "./schemas";
@@ -27,7 +27,8 @@ export const generateTwoFactorToken = async (email: string) => {
   return data;
 };
 
-export const deleteTwoFactorTokenByToken = withValidationOnly({
+export const deleteTwoFactorTokenByToken = withProtectedDataAccess({
+  options: { requireAuth: false },
   schema: z.object({
     token: z.string(),
   }),
@@ -36,7 +37,8 @@ export const deleteTwoFactorTokenByToken = withValidationOnly({
   },
 });
 
-export const sendTwoFactorEmail = withValidationOnly({
+export const sendTwoFactorEmail = withProtectedDataAccess({
+  options: { requireAuth: false },
   schema: SendTwoFactorTokenEmailSchema,
   callback: async (data) => {
     const twoFactorToken = await generateTwoFactorToken(data.email);
@@ -46,7 +48,10 @@ export const sendTwoFactorEmail = withValidationOnly({
         email: data.email,
       });
     } catch (_e) {
-      return createDataAccessError("EMAIL_SENDING_FAILED");
+      return createDataAccessError({
+        type: "EMAIL_SENDING_FAILED",
+        message: "Failed to send two-factor authentication email",
+      });
     }
 
     return true;

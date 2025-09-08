@@ -216,7 +216,7 @@ const Loader = ({ isIndeterminate = true, ref, ...props }: LoaderProps) => {
           intent,
           size,
           className: twMerge([
-            ["ring"].includes(variant) && "animate-spin",
+            ["spin"].includes(variant) && "animate-spin",
             variant === "spin" && "stroke-current",
             className,
           ]),

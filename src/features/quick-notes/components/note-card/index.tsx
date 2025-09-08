@@ -45,7 +45,10 @@ const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
     focusCheckedRef.current = true;
 
     if (note.clientId && noteFocusRegistry.shouldFocus(note.clientId)) {
-      textAreaRef.current.focus();
+      // Use setTimeout to ensure focus happens after render is complete
+      setTimeout(() => {
+        textAreaRef.current?.focus();
+      }, 0);
     }
   }, [note.clientId]);
 
@@ -69,8 +72,9 @@ const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
     <div
       data-hub-id={note.hubId}
       className={cn(
-        "bg-white group flex flex-col  rounded-lg border-1 border-border relative transition duration-250",
-        "note-card focus-within:opacity-100! ",
+        "bg-white group flex flex-col shadow-xs rounded-lg border-1 border-border relative transition duration-250",
+        "note-card focus-within:opacity-100! hover:shadow-sm",
+        `hover:${colorClasses.border}`,
         isEditingNote && `${colorClasses.border}`,
       )}
     >
@@ -97,11 +101,11 @@ const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
         placeholder="Write something..."
         className={cn(
           "placeholder:text-muted-fg/40 field-sizing-content resize-none text-sm",
-          "p-3 pr-8 pb-2",
+          "p-3 pr-8 pb-9",
         )}
         onChange={(e) => handleContentChange(e.target.value)}
       />
-      <div className="flex justify-between items-center p-3 pt-0 pb-3 min-h-7">
+      <div className="absolute bottom-1 left-3  min-h-7">
         {isSaving && (
           <span className="text-xs text-muted-fg/50">Saving...</span>
         )}

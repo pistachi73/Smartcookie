@@ -41,11 +41,9 @@ type UpdatableStudentFields = keyof Omit<
 
 export const StudentProfileDetail = ({ id }: { id: number }) => {
   const { mutate: updateStudent } = useUpdateStudent();
-  const { data: student, isLoading } = useSuspenseQuery(
+  const { data: student } = useSuspenseQuery(
     getUserStudentByIdQueryOptions(id),
   );
-
-  if (isLoading) return <div>hello</div>;
 
   if (!student)
     return (

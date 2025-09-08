@@ -3,14 +3,14 @@
 import { DashboardSquare01Icon } from "@hugeicons-pro/core-solid-rounded";
 
 import { PageHeader } from "@/shared/components/layout/page-header";
-import { AgendaSessionCardSkeleton } from "@/shared/components/sessions/agenda-session-card-skeleton";
 
+import { AgendaCardSkeleton } from "./agenda-card/agenda-card-skeleton";
 import { SkeletonNextSession } from "./next-session/skeleton-next-session";
 import { SkeletonWeeklyHoursChartCard } from "./weekly-hours-chart-card/skeleton-weekly-hours-chart-card";
 
 export const SkeletonDashboard = () => {
   return (
-    <div className="min-h-0 h-full w-full bg-bg p-5 space-y-4 overflow-y-auto">
+    <div className="min-h-0 h-full w-full bg-bg p-4 sm:p-6 sm:space-y-4 space-y-6 overflow-y-auto @container">
       <PageHeader
         icon={DashboardSquare01Icon}
         title="Dashboard"
@@ -20,23 +20,19 @@ export const SkeletonDashboard = () => {
         }}
       />
 
-      <div className="grid grid-cols-[2fr_1fr] gap-4">
-        <div className="flex flex-col gap-4">
+      <div className="grid grid-cols-1 @4xl:grid-cols-3 gap-4 sm:gap-6">
+        <div className="space-y-4 sm:space-y-6 col-span-1 @4xl:col-span-2">
           <div>
             <SkeletonNextSession />
           </div>
 
-          <div className="flex flex-row gap-4">
-            <div className="basis-1/2">
-              <SkeletonWeeklyHoursChartCard />
-            </div>
-            <div className="basis-1/2">
-              <div className="h-full border rounded-lg shadow-md p-4 bg-overlay" />
-            </div>
+          <div>
+            <SkeletonWeeklyHoursChartCard />
           </div>
         </div>
-        <div className="h-full">
-          <AgendaSessionCardSkeleton />
+
+        <div className="col-span-1 ">
+          <AgendaCardSkeleton />
         </div>
       </div>
     </div>

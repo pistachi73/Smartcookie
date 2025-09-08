@@ -1,11 +1,14 @@
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { twoFactorConirmation } from "@/db/schema";
-import { withValidationOnly } from "../protected-data-access";
 
-export const getTwoFactorConirmationByUserId = withValidationOnly({
+export const getTwoFactorConirmationByUserId = withProtectedDataAccess({
+  options: {
+    requireAuth: false,
+  },
   schema: z.object({
     userId: z.string(),
   }),

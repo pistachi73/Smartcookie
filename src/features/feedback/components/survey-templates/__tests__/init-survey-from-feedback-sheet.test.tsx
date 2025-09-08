@@ -1,3 +1,5 @@
+import { useQuery } from "@tanstack/react-query";
+import type React from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
@@ -9,12 +11,18 @@ import {
 } from "@/shared/lib/testing/test-utils";
 
 import { useInitSurvey } from "@/features/hub/hooks/feedback/use-init-survey";
-import { useHubs } from "@/features/hub/hooks/use-hubs";
 import { InitSurveyFromFeedbackSheet } from "../init-survey-from-feedback-sheet";
 
 // Mock dependencies
-vi.mock("@/features/hub/hooks/use-hubs", () => ({
-  useHubs: vi.fn(),
+vi.mock("@tanstack/react-query", () => ({
+  useQuery: vi.fn(),
+  queryOptions: vi.fn((options) => options),
+  QueryClient: vi.fn().mockImplementation(() => ({
+    invalidateQueries: vi.fn(),
+    cancelQueries: vi.fn(),
+  })),
+  QueryClientProvider: ({ children }: { children: React.ReactNode }) =>
+    children,
 }));
 
 vi.mock("@/features/hub/hooks/feedback/use-init-survey", () => ({
@@ -55,7 +63,7 @@ describe("InitSurveyFromFeedbackSheet", () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    vi.mocked(useHubs).mockReturnValue({
+    vi.mocked(useQuery).mockReturnValue({
       data: mockHubs,
       isLoading: false,
     } as any);
@@ -104,7 +112,7 @@ describe("InitSurveyFromFeedbackSheet", () => {
 
   describe("Loading State", () => {
     it("shows skeleton loaders when loading", () => {
-      vi.mocked(useHubs).mockReturnValue({
+      vi.mocked(useQuery).mockReturnValue({
         data: undefined,
         isLoading: true,
       } as any);
@@ -119,7 +127,7 @@ describe("InitSurveyFromFeedbackSheet", () => {
 
   describe("Empty State", () => {
     it("shows empty state when no hubs available", () => {
-      vi.mocked(useHubs).mockReturnValue({
+      vi.mocked(useQuery).mockReturnValue({
         data: [],
         isLoading: false,
       } as any);
@@ -133,7 +141,7 @@ describe("InitSurveyFromFeedbackSheet", () => {
     });
 
     it("shows empty state when hubs is undefined", () => {
-      vi.mocked(useHubs).mockReturnValue({
+      vi.mocked(useQuery).mockReturnValue({
         data: undefined,
         isLoading: false,
       } as any);

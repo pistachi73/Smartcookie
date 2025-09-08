@@ -1,19 +1,28 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { cleanup, render, screen } from "@/shared/lib/testing/test-utils";
 
-import { useHubNotes } from "../../hooks/use-hub-notes";
 import { HubNotesStack } from "../hub-notes-stack";
 
 // Mock TanStack Query
 vi.mock("@tanstack/react-query", async (importOriginal) => ({
   ...((await importOriginal()) as any),
   useQuery: vi.fn(),
+  useSuspenseQuery: vi.fn(),
 }));
 
-// Mock hooks
-vi.mock("../../hooks/use-hub-notes");
+// Mock query options
+vi.mock("../../lib/quick-notes-query-options", () => ({
+  quickNotesHubsQueryOptions: vi.fn(() => ({
+    queryKey: ["quick-notes-hubs"],
+    queryFn: vi.fn(),
+  })),
+  quickNotesByHubIdQueryOptions: vi.fn((hubId: number) => ({
+    queryKey: ["hub-notes", hubId],
+    queryFn: vi.fn(),
+  })),
+}));
 
 // Mock components
 vi.mock("../note-card", () => ({
@@ -62,19 +71,18 @@ describe("HubNotesStack", () => {
   ];
 
   const mockUseQuery = useQuery as any;
-  const mockUseHubNotes = useHubNotes as any;
+  const mockUseSuspenseQuery = useSuspenseQuery as any;
 
   beforeEach(() => {
     vi.resetAllMocks();
 
-    // Default mock for hubs query
-    mockUseQuery.mockReturnValue({
+    // Default mock for hubs query (useSuspenseQuery)
+    mockUseSuspenseQuery.mockReturnValue({
       data: [mockHub],
-      isLoading: false,
     });
 
-    // Default mock for notes query
-    mockUseHubNotes.mockReturnValue({
+    // Default mock for notes query (useQuery)
+    mockUseQuery.mockReturnValue({
       data: mockNotes,
       isLoading: false,
       isPending: false,
@@ -89,7 +97,7 @@ describe("HubNotesStack", () => {
     render(<HubNotesStack hubId={mockHubId} />);
 
     expect(screen.getByText("Test Hub")).toBeInTheDocument();
-    expect(screen.getByText("2")).toBeInTheDocument();
+    expect(screen.getByText("2 notes")).toBeInTheDocument();
     expect(screen.getByTestId(`add-note-${mockHubId}`)).toBeInTheDocument();
   });
 
@@ -102,7 +110,7 @@ describe("HubNotesStack", () => {
   });
 
   it("shows zero count when no notes", () => {
-    mockUseHubNotes.mockReturnValue({
+    mockUseQuery.mockReturnValue({
       data: [],
       isLoading: false,
       isPending: false,
@@ -111,11 +119,11 @@ describe("HubNotesStack", () => {
     render(<HubNotesStack hubId={mockHubId} />);
 
     expect(screen.getByText("Test Hub")).toBeInTheDocument();
-    expect(screen.getByText("0")).toBeInTheDocument();
+    expect(screen.getByText("0 notes")).toBeInTheDocument();
   });
 
   it("shows zero count when notes data is undefined", () => {
-    mockUseHubNotes.mockReturnValue({
+    mockUseQuery.mockReturnValue({
       data: undefined,
       isLoading: false,
       isPending: false,
@@ -124,11 +132,16 @@ describe("HubNotesStack", () => {
     render(<HubNotesStack hubId={mockHubId} />);
 
     expect(screen.getByText("Test Hub")).toBeInTheDocument();
-    expect(screen.getByText("0")).toBeInTheDocument();
+    expect(screen.getByText("0 notes")).toBeInTheDocument();
   });
 
   it("doesn't render when hub doesn't exist", () => {
     const nonExistentHubId = 999;
+
+    // Mock with empty hubs array
+    mockUseSuspenseQuery.mockReturnValue({
+      data: [],
+    });
 
     const { container } = render(<HubNotesStack hubId={nonExistentHubId} />);
 

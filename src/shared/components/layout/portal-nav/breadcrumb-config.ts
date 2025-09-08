@@ -1,19 +1,19 @@
 import {
   Calendar01Icon as Calendar01IconSolid,
-  Comment01Icon as Comment01IconSolid,
   CreditCardIcon as CreditCardIconSolid,
   DashboardSquare01Icon as DashboardSquare01IconSolid,
   FolderLibraryIcon as FolderLibraryIconSolid,
+  HealtcareIcon as HealtcareIconSolid,
   NoteIcon as NoteIconSolid,
   User02Icon as User02IconSolid,
   UserGroupIcon as UserGroupIconSolid,
 } from "@hugeicons-pro/core-solid-rounded";
 import {
   Calendar01Icon,
-  Comment01Icon,
   CreditCardIcon,
   DashboardSquare01Icon,
   FolderLibraryIcon,
+  HealtcareIcon,
   NoteIcon,
   User02Icon,
   UserGroupIcon,
@@ -48,8 +48,8 @@ export const breadcrumbConfig: RouteBreadcrumbConfig = {
     {
       label: "Feedback",
       href: "/portal/feedback",
-      icon: Comment01Icon,
-      iconSolid: Comment01IconSolid,
+      icon: HealtcareIcon,
+      iconSolid: HealtcareIconSolid,
     },
   ],
   "/portal/calendar": [

@@ -1,11 +1,14 @@
 import { eq } from "drizzle-orm";
 import z from "zod";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { passwordResetToken } from "@/db/schema";
-import { withValidationOnly } from "../protected-data-access";
 
-export const getPasswordResetTokenByToken = withValidationOnly({
+export const getPasswordResetTokenByToken = withProtectedDataAccess({
+  options: {
+    requireAuth: false,
+  },
   schema: z.object({
     token: z.string(),
   }),
@@ -16,7 +19,10 @@ export const getPasswordResetTokenByToken = withValidationOnly({
   },
 });
 
-export const getPasswordResetTokenByEmail = withValidationOnly({
+export const getPasswordResetTokenByEmail = withProtectedDataAccess({
+  options: {
+    requireAuth: false,
+  },
   schema: z.object({
     email: z.string().email(),
   }),

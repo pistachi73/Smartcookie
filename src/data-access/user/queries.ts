@@ -4,12 +4,13 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { getAccountByUserId } from "@/data-access/accounts/queries";
-import { withValidationOnly } from "@/data-access/protected-data-access";
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { user } from "@/db/schema";
 import { GetUserAndAccountByEmailSchema } from "./schemas";
 
-export const getUserByEmail = withValidationOnly({
+export const getUserByEmail = withProtectedDataAccess({
+  options: { requireAuth: false },
   schema: z.object({
     email: z.string().email(),
   }),
@@ -20,7 +21,8 @@ export const getUserByEmail = withValidationOnly({
   },
 });
 
-export const getUserById = withValidationOnly({
+export const getUserById = withProtectedDataAccess({
+  options: { requireAuth: false },
   schema: z.object({
     id: z.string(),
   }),
@@ -29,7 +31,8 @@ export const getUserById = withValidationOnly({
   },
 });
 
-export const getUserAndAccountByEmail = withValidationOnly({
+export const getUserAndAccountByEmail = withProtectedDataAccess({
+  options: { requireAuth: false },
   schema: GetUserAndAccountByEmailSchema,
   callback: async ({ email }) => {
     const user = await getUserByEmail({ email });

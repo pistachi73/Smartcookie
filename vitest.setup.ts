@@ -33,3 +33,22 @@ vi.mock("next/navigation", () => ({
   useRouter: vi.fn(),
   useSearchParams: vi.fn(),
 }));
+
+vi.mock("@/shared/lib/auth", () => ({
+  currentUser: vi.fn(),
+  currentRole: vi.fn(),
+}));
+
+vi.mock("@/core/config/auth-config", () => ({
+  auth: vi.fn(),
+  signIn: vi.fn(),
+  signOut: vi.fn(),
+}));
+
+vi.mock("@/env.js", () => ({
+  env: {
+    DATABASE_URL: "postgresql://test:test@localhost:5432/test",
+    NEXTAUTH_SECRET: "test-secret",
+    NEXTAUTH_URL: "http://localhost:3000",
+  },
+}));

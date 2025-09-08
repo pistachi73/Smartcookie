@@ -2,20 +2,20 @@
 
 import { and, eq, inArray } from "drizzle-orm";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import {
   type InsertSurveyTemplateQuestion,
   surveyTemplateQuestions,
   surveyTemplates,
 } from "@/db/schema";
-import { withValidationAndAuth } from "../protected-data-access";
 import {
   CreateSurveyTemplateSchema,
   DeleteSurveyTemplateSchema,
   UpdateSurveyTemplateSchema,
 } from "./schemas";
 
-export const createSurveyTemplate = withValidationAndAuth({
+export const createSurveyTemplate = withProtectedDataAccess({
   schema: CreateSurveyTemplateSchema,
   callback: async ({ title, description, questions }, user) => {
     await db.transaction(async (tx) => {
@@ -47,7 +47,7 @@ export const createSurveyTemplate = withValidationAndAuth({
   },
 });
 
-export const updateSurveyTemplate = withValidationAndAuth({
+export const updateSurveyTemplate = withProtectedDataAccess({
   schema: UpdateSurveyTemplateSchema,
   callback: async (
     { id: surveyTemplateId, title, description, questions },
@@ -150,7 +150,7 @@ export const updateSurveyTemplate = withValidationAndAuth({
   },
 });
 
-export const deleteSurveyTemplate = withValidationAndAuth({
+export const deleteSurveyTemplate = withProtectedDataAccess({
   schema: DeleteSurveyTemplateSchema,
   callback: async ({ id }, user) => {
     await db

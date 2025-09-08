@@ -8,6 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import type { ZodFormattedError, ZodType } from "zod";
 
+import { createDataAccessError, isDataAccessError } from "@/data-access/errors";
 import { useCurrentUser } from "./use-current-user";
 
 /**
@@ -47,12 +48,7 @@ export class ValidationError<T = any> extends Error {
   }
 }
 
-export class AuthenticationError extends Error {
-  constructor(message = "Authentication required") {
-    super(message);
-    this.name = "AuthenticationError";
-  }
-}
+const isDevEnv = process.env.NODE_ENV === "development";
 
 /**
  * A fully self-contained protected mutation hook that checks auth state internally
@@ -63,7 +59,7 @@ export function useProtectedMutation<
   TOutput,
   TContext = unknown,
   TVariables = TInput,
-  TError = Error | ValidationError<TInput> | AuthenticationError,
+  TError = Error,
   TRequireAuth extends boolean = true,
 >({
   schema,
@@ -91,7 +87,10 @@ export function useProtectedMutation<
     mutationFn: async (variables: TVariables) => {
       // First check authentication
       if (requireAuth && !user?.id) {
-        throw new AuthenticationError() as unknown as TError;
+        return createDataAccessError({
+          type: "AUTHENTICATION_ERROR",
+          message: "You must be logged in to perform this action",
+        }) as TOutput;
       }
 
       // Then validate with Zod
@@ -99,33 +98,55 @@ export function useProtectedMutation<
 
       if (!parse.success) {
         const formattedErrors = parse.error.format();
-        throw new ValidationError<TInput>(
-          "Validation failed",
-          formattedErrors,
-        ) as unknown as TError;
+        return createDataAccessError({
+          type: "VALIDATION_ERROR",
+          message: "Validation failed",
+          meta: {
+            formattedErrors,
+          },
+        }) as TOutput;
       }
 
-      return await mutationFn(parse.data, {
+      const result = await mutationFn(parse.data, {
         userId: requireAuth ? user!.id : (user?.id ?? null),
       } as TRequireAuth extends true
         ? { userId: string }
         : { userId: string | null });
+
+      return result;
     },
+    onSuccess: (data, variables, context) => {
+      if (isDataAccessError(data)) {
+        console.log({ data });
+        switch (data.type) {
+          case "AUTHENTICATION_ERROR":
+            toast.error("You must be logged in to do this");
+            break;
+          case "VALIDATION_ERROR": {
+            if (data.meta.formattedErrors && isDevEnv) {
+              const errorMessages = extractZodErrors(data.meta.formattedErrors);
+              toast.error("Validation failed", {
+                description: errorMessages?.join("\n"),
+              });
+            } else {
+              toast.error("Validation failed");
+            }
 
+            break;
+          }
+        }
+
+        return;
+      }
+
+      options.onSuccess?.(data, variables, context);
+    },
     onError: (error, variables, context) => {
-      if (error instanceof AuthenticationError) {
-        toast.error("You must be logged in to do this");
+      if (options.onError) {
+        options.onError?.(error, variables, context);
+      } else {
+        toast.error("Something went wrong! Please try again.");
       }
-
-      if (error instanceof ValidationError) {
-        const errorMessages = extractZodErrors(error.formattedErrors);
-        toast.error("Validation failed", {
-          description: errorMessages?.join("\n"),
-        });
-      }
-
-      // Call the original onError if provided
-      options.onError?.(error, variables, context);
     },
   });
 }

@@ -5,6 +5,7 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import { Form } from "@/shared/components/ui/form";
+import { LoadingPhoneField } from "@/shared/components/ui/phone-field/loading-phone-field";
 import { cn } from "@/shared/lib/utils";
 
 import type { EditableTextFieldComponentProps } from "./editable-field.types";
@@ -15,6 +16,16 @@ const DynamicPhoneField = dynamic(
     import("@/shared/components/ui/phone-field").then((mod) => mod.PhoneField),
   {
     ssr: false,
+    loading: () => (
+      <LoadingPhoneField
+        label="Phone Number"
+        className={{
+          fieldGroup: cn(
+            "bg-bg py-1.5 pr-2 *:sm:text-base inset-ring-transparent shadow-none",
+          ),
+        }}
+      />
+    ),
   },
 );
 
