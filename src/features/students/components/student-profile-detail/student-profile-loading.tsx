@@ -49,5 +49,3 @@ export const StudentProfileLoading = () => (
     </div>
   </StudentProfileLayout>
 );
-
-
