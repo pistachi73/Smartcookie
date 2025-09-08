@@ -254,10 +254,9 @@ export const SurveyTemplateDetails = ({
                         <span className="text-xs text-muted-fg mr-1">m</span>
                       </>
                     )}
-                    <>
-                      {averageResponseTime.seconds}
-                      <span className="text-xs text-muted-fg">s</span>
-                    </>
+
+                    {averageResponseTime.seconds}
+                    <span className="text-xs text-muted-fg">s</span>
                   </>
                 ) : (
                   "N/A"

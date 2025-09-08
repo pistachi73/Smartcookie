@@ -5,11 +5,11 @@ import { z } from "zod";
 
 import { sendTwoFactorTokenEmail } from "@/shared/lib/mail";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { twoFactorToken } from "@/db/schema";
 import { createDataAccessError } from "../errors";
 import { generateSecureRandomInt } from "../utils";
-import { withProtectedDataAccess } from "../with-protected-data-access";
 import { getTwoFactorTokenByEmail } from "./queries";
 import { SendTwoFactorTokenEmailSchema } from "./schemas";
 

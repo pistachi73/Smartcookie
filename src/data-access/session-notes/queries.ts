@@ -2,9 +2,9 @@
 
 import { and, desc, eq } from "drizzle-orm";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { type SessionNotePosition, sessionNote } from "@/db/schema";
-import { withProtectedDataAccess } from "../with-protected-data-access";
 import { GetSessionNotesBySessionIdSchema } from "./schemas";
 
 export const getSessionNotesBySessionId = withProtectedDataAccess({

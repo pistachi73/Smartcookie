@@ -2,13 +2,13 @@
 
 import { asc, eq, sql } from "drizzle-orm";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { hub } from "@/db/schema";
 import {
   parseOptionalDateWithTimezone,
   parseRequiredDateWithTimezone,
 } from "../utils";
-import { withProtectedDataAccess } from "../with-protected-data-access";
 import { GetHubByIdSchema } from "./schemas";
 
 export const getHubsByUserIdForQuickNotes = withProtectedDataAccess({
@@ -88,6 +88,6 @@ export const getHubById = withProtectedDataAccess({
       .where(eq(hub.id, hubId))
       .limit(1);
 
-    return res[0];
+    return res[0] ?? null;
   },
 });

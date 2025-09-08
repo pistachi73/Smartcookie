@@ -12,11 +12,11 @@ import { z } from "zod";
 
 import type { ChartConfig } from "@/shared/components/ui/chart";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { session, sessionNote } from "@/db/schema";
 import { getDayKeyFromDateString } from "@/features/calendar/lib/utils";
 import { getTimestampISO } from "../utils";
-import { withProtectedDataAccess } from "../with-protected-data-access";
 import {
   GetCalendarSessionsByDateRangeSchema,
   GetInfiniteSessionsByHubIdSchema,
@@ -144,8 +144,6 @@ export const getSessionsCountByHubId = withProtectedDataAccess({
 export const getPaginatedSessionsByHubId = withProtectedDataAccess({
   schema: GetInfiniteSessionsByHubIdSchema,
   callback: async ({ hubId, cursor, direction = "next", limit = 10 }, user) => {
-    console.log({ cursor, hubId, direction, limit });
-
     const now = new Date();
     const baseWhere = and(
       eq(session.hubId, hubId),

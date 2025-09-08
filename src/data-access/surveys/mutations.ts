@@ -2,6 +2,7 @@
 
 import { and, eq, sql } from "drizzle-orm";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import {
   answers,
@@ -15,7 +16,6 @@ import {
   surveyTemplates,
 } from "@/db/schema";
 import { createDataAccessError } from "../errors";
-import { withProtectedDataAccess } from "../with-protected-data-access";
 import {
   CheckStudentHasSurveyAccessSchema,
   CreateHubSurveySchema,

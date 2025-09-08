@@ -3,11 +3,11 @@
 import MailerLite from "@mailerlite/mailerlite-nodejs";
 import { eq } from "drizzle-orm";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { emailMarketing } from "@/db/schema";
 import { env } from "@/env";
 import { createDataAccessError } from "../errors";
-import { withProtectedDataAccess } from "../with-protected-data-access";
 import { AddEmailMarketingSubscriberSchema } from "./schemas";
 
 const mailerlite = new MailerLite({

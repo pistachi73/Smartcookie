@@ -8,7 +8,7 @@ import {
   Pen01Icon,
   Tick01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { LayoutGroup } from "motion/react";
 import * as m from "motion/react-m";
 import dynamic from "next/dynamic";
@@ -73,7 +73,7 @@ export function SessionsList({ hubId }: { hubId: number }) {
     isFetchingNextPage,
     isFetchingPreviousPage,
     isPending: isLoadingSessions,
-  } = useInfiniteQuery(getPaginatedSessionsByHubIdQueryOptions(hubId));
+  } = useSuspenseInfiniteQuery(getPaginatedSessionsByHubIdQueryOptions(hubId));
 
   // Flatten all sessions from all pages - backend handles correct ordering
   const sessions = (data as any)?.pages

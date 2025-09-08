@@ -101,7 +101,7 @@ export const SidebarItem = ({
   return isCollapsed && tooltip ? (
     <Tooltip delay={0}>
       {link}
-      <Tooltip.Content intent="inverse" showArrow={false} placement="right">
+      <Tooltip.Content intent="inverse" showArrow={true} placement="right">
         {tooltip}
       </Tooltip.Content>
     </Tooltip>

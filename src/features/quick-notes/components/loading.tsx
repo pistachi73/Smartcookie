@@ -1,62 +1,48 @@
 import { NoteIcon } from "@hugeicons-pro/core-solid-rounded";
 
-import { Separator } from "@/ui/separator";
-import { Skeleton } from "@/ui/skeleton";
+import { Heading } from "@/shared/components/ui/heading";
+import { Skeleton } from "@/shared/components/ui/skeleton";
 import { PageHeader } from "@/shared/components/layout/page-header";
 import { cn } from "@/shared/lib/classes";
 
-import { SkeletonNoteCard } from "./note-card/skeleton-note-card";
+import { HubNotesStackSkeleton } from "./hub-notes-stack-skeleton";
 
 export const QuickNotesLoading = () => {
   return (
-    <div className="min-h-0 h-full flex flex-col w-full overflow-hidden">
+    <div className="min-h-0 h-full flex flex-col">
       <PageHeader
         title="Quick Notes"
-        subTitle="Quickly jot down notes"
         icon={NoteIcon}
         className={{
-          container: "bg-bg",
+          actionsContainer: "flex-row items-center",
+          container: "bg-bg flex-row items-center",
         }}
       />
-      <div className="min-h-0 h-full flex  w-full overflow-hidden">
+      <div className="flex flex-1 h-full min-h-0 ">
         <div
           className={cn(
-            "transition-all duration-150 bg-bg border-r h-full bg-bg shrink-0",
-            "w-[300px]",
+            "hidden lg:flex border-r h-full min-h-0 flex-col shrink-0  bg-muted w-[300px]",
           )}
         >
-          <div className="p-4 h-[72px] flex items-center">
-            <Skeleton className="h-6 w-3/4" />
+          <div className="p-4 pb-0 mb-2 space-y-2">
+            <Heading level={3} className="mb-2">
+              Filter by hubs
+            </Heading>
           </div>
 
-          <Separator orientation="horizontal" />
-          <div className="p-4">
-            <Skeleton soft className="h-10 w-full" />
-          </div>
-          <div className="p-4 space-y-2 w-full">
-            {Array.from({ length: 6 }).map((_, index) => (
-              <Skeleton
-                key={`hub-toggle-skeleton-${index}`}
-                soft
-                className="h-10 w-full"
-              />
-            ))}
+          <div className="p-4 overflow-y-auto">
+            <div className="space-y-2 overflow-y-auto">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <Skeleton key={index} className="h-10 w-full" soft={false} />
+              ))}
+            </div>
           </div>
         </div>
-        <div className="flex   overflow-scroll">
-          {Array.from({ length: 3 }).map((_, index) => (
-            <div
-              key={`skeleton-hub-${index}`}
-              className=" pb-0 shrink-0 space-y-8 w-[320px] p-3"
-            >
-              <Skeleton className="h-12 w-full" />
-              <div className="flex flex-col gap-4">
-                {Array.from({ length: 5 }).map((_, index) => (
-                  <SkeletonNoteCard key={`skeleton-card-${index}`} />
-                ))}
-              </div>
-            </div>
-          ))}
+        <div className=" h-full grow relative shrink-0 bg-white p-4 sm:p-6 space-y-6 overflow-y-auto @container">
+          <HubNotesStackSkeleton numberOfNotes={5} />
+          <HubNotesStackSkeleton numberOfNotes={1} />
+          <HubNotesStackSkeleton numberOfNotes={3} />
+          <HubNotesStackSkeleton numberOfNotes={2} />
         </div>
       </div>
     </div>

@@ -3,7 +3,6 @@ import { DynamicPortalNav } from "@/shared/components/layout/portal-nav/dynamic-
 import AppSidebar from "@/shared/components/layout/portal-sidebar";
 
 import { PortalProviders } from "@/core/providers/portal-providers";
-import { QuickNotesMenu } from "@/features/quick-notes/components/quick-notes-menu";
 
 export default function PortalLayout({
   children,
@@ -17,7 +16,6 @@ export default function PortalLayout({
         <DynamicPortalNav />
         {children}
       </SidebarInset>
-      <QuickNotesMenu />
     </PortalProviders>
   );
 }

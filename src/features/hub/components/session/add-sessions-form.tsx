@@ -7,7 +7,7 @@ import {
   parseDateTime,
   type Time,
 } from "@internationalized/date";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   Controller,
   useFormContext,
@@ -92,15 +92,12 @@ export function AddSessionsForm({
   disableHubSelection,
   removeHubSelection = false,
 }: AddSessionsFormProps) {
-  const queryClient = useQueryClient();
-  const { data: hubs, isLoading } = useQuery(
-    getHubsByUserIdQueryOptions(queryClient),
-  );
+  const { data: hubs, isLoading } = useQuery(getHubsByUserIdQueryOptions);
 
   const form = useFormContext<z.infer<typeof AddSessionFormSchema>>();
-  const [date, startTime, selectedHubId] = useWatch({
+  const [date, startTime] = useWatch({
     control: form.control,
-    name: ["date", "startTime", "hubId"],
+    name: ["date", "startTime"],
   });
 
   const formState = useFormState({

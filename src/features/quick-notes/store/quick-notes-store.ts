@@ -1,9 +1,6 @@
-import { enableMapSet } from "immer";
-import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 import { createStore } from "zustand/vanilla";
 
-import { superjsonStorage } from "@/core/stores/superjson-storage";
 import type {
   InitialQuickNotesStateData,
   QuickNotesState,
@@ -14,83 +11,60 @@ export const initQuickNotesStore = (
   initilData?: InitialQuickNotesStateData,
 ): QuickNotesState => {
   return {
-    visibleHubs: new Set(initilData?.visibleHubs || []),
-    isHydrated: false,
+    visibleHubs: initilData?.visibleHubs || [],
     edittingHub: null,
     isFilterPanelOpen: false,
   };
 };
 
-enableMapSet();
+export const VISIBLE_HUBS_COOKIE_NAME = "quick-notesvisible-hubs";
+const VISIBLE_HUBS_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 
 export const createQuickNotesStore = (initState: QuickNotesState) => {
   return createStore<QuickNotesStore>()(
-    persist(
-      immer((set, get) => ({
-        ...initState,
+    immer((set) => ({
+      ...initState,
 
-        toggleHubVisibility: (hubId: number) => {
-          set((state) => {
-            if (state.visibleHubs.has(hubId)) {
-              state.visibleHubs.delete(hubId);
-            } else {
-              state.visibleHubs.add(hubId);
-            }
-          });
-        },
+      toggleHubVisibility: (hubId: number) => {
+        set((state) => {
+          let newVisibleHubs: number[];
+          if (state.visibleHubs.includes(hubId)) {
+            newVisibleHubs = state.visibleHubs.filter((id) => id !== hubId);
+          } else {
+            newVisibleHubs = [...state.visibleHubs, hubId];
+          }
+          state.visibleHubs = newVisibleHubs;
 
-        toggleAllHubsVisibility: (hubIds: number[]) => {
-          set((state) => {
-            const allVisible = hubIds.every((id) => state.visibleHubs.has(id));
-
-            if (allVisible) {
-              // If all provided hubs are visible, hide them
-              hubIds.forEach((id) => state.visibleHubs.delete(id));
-            } else {
-              // If not all are visible, show all provided hubs
-              hubIds.forEach((id) => state.visibleHubs.add(id));
-            }
-          });
-        },
-
-        setEdittingHub: (hubId) => {
-          set((state) => {
-            state.edittingHub = hubId;
-          });
-        },
-
-        setHydrated: () => {
-          set((state) => {
-            state.isHydrated = true;
-          });
-        },
-      })),
-      {
-        name: "quick-notes-store",
-        storage: superjsonStorage,
-        partialize: ({ edittingHub, isHydrated, ...rest }) => ({
-          ...rest,
-        }),
-        merge(persistedState, currentState) {
-          const visibleHubs = new Set([
-            ...(currentState?.visibleHubs || []),
-            ...((persistedState as any)?.visibleHubs || []),
-          ]);
-
-          return {
-            ...currentState,
-            ...(persistedState as any),
-            visibleHubs,
-          };
-        },
-        onRehydrateStorage: () => {
-          return async (state, error) => {
-            if (!error) {
-              state?.setHydrated();
-            }
-          };
-        },
+          if (document) {
+            document.cookie = `${VISIBLE_HUBS_COOKIE_NAME}=${newVisibleHubs.join(",")}; path=/; max-age=${VISIBLE_HUBS_COOKIE_MAX_AGE}`;
+          }
+        });
       },
-    ),
+
+      toggleAllHubsVisibility: (hubIds: number[]) => {
+        set((state) => {
+          const allVisible = hubIds.every((id) =>
+            state.visibleHubs.includes(id),
+          );
+
+          if (allVisible) {
+            state.visibleHubs = state.visibleHubs.filter(
+              (id) => !hubIds.includes(id),
+            );
+          } else {
+            const newHubIds = hubIds.filter(
+              (id) => !state.visibleHubs.includes(id),
+            );
+            state.visibleHubs = [...state.visibleHubs, ...newHubIds];
+          }
+        });
+      },
+
+      setEdittingHub: (hubId) => {
+        set((state) => {
+          state.edittingHub = hubId;
+        });
+      },
+    })),
   );
 };

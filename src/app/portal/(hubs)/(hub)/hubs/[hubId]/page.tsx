@@ -3,21 +3,14 @@ import { redirect } from "next/navigation";
 
 import { getQueryClient } from "@/shared/lib/get-query-client";
 
-import { getHubById } from "@/data-access/hubs/queries";
-import { getNotesByHubId } from "@/data-access/quick-notes/queries";
 import { HubDashboard } from "@/features/hub/components/hub-dashboard";
 import { getHubByIdQueryOptions } from "@/features/hub/lib/hub-query-options";
+import { getPaginatedSessionsByHubIdQueryOptions } from "@/features/hub/lib/hub-sessions-query-options";
 import { quickNotesByHubIdQueryOptions } from "@/features/quick-notes/lib/quick-notes-query-options";
 
-interface HubPageProps {
-  params: Promise<{
-    hubId: string;
-  }>;
-}
-
-const HubPage = async ({ params }: HubPageProps) => {
+const HubPage = async (props: PageProps<"/portal/hubs/[hubId]">) => {
   const queryClient = getQueryClient();
-  const { hubId } = await params;
+  const { hubId } = await props.params;
 
   const hubIdNumber = Number(hubId);
 
@@ -25,24 +18,16 @@ const HubPage = async ({ params }: HubPageProps) => {
     redirect("/portal/hubs");
   }
 
-  const [hub, notes] = await Promise.all([
-    getHubById({ hubId: hubIdNumber }),
-    getNotesByHubId({ hubId: hubIdNumber }),
-  ]);
-
-  if (!hub) {
-    redirect("/portal/hubs");
-  }
-
-  // Set both data sets we already fetched
-  queryClient.setQueryData(getHubByIdQueryOptions(hubIdNumber).queryKey, hub);
-  queryClient.setQueryData(
-    quickNotesByHubIdQueryOptions(hubIdNumber).queryKey,
-    notes,
+  void queryClient.prefetchQuery(getHubByIdQueryOptions(hubIdNumber));
+  void queryClient.prefetchQuery(quickNotesByHubIdQueryOptions(hubIdNumber));
+  void queryClient.prefetchInfiniteQuery(
+    getPaginatedSessionsByHubIdQueryOptions(hubIdNumber),
   );
 
+  const dehydratedState = dehydrate(queryClient);
+
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
+    <HydrationBoundary state={dehydratedState}>
       <HubDashboard hubId={hubIdNumber} />
     </HydrationBoundary>
   );

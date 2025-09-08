@@ -4,10 +4,10 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { TOKEN_LENGTH } from "@/core/config/app-config";
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { passwordResetToken } from "@/db/schema";
 import { generateRandomToken } from "../utils";
-import { withProtectedDataAccess } from "../with-protected-data-access";
 import { getPasswordResetTokenByEmail } from "./queries";
 import {
   CreatePasswordResetTokenSchema,

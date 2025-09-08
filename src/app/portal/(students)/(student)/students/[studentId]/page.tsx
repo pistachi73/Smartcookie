@@ -15,12 +15,14 @@ export default async function StudentPage({ params }: StudentPageProps) {
   const { studentId } = await params;
   const queryClient = getQueryClient();
 
-  await queryClient.prefetchQuery({
+  void queryClient.prefetchQuery({
     ...getUserStudentByIdQueryOptions(Number.parseInt(studentId)),
   });
 
+  const dehydratedState = dehydrate(queryClient);
+
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
+    <HydrationBoundary state={dehydratedState}>
       <StudentProfileDetail id={Number.parseInt(studentId)} />
     </HydrationBoundary>
   );

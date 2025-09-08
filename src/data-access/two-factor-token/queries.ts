@@ -1,9 +1,9 @@
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { twoFactorToken } from "@/db/schema";
-import { withProtectedDataAccess } from "../with-protected-data-access";
 
 export const getTwoFactorTokenByEmail = withProtectedDataAccess({
   options: { requireAuth: false },

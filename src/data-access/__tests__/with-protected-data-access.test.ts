@@ -11,8 +11,8 @@ import { z } from "zod";
 import { currentUser } from "@/shared/lib/auth";
 
 import { createMockUser } from "@/data-access/user/__mocks__";
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import type { AuthUser } from "@/types/next-auth";
-import { withProtectedDataAccess } from "../with-protected-data-access";
 
 vi.mock("@/shared/lib/auth", () => ({
   currentUser: vi.fn(),

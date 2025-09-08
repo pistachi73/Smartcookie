@@ -93,7 +93,7 @@ export function useAddSessionNote() {
       );
     },
 
-    onError: (error, input, context) => {
+    onError: (error, _, context) => {
       toast.error("Failed to add note");
       if (context?.previousData) {
         queryClient.setQueryData(

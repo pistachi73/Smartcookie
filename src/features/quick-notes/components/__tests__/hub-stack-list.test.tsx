@@ -9,7 +9,9 @@ import { HubStackList } from "../hub-stack-list";
 
 // Mock empty state component
 vi.mock("../empty-state", () => ({
-  EmptyState: () => <div data-testid="empty-state">No hubs to display</div>,
+  QuickNotesEmptyState: () => (
+    <div data-testid="empty-state">No hubs to display</div>
+  ),
 }));
 
 // Mock hub notes stack component
@@ -26,7 +28,7 @@ describe("HubStackList", () => {
   const mockStore = mockZustandStoreImplementation<QuickNotesStore>({
     hook: useQuickNotesStore,
     initialState: {
-      visibleHubs: new Set([1, 2, 3]),
+      visibleHubs: [1, 2, 3],
     },
   });
 
@@ -41,7 +43,7 @@ describe("HubStackList", () => {
 
   it("renders EmptyState when there are no visible hubs", () => {
     mockStore.setState({
-      visibleHubs: new Set(),
+      visibleHubs: [],
     });
 
     render(<HubStackList />);

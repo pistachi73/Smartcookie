@@ -2,13 +2,13 @@
 
 import { and, eq, inArray } from "drizzle-orm";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import {
   type InsertSurveyTemplateQuestion,
   surveyTemplateQuestions,
   surveyTemplates,
 } from "@/db/schema";
-import { withProtectedDataAccess } from "../with-protected-data-access";
 import {
   CreateSurveyTemplateSchema,
   DeleteSurveyTemplateSchema,

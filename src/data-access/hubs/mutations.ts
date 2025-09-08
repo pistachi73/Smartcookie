@@ -1,9 +1,9 @@
 "use server";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { hub, studentHub } from "@/db/schema";
 import { addSessions } from "../sessions/mutations";
-import { withProtectedDataAccess } from "../with-protected-data-access";
 import { CreateHubUseCaseSchema } from "./schemas";
 
 export const createHub = withProtectedDataAccess({

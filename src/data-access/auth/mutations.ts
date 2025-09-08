@@ -21,13 +21,13 @@ import {
 import { getUserByEmail, getUserById } from "@/data-access/user/queries";
 import { sendEmailVerificationEmail } from "@/data-access/verification-token/mutations";
 import { getVerificationTokenByTokenAndEmail } from "@/data-access/verification-token/queries";
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import {
   deletePasswordResetTokenByToken,
   generatePasswordResetToken,
 } from "../password-reset-token/mutations";
 import { hashPassword } from "../utils";
-import { withProtectedDataAccess } from "../with-protected-data-access";
 import {
   ChangePasswordSchema,
   CredentialsSignInSchema,

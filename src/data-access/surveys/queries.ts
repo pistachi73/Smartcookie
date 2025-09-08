@@ -3,9 +3,9 @@
 import { and, asc, desc, eq } from "drizzle-orm";
 import { z } from "zod";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { surveys, surveyTemplateQuestions } from "@/db/schema";
-import { withProtectedDataAccess } from "../with-protected-data-access";
 import { GetSurveysByHubIdSchema } from "./schemas";
 
 export const getSurveysByHubId = withProtectedDataAccess({

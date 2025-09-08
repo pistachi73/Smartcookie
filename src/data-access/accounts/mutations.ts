@@ -1,8 +1,8 @@
 import { and, eq } from "drizzle-orm";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { account } from "@/db/schema";
-import { withProtectedDataAccess } from "../with-protected-data-access";
 import { LinkOAuthAccountSchema } from "./schemas";
 
 export const linkOAuthAccount = withProtectedDataAccess({

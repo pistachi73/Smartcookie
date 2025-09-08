@@ -11,13 +11,16 @@ import { Skeleton } from "@/shared/components/ui/skeleton";
 import { Tooltip } from "@/shared/components/ui/tooltip";
 
 import { useGetWeeklyHours } from "../../hooks/use-get-weekly-hours";
-import { SkeletonWeeklyHoursChartCard } from "./skeleton-weekly-hours-chart-card";
 
-const DynamicWeeklyHoursCard = dynamic(
+const DynamicWeeklyHoursChart = dynamic(
   () => import("./weekly-hours-chart").then((mod) => mod.WeeklyHoursChart),
   {
     ssr: true,
-    loading: () => <SkeletonWeeklyHoursChartCard />,
+    loading: () => (
+      <div className="aspect-video h-56 sm:h-80 flex items-center justify-center w-full">
+        <Loader size="lg" variant="spin" intent="secondary" />
+      </div>
+    ),
   },
 );
 
@@ -101,7 +104,7 @@ export function WeeklyHoursCard() {
             <Loader size="lg" variant="spin" intent="secondary" />
           </div>
         ) : (
-          <DynamicWeeklyHoursCard date={date} />
+          <DynamicWeeklyHoursChart date={date} />
         )}
       </Card.Content>
     </Card>

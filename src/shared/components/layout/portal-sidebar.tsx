@@ -3,17 +3,17 @@
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Calendar03Icon as Calendar03IconSolid,
-  Comment01Icon as Comment01IconSolid,
-  DashboardSquare01Icon as DashboardSquare01IconSolid,
   FolderLibraryIcon as FolderLibraryIconSolid,
+  HealtcareIcon as HealtcareIconSolid,
+  Layout04Icon as Layout04IconSolid,
   NoteIcon as NoteIconSolid,
   UserGroupIcon as UserGroupIconSolid,
 } from "@hugeicons-pro/core-solid-rounded";
 import {
   Calendar03Icon,
-  Comment01Icon,
-  DashboardSquare01Icon,
   FolderLibraryIcon,
+  HealtcareIcon,
+  Layout04Icon,
   NoteIcon,
   UserGroupIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
@@ -45,7 +45,7 @@ export default function AppSidebar({ ...props }: AppSidebarProps) {
     <Sidebar {...props}>
       <SidebarHeader
         className={cn(
-          "flex h-14 flex-row items-center justify-between border-b gap-x-2 py-0",
+          "flex h-14 flex-row items-center justify-between gap-x-2 py-0 border-b",
           state.state === "collapsed" &&
             "flex items-center justify-center w-full",
         )}
@@ -84,7 +84,7 @@ export default function AppSidebar({ ...props }: AppSidebarProps) {
 
       <SidebarContent className="mt-4">
         <SidebarSectionGroup>
-          <SidebarSection title="Main">
+          <SidebarSection>
             {navigation.map((item) => {
               const isCurrent = pathname.includes(item.href);
               return (
@@ -122,8 +122,8 @@ const navigation = [
   {
     label: "Dashboard",
     href: "/portal/dashboard",
-    icon: DashboardSquare01Icon,
-    iconActive: DashboardSquare01IconSolid,
+    icon: Layout04Icon,
+    iconActive: Layout04IconSolid,
   },
   {
     label: "Calendar",
@@ -158,7 +158,7 @@ const navigation = [
   {
     label: "Feedback",
     href: "/portal/feedback",
-    icon: Comment01Icon,
-    iconActive: Comment01IconSolid,
+    icon: HealtcareIcon,
+    iconActive: HealtcareIconSolid,
   },
 ];

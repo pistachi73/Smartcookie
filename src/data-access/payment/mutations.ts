@@ -4,11 +4,11 @@ import { Stripe } from "stripe";
 
 import { getUrl } from "@/shared/lib/get-url";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { env } from "@/env";
 import { createDataAccessError, isDataAccessError } from "../errors";
 import { updateUser } from "../user/mutations";
 import { getUserSubscriptionByUserId } from "../user-subscription/queries";
-import { withProtectedDataAccess } from "../with-protected-data-access";
 import {
   createCheckoutSessionSchema,
   createStripeCustomerSchema,

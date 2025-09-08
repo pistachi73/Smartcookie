@@ -7,6 +7,7 @@ import {
   FolderLibraryIcon,
   Rocket01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
+import { useQuery } from "@tanstack/react-query";
 import { useDeferredValue, useMemo, useState } from "react";
 
 import { Button } from "@/shared/components/ui/button";
@@ -23,7 +24,7 @@ import { cn } from "@/shared/lib/classes";
 import { getCustomColorClasses } from "@/shared/lib/custom-colors";
 
 import { useInitSurvey } from "@/features/hub/hooks/feedback/use-init-survey";
-import { useHubs } from "@/features/hub/hooks/use-hubs";
+import { getHubsByUserIdQueryOptions } from "@/features/hub/lib/hub-query-options";
 import type { Hub } from "@/features/hub/types/hub.types";
 
 interface InitSurveyFromFeedbackSheetProps {
@@ -80,7 +81,9 @@ export function InitSurveyFromFeedbackSheet({
   surveyTemplateId,
   onCancel,
 }: InitSurveyFromFeedbackSheetProps) {
-  const { data: hubs, isLoading } = useHubs();
+  const { data: hubs, isLoading } = useQuery({
+    ...getHubsByUserIdQueryOptions,
+  });
   const [selectedHubId, setSelectedHubId] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState("");
 

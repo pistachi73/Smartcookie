@@ -54,7 +54,7 @@ export const EmptyState = ({
             </div>
           )}
           <div className="space-y-1">
-            <Heading level={3}>{title}</Heading>
+            <Heading level={4}>{title}</Heading>
             <p className="text-sm text-muted-fg max-w-[42ch]">{description}</p>
           </div>
           {action}

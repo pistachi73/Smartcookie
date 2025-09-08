@@ -2,10 +2,10 @@
 
 import { eq } from "drizzle-orm";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { user } from "@/db/schema";
 import { hashPassword } from "../utils";
-import { withProtectedDataAccess } from "../with-protected-data-access";
 import {
   CreateUserSchema,
   UpdateUserPasswordSchema,

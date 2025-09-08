@@ -29,25 +29,9 @@ describe("Quick Notes Store", () => {
 
   describe("Initial State", () => {
     it("should initialize with the correct state", () => {
-      expect(state.visibleHubs).toEqual(new Set(mockInitialState.visibleHubs));
+      expect(state.visibleHubs).toEqual(mockInitialState.visibleHubs);
       expect(state.edittingHub).toBe(null);
       expect(state.isFilterPanelOpen).toBe(false);
-    });
-  });
-
-  describe("setHydrated", () => {
-    it("should set isHydrated to true", () => {
-      // Initialize state
-      store.setState({
-        ...store.getState(),
-        isHydrated: false,
-      });
-
-      act(() => {
-        store.getState().setHydrated();
-      });
-
-      expect(store.getState().isHydrated).toBe(true);
     });
   });
 
@@ -55,7 +39,7 @@ describe("Quick Notes Store", () => {
     beforeEach(() => {
       store.setState({
         ...store.getState(),
-        visibleHubs: new Set(mockInitialState.visibleHubs),
+        visibleHubs: mockInitialState.visibleHubs,
       });
     });
 
@@ -64,9 +48,10 @@ describe("Quick Notes Store", () => {
         state.toggleHubVisibility(3);
       });
 
-      expect(store.getState().visibleHubs).toEqual(
-        new Set([...mockInitialState.visibleHubs, 3]),
-      );
+      expect(store.getState().visibleHubs).toEqual([
+        ...mockInitialState.visibleHubs,
+        3,
+      ]);
     });
 
     it("should remove hub from visibleHubs if already present", () => {
@@ -76,7 +61,7 @@ describe("Quick Notes Store", () => {
 
       const remainingHubs = mockInitialState.visibleHubs.slice(1);
 
-      expect(store.getState().visibleHubs).toEqual(new Set(remainingHubs));
+      expect(store.getState().visibleHubs).toEqual(remainingHubs);
     });
   });
 
@@ -84,7 +69,7 @@ describe("Quick Notes Store", () => {
     beforeEach(() => {
       store.setState({
         ...store.getState(),
-        visibleHubs: new Set([1, 2]),
+        visibleHubs: [1, 2],
       });
     });
 
@@ -94,21 +79,21 @@ describe("Quick Notes Store", () => {
       });
 
       // Since 1 and 2 are already visible but 3 and 4 are not, all should be added
-      expect(store.getState().visibleHubs).toEqual(new Set([1, 2, 3, 4]));
+      expect(store.getState().visibleHubs).toEqual([1, 2, 3, 4]);
     });
 
     it("should remove all provided hubs from visibleHubs if all are present", () => {
       // Set up state where all target hubs are visible
       store.setState({
         ...store.getState(),
-        visibleHubs: new Set([1, 2, 3]),
+        visibleHubs: [1, 2, 3],
       });
 
       act(() => {
         state.toggleAllHubsVisibility([1, 2, 3]);
       });
 
-      expect(store.getState().visibleHubs).toEqual(new Set([]));
+      expect(store.getState().visibleHubs).toEqual([]);
     });
 
     it("should add missing hubs when only some are visible", () => {
@@ -118,11 +103,11 @@ describe("Quick Notes Store", () => {
       });
 
       // Since not all (1, 2, 3) were visible, all should be made visible
-      expect(store.getState().visibleHubs).toEqual(new Set([1, 2, 3]));
+      expect(store.getState().visibleHubs).toEqual([1, 2, 3]);
     });
 
     it("should handle empty array gracefully", () => {
-      const initialVisible = new Set([1, 2]);
+      const initialVisible = [1, 2];
       store.setState({
         ...store.getState(),
         visibleHubs: initialVisible,

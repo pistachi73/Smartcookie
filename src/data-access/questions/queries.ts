@@ -1,10 +1,12 @@
+"use server";
+
 import { and, count, desc, eq, sql } from "drizzle-orm";
 import { cache } from "react";
 import { z } from "zod";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { questions } from "@/db/schema";
-import { withProtectedDataAccess } from "../with-protected-data-access";
 import { GetQuestionsSchema } from "./schemas";
 
 const buildSearchCondition = (q?: string) => {

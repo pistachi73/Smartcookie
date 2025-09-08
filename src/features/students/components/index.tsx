@@ -16,6 +16,8 @@ import { StudentsTable, StudentsTableSkeleton } from "./students-table";
 import { StudentsTablePagination } from "./students-table/students-table-pagination";
 import { StudentsTableSearch } from "./students-table/students-table-search";
 
+export const STUDENTS_PAGE_SIZE = 5;
+
 export const StudentsPageLayout = ({
   children,
 }: {
@@ -48,14 +50,14 @@ export const StudentsCardLayout = ({
   return (
     <Card>
       <div className="px-(--card-spacing) flex flex-col gap-4 md:gap-8 md:flex-row md:items-end md:justify-between">
-        <div className="space-y-1">
+        <div className="space-y-1 w-full">
           <CardTitle>Explore students</CardTitle>
-          <CardDescription className="text-balance">
+          <CardDescription>
             Manage your students and their progress. Add, edit, and delete
             students as needed.
           </CardDescription>
         </div>
-        <div className="flex-1 w-full md:w-auto flex items-end h-full">
+        <div className="flex-1 w-full md:w-fit flex items-end h-full">
           <StudentsTableSearch />
         </div>
       </div>
@@ -71,7 +73,7 @@ export const Students = () => {
   const { data, isLoading, isPlaceholderData } = useQuery(
     getPaginatedUserStudentsQueryOptions({
       page,
-      pageSize: 10,
+      pageSize: STUDENTS_PAGE_SIZE,
       q,
     }),
   );

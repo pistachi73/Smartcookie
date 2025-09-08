@@ -2,11 +2,11 @@
 
 import Stripe from "stripe";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { env } from "@/env";
 import { createDataAccessError } from "../errors";
 import { getUserById } from "../user/queries";
 import { getUserSubscriptionByUserId } from "../user-subscription/queries";
-import { withProtectedDataAccess } from "../with-protected-data-access";
 import {
   formatInvoice,
   formatPaymentMethod,

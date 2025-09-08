@@ -1,8 +1,8 @@
 import { and, eq } from "drizzle-orm";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { attendance } from "@/db/schema";
-import { withProtectedDataAccess } from "../with-protected-data-access";
 import {
   AddAttendanceSchema,
   RemoveAllStudentAttendanceSchema,

@@ -59,7 +59,7 @@ export const useDeleteQuickNote_ = ({
       return { previousData };
     },
 
-    onError: (err, data, context) => {
+    onError: (_, __, context) => {
       toast.error("Failed to delete note");
       // If the mutation fails, roll back to the previous value
       if (context?.previousData) {

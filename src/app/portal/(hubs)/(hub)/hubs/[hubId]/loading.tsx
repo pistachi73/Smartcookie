@@ -1,3 +1,5 @@
+import { HubLoading } from "@/features/hub/components/hub-loading";
+
 export default function HubLoadingPage() {
-  return <div>loading...</div>;
+  return <HubLoading />;
 }

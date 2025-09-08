@@ -4,9 +4,9 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { getAccountByUserId } from "@/data-access/accounts/queries";
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { user } from "@/db/schema";
-import { withProtectedDataAccess } from "../with-protected-data-access";
 import { GetUserAndAccountByEmailSchema } from "./schemas";
 
 export const getUserByEmail = withProtectedDataAccess({

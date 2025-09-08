@@ -30,31 +30,28 @@ export const PageHeader = ({
         className?.container,
       )}
     >
-      <div className="flex items-center gap-x-3 sm:gap-x-4">
+      <div className="w-full flex items-center gap-x-3 sm:gap-x-4">
         <div
           className={cn(
-            "size-10 sm:size-12 rounded-lg bg-overlay shadow-md flex items-center justify-center shrink-0",
+            "size-11 sm:size-12 rounded-lg bg-overlay shadow-md flex items-center justify-center shrink-0",
             className?.icon,
           )}
         >
-          <HugeiconsIcon
-            icon={icon}
-            className="text-primary size-4 sm:size-5"
-          />
+          <HugeiconsIcon icon={icon} className="text-primary size-5" />
         </div>
         <div className="flex flex-col w-full">
           <Heading level={1} tracking="tight" className="text-lg">
             {title}
           </Heading>
           {subTitle && (
-            <span className="text-muted-fg text-sm">{subTitle}</span>
+            <span className="text-muted-fg text-xs sm:text-sm">{subTitle}</span>
           )}
         </div>
       </div>
       {actions && (
         <div
           className={cn(
-            "flex gap-2 items-center justify-end w-full @2xl:w-auto",
+            "flex gap-2 items-center justify-end shrink-0",
             className?.actionsContainer,
           )}
         >

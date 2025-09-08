@@ -3,9 +3,9 @@
 import { and, count, desc, eq } from "drizzle-orm";
 import { z } from "zod";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { student, surveyResponses, surveys as surveysTable } from "@/db/schema";
-import { withProtectedDataAccess } from "../with-protected-data-access";
 
 export const getSurveyTemplateResponses = withProtectedDataAccess({
   schema: z.object({

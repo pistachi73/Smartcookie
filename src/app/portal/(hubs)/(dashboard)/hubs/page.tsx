@@ -2,20 +2,18 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
 import { getQueryClient } from "@/shared/lib/get-query-client";
 
-import { getHubsByUserId } from "@/data-access/hubs/queries";
 import { HubList } from "@/features/hub/components/hub-list";
 import { getHubsByUserIdQueryOptions } from "@/features/hub/lib/hub-query-options";
 
 const HubsPage = async () => {
   const queryClient = getQueryClient();
 
-  const hubsQueryOptionsKey = getHubsByUserIdQueryOptions(queryClient).queryKey;
-  const hubs = await getHubsByUserId();
+  void queryClient.prefetchQuery(getHubsByUserIdQueryOptions);
 
-  queryClient.setQueryData(hubsQueryOptionsKey, hubs);
+  const dehydratedState = dehydrate(queryClient);
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
+    <HydrationBoundary state={dehydratedState}>
       <HubList />
     </HydrationBoundary>
   );

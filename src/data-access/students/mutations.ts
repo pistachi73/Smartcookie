@@ -2,6 +2,7 @@
 
 import { and, eq } from "drizzle-orm";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { session, student, studentHub } from "@/db/schema";
 import {
@@ -10,7 +11,6 @@ import {
 } from "../attendance/mutations";
 import { createDataAccessError } from "../errors";
 import { archiveStudentSurveyResponsesInHub } from "../survey-response/mutations";
-import { withProtectedDataAccess } from "../with-protected-data-access";
 import {
   AddStudentSchema,
   AddStudentToHubSchema,

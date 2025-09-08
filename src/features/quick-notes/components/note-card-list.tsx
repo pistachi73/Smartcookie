@@ -1,10 +1,7 @@
-import { HugeiconsIcon } from "@hugeicons/react";
-import { NoteIcon } from "@hugeicons-pro/core-solid-rounded";
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, m } from "motion/react";
 
-import { cn } from "@/shared/lib/classes";
-import { getCustomColorClasses } from "@/shared/lib/custom-colors";
+import { EmptyState } from "@/shared/components/ui/empty-state";
 
 import type { CustomColor } from "@/db/schema/shared";
 import { quickNotesByHubIdQueryOptions } from "../lib/quick-notes-query-options";
@@ -48,65 +45,54 @@ export const NoteCardList = ({ hubId, hubColor }: NoteCardListProps) => {
   );
   const hasNotes = !!notes?.length;
 
-  const colorClasses = getCustomColorClasses(hubColor);
   return (
-    <div className="flex flex-col  gap-3 relative">
+    <div className="w-full @container">
       <AnimatePresence mode="popLayout" initial={false}>
         {isLoading ? (
-          Array.from({ length: 4 }).map((_, index) => (
-            <m.div
-              key={`skeleton-${index}`}
-              custom={index}
-              variants={cardVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              className="will-change-transform origin-top"
-            >
-              <SkeletonNoteCard />
-            </m.div>
-          ))
+          <div className="columns-1 @lg:columns-2 @4xl:columns-3  gap-3 space-y-3">
+            {Array.from({ length: 4 }).map((_, index) => (
+              <m.div
+                key={`skeleton-${index}`}
+                custom={index}
+                variants={cardVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                className="will-change-transform origin-top break-inside-avoid mb-4"
+              >
+                <SkeletonNoteCard />
+              </m.div>
+            ))}
+          </div>
         ) : hasNotes ? (
-          notes?.map((note, index) => (
-            <m.div
-              layout
-              // layoutId={String(note.clientId || note.id)}
-              key={note.clientId || note.id}
-              custom={index}
-              variants={cardVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              className="will-change-transform origin-top "
-            >
-              <NoteCard note={note} hubColor={hubColor} />
-            </m.div>
-          ))
+          <div className="columns-1 @lg:columns-2 @4xl:columns-3  gap-3">
+            {notes?.map((note, index) => (
+              <m.div
+                layout
+                key={note.clientId || note.id}
+                custom={index}
+                variants={cardVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                className="will-change-transform origin-top mb-3 inline-block w-full"
+              >
+                <NoteCard note={note} hubColor={hubColor} />
+              </m.div>
+            ))}
+          </div>
         ) : (
           <m.div
             variants={cardVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
-            className=" bg-overlay border  shadow-sm dark:bg-overlay-highlight rounded-lg h-auto flex flex-col items-center py-8 px-4 text-center"
           >
-            <div
-              className={cn(
-                "w-12 h-12 mb-3 rounded-full flex items-center justify-center",
-                colorClasses.bg,
-                "bg-opacity-20 dark:bg-opacity-30",
-              )}
-            >
-              <HugeiconsIcon
-                icon={NoteIcon}
-                size={24}
-                className={colorClasses.text}
-              />
-            </div>
-            <p className="font-medium mb-1">No notes in this hub</p>
-            <p className="text-muted-fg text-xs mb-4">
-              Create your first note to get started
-            </p>
+            <EmptyState
+              title="No notes yet"
+              description="Create your first note to get started"
+              className="min-h-0 p-4"
+            />
           </m.div>
         )}
       </AnimatePresence>

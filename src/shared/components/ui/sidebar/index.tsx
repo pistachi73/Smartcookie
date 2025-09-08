@@ -474,7 +474,7 @@ const SidebarLabel = ({ className, ref, ...props }: SidebarLabelProps) => {
 
 const nav = tv({
   base: [
-    "isolate flex h-[3.2rem] items-center justify-between gap-x-2 px-4 text-navbar-fg sm:justify-start md:w-full",
+    "isolate flex h-[3.2rem] items-center justify-between gap-x-2 px-4 sm:px-6 text-navbar-fg sm:justify-start md:w-full",
     "group-has-data-[sidebar-intent=default]/sidebar-root:border-b group-has-data-[sidebar-intent=fleet]/sidebar-root:border-b group-has-data-[sidebar-intent=default]/sidebar-root:bg-overlay",
   ],
   variants: {

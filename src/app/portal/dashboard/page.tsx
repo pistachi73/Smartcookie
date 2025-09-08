@@ -1,28 +1,28 @@
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from "@tanstack/react-query";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
-import { getNextSession, getWeeklyHours } from "@/data-access/sessions/queries";
+import { getQueryClient } from "@/shared/lib/get-query-client";
+
 import { Dashboard } from "@/features/dashboard/components";
 import { getWeeklyHoursQueryOptions } from "@/features/dashboard/hooks/hook-options";
 import { getNextSessionQueryOptions } from "@/features/dashboard/lib/get-next-session-query-options";
 
 const DashboardPage = async () => {
-  const queryClient = new QueryClient();
+  const queryClient = getQueryClient();
   const now = new Date();
 
-  const [nextSession, weeklyHours] = await Promise.all([
-    getNextSession(),
-    getWeeklyHours({ date: now.toISOString() }),
-  ]);
+  // const [nextSession, weeklyHours] = await Promise.all([
+  //   getNextSession(),
+  //   getWeeklyHours({ date: now.toISOString() }),
+  // ]);
 
-  queryClient.setQueryData(getNextSessionQueryOptions().queryKey, nextSession);
-  queryClient.setQueryData(
-    getWeeklyHoursQueryOptions(now.toISOString()).queryKey,
-    weeklyHours,
-  );
+  // queryClient.setQueryData(getNextSessionQueryOptions().queryKey, nextSession);
+  // queryClient.setQueryData(
+  //   getWeeklyHoursQueryOptions(now.toISOString()).queryKey,
+  //   weeklyHours,
+  // );
+
+  void queryClient.prefetchQuery(getNextSessionQueryOptions());
+  void queryClient.prefetchQuery(getWeeklyHoursQueryOptions(now.toISOString()));
 
   const dehydratedState = dehydrate(queryClient);
 

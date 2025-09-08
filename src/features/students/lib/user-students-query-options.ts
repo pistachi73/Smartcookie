@@ -6,9 +6,14 @@ import {
   getStudentById,
 } from "@/data-access/students/queries";
 import type { GetPaginatedUserStudentsSchema } from "@/data-access/students/schemas";
+import { STUDENTS_PAGE_SIZE } from "../components";
 
 export const getPaginatedUserStudentsQueryOptions = (
-  params: z.infer<typeof GetPaginatedUserStudentsSchema>,
+  params: z.infer<typeof GetPaginatedUserStudentsSchema> = {
+    page: 1,
+    pageSize: STUDENTS_PAGE_SIZE,
+    q: "",
+  },
 ) => {
   return queryOptions({
     queryKey: ["user-students", params],

@@ -8,7 +8,7 @@ export const SkeletonNoteCard = ({ className }: SkeletonNoteCardProps) => {
   return (
     <div
       className={cn(
-        "w-full p-3 rounded-lg border border-border-skeleton bg-card shadow-sm",
+        "w-full p-3 rounded-lg border border-border-skeleton bg-card shadow-xs break-inside-avoid",
         className,
       )}
     >
@@ -20,7 +20,7 @@ export const SkeletonNoteCard = ({ className }: SkeletonNoteCardProps) => {
 
       {/* Footer skeleton - just date */}
       <div className="mt-4">
-        <div className="h-4 w-1/4 bg-muted rounded animate-pulse" />
+        <div className="h-3 w-1/4 bg-muted rounded animate-pulse" />
       </div>
     </div>
   );

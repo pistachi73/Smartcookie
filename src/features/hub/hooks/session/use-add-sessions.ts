@@ -19,7 +19,7 @@ export const useAddSessions = ({
   onSuccess?: () => void;
 } = {}) => {
   const queryClient = useQueryClient();
-  const { data: hubs } = useQuery(getHubsByUserIdQueryOptions(queryClient));
+  const { data: hubs } = useQuery(getHubsByUserIdQueryOptions);
   const cacheManager = getCalendarCacheManager();
 
   return useProtectedMutation({
@@ -75,7 +75,7 @@ export const useAddSessions = ({
     },
     onSuccess: (realSessions, variables, context) => {
       // 🚀 Replace optimistic sessions with real data
-      console.log("realSessions", realSessions);
+
       if (
         context?.optimisticSessions &&
         realSessions &&

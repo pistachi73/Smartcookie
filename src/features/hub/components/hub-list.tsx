@@ -12,7 +12,7 @@ import {
   SortingAZ02Icon,
   SortingZA01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useCallback, useMemo, useState } from "react";
 import { Link } from "react-aria-components";
 
@@ -34,10 +34,7 @@ type SortOption = {
 };
 
 export function HubList() {
-  const queryClient = useQueryClient();
-  const { data: hubs } = useSuspenseQuery(
-    getHubsByUserIdQueryOptions(queryClient),
-  );
+  const { data: hubs } = useSuspenseQuery(getHubsByUserIdQueryOptions);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption["key"]>("name");
 
@@ -111,7 +108,7 @@ export function HubList() {
             onChange={(value) => setSearchQuery(value)}
             className={{
               primitive: "flex-1 @2xl:flex-none",
-              fieldGroup: "bg-overlay",
+              fieldGroup: "bg-overlay h-10",
             }}
           />
 

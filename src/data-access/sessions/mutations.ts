@@ -3,10 +3,10 @@
 import { endOfDay, startOfDay } from "date-fns";
 import { and, between, eq, inArray, notInArray } from "drizzle-orm";
 
+import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { hub, type InsertSession, session, studentHub } from "@/db/schema";
 import { addAttendance } from "../attendance/mutations";
-import { withProtectedDataAccess } from "../with-protected-data-access";
 import {
   AddSessionsSchema,
   CheckSessionConflictsSchema,
