@@ -2,7 +2,7 @@
 
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
-  Calendar03Icon as Calendar03IconSolid,
+  Calendar01Icon as Calendar01IconSolid,
   FolderLibraryIcon as FolderLibraryIconSolid,
   HealtcareIcon as HealtcareIconSolid,
   Layout04Icon as Layout04IconSolid,
@@ -10,7 +10,7 @@ import {
   UserGroupIcon as UserGroupIconSolid,
 } from "@hugeicons-pro/core-solid-rounded";
 import {
-  Calendar03Icon,
+  Calendar01Icon,
   FolderLibraryIcon,
   HealtcareIcon,
   Layout04Icon,
@@ -128,8 +128,8 @@ const navigation = [
   {
     label: "Calendar",
     href: "/portal/calendar",
-    icon: Calendar03Icon,
-    iconActive: Calendar03IconSolid,
+    icon: Calendar01Icon,
+    iconActive: Calendar01IconSolid,
   },
   {
     label: "Hubs",

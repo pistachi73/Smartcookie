@@ -28,6 +28,9 @@ export const addSessions = withProtectedDataAccess({
       const [addedSessions, hubStudents] = await Promise.all([
         trx.insert(session).values(toAddSessions).returning({
           id: session.id,
+          startTime: session.startTime,
+          endTime: session.endTime,
+          status: session.status,
         }),
         trx
           .select({
@@ -202,11 +205,15 @@ export const updateSession = withProtectedDataAccess({
 export const deleteSession = withProtectedDataAccess({
   schema: DeleteSessionsSchema,
   callback: async (data, user) => {
-    await db
-      .delete(session)
-      .where(
-        and(inArray(session.id, data.sessionIds), eq(session.userId, user.id)),
-      );
+    await db.delete(session).where(
+      and(
+        inArray(
+          session.id,
+          data.sessions.map((s) => s.id),
+        ),
+        eq(session.userId, user.id),
+      ),
+    );
 
     return { success: true };
   },

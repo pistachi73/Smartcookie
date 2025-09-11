@@ -20,7 +20,7 @@ export const HubHeader = ({ hubName }: { hubName?: string }) => {
           {hubName}
         </Heading>
       ) : (
-        <Skeleton className="h-8 w-64" soft={false} />
+        <Skeleton className="h-7 sm:h-8 w-64" soft={false} />
       )}
     </div>
   );

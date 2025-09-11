@@ -86,6 +86,14 @@ const mockTextAnswers = [
   { id: 3, value: "Excellent support team", additionalComment: null },
 ];
 
+const waitForQuestionDetailsRendered = async (hasResponse: boolean) => {
+  if (hasResponse) {
+    await screen.findByText("Total Responses");
+  } else {
+    await screen.findByText("No responses found");
+  }
+};
+
 describe("QuestionDetails", () => {
   const mockPush = vi.fn();
   const questionId = 1;
@@ -233,7 +241,9 @@ describe("QuestionDetails", () => {
     it("navigates to edit page when edit is clicked", async () => {
       render(<QuestionDetails questionId={questionId} />);
 
-      const menuButton = screen.getByRole("button", { name: "" });
+      const menuButton = await screen.findByTestId(
+        "question-details-menu-trigger",
+      );
       fireEvent.click(menuButton);
 
       const editMenuItem = screen.getByText("Edit");
@@ -247,13 +257,16 @@ describe("QuestionDetails", () => {
     it("opens delete modal when delete is clicked", async () => {
       render(<QuestionDetails questionId={questionId} />);
 
-      const menuButton = screen.getByRole("button", { name: "" });
+      const menuButton = await screen.findByTestId(
+        "question-details-menu-trigger",
+      );
+
       fireEvent.click(menuButton);
 
-      const deleteMenuItem = screen.getByText("Delete");
+      const deleteMenuItem = await screen.findByText("Delete");
       fireEvent.click(deleteMenuItem);
 
-      await waitFor(() => {
+      await waitFor(async () => {
         expect(screen.getByTestId("delete-modal")).toBeInTheDocument();
         expect(
           screen.getByText("Delete modal for How would you rate our service?"),
@@ -263,13 +276,14 @@ describe("QuestionDetails", () => {
   });
 
   describe("Answer Type Rendering", () => {
-    it("renders rating answers for rating questions", () => {
+    it("renders rating answers for rating questions", async () => {
       vi.mocked(useQueries).mockReturnValue([
         { data: { ...mockQuestion, type: "rating" }, isLoading: false },
         { data: mockRatingAnswers, isPending: false },
       ] as any);
 
       render(<QuestionDetails questionId={questionId} />);
+      await waitForQuestionDetailsRendered(true);
 
       // Check for rating-specific elements
       expect(screen.getByText("5 responses")).toBeInTheDocument();
@@ -284,13 +298,14 @@ describe("QuestionDetails", () => {
       expect(screen.getAllByText("(20%)")).toHaveLength(2); // Ratings 4 and 3 each have 20%
     });
 
-    it("renders boolean answers for boolean questions", () => {
+    it("renders boolean answers for boolean questions", async () => {
       vi.mocked(useQueries).mockReturnValue([
         { data: { ...mockQuestion, type: "boolean" }, isLoading: false },
         { data: mockBooleanAnswers, isPending: false },
       ] as any);
 
       render(<QuestionDetails questionId={questionId} />);
+      await waitForQuestionDetailsRendered(true);
 
       // Check for boolean-specific elements - use Total Responses instead of just responses
       expect(screen.getByText("Total Responses")).toBeInTheDocument();
@@ -305,7 +320,7 @@ describe("QuestionDetails", () => {
       expect(screen.getByText("25")).toBeInTheDocument(); // Percentage without %
     });
 
-    it("renders text answers for text questions", () => {
+    it("renders text answers for text questions", async () => {
       vi.mocked(useQueries).mockReturnValue([
         {
           data: { ...mockQuestion, type: "text", totalAnswers: 3 },
@@ -315,6 +330,7 @@ describe("QuestionDetails", () => {
       ] as any);
 
       render(<QuestionDetails questionId={questionId} />);
+      await waitForQuestionDetailsRendered(true);
 
       // Check for text answer content
       expect(screen.getByText("Great service overall")).toBeInTheDocument();
@@ -441,14 +457,14 @@ describe("QuestionDetails", () => {
       expect(applyButton).toBeDisabled();
     });
 
-    it("shows date range picker when filters are open", () => {
+    it("shows date range picker when filters are open", async () => {
       render(<QuestionDetails questionId={questionId} />);
 
       const filtersButton = screen.getByRole("button", { name: /filters/i });
       fireEvent.click(filtersButton);
 
       // Check for date range picker elements - look for the group element
-      expect(screen.getByRole("group")).toBeInTheDocument();
+      expect(await screen.findByRole("group")).toBeInTheDocument();
       // Check for spinbutton elements (date inputs)
       expect(screen.getAllByRole("spinbutton")).toHaveLength(6); // month, day, year for start and end dates
     });

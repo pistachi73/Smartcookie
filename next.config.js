@@ -13,6 +13,22 @@ const config = {
 
   experimental: {
     reactCompiler: true,
+    optimizePackageImports: [
+      "@hugeicons/react",
+      "@hugeicons-pro/core-solid-rounded",
+      "@hugeicons-pro/core-stroke-rounded",
+    ],
+  },
+
+  // Optimize bundle
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+      };
+    }
+    return config;
   },
 
   images: {

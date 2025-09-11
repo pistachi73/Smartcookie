@@ -3,6 +3,8 @@ import { use } from "react";
 
 import { SidebarProvider } from "@/shared/components/ui/sidebar/sidebar-provider";
 
+import { OptimizedCalendarProvider } from "@/features/calendar/providers/optimized-calendar-provider";
+
 export const PortalProviders = ({
   children,
 }: {
@@ -15,6 +17,8 @@ export const PortalProviders = ({
   }
 
   return (
-    <SidebarProvider defaultOpen={defaultOpen}>{children}</SidebarProvider>
+    <SidebarProvider defaultOpen={defaultOpen}>
+      <OptimizedCalendarProvider>{children}</OptimizedCalendarProvider>
+    </SidebarProvider>
   );
 };

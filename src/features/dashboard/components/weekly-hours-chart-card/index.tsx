@@ -1,11 +1,14 @@
 "use client";
 
-import { getLocalTimeZone, today } from "@internationalized/date";
+import {
+  type CalendarDate,
+  getLocalTimeZone,
+  today,
+} from "@internationalized/date";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 
 import { Card } from "@/shared/components/ui/card";
-import { DatePicker } from "@/shared/components/ui/date-picker";
 import { Loader } from "@/shared/components/ui/loader";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { Tooltip } from "@/shared/components/ui/tooltip";
@@ -21,6 +24,15 @@ const DynamicWeeklyHoursChart = dynamic(
         <Loader size="lg" variant="spin" intent="secondary" />
       </div>
     ),
+  },
+);
+
+const LazyDatePicker = dynamic(
+  () =>
+    import("@/shared/components/ui/date-picker").then((mod) => mod.DatePicker),
+  {
+    ssr: false,
+    loading: () => <Skeleton className="h-9 w-40" soft />,
   },
 );
 
@@ -42,8 +54,8 @@ export function WeeklyHoursCard() {
           different hubs.
         </Card.Description>
         <Card.Action>
-          <DatePicker
-            onChange={(value) => value && setDate(value)}
+          <LazyDatePicker
+            onChange={(value) => value && setDate(value as CalendarDate)}
             value={date}
             placement="bottom end"
             className="h-9"

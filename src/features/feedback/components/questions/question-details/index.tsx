@@ -6,9 +6,6 @@ import {
   ArrowLeft02Icon,
   ArrowUpIcon,
   ChartHistogramIcon,
-  Delete02Icon,
-  MessageEdit01Icon,
-  MoreHorizontalIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import {
   type CalendarDate,
@@ -19,15 +16,13 @@ import type { RangeValue } from "@react-types/shared";
 import { useQueries } from "@tanstack/react-query";
 import { format } from "date-fns";
 import * as motion from "motion/react-m";
-import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import { useState } from "react";
 
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
-import { DateRangePicker } from "@/shared/components/ui/date-range-picker";
 import { Heading } from "@/shared/components/ui/heading";
 import { Link } from "@/shared/components/ui/link";
-import { Menu } from "@/shared/components/ui/menu";
 import { Separator } from "@/shared/components/ui/separator";
 import useNavigateWithParams from "@/shared/hooks/use-navigate-with-params";
 import { cn } from "@/shared/lib/classes";
@@ -38,11 +33,67 @@ import {
 } from "@/features/feedback/lib/questions-query-options";
 import { FeedbackLoading } from "../../shared/feedback-loading";
 import { FeedbackNotFound } from "../../shared/feedback-not-found";
-import { DeleteQuestionModal } from "../delete-question-modal";
 import { QuestionTypeBadge } from "../question-type-badge";
-import { QuestionAnswersBoolean } from "./question-answers/question-answers-boolean";
-import { QuestionAnswersRating } from "./question-answers/question-answers-rating";
-import { QuestionAnswersText } from "./question-answers/question-answers-text";
+import { QuestionDetailsMenuTrigger } from "./question-details-menu/question-details-menu-trigger";
+
+// Dynamic imports for answer components - only load when needed
+const QuestionAnswersBoolean = dynamic(
+  () =>
+    import("./question-answers/question-answers-boolean").then((mod) => ({
+      default: mod.QuestionAnswersBoolean,
+    })),
+  {
+    loading: () => <FeedbackLoading title="Loading answers..." />,
+  },
+);
+
+const QuestionAnswersRating = dynamic(
+  () =>
+    import("./question-answers/question-answers-rating").then((mod) => ({
+      default: mod.QuestionAnswersRating,
+    })),
+  {
+    loading: () => <FeedbackLoading title="Loading answers..." />,
+  },
+);
+
+const QuestionAnswersText = dynamic(
+  () =>
+    import("./question-answers/question-answers-text").then((mod) => ({
+      default: mod.QuestionAnswersText,
+    })),
+  {
+    loading: () => <FeedbackLoading title="Loading answers..." />,
+  },
+);
+
+// Dynamic import for delete modal - only load when needed
+const DeleteQuestionModal = dynamic(
+  () =>
+    import("../delete-question-modal").then((mod) => ({
+      default: mod.DeleteQuestionModal,
+    })),
+  {
+    ssr: false, // Modal doesn't need SSR
+  },
+);
+
+const DateRangePicker = dynamic(() =>
+  import("@/shared/components/ui/date-range-picker").then((mod) => ({
+    default: mod.DateRangePicker,
+  })),
+);
+
+const QuestionDetailsMenu = dynamic(
+  () =>
+    import("./question-details-menu").then((mod) => ({
+      default: mod.QuestionDetailsMenu,
+    })),
+  {
+    ssr: false,
+    loading: () => <QuestionDetailsMenuTrigger isLazyLoading />,
+  },
+);
 
 type QuestionDetailsProps = {
   questionId: number;
@@ -58,7 +109,6 @@ export const getInitialDateRange = (): RangeValue<CalendarDate> => {
 };
 
 export const QuestionDetails = ({ questionId }: QuestionDetailsProps) => {
-  const router = useRouter();
   const { createHrefWithParams } = useNavigateWithParams();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [dateRange, setDateRange] = useState<RangeValue<CalendarDate>>(
@@ -158,38 +208,10 @@ export const QuestionDetails = ({ questionId }: QuestionDetailsProps) => {
                   </p>
                 )}
               </div>
-
-              <Menu>
-                <Button intent="outline" size="sq-sm" className={"shrink-0"}>
-                  <HugeiconsIcon
-                    icon={MoreHorizontalIcon}
-                    size={18}
-                    data-slot="icon"
-                  />
-                </Button>
-                <Menu.Content placement="bottom end">
-                  <Menu.Item
-                    onAction={() => {
-                      router.push(editHref);
-                    }}
-                  >
-                    <HugeiconsIcon
-                      icon={MessageEdit01Icon}
-                      size={16}
-                      data-slot="icon"
-                    />
-                    Edit
-                  </Menu.Item>
-                  <Menu.Item isDanger onAction={() => setShowDeleteModal(true)}>
-                    <HugeiconsIcon
-                      icon={Delete02Icon}
-                      size={16}
-                      data-slot="icon"
-                    />
-                    Delete
-                  </Menu.Item>
-                </Menu.Content>
-              </Menu>
+              <QuestionDetailsMenu
+                editHref={editHref}
+                setShowDeleteModal={setShowDeleteModal}
+              />
             </div>
             <div className="flex items-center gap-3">
               <QuestionTypeBadge label type={question.type} />
@@ -285,7 +307,7 @@ export const QuestionDetails = ({ questionId }: QuestionDetailsProps) => {
                           value={dateRange}
                           onChange={(value) => {
                             if (value) {
-                              setDateRange(value);
+                              setDateRange(value as RangeValue<CalendarDate>);
                             }
                           }}
                           maxValue={today(getLocalTimeZone()).add({ days: 1 })}

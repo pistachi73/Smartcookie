@@ -96,6 +96,9 @@ export const UpdateSessionFormModal = ({
   }, [form.watch, resetConflicts]);
 
   const onSubmit = async (data: z.infer<typeof UpdateSessionFormSchema>) => {
+    const firtyField = form.formState.dirtyFields;
+    const hasUpdatedTime = firtyField.startTime || firtyField.endTime;
+
     const startDate = new Date(
       data.date.year,
       data.date.month - 1,
@@ -122,7 +125,7 @@ export const UpdateSessionFormModal = ({
       },
     };
 
-    if (!conflictsData) {
+    if (!conflictsData && hasUpdatedTime) {
       const { success } = await checkSessionConflicts({
         sessions: [sessionToUpdate],
         excludedSessionIds: [session.id],

@@ -8,21 +8,16 @@ import {
 import {
   ArrowLeft02Icon,
   BubbleChatQuestionIcon,
-  Delete02Icon,
-  MessageEdit01Icon,
-  MoreHorizontalIcon,
-  Rocket01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import { useQueries } from "@tanstack/react-query";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { Badge } from "@/shared/components/ui/badge";
-import { Button } from "@/shared/components/ui/button";
 import { Card } from "@/shared/components/ui/card";
 import { Heading } from "@/shared/components/ui/heading";
 import { Link } from "@/shared/components/ui/link";
-import { Menu } from "@/shared/components/ui/menu";
 import useNavigateWithParams from "@/shared/hooks/use-navigate-with-params";
 
 import { surveyTemplateByIdQueryOptions } from "@/features/feedback/lib/survey-template-query-options";
@@ -30,10 +25,39 @@ import { surveyTemplateResponsesQueryOptions } from "../../lib/survey-template-r
 import { DataCard } from "../questions/question-details/question-answers/shared-cards";
 import { FeedbackLoading } from "../shared/feedback-loading";
 import { FeedbackNotFound } from "../shared/feedback-not-found";
-import { DeleteSurveyTemplateModal } from "./delete-survey-template-modal";
-import { InitSurveyFromFeedbackSheet } from "./init-survey-from-feedback-sheet";
+import { SurveyTemplateDetailsMenuTrigger } from "./survey-template-details-menu/survey-template-details-menu-trigger";
 import { SurveyTemplateResponses } from "./survey-template-responses";
 import { TemplateQuestion } from "./template-question";
+
+const InitSurveyFromFeedbackSheet = dynamic(
+  () =>
+    import("./init-survey-from-feedback-sheet").then((mod) => ({
+      default: mod.InitSurveyFromFeedbackSheet,
+    })),
+  {
+    ssr: false,
+  },
+);
+const DeleteSurveyTemplateModal = dynamic(
+  () =>
+    import("./delete-survey-template-modal").then((mod) => ({
+      default: mod.DeleteSurveyTemplateModal,
+    })),
+  {
+    ssr: false,
+  },
+);
+
+const SurveyTemplateDetailsMenu = dynamic(
+  () =>
+    import("./survey-template-details-menu").then((mod) => ({
+      default: mod.SurveyTemplateDetailsMenu,
+    })),
+  {
+    ssr: false,
+    loading: () => <SurveyTemplateDetailsMenuTrigger isLazyLoading />,
+  },
+);
 
 type SurveyTemplateDetailsProps = {
   surveyTemplateId: number;
@@ -148,54 +172,11 @@ export const SurveyTemplateDetails = ({
                   </p>
                 )}
               </div>
-
-              <Menu>
-                <Button intent="outline" size="sq-sm">
-                  <HugeiconsIcon
-                    icon={MoreHorizontalIcon}
-                    size={18}
-                    data-slot="icon"
-                  />
-                </Button>
-                <Menu.Content
-                  placement="bottom end"
-                  popover={{ showArrow: true }}
-                >
-                  <Menu.Item
-                    onAction={() => {
-                      setShowInitSurveySheet(true);
-                    }}
-                  >
-                    <HugeiconsIcon
-                      icon={Rocket01Icon}
-                      size={16}
-                      data-slot="icon"
-                    />
-                    Initiate Survey
-                  </Menu.Item>
-                  <Menu.Separator />
-                  <Menu.Item
-                    onAction={() => {
-                      router.push(editHref);
-                    }}
-                  >
-                    <HugeiconsIcon
-                      icon={MessageEdit01Icon}
-                      size={16}
-                      data-slot="icon"
-                    />
-                    Edit Template
-                  </Menu.Item>
-                  <Menu.Item isDanger onAction={() => setShowDeleteModal(true)}>
-                    <HugeiconsIcon
-                      icon={Delete02Icon}
-                      size={16}
-                      data-slot="icon"
-                    />
-                    Delete Template
-                  </Menu.Item>
-                </Menu.Content>
-              </Menu>
+              <SurveyTemplateDetailsMenu
+                editHref={editHref}
+                setShowInitSurveySheet={setShowInitSurveySheet}
+                setShowDeleteModal={setShowDeleteModal}
+              />
             </div>
           </div>
           <div className="flex items-center gap-3">

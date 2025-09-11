@@ -44,12 +44,16 @@ export const getPaginatedSessionsByHubIdQueryOptions = (hubId: number) =>
     queryKey: ["hub-infinite-sessions", hubId],
     queryFn: async ({ pageParam }) => {
       const [cursor, direction] = pageParam;
-      return getPaginatedSessionsByHubId({
+      console.log({ cursor, direction });
+      const res = await getPaginatedSessionsByHubId({
         hubId,
         cursor,
         limit: 10,
         direction,
       });
+
+      console.log({ res });
+      return res;
     },
     initialPageParam: [undefined, "next"] as PageParam,
     getNextPageParam: (lastPage) => {

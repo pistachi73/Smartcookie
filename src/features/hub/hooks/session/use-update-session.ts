@@ -11,6 +11,7 @@ import { updateSession } from "@/data-access/sessions/mutations";
 import { UpdateSessionSchema } from "@/data-access/sessions/schemas";
 import { useOptimizedCalendar } from "@/features/calendar/providers/optimized-calendar-provider";
 import type { LayoutCalendarSession } from "@/features/calendar/types/calendar.types";
+import { getPaginatedSessionsByHubIdQueryOptions } from "../../lib/hub-sessions-query-options";
 
 export const useUpdateSession = () => {
   const queryClient = useQueryClient();
@@ -20,14 +21,6 @@ export const useUpdateSession = () => {
     schema: UpdateSessionSchema,
     mutationFn: updateSession,
     onMutate: async (variables) => {
-      // Invalidate hub-specific queries
-      queryClient.invalidateQueries({
-        queryKey: ["hub-sessions", variables.hubId],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["hub-students", variables.hubId],
-      });
-
       const { originalStartTime, startTime, endTime, status } = variables.data;
       const timezone = getLocalTimeZone();
 
@@ -39,49 +32,58 @@ export const useUpdateSession = () => {
         .toZonedDateTimeISO(timezone)
         .toPlainDate();
 
+      console.log({ cacheManager });
       // Get original session from cache to preserve other properties
       const originalSessions = cacheManager.getDaySessions(originalDate);
       const originalSession = originalSessions.find(
         (session) => session.id === variables.sessionId,
       );
 
-      if (!originalSession) {
-        throw new Error("Session not found in cache");
+      if (originalSession) {
+        const updatedSession: LayoutCalendarSession = {
+          ...originalSession,
+          startTime,
+          endTime,
+          status: status || originalSession.status,
+          students: originalSession.students,
+        };
+
+        cacheManager.optimisticUpdate(originalDate, "delete", originalSession);
+        cacheManager.optimisticUpdate(newDate, "create", updatedSession);
+
+        return {
+          originalSession,
+          originalDate,
+          newDate,
+          updatedSession,
+        };
       }
 
-      // Create updated session with new values
-      const updatedSession: LayoutCalendarSession = {
-        ...originalSession,
-        startTime,
-        endTime,
-        status: status || originalSession.status,
-        students: originalSession.students,
-      };
-
-      // 🚀 OPTIMISTIC UPDATE: Remove from original date
-      cacheManager.optimisticUpdate(originalDate, "delete", originalSession);
-
-      // 🚀 OPTIMISTIC UPDATE: Add to new date (could be same date)
-      cacheManager.optimisticUpdate(newDate, "create", updatedSession);
-
       return {
-        originalSession,
         originalDate,
         newDate,
-        updatedSession,
+        originalSession: null,
+        updatedSession: null,
       };
     },
-    onSuccess: async () => {
+    onSuccess: async (_, variables) => {
+      const paginatedSessionsQueryKey = getPaginatedSessionsByHubIdQueryOptions(
+        variables.hubId,
+      ).queryKey;
+
+      queryClient.invalidateQueries({
+        queryKey: paginatedSessionsQueryKey,
+      });
       toast.success("Session updated successfully");
     },
     onError: (_, __, context) => {
+      console.error(_);
       toast.error("Failed to update session");
 
-      // 🚀 Rollback optimistic updates
-      if (context) {
-        const { originalSession, originalDate, newDate, updatedSession } =
-          context;
+      const { originalSession, originalDate, newDate, updatedSession } =
+        context ?? {};
 
+      if (originalSession && originalDate && newDate && updatedSession) {
         // Remove failed optimistic session from new date
         cacheManager.optimisticUpdate(newDate, "delete", updatedSession);
 

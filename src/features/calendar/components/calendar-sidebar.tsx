@@ -54,9 +54,7 @@ export const CalendarSidebar = () => {
           />
         </ResizablePanelRoot>
       </div>
-      {/* <div className="p-4 border-b w-full">
-          <SessionsForDate />
-        </div> */}
+
       <div className="p-4 w-full overflow-y-auto h-full bg-white">
         <UpcomingSessions />
       </div>

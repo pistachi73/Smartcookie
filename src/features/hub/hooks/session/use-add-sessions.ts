@@ -12,6 +12,7 @@ import { AddSessionsSchema } from "@/data-access/sessions/schemas";
 import { getCalendarCacheManager } from "@/features/calendar/lib/calendar-cache";
 import type { LayoutCalendarSession } from "@/features/calendar/types/calendar.types";
 import { getHubsByUserIdQueryOptions } from "../../lib/hub-query-options";
+import { getPaginatedSessionsByHubIdQueryOptions } from "../../lib/hub-sessions-query-options";
 
 export const useAddSessions = ({
   onSuccess,
@@ -26,14 +27,6 @@ export const useAddSessions = ({
     schema: AddSessionsSchema,
     mutationFn: addSessions,
     onMutate: async (variables) => {
-      // Invalidate hub-specific queries
-      queryClient.invalidateQueries({
-        queryKey: ["hub-sessions", variables.hubId],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["hub-students", variables.hubId],
-      });
-
       const timezone = getLocalTimeZone();
       const optimisticSessions: LayoutCalendarSession[] = [];
 
@@ -106,12 +99,14 @@ export const useAddSessions = ({
         });
       }
 
+      const paginatedSessionsQueryKey = getPaginatedSessionsByHubIdQueryOptions(
+        variables.hubId,
+      ).queryKey;
+
       queryClient.invalidateQueries({
-        queryKey: ["hub-sessions", variables.hubId],
+        queryKey: paginatedSessionsQueryKey,
       });
-      queryClient.invalidateQueries({
-        queryKey: ["hub-students", variables.hubId],
-      });
+
       toast.success("Session added successfully");
       onSuccess?.();
     },

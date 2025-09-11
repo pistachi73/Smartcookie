@@ -1,20 +1,12 @@
-"use client";
-
-import { HugeiconsIcon } from "@hugeicons/react";
-import {
-  ArrowDown01Icon,
-  CalendarSetting02Icon,
-} from "@hugeicons-pro/core-stroke-rounded";
 import { SelectValue } from "react-aria-components";
 import { useShallow } from "zustand/react/shallow";
 
-import { Button } from "@/shared/components/ui/button";
 import { Select } from "@/shared/components/ui/select";
-import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
 import { cn } from "@/shared/lib/utils";
 
 import { useCalendarStore } from "@/features/calendar/providers/calendar-store-provider";
 import type { CalendarView } from "@/features/calendar/types/calendar.types";
+import { ViewSelectorTrigger } from "./view-selector-trigger";
 
 export const ViewSelector = () => {
   const { calendarView, setCalendarView } = useCalendarStore(
@@ -23,8 +15,6 @@ export const ViewSelector = () => {
       setCalendarView: store.setCalendarView,
     })),
   );
-  const { down } = useViewport();
-  const isMobile = down("sm");
 
   return (
     <Select
@@ -35,25 +25,10 @@ export const ViewSelector = () => {
       }}
       className="w-fit"
     >
-      <Button
-        size={isMobile ? "sq-md" : "md"}
-        intent={isMobile ? "plain" : "outline"}
-        className={cn(isMobile && "size-9")}
-      >
-        {isMobile ? (
-          <HugeiconsIcon icon={CalendarSetting02Icon} size={18} />
-        ) : (
-          <>
-            <SelectValue />
-            <HugeiconsIcon
-              icon={ArrowDown01Icon}
-              aria-hidden
-              data-slot="icon"
-              className="size-4 shrink-0 text-muted-fg duration-300 group-data-open:rotate-180 group-data-open:text-fg"
-            />
-          </>
-        )}
-      </Button>
+      <ViewSelectorTrigger>
+        <SelectValue />
+      </ViewSelectorTrigger>
+
       <Select.List
         popover={{
           placement: "bottom right",

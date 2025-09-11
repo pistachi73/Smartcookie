@@ -195,20 +195,6 @@ export function Hero() {
           lessons, and boosts motivation. A second brain to teach smarter.
         </p>
 
-        {/* <div className="mt-6 flex flex-row items-center justify-center gap-2">
-          <Button intent="primary" size="lg" className="group h-13 px-8">
-            Get Started
-            <HugeiconsIcon
-              icon={ArrowRight02Icon}
-              size={20}
-              className="shrink-0 group-hover:translate-x-1 transition-transform"
-            />
-          </Button>
-          <Button intent="secondary" size="lg" className="h-13 px-8">
-            Learn More
-          </Button>
-        </div> */}
-
         <EmailMarketingForm />
       </div>
     </MaxWidthWrapper>
@@ -270,7 +256,7 @@ export const EmailMarketingForm = () => {
         isPending={isPending}
         className="group h-13 w-full sm:w-auto max-w-[400px] sm:max-w-none gap-6 text-base"
       >
-        {isPending ? "Sending..." : "Get a Demo"}
+        Discover SmartCookie
         {isPending ? (
           <ProgressCircle isIndeterminate className="size-5" />
         ) : (

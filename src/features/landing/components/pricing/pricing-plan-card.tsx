@@ -74,7 +74,7 @@ export const PremiumPlanCard = ({
             className="w-full justify-between px-6 h-13 group bg-linear-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl transition-all duration-200"
             size="lg"
           >
-            Get Started
+            Comming soon
             <HugeiconsIcon
               icon={ArrowRight02Icon}
               size={20}
@@ -156,7 +156,7 @@ export const FreePlanCard = ({
             className="w-full justify-between px-6 h-13 group"
             size="lg"
           >
-            Start Fere Trial
+            Comming soon
             <HugeiconsIcon
               icon={ArrowRight02Icon}
               size={20}

@@ -10,17 +10,6 @@ const DashboardPage = async () => {
   const queryClient = getQueryClient();
   const now = new Date();
 
-  // const [nextSession, weeklyHours] = await Promise.all([
-  //   getNextSession(),
-  //   getWeeklyHours({ date: now.toISOString() }),
-  // ]);
-
-  // queryClient.setQueryData(getNextSessionQueryOptions().queryKey, nextSession);
-  // queryClient.setQueryData(
-  //   getWeeklyHoursQueryOptions(now.toISOString()).queryKey,
-  //   weeklyHours,
-  // );
-
   void queryClient.prefetchQuery(getNextSessionQueryOptions());
   void queryClient.prefetchQuery(getWeeklyHoursQueryOptions(now.toISOString()));
 

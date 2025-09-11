@@ -41,7 +41,7 @@ export const SurveyTemplateResponses = ({
     );
   }
 
-  if (!surveyTemplateResponses?.responses.length) {
+  if (!surveyTemplateResponses?.responses?.length) {
     return (
       <section className="space-y-4">
         <div className="flex items-center gap-2">

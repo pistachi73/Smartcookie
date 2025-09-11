@@ -14,7 +14,7 @@ export function SkeletonWeeklyHoursChartCard() {
           different hubs.
         </Card.Description>
         <Card.Action>
-          <Skeleton className="h-9 w-20" />
+          <Skeleton className="h-9 w-40" soft />
         </Card.Action>
       </Card.Header>
       <Card.Content className="space-y-4">
