@@ -8,7 +8,6 @@ import { I18nProvider, RouterProvider } from "react-aria-components";
 
 import { getQueryClient } from "@/shared/lib/get-query-client";
 
-import { OptimizedCalendarProvider } from "@/features/calendar/providers/optimized-calendar-provider";
 import { ThemeProvider } from "./theme-provider";
 
 const loadFeatures = () =>
@@ -34,9 +33,7 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
             disableTransitionOnChange
             defaultTheme="light"
           >
-            <LazyMotion features={loadFeatures}>
-              <OptimizedCalendarProvider>{children}</OptimizedCalendarProvider>
-            </LazyMotion>
+            <LazyMotion features={loadFeatures}>{children}</LazyMotion>
           </ThemeProvider>
         </I18nProvider>
       </RouterProvider>

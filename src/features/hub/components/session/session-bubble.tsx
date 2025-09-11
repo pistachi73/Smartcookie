@@ -47,7 +47,9 @@ type SessionBubbleProps = {
 export const SessionBubble = ({ session, className }: SessionBubbleProps) => {
   const isEditing = useSessionStore((store) => store.isEditingMode);
   const isSelected = useSessionStore((store) =>
-    store.selectedSessions.includes(session.id),
+    store.selectedSessions.some(
+      (selectedSession) => selectedSession.id === session.id,
+    ),
   );
   const handleSessionSelection = useSessionStore(
     (store) => store.toggleSessionSelection,
@@ -70,9 +72,13 @@ export const SessionBubble = ({ session, className }: SessionBubbleProps) => {
         }}
         className={cn(className, "relative h-fit")}
         isSelected={isSelected}
-        onChange={(isSelected) =>
-          handleSessionSelection?.(sessionId, isSelected)
-        }
+        onChange={(isSelected) => {
+          console.log({ id: sessionId, startTime: session.startTime });
+          handleSessionSelection?.(
+            { id: sessionId, startTime: session.startTime },
+            isSelected,
+          );
+        }}
       >
         {({ isSelected, isFocusVisible }) => (
           <div

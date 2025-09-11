@@ -1,6 +1,7 @@
 import { HugeiconsIcon } from "@hugeicons/react";
 import { AddIcon } from "@hugeicons-pro/core-stroke-rounded";
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import * as m from "motion/react-m";
 
 import { Heading } from "@/ui/heading";
 import { cn } from "@/shared/lib/classes";
@@ -29,8 +30,8 @@ export const HubNotesStack = ({ hubId }: HubNotesStackProps) => {
   const colorClasses = getCustomColorClasses(hub.color as CustomColor);
 
   return (
-    <div id="hub-notes-stack" className="space-y-3">
-      <div className=" flex items-center justify-between b">
+    <m.div layout id="hub-notes-stack" className="space-y-3">
+      <m.div layout className=" flex items-center justify-between b">
         <div className="w-full flex items-center gap-4 justify-between @xl:justify-start">
           <Heading
             level={3}
@@ -52,9 +53,9 @@ export const HubNotesStack = ({ hubId }: HubNotesStackProps) => {
             <HugeiconsIcon icon={AddIcon} size={16} data-slot="icon" />
           </AddNoteCard>
         </div>
-      </div>
+      </m.div>
 
       <NoteCardList hubId={hub.id} hubColor={hub.color} />
-    </div>
+    </m.div>
   );
 };

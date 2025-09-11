@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import { useRef } from "react";
 import { useDrop } from "react-aria";
 import type { Temporal } from "temporal-polyfill";
@@ -8,9 +9,29 @@ import { useOptimizedDaySessions } from "@/features/calendar/hooks/use-optimized
 import { getSnapToNearest15MinutesIndex } from "@/features/calendar/lib/utils";
 import { useCalendarDragDropStore } from "@/features/calendar/store/calendar-drag-drop-store";
 import { useUpdateSession } from "@/features/hub/hooks/session/use-update-session";
-import { DayViewPreviewSession, DayViewSession } from "./day-view-session";
-import { DragToCreateSession } from "./drag-to-create-session";
-import { HourMarker } from "./hour-marker";
+import { DayViewPreviewSession } from "./day-view-session";
+
+const DayViewSession = dynamic(
+  () => import("./day-view-session").then((mod) => mod.DayViewSession),
+  {
+    ssr: false,
+  },
+);
+
+const DragToCreateSession = dynamic(
+  () =>
+    import("./drag-to-create-session").then((mod) => mod.DragToCreateSession),
+  {
+    ssr: false,
+  },
+);
+
+const HourMarker = dynamic(
+  () => import("./hour-marker").then((mod) => mod.HourMarker),
+  {
+    ssr: false,
+  },
+);
 
 export const DayColumn = ({ date }: { date: Temporal.PlainDate }) => {
   const columnRef = useRef<HTMLDivElement>(null);

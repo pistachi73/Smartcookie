@@ -5,18 +5,12 @@ import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 
 import { createQuickNote } from "@/data-access/quick-notes/mutations";
 import { CreateQuickNoteSchema } from "@/data-access/quick-notes/schemas";
+import { quickNotesByHubIdQueryOptions } from "../lib/quick-notes-query-options";
 import type { NoteSummary } from "../types/quick-notes.types";
 
 export type UseAddQuickNoteProps = {
   cleanFocusRegisterOnAdd?: boolean;
 };
-
-interface MutationContext {
-  previousData: NoteSummary[] | undefined;
-  optimisticId: number;
-  clientId: string;
-  hubId: number;
-}
 
 // Create a global registry for notes that need focus
 export const noteFocusRegistry = {
@@ -49,18 +43,14 @@ export const useAddQuickNote = (options?: UseAddQuickNoteProps) => {
   return useProtectedMutation({
     schema: CreateQuickNoteSchema,
     mutationFn: createQuickNote,
-    onMutate: async (newNote): Promise<MutationContext> => {
+    onMutate: async (newNote) => {
       // Cancel any outgoing refetches for the specific hub
       const hubId = newNote.hubId;
-      await queryClient.cancelQueries({ queryKey: ["hub-notes", hubId] });
+      const hubNotesQueryKey = quickNotesByHubIdQueryOptions(hubId).queryKey;
+      await queryClient.cancelQueries({ queryKey: hubNotesQueryKey });
 
-      // Snapshot the previous value
-      const previousData = queryClient.getQueryData<NoteSummary[]>([
-        "hub-notes",
-        hubId,
-      ]);
+      const previousData = queryClient.getQueryData(hubNotesQueryKey);
 
-      // Create an optimistic note with a temporary ID and a clientId for animation stability
       const optimisticId = -Date.now(); // Use negative number to avoid collisions
       const clientId = `client-${Date.now()}`; // Stable ID for animations
 
@@ -80,19 +70,18 @@ export const useAddQuickNote = (options?: UseAddQuickNoteProps) => {
       // Register this note for focus before updating the cache
       noteFocusRegistry.register(clientId);
 
-      // Optimistically update the hub-specific cache
-      queryClient.setQueryData<NoteSummary[]>(["hub-notes", hubId], (old) => {
+      queryClient.setQueryData(hubNotesQueryKey, (old) => {
         if (!old) return [optimisticNote];
         return [optimisticNote, ...old];
       });
 
-      return { previousData, optimisticId, clientId, hubId };
+      return { previousData, optimisticId, clientId, hubId, hubNotesQueryKey };
     },
     onError: (err, _, context) => {
-      // Revert the optimistic update
-      if (context?.hubId !== undefined) {
-        queryClient.setQueryData<NoteSummary[]>(
-          ["hub-notes", context.hubId],
+      console.log("onError", err.message);
+      if (context?.hubNotesQueryKey !== undefined) {
+        queryClient.setQueryData(
+          context.hubNotesQueryKey,
           context.previousData,
         );
       }
@@ -102,11 +91,10 @@ export const useAddQuickNote = (options?: UseAddQuickNoteProps) => {
     onSuccess: (response, _, context) => {
       if (!response || !context) return;
 
-      const { hubId, optimisticId, clientId } = context;
+      const { optimisticId, clientId, hubNotesQueryKey } = context;
       const newNote = response;
 
-      // Replace the optimistic note with the real one
-      queryClient.setQueryData<NoteSummary[]>(["hub-notes", hubId], (old) => {
+      queryClient.setQueryData(hubNotesQueryKey, (old) => {
         if (!old) return old;
 
         return old.map((note) => {

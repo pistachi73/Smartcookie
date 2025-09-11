@@ -380,10 +380,12 @@ describe("SurveyTemplateDetails", () => {
   });
 
   describe("Menu Actions", () => {
-    it("renders menu with all action items", () => {
+    it("renders menu with all action items", async () => {
       render(<SurveyTemplateDetails {...defaultProps} />);
 
-      const menuButton = screen.getByRole("button"); // Menu trigger button
+      const menuButton = await screen.findByTestId(
+        "survey-template-details-menu-trigger",
+      ); // Menu trigger button
       fireEvent.click(menuButton);
 
       const menuItems = ["Initiate Survey", "Edit Template", "Delete Template"];
@@ -392,10 +394,12 @@ describe("SurveyTemplateDetails", () => {
       });
     });
 
-    it("navigates to edit page when edit template is clicked", () => {
+    it("navigates to edit page when edit template is clicked", async () => {
       render(<SurveyTemplateDetails {...defaultProps} />);
 
-      const menuButton = screen.getByRole("button");
+      const menuButton = await screen.findByTestId(
+        "survey-template-details-menu-trigger",
+      );
       fireEvent.click(menuButton);
 
       const editButton = screen.getByText("Edit Template");

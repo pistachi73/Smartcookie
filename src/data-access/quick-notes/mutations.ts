@@ -17,15 +17,13 @@ export const createQuickNote = withProtectedDataAccess({
   callback: async ({ hubId, content, updatedAt }, user) => {
     const actualHubId = hubId === 0 ? null : hubId;
 
-    const newNote = await db
-      .insert(quickNote)
-      .values({
-        content,
-        hubId: actualHubId,
-        updatedAt,
-        userId: user.id,
-      })
-      .returning();
+    const data = {
+      content,
+      hubId: actualHubId,
+      updatedAt,
+      userId: user.id,
+    };
+    const newNote = await db.insert(quickNote).values(data).returning();
 
     return newNote[0];
   },

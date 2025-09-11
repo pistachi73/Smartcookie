@@ -140,6 +140,7 @@ export function AddSessionsForm({
             >
               <ComboBox.Input
                 placeholder={isLoading ? "Loading hubs..." : "Select a hub"}
+                className="h-10"
               />
               <ComboBox.List items={hubOptions}>
                 {(item) => (

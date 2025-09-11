@@ -123,8 +123,6 @@ export const getHubOverviewSessions = withProtectedDataAccess({
       }),
     ]);
 
-    console.log(pastSession);
-
     return [...(pastSession ? [pastSession] : []), ...futureSessions];
   },
 });
@@ -182,6 +180,8 @@ export const getPaginatedSessionsByHubId = withProtectedDataAccess({
       .where(whereClause)
       .orderBy(...orderBy)
       .limit(limit + 1);
+
+    console.log({ l: rawSessions.length, rawSessions });
 
     // Check if there are more pages
     const hasMore = rawSessions.length > limit;

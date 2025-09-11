@@ -40,9 +40,7 @@ export const AttendanceBar = ({
       </div>
       <div
         role="presentation"
-        className={cn(
-          "w-full h-2.5 rounded-full bg-overlay-highlight relative",
-        )}
+        className={cn("w-full h-2.5 rounded-full bg-muted relative")}
       >
         <div
           className={cn(

@@ -1,9 +1,9 @@
 import {
   Calendar01Icon as Calendar01IconSolid,
   CreditCardIcon as CreditCardIconSolid,
-  DashboardSquare01Icon as DashboardSquare01IconSolid,
   FolderLibraryIcon as FolderLibraryIconSolid,
   HealtcareIcon as HealtcareIconSolid,
+  Layout04Icon as Layout04IconSolid,
   NoteIcon as NoteIconSolid,
   User02Icon as User02IconSolid,
   UserGroupIcon as UserGroupIconSolid,
@@ -11,9 +11,9 @@ import {
 import {
   Calendar01Icon,
   CreditCardIcon,
-  DashboardSquare01Icon,
   FolderLibraryIcon,
   HealtcareIcon,
+  Layout04Icon,
   NoteIcon,
   User02Icon,
   UserGroupIcon,
@@ -39,8 +39,8 @@ export const breadcrumbConfig: RouteBreadcrumbConfig = {
     {
       label: "Dashboard",
       href: "/portal/dashboard",
-      icon: DashboardSquare01Icon,
-      iconSolid: DashboardSquare01IconSolid,
+      icon: Layout04Icon,
+      iconSolid: Layout04IconSolid,
     },
   ],
   "/portal/feedback": [

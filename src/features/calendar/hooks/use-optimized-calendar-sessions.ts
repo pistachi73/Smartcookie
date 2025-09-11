@@ -98,9 +98,7 @@ export const useOptimizedCalendarSessions = (
   const queryClient = useQueryClient();
 
   // Initialize cache manager (singleton)
-  const cacheManager = useMemo(() => {
-    return createCalendarCacheManager(queryClient, cacheConfig);
-  }, [queryClient, cacheConfig]);
+  const cacheManager = createCalendarCacheManager(queryClient, cacheConfig);
 
   // Create stable query key
   const queryKey = useMemo(

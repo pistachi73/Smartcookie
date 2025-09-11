@@ -1,7 +1,7 @@
-import { CreateHubMultistepForm } from "@/features/hub/components/create-hub-multistep-form";
+import { CreateHubForm } from "@/features/hub/components/create-hub-form";
 
 const NewHubPage = () => {
-  return <CreateHubMultistepForm />;
+  return <CreateHubForm />;
 };
 
 export default NewHubPage;

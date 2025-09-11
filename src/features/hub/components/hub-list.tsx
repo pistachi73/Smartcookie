@@ -46,7 +46,6 @@ export function HubList() {
   ];
 
   const filteredAndSortedHubs = useMemo(() => {
-    console.log("hubs", hubs);
     if (!hubs) return [];
 
     // Filter hubs based on search query

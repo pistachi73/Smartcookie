@@ -1,7 +1,5 @@
 "use client";
 
-import { memo } from "react";
-
 import { cn } from "@/shared/lib/classes";
 
 import { useCalendarStore } from "@/features/calendar/providers/calendar-store-provider";
@@ -9,7 +7,7 @@ import { AgendaView } from "./views/agenda-view/agenda-view";
 import { DayView } from "./views/day-view/day-view";
 import { MonthView } from "./views/month-view/month-view";
 
-export const CalendarView = memo(() => {
+export const CalendarView = () => {
   const calendarView = useCalendarStore((state) => state.calendarView);
 
   return (
@@ -29,4 +27,4 @@ export const CalendarView = memo(() => {
       </div>
     </div>
   );
-});
+};

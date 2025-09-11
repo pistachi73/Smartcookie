@@ -36,7 +36,7 @@ export const UpdateSessionSchema = z.object({
 });
 
 export const DeleteSessionsSchema = z.object({
-  sessionIds: z.array(z.number()),
+  sessions: z.array(z.object({ id: z.number(), startTime: z.string() })),
 });
 
 export const CheckSessionConflictsSchema = AddSessionsSchema.pick({

@@ -22,7 +22,7 @@ export const FeedbackLoading = ({
         isIndeterminate
         aria-label={title}
       />
-      <p className="text-sm text-muted-fg animate-pulse">{title}</p>
+      <p className="text-sm text-muted-fg ">{title}</p>
     </div>
   );
 };

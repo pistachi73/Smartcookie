@@ -26,17 +26,17 @@ export const useSessionStore = create<SessionStore>((set) => ({
       return { isEditingMode: isEditing };
     }),
 
-  toggleSessionSelection: (sessionId, isSelected) =>
+  toggleSessionSelection: ({ id, startTime }, isSelected) =>
     set((state) => {
       if (isSelected) {
         return {
-          selectedSessions: [...state.selectedSessions, sessionId],
+          selectedSessions: [...state.selectedSessions, { id, startTime }],
         };
       }
 
       return {
         selectedSessions: state.selectedSessions.filter(
-          (id) => id !== sessionId,
+          (selectedSession) => selectedSession.id !== id,
         ),
       };
     }),

@@ -1,28 +1,72 @@
 "use client";
 
-import { HugeiconsIcon } from "@hugeicons/react";
-import {
-  AddIcon,
-  Folder01Icon,
-  NoteAddIcon,
-} from "@hugeicons-pro/core-stroke-rounded";
+import { Folder01Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import dynamic from "next/dynamic";
 import { useState } from "react";
 
-import { Card } from "@/shared/components/ui/card";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import { Tabs } from "@/shared/components/ui/tabs";
 import { cn } from "@/shared/lib/classes";
 
-import { AddNoteCard } from "@/features/quick-notes/components/add-note-card";
-import { NoteCardList } from "@/features/quick-notes/components/note-card-list";
 import { TABS } from "../lib/constants";
 import { getHubByIdQueryOptions } from "../lib/hub-query-options";
-import { CourseFeedback } from "./feedback";
+import { HubFeedbackLoading } from "./feedback/hub-feedback-loading";
 import { HubDashboardLayout } from "./hub-dashboard-layout";
-import { HubPanelHeader } from "./hub-panel-header";
-import { SessionsList } from "./session/session-list";
-import { Students } from "./students/students";
+import { HubNotesPanelLoading } from "./notes/hub-notes-panel-loading";
+import { HubNotesCardLoading } from "./notes/hub-notest-card-loading";
+import { HubSessionsLoading } from "./session/hub-sessions-loading";
+import { HubStudentsLoading } from "./students/hub-students-loading";
+
+const LazySessionsList = dynamic(
+  () =>
+    import("./session/session-list").then((mod) => ({
+      default: mod.SessionsList,
+    })),
+  {
+    ssr: false,
+    loading: HubSessionsLoading,
+  },
+);
+
+const LazyStudents = dynamic(
+  () =>
+    import("./students/students").then((mod) => ({ default: mod.Students })),
+  {
+    ssr: false,
+    loading: HubStudentsLoading,
+  },
+);
+
+const LazyCourseFeedback = dynamic(
+  () => import("./feedback").then((mod) => ({ default: mod.CourseFeedback })),
+  {
+    ssr: false,
+    loading: HubFeedbackLoading,
+  },
+);
+
+const LazyHubNotesCard = dynamic(
+  () =>
+    import("./notes/hub-notes-card").then((mod) => ({
+      default: mod.HubNotesCard,
+    })),
+  {
+    ssr: false,
+    loading: HubNotesCardLoading,
+  },
+);
+
+const LazyHubNotesPanel = dynamic(
+  () =>
+    import("./notes/hub-notes-panel").then((mod) => ({
+      default: mod.HubNotesPanel,
+    })),
+  {
+    ssr: false,
+    loading: HubNotesPanelLoading,
+  },
+);
 
 type Tab = (typeof TABS)[number]["id"];
 
@@ -83,47 +127,22 @@ export function HubDashboard({ hubId }: { hubId: number }) {
             </Tabs.List>
 
             <Tabs.Panel id="sessions" className={"px-4 sm:px-6"}>
-              <SessionsList hubId={hubId} />
+              <LazySessionsList hubId={hubId} />
             </Tabs.Panel>
             <Tabs.Panel id="students" className={"px-4 sm:px-6"}>
-              <Students hubId={hubId} />
+              <LazyStudents hubId={hubId} />
             </Tabs.Panel>
             <Tabs.Panel id="feedback" className={"px-4 sm:px-6"}>
-              <CourseFeedback hubId={hubId} />
+              <LazyCourseFeedback hubId={hubId} />
             </Tabs.Panel>
             <Tabs.Panel id="quick-notes" className={"px-4 sm:px-6 lg:hidden"}>
-              <HubPanelHeader
-                title="Quick Notes"
-                actions={
-                  <AddNoteCard
-                    hubId={hubId}
-                    className={"w-full sm:w-fit"}
-                    size="sm"
-                    intent="primary"
-                  >
-                    <HugeiconsIcon icon={NoteAddIcon} size={16} />
-                    Add note
-                  </AddNoteCard>
-                }
-              />
-              <NoteCardList hubId={Number(hubId)} hubColor={hub.color} />
+              <LazyHubNotesPanel hubId={hubId} hubColor={hub.color} />
             </Tabs.Panel>
           </Tabs>
         </div>
-        <Card className="w-full lg:w-[350px] hidden lg:flex">
-          <Card.Header>
-            <Card.Title>Quick Notes</Card.Title>
-            <Card.Description>View the course notes</Card.Description>
-            <Card.Action>
-              <AddNoteCard hubId={hubId} intent="outline" size="sq-sm">
-                <HugeiconsIcon icon={AddIcon} size={16} />
-              </AddNoteCard>
-            </Card.Action>
-          </Card.Header>
-          <Card.Content>
-            <NoteCardList hubId={Number(hubId)} hubColor={hub.color} />
-          </Card.Content>
-        </Card>
+        <div className="w-full lg:w-[350px] hidden lg:flex">
+          <LazyHubNotesCard hubId={hubId} hubColor={hub.color} />
+        </div>
       </div>
     </HubDashboardLayout>
   );

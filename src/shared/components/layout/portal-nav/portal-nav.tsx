@@ -3,7 +3,6 @@
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Diamond02Icon, Search01Icon } from "@hugeicons-pro/core-solid-rounded";
 import { Notification01Icon } from "@hugeicons-pro/core-stroke-rounded";
-import { useEffect, useState } from "react";
 
 import { Breadcrumbs } from "@/shared/components/ui/breadcrumbs";
 import { useCurrentUser } from "@/shared/hooks/use-current-user";
@@ -31,18 +30,16 @@ export const PortalNav = ({
   showSearchField = false,
   breadcrumbs,
 }: PortalNavProps) => {
-  const [lastUrl, setLastUrl] = useState<string | null>(null);
   const { down } = useViewport();
   const isMobile = down("md");
   const user = useCurrentUser();
 
-  useEffect(() => {
-    setLastUrl(document.referrer);
-  }, []);
-
   return (
     <SidebarNav
-      className={cn(" h-14 sticky shrink-0 top-0 z-20 bg-white", className)}
+      className={cn(
+        " h-14 sticky shrink-0 top-0 z-20 bg-white border-b",
+        className,
+      )}
     >
       <div className="flex items-center justify-between w-full h-full gap-8">
         {isMobile && <SidebarTrigger />}
@@ -109,11 +106,11 @@ export const PortalNav = ({
           {!user?.hasActiveSubscription && (
             <ExplorePremiumModal>
               <Button
-                className={cn("shrink-0")}
+                className={cn("shrink-0 aspect-square md:aspect-auto")}
                 size={isMobile ? "sq-md" : "md"}
               >
                 <HugeiconsIcon icon={Diamond02Icon} data-slot="icon" />
-                {isMobile ? "" : "Explore premium"}
+                <span className="hidden md:inline">Explore premium</span>
               </Button>
             </ExplorePremiumModal>
           )}

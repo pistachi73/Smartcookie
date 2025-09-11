@@ -1,3 +1,4 @@
+import { getLocalTimeZone } from "@internationalized/date";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Temporal } from "temporal-polyfill";
@@ -8,6 +9,7 @@ import { deleteSession } from "@/data-access/sessions/mutations";
 import { DeleteSessionsSchema } from "@/data-access/sessions/schemas";
 import { getCalendarCacheManager } from "@/features/calendar/lib/calendar-cache";
 import type { LayoutCalendarSession } from "@/features/calendar/types/calendar.types";
+import { getPaginatedSessionsByHubIdQueryOptions } from "../../lib/hub-sessions-query-options";
 
 export const useDeleteSession = ({ hubId }: { hubId: number }) => {
   const queryClient = useQueryClient();
@@ -17,55 +19,31 @@ export const useDeleteSession = ({ hubId }: { hubId: number }) => {
     schema: DeleteSessionsSchema,
     mutationFn: deleteSession,
     onMutate: async (variables) => {
-      // Invalidate hub-specific queries
-      queryClient.invalidateQueries({
-        queryKey: ["hub-sessions", hubId],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["hub-students", hubId],
-      });
-
-      // For each session ID to delete, find and remove optimistically
+      // For each session to delete, use the start time to find the exact date
       const sessionsToDelete: {
         session: LayoutCalendarSession;
         date: Temporal.PlainDate;
       }[] = [];
 
-      // We need to iterate through sessions to find them by ID
-      // Since we don't know which dates they're on, we'll have to search
-      for (const sessionId of variables.sessionIds) {
-        // Search through cache to find the session
-        let foundSession: LayoutCalendarSession | undefined;
-        let foundDate: Temporal.PlainDate | undefined;
+      for (const sessionToDelete of variables.sessions) {
+        // Parse the start time to get the date directly
+        const sessionDate = Temporal.Instant.from(sessionToDelete.startTime)
+          .toZonedDateTimeISO(getLocalTimeZone())
+          .toPlainDate();
 
-        // We'll search a reasonable date range (current month ± 2 months)
-        const today = Temporal.Now.plainDateISO();
-        const searchStart = today.subtract({ months: 2 });
-        const searchEnd = today.add({ months: 2 });
+        // Get sessions for this specific date
+        const daySessions = cacheManager.getDaySessions(sessionDate);
+        const foundSession = daySessions.find(
+          (s) => s.id === sessionToDelete.id,
+        );
 
-        for (
-          let date = searchStart;
-          Temporal.PlainDate.compare(date, searchEnd) <= 0;
-          date = date.add({ days: 1 })
-        ) {
-          const daySessions = cacheManager.getDaySessions(date);
-          const session = daySessions.find((s) => s.id === sessionId);
-
-          if (session) {
-            foundSession = session;
-            foundDate = date;
-            break;
-          }
-        }
-
-        if (foundSession && foundDate) {
+        if (foundSession) {
           sessionsToDelete.push({
             session: foundSession,
-            date: foundDate,
+            date: sessionDate,
           });
 
-          // 🚀 OPTIMISTIC UPDATE: Remove from cache immediately
-          cacheManager.optimisticUpdate(foundDate, "delete", foundSession);
+          cacheManager.optimisticUpdate(sessionDate, "delete", foundSession);
         }
       }
 
@@ -74,30 +52,23 @@ export const useDeleteSession = ({ hubId }: { hubId: number }) => {
       };
     },
     onSuccess: () => {
+      const paginatedSessionsQueryKey =
+        getPaginatedSessionsByHubIdQueryOptions(hubId).queryKey;
+
       queryClient.invalidateQueries({
-        queryKey: ["hub-sessions", hubId],
+        queryKey: paginatedSessionsQueryKey,
       });
-      queryClient.invalidateQueries({
-        queryKey: ["hub-students", hubId],
-      });
+
       toast.success("Sessions deleted successfully");
     },
-    onError: (error, _, context) => {
-      // 🚀 Rollback optimistic deletes
+    onError: (_, __, context) => {
       if (context?.sessionsToDelete) {
         context.sessionsToDelete.forEach(({ session, date }) => {
-          // Restore deleted sessions back to cache
           cacheManager.optimisticUpdate(date, "create", session);
         });
       }
 
-      if (error instanceof Error) {
-        toast.error(error.message);
-      } else {
-        toast.error("Failed to delete sessions");
-      }
-
-      console.error("Delete sessions failed, rolled back:", error);
+      toast.error("Failed to delete sessions");
     },
   });
 };

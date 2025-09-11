@@ -1,6 +1,7 @@
 "use client";
 
 import { Calendar03Icon } from "@hugeicons-pro/core-solid-rounded";
+import dynamic from "next/dynamic";
 import { useShallow } from "zustand/react/shallow";
 
 import { PageHeader } from "@/shared/components/layout/page-header";
@@ -12,7 +13,15 @@ import { AddSessionButton } from "./add-session-button";
 import { NavigationButtons } from "./navigation-buttons";
 import { SidebarToggle } from "./sidebar-toggle";
 import { TodayButton } from "./today-button";
-import { ViewSelector } from "./view-selector";
+import { ViewSelectorTrigger } from "./view-selector/view-selector-trigger";
+
+const ViewSelector = dynamic(
+  () => import("./view-selector").then((mod) => mod.ViewSelector),
+  {
+    ssr: false,
+    loading: () => <ViewSelectorTrigger />,
+  },
+);
 
 export const CalendarPageHeader = () => {
   const { selectedDate, calendarView, setIsCreateSessionModalOpen } =
@@ -24,14 +33,13 @@ export const CalendarPageHeader = () => {
       })),
     );
 
-  const { down, currentViewport } = useViewport();
+  const { down } = useViewport();
   const { title } = useCalendarHeaderTitle({
     selectedDate,
     calendarView: calendarView === "weekday" ? "week" : calendarView,
   });
 
   const isMobile = down("sm");
-  console.log({ currentViewport, isMobile });
 
   const actions = isMobile ? (
     // Mobile order: Navigation Buttons, View Selector, Today, Sidebar Toggle, Add Session

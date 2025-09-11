@@ -3,13 +3,10 @@
 import dynamic from "next/dynamic";
 import { useShallow } from "zustand/react/shallow";
 
-import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
+import { ProgressCircle } from "@/shared/components/ui/progress-circle";
 
 import { useCalendarStore } from "@/features/calendar/providers/calendar-store-provider";
-import { useOptimizedCalendarSessions } from "../hooks/use-optimized-calendar-sessions";
 import { CalendarPageHeader } from "./calendar-page-header";
-import { CalendarSidebar } from "./calendar-sidebar";
-import { CalendarView } from "./calendar-view";
 
 const DynamicAddSessionsFormModal = dynamic(
   () =>
@@ -21,42 +18,43 @@ const DynamicAddSessionsFormModal = dynamic(
   },
 );
 
+const MainCalendar = dynamic(
+  () => import("./main").then((mod) => mod.MainCalendar),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-full w-full flex-col gap-4  bg-white flex items-center justify-center">
+        <ProgressCircle
+          isIndeterminate
+          className="size-16 text-primary"
+          strokeWidth={2.5}
+        />
+        <p className="block text-sm font-medium text-muted-fg">
+          Loading calendar...
+        </p>
+      </div>
+    ),
+  },
+);
+
 export const Calendar = () => {
-  // Initialize the optimized calendar system
-  const { up } = useViewport();
   const {
-    sidebarOpen,
-    calendarView,
-    selectedDate,
     isCreateSessionModalOpen,
     defaultSessionFormData,
     setIsCreateSessionModalOpen,
   } = useCalendarStore(
     useShallow((store) => ({
-      sidebarOpen: store.sidebarOpen,
-      calendarView: store.calendarView,
-      selectedDate: store.selectedDate,
       isCreateSessionModalOpen: store.isCreateSessionModalOpen,
       defaultSessionFormData: store.defaultSessionFormData,
       setIsCreateSessionModalOpen: store.setIsCreateSessionModalOpen,
     })),
   );
 
-  useOptimizedCalendarSessions({
-    viewType: calendarView,
-    date: selectedDate,
-  });
-
-  const showSidebarViewport = up("lg");
-
   return (
     <>
       <div className="min-h-0 h-full flex flex-col bg-bg">
         <CalendarPageHeader />
-        <div className="h-full min-h-0 flex-1 flex bg-overlay">
-          <CalendarView />
-          {sidebarOpen && showSidebarViewport && <CalendarSidebar />}
-        </div>
+        <MainCalendar />
       </div>
       <DynamicAddSessionsFormModal
         isOpen={isCreateSessionModalOpen}

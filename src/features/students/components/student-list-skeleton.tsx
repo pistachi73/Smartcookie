@@ -1,7 +1,10 @@
+"use client";
+
 import { Card } from "@/shared/components/ui/card";
 
-import { StudentsCardLayout, StudentsPageLayout } from ".";
-import { StudentsTableSkeleton } from "./students-table";
+import { StudentsCardLayout } from "./students-card-layout";
+import { StudentsPageLayout } from "./students-page-layout";
+import { StudentsTableSkeleton } from "./students-table/students-table-skeleton";
 
 export const StudentListSkeleton = () => {
   return (

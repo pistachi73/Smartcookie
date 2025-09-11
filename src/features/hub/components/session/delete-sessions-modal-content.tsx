@@ -17,6 +17,9 @@ export function DeleteSessionsModalContent({ hubId }: { hubId: number }) {
   const setIsDeleteModalOpen = useSessionStore(
     (store) => store.setIsDeleteModalOpen,
   );
+  const clearSelectedSessions = useSessionStore(
+    (store) => store.clearSelectedSessions,
+  );
   const { data: sessions } = useSessionsByHubId(hubId);
 
   const { mutateAsync: deleteSessions, isPending } = useDeleteSession({
@@ -24,8 +27,9 @@ export function DeleteSessionsModalContent({ hubId }: { hubId: number }) {
   });
 
   const handleDeleteSessions = async () => {
-    await deleteSessions({ sessionIds: selectedSessions });
+    await deleteSessions({ sessions: selectedSessions });
     setIsDeleteModalOpen(false);
+    clearSelectedSessions();
   };
 
   return (
@@ -40,12 +44,14 @@ export function DeleteSessionsModalContent({ hubId }: { hubId: number }) {
         description={`Are you sure you want to delete ${selectedSessions.length} session${selectedSessions.length > 1 ? "s" : ""}? This action cannot be undone.`}
       />
       <Modal.Body className="space-y-1 max-h-[300px] overflow-y-auto">
-        {selectedSessions.map((sessionId) => {
-          const session = sessions?.find((session) => session.id === sessionId);
+        {selectedSessions.map((selectedSession) => {
+          const session = sessions?.find(
+            (session) => session.id === selectedSession.id,
+          );
           if (!session) return null;
           return (
             <div
-              key={`${sessionId}-${session.startTime}`}
+              key={`${selectedSession.id}-${session.startTime}`}
               className="flex items-center gap-3 text-sm p-2 border rounded-lg tabular-nums"
             >
               <span className="font-medium tabular-nums w-22">
