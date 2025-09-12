@@ -8,11 +8,7 @@ import {
 } from "@/shared/lib/testing/query-client-utils";
 import { act, renderHook, waitFor } from "@/shared/lib/testing/test-utils";
 
-import {
-  noteFocusRegistry,
-  type UseAddQuickNoteProps,
-  useAddQuickNote,
-} from "../use-add-quick-note";
+import { useAddQuickNote } from "../use-add-quick-note";
 
 vi.mock("sonner", () => ({
   toast: {
@@ -53,11 +49,8 @@ vi.mock("@/data-access/quick-notes/mutations", () => ({
   createQuickNote: mocks.createQuickNote,
 }));
 
-const renderHookWithQueryClient = (
-  queryClient: QueryClient,
-  hookProps?: UseAddQuickNoteProps,
-) => {
-  return renderHook(() => useAddQuickNote(hookProps), {
+const renderHookWithQueryClient = (queryClient: QueryClient) => {
+  return renderHook(() => useAddQuickNote(), {
     wrapper: createQueryClientWrapper(queryClient),
   });
 };
@@ -79,7 +72,6 @@ describe("useAddQuickNote", () => {
 
   afterEach(() => {
     vi.clearAllMocks();
-    noteFocusRegistry.clean();
   });
 
   it("should add a new note and handle optimistic updates", async () => {
@@ -98,62 +90,6 @@ describe("useAddQuickNote", () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(result.current.data).toEqual(mockQuickNoteReturn);
-  });
-
-  it("should register client ID for focus", async () => {
-    noteFocusRegistry.clean();
-
-    const { result } = renderHookWithQueryClient(queryClient);
-
-    const newNote = {
-      content: "Focus Test Note",
-      hubId: 456,
-      updatedAt: "2023-01-03T00:00:00Z",
-    };
-
-    expect(noteFocusRegistry.pendingFocus.size).toBe(0);
-
-    await act(async () => {
-      result.current.mutate(newNote);
-    });
-
-    expect(noteFocusRegistry.pendingFocus.size).toBeGreaterThan(0);
-
-    await waitFor(() => expect(result.current.isSuccess).toBe(true));
-
-    const clientId = Array.from(noteFocusRegistry.pendingFocus)[0];
-    expect(clientId).toBeDefined();
-
-    if (clientId) {
-      expect(noteFocusRegistry.shouldFocus(clientId)).toBe(true);
-      expect(noteFocusRegistry.shouldFocus(clientId)).toBe(false);
-    }
-  });
-
-  it("should clean focus registry when cleanFocusRegisterOnAdd is true", async () => {
-    const { result } = renderHookWithQueryClient(queryClient, {
-      cleanFocusRegisterOnAdd: true,
-    });
-
-    const fakeClientId = "fake-client-id";
-    noteFocusRegistry.register(fakeClientId);
-    expect(noteFocusRegistry.pendingFocus.size).toBe(1);
-    expect(noteFocusRegistry.pendingFocus.has(fakeClientId)).toBe(true);
-
-    const newNote = {
-      content: "Clean Test Note",
-      hubId: 789,
-      updatedAt: "2023-01-04T00:00:00Z",
-    };
-
-    await act(async () => {
-      result.current.mutate(newNote);
-    });
-
-    expect(noteFocusRegistry.pendingFocus.size).toBe(1);
-    expect(noteFocusRegistry.pendingFocus.has(fakeClientId)).toBe(false);
-
-    await waitFor(() => expect(result.current.isSuccess).toBe(true));
   });
 
   it("should handle errors and revert optimistic updates", async () => {
@@ -210,12 +146,8 @@ describe("useAddQuickNote", () => {
     vi.mocked(mocks.createQuickNote).mockRejectedValue(
       new Error("Failed to add note"),
     );
-    noteFocusRegistry.clean();
 
     const { result } = renderHookWithQueryClient(queryClient);
-
-    const existingClientId = "existing-client-id";
-    noteFocusRegistry.register(existingClientId);
 
     const errorNote = {
       content: "ERROR_CASE",
@@ -228,9 +160,5 @@ describe("useAddQuickNote", () => {
     });
 
     await waitFor(() => expect(result.current.isError).toBe(true));
-
-    expect(noteFocusRegistry.pendingFocus.has(existingClientId)).toBe(true);
-
-    expect(noteFocusRegistry.pendingFocus.size).toBe(2);
   });
 });

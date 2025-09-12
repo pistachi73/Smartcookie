@@ -1,27 +1,37 @@
-import { type QueryKey, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { z } from "zod";
 
 import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 
 import { updateSessionNote } from "@/data-access/session-notes/mutations";
-import { UpdateSessionNoteSchema } from "@/data-access/session-notes/schemas";
 import { getSessionNotesBySessionIdQueryOptions } from "../../lib/session-notes-query-options";
 import type { ClientSessionNotesMap } from "../../types/session-notes.types";
 
-type OptimisticContext = {
-  sourcePreviousNotes: ClientSessionNotesMap | undefined;
-  targetPreviousNotes: ClientSessionNotesMap | undefined;
-  sourceSessionNotesQueryKey: QueryKey;
-  targetSessionNotesQueryKey: QueryKey;
-};
-
-export function useUpdateSessionNote() {
+export function useUpdateSessionNotePosition() {
   const queryClient = useQueryClient();
 
   return useProtectedMutation({
-    schema: UpdateSessionNoteSchema,
-    mutationFn: updateSessionNote,
-    onMutate: async (variables): Promise<OptimisticContext> => {
+    schema: z.object({
+      noteId: z.number(),
+      source: z.object({
+        sessionId: z.number(),
+        position: z.enum(["plans", "in-class"]),
+      }),
+      target: z.object({
+        sessionId: z.number(),
+        position: z.enum(["plans", "in-class"]),
+      }),
+    }),
+    mutationFn: (data) => {
+      return updateSessionNote({
+        noteId: data.noteId,
+        sessionId: data.target.sessionId,
+        position: data.target.position,
+      });
+    },
+
+    onMutate: async (variables) => {
       const sourceQueryKey = getSessionNotesBySessionIdQueryOptions(
         variables.source.sessionId,
       ).queryKey;
@@ -40,26 +50,24 @@ export function useUpdateSessionNote() {
       ]);
 
       // Snapshot the previous values
-      const sourcePreviousNotes =
-        queryClient.getQueryData<ClientSessionNotesMap>(sourceQueryKey);
+      const sourcePreviousNotes = queryClient.getQueryData(sourceQueryKey);
+      const targetPreviousNotes = queryClient.getQueryData(targetQueryKey);
 
-      const targetPreviousNotes =
-        queryClient.getQueryData<ClientSessionNotesMap>(targetQueryKey);
+      console.log({ sourcePreviousNotes, targetPreviousNotes });
 
       // Optimistically update both source and target
       if (sourcePreviousNotes) {
-        queryClient.setQueryData<ClientSessionNotesMap>(
-          sourceQueryKey,
-          (old) => {
-            if (!old) return old;
-            const updatedNotes = { ...old };
-            // Remove the note from the source position
-            updatedNotes[variables.source.position] = old[
-              variables.source.position
-            ].filter((note) => note.id !== variables.noteId);
-            return updatedNotes;
-          },
-        );
+        queryClient.setQueryData(sourceQueryKey, (old) => {
+          if (!old) return old;
+          const updatedNotes = { ...old };
+
+          console.log({ updatedNotes });
+          // Remove the note from the source position
+          updatedNotes[variables.source.position] = old[
+            variables.source.position
+          ].filter((note) => note.id !== variables.noteId);
+          return updatedNotes;
+        });
       }
 
       if (targetPreviousNotes) {

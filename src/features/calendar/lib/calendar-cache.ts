@@ -231,7 +231,7 @@ export class DateRangeCalculator {
       case "agenda":
         baseStart = centerDate;
         baseEnd = centerDate.add({ days: 30 });
-        adjustedPrefetch = Math.min(prefetchDistance, 7); // Only 1 week prefetch
+        adjustedPrefetch = 0; // Only 1 week prefetch
         break;
 
       default:
@@ -392,10 +392,11 @@ export class CalendarCacheManager implements CacheEventEmitter {
     switch (viewType) {
       case "month":
         return 42; // Larger batches for month view
+      case "agenda":
+        return 30; // Larger batches for agenda view
       case "week":
       case "weekday":
       case "day":
-      case "agenda":
         return 7; // Medium batches for week views
       default:
         return this.config.batchSize;

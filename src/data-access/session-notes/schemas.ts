@@ -17,12 +17,12 @@ export const DeleteSessionNoteSchema = z.object({
 
 export const UpdateSessionNoteSchema = z.object({
   noteId: z.number(),
-  source: z.object({
-    sessionId: z.number(),
-    position: z.enum(["plans", "in-class"]),
-  }),
-  target: z.object({
-    sessionId: z.number(),
-    position: z.enum(["plans", "in-class"]),
-  }),
+  sessionId: z.number().optional(),
+  position: z.enum(["plans", "in-class"]).optional(),
+  content: z.string().optional(),
+});
+
+export const UpdateSessionNoteContentSchema = z.object({
+  noteId: z.number(),
+  content: z.string(),
 });

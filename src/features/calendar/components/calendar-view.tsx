@@ -10,6 +10,19 @@ import { MonthView } from "./views/month-view/month-view";
 export const CalendarView = () => {
   const calendarView = useCalendarStore((state) => state.calendarView);
 
+  const getCalendarView = () => {
+    switch (calendarView) {
+      case "day":
+      case "weekday":
+      case "week":
+        return <DayView />;
+      case "month":
+        return <MonthView />;
+      case "agenda":
+        return <AgendaView />;
+    }
+  };
+
   return (
     <div
       className={cn(
@@ -19,11 +32,7 @@ export const CalendarView = () => {
       )}
     >
       <div className="grow overflow-hidden flex flex-col">
-        {calendarView === "day" && <DayView key="day-view" />}
-        {calendarView === "weekday" && <DayView key="weekday-view" />}
-        {calendarView === "week" && <DayView key="week-view" />}
-        {calendarView === "month" && <MonthView key="month-view" />}
-        {calendarView === "agenda" && <AgendaView key="agenda-view" />}
+        {getCalendarView()}
       </div>
     </div>
   );

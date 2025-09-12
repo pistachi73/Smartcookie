@@ -42,14 +42,6 @@ vi.mock("../note-card/skeleton-note-card", () => ({
   ),
 }));
 
-vi.mock("../add-note-card", () => ({
-  AddNoteCard: ({ hubId }: any) => (
-    <button type="button" data-testid={`add-note-${hubId}`}>
-      Add Note
-    </button>
-  ),
-}));
-
 vi.mock("../note-card-list", () => ({
   NoteCardList: ({ hubId, hubColor }: any) => (
     <div data-testid={`note-card-list-${hubId}`} data-hub-color={hubColor}>

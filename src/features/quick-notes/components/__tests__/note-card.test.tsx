@@ -7,7 +7,6 @@ import {
   screen,
 } from "@/shared/lib/testing/test-utils";
 
-import { noteFocusRegistry } from "../../hooks/use-add-quick-note";
 import { useDeleteQuickNote } from "../../hooks/use-delete-quick-note";
 import { useUpdateQuickNote } from "../../hooks/use-update-quick-note";
 import { useQuickNotesStore } from "../../store/quick-notes-store-provider";
@@ -63,8 +62,6 @@ describe("NoteCard", () => {
       edittingHub: null,
       setEdittingHub: mockSetEdittingHub,
     });
-
-    (noteFocusRegistry.shouldFocus as any).mockReturnValue(false);
   });
 
   afterEach(() => {
