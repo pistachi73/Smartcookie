@@ -6,7 +6,7 @@ import { regularSpring } from "@/shared/lib/animation";
 import { cn } from "@/shared/lib/classes";
 
 import type { SessionNotePosition } from "@/db/schema";
-import { useUpdateSessionNote } from "../../../hooks/session-notes/use-update-session-note";
+import { useUpdateSessionNotePosition } from "../../../hooks/session-notes/use-update-session-note-position";
 import type { ClientSessionNote } from "../../../types/session-notes.types";
 export const DroppableSessionNoteColumn = ({
   children,
@@ -17,7 +17,7 @@ export const DroppableSessionNoteColumn = ({
   sessionId: number;
   position: SessionNotePosition;
 }) => {
-  const { mutate: updateSessionNote } = useUpdateSessionNote();
+  const { mutate: updateSessionNote } = useUpdateSessionNotePosition();
   const ref = useRef(null);
   const { dropProps, isDropTarget } = useDrop({
     ref,

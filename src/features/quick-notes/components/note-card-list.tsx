@@ -2,10 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, m } from "motion/react";
 
 import { EmptyState } from "@/shared/components/ui/empty-state";
+import { cn } from "@/shared/lib/utils";
 
 import type { CustomColor } from "@/db/schema/shared";
 import { quickNotesByHubIdQueryOptions } from "../lib/quick-notes-query-options";
 import { NoteCard } from "./note-card";
+import { AddQuickNoteForm } from "./note-card/add-quick-note-form";
 import { SkeletonNoteCard } from "./note-card/skeleton-note-card";
 
 // Animation variants for consistent animations
@@ -37,64 +39,91 @@ const cardVariants = {
 interface NoteCardListProps {
   hubId: number;
   hubColor: CustomColor;
+  isAddingNote: boolean;
+  setIsAddingNote: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export const NoteCardList = ({ hubId, hubColor }: NoteCardListProps) => {
+export const NoteCardList = ({
+  hubId,
+  hubColor,
+  isAddingNote,
+  setIsAddingNote,
+}: NoteCardListProps) => {
   const { data: notes, isLoading } = useQuery(
     quickNotesByHubIdQueryOptions(hubId),
   );
-  const hasNotes = !!notes?.length;
+  const hasNotes = !!notes?.length || isLoading || isAddingNote;
 
   return (
     <div className="w-full @container">
       <AnimatePresence mode="popLayout" initial={false}>
-        {isLoading ? (
-          <div className="columns-1 @lg:columns-2 @4xl:columns-3  gap-3 space-y-3">
-            {Array.from({ length: 4 }).map((_, index) => (
-              <m.div
-                key={`skeleton-${index}`}
-                custom={index}
-                variants={cardVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                className="will-change-transform origin-top break-inside-avoid mb-4"
-              >
-                <SkeletonNoteCard />
-              </m.div>
-            ))}
-          </div>
-        ) : hasNotes ? (
-          <div className="columns-1 @lg:columns-2 @4xl:columns-3  gap-3">
-            {notes?.map((note, index) => (
-              <m.div
-                layout
-                key={note.clientId || note.id}
-                custom={index}
-                variants={cardVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                className="will-change-transform origin-top mb-3 inline-block w-full"
-              >
-                <NoteCard note={note} hubColor={hubColor} />
-              </m.div>
-            ))}
-          </div>
-        ) : (
-          <m.div
-            variants={cardVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-          >
-            <EmptyState
-              title="No notes yet"
-              description="Create your first note to get started"
-              className="min-h-0 p-4"
-            />
-          </m.div>
-        )}
+        <div
+          className={cn(
+            hasNotes &&
+              "columns-1 @lg:columns-2 @4xl:columns-3  gap-3 space-y-3",
+          )}
+        >
+          {isAddingNote && (
+            <m.div
+              layout
+              key="adding-note"
+              variants={cardVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="will-change-transform origin-top mb-3 inline-block w-full"
+            >
+              <AddQuickNoteForm
+                onCancel={() => setIsAddingNote(false)}
+                hubId={hubId}
+              />
+            </m.div>
+          )}
+          {isLoading
+            ? Array.from({ length: 4 }).map((_, index) => (
+                <m.div
+                  key={`skeleton-${index}`}
+                  custom={index}
+                  variants={cardVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  className="will-change-transform origin-top break-inside-avoid mb-4"
+                >
+                  <SkeletonNoteCard />
+                </m.div>
+              ))
+            : notes?.map((note, index) => (
+                <m.div
+                  layout
+                  key={note.clientId || note.id}
+                  custom={index}
+                  variants={cardVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="hidden"
+                  className="will-change-transform origin-top mb-3 inline-block w-full"
+                >
+                  <NoteCard note={note} hubColor={hubColor} />
+                </m.div>
+              ))}
+
+          {!hasNotes && (
+            <m.div
+              layout
+              variants={cardVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
+              <EmptyState
+                title="No notes yet"
+                description="Create your first note to get started"
+                className="min-h-0 p-4"
+              />
+            </m.div>
+          )}
+        </div>
       </AnimatePresence>
     </div>
   );

@@ -2,7 +2,9 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { AddIcon } from "@hugeicons-pro/core-stroke-rounded";
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import * as m from "motion/react-m";
+import { useState } from "react";
 
+import { Button } from "@/shared/components/ui/button";
 import { Heading } from "@/ui/heading";
 import { cn } from "@/shared/lib/classes";
 import { getCustomColorClasses } from "@/shared/lib/custom-colors";
@@ -12,7 +14,6 @@ import {
   quickNotesByHubIdQueryOptions,
   quickNotesHubsQueryOptions,
 } from "@/features/quick-notes/lib/quick-notes-query-options";
-import { AddNoteCard } from "./add-note-card";
 import { NoteCardList } from "./note-card-list";
 
 interface HubNotesStackProps {
@@ -20,6 +21,7 @@ interface HubNotesStackProps {
 }
 
 export const HubNotesStack = ({ hubId }: HubNotesStackProps) => {
+  const [isAddingNote, setIsAddingNote] = useState(false);
   const { data: hubs } = useSuspenseQuery(quickNotesHubsQueryOptions);
   const { data: notes } = useQuery(quickNotesByHubIdQueryOptions(hubId));
 
@@ -49,13 +51,25 @@ export const HubNotesStack = ({ hubId }: HubNotesStackProps) => {
             </span>
           </Heading>
 
-          <AddNoteCard hubId={hub.id} size="sq-xs" className={"text-xs"}>
+          <Button
+            intent="outline"
+            size="sq-xs"
+            className={"text-xs"}
+            onPress={() => setIsAddingNote(true)}
+            isDisabled={isAddingNote}
+            data-testid={`add-note-${hub.id}`}
+          >
             <HugeiconsIcon icon={AddIcon} size={16} data-slot="icon" />
-          </AddNoteCard>
+          </Button>
         </div>
       </m.div>
 
-      <NoteCardList hubId={hub.id} hubColor={hub.color} />
+      <NoteCardList
+        hubId={hub.id}
+        hubColor={hub.color}
+        isAddingNote={isAddingNote}
+        setIsAddingNote={setIsAddingNote}
+      />
     </m.div>
   );
 };

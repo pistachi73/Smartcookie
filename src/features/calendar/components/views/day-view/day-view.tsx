@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { Button } from "react-aria-components";
 import { tv } from "tailwind-variants";
 import { Temporal } from "temporal-polyfill";
@@ -7,6 +8,7 @@ import { Temporal } from "temporal-polyfill";
 import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
 import { cn } from "@/shared/lib/classes";
 
+import { useCurrentTime } from "@/features/calendar/hooks/use-current-time";
 import { useCalendarStore } from "@/features/calendar/providers/calendar-store-provider";
 import { DayColumn } from "./day-column";
 import { HourColumn } from "./hour-column";
@@ -41,9 +43,19 @@ export const DayView = () => {
   const visibleDates = useCalendarStore((store) => store.visibleDates);
   const { down } = useViewport();
   const isMobile = down("sm");
+  const { top: currentTimeTop } = useCurrentTime();
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const is1DayView = visibleDates.length === 1;
   const hideDayHeader = is1DayView && isMobile;
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Just run on mount
+  useEffect(() => {
+    if (scrollContainerRef.current && currentTimeTop !== undefined) {
+      const scrollPosition = Math.max(0, currentTimeTop - 200);
+      scrollContainerRef.current.scrollTop = scrollPosition;
+    }
+  }, []);
 
   return (
     <div className="flex flex-col h-full relative overflow-hidden ">
@@ -86,7 +98,10 @@ export const DayView = () => {
           </div>
         </div>
       )}
-      <div className="relative flex flex-col overflow-y-scroll no-scrollbar">
+      <div
+        ref={scrollContainerRef}
+        className="relative flex flex-col overflow-y-scroll no-scrollbar"
+      >
         <div className="items-stretch flex flex-auto ">
           <HourColumn />
           <div className="ml-1 flex flex-row w-full h-auto relative">

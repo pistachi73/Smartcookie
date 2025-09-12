@@ -1,13 +1,12 @@
 "use client";
 
-import { memo, useEffect, useRef, useState } from "react";
+import { memo, useState } from "react";
 import { TextArea } from "react-aria-components";
 
 import { cn } from "@/shared/lib/classes";
 import { getCustomColorClasses } from "@/shared/lib/custom-colors";
 
 import type { CustomColor } from "@/db/schema/shared";
-import { noteFocusRegistry } from "../../hooks/use-add-quick-note";
 import { useDeleteQuickNote } from "../../hooks/use-delete-quick-note";
 import { useUpdateQuickNote } from "../../hooks/use-update-quick-note";
 import type { NoteSummary } from "../../types/quick-notes.types";
@@ -22,8 +21,6 @@ interface NoteCardProps {
 
 const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
   const [isEditingNote, setIsEditingNote] = useState(false);
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
-  const focusCheckedRef = useRef(false);
 
   const { content, isUnsaved, isSaving, handleContentChange } =
     useUpdateQuickNote({
@@ -38,19 +35,6 @@ const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
     clientId: note.clientId,
     hubId: note.hubId || 0,
   });
-
-  // Check if this note needs focus when it mounts
-  useEffect(() => {
-    if (focusCheckedRef.current || !textAreaRef.current) return;
-    focusCheckedRef.current = true;
-
-    if (note.clientId && noteFocusRegistry.shouldFocus(note.clientId)) {
-      // Use setTimeout to ensure focus happens after render is complete
-      setTimeout(() => {
-        textAreaRef.current?.focus();
-      }, 0);
-    }
-  }, [note.clientId]);
 
   const colorClasses = getCustomColorClasses(hubColor as CustomColor);
 
@@ -94,7 +78,6 @@ const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
       />
 
       <TextArea
-        ref={textAreaRef}
         value={content}
         onFocus={onFocus}
         onBlur={onBlur}

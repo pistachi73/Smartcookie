@@ -50,9 +50,7 @@ export const QuickNotesMenu = () => {
     ...quickNotesHubsQueryOptions,
     enabled: isPopoverOpen,
   });
-  const { mutateAsync: addNoteAsync } = useAddQuickNote({
-    cleanFocusRegisterOnAdd: true,
-  });
+  const { mutateAsync: addNoteAsync } = useAddQuickNote();
 
   const handleCreateNote = () => {
     if (!noteForm.content.trim() || noteForm.hubId === null) return;

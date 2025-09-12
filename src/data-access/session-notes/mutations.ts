@@ -26,24 +26,19 @@ export const addSessionNote = withProtectedDataAccess({
 export const updateSessionNote = withProtectedDataAccess({
   schema: UpdateSessionNoteSchema,
   callback: async (data, user) => {
-    const { noteId, target } = data;
+    const { noteId, ...noteData } = data;
 
     const [updatedNote] = await db
       .update(sessionNote)
-      .set({
-        sessionId: target.sessionId,
-        position: target.position,
-      })
+      .set(noteData)
       .where(and(eq(sessionNote.id, noteId), eq(sessionNote.userId, user.id)))
       .returning({
         id: sessionNote.id,
         sessionId: sessionNote.sessionId,
         position: sessionNote.position,
+        content: sessionNote.content,
+        updatedAt: sessionNote.updatedAt,
       });
-
-    if (!updatedNote) {
-      throw new Error("Failed to update note");
-    }
 
     return updatedNote;
   },

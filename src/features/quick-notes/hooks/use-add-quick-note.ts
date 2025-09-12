@@ -8,37 +8,8 @@ import { CreateQuickNoteSchema } from "@/data-access/quick-notes/schemas";
 import { quickNotesByHubIdQueryOptions } from "../lib/quick-notes-query-options";
 import type { NoteSummary } from "../types/quick-notes.types";
 
-export type UseAddQuickNoteProps = {
-  cleanFocusRegisterOnAdd?: boolean;
-};
-
-// Create a global registry for notes that need focus
-export const noteFocusRegistry = {
-  // Store clientIds that need focus
-  pendingFocus: new Set<string>(),
-
-  // Register a note for focus
-  register(clientId: string) {
-    this.pendingFocus.add(clientId);
-  },
-
-  clean() {
-    this.pendingFocus.clear();
-  },
-
-  // Check if a note needs focus and consume the focus request
-  shouldFocus(clientId: string) {
-    if (this.pendingFocus.has(clientId)) {
-      this.pendingFocus.delete(clientId);
-      return true;
-    }
-    return false;
-  },
-};
-
-export const useAddQuickNote = (options?: UseAddQuickNoteProps) => {
+export const useAddQuickNote = () => {
   const queryClient = useQueryClient();
-  const { cleanFocusRegisterOnAdd = false } = options || {};
 
   return useProtectedMutation({
     schema: CreateQuickNoteSchema,
@@ -62,14 +33,6 @@ export const useAddQuickNote = (options?: UseAddQuickNoteProps) => {
         clientId, // Add clientId for animation stability
       };
 
-      // If the note is being added, clean the focus registry
-      if (cleanFocusRegisterOnAdd) {
-        noteFocusRegistry.clean();
-      }
-
-      // Register this note for focus before updating the cache
-      noteFocusRegistry.register(clientId);
-
       queryClient.setQueryData(hubNotesQueryKey, (old) => {
         if (!old) return [optimisticNote];
         return [optimisticNote, ...old];
@@ -77,15 +40,13 @@ export const useAddQuickNote = (options?: UseAddQuickNoteProps) => {
 
       return { previousData, optimisticId, clientId, hubId, hubNotesQueryKey };
     },
-    onError: (err, _, context) => {
-      console.log("onError", err.message);
+    onError: (_, __, context) => {
       if (context?.hubNotesQueryKey !== undefined) {
         queryClient.setQueryData(
           context.hubNotesQueryKey,
           context.previousData,
         );
       }
-      console.error(err);
       toast.error("Failed to add note");
     },
     onSuccess: (response, _, context) => {
