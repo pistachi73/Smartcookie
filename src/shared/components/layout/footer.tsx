@@ -160,6 +160,8 @@ export const Footer = () => {
                 <LocaleSwitcherSelect intent="plain" size="xs" />
                 <Link
                   href="/privacy-policy"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   intent="primary"
                   className={"font-medium text-sm text-muted-fg"}
                 >
@@ -167,6 +169,8 @@ export const Footer = () => {
                 </Link>
                 <Link
                   href="/terms-of-service"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   intent="primary"
                   className={"font-medium text-sm text-muted-fg"}
                 >
@@ -174,6 +178,8 @@ export const Footer = () => {
                 </Link>
                 <Link
                   href="/cookie-policy"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   intent="primary"
                   className={"font-medium text-sm text-muted-fg"}
                 >
@@ -181,6 +187,8 @@ export const Footer = () => {
                 </Link>
                 <Link
                   href="/accessibility-statement"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   intent="primary"
                   className={"font-medium text-sm text-muted-fg"}
                 >

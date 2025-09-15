@@ -26,7 +26,7 @@ export const useCreateCheckoutSession = ({
         switch (result.type) {
           case "USER_ALREADY_HAS_SUBSCRIPTION":
             onSuccess?.();
-            router.push("/portal/account?t=subscription");
+            router.push("/portal/account/subscription");
             return;
         }
 

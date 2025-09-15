@@ -78,6 +78,13 @@
       "when": 1757879164826,
       "tag": "0010_heavy_bug",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1757956508564,
+      "tag": "0011_exotic_mephistopheles",
+      "breakpoints": true
     }
   ]
 }
