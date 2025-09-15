@@ -28,7 +28,7 @@ export const BasicPricingPlanCard = ({
 
   return (
     <PricingPlanCard
-      title="Professional"
+      title={t("Basic.title")}
       monthlyPrice="10 €"
       annualPrice="8 €"
       featuresHeading={t("Basic.featuresHeading")}

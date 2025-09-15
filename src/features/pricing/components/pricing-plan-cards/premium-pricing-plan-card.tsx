@@ -29,7 +29,7 @@ export const PremiumPricingPlanCard = ({
     useCreateCheckoutSession();
   return (
     <PricingPlanCard
-      title="Premium"
+      title={t("Premium.title")}
       monthlyPrice="20 €"
       annualPrice="16 €"
       description={t("Premium.description")}
