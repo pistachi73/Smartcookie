@@ -46,11 +46,6 @@ export const PlanFrequencySwitch = ({
     }
   }, [paymentFrequency]);
 
-  const paymentFrequencyLabel = t("paymentFrequency", {
-    paymentFrequency: "M",
-  });
-
-  console.log({ paymentFrequencyLabel });
   return (
     <div className="relative flex items-center justify-center p-0.5 bg-muted rounded-full gap-0.5 w-fit">
       {/* Blob that matches active button dimensions */}
