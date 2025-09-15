@@ -76,11 +76,10 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} dir={"ltr"} className="h-full" suppressHydrationWarning>
-      {/* <ReactScan /> */}
       <body className={`${sans.variable} font-sans h-full`}>
         <LocalizedStringProvider locale={locale} />
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <Providers locale={locale}>
+          <Providers>
             <SessionProvider session={session}>
               <ViewportProvider ssrViewport={ssrViewport}>
                 {children}

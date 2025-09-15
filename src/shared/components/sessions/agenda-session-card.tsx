@@ -64,7 +64,7 @@ export const AgendaSessionCard = ({
 
   return (
     <div className="flex flex-row gap-2 p-1">
-      <div className="flex flex-col gap-1 shrink-0 p-0.5 w-18">
+      <div className="flex flex-col gap-1 shrink-0 p-0.5 w-15">
         <p className="text-sm font-medium tabular-nums">
           {format(new Date(session.startTime), "HH:mm")}
         </p>

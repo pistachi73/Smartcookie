@@ -111,7 +111,7 @@ const CalendarHeader = ({
     <header
       data-slot="calendar-header"
       className={twMerge(
-        "flex w-full justify-between gap-1.5 pt-1 pr-1 pb-5 pl-1.5 sm:pb-4",
+        "flex justify-between gap-1.5 pt-1 pr-1 pb-5 pl-1.5 sm:pb-4",
         className,
       )}
       {...props}
@@ -124,7 +124,7 @@ const CalendarHeader = ({
       )}
       <Heading
         className={twMerge(
-          "mr-2 flex-1 text-left font-medium text-base text-current",
+          "mr-2 flex-1 text-left font-medium text-base text-current first-letter:uppercase",
           showSelectors && !isRange && "sr-only",
           className,
         )}

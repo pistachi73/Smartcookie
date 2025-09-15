@@ -26,17 +26,13 @@ const config = {
   // Optimize bundle
   webpack: (config, { isServer }) => {
     if (!isServer) {
+      config.plugins.push(optimizeLocales.webpack({ locales: [] }));
       config.resolve.fallback = {
         ...config.resolve.fallback,
         fs: false,
       };
     }
 
-    config.plugins.push(
-      optimizeLocales.webpack({
-        locales: ["en-GB", "es-ES"],
-      }),
-    );
     return config;
   },
 
