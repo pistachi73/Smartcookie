@@ -766,7 +766,7 @@ describe("jwtCallback", () => {
       role: "USER",
       isTwoFactorEnabled: true,
       stripeCustomerId: "cus_123",
-      subscriptionTier: undefined,
+      subscriptionTier: "free",
       subscriptionStatus: undefined,
     });
     expect(mockGetUserByIdInternal).toHaveBeenCalledWith(token.sub);
@@ -808,7 +808,7 @@ describe("jwtCallback", () => {
       role: "ADMIN",
       isTwoFactorEnabled: false,
       stripeCustomerId: "cus_456",
-      subscriptionTier: undefined,
+      subscriptionTier: "free",
       subscriptionStatus: undefined,
     });
   });
@@ -829,7 +829,7 @@ describe("jwtCallback", () => {
       const subscription = createMockUserSubscription({
         userId: "user-123",
         status: "active",
-        tier: "pro",
+        tier: "premium",
       });
 
       mockGetUserByIdInternal.mockResolvedValue(user);
@@ -846,7 +846,7 @@ describe("jwtCallback", () => {
         role: "USER",
         isTwoFactorEnabled: false,
         stripeCustomerId: "cus_pro",
-        subscriptionTier: "pro",
+        subscriptionTier: "premium",
         subscriptionStatus: "active",
       });
     });
@@ -865,7 +865,7 @@ describe("jwtCallback", () => {
       const subscription = createMockUserSubscription({
         userId: "user-123",
         status: "inactive",
-        tier: "pro",
+        tier: "premium",
       });
 
       mockGetUserByIdInternal.mockResolvedValue(user);
@@ -882,7 +882,7 @@ describe("jwtCallback", () => {
         role: "USER",
         isTwoFactorEnabled: false,
         stripeCustomerId: "cus_inactive",
-        subscriptionTier: "pro",
+        subscriptionTier: "premium",
         subscriptionStatus: "inactive",
       });
     });
@@ -908,7 +908,7 @@ describe("jwtCallback", () => {
       const subscription = createMockUserSubscription({
         userId: "user-123",
         status: "active",
-        tier: "pro",
+        tier: "premium",
       });
 
       mockGetUserByIdInternal.mockResolvedValue(user);
@@ -925,7 +925,7 @@ describe("jwtCallback", () => {
         role: "USER",
         isTwoFactorEnabled: false,
         stripeCustomerId: "cus_oauth_pro",
-        subscriptionTier: "pro",
+        subscriptionTier: "premium",
         subscriptionStatus: "active",
       });
     });
@@ -955,7 +955,7 @@ describe("jwtCallback", () => {
         role: "USER",
         isTwoFactorEnabled: false,
         stripeCustomerId: null,
-        subscriptionTier: undefined,
+        subscriptionTier: "free",
         subscriptionStatus: undefined,
       });
     });
@@ -972,7 +972,7 @@ describe("sessionCallback", () => {
       isTwoFactorEnabled: true,
       isOAuth: false,
       stripeCustomerId: "cus_123",
-      subscriptionTier: "pro",
+      subscriptionTier: "basic",
       subscriptionStatus: "active",
     } as JWT;
 
@@ -992,7 +992,7 @@ describe("sessionCallback", () => {
         isTwoFactorEnabled: true,
         isOAuth: false,
         stripeCustomerId: "cus_123",
-        subscriptionTier: "pro",
+        subscriptionTier: "basic",
         hasActiveSubscription: true,
       },
       expires: "2024-12-31T23:59:59.999Z",
@@ -1005,7 +1005,7 @@ describe("sessionCallback", () => {
       name: "John Doe",
       email: "john@example.com",
       stripeCustomerId: "cus_123",
-      subscriptionTier: "pro",
+      subscriptionTier: "basic",
       subscriptionStatus: "active",
     } as JWT;
 
@@ -1030,7 +1030,7 @@ describe("sessionCallback", () => {
         isTwoFactorEnabled: false,
         isOAuth: false,
         stripeCustomerId: "cus_pro",
-        subscriptionTier: "pro",
+        subscriptionTier: "basic",
         subscriptionStatus: "active",
       } as JWT;
 
@@ -1053,7 +1053,7 @@ describe("sessionCallback", () => {
         isTwoFactorEnabled: false,
         isOAuth: false,
         stripeCustomerId: "cus_inactive",
-        subscriptionTier: "pro",
+        subscriptionTier: "basic",
         subscriptionStatus: "inactive",
       } as JWT;
 
@@ -1076,7 +1076,7 @@ describe("sessionCallback", () => {
         isTwoFactorEnabled: false,
         isOAuth: false,
         stripeCustomerId: "cus_free",
-        subscriptionTier: undefined,
+        subscriptionTier: "free",
         subscriptionStatus: undefined,
       } as JWT;
 
@@ -1099,7 +1099,7 @@ describe("sessionCallback", () => {
         isTwoFactorEnabled: false,
         isOAuth: false,
         stripeCustomerId: null,
-        subscriptionTier: undefined,
+        subscriptionTier: "free",
         subscriptionStatus: undefined,
       } as JWT;
 
@@ -1119,7 +1119,7 @@ describe("sessionCallback", () => {
           isTwoFactorEnabled: false,
           isOAuth: false,
           stripeCustomerId: null,
-          subscriptionTier: undefined,
+          subscriptionTier: "free",
           hasActiveSubscription: false,
         },
         expires: "2024-12-31T23:59:59.999Z",

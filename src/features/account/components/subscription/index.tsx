@@ -1,27 +1,22 @@
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Diamond02Icon } from "@hugeicons-pro/core-solid-rounded";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
-import { Button } from "@/shared/components/ui/button";
-import { Card } from "@/shared/components/ui/card";
 import { QueryError } from "@/shared/components/ui/query-error";
-import { ExplorePremiumModal } from "@/shared/components/explore-premium-modal";
 
 import { isDataAccessError } from "@/data-access/errors";
-import { getSubscription } from "@/data-access/payment/queries";
-import { memberChecks } from "@/features/landing/components/pricing/constants";
-import { PlanCheck } from "@/features/landing/components/pricing/pricing-plan-card";
+import { env } from "@/env";
+import { userSubscriptionQueryOptions } from "../../hooks/user-subscription-query-options";
 import { InvoiceList } from "./invoice-list";
 import { UpcomingInvoice } from "./next-invoice";
 import { PaymentDetails } from "./payment-details";
-import { ProSubscriptionCard } from "./pro-subscription-card";
+import { BasicSubscriptionCard } from "./subscription-cards/basic-subscription-card";
+import { FreeSubscriptionCard } from "./subscription-cards/free-subscription-card";
+import { PremiumSubscriptionCard } from "./subscription-cards/premium-subscription-card";
 import { SubscriptionLoading } from "./subscription-loading";
 
 export const Subscription = () => {
-  const { data, isLoading, error, refetch, isRefetching } = useQuery({
-    queryKey: ["subscription"],
-    queryFn: getSubscription,
-  });
+  const { data, isLoading, error, refetch, isRefetching } = useSuspenseQuery(
+    userSubscriptionQueryOptions,
+  );
 
   if (isLoading) {
     return <SubscriptionLoading />;
@@ -47,12 +42,25 @@ export const Subscription = () => {
     upcomingInvoice,
   } = data ?? {};
 
+  const isBasicProduct =
+    product?.id === env.NEXT_PUBLIC_STRIPE_BASIC_PRODUCT_ID;
+  const isPremiumProduct =
+    product?.id === env.NEXT_PUBLIC_STRIPE_PREMIUM_PRODUCT_ID;
+
   return (
     <div className="@container space-y-6">
       {subscription ? (
         <>
-          {product && price && (
-            <ProSubscriptionCard
+          {isBasicProduct && (
+            <BasicSubscriptionCard
+              subscription={subscription}
+              product={product}
+              price={price}
+              hasUpcomingInvoice={!!upcomingInvoice}
+            />
+          )}
+          {isPremiumProduct && (
+            <PremiumSubscriptionCard
               subscription={subscription}
               product={product}
               price={price}
@@ -71,39 +79,7 @@ export const Subscription = () => {
           <InvoiceList invoices={invoices ?? []} />
         </>
       ) : (
-        <div className="space-y-6">
-          <Card className="shadow-md relative overflow-hidden">
-            <div className="absolute inset-0 z-10 flex items-center justify-center bg-secondary w-full h-1" />
-            <Card.Header>
-              <Card.Title className="flex flex-row gap-2 text-xl items-center">
-                Free plan
-              </Card.Title>
-              <Card.Description>
-                Upgrade to Pro plan to enjoy all the benefits
-              </Card.Description>
-            </Card.Header>
-            <Card.Content className="space-y-6">
-              <ExplorePremiumModal>
-                <Button size="lg" className="w-full">
-                  Upgrade to Pro plan
-                  <HugeiconsIcon
-                    icon={Diamond02Icon}
-                    size={16}
-                    data-slot="icon"
-                  />
-                </Button>
-              </ExplorePremiumModal>
-              <div className="space-y-4">
-                <p className="text-lg font-semibold">With Pro plan you get:</p>
-                <div className="flex flex-col gap-3">
-                  {memberChecks.map(({ key, label, icon }) => (
-                    <PlanCheck key={key} label={label} icon={icon} />
-                  ))}
-                </div>
-              </div>
-            </Card.Content>
-          </Card>
-        </div>
+        <FreeSubscriptionCard />
       )}
     </div>
   );

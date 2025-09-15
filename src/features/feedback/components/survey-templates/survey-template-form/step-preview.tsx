@@ -2,7 +2,6 @@
 
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowLeft02Icon } from "@hugeicons-pro/core-stroke-rounded";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { Button } from "@/shared/components/ui/button";
@@ -11,6 +10,7 @@ import { Heading } from "@/shared/components/ui/heading";
 import { ProgressCircle } from "@/shared/components/ui/progress-circle";
 import useNavigateWithParams from "@/shared/hooks/use-navigate-with-params";
 
+import { useRouter } from "@/i18n/navigation";
 import { useCreateSurveyTemplate } from "../../../hooks/survey-templates/use-create-survey-template";
 import { useUpdateSurveyTemplate } from "../../../hooks/survey-templates/use-update-survey-template";
 import { useSurveyTemplateFormStore } from "../../../store/survey-template-form.store";

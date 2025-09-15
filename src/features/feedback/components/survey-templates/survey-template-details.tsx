@@ -11,7 +11,6 @@ import {
 } from "@hugeicons-pro/core-stroke-rounded";
 import { useQueries } from "@tanstack/react-query";
 import dynamic from "next/dynamic";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { Badge } from "@/shared/components/ui/badge";
@@ -21,6 +20,7 @@ import { Link } from "@/shared/components/ui/link";
 import useNavigateWithParams from "@/shared/hooks/use-navigate-with-params";
 
 import { surveyTemplateByIdQueryOptions } from "@/features/feedback/lib/survey-template-query-options";
+import { useRouter } from "@/i18n/navigation";
 import { surveyTemplateResponsesQueryOptions } from "../../lib/survey-template-responses-query-options";
 import { DataCard } from "../questions/question-details/question-answers/shared-cards";
 import { FeedbackLoading } from "../shared/feedback-loading";

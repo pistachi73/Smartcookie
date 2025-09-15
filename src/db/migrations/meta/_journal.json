@@ -71,6 +71,13 @@
       "when": 1753289658716,
       "tag": "0009_shocking_silver_centurion",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1757879164826,
+      "tag": "0010_heavy_bug",
+      "breakpoints": true
     }
   ]
 }

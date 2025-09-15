@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowLeft02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
@@ -17,6 +16,7 @@ import {
   CreateQuestionSchema,
   type UpdateQuestionSchema,
 } from "@/data-access/questions/schemas";
+import { useRouter } from "@/i18n/navigation";
 import { useUpdateQuestion } from "../../hooks/questions/use-update-question";
 import { questionQueryOptions } from "../../lib/questions-query-options";
 import { FeedbackLoading } from "../shared/feedback-loading";

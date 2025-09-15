@@ -1,0 +1,148 @@
+{
+  "Landing": {
+    "Hero": {
+      "Title": {
+        "1": "Dedícate a enseñar",
+        "2": "olvídate de",
+        "3": "{id, select, admin {la gestión} spreadsheets {las hojas de cálculo} last_minute_prep {preparar clases a contrarreloj} chaotic_notes {las notas caóticas} other {la gestión}}."
+      },
+      "Subtitle": "SmartCookie es una herramienta todo en uno que simplifica la gestión docente, organiza tus clases y potencia la motivación. La mano derecha de cada profe.",
+      "EmailMarketingForm": {
+        "Placeholder": "Introduce tu correo electrónico",
+        "Button": "Descubre SmartCookie"
+      }
+    },
+    "Features": {
+      "Calendar": {
+        "Title": "Agenda tus clases sin esfuerzo",
+        "Subtitle": "Calendario integrado",
+        "Description": "Agiliza tus reservas con una programación inteligente que se adapta a tu disponibilidad."
+      },
+      "QuickNotes": {
+        "Title": "Toma notas fácilmente",
+        "Subtitle": "Notas de otro nivel",
+        "Description": "Guarda todos los detalles clave relacionados con alumnos y clases. Olvídate de notas desordenadas o traspapeladas."
+      },
+      "Feedback": {
+        "Title": "Recoge feedback de manera eficaz",
+        "Subtitle": "Seguimiento de feedback",
+        "Description": "Registra ideas valiosas a tu manera. Usa el feedback significativo para adaptarte y mejorar tu enseñanza."
+      },
+      "Courses": {
+        "Title": "Gestiona tus cursos cómodamente",
+        "Subtitle": "Panel de control inteligente",
+        "Description": "Ten todos tus cursos organizados en un único lugar. Cambia rápidamente entre clases sin perder el foco."
+      },
+      "Dashboard": {
+        "Title": "Controla tu carga de trabajo",
+        "Subtitle": "Visualiza las horas que haces",
+        "Description": "Mantente al día de tus tareas y clases. Equilibra tu agenda y evita el agotamiento."
+      }
+    },
+    "Highlights": {
+      "Title": "Creado para profes con agendas llenas como tú",
+      "Subtitle": "Todo lo que necesitas para gestionar tus clases, alumnos y feedback en una única plataforma intuitiva. Diseñada por profes, para profes.",
+      "Badge": "Destacados",
+      "HoursSaved": {
+        "Title": "Horas ahorradas cada semana",
+        "Description": "Más de 12 horas semanales ahorradas usando SmartCookie para gestionar la administración."
+      },
+      "Quote": "Dedícate a enseñar, confía el resto a SmartCookie.",
+      "AllInOneTool": {
+        "Title": "Todas tus herramientas, en una sola pantalla.",
+        "Description": "Organizado. Centralizado. Cómodo."
+      },
+      "TrustedBy": "Con la confianza de",
+      "BrainQuote": "Tu mano derecha",
+      "FeedbackQuote": "Mantén la motivación"
+    },
+    "Pricing": {
+      "title": "Planes que se adaptan a ti",
+      "description": "Empieza con un plan 100% gratuito y amplíalo cuando lo necesites. SmartCookie es tu mano derecha, elige sus funcionalidades y dedícate a lo que más te gusta: enseñar.",
+      "badge": "Planes",
+      "paymentFrequency": "{paymentFrequency, select, M {Pago mensual} A {Pago anual} other {Desconocido}}",
+      "paymentFrequencyLabel": "mensual",
+      "annualBillingLabel": "Una vez al año",
+      "Free": {
+        "title": "Gratis",
+        "description": "Perfecto para empezar con la gestión básica.",
+        "actionButtonLabel": "Próximamente",
+        "featuresHeading": "Incluye",
+        "features": {
+          "coursesLimit": "Hasta 2 cursos",
+          "studentsLimit": "Hasta 10 estudiantes",
+          "notesLimit": "Hasta 20 notas",
+          "notesCharacterLimit": "Hasta 100 caracteres por nota",
+          "communityAccess": "1 webinar al mes"
+        }
+      },
+
+      "Basic": {
+        "title": "Básico",
+        "description": "Ideal para profes que necesitan una mano derecha para optimizar su gestión.",
+        "actionButtonLabel": "Próximamente",
+        "featuresHeading": "Todo lo del plan Gratis, más:",
+        "features": {
+          "coursesLimit": "Hasta 20 cursos",
+          "studentsLimit": "Hasta 40 estudiantes",
+          "notesLimit": "Hasta 500 notas",
+          "notesCharacterLimit": "Hasta 500 caracteres por nota",
+          "communityAccess": "Acceso a la comunidad",
+          "itSupport": "Soporte estándar por email y onboarding",
+          "feedbackProgressTracking": "Seguimiento de progreso y feedback",
+          "automaticScheduleConflictNotification": "Notificación automática de conflictos de horario"
+        }
+      },
+      "Premium": {
+        "title": "Premium",
+        "description": "Diseñado para profes quieren enfocarse en la enseñanza mientras todo lo demás se gestiona por sí solo.",
+        "actionButtonLabel": "Próximamente",
+        "featuresHeading": "Todo lo del plan Básico, más:",
+        "features": {
+          "coursesLimit": "Cursos ilimitados",
+          "studentsLimit": "Estudiantes ilimitados",
+          "notesLimit": "Notas ilimitadas",
+          "notesCharacterLimit": "Hasta 1000 caracteres por nota",
+          "communityAccess": "Acceso exclusivo a la comunidad",
+          "itSupport": "Soporte prioritario"
+        }
+      }
+    },
+    "AboutUs": {
+      "title": "El equipo detrás de SmartCookie",
+      "subtitle": "Una profesora de idiomas y un desarrollador de software con más de 15 años de experiencia combinada han creado una app para impulsar a docentes ocupados como tú",
+      "badge": "Sobre nosotros",
+      "trustedBy": "Con la confianza de",
+      "martina": {
+        "experience": "Más de 9 años enseñando idiomas",
+        "bio": "Desde 2016, Martina ha impartido más de 4.000 horas de clase a más de 1.000 estudiantes de español, catalán, inglés y alemán. Participa en eventos internacionales de enseñanza y desarrolla activamente su experiencia mediante formación continua. Con formación en Matemáticas, Empresa y Psicología, combina un profundo entendimiento del aprendizaje y la enseñanza con la práctica real en las aulas."
+      },
+      "oscar": {
+        "experience": "Más de 7 años desarrollando software",
+        "bio": "Desde 2018, Óscar ha programado miles de horas y ha construido aplicaciones full-stack en diversas industrias. Actualmente trabaja como Frontend Engineer en Gartner, donde supera retos complejos en un entorno internacional y puntero. Siempre con ganas de aprender, explora continuamente nuevas tecnologías como Web3, smart contracts y nuevos campos creativos como el diseño gráfico y la animación 2D."
+      }
+    },
+    "Footer": {
+      "title": "Enseña eficazmente con SmartCookie",
+      "description": "SmartCookie es la app todo en uno que actúa como la mano derecha de cada profe de idiomas: ayuda a organizar sus calendarios, a hacer un seguimiento del progreso de sus clases y a aumentar la motivación mediante feedback útil y accionable.",
+      "navigation": "Navegación",
+      "connect": "Conectar"
+    },
+    "Navigation": {
+      "features": "Funciones",
+      "highlights": "Ventajas",
+      "pricing": "Planes",
+      "about": "Sobre nosotros"
+    },
+    "Legal": {
+      "privacyPolicy": "Política de privacidad",
+      "termsOfService": "Términos del servicio",
+      "cookiePolicy": "Política de cookies",
+      "accessibilityStatement": "Declaración de accesibilidad"
+    }
+  },
+  "LocaleSwitcher": {
+    "label": "Cambiar idioma",
+    "locale": "{locale, select, en_GB {Inglés} es_ES {Español} other {Desconocido}}"
+  }
+}

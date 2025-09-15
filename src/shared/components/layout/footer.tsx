@@ -2,52 +2,72 @@
 
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
-  ArrowUp01Icon,
   Linkedin01Icon,
   SmartPhoneIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
+import { Button } from "react-aria-components";
 
-import { Button } from "@/shared/components/ui/button";
 import { cn } from "@/shared/lib/classes";
 
 import { Heading } from "../ui/heading";
-import { Link } from "../ui/link";
+import { Link, linkStyles } from "../ui/link";
+import { LocaleSwitcherSelect } from "../ui/locale-switcher/locale-switcher";
 import { MaxWidthWrapper } from "./max-width-wrapper";
-
-const navigationLinks = [
-  { label: "Features", href: "#features" },
-  { label: "Highlights", href: "#main-points" },
-  { label: "Pricing", href: "#pricing" },
-  { label: "About us", href: "#about" },
-];
 
 const socialLinks = [
   {
+    id: "martina-linkedin",
     name: "Martina Monreal",
     description: "CEO & Co-Founder",
     href: "https://www.linkedin.com/in/martinamonreal-smartcookie/",
     icon: Linkedin01Icon,
   },
   {
+    id: "oscar-linkedin",
     name: "Óscar Pulido",
     description: "CTO & Co-Founder",
     href: "https://www.linkedin.com/in/oscar-pulido-castillo/",
     icon: Linkedin01Icon,
   },
   {
-    name: "Phone",
+    id: "phone",
     description: "+34 611 15 15 27",
     href: "tel:+34611151527",
     icon: SmartPhoneIcon,
   },
 ];
 
-const scrollToTop = () => {
-  window.scrollTo({ top: 0, behavior: "smooth" });
+export const handleNavigation = (id: string, href: string) => {
+  const isLandingPage = window.location.pathname === "/";
+
+  if (isLandingPage) {
+    const element = document.querySelector(`#${id}`);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  } else {
+    window.location.href = href;
+  }
 };
 
 export const Footer = () => {
+  const t = useTranslations("Landing");
+  const tFooter = useTranslations("Landing.Footer");
+  const tNavigation = useTranslations("Landing.Navigation");
+  const tLegal = useTranslations("Landing.Legal");
+
+  const navigationLinks = [
+    { id: "features", label: tNavigation("features"), href: "/#features" },
+    {
+      id: "highlights",
+      label: tNavigation("highlights"),
+      href: "/#main-points",
+    },
+    { id: "pricing", label: tNavigation("pricing"), href: "/#pricing" },
+    { id: "about", label: tNavigation("about"), href: "/#about" },
+  ];
   return (
     <footer className="p-[2%] md:p-6 bg-white">
       <div className="bg-muted rounded-2xl p-6">
@@ -58,7 +78,7 @@ export const Footer = () => {
               tracking="tight"
               className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight bg-linear-to-r from-primary via-primary-shade to-primary bg-clip-text text-transparent text-center"
             >
-              Teach smarter with SmartCookie
+              {tFooter("title")}
             </Heading>
 
             {/* Navigation and social section */}
@@ -67,7 +87,7 @@ export const Footer = () => {
               <div className="space-y-6 lg:col-span-1">
                 <div className="flex items-center gap-3">
                   <Image
-                    src="/Logo.svg"
+                    src="/logos/smartcookie_logo.svg"
                     alt="SmartCookie Logo"
                     height={28}
                     width={14}
@@ -77,11 +97,8 @@ export const Footer = () => {
                     SmartCookie
                   </span>
                 </div>
-                <p className="text-sm text-muted-fg leading-relaxed max-w-sm">
-                  SmartCookie is the all-in-one app that acts as a second brain
-                  for language teachers, helping them organize their calendars,
-                  track lesson progress, and boost student motivation through
-                  actionable feedback.
+                <p className="text-sm  leading-relaxed max-w-sm">
+                  {tFooter("description")}
                 </p>
               </div>
 
@@ -91,18 +108,20 @@ export const Footer = () => {
                   level={3}
                   className="uppercase text-sm sm:text-sm font-semibold"
                 >
-                  Navigation
+                  {tFooter("navigation")}
                 </Heading>
                 <nav className="grid grid-cols-2 sm:grid-cols-1 gap-3">
                   {navigationLinks.map((link) => (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      intent="primary"
-                      className="text-sm text-muted-fg"
+                    <Button
+                      key={link.id}
+                      onPress={() => handleNavigation(link.id, link.href)}
+                      className={linkStyles({
+                        intent: "primary",
+                        className: "text-left text-sm cursor-pointer",
+                      })}
                     >
                       {link.label}
-                    </Link>
+                    </Button>
                   ))}
                 </nav>
               </div>
@@ -113,12 +132,12 @@ export const Footer = () => {
                   level={3}
                   className="uppercase text-sm sm:text-sm font-semibold"
                 >
-                  Connect
+                  {tFooter("connect")}
                 </Heading>
                 <div className="space-y-3">
                   {socialLinks.map((social) => (
                     <Link
-                      key={social.name}
+                      key={social.id}
                       href={social.href}
                       target={
                         social.href.startsWith("http") ? "_blank" : "_self"
@@ -135,10 +154,12 @@ export const Footer = () => {
                     >
                       <HugeiconsIcon icon={social.icon} size={16} />
                       <div className="flex flex-col gap-0.5">
-                        <span className="font-medium text-sm">
-                          {social.name}
-                        </span>
-                        <span className="text-xs text-muted-fg/80">
+                        {social.name && (
+                          <span className="font-medium text-sm">
+                            {social.name}
+                          </span>
+                        )}
+                        <span className="text-sm text-muted-fg">
                           {social.description}
                         </span>
                       </div>
@@ -150,23 +171,36 @@ export const Footer = () => {
 
             {/* Bottom section */}
             <div className="pt-8 border-t border-border/40">
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-                <p>
-                  © {new Date().getFullYear()} SmartCookie. All rights reserved.
-                </p>
-                <Button
-                  onPress={scrollToTop}
-                  intent="secondary"
-                  size="sm"
-                  className={cn("group")}
+              <div className="flex flex-col sm:flex-row sm:flex-wrap items-center gap-4">
+                <LocaleSwitcherSelect intent="plain" size="xs" />
+                <Link
+                  href="/privacy-policy"
+                  intent="primary"
+                  className={"font-medium text-sm text-muted-fg"}
                 >
-                  <HugeiconsIcon
-                    icon={ArrowUp01Icon}
-                    data-slot="icon"
-                    className="group-hover:-translate-y-0.5 transition-transform duration-200"
-                  />
-                  Back to top
-                </Button>
+                  {tLegal("privacyPolicy")}
+                </Link>
+                <Link
+                  href="/terms-of-service"
+                  intent="primary"
+                  className={"font-medium text-sm text-muted-fg"}
+                >
+                  {tLegal("termsOfService")}
+                </Link>
+                <Link
+                  href="/cookie-policy"
+                  intent="primary"
+                  className={"font-medium text-sm text-muted-fg"}
+                >
+                  {tLegal("cookiePolicy")}
+                </Link>
+                <Link
+                  href="/accessibility-statement"
+                  intent="primary"
+                  className={"font-medium text-sm text-muted-fg"}
+                >
+                  {tLegal("accessibilityStatement")}
+                </Link>
               </div>
             </div>
           </div>

@@ -2,7 +2,6 @@
 
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
-  ArrowLeft02Icon,
   Briefcase01Icon,
   Calendar01Icon,
   CallIcon,
@@ -18,9 +17,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import type { z } from "zod";
 
 import { Badge } from "@/shared/components/ui/badge";
-import { buttonStyles } from "@/shared/components/ui/button";
 import { Card } from "@/shared/components/ui/card";
-import { EmptyState } from "@/shared/components/ui/empty-state";
 import { Link } from "@/shared/components/ui/link";
 import { UserAvatar } from "@/shared/components/ui/user-avatar";
 import { getCustomColorClasses } from "@/shared/lib/custom-colors";
@@ -32,6 +29,7 @@ import { getUserStudentByIdQueryOptions } from "../../lib/user-students-query-op
 import { EditableDateField } from "./editable-field/editable-date-field";
 import { EditablePhoneField } from "./editable-field/editable-phone-field";
 import { EditableTextField } from "./editable-field/editable-text-field";
+import { StudentNotFound } from "./student-not-found";
 import { StudentProfileLayout } from "./student-profile-layout";
 
 type UpdatableStudentFields = keyof Omit<
@@ -40,31 +38,13 @@ type UpdatableStudentFields = keyof Omit<
 >;
 
 export const StudentProfileDetail = ({ id }: { id: number }) => {
+  console.log("id", id);
   const { mutate: updateStudent } = useUpdateStudent();
   const { data: student } = useSuspenseQuery(
     getUserStudentByIdQueryOptions(id),
   );
 
-  if (!student)
-    return (
-      <StudentProfileLayout>
-        <EmptyState
-          title="Student not found"
-          description="The student you are looking for does not exist."
-          className="bg-white"
-          icon={User02Icon}
-          action={
-            <Link
-              href="/portal/students"
-              className={cn(buttonStyles({ intent: "secondary" }))}
-            >
-              <HugeiconsIcon icon={ArrowLeft02Icon} data-slot="icon" />
-              Back to students
-            </Link>
-          }
-        />
-      </StudentProfileLayout>
-    );
+  if (!student) return <StudentNotFound />;
 
   const handleFieldSave = (field: UpdatableStudentFields, value?: string) => {
     if (!value) return;

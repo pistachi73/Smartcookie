@@ -7,5 +7,5 @@ export const createStripeCustomerSchema = z.object({
 });
 
 export const createCheckoutSessionSchema = z.object({
-  paymentFrequency: z.enum(["M", "A"]),
+  priceId: z.string().min(1),
 });

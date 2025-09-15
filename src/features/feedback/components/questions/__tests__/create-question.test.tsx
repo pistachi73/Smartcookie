@@ -1,4 +1,3 @@
-import { useRouter } from "next/navigation";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
@@ -9,6 +8,7 @@ import {
   waitFor,
 } from "@/shared/lib/testing/test-utils";
 
+import { useRouter } from "@/i18n/navigation";
 import { useCreateQuestion } from "../../../hooks/questions/use-create-question";
 import { CreateQuestion } from "../create-question";
 

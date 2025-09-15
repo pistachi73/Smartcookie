@@ -4,7 +4,10 @@
  */
 await import("./src/env.js");
 
-import bundleAnalyzer from "@next/bundle-analyzer";
+import optimizeLocales from "@react-aria/optimize-locales-plugin";
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin();
 
 /** @type {import("next").NextConfig} */
 const config = {
@@ -28,6 +31,12 @@ const config = {
         fs: false,
       };
     }
+
+    config.plugins.push(
+      optimizeLocales.webpack({
+        locales: ["en-GB", "es-ES"],
+      }),
+    );
     return config;
   },
 
@@ -53,6 +62,4 @@ const config = {
   },
 };
 
-export default bundleAnalyzer({
-  enabled: process.env.ANALYZE === "true",
-})(config);
+export default withNextIntl(config);

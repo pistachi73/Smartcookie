@@ -1,5 +1,3 @@
-import { HugeiconsIcon } from "@hugeicons/react";
-import { CheckmarkBadge01Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { format } from "date-fns";
 
 import { Badge } from "@/shared/components/ui/badge";
@@ -11,7 +9,7 @@ import type {
   StripeProduct,
   Subscription,
 } from "@/data-access/payment/formatters";
-import { memberChecks } from "@/features/landing/components/pricing/constants";
+// import { memberChecks } from "@/features/landing/components/pricing/constants";
 import { BillingPortalButton } from "./billing-portal-button";
 
 export const ProSubscriptionCard = ({
@@ -67,12 +65,12 @@ export const ProSubscriptionCard = ({
             Current plan benefits
           </Heading>
           <div className="grid grid-cols-1 @2xl:grid-cols-2 gap-4">
-            {memberChecks.map(({ key, label }) => (
+            {/* {memberChecks.map(({ key, label }) => (
               <div key={key} className="flex flex-row items-center gap-2">
                 <HugeiconsIcon icon={CheckmarkBadge01Icon} size={20} />
                 <p className="text-sm font-medium">{label}</p>
               </div>
-            ))}
+            ))} */}
           </div>
         </div>
       </Card.Footer>

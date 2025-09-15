@@ -16,7 +16,10 @@ export const subscriptionStatusEnum = pgEnum("subscription_status", [
   "active",
 ]);
 
-export const subscriptionTierEnum = pgEnum("subscription_tier", ["pro"]);
+export const subscriptionTierEnum = pgEnum("subscription_tier", [
+  "basic",
+  "premium",
+]);
 
 export const userSubscription = pgTable(
   "user_subscription",
@@ -31,7 +34,7 @@ export const userSubscription = pgTable(
 
     // Subscription details
     status: subscriptionStatusEnum().notNull().default("active"),
-    tier: subscriptionTierEnum().notNull().default("pro"),
+    tier: subscriptionTierEnum().notNull().default("basic"),
 
     // Important dates
     currentPeriodStart: timestamp({ mode: "date" }).notNull(),

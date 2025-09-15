@@ -1,11 +1,11 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 
 import { createHub } from "@/data-access/hubs/mutations";
 import { CreateHubUseCaseSchema } from "@/data-access/hubs/schemas";
+import { useRouter } from "@/i18n/navigation";
 import { getHubsByUserIdQueryOptions } from "../lib/hub-query-options";
 
 export function useCreateHub() {

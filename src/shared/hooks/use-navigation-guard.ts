@@ -1,5 +1,6 @@
-import { useRouter } from "next/navigation";
 import { useCallback, useEffect } from "react";
+
+import { useRouter } from "@/i18n/navigation";
 
 type NavigationGuardOptions = {
   /**

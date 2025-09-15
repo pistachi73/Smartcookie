@@ -1,4 +1,3 @@
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -13,6 +12,7 @@ import { mockZustandStoreImplementation } from "@/shared/lib/testing/zustand-uti
 
 import { useCreateSurveyTemplate } from "@/features/feedback/hooks/survey-templates/use-create-survey-template";
 import { useUpdateSurveyTemplate } from "@/features/feedback/hooks/survey-templates/use-update-survey-template";
+import { useRouter } from "@/i18n/navigation";
 import { useSurveyTemplateFormStore } from "../../../../store/survey-template-form.store";
 import type { SurveyTemplateFormState } from "../../../../types/survey-template-form-store.types";
 import { StepPreview } from "../../survey-template-form/step-preview";

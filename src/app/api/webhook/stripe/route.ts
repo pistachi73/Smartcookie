@@ -11,13 +11,15 @@ type Metadata = {
 };
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-  apiVersion: "2025-06-30.basil",
+  apiVersion: "2025-08-27.basil",
 });
 
 const webhookSecret: string = env.STRIPE_WEBHOOK_SECRET;
 
 const webhookHandler = async (req: NextRequest) => {
   let event: Stripe.Event | undefined;
+
+  console.log("🔑 Webhook secret:", webhookSecret);
 
   try {
     const buf = await req.text();
@@ -91,6 +93,12 @@ const webhookHandler = async (req: NextRequest) => {
             break;
           }
 
+          const tier =
+            priceId === env.NEXT_PUBLIC_STRIPE_PREMIUM_MONTHLY_PRICE_ID ||
+            priceId === env.NEXT_PUBLIC_STRIPE_PREMIUM_ANNUAL_PRICE_ID
+              ? "premium"
+              : "basic";
+
           await db.insert(userSubscription).values({
             userId: userId,
             stripeSubscriptionId: subscription.id,
@@ -98,6 +106,7 @@ const webhookHandler = async (req: NextRequest) => {
             currentPeriodEnd,
             currentPeriodStart,
             status: "active",
+            tier,
           });
 
           console.log(`✅ Created subscription for user ${userId}`);
@@ -133,6 +142,12 @@ const webhookHandler = async (req: NextRequest) => {
             ? "active"
             : "inactive";
 
+          const tier =
+            priceId === env.NEXT_PUBLIC_STRIPE_PREMIUM_MONTHLY_PRICE_ID ||
+            priceId === env.NEXT_PUBLIC_STRIPE_PREMIUM_ANNUAL_PRICE_ID
+              ? "premium"
+              : "basic";
+
           // Update using WHERE clause
           const _updateResult = await db
             .update(userSubscription)
@@ -141,6 +156,7 @@ const webhookHandler = async (req: NextRequest) => {
               currentPeriodEnd,
               currentPeriodStart,
               status,
+              tier,
             })
             .where(
               eq(userSubscription.stripeSubscriptionId, stripeSubscriptionId),

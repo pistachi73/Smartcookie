@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
@@ -15,6 +14,7 @@ import { resetPassword } from "@/data-access/auth/mutations";
 import { ResetPasswordSchema } from "@/data-access/auth/schemas";
 import { isDataAccessError } from "@/data-access/errors";
 import { useAuthStore } from "@/features/auth/store/auth-store-provider";
+import { useRouter } from "@/i18n/navigation";
 import { authSchema } from "../lib/validation";
 import { FormWrapper } from "./form-wrapper";
 

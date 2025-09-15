@@ -1,7 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
 import { Button } from "@/shared/components/ui/button";
 import { Modal } from "@/shared/components/ui/modal";
 import { Note } from "@/shared/components/ui/note";
@@ -9,6 +7,7 @@ import { ProgressCircle } from "@/shared/components/ui/progress-circle";
 import useNavigateWithParams from "@/shared/hooks/use-navigate-with-params";
 
 import type { SurveyTemplate } from "@/db/schema";
+import { useRouter } from "@/i18n/navigation";
 import { useDeleteSurveyTemplate } from "../../hooks/survey-templates/use-delete-survey-template";
 
 interface DeleteSurveyTemplateModalProps {

@@ -111,7 +111,7 @@ export const useAddSessions = ({
       onSuccess?.();
     },
     onError: (error, _, context) => {
-      toast.error(error.message);
+      toast.error("Failed to add sessions. Please try again later!");
 
       // 🚀 Rollback optimistic updates from memory cache
       if (context?.optimisticSessions) {

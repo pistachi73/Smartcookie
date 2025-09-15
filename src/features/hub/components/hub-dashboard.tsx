@@ -1,11 +1,9 @@
 "use client";
 
-import { Folder01Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 
-import { EmptyState } from "@/shared/components/ui/empty-state";
 import { Tabs } from "@/shared/components/ui/tabs";
 import { cn } from "@/shared/lib/classes";
 
@@ -13,6 +11,7 @@ import { TABS } from "../lib/constants";
 import { getHubByIdQueryOptions } from "../lib/hub-query-options";
 import { HubFeedbackLoading } from "./feedback/hub-feedback-loading";
 import { HubDashboardLayout } from "./hub-dashboard-layout";
+import { HubNotFound } from "./hub-not-found";
 import { HubNotesPanelLoading } from "./notes/hub-notes-panel-loading";
 import { HubNotesCardLoading } from "./notes/hub-notest-card-loading";
 import { HubSessionsLoading } from "./session/hub-sessions-loading";
@@ -74,19 +73,7 @@ export function HubDashboard({ hubId }: { hubId: number }) {
   const { data: hub } = useSuspenseQuery(getHubByIdQueryOptions(hubId));
   const [selectedTab, setSelectedTab] = useState<Tab>("sessions");
 
-  if (!hub)
-    return (
-      <HubDashboardLayout hubName={"Hub not found"}>
-        <div className="sm:p-6 p-4 pt-0!">
-          <EmptyState
-            title="Hub not found"
-            description="The hub you are looking for does not exist."
-            className="bg-white"
-            icon={Folder01Icon}
-          />
-        </div>
-      </HubDashboardLayout>
-    );
+  if (!hub) return <HubNotFound />;
 
   return (
     <HubDashboardLayout hubName={hub.name}>

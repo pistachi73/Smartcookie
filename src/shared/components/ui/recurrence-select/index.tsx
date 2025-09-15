@@ -175,8 +175,8 @@ export const RecurrenceSelect = ({
                 <StartDaySelect
                   setRruleOptions={setRruleOptions}
                   startDate={rruleOptions.dstart}
-                  minDate={minDate}
-                  maxDate={maxDate}
+                  minDate={minDate?.add({ days: -1 })}
+                  maxDate={maxDate?.add({ days: 1 })}
                   onStartDateChange={onStartDateChange}
                 />
               </div>

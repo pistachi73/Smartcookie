@@ -4,33 +4,16 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowRight02Icon } from "@hugeicons-pro/core-solid-rounded";
 import { Menu01Icon } from "@hugeicons-pro/core-stroke-rounded";
 import Image from "next/image";
-import { Link } from "react-aria-components";
+import { useTranslations } from "next-intl";
+import { Button, Link } from "react-aria-components";
 
 import { buttonStyles } from "@/shared/components/ui/button";
 import { Menu } from "@/shared/components/ui/menu";
 import { cn } from "@/shared/lib/classes";
 
 import type { AuthUser } from "@/types/next-auth";
+import { handleNavigation } from "./footer";
 import { MaxWidthWrapper } from "./max-width-wrapper";
-
-const publicNavigation = [
-  {
-    label: "Features",
-    href: "#features",
-  },
-  {
-    label: "Highlights",
-    href: "#main-points",
-  },
-  {
-    label: "Pricing",
-    href: "#pricing",
-  },
-  {
-    label: "About Us",
-    href: "#about",
-  },
-];
 
 export const Header = ({
   user,
@@ -39,6 +22,14 @@ export const Header = ({
   user?: AuthUser;
   portalEnabled: boolean;
 }) => {
+  const t = useTranslations("Landing.Navigation");
+
+  const navigationLinks = [
+    { id: "features", label: t("features"), href: "/#features" },
+    { id: "highlights", label: t("highlights"), href: "/#main-points" },
+    { id: "pricing", label: t("pricing"), href: "/#pricing" },
+    { id: "about", label: t("about"), href: "/#about" },
+  ];
   return (
     <>
       <div aria-hidden="true" className="h-17 bg-white" />
@@ -55,16 +46,21 @@ export const Header = ({
             )}
           >
             <div className="px-3 flex items-center gap-2 md:bg-primary-tint h-11 rounded-lg">
-              <Image src="/Logo.svg" alt="SmartCookie" height={28} width={14} />
+              <Image
+                src="/logos/smartcookie_logo.svg"
+                alt="SmartCookie"
+                height={28}
+                width={14}
+              />
               <p className="text-base font-medium text-primary">SmartCookie</p>
             </div>
 
             <nav className="hidden md:flex items-center gap-1">
-              {publicNavigation.map((item) => {
+              {navigationLinks.map((item) => {
                 return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
+                  <Button
+                    key={item.id}
+                    onPress={() => handleNavigation(item.id, item.href)}
                     className={buttonStyles({
                       intent: "plain",
                       size: "lg",
@@ -72,7 +68,7 @@ export const Header = ({
                     })}
                   >
                     <span>{item.label}</span>
-                  </Link>
+                  </Button>
                 );
               })}
             </nav>
@@ -89,23 +85,15 @@ export const Header = ({
               <Menu.Content placement="bottom end" className="min-w-48">
                 <Menu.Section>
                   <Menu.Header className="py-4">
-                    <div className="flex items-center gap-2">
-                      <Image
-                        src="/Logo.svg"
-                        alt="SmartCookie"
-                        height={28}
-                        width={14}
-                      />
-                      <span className="text-base font-medium text-primary">
-                        SmartCookie
-                      </span>
-                    </div>
+                    <span className="text-base font-medium text-primary">
+                      SmartCookie
+                    </span>
                   </Menu.Header>
-                  {publicNavigation.map((item) => (
+                  {navigationLinks.map((item) => (
                     <Menu.Item
-                      key={item.href}
-                      href={item.href}
+                      key={item.id}
                       className="py-3"
+                      onAction={() => handleNavigation(item.id, item.href)}
                     >
                       {item.label}
                     </Menu.Item>
