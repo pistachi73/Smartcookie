@@ -194,6 +194,15 @@ export const Footer = () => {
                 >
                   {tLegal("accessibilityStatement")}
                 </Link>
+                <Link
+                  href="/refund-policy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  intent="primary"
+                  className={"font-medium text-sm text-muted-fg"}
+                >
+                  {tLegal("refundPolicy")}
+                </Link>
               </div>
             </div>
           </div>

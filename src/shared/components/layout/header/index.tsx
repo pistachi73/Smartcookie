@@ -78,7 +78,7 @@ export const Header = ({
         as="header"
         className="fixed top-[2vw] md:top-4 left-1/2 -translate-x-1/2 flex md:gap-2 z-50 items-center justify-center w-full"
       >
-        <div className="w-full flex gap-2 bg-secondary/70 rounded-2xl shadow-lg p-2 relative justify-between items-center backdrop-blur-2xl border border-border/20 h-[62px]">
+        <div className="w-full flex gap-2 bg-[color-mix(in_oklab,var(--color-secondary)_60%,white_80%)] rounded-2xl shadow-lg p-2 relative justify-between items-center backdrop-blur-2xl border border-border/20 h-[62px]">
           <div className="px-2 flex items-center gap-2">
             <Image
               src="/logos/smartcookie_logo.svg"
