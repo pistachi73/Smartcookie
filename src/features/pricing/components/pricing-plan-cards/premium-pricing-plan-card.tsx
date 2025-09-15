@@ -18,10 +18,12 @@ export const PremiumPricingPlanCard = ({
   paymentFrequency,
   highlight,
   className,
+  buttonDisabled = false,
 }: {
   paymentFrequency: PaymentFrequency;
   highlight?: boolean;
   className?: string;
+  buttonDisabled?: boolean;
 }) => {
   const premiumFeatureItems = usePremiumPricingPlanFeatures();
   const t = useTranslations("Landing.Pricing");
@@ -47,6 +49,7 @@ export const PremiumPricingPlanCard = ({
           className="w-full justify-between px-6 h-13 group"
           size="lg"
           onPress={() => {
+            if (buttonDisabled) return;
             const priceId =
               paymentFrequency === "M"
                 ? env.NEXT_PUBLIC_STRIPE_PREMIUM_MONTHLY_PRICE_ID

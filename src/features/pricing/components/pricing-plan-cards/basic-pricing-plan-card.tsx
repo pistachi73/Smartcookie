@@ -17,9 +17,11 @@ import { PricingPlanCard } from "./pricing-plan-card";
 export const BasicPricingPlanCard = ({
   paymentFrequency,
   className,
+  buttonDisabled = false,
 }: {
   paymentFrequency: PaymentFrequency;
   className?: string;
+  buttonDisabled?: boolean;
 }) => {
   const basicFeatureItems = useBasicPricingPlanFeatures();
   const t = useTranslations("Landing.Pricing");
@@ -46,6 +48,7 @@ export const BasicPricingPlanCard = ({
           className="w-full justify-between px-6 h-13 group bg-linear-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg hover:shadow-xl transition-all duration-200"
           size="lg"
           onPress={() => {
+            if (buttonDisabled) return;
             const priceId =
               paymentFrequency === "M"
                 ? env.NEXT_PUBLIC_STRIPE_BASIC_MONTHLY_PRICE_ID

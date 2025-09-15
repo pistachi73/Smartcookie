@@ -39,8 +39,14 @@ export const Plans = () => {
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-4 w-full bg-muted p-4 rounded-3xl shadow-md">
         <FreePricingPlanCard />
         <div className="flex flex-col lg:flex-row  gap-4 w-full grow bg-white rounded-xl shadow-sm border">
-          <BasicPricingPlanCard paymentFrequency={paymentFrequency} />
-          <PremiumPricingPlanCard paymentFrequency={paymentFrequency} />
+          <BasicPricingPlanCard
+            paymentFrequency={paymentFrequency}
+            buttonDisabled={true}
+          />
+          <PremiumPricingPlanCard
+            paymentFrequency={paymentFrequency}
+            buttonDisabled={true}
+          />
         </div>
       </div>
     </MaxWidthWrapper>
