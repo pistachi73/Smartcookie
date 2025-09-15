@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { SessionProvider } from "next-auth/react";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
+import { LocalizedStringProvider } from "react-aria-components/i18n";
 
 import { Toast } from "@/ui/toast";
 import { ToastNotification } from "@/shared/components/layout/toast-notification";
@@ -77,6 +78,7 @@ export default async function RootLayout({
     <html lang={locale} dir={"ltr"} className="h-full" suppressHydrationWarning>
       {/* <ReactScan /> */}
       <body className={`${sans.variable} font-sans h-full`}>
+        <LocalizedStringProvider locale={locale} />
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Providers locale={locale}>
             <SessionProvider session={session}>
