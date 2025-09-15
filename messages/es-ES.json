@@ -4,9 +4,9 @@
       "Title": {
         "1": "Dedícate a enseñar",
         "2": "olvídate de",
-        "3": "{id, select, admin {la gestión} spreadsheets {las hojas de cálculo} last_minute_prep {preparar clases a contrarreloj} chaotic_notes {las notas caóticas} other {la gestión}}."
+        "3": "{id, select, admin {la gestión} spreadsheets {las hojas de cálculo} last_minute_prep {ir a contrarreloj} chaotic_notes {las notas caóticas} other {la gestión}}."
       },
-      "Subtitle": "SmartCookie es una herramienta todo en uno que simplifica la gestión docente, organiza tus clases y potencia la motivación. La mano derecha de cada profe.",
+      "Subtitle": "SmartCookie es una herramienta todo en uno que simplifica la gestión docente, organiza tus clases y potencia la motivación. SmartCookie es la mano derecha de cada profe.",
       "EmailMarketingForm": {
         "Placeholder": "Introduce tu correo electrónico",
         "Button": "Descubre SmartCookie"
@@ -110,12 +110,12 @@
     },
     "AboutUs": {
       "title": "El equipo detrás de SmartCookie",
-      "subtitle": "Una profesora de idiomas y un desarrollador de software con más de 15 años de experiencia combinada han creado una app para impulsar a docentes ocupados como tú",
+      "subtitle": "Una profesora de idiomas y un desarrollador de software con más de 15 años de experiencia combinada han creado una app para impulsar a docentes como tú, con agendas llenas",
       "badge": "Sobre nosotros",
       "trustedBy": "Con la confianza de",
       "martina": {
         "experience": "Más de 9 años enseñando idiomas",
-        "bio": "Desde 2016, Martina ha impartido más de 4.000 horas de clase a más de 1.000 estudiantes de español, catalán, inglés y alemán. Participa en eventos internacionales de enseñanza y desarrolla activamente su experiencia mediante formación continua. Con formación en Matemáticas, Empresa y Psicología, combina un profundo entendimiento del aprendizaje y la enseñanza con la práctica real en las aulas."
+        "bio": "Desde 2016, Martina ha impartido más de 4000 horas de clase a más de 1000 estudiantes de español, catalán, inglés y alemán. Participa en eventos internacionales de enseñanza y desarrolla activamente su experiencia mediante formación continua. Con formación en Matemáticas, Empresa y Psicología, combina un profundo entendimiento del aprendizaje y la enseñanza con la práctica real en las aulas."
       },
       "oscar": {
         "experience": "Más de 7 años desarrollando software",
