@@ -12,7 +12,7 @@ import { Menu } from "@/shared/components/ui/menu";
 import { cn } from "@/shared/lib/classes";
 
 import type { AuthUser } from "@/types/next-auth";
-import { handleNavigation } from "./footer";
+import { useHandleNavigation } from "./footer";
 import { MaxWidthWrapper } from "./max-width-wrapper";
 
 export const Header = ({
@@ -23,10 +23,10 @@ export const Header = ({
   portalEnabled: boolean;
 }) => {
   const t = useTranslations("Landing.Navigation");
-
+  const handleNavigation = useHandleNavigation();
   const navigationLinks = [
     { id: "features", label: t("features"), href: "/#features" },
-    { id: "highlights", label: t("highlights"), href: "/#main-points" },
+    { id: "highlights", label: t("highlights"), href: "/#highlights" },
     { id: "pricing", label: t("pricing"), href: "/#pricing" },
     { id: "about", label: t("about"), href: "/#about" },
   ];

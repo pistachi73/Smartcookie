@@ -24,7 +24,7 @@ export const Highlights = () => {
   return (
     <MaxWidthWrapper
       as="section"
-      id="main-points"
+      id="highlights"
       className="items-center h-full flex justify-center flex-col space-y-12"
     >
       {/* Header Section */}

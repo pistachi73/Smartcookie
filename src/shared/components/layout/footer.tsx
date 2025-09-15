@@ -11,6 +11,7 @@ import { Button } from "react-aria-components";
 
 import { cn } from "@/shared/lib/classes";
 
+import { usePathname, useRouter } from "@/i18n/navigation";
 import { Heading } from "../ui/heading";
 import { Link, linkStyles } from "../ui/link";
 import { LocaleSwitcherSelect } from "../ui/locale-switcher/locale-switcher";
@@ -38,32 +39,42 @@ const socialLinks = [
     icon: SmartPhoneIcon,
   },
 ];
+export const useHandleNavigation = () => {
+  const pathname = usePathname();
+  const router = useRouter();
 
-export const handleNavigation = (id: string, href: string) => {
-  const isLandingPage = window.location.pathname === "/";
+  return (id: string, href: string) => {
+    const isLandingPage = pathname === "/";
 
-  if (isLandingPage) {
-    const element = document.querySelector(`#${id}`);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+    if (isLandingPage) {
+      const element = document.querySelector(`#${id}`);
+      if (element) {
+        const headerOffset = 100;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition =
+          elementPosition + window.pageYOffset - headerOffset;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
+      }
+    } else {
+      router.push(href);
     }
-  } else {
-    window.location.href = href;
-  }
+  };
 };
 
 export const Footer = () => {
-  const t = useTranslations("Landing");
   const tFooter = useTranslations("Landing.Footer");
   const tNavigation = useTranslations("Landing.Navigation");
   const tLegal = useTranslations("Landing.Legal");
-
+  const handleNavigation = useHandleNavigation();
   const navigationLinks = [
     { id: "features", label: tNavigation("features"), href: "/#features" },
     {
       id: "highlights",
       label: tNavigation("highlights"),
-      href: "/#main-points",
+      href: "/#highlights",
     },
     { id: "pricing", label: tNavigation("pricing"), href: "/#pricing" },
     { id: "about", label: tNavigation("about"), href: "/#about" },
@@ -80,8 +91,7 @@ export const Footer = () => {
             >
               {tFooter("title")}
             </Heading>
-
-            {/* Navigation and social section */}
+            h{/* Navigation and social section */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
               {/* Logo and description */}
               <div className="space-y-6 lg:col-span-1">
@@ -168,7 +178,6 @@ export const Footer = () => {
                 </div>
               </div>
             </div>
-
             {/* Bottom section */}
             <div className="pt-8 border-t border-border/40">
               <div className="flex flex-col sm:flex-row sm:flex-wrap items-center gap-4">
