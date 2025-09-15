@@ -74,12 +74,7 @@ export default async function RootLayout({
   }
 
   return (
-    <html
-      lang={"en-GB"}
-      dir={"ltr"}
-      className="h-full"
-      suppressHydrationWarning
-    >
+    <html lang={locale} dir={"ltr"} className="h-full" suppressHydrationWarning>
       {/* <ReactScan /> */}
       <body className={`${sans.variable} font-sans h-full`}>
         <NextIntlClientProvider locale={locale} messages={messages}>
