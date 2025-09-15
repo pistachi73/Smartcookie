@@ -7,7 +7,7 @@ export const createMockUserSubscription = (
   stripeSubscriptionId: "sub_123",
   stripePriceId: "price_123",
   status: "active",
-  tier: "pro",
+  tier: "basic",
   currentPeriodStart: new Date("2024-01-01"),
   currentPeriodEnd: new Date("2024-02-01"),
   createdAt: new Date("2024-01-01"),

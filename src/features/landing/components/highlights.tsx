@@ -9,6 +9,7 @@ import {
 import { Brain02Icon, HealtcareIcon } from "@hugeicons-pro/core-stroke-rounded";
 import * as motion from "motion/react-m";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 import { MaxWidthWrapper } from "@/shared/components/layout/max-width-wrapper";
 import { regularSpring } from "@/shared/lib/animation";
@@ -19,17 +20,18 @@ import { LandingSectionHeader } from "./landing-section-header";
 const MotionHugeIcons = motion.create(HugeiconsIcon);
 
 export const Highlights = () => {
+  const t = useTranslations("Landing.Highlights");
   return (
     <MaxWidthWrapper
       as="section"
-      id="main-points"
+      id="highlights"
       className="items-center h-full flex justify-center flex-col space-y-12"
     >
       {/* Header Section */}
       <LandingSectionHeader
-        title="Built for busy teachers like you"
-        description="Everything you need to manage your lessons, students, and feedback in one intuitive platform. Designed by teachers, for teachers."
-        badge="Highlights"
+        title={t("Title")}
+        description={t("Subtitle")}
+        badge={t("Badge")}
         icon={SparklesIcon}
       />
 
@@ -51,7 +53,7 @@ export const Highlights = () => {
           )}
         >
           <Image
-            src="/texas.jpg"
+            src="/images/highlights/martina_teaching_texas.jpg"
             alt="Your Daily Teaching Companion"
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 350px"
@@ -71,10 +73,10 @@ export const Highlights = () => {
           )}
         >
           <p className="text-xl lg:text-2xl  font-semibold leading-tight">
-            All your tools, one screen.
+            {t("AllInOneTool.Title")}
           </p>
           <p className="text-base text-muted-fg ">
-            Organized. Centralized. Effortless.
+            {t("AllInOneTool.Description")}
           </p>
         </div>
 
@@ -119,7 +121,7 @@ export const Highlights = () => {
             transition={regularSpring}
             className=" leading-0 text-base font-medium text-center text-balance"
           >
-            Monitor motivation over time
+            {t("FeedbackQuote")}
           </motion.p>
         </motion.div>
 
@@ -133,7 +135,7 @@ export const Highlights = () => {
           )}
         >
           <Image
-            src="/martina_teaching_1.png"
+            src="/images/highlights/martina_teaching_online.png"
             alt="Your Daily Teaching Companion"
             fill
             className="object-cover aspect-video"
@@ -169,7 +171,7 @@ export const Highlights = () => {
             />
           </div>
           <blockquote className="text-center text-base xl:text-base font-medium leading-relaxed relative text-pretty">
-            Focus on teaching, trust everything else to SmartCookie.
+            {t("Quote")}
           </blockquote>
         </div>
 
@@ -183,7 +185,7 @@ export const Highlights = () => {
           )}
         >
           <p className="text-muted-fg text-base lg:text-sm xl:text-base">
-            Trusted by
+            {t("TrustedBy")}
           </p>
           <div className="relative w-fit">
             <p className="text-5xl sm:text-4xl xl:text-5xl font-bold tracking-tight tabular-nums">
@@ -234,7 +236,7 @@ export const Highlights = () => {
             transition={regularSpring}
             className=" leading-0 text-base font-medium text-center text-balance"
           >
-            Your second brain
+            {t("BrainQuote")}
           </motion.p>
         </motion.div>
 
@@ -254,13 +256,12 @@ export const Highlights = () => {
                 +
               </span>
             </p>
-            <div className="text-xl lg:text-2xl font-semibold  mb-1 shrink-0 text-nowrap">
-              Hours Saved Weekly
+            <div className="text-xl lg:text-2xl font-semibold  mb-1 shrink-0 ">
+              {t("HoursSaved.Title")}
             </div>
           </div>
           <p className="text-muted-fg text-base">
-            Teachers save 12+ hours weekly by trusting SmartCookie to manage
-            their admin.
+            {t("HoursSaved.Description")}
           </p>
         </div>
       </div>

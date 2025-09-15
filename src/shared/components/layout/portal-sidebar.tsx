@@ -64,7 +64,7 @@ export default function AppSidebar({ ...props }: AppSidebarProps) {
           >
             <div className="relative h-8 w-4 shrink-0">
               <Image
-                src="/Logo.svg"
+                src="/logos/smartcookie_logo.svg"
                 alt="SmartCookie"
                 fill
                 className="rounded-full"

@@ -15,7 +15,7 @@ import {
 } from "./schemas";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY, {
-  apiVersion: "2025-06-30.basil",
+  apiVersion: "2025-08-27.basil",
 });
 
 export const createStripeCustomer = withProtectedDataAccess({
@@ -49,7 +49,7 @@ export const createStripeCustomer = withProtectedDataAccess({
 
 export const createCheckoutSession = withProtectedDataAccess({
   schema: createCheckoutSessionSchema,
-  callback: async ({ paymentFrequency }, user) => {
+  callback: async ({ priceId }, user) => {
     const existingSubscription = await getUserSubscriptionByUserId({
       userId: user.id,
     });
@@ -60,11 +60,6 @@ export const createCheckoutSession = withProtectedDataAccess({
         message: "User already has an active subscription",
       });
     }
-
-    const priceId =
-      paymentFrequency === "M"
-        ? env.STRIPE_PRO_MONTHLY_PRICE_ID
-        : env.STRIPE_PRO_ANNUAL_PRICE_ID;
 
     let stripeCustomerId: string;
 
@@ -97,8 +92,8 @@ export const createCheckoutSession = withProtectedDataAccess({
       metadata: {
         userId: user.id,
       },
-      success_url: getUrl("/portal/account?t=subscription"),
-      cancel_url: getUrl("/portal/account?t=subscription"),
+      success_url: getUrl("/portal/account/subscription"),
+      cancel_url: getUrl("/portal/account/subscription"),
       subscription_data: {
         trial_period_days: 7,
       },
@@ -131,7 +126,7 @@ export const createBillingPortalSession = withProtectedDataAccess({
     }
     const billingPortalSession = await stripe.billingPortal.sessions.create({
       customer: user.stripeCustomerId,
-      return_url: getUrl("/portal/account?t=subscription"),
+      return_url: getUrl("/portal/account/subscription"),
     });
 
     if (!billingPortalSession.url) {

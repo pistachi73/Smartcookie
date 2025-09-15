@@ -1,0 +1,149 @@
+{
+  "Landing": {
+    "Hero": {
+      "Title": {
+        "1": "Focus on teaching",
+        "2": "forget about",
+        "3": "{id, select, admin {admin} spreadsheets {spreadsheets} last_minute_prep {last-minute prep} chaotic_notes {chaotic notes} other {admin}}."
+      },
+      "Subtitle": "SmartCookie is an all-in-one tool that simplifies admin, tracks lessons, and boosts motivation. A second brain to teach smarter.",
+      "EmailMarketingForm": {
+        "Placeholder": "Enter your email",
+        "Button": "Discover SmartCookie"
+      }
+    },
+    "Features": {
+      "Calendar": {
+        "Title": "Schedule Lessons Effortlessly",
+        "Subtitle": "Integrated Calendar",
+        "Description": "Streamline your booking process with intelligent scheduling that adapts to your availability"
+      },
+      "QuickNotes": {
+        "Title": "Capture Notes Easily",
+        "Subtitle": "Next-Level Notes",
+        "Description": "Keep all your key details linked to students and lessons. Forget about messy or lost notes."
+      },
+      "Feedback": {
+        "Title": "Collect Feedback Thoughtfully",
+        "Subtitle": "Frictionless Feedback Tracking",
+        "Description": "Record meaningful insights on your own terms. Use meaningful feedback to adapt and improve your teaching."
+      },
+      "Courses": {
+        "Title": "Manage Courses Smoothly",
+        "Subtitle": "Smart Dashboard",
+        "Description": "Keep all your courses organized in one place. Quickly switch between classes without losing focus."
+      },
+      "Dashboard": {
+        "Title": "Track Workload Effortlessly",
+        "Subtitle": "Stay on Top of Workload",
+        "Description": "Get a clear overview of your tasks and lessons. Balance your schedule and avoid burnout."
+      }
+    },
+    "Highlights": {
+      "Title": "Built for busy teachers like you",
+      "Subtitle": "Everything you need to manage your lessons, students, and feedback in one intuitive platform. Designed by teachers, for teachers.",
+      "Badge": "Highlights",
+      "HoursSaved": {
+        "Title": "Hours Saved Weekly",
+        "Description": "Teachers save 12+ hours weekly by trusting SmartCookie to manage their admin."
+      },
+      "Quote": "Focus on teaching, trust everything else to SmartCookie.",
+      "AllInOneTool": {
+        "Title": "All your tools, one screen.",
+        "Description": "Organized. Centralized. Effortless."
+      },
+      "TrustedBy": "Trusted by",
+      "BrainQuote": "Your second brain",
+      "FeedbackQuote": "Monitor motivation over time"
+    },
+    "Pricing": {
+      "title": "Pricing plans to grow with you",
+      "description": "Begin with a free plan and scale up as your needs evolve. Each plan provides powerful features to help you teach smarter.",
+      "badge": "Pricing",
+      "paymentFrequency": "{paymentFrequency, select, M {Pay monthly} A {Pay yearly} other {Unknown}}",
+      "paymentFrequencyLabel": "Monthly",
+      "annualBillingLabel": "Billed once yearly",
+      "Free": {
+        "title": "Free",
+        "description": "Perfect for getting started and trying basic management with ease.",
+        "actionButtonLabel": "Comming soon",
+        "featuresHeading": "What's included",
+        "features": {
+          "coursesLimit": "Up to 2 courses",
+          "studentsLimit": "Up to 10 students",
+          "notesLimit": "Up to 20 notes",
+          "notesCharacterLimit": "Up to 100 chars per note",
+          "communityAccess": "1 webinar per month"
+        }
+      },
+      "Basic": {
+        "title": "Basic",
+        "description": "Ideal for teachers who want to optimize their workflow and save time.",
+        "actionButtonLabel": "Comming soon",
+        "featuresHeading": "Everything in Free, plus:",
+        "features": {
+          "coursesLimit": "Up to 20 courses",
+          "studentsLimit": "Up to 40 students",
+          "notesLimit": "Up to 500 notes",
+          "notesCharacterLimit": "Up to 500 chars per note",
+          "communityAccess": "Community forum access",
+          "itSupport": "Standard email support & onboarding",
+          "feedbackProgressTracking": "Feedback & progress tracking",
+          "automaticScheduleConflictNotification": "Automatic schedule conflict notification"
+        }
+      },
+      "Premium": {
+        "title": "Premium",
+        "description": "For teachers who want to focus on teaching while everything else runs itself.",
+        "actionButtonLabel": "Comming soon",
+        "featuresHeading": "Everything in Basic, plus:",
+        "features": {
+          "coursesLimit": "Unlimited courses",
+          "studentsLimit": "Unlimited students",
+          "notesLimit": "Unlimited notes",
+          "notesCharacterLimit": "Up to 1000 chars per note",
+          "communityAccess": "Exclusive community access",
+          "itSupport": "Priority support"
+        }
+      }
+    },
+    "AboutUs": {
+      "title": "The faces behind SmartCookie",
+      "subtitle": "A language teacher and a software developer with over 15 years of combined experience, uniting forces to empower busy professionals like you",
+      "badge": "About Us",
+      "trustedBy": "Trusted by",
+      "martina": {
+        "experience": "9+ years teaching languages",
+        "bio": "Since 2016, Martina has taught over 4,000 hours to more than 1,000 students of Spanish, Catalan, English, and German. She speaks at global teaching events and actively develops her teaching expertise through training. With a background in Mathematics, Business, and Psychology, Martina integrates a deep understanding of learning and teaching with real-world practice."
+      },
+      "oscar": {
+        "experience": "7+ years developing software",
+        "bio": "Since 2018, Óscar has coded thousands of hours building full-stack applications across diverse industries. He currently works as a Frontend Engineer at Gartner, tackling complex challenges in an international, cutting-edge environment. Always eager to expand his skills, Óscar continuously explores new technologies like Web3, smart contracts, and creative fields such as graphic design and 2D animation."
+      }
+    },
+    "Navigation": {
+      "features": "Features",
+      "highlights": "Highlights",
+      "pricing": "Pricing",
+      "about": "About Us"
+    },
+    "Legal": {
+      "privacyPolicy": "Privacy Policy",
+      "termsOfService": "Terms of Service",
+      "cookiePolicy": "Cookie Policy",
+      "accessibilityStatement": "Accessibility Statement",
+      "refundPolicy": "Refund Policy"
+    },
+
+    "Footer": {
+      "title": "Teach smarter with SmartCookie",
+      "description": "SmartCookie is the all-in-one app that acts as a second brain for language teachers, helping them organize their calendars, track lesson progress, and boost student motivation through actionable feedback.",
+      "navigation": "Navigation",
+      "connect": "Connect"
+    }
+  },
+  "LocaleSwitcher": {
+    "label": "Change language",
+    "locale": "{locale, select, en_GB {English} es_ES {Spanish} other {Unknown}}"
+  }
+}

@@ -3,10 +3,10 @@
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
   CreditCardIcon,
+  Diamond02Icon,
   Layers01Icon,
   RefreshIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -16,9 +16,15 @@ import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 
 import { isDataAccessError } from "@/data-access/errors";
 import { createBillingPortalSession } from "@/data-access/payment/mutations";
+import { useRouter } from "@/i18n/navigation";
 
 type BillingPortalButtonProps = {
-  type: "PAYMENT" | "MANAGE_PLAN" | "CANCEL_SUBSCRIPTION" | "RESUBSCRIBE";
+  type:
+    | "PAYMENT"
+    | "MANAGE_PLAN"
+    | "CANCEL_SUBSCRIPTION"
+    | "RESUBSCRIBE"
+    | "UPGRADE_TO_PREMIUM";
   buttonProps?: ButtonProps;
 };
 
@@ -44,6 +50,10 @@ const billingPortalButtonMapping: Record<
     label: "Resubscribe",
     Icon: RefreshIcon,
   },
+  UPGRADE_TO_PREMIUM: {
+    label: "Upgrade to premium",
+    Icon: Diamond02Icon,
+  },
 };
 
 export const BillingPortalButton = ({
@@ -55,7 +65,7 @@ export const BillingPortalButton = ({
   const { mutate: createBillingPortalSessionMutation, isPending } =
     useProtectedMutation({
       schema: z.void(),
-      mutationFn: () => createBillingPortalSession(),
+      mutationFn: createBillingPortalSession,
       onSuccess: (result) => {
         if (isDataAccessError(result)) {
           toast.error("Something went wrong");

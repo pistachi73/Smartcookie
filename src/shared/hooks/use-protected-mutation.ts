@@ -117,11 +117,10 @@ export function useProtectedMutation<
     },
     onSuccess: (data, variables, context) => {
       if (isDataAccessError(data)) {
-        console.log({ data });
         switch (data.type) {
           case "AUTHENTICATION_ERROR":
             toast.error("You must be logged in to do this");
-            break;
+            return;
           case "VALIDATION_ERROR": {
             if (data.meta.formattedErrors && isDevEnv) {
               const errorMessages = extractZodErrors(data.meta.formattedErrors);
@@ -131,12 +130,9 @@ export function useProtectedMutation<
             } else {
               toast.error("Validation failed");
             }
-
-            break;
+            return;
           }
         }
-
-        return;
       }
 
       options.onSuccess?.(data, variables, context);
@@ -145,6 +141,7 @@ export function useProtectedMutation<
       if (options.onError) {
         options.onError?.(error, variables, context);
       } else {
+        console.error(error);
         toast.error("Something went wrong! Please try again.");
       }
     },

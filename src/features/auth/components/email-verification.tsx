@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -22,6 +21,7 @@ import { isDataAccessError } from "@/data-access/errors";
 import { sendEmailVerificationEmail } from "@/data-access/verification-token/mutations";
 import { SendEmailVerificationEmailSchema } from "@/data-access/verification-token/schemas";
 import { useAuthStore } from "@/features/auth/store/auth-store-provider";
+import { useRouter } from "@/i18n/navigation";
 import { authSchema } from "../lib/validation";
 import { FormWrapper } from "./form-wrapper";
 

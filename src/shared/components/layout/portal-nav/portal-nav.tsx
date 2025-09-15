@@ -44,7 +44,10 @@ export const PortalNav = ({
       <div className="flex items-center justify-between w-full h-full gap-8">
         {isMobile && <SidebarTrigger />}
         <div className="flex items-center gap-x-4 shrink-0">
-          <Breadcrumbs className="@4xl:flex hidden">
+          <Breadcrumbs
+            className="@4xl:flex hidden"
+            aria-label="Portal navigation"
+          >
             {breadcrumbs.map((crumb, index) => {
               if (crumb === "skeleton") {
                 return (

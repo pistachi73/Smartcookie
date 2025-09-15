@@ -11,7 +11,7 @@ export type AuthUser = DefaultSession["user"] & {
   name: User["name"];
   email: User["email"];
   stripeCustomerId: User["stripeCustomerId"];
-  subscriptionTier?: UserSubscription["tier"];
+  subscriptionTier?: UserSubscription["tier"] | "free";
   hasActiveSubscription: boolean;
 };
 
@@ -31,7 +31,7 @@ declare module "next-auth/jwt" {
     role: User["role"];
     isTwoFactorEnabled: User["isTwoFactorEnabled"];
     stripeCustomerId: User["stripeCustomerId"];
-    subscriptionTier?: UserSubscription["tier"];
+    subscriptionTier?: UserSubscription["tier"] | "free";
     subscriptionStatus?: UserSubscription["status"];
   }
 }

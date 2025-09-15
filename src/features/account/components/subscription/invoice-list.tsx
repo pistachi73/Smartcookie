@@ -78,7 +78,10 @@ export const InvoiceList = ({
       </Card.Header>
 
       <Card.Content>
-        <Table>
+        <Table
+          bleed
+          className="[--gutter:var(--card-spacing)] sm:[--gutter:var(--card-spacing)] border-b [--gutter-y:--spacing(3)]"
+        >
           <Table.Header>
             <Table.Row>
               <Table.Column isRowHeader>Date</Table.Column>

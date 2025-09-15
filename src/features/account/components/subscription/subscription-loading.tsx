@@ -1,61 +1,48 @@
-import { Card } from "@/shared/components/ui/card";
-import { Skeleton } from "@/shared/components/ui/skeleton";
+import { LoadingTabs } from "@/shared/components/ui/tabs";
+import { cn } from "@/shared/lib/classes";
+
+import { ACCOUNT_TABS } from "../../lib/constants";
+import { SubscriptionCardSkeleton } from "./subscription-cards/subscription-card-skeleton";
+import { SubscriptionLayout } from "./subscription-layout";
 
 export const SubscriptionLoading = () => {
   return (
-    <div className="space-y-6">
-      <Card className="shadow-md relative overflow-hidden">
-        {/* Top accent bar */}
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-secondary w-full h-1" />
-
-        <Card.Header>
-          <Card.Title className="flex flex-row gap-2 text-xl items-center">
-            <Skeleton className="h-6 w-24" />
-          </Card.Title>
-          <Card.Description>
-            <Skeleton className="h-4 w-64" />
-          </Card.Description>
-        </Card.Header>
-
-        <Card.Content className="space-y-6">
-          {/* Upgrade button skeleton */}
-          <Skeleton className="h-12 w-full rounded-lg" />
-
-          <div className="space-y-4">
-            {/* "With Pro plan you get:" text skeleton */}
-            <Skeleton className="h-5 w-48" />
-
-            {/* Feature list skeleton - 6 items to match memberChecks */}
-            <div className="flex flex-col gap-3">
-              {Array.from({ length: 6 }, (_, index) => index).map((index) => (
-                <div
-                  key={`feature-skeleton-${index}`}
-                  className="flex flex-row items-center gap-3"
+    <SubscriptionLayout>
+      <LoadingTabs
+        aria-label="Hub Dashboard"
+        className="flex-1 gap-4 sm:gap-6 h-full"
+      >
+        <LoadingTabs.List
+          className={cn("w-full sticky top-0 px-5 h-12 pt-3 bg-white")}
+        >
+          {ACCOUNT_TABS.map((tab) => {
+            return (
+              <LoadingTabs.Tab
+                isSelected={tab.id === "subscription"}
+                key={tab.id}
+                id={tab.id}
+                className="px-2"
+              >
+                <p
+                  className={cn(
+                    "flex items-center gap-2",
+                    tab.id === "subscription" && "text-primary",
+                  )}
                 >
-                  {/* Icon skeleton */}
-                  <Skeleton className="h-4 w-4 rounded-sm" />
-                  {/* Feature text skeleton with varying widths */}
-                  <Skeleton
-                    className={`h-4 ${
-                      index === 0
-                        ? "w-48"
-                        : index === 1
-                          ? "w-56"
-                          : index === 2
-                            ? "w-52"
-                            : index === 3
-                              ? "w-44"
-                              : index === 4
-                                ? "w-50"
-                                : "w-40"
-                    }`}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        </Card.Content>
-      </Card>
-    </div>
+                  {tab.label}
+                </p>
+              </LoadingTabs.Tab>
+            );
+          })}
+        </LoadingTabs.List>
+
+        <LoadingTabs.Panel
+          id="subscription"
+          className="max-w-[840px] mx-auto w-full p-4 sm:p-5 space-y-4 bg-bg"
+        >
+          <SubscriptionCardSkeleton />
+        </LoadingTabs.Panel>
+      </LoadingTabs>
+    </SubscriptionLayout>
   );
 };

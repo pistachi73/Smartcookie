@@ -10,6 +10,7 @@ import {
 } from "@hugeicons-pro/core-solid-rounded";
 import { ArrowRight02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { AnimatePresence, motion } from "motion/react";
+import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -29,14 +30,16 @@ import { addEmailMarketingSubscriber } from "@/data-access/email-marketing/mutat
 import { AddEmailMarketingSubscriberSchema } from "@/data-access/email-marketing/schemas";
 
 const animatedTexts = [
-  { text: "admin.", icon: UserSettingsIcon },
-  { text: "spreadsheets.", icon: TableIcon },
-  { text: "last-minute prep.", icon: Time02Icon },
-  { text: "chaotic notes.", icon: StickyNote02Icon },
+  { id: "admin", icon: UserSettingsIcon },
+  { id: "spreadsheets", icon: TableIcon },
+  { id: "last_minute_prep", icon: Time02Icon },
+  { id: "chaotic_notes", icon: StickyNote02Icon },
 ] as const;
 
 export function Hero() {
   const { up } = useViewport();
+  const t = useTranslations("Landing.Hero");
+
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [containerWidth, setContainerWidth] = useState(0);
   const measureRef = useRef<HTMLDivElement>(null);
@@ -56,6 +59,8 @@ export function Hero() {
     }
   }, [currentTextIndex]);
 
+  const currrentAnimatedTextId = animatedTexts[currentTextIndex]!.id;
+
   return (
     <MaxWidthWrapper
       as="section"
@@ -71,7 +76,7 @@ export function Hero() {
               lineHeight: "1.3",
             }}
           >
-            Focus on teaching,
+            {t("Title.1")},
           </Heading>
           <div
             className={cn(
@@ -85,7 +90,7 @@ export function Hero() {
               }}
               className="inline-block"
             >
-              forget about
+              {t("Title.2")}
             </span>
 
             <motion.div
@@ -105,7 +110,9 @@ export function Hero() {
                 aria-hidden="true"
               >
                 <div className="size-12 lg:mx-2 lg:mr-1" />
-                {animatedTexts[currentTextIndex]?.text}
+                {t("Title.3", {
+                  id: currrentAnimatedTextId,
+                })}
               </div>
 
               <AnimatePresence mode="wait">
@@ -148,7 +155,10 @@ export function Hero() {
                       </div>
                     </motion.div>
                   </motion.div>
-                  {animatedTexts[currentTextIndex]?.text
+
+                  {t("Title.3", {
+                    id: currrentAnimatedTextId,
+                  })
                     .split(" ")
                     .map((word: string, wordIndex: number) => (
                       <motion.div
@@ -191,8 +201,7 @@ export function Hero() {
         </div>
 
         <p className="max-w-[400px] sm:max-w-none mx-auto text-base leading-relaxed text-fg/80 font-medium sm:text-xl text-center text-balance tracking-tight">
-          SmartCookie is an all-in-one tool that simplifies admin, tracks
-          lessons, and boosts motivation. A second brain to teach smarter.
+          {t("Subtitle")}
         </p>
 
         <EmailMarketingForm />
@@ -206,6 +215,7 @@ const formSchema = z.object({
 });
 
 export const EmailMarketingForm = () => {
+  const t = useTranslations("Landing.Hero.EmailMarketingForm");
   const { mutate, isPending } = useProtectedMutation({
     requireAuth: false,
     schema: AddEmailMarketingSubscriberSchema,
@@ -238,7 +248,7 @@ export const EmailMarketingForm = () => {
         render={({ field }) => (
           <TextField
             autoComplete="email"
-            placeholder="Enter your email"
+            placeholder={t("Placeholder")}
             className={{
               primitive: "w-full max-w-[400px]",
               fieldGroup: "h-13",
@@ -256,7 +266,7 @@ export const EmailMarketingForm = () => {
         isPending={isPending}
         className="group h-13 w-full sm:w-auto max-w-[400px] sm:max-w-none gap-6 text-base"
       >
-        Discover SmartCookie
+        {t("Button")}
         {isPending ? (
           <ProgressCircle isIndeterminate className="size-5" />
         ) : (

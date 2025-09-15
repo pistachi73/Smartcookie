@@ -1,5 +1,4 @@
 import { useQueries } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
@@ -10,6 +9,7 @@ import {
   waitFor,
 } from "@/shared/lib/testing/test-utils";
 
+import { useRouter } from "@/i18n/navigation";
 import { QuestionDetails } from "../question-details";
 
 vi.mock("@/shared/hooks/use-navigate-with-params");

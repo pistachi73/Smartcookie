@@ -3,10 +3,10 @@ import {
   Delete02Icon,
   MessageEdit01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { useRouter } from "next/navigation";
 
 import { Menu } from "@/shared/components/ui/menu";
 
+import { useRouter } from "@/i18n/navigation";
 import { QuestionDetailsMenuTrigger } from "./question-details-menu-trigger";
 
 type QuestionDetailsMenuProps = {

@@ -34,6 +34,11 @@ vi.mock("next/navigation", () => ({
   useSearchParams: vi.fn(),
 }));
 
+vi.mock("@/i18n/navigation", () => ({
+  usePathname: vi.fn(),
+  useRouter: vi.fn(),
+}));
+
 vi.mock("@/shared/lib/auth", () => ({
   currentUser: vi.fn(),
   currentRole: vi.fn(),

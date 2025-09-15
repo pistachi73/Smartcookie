@@ -8,6 +8,7 @@ import {
   StickyNote02Icon,
 } from "@hugeicons-pro/core-solid-rounded";
 import Image, { type ImageProps } from "next/image";
+import { useTranslations } from "next-intl";
 
 import { Card } from "@/shared/components/ui/card";
 import { Heading } from "@/shared/components/ui/heading";
@@ -15,13 +16,14 @@ import { MaxWidthWrapper } from "@/shared/components/layout/max-width-wrapper";
 import { cn } from "@/shared/lib/classes";
 
 export const Features = () => {
+  const t = useTranslations("Landing.Features");
   return (
     <MaxWidthWrapper className="md:space-y-8 space-y-4" id="features">
       <div className="grid grid-cols-1 md:grid-cols-2 md:gap-8 gap-4">
         <VerticalFeatureCard
-          title="Schedule Lessons Effortlessly"
-          subtitle="Integrated Calendar"
-          description="Streamline your booking process with intelligent scheduling that adapts to your availability"
+          title={t("Calendar.Title")}
+          subtitle={t("Calendar.Subtitle")}
+          description={t("Calendar.Description")}
           image={{
             src: "/images/features/calendar.png",
             alt: "Calendar interface",
@@ -31,9 +33,9 @@ export const Features = () => {
           icon={Calendar03Icon}
         />
         <VerticalFeatureCard
-          title="Capture Notes Easily"
-          subtitle="Next-Level Notes"
-          description="Keep all your key details linked to students and lessons. Forget about messy or lost notes."
+          title={t("QuickNotes.Title")}
+          subtitle={t("QuickNotes.Subtitle")}
+          description={t("QuickNotes.Description")}
           image={{
             src: "/images/features/quick_notes.png",
             alt: "Quick Notes",
@@ -46,9 +48,9 @@ export const Features = () => {
       <HorizontalFeatureCard />
       <div className="grid grid-cols-1 md:grid-cols-2 md:gap-8 gap-4">
         <VerticalFeatureCard
-          title="Manage Courses Smoothly"
-          subtitle="Smart Dashboard"
-          description="Keep all your courses organized in one place. Quickly switch between classes without losing focus."
+          title={t("Courses.Title")}
+          subtitle={t("Courses.Subtitle")}
+          description={t("Courses.Description")}
           image={{
             src: "/images/features/hubs.png",
             alt: "Hubs",
@@ -58,9 +60,9 @@ export const Features = () => {
           icon={FolderLibraryIcon}
         />
         <VerticalFeatureCard
-          title="Track Workload Effortlessly"
-          subtitle="Stay on Top of Workload"
-          description="Get a clear overview of your tasks and lessons. Balance your schedule and avoid burnout."
+          title={t("Dashboard.Title")}
+          subtitle={t("Dashboard.Subtitle")}
+          description={t("Dashboard.Description")}
           image={{
             src: "/images/features/dashboard.png",
             alt: "Dashboard",
@@ -149,6 +151,7 @@ export const VerticalFeatureCard = ({
 };
 
 export const HorizontalFeatureCard = () => {
+  const t = useTranslations("Landing.Features");
   return (
     <Card
       className={cn(
@@ -177,15 +180,10 @@ export const HorizontalFeatureCard = () => {
                 className="text-primary"
               />
             </div>
-            <p className="text-base font-medium">
-              Frictionless Feedback Tracking.
-            </p>
+            <p className="text-base font-medium">{t("Feedback.Subtitle")}</p>
           </div>
-          <Heading>Collect Feedback Thoughtfully</Heading>
-          <p className="text-base text-fg/80">
-            Record meaningful insights on your own terms. Use meaningful
-            feedback to adapt and improve your teaching.
-          </p>
+          <Heading>{t("Feedback.Title")}</Heading>
+          <p className="text-base text-fg/80">{t("Feedback.Description")}</p>
         </div>
       </div>
 

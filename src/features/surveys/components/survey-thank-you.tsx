@@ -17,7 +17,12 @@ export default function SurveyThankYou() {
           className="flex items-center gap-3"
         >
           <div className="relative h-8 w-4">
-            <Image src="/Logo.svg" alt="SmartCookie Logo" fill priority />
+            <Image
+              src="/logos/smartcookie_logo.svg"
+              alt="SmartCookie Logo"
+              fill
+              priority
+            />
           </div>
           <span className="text-2xl font-bold tracking-tight">SmartCookie</span>
         </motion.div>

@@ -2,6 +2,7 @@
 
 import { UserGroupIcon } from "@hugeicons-pro/core-solid-rounded";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 import { MaxWidthWrapper } from "@/shared/components/layout/max-width-wrapper";
 import { cn } from "@/shared/lib/classes";
@@ -10,13 +11,11 @@ import { LandingSectionHeader } from "../landing-section-header";
 
 const martinaImage = "/images/team/martina.jpg";
 const oscarImage = "/images/team/oscar.jpeg";
-const teamMembers = [
+const teamMembersData = [
   {
     name: "Martina Monreal",
     role: "Co-Founder & CEO",
-    experience: "9+ years teaching languages",
     image: martinaImage,
-    bio: "Since 2016, Martina has taught over 4,000 hours to more than 1,000 students of Spanish, Catalan, English, and German. She speaks at global teaching events and actively develops her teaching expertise through training. With a background in Mathematics, Business, and Psychology, Martina integrates a deep understanding of learning and teaching with real-world practice.",
     companies: [
       {
         src: "/logos/adidas_logo.svg",
@@ -54,9 +53,7 @@ const teamMembers = [
   {
     name: "Óscar Pulido",
     role: "Co-Founder & CTO",
-    experience: "7+ years developing software",
     image: oscarImage,
-    bio: "Since 2018, Óscar has coded thousands of hours building full-stack applications across diverse industries. He currently works as a Frontend Engineer at Gartner, tackling complex challenges in an international, cutting-edge environment. Always eager to expand his skills, Óscar continuously explores new technologies like Web3, smart contracts, and creative fields such as graphic design and 2D animation.",
     companies: [
       {
         src: "/logos/gartner_logo.svg",
@@ -79,6 +76,7 @@ const teamMembers = [
 ];
 
 export const AboutUs = () => {
+  const t = useTranslations("Landing.AboutUs");
   return (
     <MaxWidthWrapper
       as="section"
@@ -87,15 +85,15 @@ export const AboutUs = () => {
     >
       {/* Header Section */}
       <LandingSectionHeader
-        title="The faces behind SmartCookie"
-        description="A language teacher and a software developer with over 15 years of combined experience, uniting forces to empower busy professionals like you."
-        badge="About us"
+        title={t("title")}
+        description={t("subtitle")}
+        badge={t("badge")}
         icon={UserGroupIcon}
       />
 
       <div className="space-y-14">
-        {teamMembers.map(
-          ({ name, role, experience, image, bio, companies, reversed }) => (
+        {teamMembersData.map(
+          ({ name, role, image, companies, reversed }, index) => (
             <article
               key={name}
               className="grid grid-rows-[auto_auto] md:grid-rows-1 grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 w-full"
@@ -134,15 +132,19 @@ export const AboutUs = () => {
                     <p className="text-3xl font-bold tracking-tight">{name}</p>
                     <p className="text-lg text-muted-fg font-medium">{role}</p>
                     <p className="text-muted-fg text-medium text-base">
-                      {experience}
+                      {index === 0
+                        ? t("martina.experience")
+                        : t("oscar.experience")}
                     </p>
                   </div>
-                  <p className="text-base leading-relaxed">{bio}</p>
+                  <p className="text-base leading-relaxed">
+                    {index === 0 ? t("martina.bio") : t("oscar.bio")}
+                  </p>
                 </div>
 
                 <div className="space-y-4">
                   <p className="text-base text-muted-fg font-medium">
-                    Trusted by
+                    {t("trustedBy")}
                   </p>
                   <div className="flex items-center gap-6 flex-wrap mt-4">
                     {companies.map((company) => (

@@ -38,8 +38,8 @@ export const CalendarSidebar = () => {
   }, [selectedDate]);
 
   return (
-    <div className="min-h-0 shrink-0 relative border-l h-full flex flex-col w-[312px]">
-      <div className="sticky left-0 w-full p-4 border-b">
+    <div className="min-h-0 shrink-0 relative border-l h-full flex flex-col w-[284px]">
+      <div className="p-4 border-b">
         <ResizablePanelRoot value="calendar">
           <Calendar
             value={calendarValue}
@@ -49,7 +49,6 @@ export const CalendarSidebar = () => {
             }}
             focusedValue={focusedDate}
             onFocusChange={setFocusedDate}
-            spacing="md"
             showSelectors={false}
           />
         </ResizablePanelRoot>

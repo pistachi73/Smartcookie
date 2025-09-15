@@ -4,11 +4,11 @@ import {
   MessageEdit01Icon,
   Rocket01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { useRouter } from "next/navigation";
 import type React from "react";
 
 import { Menu } from "@/shared/components/ui/menu";
 
+import { useRouter } from "@/i18n/navigation";
 import { SurveyTemplateDetailsMenuTrigger } from "./survey-template-details-menu-trigger";
 
 type SurveyTemplateDetailsMenutProps = {

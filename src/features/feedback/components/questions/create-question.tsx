@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowLeft02Icon } from "@hugeicons-pro/core-stroke-rounded";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
@@ -12,6 +11,7 @@ import { Link } from "@/shared/components/ui/link";
 import { useNavigateWithParams } from "@/shared/hooks/use-navigate-with-params";
 
 import { CreateQuestionSchema } from "@/data-access/questions/schemas";
+import { useRouter } from "@/i18n/navigation";
 import { useCreateQuestion } from "../../hooks/questions/use-create-question";
 import { QuestionForm } from "./question-form";
 

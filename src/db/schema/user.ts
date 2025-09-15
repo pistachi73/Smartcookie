@@ -16,6 +16,7 @@ export const user = pgTable(
     password: text(),
     salt: text(),
     role: text({ enum: ["ADMIN", "USER"] }).default("USER"),
+    createdAt: timestamp({ mode: "date" }).defaultNow(),
     isTwoFactorEnabled: boolean().default(false),
     stripeCustomerId: text().unique(),
   },

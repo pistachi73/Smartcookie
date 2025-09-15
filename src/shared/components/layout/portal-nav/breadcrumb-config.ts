@@ -22,7 +22,7 @@ import {
 export type BreadcrumbConfig =
   | {
       label: string;
-      href: string;
+      href?: string;
       icon?: typeof User02Icon;
       iconSolid?: typeof User02Icon;
       dynamic?: boolean;
@@ -92,7 +92,6 @@ export const breadcrumbConfig: RouteBreadcrumbConfig = {
     { label: "Portal", href: "/portal/dashboard" },
     {
       label: "Account",
-      href: "/portal/account",
       icon: User02Icon,
       iconSolid: User02IconSolid,
     },
@@ -113,6 +112,7 @@ const breadcrumbCache = new Map<string, BreadcrumbConfig[]>();
 
 // Utility to check if a segment is likely an ID (numeric or UUID-like)
 function isIdSegment(segment: string): boolean {
+  console.log("segment", segment);
   // Check for numeric IDs
   if (/^\d+$/.test(segment)) return true;
   // Check for UUID patterns
@@ -152,6 +152,7 @@ function getIdSegmentLabel(segment: string, pathContext: string[]): string {
 // Transform segment to human-readable label
 function formatSegmentLabel(segment: string, pathContext: string[]): string {
   // Handle ID segments
+
   if (isIdSegment(segment)) {
     return getIdSegmentLabel(segment, pathContext);
   }
@@ -167,7 +168,11 @@ function formatSegmentLabel(segment: string, pathContext: string[]): string {
     .join(" ");
 }
 
-export function getBreadcrumbsForPath(pathname: string): BreadcrumbConfig[] {
+export function getBreadcrumbsForPath(
+  pathnameWithLocale: string,
+): BreadcrumbConfig[] {
+  const pathname = `/${pathnameWithLocale.split("/").slice(2).join("/")}`;
+
   // Check cache first for performance
   if (breadcrumbCache.has(pathname)) {
     return breadcrumbCache.get(pathname)!;

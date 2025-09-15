@@ -39,11 +39,11 @@ export const UserButton = ({ user }: { user: AuthUser }) => {
           <HugeiconsIcon icon={DashboardSquare01Icon} data-slot="icon" />
           Dashboard
         </Menu.Item>
-        <Menu.Item href="/portal/account">
+        <Menu.Item href="/portal/account/settings">
           <HugeiconsIcon icon={AccountSetting02Icon} data-slot="icon" />
           Account
         </Menu.Item>
-        <Menu.Item href="/portal/account?t=subscription">
+        <Menu.Item href="/portal/account/subscription">
           <HugeiconsIcon icon={Invoice02Icon} data-slot="icon" />
           Billing and subscription
         </Menu.Item>

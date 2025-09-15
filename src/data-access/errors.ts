@@ -1,8 +1,8 @@
 /**
  * Error object type
  */
-export type DataAccessError<TMeta = any> = {
-  type: string;
+export type DataAccessError<TKey extends string, TMeta = any> = {
+  type: TKey;
   message: string;
   meta?: TMeta;
 };
@@ -10,9 +10,9 @@ export type DataAccessError<TMeta = any> = {
 /**
  * Type guard to check if a value is a DataAccessError
  */
-export const isDataAccessError = <TMeta = any>(
+export const isDataAccessError = <TKey extends string, TMeta = any>(
   value: unknown,
-): value is DataAccessError<TMeta> => {
+): value is DataAccessError<TKey, TMeta> => {
   return (
     typeof value === "object" &&
     value !== null &&
@@ -27,15 +27,15 @@ export const isDataAccessError = <TMeta = any>(
  * Creates a DataAccessError with optional custom message
  * Perfect for use with neverthrow's err() function
  */
-export const createDataAccessError = <TMeta = any>({
+export const createDataAccessError = <TKey extends string, TMeta = any>({
   type,
   message,
   meta,
 }: {
-  type: string;
+  type: TKey;
   message: string;
   meta?: TMeta;
-}): DataAccessError<TMeta> => ({
+}): DataAccessError<TKey, TMeta> => ({
   type,
   message,
   meta,

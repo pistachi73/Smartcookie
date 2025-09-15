@@ -3,6 +3,7 @@
 import { AnimatePresence } from "motion/react";
 import Image from "next/image";
 
+import { Link } from "@/shared/components/ui/link";
 import { cn } from "@/shared/lib/classes";
 
 import { useAuthStore } from "@/features/auth/store/auth-store-provider";
@@ -26,8 +27,8 @@ export const Auth = ({ className }: { className?: string }) => {
     >
       <div className="relative hidden min-h-full w-full basis-1/2  bg-cover bg-left lg:block bg-primary/20">
         <Image
-          src="/login.jpg"
-          alt="SmartNotes"
+          src="/images/login-modal/modal-image.jpg"
+          alt="SmartCookie"
           fill
           className="object-cover"
           sizes="300px"
@@ -44,9 +45,15 @@ export const Auth = ({ className }: { className?: string }) => {
           {step === "TWO_FACTOR" && <TwoFactor key={step} />}
         </AnimatePresence>
         <p className="text-xs font-light leading-5 text-muted-foreground ">
-          By joining, you agree to the SmartCookie Terms of Service and to
-          occasionally receive emails from us. Please read our Privacy Policy to
-          learn how we use your personal data.
+          By joining, you agree to the SmartCookie{" "}
+          <Link href="/terms-of-service" intent="primary">
+            Terms of Service
+          </Link>{" "}
+          and to occasionally receive emails from us. Please read our{" "}
+          <Link href="/privacy-policy" intent="primary">
+            Privacy Policy
+          </Link>{" "}
+          to learn how we use your personal data.
         </p>
       </div>
     </div>
