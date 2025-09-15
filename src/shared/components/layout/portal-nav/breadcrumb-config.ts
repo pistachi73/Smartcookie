@@ -22,7 +22,7 @@ import {
 export type BreadcrumbConfig =
   | {
       label: string;
-      href: string;
+      href?: string;
       icon?: typeof User02Icon;
       iconSolid?: typeof User02Icon;
       dynamic?: boolean;
@@ -92,7 +92,6 @@ export const breadcrumbConfig: RouteBreadcrumbConfig = {
     { label: "Portal", href: "/portal/dashboard" },
     {
       label: "Account",
-      href: "/portal/account",
       icon: User02Icon,
       iconSolid: User02IconSolid,
     },

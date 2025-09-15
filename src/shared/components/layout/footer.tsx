@@ -11,10 +11,10 @@ import { Button } from "react-aria-components";
 
 import { cn } from "@/shared/lib/classes";
 
-import { usePathname, useRouter } from "@/i18n/navigation";
 import { Heading } from "../ui/heading";
 import { Link, linkStyles } from "../ui/link";
 import { LocaleSwitcherSelect } from "../ui/locale-switcher/locale-switcher";
+import { useHandleNavigation } from "./header";
 import { MaxWidthWrapper } from "./max-width-wrapper";
 
 const socialLinks = [
@@ -39,30 +39,6 @@ const socialLinks = [
     icon: SmartPhoneIcon,
   },
 ];
-export const useHandleNavigation = () => {
-  const pathname = usePathname();
-  const router = useRouter();
-
-  return (id: string, href: string) => {
-    const isLandingPage = pathname === "/";
-
-    if (isLandingPage) {
-      const element = document.querySelector(`#${id}`);
-      if (element) {
-        const headerOffset = 100;
-        const elementPosition = element.getBoundingClientRect().top;
-        const offsetPosition =
-          elementPosition + window.pageYOffset - headerOffset;
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: "smooth",
-        });
-      }
-    } else {
-      router.push(href);
-    }
-  };
-};
 
 export const Footer = () => {
   const tFooter = useTranslations("Landing.Footer");
@@ -91,7 +67,7 @@ export const Footer = () => {
             >
               {tFooter("title")}
             </Heading>
-            h{/* Navigation and social section */}
+            {/* Navigation and social section */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
               {/* Logo and description */}
               <div className="space-y-6 lg:col-span-1">
@@ -180,7 +156,7 @@ export const Footer = () => {
             </div>
             {/* Bottom section */}
             <div className="pt-8 border-t border-border/40">
-              <div className="flex flex-col sm:flex-row sm:flex-wrap items-center gap-4">
+              <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-4">
                 <LocaleSwitcherSelect intent="plain" size="xs" />
                 <Link
                   href="/privacy-policy"
