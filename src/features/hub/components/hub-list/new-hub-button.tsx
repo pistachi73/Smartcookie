@@ -3,6 +3,7 @@ import { FolderAddIcon } from "@hugeicons-pro/core-stroke-rounded";
 
 import { buttonStyles } from "@/shared/components/ui/button";
 import { Link } from "@/shared/components/ui/link";
+import { Tooltip } from "@/shared/components/ui/tooltip";
 import { useHubLimits } from "@/shared/hooks/plan-limits/use-hub-limits";
 import { useLimitToaster } from "@/shared/hooks/plan-limits/use-limit-toaster";
 import { cn } from "@/shared/lib/classes";
@@ -21,18 +22,10 @@ export const NewHubButton = () => {
 
   const isDisabled = isLoading || !canCreate;
 
-  const handleClick = (e: React.MouseEvent) => {
+  const handleClick = () => {
     if (isDisabled) {
-      e.preventDefault();
       limitToaster();
     }
-  };
-
-  const getButtonText = () => {
-    if (isLoading) return "Loading...";
-    if (isAtLimit) return `Hub limit reached (${max})`;
-    if (!isUnlimited && remaining <= 2) return `New Hub (${remaining} left)`;
-    return "New Hub";
   };
 
   const getAriaLabel = () => {
@@ -41,7 +34,12 @@ export const NewHubButton = () => {
     return `Create new hub${!isUnlimited ? `. ${remaining} remaining` : ""}`;
   };
 
-  return (
+  const tooltipContent = isAtLimit
+    ? `Limit reached: ${current} of ${max} hubs used`
+    : null;
+  const shouldShowTooltip = tooltipContent !== null;
+
+  const link = (
     <Link
       className={cn(
         buttonStyles({
@@ -53,11 +51,22 @@ export const NewHubButton = () => {
       )}
       href={canCreate && !isLoading ? "/portal/hubs/new" : "#"}
       onClick={handleClick}
-      isDisabled={isDisabled}
+      aria-disabled={isDisabled}
       aria-label={getAriaLabel()}
     >
       <HugeiconsIcon icon={FolderAddIcon} size={16} />
-      <span className="hidden @2xl:block">{getButtonText()}</span>
+      <span className="hidden @2xl:block">New hub</span>
     </Link>
+  );
+
+  return shouldShowTooltip ? (
+    <Tooltip delay={0} closeDelay={0}>
+      {link}
+      <Tooltip.Content intent={isAtLimit ? "inverse" : "default"}>
+        {tooltipContent}
+      </Tooltip.Content>
+    </Tooltip>
+  ) : (
+    link
   );
 };

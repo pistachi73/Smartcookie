@@ -2,9 +2,8 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { NoteAddIcon } from "@hugeicons-pro/core-stroke-rounded";
 import { useState } from "react";
 
-import { Button } from "@/shared/components/ui/button";
-
 import type { CustomColor } from "@/db/schema";
+import { NewQuickNoteButton } from "@/features/quick-notes/components/new-quick-note-button";
 import { NoteCardList } from "@/features/quick-notes/components/note-card-list";
 import { HubPanelHeader } from "../hub-panel-header";
 
@@ -21,7 +20,7 @@ export const HubNotesPanel = ({
       <HubPanelHeader
         title="Quick Notes"
         actions={
-          <Button
+          <NewQuickNoteButton
             className={"w-full sm:w-fit"}
             size="sm"
             intent="primary"
@@ -30,7 +29,7 @@ export const HubNotesPanel = ({
           >
             <HugeiconsIcon icon={NoteAddIcon} size={16} />
             Add note
-          </Button>
+          </NewQuickNoteButton>
         }
       />
       <NoteCardList

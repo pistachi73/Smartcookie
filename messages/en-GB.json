@@ -85,7 +85,7 @@
           "coursesLimit": "Up to 20 courses",
           "studentsLimit": "Up to 40 students",
           "notesLimit": "Up to 500 notes",
-          "notesCharacterLimit": "Up to 500 chars per note",
+          "notesCharacterLimit": "Up to 250 chars per note",
           "communityAccess": "Community forum access",
           "itSupport": "Standard email support & onboarding",
           "feedbackProgressTracking": "Feedback & progress tracking",
