@@ -1,5 +1,6 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
+import { getUserHubCountQueryOptions } from "@/shared/hooks/plan-limits/query-options/hub-count-query-options";
 import { getQueryClient } from "@/shared/lib/get-query-client";
 
 import { HubList } from "@/features/hub/components/hub-list";
@@ -8,8 +9,8 @@ import { getHubsByUserIdQueryOptions } from "@/features/hub/lib/hub-query-option
 const HubsPage = async () => {
   const queryClient = getQueryClient();
 
-  void queryClient.prefetchQuery(getHubsByUserIdQueryOptions);
-  console.log("prefetchQuery");
+  const hubs = await queryClient.fetchQuery(getHubsByUserIdQueryOptions);
+  queryClient.setQueryData(getUserHubCountQueryOptions.queryKey, hubs.length);
 
   const dehydratedState = dehydrate(queryClient);
 
