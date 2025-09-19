@@ -458,7 +458,8 @@ describe("useUpdateQuickNote", () => {
     it("should handle content limit exceeded error", async () => {
       const limitError: DataAccessError<"CONTENT_LIMIT_REACHED_NOTES"> = {
         type: "CONTENT_LIMIT_REACHED_NOTES",
-        message: "Quick note content limit exceeded. You can have up to 1000 characters per note on your current plan.",
+        message:
+          "Quick note content limit exceeded. You can have up to 1000 characters per note on your current plan.",
       };
 
       vi.mocked(mocks.updateQuickNote).mockResolvedValue(limitError);
@@ -484,7 +485,9 @@ describe("useUpdateQuickNote", () => {
       const { result } = renderHookWithQueryClient(initialProps);
 
       act(() => {
-        result.current.handleContentChange("Very long content that exceeds limit");
+        result.current.handleContentChange(
+          "Very long content that exceeds limit",
+        );
       });
 
       act(() => {

@@ -2,11 +2,7 @@ import { toast } from "sonner";
 
 import { useRouter } from "@/i18n/navigation";
 
-export const useLimitToaster = ({
-  resourceType,
-}: {
-  resourceType: "hub" | "student" | "note" | "session";
-}) => {
+export const useLimitToaster = () => {
   const router = useRouter();
 
   return ({ title }: { title?: string } = {}) => {
