@@ -47,10 +47,7 @@ export const NewHubButton = ({
   const button = (
     <Button
       intent={canCreate && !isLoading ? "primary" : "secondary"}
-      className={cn(
-        isDisabled && "cursor-not-allowed opacity-50",
-        className,
-      )}
+      className={cn(isDisabled && "cursor-not-allowed opacity-50", className)}
       onPress={onButtonPress}
       aria-disabled={isDisabled}
       aria-label={getAriaLabel()}
