@@ -1,15 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/ui/button";
-import { ComboBox } from "@/ui/combo-box";
 import { Form } from "@/ui/form";
 import { Modal } from "@/ui/modal";
+import { MultipleSelect } from "@/ui/multiple-select";
 import { ProgressCircle } from "@/ui/progress-circle";
-import { StudentProfile } from "@/shared/components/students/student-profile";
 
-import { useAddStudentToHub } from "../../hooks/students/use-add-student-to-hub";
+import { useAddStudentsToHub } from "../../hooks/students/use-add-studentd-to-hub";
 import { useStudentsByHubId } from "../../hooks/students/use-students-by-hub-id";
 import { useStudentsByUserId } from "../../hooks/students/use-students-by-user-id";
 
@@ -20,7 +19,7 @@ type AddStudentModalProps = {
 };
 
 export const AddStudentFormSchema = z.object({
-  studentId: z.number().min(1, "Please select a student"),
+  studentIds: z.array(z.number()).min(1, "Please select at least one student"),
 });
 
 export const AddStudentModal = ({
@@ -34,12 +33,12 @@ export const AddStudentModal = ({
   const form = useForm<z.infer<typeof AddStudentFormSchema>>({
     resolver: zodResolver(AddStudentFormSchema),
     defaultValues: {
-      studentId: undefined,
+      studentIds: [],
     },
   });
 
-  const { mutateAsync: addStudentToHub, isPending: isAddingStudentToHub } =
-    useAddStudentToHub();
+  const { mutateAsync: addStudentsToHub, isPending: isAddingStudentToHub } =
+    useAddStudentsToHub();
 
   const handleOpenChange = (open: boolean) => {
     onOpenChange(open);
@@ -49,71 +48,79 @@ export const AddStudentModal = ({
   };
 
   const onSubmit = async (data: z.infer<typeof AddStudentFormSchema>) => {
-    await addStudentToHub({ ...data, hubId });
+    await addStudentsToHub({
+      studentIds: data.studentIds,
+      hubId,
+    });
     handleOpenChange(false);
   };
 
-  const comboboxItems = allUserStudents?.filter(
+  const availableStudents = allUserStudents?.filter(
     (student) =>
       !hubStudents?.some((hubStudent) => hubStudent.id === student.id),
   );
 
+  const selectedStudentIds = useWatch({
+    control: form.control,
+    name: "studentIds",
+    defaultValue: [],
+  });
+
   const isPending = isAddingStudentToHub;
+  const hasAvailableStudents = (availableStudents?.length ?? 0) > 0;
 
   return (
-    <Modal.Content size="md" isOpen={isOpen} onOpenChange={handleOpenChange}>
+    <Modal.Content size="lg" isOpen={isOpen} onOpenChange={handleOpenChange}>
       <Modal.Header
-        title="Add Existing Student"
-        description="Add an existing student to your course."
+        title="Add Existing Students"
+        description="Add existing students to your course."
       />
       <Form onSubmit={form.handleSubmit(onSubmit)}>
-        <Modal.Body className="pb-1 space-y-6">
+        <Modal.Body className="pb-1 space-y-6 h-full max-h-[800px]">
           <Controller
             control={form.control}
-            name="studentId"
+            name="studentIds"
             render={({ field, fieldState }) => (
-              <ComboBox
-                placeholder="Search existing student..."
-                menuTrigger="input"
-                onSelectionChange={(value) => field.onChange(value)}
-                selectedKey={field.value}
+              <MultipleSelect
+                label={
+                  hasAvailableStudents ? "Select students" : "No students found"
+                }
+                items={availableStudents}
+                selectedKeys={new Set(field.value || [])}
+                onSelectionChange={(selection) => {
+                  const selectedArray = Array.from(selection) as number[];
+                  field.onChange(selectedArray);
+                }}
+                placeholder="Search for students"
+                isDisabled={!hasAvailableStudents}
+                className={{ popover: "min-w-auto w-[400px]" }}
+                isInvalid={
+                  fieldState.invalid ?? availableStudents?.length === 0
+                }
                 errorMessage={fieldState.error?.message}
-                isInvalid={fieldState.invalid}
-                label="Select student"
-                allowsEmptyCollection={true}
-                autoFocus
+                renderEmptyState={(inputValue) => (
+                  <div className="flex-1 flex flex-col col-span-2 items-center p-4 gap-0.5">
+                    <p className="text-sm font-medium">
+                      {inputValue
+                        ? "No students found"
+                        : "No available students"}
+                    </p>
+                    <p className="text-xs text-muted-fg">
+                      {inputValue
+                        ? "You can search by name or email"
+                        : "All students are already in this hub"}
+                    </p>
+                  </div>
+                )}
               >
-                <ComboBox.Input className="text-sm" />
-
-                <ComboBox.List
-                  renderEmptyState={() => (
-                    <div className="flex-1 flex flex-col col-span-2 items-center p-4 gap-0.5">
-                      <p className="text-sm font-medium">No students found</p>
-                      <p className="text-xs text-muted-fg">
-                        You can search by name or email
-                      </p>
-                    </div>
-                  )}
-                  items={comboboxItems}
-                  popover={{ className: "w-[calc(var(--trigger-width))]" }}
-                >
-                  {(item) => {
-                    return (
-                      <ComboBox.Option
-                        id={item.id}
-                        textValue={item.name}
-                        className={"flex gap-3"}
-                      >
-                        <StudentProfile
-                          name={item.name}
-                          email={item.email}
-                          image={item.image}
-                        />
-                      </ComboBox.Option>
-                    );
-                  }}
-                </ComboBox.List>
-              </ComboBox>
+                {(item) => (
+                  <MultipleSelect.Item
+                    id={item.id}
+                    textValue={item.name}
+                    className="flex gap-3"
+                  />
+                )}
+              </MultipleSelect>
             )}
           />
         </Modal.Body>
@@ -124,11 +131,16 @@ export const AddStudentModal = ({
             size="sm"
             className="px-6"
             isPending={isPending}
+            isDisabled={availableStudents?.length === 0}
           >
             {isPending && (
-              <ProgressCircle isIndeterminate aria-label="Adding student..." />
+              <ProgressCircle isIndeterminate aria-label="Adding students..." />
             )}
-            {isPending ? "Adding student..." : "Add Student"}
+            {isPending
+              ? "Adding students..."
+              : selectedStudentIds?.length > 1
+                ? `Add ${selectedStudentIds.length} Students`
+                : "Add Student"}
           </Button>
         </Modal.Footer>
       </Form>

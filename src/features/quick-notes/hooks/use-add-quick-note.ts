@@ -76,8 +76,10 @@ export const useAddQuickNote = () => {
         );
 
         switch (res.type) {
-          case "LIMIT_REACHED":
-            limitToaster();
+          case "LIMIT_REACHED_NOTES":
+            limitToaster({
+              title: res.message,
+            });
             break;
           default:
             toast.error(res.message);

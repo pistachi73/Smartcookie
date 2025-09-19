@@ -21,6 +21,7 @@ import type {
 import { Button, ComboBox, Group, ListBox } from "react-aria-components";
 
 import { composeTailwindRenderProps } from "@/shared/lib/primitive";
+import { cn } from "@/shared/lib/utils";
 
 import { DropdownItem, DropdownLabel, DropdownSection } from "./dropdown";
 import {
@@ -34,14 +35,18 @@ import { PopoverContent } from "./popover";
 import { Tag, TagGroup, TagList } from "./tag-group";
 
 interface MultipleSelectProps<T>
-  extends Omit<ListBoxProps<T>, "renderEmptyState">,
+  extends Omit<ListBoxProps<T>, "renderEmptyState" | "className">,
     Pick<
       ComboBoxProps<T & { selectedKeys: Selection }>,
       "isRequired" | "validate" | "validationBehavior"
     >,
     FieldProps,
     Pick<GroupProps, "isDisabled" | "isInvalid"> {
-  className?: string;
+  className?: {
+    group?: string;
+    list?: string;
+    popover?: string;
+  };
   errorMessage?: string;
   maxItems?: number;
   renderEmptyState?: (inputValue: string) => React.ReactNode;
@@ -90,26 +95,27 @@ const MultipleSelect = <T extends object>({
 
   const addItem = (e: Key | null) => {
     if (!e || isMax) return;
+
+    const selectionSet = new Set([...selectedKeys, e!]);
+
     onSelectionChange?.((s) => new Set([...s, e!]));
-    // @ts-expect-error incompatible type Key and Selection
-    props.onSelectionChange?.((s) => new Set([...s, e!]));
+    console.log(Boolean(props.onSelectionChange));
+    props.onSelectionChange?.(selectionSet);
   };
 
   const removeItem = (e: Set<Key>) => {
-    onSelectionChange?.(
-      (s) => new Set([...s].filter((i) => i !== e.values().next().value)),
+    const newSelection = new Set(
+      [...selectedKeys].filter((i) => i !== e.values().next().value),
     );
-    props.onSelectionChange?.(
-      // @ts-expect-error incompatible type Key and Selection
-      (s) => new Set([...s].filter((i) => i !== e.values().next().value)),
-    );
+    onSelectionChange?.(newSelection);
+    props.onSelectionChange?.(newSelection);
   };
 
   const onKeyDownCapture = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Backspace" && inputValue === "") {
-      onSelectionChange?.((s) => new Set([...s].slice(0, -1)));
-      // @ts-expect-error incompatible type Key and Selection
-      props.onSelectionChange?.((s) => new Set([...s].slice(0, -1)));
+      const newSelection = new Set([...selectedKeys].slice(0, -1));
+      onSelectionChange?.(newSelection);
+      props.onSelectionChange?.(newSelection);
     }
   };
 
@@ -138,7 +144,7 @@ const MultipleSelect = <T extends object>({
       isDisabled={props.isDisabled}
       isInvalid={props.isInvalid}
       className={composeTailwindRenderProps(
-        className,
+        className?.group,
         "group flex h-fit min-w-[16rem] flex-col gap-y-1",
       )}
     >
@@ -209,20 +215,23 @@ const MultipleSelect = <T extends object>({
                   <HugeiconsIcon
                     icon={UnfoldMoreIcon}
                     data-slot="chevron"
-                    className="text-muted-fg group-open:text-fg"
-                    size={16}
+                    className="size-4 text-muted-fg group-open:text-fg"
                   />
                 </Button>
               </div>
               <PopoverContent
-                className="min-w-(--trigger-width) scroll-py-1 overflow-y-auto overscroll-contain"
+                className={cn(
+                  "min-w-(--trigger-width) w-full scroll-py-1 overflow-y-auto overscroll-contain",
+                  className?.popover,
+                )}
                 triggerRef={triggerRef}
               >
                 <ListBox
                   className={composeTailwindRenderProps(
-                    className,
+                    className?.list,
                     "grid max-h-96 w-full grid-cols-[auto_1fr] flex-col gap-y-1 p-1 outline-hidden *:[[role='group']+[role=group]]:mt-4 *:[[role='group']+[role=separator]]:mt-1",
                   )}
+                  items={(availableItemsToSelect as T[]) ?? props.items}
                   renderEmptyState={() =>
                     renderEmptyState ? (
                       renderEmptyState(inputValue)
@@ -241,7 +250,6 @@ const MultipleSelect = <T extends object>({
                       </Description>
                     )
                   }
-                  items={(availableItemsToSelect as T[]) ?? props.items}
                   {...props}
                 >
                   {filteredChildren?.map((item: any) => (
@@ -269,9 +277,18 @@ const MultipleSelect = <T extends object>({
   );
 };
 
-MultipleSelect.Item = DropdownItem;
-MultipleSelect.Label = DropdownLabel;
-MultipleSelect.Section = DropdownSection;
+const MultipleSelectItem = DropdownItem;
+const MultipleSelectLabel = DropdownLabel;
+const MultipleSelectSection = DropdownSection;
 
-export { MultipleSelect };
+MultipleSelect.Item = MultipleSelectItem;
+MultipleSelect.Label = MultipleSelectLabel;
+MultipleSelect.Section = MultipleSelectSection;
+
+export {
+  MultipleSelect,
+  MultipleSelectItem,
+  MultipleSelectLabel,
+  MultipleSelectSection,
+};
 export type { MultipleSelectProps };

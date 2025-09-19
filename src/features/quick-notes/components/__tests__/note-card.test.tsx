@@ -31,6 +31,28 @@ vi.mock("../../hooks/use-add-quick-note", () => ({
   },
 }));
 
+vi.mock("@/shared/hooks/plan-limits/use-notes-limits", () => ({
+  useNotesLimits: vi.fn(() => ({
+    max: 10,
+    current: 5,
+    remaining: 5,
+    isAtLimit: false,
+    canCreate: true,
+    isUnlimited: false,
+    maxCharacters: 1000,
+    isLoading: false,
+    error: null,
+  })),
+}));
+
+vi.mock("@/shared/hooks/use-current-user", () => ({
+  useCurrentUser: vi.fn().mockReturnValue({
+    id: "test-user-id",
+    name: "Test User",
+    email: "test@example.com",
+  }),
+}));
+
 describe("NoteCard", () => {
   const mockHandleContentChange = vi.fn();
   const mockSetEdittingHub = vi.fn();

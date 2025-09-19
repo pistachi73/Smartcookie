@@ -5,12 +5,13 @@ import {
   PropertyEditIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import { useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
+import { format, isToday, isTomorrow } from "date-fns";
 import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";
 import dynamic from "next/dynamic";
 import { useCallback, useState } from "react";
 
+import { Badge } from "@/shared/components/ui/badge";
 import { Button, buttonStyles } from "@/shared/components/ui/button";
 import { Heading } from "@/shared/components/ui/heading";
 import { ProgressCircle } from "@/shared/components/ui/progress-circle";
@@ -96,6 +97,9 @@ export const Session = ({ session, position, hubId }: SessionProps) => {
     enabled: isExpanded,
   });
 
+  const isTodaySession = isToday(session.startTime);
+  const isTomorrowSession = isTomorrow(session.startTime);
+
   return (
     <>
       <div
@@ -155,6 +159,8 @@ export const Session = ({ session, position, hubId }: SessionProps) => {
               {format(session.startTime, "HH:mm")} -{" "}
               {format(session.endTime, "HH:mm")}
             </p>
+            {isTodaySession && <Badge intent="primary">Today</Badge>}
+            {isTomorrowSession && <Badge intent="secondary">Tomorrow</Badge>}
           </div>
 
           <div className="flex items-center gap-1">

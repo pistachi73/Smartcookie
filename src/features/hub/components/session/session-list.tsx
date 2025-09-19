@@ -2,6 +2,7 @@
 
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
+  ArrowLeft02Icon,
   Calendar02Icon,
   CalendarAdd02Icon,
   DeleteIcon,
@@ -16,14 +17,16 @@ import { useShallow } from "zustand/react/shallow";
 
 import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
-import { Loader } from "@/shared/components/ui/loader";
+import { ProgressCircle } from "@/shared/components/ui/progress-circle";
 import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
 import { regularSpring } from "@/shared/lib/animation";
 
 import { getPaginatedSessionsByHubIdQueryOptions } from "../../lib/hub-sessions-query-options";
 import { useSessionStore } from "../../store/session-store";
 import { HubPanelHeader } from "../hub-panel-header";
+import { AddSessionsButton } from "./add-sessions-button";
 import { DesktopSessionBubble, Session } from "./session";
+import { SessionNavigationBar } from "./session-navigation-bar";
 import { SessionSkeleton } from "./session-skeleton";
 
 const DynamicAddSessionsFormModal = dynamic(
@@ -73,6 +76,7 @@ export function SessionsList({ hubId }: { hubId: number }) {
     isFetchingNextPage,
     isFetchingPreviousPage,
     isPending: isLoadingSessions,
+    refetch,
   } = useSuspenseInfiniteQuery(getPaginatedSessionsByHubIdQueryOptions(hubId));
 
   // Flatten all sessions from all pages - backend handles correct ordering
@@ -86,75 +90,74 @@ export function SessionsList({ hubId }: { hubId: number }) {
     setIsEditingMode(!isEditingMode);
   };
 
-  const handleActionButtonPress = () => {
-    if (isEditingMode) {
-      setIsDeleteModalOpen(true);
-    } else {
-      setIsAddModalOpen(true);
-    }
-  };
-
   const hasSessions = sessions?.length > 0 && !isLoadingSessions;
 
   const actions = (
     <div className="flex gap-2 sm:flex-row justify-between sm:justify-end flex-1">
       {hasSessions && (
         <Button
-          size={isMobile ? "sq-sm" : "sm"}
-          intent={isEditingMode ? "primary" : "secondary"}
+          size={isMobile ? "sq-sm" : "md"}
+          intent={isEditingMode ? "secondary" : "plain"}
           onPress={handleEditModeToggle}
           isDisabled={isLoadingSessions}
         >
           {isEditingMode ? (
             <>
-              <HugeiconsIcon icon={Tick01Icon} size={16} data-slot="icon" />
+              <HugeiconsIcon icon={Tick01Icon} data-slot="icon" />
               {!isMobile && <span>Done</span>}
             </>
           ) : (
             <>
-              <HugeiconsIcon icon={Pen01Icon} size={16} data-slot="icon" />
+              <HugeiconsIcon icon={Pen01Icon} data-slot="icon" />
               {!isMobile && <span>Edit</span>}
             </>
           )}
         </Button>
       )}
-
-      <Button
-        intent={isEditingMode ? "danger" : "primary"}
-        onPress={handleActionButtonPress}
-        className={"w-full sm:w-fit"}
-        size="sm"
-        isDisabled={isEditingMode && selectedSessions.length === 0}
-      >
-        <HugeiconsIcon
-          icon={CalendarAdd02Icon}
-          altIcon={DeleteIcon}
-          showAlt={isEditingMode}
-          size={16}
-          data-slot="icon"
-        />
-        <p>{isEditingMode ? "Delete sessions" : "Add session"}</p>
-      </Button>
+      {isEditingMode ? (
+        <Button
+          intent="danger"
+          onPress={() => setIsDeleteModalOpen(true)}
+          className={"w-full sm:w-fit"}
+          isDisabled={isLoadingSessions || selectedSessions.length === 0}
+        >
+          <HugeiconsIcon icon={DeleteIcon} data-slot="icon" />
+          <p>Delete sessions</p>
+        </Button>
+      ) : (
+        <AddSessionsButton
+          intent="primary"
+          onPress={() => setIsAddModalOpen(true)}
+          hubId={hubId}
+          className={"w-full sm:w-fit"}
+        >
+          <HugeiconsIcon icon={CalendarAdd02Icon} data-slot="icon" />
+          <p>Add session</p>
+        </AddSessionsButton>
+      )}
     </div>
   );
 
   return (
     <>
-      <div className="min-h-0">
+      <div className="min-h-0 pb-12 sm:pb-0">
         <HubPanelHeader title="Sessions timeline" actions={actions} />
         {sessions?.length !== 0 && !isLoadingSessions && (
-          <Button
-            intent="plain"
-            size="xs"
-            className="mb-4"
-            onPress={() => fetchPreviousPage()}
-            isDisabled={!hasPreviousPage || isFetchingPreviousPage}
-          >
-            {isFetchingPreviousPage ? "Loading..." : "Show past sessions"}
-          </Button>
+          <div className="w-full flex justify-center">
+            <SessionNavigationBar
+              onFetchPrevious={() => fetchPreviousPage()}
+              onFetchNext={() => fetchNextPage()}
+              hasPrevious={hasPreviousPage}
+              hasNext={hasNextPage}
+              isLoadingPrevious={isFetchingPreviousPage}
+              isLoadingNext={isFetchingNextPage}
+              totalSessions={sessions?.length || 0}
+              className="mb-4"
+            />
+          </div>
         )}
 
-        {sessions?.length === 0 && !isLoadingSessions && (
+        {sessions?.length === 0 && !hasPreviousPage && (
           <EmptyState
             title="No upcoming sessions"
             description="Create your next session to see it here. Past sessions can be
@@ -164,6 +167,44 @@ export function SessionsList({ hubId }: { hubId: number }) {
               <Button intent="primary" onPress={() => setIsAddModalOpen(true)}>
                 Create session
               </Button>
+            }
+          />
+        )}
+        {sessions?.length === 0 && hasPreviousPage && (
+          <EmptyState
+            title="No upcoming sessions"
+            description="Create your next session to see it here or view your past sessions."
+            icon={Calendar02Icon}
+            action={
+              <div className="flex flex-col sm:flex-row gap-3 items-center w-full justify-center">
+                <AddSessionsButton
+                  hubId={hubId}
+                  onPress={() => setIsAddModalOpen(true)}
+                >
+                  <HugeiconsIcon icon={CalendarAdd02Icon} data-slot="icon" />
+                  Create session
+                </AddSessionsButton>
+                <Button
+                  intent="outline"
+                  onPress={() => fetchPreviousPage()}
+                  isDisabled={!hasPreviousPage || isFetchingPreviousPage}
+                >
+                  {isFetchingPreviousPage ? (
+                    <ProgressCircle
+                      className="size-4"
+                      isIndeterminate
+                      aria-label="Loading past sessions"
+                    />
+                  ) : (
+                    <HugeiconsIcon
+                      icon={ArrowLeft02Icon}
+                      data-slot="icon"
+                      className="size-4"
+                    />
+                  )}
+                  Show past sessions
+                </Button>
+              </div>
             }
           />
         )}
@@ -202,30 +243,15 @@ export function SessionsList({ hubId }: { hubId: number }) {
             })}
           </LayoutGroup>
         )}
-
-        {/* Infinite scroll trigger */}
-
-        {hasNextPage && (
-          <div className="flex justify-center py-2 pb-4">
-            <Button
-              intent="plain"
-              onPress={() => fetchNextPage()}
-              isPending={isFetchingNextPage}
-            >
-              {isFetchingNextPage ? (
-                <Loader size="sm" intent="secondary" />
-              ) : (
-                "Load more"
-              )}
-            </Button>
-          </div>
-        )}
       </div>
       <DynamicAddSessionsFormModal
         isOpen={isAddModalOpen}
         onOpenChange={setIsAddModalOpen}
         hubId={hubId}
         disableHubSelection={true}
+        onSuccessfullyAddedSessions={() => {
+          // refetch();
+        }}
       />
       <DynamicDeleteSessionsModal hubId={hubId} />
     </>

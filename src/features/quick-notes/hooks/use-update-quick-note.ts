@@ -2,6 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
+import { useLimitToaster } from "@/shared/hooks/plan-limits/use-limit-toaster";
 import { useNotesLimits } from "@/shared/hooks/plan-limits/use-notes-limits";
 import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 
@@ -36,6 +37,7 @@ export const useUpdateQuickNote = ({
   const retryIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const pendingSaveRef = useRef<PendingSave | null>(null);
   const queryClient = useQueryClient();
+  const limitToaster = useLimitToaster({ resourceType: "note" });
 
   const { maxCharacters } = useNotesLimits();
 
@@ -76,8 +78,16 @@ export const useUpdateQuickNote = ({
           context.hubNotesQueryKey,
           context.previousData,
         );
-        toast.error(response.message);
-        return;
+        switch (response.type) {
+          case "CONTENT_LIMIT_REACHED_NOTES":
+            limitToaster({
+              title: response.message,
+            });
+            return;
+          default:
+            toast.error(response.message);
+            return;
+        }
       }
 
       setIsUnsaved(false);

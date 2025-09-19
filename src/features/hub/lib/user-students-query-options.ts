@@ -1,9 +1,9 @@
 import { queryOptions } from "@tanstack/react-query";
 
-import type { getStudentsByUserId } from "@/data-access/students/queries";
+import type { getAllStudents } from "@/data-access/students/queries";
 
 export type GetStudentsByUserIdQueryResponse = Awaited<
-  ReturnType<typeof getStudentsByUserId>
+  ReturnType<typeof getAllStudents>
 >;
 
 export const getStudentsByUserIdQueryOptions = () =>

@@ -1,34 +1,28 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import { useLimitToaster } from "@/shared/hooks/plan-limits/use-limit-toaster";
 import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 
 import { isDataAccessError } from "@/data-access/errors";
-import { createStudentInHub } from "@/data-access/students/mutations";
-import { CreateStudentInHubSchema } from "@/data-access/students/schemas";
+import { addStudentsToHub } from "@/data-access/students/mutations";
+import { AddStudentsToHubSchema } from "@/data-access/students/schemas";
 import { getStudentsByHubIdQueryOptions } from "../../lib/hub-students-query-optionts";
 import { getStudentsByUserIdQueryOptions } from "../../lib/user-students-query-options";
 
-export const useCreateStudentInHub = () => {
+export const useAddStudentsToHub = ({
+  onSuccess,
+}: {
+  onSuccess?: () => void;
+} = {}) => {
   const queryClient = useQueryClient();
-  const limitToaster = useLimitToaster({ resourceType: "student" });
 
   return useProtectedMutation({
-    schema: CreateStudentInHubSchema,
-    mutationFn: createStudentInHub,
+    schema: AddStudentsToHubSchema,
+    mutationFn: addStudentsToHub,
     onSuccess: (data, variables) => {
       if (isDataAccessError(data)) {
-        switch (data.type) {
-          case "LIMIT_EXCEEDED_STUDENTS":
-            limitToaster({
-              title: data.message,
-            });
-            return;
-          default:
-            toast.error(data.message);
-            return;
-        }
+        toast.error(data.message);
+        return;
       }
 
       const hubStudentsQueryKey = getStudentsByHubIdQueryOptions(
@@ -42,6 +36,8 @@ export const useCreateStudentInHub = () => {
       queryClient.invalidateQueries({
         queryKey: userStudentsQueryKey,
       });
+
+      onSuccess?.();
     },
   });
 };

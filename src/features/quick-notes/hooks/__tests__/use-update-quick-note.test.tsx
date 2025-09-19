@@ -7,6 +7,7 @@ import {
   createTestQueryClient,
 } from "@/shared/lib/testing/query-client-utils";
 
+import type { DataAccessError } from "@/data-access/errors";
 import type { NoteSummary } from "../../types/quick-notes.types";
 import { useUpdateQuickNote } from "../use-update-quick-note";
 
@@ -30,6 +31,16 @@ vi.mock("sonner", () => ({
   toast: {
     error: vi.fn(),
   },
+}));
+
+vi.mock("@/shared/hooks/plan-limits/use-limit-toaster", () => ({
+  useLimitToaster: vi.fn().mockReturnValue(vi.fn()),
+}));
+
+vi.mock("@/shared/hooks/plan-limits/use-notes-limits", () => ({
+  useNotesLimits: vi.fn().mockReturnValue({
+    maxCharacters: 1000,
+  }),
 }));
 
 const mockUpdateQuickNoteReturn = {
@@ -226,14 +237,15 @@ describe("useUpdateQuickNote", () => {
       );
     });
 
-    it("should retry and save when real note is found by content (fallback)", async () => {
+    it("should retry and save when real note is found by clientId (no content fallback)", async () => {
       const optimisticId = -Date.now();
+      const testClientId = "client-456";
 
       const initialProps = {
         noteId: optimisticId,
         initialContent: "",
         hubId: mockHubId,
-        // No clientId provided
+        clientId: testClientId,
       };
 
       const mockNotes: NoteSummary[] = [
@@ -242,6 +254,7 @@ describe("useUpdateQuickNote", () => {
           content: "",
           updatedAt: "2023-01-01T00:00:00Z",
           hubId: mockHubId,
+          clientId: testClientId,
         },
       ];
 
@@ -258,13 +271,14 @@ describe("useUpdateQuickNote", () => {
         vi.advanceTimersByTime(800);
       });
 
-      // Simulate the note getting a real ID
+      // Simulate the note getting a real ID but keeping the same clientId
       const updatedNotes: NoteSummary[] = [
         {
           id: 888,
           content: "Unique content",
           updatedAt: "2023-01-01T00:00:00Z",
           hubId: mockHubId,
+          clientId: testClientId, // Same clientId to match
         },
       ];
 
@@ -346,7 +360,58 @@ describe("useUpdateQuickNote", () => {
   });
 
   describe("error handling", () => {
-    it("should revert optimistic updates on error", async () => {
+    it("should revert optimistic updates on DataAccessError", async () => {
+      const mockError: DataAccessError<"UNEXPECTED_ERROR"> = {
+        type: "UNEXPECTED_ERROR",
+        message: "Something went wrong! Please try again.",
+      };
+
+      vi.mocked(mocks.updateQuickNote).mockResolvedValue(mockError);
+
+      const previousData: NoteSummary[] = [
+        {
+          id: 123,
+          content: "Original content",
+          updatedAt: "2023-01-01T00:00:00Z",
+          hubId: mockHubId,
+        },
+      ];
+
+      queryClient.setQueryData(mockQueryKey, previousData);
+      vi.mocked(queryClient.getQueryData).mockReturnValue(previousData);
+
+      const initialProps = {
+        noteId: 123,
+        initialContent: "Original content",
+        hubId: mockHubId,
+      };
+
+      const { result } = renderHookWithQueryClient(initialProps);
+
+      act(() => {
+        result.current.handleContentChange("New content");
+      });
+
+      act(() => {
+        vi.advanceTimersByTime(800);
+      });
+
+      // Flush any pending async operations
+      await act(async () => {
+        await vi.runAllTimersAsync();
+      });
+
+      expect(toast.error).toHaveBeenCalledWith(
+        "Something went wrong! Please try again.",
+      );
+
+      expect(queryClient.setQueryData).toHaveBeenCalledWith(
+        mockQueryKey,
+        previousData,
+      );
+    });
+
+    it("should handle network errors gracefully", async () => {
       vi.mocked(mocks.updateQuickNote).mockRejectedValue(
         new Error("Network error"),
       );
@@ -384,9 +449,52 @@ describe("useUpdateQuickNote", () => {
         await vi.runAllTimersAsync();
       });
 
-      expect(toast.error).toHaveBeenCalledWith(
-        "Failed to save note. Changes will be lost if you navigate away.",
+      expect(queryClient.setQueryData).toHaveBeenCalledWith(
+        mockQueryKey,
+        previousData,
       );
+    });
+
+    it("should handle content limit exceeded error", async () => {
+      const limitError: DataAccessError<"CONTENT_LIMIT_REACHED_NOTES"> = {
+        type: "CONTENT_LIMIT_REACHED_NOTES",
+        message: "Quick note content limit exceeded. You can have up to 1000 characters per note on your current plan.",
+      };
+
+      vi.mocked(mocks.updateQuickNote).mockResolvedValue(limitError);
+
+      const previousData: NoteSummary[] = [
+        {
+          id: 123,
+          content: "Original content",
+          updatedAt: "2023-01-01T00:00:00Z",
+          hubId: mockHubId,
+        },
+      ];
+
+      queryClient.setQueryData(mockQueryKey, previousData);
+      vi.mocked(queryClient.getQueryData).mockReturnValue(previousData);
+
+      const initialProps = {
+        noteId: 123,
+        initialContent: "Original content",
+        hubId: mockHubId,
+      };
+
+      const { result } = renderHookWithQueryClient(initialProps);
+
+      act(() => {
+        result.current.handleContentChange("Very long content that exceeds limit");
+      });
+
+      act(() => {
+        vi.advanceTimersByTime(800);
+      });
+
+      // Flush any pending async operations
+      await act(async () => {
+        await vi.runAllTimersAsync();
+      });
 
       expect(queryClient.setQueryData).toHaveBeenCalledWith(
         mockQueryKey,

@@ -18,13 +18,13 @@ export function useCreateHub() {
   return useProtectedMutation({
     schema: CreateHubUseCaseSchema,
     mutationFn: createHub,
-    onMutate: async () => {},
-
     onSuccess: (data) => {
       if (isDataAccessError(data)) {
         switch (data.type) {
-          case "LIMIT_REACHED":
-            limitToaster();
+          case "LIMIT_REACHED_HUBS":
+            limitToaster({
+              title: data.message,
+            });
             return;
           default:
             toast.error(data.message);
@@ -38,9 +38,6 @@ export function useCreateHub() {
 
       toast.success("Hub created successfully");
       router.push("/portal/hubs");
-    },
-    onError: () => {
-      toast.error("Failed to create hub");
     },
   });
 }

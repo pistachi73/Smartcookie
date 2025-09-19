@@ -5,8 +5,11 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Temporal } from "temporal-polyfill";
 
+import { getSessionsCountByHubIdQueryOptions } from "@/shared/hooks/plan-limits/query-options/sessions-count-query-options";
+import { useLimitToaster } from "@/shared/hooks/plan-limits/use-limit-toaster";
 import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 
+import { isDataAccessError } from "@/data-access/errors";
 import { addSessions } from "@/data-access/sessions/mutations";
 import { AddSessionsSchema } from "@/data-access/sessions/schemas";
 import { getCalendarCacheManager } from "@/features/calendar/lib/calendar-cache";
@@ -22,6 +25,7 @@ export const useAddSessions = ({
   const queryClient = useQueryClient();
   const { data: hubs } = useQuery(getHubsByUserIdQueryOptions);
   const cacheManager = getCalendarCacheManager();
+  const limitToaster = useLimitToaster({ resourceType: "session" });
 
   return useProtectedMutation({
     schema: AddSessionsSchema,
@@ -29,6 +33,20 @@ export const useAddSessions = ({
     onMutate: async (variables) => {
       const timezone = getLocalTimeZone();
       const optimisticSessions: LayoutCalendarSession[] = [];
+
+      const sessionCountQueryKey = getSessionsCountByHubIdQueryOptions(
+        variables.hubId,
+      ).queryKey;
+
+      const previousSessionCount =
+        queryClient.getQueryData(sessionCountQueryKey);
+
+      if (previousSessionCount) {
+        queryClient.setQueryData(
+          sessionCountQueryKey,
+          previousSessionCount + variables.sessions.length,
+        );
+      }
 
       // Create optimistic sessions and add to cache
       variables.sessions.forEach((sessionData, index) => {
@@ -63,58 +81,20 @@ export const useAddSessions = ({
       });
 
       return {
-        optimisticSessions, // Track for cleanup
+        optimisticSessions,
+        sessionCountQueryKey,
+        previousSessionCount,
       };
     },
-    onSuccess: (realSessions, variables, context) => {
-      // 🚀 Replace optimistic sessions with real data
-
-      if (
-        context?.optimisticSessions &&
-        realSessions &&
-        Array.isArray(realSessions)
-      ) {
-        const timezone = getLocalTimeZone();
-
-        // Remove optimistic sessions and add real ones
-        context.optimisticSessions.forEach((optimisticSession, index) => {
-          const sessionDate = Temporal.Instant.from(optimisticSession.startTime)
-            .toZonedDateTimeISO(timezone)
-            .toPlainDate();
-
-          // Remove optimistic session
-          cacheManager.optimisticUpdate(
-            sessionDate,
-            "delete",
-            optimisticSession,
+    onSuccess: (res, variables, context) => {
+      if (isDataAccessError(res)) {
+        if (context.previousSessionCount) {
+          queryClient.setQueryData(
+            context.sessionCountQueryKey,
+            context.previousSessionCount,
           );
+        }
 
-          // Add real session (if available)
-          if (realSessions[index]) {
-            cacheManager.optimisticUpdate(sessionDate, "create", {
-              ...optimisticSession,
-              id: realSessions[index].id,
-            });
-          }
-        });
-      }
-
-      const paginatedSessionsQueryKey = getPaginatedSessionsByHubIdQueryOptions(
-        variables.hubId,
-      ).queryKey;
-
-      queryClient.invalidateQueries({
-        queryKey: paginatedSessionsQueryKey,
-      });
-
-      toast.success("Session added successfully");
-      onSuccess?.();
-    },
-    onError: (error, _, context) => {
-      toast.error("Failed to add sessions. Please try again later!");
-
-      // 🚀 Rollback optimistic updates from memory cache
-      if (context?.optimisticSessions) {
         const timezone = getLocalTimeZone();
 
         context.optimisticSessions.forEach((optimisticSession) => {
@@ -122,16 +102,66 @@ export const useAddSessions = ({
             .toZonedDateTimeISO(timezone)
             .toPlainDate();
 
-          // Remove failed optimistic session from memory cache
           cacheManager.optimisticUpdate(
             sessionDate,
             "delete",
             optimisticSession,
           );
         });
+
+        switch (res.type) {
+          case "LIMIT_REACHED_SESSIONS": {
+            limitToaster({
+              title: res.message,
+            });
+
+            break;
+          }
+          default:
+            toast.error(res.message);
+            break;
+        }
+        return;
       }
 
-      console.error("Create sessions failed, rolled back:", error);
+      const timezone = getLocalTimeZone();
+
+      context.optimisticSessions.forEach((optimisticSession, index) => {
+        const sessionDate = Temporal.Instant.from(optimisticSession.startTime)
+          .toZonedDateTimeISO(timezone)
+          .toPlainDate();
+
+        cacheManager.optimisticUpdate(sessionDate, "delete", optimisticSession);
+
+        if (res[index]) {
+          cacheManager.optimisticUpdate(sessionDate, "create", {
+            ...optimisticSession,
+            id: res[index].id,
+          });
+        }
+      });
+
+      toast.success("Session added successfully");
+
+      const paginatedSessionsQueryKey = getPaginatedSessionsByHubIdQueryOptions(
+        variables.hubId,
+      ).queryKey;
+
+      queryClient.setQueryData(paginatedSessionsQueryKey, (oldData) => {
+        if (!oldData) return undefined;
+        const initialPage = oldData.pages.filter((page) => page.page === 0);
+        const initialPageParams = oldData.pageParams.filter(
+          (pageParam: any) => pageParam[2] === 0,
+        );
+
+        return {
+          ...oldData,
+          pages: initialPage,
+          pageParams: initialPageParams,
+        };
+      });
+
+      onSuccess?.();
     },
   });
 };

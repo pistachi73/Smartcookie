@@ -87,6 +87,7 @@ export const AgendaSessionCard = ({
         <div className="flex flex-row items-center gap-1.5">
           {numberOfStudents > 0 && (
             <AvatarStack
+              keyPrefix={`session${session.id}`}
               users={session.students.map((student) => ({
                 id: student.id,
                 name: student.name,
@@ -94,9 +95,9 @@ export const AgendaSessionCard = ({
               }))}
               size="sm"
               spacing="loose"
-              maxAvatars={5}
+              maxAvatars={4}
               showTooltips={showStudentTooltips}
-              className={{ avatar: "outline-overlay outline-2" }}
+              className={{ avatar: "outline-overlay outline-2 bg-red-100" }}
             />
           )}
         </div>

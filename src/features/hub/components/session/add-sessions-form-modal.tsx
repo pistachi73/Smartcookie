@@ -12,6 +12,8 @@ import { Form } from "@/shared/components/ui/form";
 import { Modal } from "@/shared/components/ui/modal";
 import { Note } from "@/shared/components/ui/note";
 import { ProgressCircle } from "@/shared/components/ui/progress-circle";
+import { useLimitToaster } from "@/shared/hooks/plan-limits/use-limit-toaster";
+import { useSessionLimits } from "@/shared/hooks/plan-limits/use-session-limits";
 import { serializeDateValue } from "@/shared/lib/serialize-react-aria/serialize-date-value";
 import { serializeTime } from "@/shared/lib/serialize-react-aria/serialize-time";
 
@@ -32,6 +34,7 @@ type AddSessionsFormModalProps = {
   disableHubSelection?: boolean;
   defaultValues?: Partial<z.infer<typeof AddSessionFormSchema>>;
   skipConflictsCheck?: boolean;
+  onSuccessfullyAddedSessions?: () => void;
 };
 
 export const AddSessionsFormModal = ({
@@ -41,8 +44,10 @@ export const AddSessionsFormModal = ({
   disableHubSelection,
   defaultValues,
   skipConflictsCheck = false,
+  onSuccessfullyAddedSessions,
 }: AddSessionsFormModalProps) => {
   const [isConflictModalOpen, setIsConflictModalOpen] = useState(false);
+  const limitToaster = useLimitToaster({ resourceType: "session" });
 
   const form = useForm<z.infer<typeof AddSessionFormSchema>>({
     resolver: zodResolver(AddSessionFormSchema),
@@ -64,6 +69,7 @@ export const AddSessionsFormModal = ({
     ...getHubByIdQueryOptions(selectedHubId),
     enabled: !!selectedHubId && isOpen,
   });
+  const sessionLimits = useSessionLimits(selectedHubId);
 
   // Watch all changes
   useEffect(() => {
@@ -81,7 +87,9 @@ export const AddSessionsFormModal = ({
     }
   }, [defaultValues, form]);
 
-  const { mutate: addSessions, isPending: isAddingSessions } = useAddSessions();
+  const { mutate: addSessions, isPending: isAddingSessions } = useAddSessions({
+    onSuccess: onSuccessfullyAddedSessions,
+  });
   const {
     mutateAsync: checkSessionConflicts,
     reset: resetConflicts,
@@ -95,8 +103,9 @@ export const AddSessionsFormModal = ({
     }
 
     if (
-      (hub.startDate && data.date.toString() < hub.startDate) ||
-      (hub.endDate && data.date.toString() > hub.endDate)
+      (hub.startDate &&
+        data.date.add({ days: +1 }).toString() < hub.startDate) ||
+      (hub.endDate && data.date.add({ days: -1 }).toString() > hub.endDate)
     ) {
       const formatDate = (dateString: string) => {
         const date = parseISO(dateString);
@@ -127,6 +136,16 @@ export const AddSessionsFormModal = ({
       hubEndsOn: hub.endDate,
       hubStartsOn: hub.startDate as string,
     });
+
+    if (
+      sessions.length + sessionLimits.currentCount >
+      sessionLimits.maxSessions
+    ) {
+      limitToaster({
+        title: `Session limit exceeded. You can have up to ${sessionLimits.maxSessions} sessions per hub on your current plan.`,
+      });
+      return;
+    }
 
     if (!conflictsData && !skipConflictsCheck) {
       const { success } = await checkSessionConflicts({

@@ -67,14 +67,12 @@ export const getStudentsByHubId = withProtectedDataAccess({
   },
 });
 
-export const getStudentsByUserId = withProtectedDataAccess({
+export const getAllStudents = withProtectedDataAccess({
   callback: async (user) => {
     const students = await db
       .select({
         id: student.id,
         name: student.name,
-        email: student.email,
-        image: student.image,
       })
       .from(student)
       .where(eq(student.userId, user.id));

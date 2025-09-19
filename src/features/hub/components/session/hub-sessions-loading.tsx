@@ -14,7 +14,7 @@ export const HubSessionsLoading = () => {
       <HubPanelHeader
         title="Sessions timeline"
         actions={
-          <Button intent={"primary"} className={"w-full sm:w-fit"} size="sm">
+          <Button intent={"primary"} className={"w-full sm:w-fit"}>
             <HugeiconsIcon
               icon={CalendarAdd02Icon}
               size={16}
