@@ -2,7 +2,6 @@ import type { PressEvent } from "react-aria";
 
 import { Button, type ButtonProps } from "@/shared/components/ui/button";
 import { Tooltip } from "@/shared/components/ui/tooltip";
-import { useLimitToaster } from "@/shared/hooks/plan-limits/use-limit-toaster";
 import { useNotesLimits } from "@/shared/hooks/plan-limits/use-notes-limits";
 import { cn } from "@/shared/lib/classes";
 
