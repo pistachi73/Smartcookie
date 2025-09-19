@@ -79,7 +79,7 @@ export const useUpdateQuickNote = ({
           context.previousData,
         );
         switch (response.type) {
-          case "CONTENT_LIMIT_REACHED_NOTES":
+          case "CONTENT_LIMIT_REACHED_QUICK_NOTES":
             limitToaster({
               title: response.message,
             });

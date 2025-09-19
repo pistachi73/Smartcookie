@@ -4,6 +4,7 @@ import {
   ArrowRight02Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
 
+import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import { ProgressCircle } from "@/shared/components/ui/progress-circle";
 import { cn } from "@/shared/lib/utils";
@@ -24,6 +25,9 @@ interface SessionNavigationBarProps {
   /** Total number of sessions currently loaded */
   totalSessions: number;
   /** Optional className for the container */
+  onToggleAllSessionsExpanded: () => void;
+  /** Whether all sessions are expanded */
+  allSessionsExpanded: boolean;
   className?: string;
 }
 
@@ -35,6 +39,8 @@ export const SessionNavigationBar = ({
   isLoadingPrevious,
   isLoadingNext,
   totalSessions,
+  onToggleAllSessionsExpanded,
+  allSessionsExpanded,
   className,
 }: SessionNavigationBarProps) => {
   const getSessionCountText = () => {
@@ -46,65 +52,90 @@ export const SessionNavigationBar = ({
   return (
     <div
       className={cn(
-        "flex items-center justify-between gap-4 p-4 w-fit",
+        "@container flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4 p-3 bg-muted/50 rounded-lg w-full",
         className,
       )}
     >
-      {/* Load Past Sessions Button */}
-      <Button
-        intent="outline"
-        size="sm"
-        onPress={onFetchPrevious}
-        isDisabled={!hasPrevious || isLoadingPrevious}
-        className="flex-shrink-0"
-      >
-        {isLoadingPrevious ? (
-          <ProgressCircle
-            className="size-4"
-            isIndeterminate
-            aria-label="Loading past sessions"
-          />
-        ) : (
-          <HugeiconsIcon
-            icon={ArrowLeft02Icon}
-            data-slot="icon"
-            className="size-4"
-          />
-        )}
-        Load past sessions{" "}
-        {!hasPrevious && !isLoadingPrevious && "(none available)"}
-      </Button>
+      <div className="flex items-center gap-2 w-full sm:w-auto">
+        {/* Load Past Sessions Button */}
+        <Button
+          intent="outline"
+          size="sm"
+          onPress={onFetchPrevious}
+          isDisabled={!hasPrevious || isLoadingPrevious}
+          className="w-full sm:w-fit text-xs sm:text-sm justify-center sm:justify-start"
+        >
+          {isLoadingPrevious ? (
+            <ProgressCircle
+              className="size-4"
+              isIndeterminate
+              aria-label="Loading past sessions"
+            />
+          ) : (
+            <HugeiconsIcon
+              icon={ArrowLeft02Icon}
+              data-slot="icon"
+              className="size-4"
+            />
+          )}
+          <span className="hidden sm:inline">
+            {!hasPrevious && !isLoadingPrevious
+              ? "No previous sessions"
+              : "Load previous"}
+          </span>
+          <span className="sm:hidden">
+            {!hasPrevious && !isLoadingPrevious ? "No previous" : "Previous"}
+          </span>
+        </Button>
 
-      {/* Sessions Count Indicator */}
-      <div className="flex-1 text-center">
-        <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">
-          {getSessionCountText()} loaded
-        </span>
+        {/* Load Future Sessions Button */}
+        <Button
+          intent="outline"
+          size="sm"
+          onPress={onFetchNext}
+          isDisabled={!hasNext || isLoadingNext}
+          className="w-full sm:w-fit text-xs sm:text-sm justify-center sm:justify-start"
+        >
+          <span className="hidden sm:inline">
+            {!hasNext && !isLoadingNext
+              ? "No upcoming sessions"
+              : "Load upcoming"}
+          </span>
+          <span className="sm:hidden">
+            {!hasNext && !isLoadingNext ? "No upcoming" : "Upcoming"}
+          </span>
+          {isLoadingNext ? (
+            <ProgressCircle
+              className="size-4"
+              isIndeterminate
+              aria-label="Loading future sessions"
+            />
+          ) : (
+            <HugeiconsIcon
+              icon={ArrowRight02Icon}
+              data-slot="icon"
+              className="size-4"
+            />
+          )}
+        </Button>
       </div>
-
-      {/* Load Future Sessions Button */}
-      <Button
-        intent="outline"
-        size="sm"
-        onPress={onFetchNext}
-        isDisabled={!hasNext || isLoadingNext}
-        className="flex-shrink-0"
-      >
-        Load future sessions {!hasNext && !isLoadingNext && "(none available)"}
-        {isLoadingNext ? (
-          <ProgressCircle
-            className="size-4"
-            isIndeterminate
-            aria-label="Loading future sessions"
-          />
-        ) : (
-          <HugeiconsIcon
-            icon={ArrowRight02Icon}
-            data-slot="icon"
-            className="size-4"
-          />
-        )}
-      </Button>
+      <div className=" items-center gap-2 w-full sm:w-auto hidden sm:flex">
+        <Badge
+          intent="secondary"
+          isCircle={false}
+          className="hidden @2xl:block"
+        >
+          {getSessionCountText()} loaded
+        </Badge>
+        <Button
+          intent="secondary"
+          size="sm"
+          onPress={onToggleAllSessionsExpanded}
+          className="block"
+        >
+          {allSessionsExpanded ? "Collapse all" : "Expand all"}
+        </Button>
+      </div>
     </div>
   );
 };

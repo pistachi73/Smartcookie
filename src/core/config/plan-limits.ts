@@ -18,6 +18,7 @@ export interface PlanLimits {
   };
   sessions: {
     maxPerHub: number;
+    maxCharactersPerNote: number;
   };
   students: {
     maxCount: number;
@@ -47,7 +48,8 @@ export const PLAN_LIMITS: Record<
       maxCount: 2,
     },
     sessions: {
-      maxPerHub: 10,
+      maxPerHub: 20,
+      maxCharactersPerNote: 100,
     },
     students: {
       maxCount: 10,
@@ -72,14 +74,16 @@ export const PLAN_LIMITS: Record<
       maxCount: 20,
     },
     sessions: {
-      maxPerHub: 1,
+      maxPerHub: 40,
+      maxCharactersPerNote: 100,
     },
+
     students: {
       maxCount: 40,
     },
     notes: {
       maxCount: 500,
-      maxCharactersPerNote: 250,
+      maxCharactersPerNote: 280,
     },
     community: {
       access: CommunityAccess.FORUM,
@@ -98,13 +102,14 @@ export const PLAN_LIMITS: Record<
     },
     sessions: {
       maxPerHub: Number.POSITIVE_INFINITY,
+      maxCharactersPerNote: 100,
     },
     students: {
       maxCount: Number.POSITIVE_INFINITY,
     },
     notes: {
       maxCount: Number.POSITIVE_INFINITY,
-      maxCharactersPerNote: 1000,
+      maxCharactersPerNote: 500,
     },
     community: {
       access: CommunityAccess.EXCLUSIVE,

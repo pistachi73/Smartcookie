@@ -2,13 +2,15 @@
 
 import { and, eq } from "drizzle-orm";
 
-import { getPlanLimits } from "@/core/config/plan-limits";
 import { db } from "@/db";
 import type { InsertQuickNote } from "@/db/schema";
 import { quickNote } from "@/db/schema";
 import { authenticatedDataAccess } from "../data-access-chain";
-import { createDataAccessError, type DataAccessError } from "../errors";
-import { quickNoteLimitMiddleware } from "../limit-middleware";
+import { createDataAccessError } from "../errors";
+import {
+  quickNoteContentLimitMiddleware,
+  quickNoteLimitMiddleware,
+} from "../limit-middleware";
 import {
   CreateQuickNoteSchema,
   DeleteQuickNoteSchema,
@@ -18,6 +20,9 @@ import {
 export const createQuickNote = authenticatedDataAccess()
   .input(CreateQuickNoteSchema)
   .use(quickNoteLimitMiddleware)
+  .use(async ({ data, user }) =>
+    quickNoteContentLimitMiddleware({ user, content: data.content }),
+  )
   .execute(async ({ hubId, content, updatedAt }, user) => {
     const actualHubId = hubId === 0 ? null : hubId;
     const data = {
@@ -40,19 +45,8 @@ export const createQuickNote = authenticatedDataAccess()
 
 export const updateQuickNote = authenticatedDataAccess()
   .input(UpdateQuickNoteSchema({ maxLength: 1000 }))
-  .use(
-    async ({
-      data,
-      user,
-    }): Promise<void | DataAccessError<"CONTENT_LIMIT_REACHED_NOTES">> => {
-      const limit = getPlanLimits(user.subscriptionTier);
-      if (data.content.length > limit.notes.maxCharactersPerNote) {
-        return createDataAccessError({
-          type: "CONTENT_LIMIT_REACHED_NOTES",
-          message: `Quick note content limit exceeded. You can have up to ${limit.notes.maxCharactersPerNote} characters per note on your current plan.`,
-        });
-      }
-    },
+  .use(async ({ data, user }) =>
+    quickNoteContentLimitMiddleware({ user, content: data.content }),
   )
   .execute(async ({ id, content, updatedAt }, user) => {
     const updateData: Partial<InsertQuickNote> = {

@@ -12,7 +12,7 @@ export const HubStudentsLoading = () => {
       <HubPanelHeader
         title="Course Students"
         actions={
-          <Button className={"w-full sm:w-fit"} size="sm" intent="primary">
+          <Button className={"w-full sm:w-fit"} intent="primary">
             <HugeiconsIcon
               icon={UserAdd02Icon}
               altIcon={DeleteIcon}

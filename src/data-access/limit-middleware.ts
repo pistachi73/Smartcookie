@@ -4,7 +4,7 @@ import { getPlanLimits, isAtLimit } from "@/core/config/plan-limits";
 import { db } from "@/db";
 import { hub, quickNote, session, student } from "@/db/schema";
 import type { AuthUser } from "@/types/next-auth";
-import { createDataAccessError } from "./errors";
+import { createDataAccessError, type DataAccessError } from "./errors";
 
 export const studentLimitMiddleware = async (context: { user: AuthUser }) => {
   if (context.user.subscriptionTier === "premium") return;
@@ -104,6 +104,32 @@ export const getHubLimitMiddleware = async (context: { user: AuthUser }) => {
         max: limits.hubs.maxCount,
         limitType: "hubs",
       },
+    });
+  }
+};
+
+export const sessionNoteLimitMiddleware = async (context: {
+  user: AuthUser;
+  content: string;
+}): Promise<void | DataAccessError<"CONTENT_LIMIT_REACHED_SESSION_NOTES">> => {
+  const limit = getPlanLimits(context.user.subscriptionTier);
+  if (context.content.length > limit.sessions.maxCharactersPerNote) {
+    return createDataAccessError({
+      type: "CONTENT_LIMIT_REACHED_SESSION_NOTES",
+      message: `Session note content limit exceeded. You can have up to ${limit.notes.maxCharactersPerNote} characters per session note on your current plan.`,
+    });
+  }
+};
+
+export const quickNoteContentLimitMiddleware = async (context: {
+  user: AuthUser;
+  content: string;
+}): Promise<void | DataAccessError<"CONTENT_LIMIT_REACHED_QUICK_NOTES">> => {
+  const limit = getPlanLimits(context.user.subscriptionTier);
+  if (context.content.length > limit.notes.maxCharactersPerNote) {
+    return createDataAccessError({
+      type: "CONTENT_LIMIT_REACHED_QUICK_NOTES",
+      message: `Quick note content limit exceeded. You can have up to ${limit.notes.maxCharactersPerNote} characters per quick note on your current plan.`,
     });
   }
 };

@@ -59,11 +59,10 @@ export const Students = ({ hubId }: { hubId: number }) => {
           title="Course Students"
           actions={
             <Menu>
-              <Button className={"w-full sm:w-fit"} size="sm" intent="primary">
+              <Button className={"w-full sm:w-fit"} intent="primary">
                 <HugeiconsIcon
                   icon={UserAdd02Icon}
                   altIcon={DeleteIcon}
-                  size={16}
                   data-slot="icon"
                 />
                 <p>Add student</p>

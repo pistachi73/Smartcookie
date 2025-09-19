@@ -5,6 +5,7 @@ import { useButton, useDrag } from "react-aria";
 import { TextArea } from "react-aria-components";
 
 import { DeleteProgressButton } from "@/shared/components/ui/delete-progress-button";
+import { useUserPlanLimits } from "@/shared/hooks/plan-limits/use-user-plan-limits";
 import { cn } from "@/shared/lib/classes";
 
 import { useUpdateSessionNoteContent } from "@/features/hub/hooks/session-notes/use-update-session-note-content";
@@ -20,6 +21,9 @@ export const DraggableSessionNote = ({
   note,
   sessionId,
 }: DraggableSessionNoteProps) => {
+  const {
+    sessions: { maxCharactersPerNote },
+  } = useUserPlanLimits();
   const { mutate: handleDelete } = useDeleteSessionNote();
   const { content, isSaving, handleContentChange } =
     useUpdateSessionNoteContent({
@@ -83,6 +87,7 @@ export const DraggableSessionNote = ({
           "pr-8 ",
         )}
         onChange={(e) => handleContentChange(e.target.value, note.position)}
+        maxLength={maxCharactersPerNote}
       />
 
       <DeleteProgressButton

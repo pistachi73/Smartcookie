@@ -5,27 +5,34 @@ import { and, eq } from "drizzle-orm";
 import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { sessionNote } from "@/db/schema";
+import { authenticatedDataAccess } from "../data-access-chain";
+import { sessionNoteLimitMiddleware } from "../limit-middleware";
 import {
   CreateSessionNoteSchema,
   DeleteSessionNoteSchema,
   UpdateSessionNoteSchema,
 } from "./schemas";
 
-export const addSessionNote = withProtectedDataAccess({
-  schema: CreateSessionNoteSchema,
-  callback: async (data, user) => {
+export const addSessionNote = authenticatedDataAccess()
+  .input(CreateSessionNoteSchema)
+  .use(async ({ data, user }) =>
+    sessionNoteLimitMiddleware({ user, content: data.content }),
+  )
+  .execute(async (data, user) => {
     const [createdSessonNote] = await db
       .insert(sessionNote)
       .values({ ...data, userId: user.id })
       .returning();
 
     return createdSessonNote;
-  },
-});
+  });
 
-export const updateSessionNote = withProtectedDataAccess({
-  schema: UpdateSessionNoteSchema,
-  callback: async (data, user) => {
+export const updateSessionNote = authenticatedDataAccess()
+  .input(UpdateSessionNoteSchema)
+  .use(async ({ data, user }) =>
+    sessionNoteLimitMiddleware({ user, content: data.content || "" }),
+  )
+  .execute(async (data, user) => {
     const { noteId, ...noteData } = data;
 
     const [updatedNote] = await db
@@ -41,8 +48,7 @@ export const updateSessionNote = withProtectedDataAccess({
       });
 
     return updatedNote;
-  },
-});
+  });
 
 export const deleteSessionNote = withProtectedDataAccess({
   schema: DeleteSessionNoteSchema,

@@ -46,35 +46,49 @@ export const AgendaViewOccurrenceMobile = ({
   );
 };
 
-export const AgendaViewOccurrence = ({
+export const AgendaViewSession = ({
   session,
 }: {
   session: CalendarSession;
 }) => {
   const color = getCalendarColor(session.hub?.color);
-
+  const isCancelled = session.status === "cancelled";
   return (
     <Popover>
       <Button
         key={`calendar-session-${session.id}`}
-        className={cn(
-          "p-3 relative h-full w-full brightness-100 grid grid-cols-[150px_1fr] gap-6 items-center rounded-md transition-colors",
-          "hover:bg-bg dark:hover:bg-overlay-highlight cursor-pointer",
-        )}
+        className={({ isPressed }) =>
+          cn(
+            "p-3 relative h-full w-full brightness-100 grid grid-cols-[150px_1fr] gap-6 items-center rounded-md transition-colors",
+            "hover:bg-bg dark:hover:bg-overlay-highlight cursor-pointer",
+            isCancelled && "opacity-40 saturate-75",
+            isPressed && "bg-bg",
+          )
+        }
       >
         <div className="flex items-center gap-2">
           <span
             className={cn("w-2 h-2 rounded-full shrink-0", color?.className)}
             aria-hidden="true"
           />
-          <span className="text-sm text-text-sub whitespace-nowrap">
+          <span
+            className={cn(
+              "text-sm text-text-sub whitespace-nowrap",
+              isCancelled && "line-through",
+            )}
+          >
             {format(session.startTime, "HH:mm")} -{" "}
             {format(session.endTime, "HH:mm")}
           </span>
         </div>
 
         <div className="text-left min-w-0">
-          <p className="font-medium text-sm line-clamp-2 leading-tight">
+          <p
+            className={cn(
+              "font-medium text-sm line-clamp-2 leading-tight",
+              isCancelled && "line-through",
+            )}
+          >
             {session.hub?.name || "Untitled"}
           </p>
         </div>
@@ -83,8 +97,9 @@ export const AgendaViewOccurrence = ({
         session={session}
         popoverProps={{
           placement: "top left",
+          className: "min-w-auto",
           showArrow: false,
-          offset: 2,
+          offset: 6,
           crossOffset: 12,
         }}
       />

@@ -12,30 +12,18 @@ import { Landing } from "./landing";
 import { ResetPassword } from "./reset-password";
 import { UpdatePassword } from "./update-password";
 
-const DynamicCreatePassword = dynamic(
-  () => import("./create-password").then((mod) => mod.CreatePassword),
-  {
-    ssr: false,
-  },
+const DynamicCreatePassword = dynamic(() =>
+  import("./create-password").then((mod) => mod.CreatePassword),
 );
-const DynamicEmailVerification = dynamic(
-  () => import("./email-verification").then((mod) => mod.EmailVerification),
-  {
-    ssr: false,
-  },
+const DynamicEmailVerification = dynamic(() =>
+  import("./email-verification").then((mod) => mod.EmailVerification),
 );
-const DynamicEnterPassword = dynamic(
-  () => import("./enter-password").then((mod) => mod.EnterPassword),
-  {
-    ssr: false,
-  },
+const DynamicEnterPassword = dynamic(() =>
+  import("./enter-password").then((mod) => mod.EnterPassword),
 );
 
-const DynamicTwoFactor = dynamic(
-  () => import("./two-factor").then((mod) => mod.TwoFactor),
-  {
-    ssr: false,
-  },
+const DynamicTwoFactor = dynamic(() =>
+  import("./two-factor").then((mod) => mod.TwoFactor),
 );
 
 export const Auth = ({ className }: { className?: string }) => {

@@ -6,6 +6,11 @@ export type GetSessionNotesBySessionIdQueryResponse = Awaited<
   ReturnType<typeof getSessionNotesBySessionId>
 >;
 
+export type SessionNotesWithClientId =
+  GetSessionNotesBySessionIdQueryResponse["in-class"][number] & {
+    clientId?: string;
+  };
+
 export const getSessionNotesBySessionIdQueryOptions = (sessionId: number) =>
   queryOptions({
     queryKey: ["session-notes", sessionId],
@@ -14,7 +19,21 @@ export const getSessionNotesBySessionIdQueryOptions = (sessionId: number) =>
 
       const json =
         (await response.json()) as GetSessionNotesBySessionIdQueryResponse;
-      return json;
+
+      const planNotesWithClientId = json.plans.map((note) => ({
+        ...note,
+        clientId: undefined,
+      })) as SessionNotesWithClientId[];
+
+      const inClassNotesWithClientId = json["in-class"].map((note) => ({
+        ...note,
+        clientId: undefined,
+      })) as SessionNotesWithClientId[];
+
+      return {
+        plans: planNotesWithClientId,
+        "in-class": inClassNotesWithClientId,
+      };
     },
     enabled: !!sessionId,
   });

@@ -26,12 +26,17 @@ export const getSessionNotesBySessionId = withProtectedDataAccess({
       )
       .orderBy(desc(sessionNote.updatedAt));
 
-    return notes.reduce<Record<SessionNotePosition, typeof notes>>(
+    const ret = notes.reduce<Record<SessionNotePosition, typeof notes>>(
       (acc, note) => {
         acc[note.position] = [...(acc[note.position] || []), { ...note }];
         return acc;
       },
-      {} as Record<SessionNotePosition, typeof notes>,
+      {
+        plans: [],
+        "in-class": [],
+      } as Record<SessionNotePosition, typeof notes>,
     );
+
+    return ret;
   },
 });

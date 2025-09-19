@@ -77,6 +77,7 @@ export const DayViewSession = ({ session }: DayViewSessionProps) => {
   const widthPercentage = 100 / session.totalColumns;
   const isShortEvent = heightPx / PIXELS_PER_15_MINUTES <= 2;
 
+  const isCancelled = session.status === "cancelled";
   return (
     <>
       <Popover>
@@ -97,6 +98,7 @@ export const DayViewSession = ({ session }: DayViewSessionProps) => {
               eventColor?.className,
               isShortEvent ? "rounded-sm" : "rounded-sm sm:rounded-md",
               isDragging && "opacity-50",
+              isCancelled && "opacity-40 saturate-75",
             )}
           >
             <div
@@ -107,7 +109,12 @@ export const DayViewSession = ({ session }: DayViewSessionProps) => {
                   : "flex-col py-1.5  gap-0.5",
               )}
             >
-              <p className="font-semibold leading-tight text-xs whitespace-nowrap">
+              <p
+                className={cn(
+                  "font-semibold leading-tight text-xs whitespace-nowrap",
+                  isCancelled && "line-through",
+                )}
+              >
                 {session.hub?.name ? session.hub.name : "Untitled"}
               </p>
 
@@ -115,6 +122,7 @@ export const DayViewSession = ({ session }: DayViewSessionProps) => {
                 className={cn(
                   "text-current/70 text-xs ",
                   !isShortEvent && "whitespace-nowrap",
+                  isCancelled && "line-through",
                 )}
               >
                 {isShortEvent

@@ -2,17 +2,20 @@
 
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
+  ArrowDownDoubleIcon,
   ArrowLeft02Icon,
+  ArrowUpDoubleIcon,
   Calendar02Icon,
   CalendarAdd02Icon,
   DeleteIcon,
   Pen01Icon,
   Tick01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { LayoutGroup } from "motion/react";
 import * as m from "motion/react-m";
 import dynamic from "next/dynamic";
+import { useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import { Button } from "@/shared/components/ui/button";
@@ -47,6 +50,7 @@ const DynamicDeleteSessionsModal = dynamic(
 );
 
 export function SessionsList({ hubId }: { hubId: number }) {
+  const [allSessionsExpanded, setAllSessionsExpanded] = useState(false);
   const { down } = useViewport();
 
   const {
@@ -77,7 +81,7 @@ export function SessionsList({ hubId }: { hubId: number }) {
     isFetchingPreviousPage,
     isPending: isLoadingSessions,
     refetch,
-  } = useSuspenseInfiniteQuery(getPaginatedSessionsByHubIdQueryOptions(hubId));
+  } = useInfiniteQuery(getPaginatedSessionsByHubIdQueryOptions(hubId));
 
   // Flatten all sessions from all pages - backend handles correct ordering
   const sessions = (data as any)?.pages
@@ -95,24 +99,42 @@ export function SessionsList({ hubId }: { hubId: number }) {
   const actions = (
     <div className="flex gap-2 sm:flex-row justify-between sm:justify-end flex-1">
       {hasSessions && (
-        <Button
-          size={isMobile ? "sq-sm" : "md"}
-          intent={isEditingMode ? "secondary" : "plain"}
-          onPress={handleEditModeToggle}
-          isDisabled={isLoadingSessions}
-        >
-          {isEditingMode ? (
-            <>
-              <HugeiconsIcon icon={Tick01Icon} data-slot="icon" />
-              {!isMobile && <span>Done</span>}
-            </>
-          ) : (
-            <>
-              <HugeiconsIcon icon={Pen01Icon} data-slot="icon" />
-              {!isMobile && <span>Edit</span>}
-            </>
-          )}
-        </Button>
+        <>
+          <Button
+            size="sq-md"
+            intent="outline"
+            onPress={() => {
+              setAllSessionsExpanded(!allSessionsExpanded);
+            }}
+            className="shrink-0 sm:hidden"
+          >
+            <HugeiconsIcon
+              icon={ArrowDownDoubleIcon}
+              altIcon={ArrowUpDoubleIcon}
+              showAlt={allSessionsExpanded}
+              data-slot="icon"
+            />
+          </Button>
+          <Button
+            size={isMobile ? "sq-md" : "md"}
+            intent={isEditingMode ? "secondary" : "outline"}
+            onPress={handleEditModeToggle}
+            isDisabled={isLoadingSessions}
+            className="shrink-0"
+          >
+            {isEditingMode ? (
+              <>
+                <HugeiconsIcon icon={Tick01Icon} data-slot="icon" />
+                {!isMobile && <span>Done</span>}
+              </>
+            ) : (
+              <>
+                <HugeiconsIcon icon={Pen01Icon} data-slot="icon" />
+                {!isMobile && <span>Edit</span>}
+              </>
+            )}
+          </Button>
+        </>
       )}
       {isEditingMode ? (
         <Button
@@ -152,6 +174,10 @@ export function SessionsList({ hubId }: { hubId: number }) {
               isLoadingPrevious={isFetchingPreviousPage}
               isLoadingNext={isFetchingNextPage}
               totalSessions={sessions?.length || 0}
+              onToggleAllSessionsExpanded={() =>
+                setAllSessionsExpanded(!allSessionsExpanded)
+              }
+              allSessionsExpanded={allSessionsExpanded}
               className="mb-4"
             />
           </div>
@@ -235,8 +261,8 @@ export function SessionsList({ hubId }: { hubId: number }) {
                   <Session
                     key={session.id}
                     session={session}
-                    position={index + 1}
                     hubId={hubId}
+                    isExpanded={allSessionsExpanded}
                   />
                 </m.div>
               );
@@ -250,7 +276,7 @@ export function SessionsList({ hubId }: { hubId: number }) {
         hubId={hubId}
         disableHubSelection={true}
         onSuccessfullyAddedSessions={() => {
-          // refetch();
+          refetch();
         }}
       />
       <DynamicDeleteSessionsModal hubId={hubId} />

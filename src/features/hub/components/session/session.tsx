@@ -9,7 +9,7 @@ import { format, isToday, isTomorrow } from "date-fns";
 import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";
 import dynamic from "next/dynamic";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { Badge } from "@/shared/components/ui/badge";
 import { Button, buttonStyles } from "@/shared/components/ui/button";
@@ -18,7 +18,6 @@ import { ProgressCircle } from "@/shared/components/ui/progress-circle";
 import { Separator } from "@/shared/components/ui/separator";
 import { regularSpring } from "@/shared/lib/animation";
 import { cn } from "@/shared/lib/classes";
-import { getQueryClient } from "@/shared/lib/get-query-client";
 
 import { getSessionNotesBySessionIdQueryOptions } from "../../lib/session-notes-query-options";
 import { useSessionStore } from "../../store/session-store";
@@ -71,22 +70,22 @@ export const DesktopSessionBubble = ({
 type SessionProps = {
   hubId: number;
   session: HubSession;
-  position: number;
+  isExpanded: boolean;
 };
 
-export const Session = ({ session, position, hubId }: SessionProps) => {
-  const queryClient = getQueryClient();
-  const [isExpanded, setIsExpanded] = useState(false);
+export const Session = ({
+  session,
+  hubId,
+  isExpanded: isParentExpanded,
+}: SessionProps) => {
+  const [isExpanded, setIsExpanded] = useState(isParentExpanded);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
 
   const isEditingMode = useSessionStore((store) => store.isEditingMode);
 
-  const prefecthSesionNotes = useCallback(() => {
-    queryClient.prefetchQuery({
-      ...getSessionNotesBySessionIdQueryOptions(session.id),
-      staleTime: 60000,
-    });
-  }, [queryClient, session.id]);
+  useEffect(() => {
+    setIsExpanded(isParentExpanded);
+  }, [isParentExpanded]);
 
   const onEditSession = useCallback(() => {
     setIsUpdateModalOpen(true);
@@ -94,7 +93,7 @@ export const Session = ({ session, position, hubId }: SessionProps) => {
 
   const { isLoading: isLoadingSessionNotes } = useQuery({
     ...getSessionNotesBySessionIdQueryOptions(session.id),
-    enabled: isExpanded,
+    enabled: isExpanded || isParentExpanded,
   });
 
   const isTodaySession = isToday(session.startTime);
@@ -121,15 +120,13 @@ export const Session = ({ session, position, hubId }: SessionProps) => {
           }}
           className={cn(
             buttonStyles({ intent: "plain" }),
-            "group p-2 sm:p-1 sm:pr-4 h-auto flex w-full items-center flex-row gap-2 transition-all justify-between ",
+            "group p-2 sm:pr-4 h-auto flex w-full items-center flex-row gap-2 transition-all justify-between ",
             isExpanded && "bg-muted rounded-b-none",
             "transition-colors",
           )}
-          onHoverStart={prefecthSesionNotes}
-          onFocus={prefecthSesionNotes}
         >
           <div className="flex flex-row items-center gap-4">
-            <m.div
+            {/* <m.div
               layout
               className={cn(
                 "hidden sm:flex transition-colors flex-col items-center justify-center size-12 bg-bg dark:bg-overlay-highlight rounded-sm",
@@ -142,12 +139,12 @@ export const Session = ({ session, position, hubId }: SessionProps) => {
               <p className="text-base font-semibold tabular-nums">
                 {format(session.startTime, "dd")}
               </p>
-            </m.div>
+            </m.div> */}
 
             <SessionBubble session={session} className="flex sm:hidden" />
 
-            <Heading level={3} className="text-base font-medium">
-              Session {position}
+            <Heading level={3} className="text-base font-medium tabular-nums">
+              {format(session.startTime, "eee, dd MMM ")}
             </Heading>
             <Separator orientation="vertical" className="h-4" />
             <p className="tabular-nums text-sm text-muted-fg flex flex-row items-center gap-1">

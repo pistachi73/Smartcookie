@@ -29,7 +29,7 @@ export const PremiumLockedSection = ({
         className,
       )}
     >
-      <Card.Header className="relative z-10 flex flex-col items-center text-center space-y-4 p-8">
+      <Card.Header className="relative z-10 flex flex-col items-center text-center space-y-2">
         {/* Icon */}
         <div className="relative">
           <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl" />
@@ -55,7 +55,7 @@ export const PremiumLockedSection = ({
         </Card.Description>
       </Card.Header>
 
-      <Card.Footer className="relative z-10 flex justify-center p-8 pt-0">
+      <Card.Footer className="relative z-10 flex justify-center pt-0">
         <ExplorePremiumModal>
           <Button intent="primary" size="lg" className="group">
             <HugeiconsIcon

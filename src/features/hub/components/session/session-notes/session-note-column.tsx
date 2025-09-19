@@ -12,7 +12,6 @@ import { cn } from "@/shared/lib/classes";
 
 import type { SessionNotePosition } from "@/db/schema";
 import { getSessionNotesBySessionIdQueryOptions } from "@/features/hub/lib/session-notes-query-options";
-import type { ClientSessionNote } from "../../../types/session-notes.types";
 import { AddSessionNoteForm } from "./add-session-note-form";
 import { DraggableSessionNote } from "./draggable-session-note";
 import { DroppableSessionNoteColumn } from "./droppable-session-note-column";
@@ -53,7 +52,7 @@ export const SessionNoteColumn = <T extends SessionNotePosition>({
     ...getSessionNotesBySessionIdQueryOptions(sessionId),
   });
 
-  const notes = (sessionNotes?.[position] ?? []) as ClientSessionNote[];
+  const notes = sessionNotes?.[position] ?? [];
 
   return (
     <DroppableSessionNoteColumn sessionId={sessionId} position={position}>
