@@ -22,12 +22,10 @@ export const NewQuickNoteButton = ({
     remaining,
     canCreate,
   } = useNotesLimits();
-  const limitToaster = useLimitToaster({ resourceType: "note" });
   const disabled = isLoading || !canCreate || isDisabled;
 
   const onButtonPress = (e: PressEvent) => {
     if (disabled) {
-      limitToaster();
       return;
     }
     onPress?.(e);

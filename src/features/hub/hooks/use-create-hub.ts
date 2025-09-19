@@ -13,7 +13,7 @@ import { getHubsByUserIdQueryOptions } from "../lib/hub-query-options";
 export function useCreateHub() {
   const queryClient = useQueryClient();
   const router = useRouter();
-  const limitToaster = useLimitToaster({ resourceType: "hub" });
+  const limitToaster = useLimitToaster();
 
   return useProtectedMutation({
     schema: CreateHubUseCaseSchema,

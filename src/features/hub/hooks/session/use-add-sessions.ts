@@ -25,7 +25,7 @@ export const useAddSessions = ({
   const queryClient = useQueryClient();
   const { data: hubs } = useQuery(getHubsByUserIdQueryOptions);
   const cacheManager = getCalendarCacheManager();
-  const limitToaster = useLimitToaster({ resourceType: "session" });
+  const limitToaster = useLimitToaster();
 
   return useProtectedMutation({
     schema: AddSessionsSchema,

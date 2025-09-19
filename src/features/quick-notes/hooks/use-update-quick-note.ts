@@ -37,7 +37,7 @@ export const useUpdateQuickNote = ({
   const retryIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const pendingSaveRef = useRef<PendingSave | null>(null);
   const queryClient = useQueryClient();
-  const limitToaster = useLimitToaster({ resourceType: "note" });
+  const limitToaster = useLimitToaster();
 
   const { maxCharacters } = useNotesLimits();
 

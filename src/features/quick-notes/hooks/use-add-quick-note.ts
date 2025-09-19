@@ -13,7 +13,7 @@ import type { NoteSummary } from "../types/quick-notes.types";
 
 export const useAddQuickNote = () => {
   const queryClient = useQueryClient();
-  const limitToaster = useLimitToaster({ resourceType: "note" });
+  const limitToaster = useLimitToaster();
 
   return useProtectedMutation({
     schema: CreateQuickNoteSchema,

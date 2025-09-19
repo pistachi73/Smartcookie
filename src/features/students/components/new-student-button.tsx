@@ -4,7 +4,6 @@ import { AddIcon } from "@hugeicons-pro/core-stroke-rounded";
 import { buttonStyles } from "@/shared/components/ui/button";
 import { Link } from "@/shared/components/ui/link";
 import { Tooltip } from "@/shared/components/ui/tooltip";
-import { useLimitToaster } from "@/shared/hooks/plan-limits/use-limit-toaster";
 import { useStudentLimits } from "@/shared/hooks/plan-limits/use-student-limits";
 import { cn } from "@/shared/lib/classes";
 
@@ -19,20 +18,11 @@ export const NewStudentButton = () => {
     isUnlimited,
   } = useStudentLimits();
 
-  const limitToaster = useLimitToaster({ resourceType: "student" });
-
   const isDisabled = isLoading || !canCreate;
 
   if (isLoading) {
     return null;
   }
-
-  const handleClick = (e: React.MouseEvent) => {
-    if (isDisabled) {
-      e.preventDefault();
-      limitToaster();
-    }
-  };
 
   const getAriaLabel = () => {
     if (isLoading) return "Loading student limits";
@@ -55,7 +45,6 @@ export const NewStudentButton = () => {
         isDisabled && "cursor-not-allowed opacity-50",
       )}
       href={canCreate && !isLoading ? "/portal/students/new" : "#"}
-      onClick={handleClick}
       aria-disabled={isDisabled}
       aria-label={getAriaLabel()}
     >

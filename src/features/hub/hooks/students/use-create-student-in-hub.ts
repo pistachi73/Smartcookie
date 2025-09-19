@@ -12,7 +12,7 @@ import { getStudentsByUserIdQueryOptions } from "../../lib/user-students-query-o
 
 export const useCreateStudentInHub = () => {
   const queryClient = useQueryClient();
-  const limitToaster = useLimitToaster({ resourceType: "student" });
+  const limitToaster = useLimitToaster();
 
   return useProtectedMutation({
     schema: CreateStudentInHubSchema,

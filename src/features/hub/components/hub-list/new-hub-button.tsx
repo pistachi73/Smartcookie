@@ -18,7 +18,7 @@ export const NewHubButton = () => {
     remaining,
     isUnlimited,
   } = useHubLimits();
-  const limitToaster = useLimitToaster({ resourceType: "hub" });
+  const limitToaster = useLimitToaster();
 
   const isDisabled = isLoading || !canCreate;
 

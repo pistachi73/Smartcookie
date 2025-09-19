@@ -47,7 +47,7 @@ export const AddSessionsFormModal = ({
   onSuccessfullyAddedSessions,
 }: AddSessionsFormModalProps) => {
   const [isConflictModalOpen, setIsConflictModalOpen] = useState(false);
-  const limitToaster = useLimitToaster({ resourceType: "session" });
+  const limitToaster = useLimitToaster();
 
   const form = useForm<z.infer<typeof AddSessionFormSchema>>({
     resolver: zodResolver(AddSessionFormSchema),

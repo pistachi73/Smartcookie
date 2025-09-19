@@ -22,7 +22,7 @@ export const AddSessionsButton = ({
     remainingCount,
     isUnlimited,
   } = useSessionLimits(hubId);
-  const limitToaster = useLimitToaster({ resourceType: "session" });
+  const limitToaster = useLimitToaster();
 
   const disabled = !canCreateSession || isDisabled;
 

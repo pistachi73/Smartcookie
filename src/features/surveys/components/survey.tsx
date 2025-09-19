@@ -40,7 +40,7 @@ export const Survey = ({ surveyId }: { surveyId: string }) => {
 
   return (
     <div className="h-screen w-screen flex flex-col bg-bg relative">
-      {!onBoundarySteps && <SurveyProgressBar surveyId={surveyId} />}
+      {!onBoundarySteps && <SurveyProgressBar />}
       <div className="flex-1 flex items-center justify-center overflow-hidden px-10 md:px-16 mb-12 md:mb-16">
         <AnimatePresence
           initial={false}
