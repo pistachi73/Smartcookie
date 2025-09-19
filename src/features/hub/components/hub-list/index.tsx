@@ -7,6 +7,7 @@ import {
 } from "@hugeicons-pro/core-solid-rounded";
 import {
   Calendar01Icon,
+  FolderAddIcon,
   SortByUp02Icon,
   SortingAZ02Icon,
   SortingZA01Icon,
@@ -151,7 +152,13 @@ export function HubList() {
             </Menu.Content>
           </Menu>
 
-          <NewHubButton />
+          <NewHubButton
+            size="sm"
+            className="px-0 size-10 @2xl:h-10 @2xl:w-auto @2xl:px-4"
+          >
+            <HugeiconsIcon icon={FolderAddIcon} size={16} />
+            <span className="hidden @2xl:block">New hub</span>
+          </NewHubButton>
         </div>
       </div>
 

@@ -18,12 +18,13 @@ import { getCustomColorClasses } from "@/shared/lib/custom-colors";
 
 import { getNextSessionQueryOptions } from "../../lib/get-next-session-query-options";
 import { GoToCourseLink } from "./go-to-course-button";
+import { NextSessionUnavailable } from "./next-session-unavailab";
 
 export const NextSession = () => {
   const { data: nextSession } = useSuspenseQuery(getNextSessionQueryOptions());
 
   if (!nextSession) {
-    return null;
+    return <NextSessionUnavailable />;
   }
 
   const colorClasses = getCustomColorClasses(
