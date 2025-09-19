@@ -1,5 +1,6 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 
+import { getSessionsCountByHubIdQueryOptions } from "@/shared/hooks/plan-limits/query-options/sessions-count-query-options";
 import { getQueryClient } from "@/shared/lib/get-query-client";
 
 import { HubDashboard } from "@/features/hub/components/hub-dashboard";
@@ -23,6 +24,9 @@ const HubPage = async (props: PageProps<"/[locale]/portal/hubs/[hubId]">) => {
   void queryClient.prefetchQuery(quickNotesByHubIdQueryOptions(hubIdNumber));
   void queryClient.prefetchInfiniteQuery(
     getPaginatedSessionsByHubIdQueryOptions(hubIdNumber),
+  );
+  void queryClient.prefetchQuery(
+    getSessionsCountByHubIdQueryOptions(hubIdNumber),
   );
 
   const dehydratedState = dehydrate(queryClient);

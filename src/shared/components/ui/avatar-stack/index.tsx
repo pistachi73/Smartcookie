@@ -3,8 +3,7 @@
 import { useMemo } from "react";
 import { tv, type VariantProps } from "tailwind-variants";
 
-import { cn } from "@/shared/lib/classes";
-
+import { StudentProfile } from "../../students/student-profile";
 import { Avatar } from "../avatar";
 import { Tooltip } from "../tooltip";
 import { UserAvatar } from "../user-avatar";
@@ -48,6 +47,7 @@ export type AvatarStackProps<TUser extends User> = VariantProps<
     avatar?: string;
   };
   showTooltips?: boolean;
+  keyPrefix?: string;
 };
 
 export const AvatarStack = <TUser extends User>({
@@ -57,6 +57,7 @@ export const AvatarStack = <TUser extends User>({
   size = "md",
   className,
   showTooltips = true,
+  keyPrefix = "avatar-stack",
 }: AvatarStackProps<TUser>) => {
   const { visibleUsers, overflowUsers, hasOverflow } = useMemo(() => {
     if (users.length <= maxAvatars) {
@@ -86,7 +87,7 @@ export const AvatarStack = <TUser extends User>({
       data-testid="avatar-stack"
     >
       {visibleUsers.map((user) => (
-        <div key={user.id} className="relative">
+        <div key={`${keyPrefix}-${user.id}`} className="relative">
           {showTooltips ? (
             <Tooltip delay={100} closeDelay={100}>
               <Tooltip.Trigger>
@@ -120,36 +121,26 @@ export const AvatarStack = <TUser extends User>({
             <Tooltip delay={100} closeDelay={100}>
               <Tooltip.Trigger data-testid="overflow-avatar">
                 <Avatar
-                  className="bg-overlay-highlight dark:bg-overlay-elevated-highlight outline-overlay"
+                  className="bg-secondary outline-overlay"
                   initials={`+${overflowCount}`}
                   size={size}
                 />
               </Tooltip.Trigger>
-              <Tooltip.Content className="space-y-2 max-w-xs px-3 py-2">
+              <Tooltip.Content className="space-y-3 p-3">
                 {overflowUsers.map((user) => (
-                  <div key={user.id} className="flex items-center gap-1.5">
-                    <UserAvatar
-                      className={cn(
-                        "bg-overlay-elevated-highlight",
-                        className?.avatar,
-                      )}
-                      userName={user.name}
-                      userImage={user.image}
-                      size={size}
-                    />
-                    <div>
-                      <p className="font-medium">{user.name}</p>
-                      {user.email && (
-                        <p className="text-xs text-muted-fg">{user.email}</p>
-                      )}
-                    </div>
-                  </div>
+                  <StudentProfile
+                    key={`${keyPrefix}-${user.id}-user-overflow`}
+                    name={user.name}
+                    email={user.email ?? undefined}
+                    image={user.image}
+                    avatarSize={size}
+                  />
                 ))}
               </Tooltip.Content>
             </Tooltip>
           ) : (
             <Avatar
-              className="bg-overlay-highlight dark:bg-overlay-elevated-highlight outline-overlay"
+              className="bg-secondary outline-overlay"
               initials={`+${overflowCount}`}
               size={size}
             />

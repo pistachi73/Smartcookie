@@ -1,0 +1,1 @@
+ALTER TABLE "attendance" ADD CONSTRAINT "attendance_studentId_sessionId_hubId_unique" UNIQUE("student_id","session_id","hub_id");

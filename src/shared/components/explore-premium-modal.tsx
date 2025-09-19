@@ -6,7 +6,6 @@ import {
 } from "@/features/pricing/components/frequency-switch";
 import { BasicPricingPlanCard } from "@/features/pricing/components/pricing-plan-cards/basic-pricing-plan-card";
 import { PremiumPricingPlanCard } from "@/features/pricing/components/pricing-plan-cards/premium-pricing-plan-card";
-import { useRouter } from "@/i18n/navigation";
 import { useCurrentUser } from "../hooks/use-current-user";
 import { Modal } from "./ui/modal";
 import { Separator } from "./ui/separator";
@@ -16,9 +15,8 @@ export const ExplorePremiumModal = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const router = useRouter();
   const [paymentFrequency, setPaymentFrequency] =
-    useState<PaymentFrequency>("M");
+    useState<PaymentFrequency>("A");
   const [isOpen, setIsOpen] = useState(false);
   const user = useCurrentUser();
 

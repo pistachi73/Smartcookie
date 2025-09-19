@@ -2,7 +2,7 @@
 
 import { useSurveyStore } from "../store/survey-store-provider";
 
-export const SurveyProgressBar = ({ surveyId }: { surveyId: string }) => {
+export const SurveyProgressBar = () => {
   const step = useSurveyStore((s) => s.step);
   const totalQuestions = useSurveyStore((s) => s.totalQuestions);
   const progress =

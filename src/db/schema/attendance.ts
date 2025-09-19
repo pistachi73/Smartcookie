@@ -1,5 +1,11 @@
 import { relations } from "drizzle-orm";
-import { integer, pgEnum, serial, timestamp } from "drizzle-orm/pg-core";
+import {
+  integer,
+  pgEnum,
+  serial,
+  timestamp,
+  unique,
+} from "drizzle-orm/pg-core";
 
 import { hub } from "./hub";
 import { session } from "./session";
@@ -31,7 +37,7 @@ export const attendance = pgTable(
       .$onUpdate(() => new Date().toISOString())
       .notNull(),
   },
-  () => [],
+  (t) => [unique().on(t.studentId, t.sessionId, t.hubId)],
 );
 
 export const attendanceRelations = relations(attendance, ({ one }) => ({

@@ -76,7 +76,7 @@ export const Subscription = () => {
             </p>
           </div>
           <div className="@container space-y-6">
-            {subscription ? (
+            {subscription?.status === "active" ? (
               <>
                 {isBasicProduct && (
                   <BasicSubscriptionCard

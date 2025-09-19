@@ -2,12 +2,12 @@
 
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
-  FolderAddIcon,
   FolderLibraryIcon,
   FolderSearchIcon,
 } from "@hugeicons-pro/core-solid-rounded";
 import {
   Calendar01Icon,
+  FolderAddIcon,
   SortByUp02Icon,
   SortingAZ02Icon,
   SortingZA01Icon,
@@ -23,9 +23,10 @@ import { Heading } from "@/ui/heading";
 import { PageHeader } from "@/shared/components/layout/page-header";
 import { cn } from "@/shared/lib/classes";
 
-import { getHubsByUserIdQueryOptions } from "../lib/hub-query-options";
-import type { Hub } from "../types/hub.types";
-import { HubCard } from "./hub-card";
+import { getHubsByUserIdQueryOptions } from "../../lib/hub-query-options";
+import type { Hub } from "../../types/hub.types";
+import { HubCard } from "../hub-card";
+import { NewHubButton } from "./new-hub-button";
 
 type SortOption = {
   key: keyof Hub | "name-desc";
@@ -151,19 +152,13 @@ export function HubList() {
             </Menu.Content>
           </Menu>
 
-          <Link
-            className={cn(
-              buttonStyles({
-                intent: "primary",
-                size: "sm",
-              }),
-              "px-0 size-10 @2xl:h-10 @2xl:w-auto @2xl:px-4",
-            )}
-            href="/portal/hubs/new"
+          <NewHubButton
+            size="sm"
+            className="px-0 size-10 @2xl:h-10 @2xl:w-auto @2xl:px-4"
           >
             <HugeiconsIcon icon={FolderAddIcon} size={16} />
-            <span className="hidden @2xl:block">New Hub</span>
-          </Link>
+            <span className="hidden @2xl:block">New hub</span>
+          </NewHubButton>
         </div>
       </div>
 

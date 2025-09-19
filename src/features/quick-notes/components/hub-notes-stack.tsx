@@ -4,7 +4,6 @@ import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import * as m from "motion/react-m";
 import { useState } from "react";
 
-import { Button } from "@/shared/components/ui/button";
 import { Heading } from "@/ui/heading";
 import { cn } from "@/shared/lib/classes";
 import { getCustomColorClasses } from "@/shared/lib/custom-colors";
@@ -14,6 +13,7 @@ import {
   quickNotesByHubIdQueryOptions,
   quickNotesHubsQueryOptions,
 } from "@/features/quick-notes/lib/quick-notes-query-options";
+import { NewQuickNoteButton } from "./new-quick-note-button";
 import { NoteCardList } from "./note-card-list";
 
 interface HubNotesStackProps {
@@ -51,7 +51,7 @@ export const HubNotesStack = ({ hubId }: HubNotesStackProps) => {
             </span>
           </Heading>
 
-          <Button
+          <NewQuickNoteButton
             intent="outline"
             size="sq-xs"
             className={"text-xs"}
@@ -60,7 +60,7 @@ export const HubNotesStack = ({ hubId }: HubNotesStackProps) => {
             data-testid={`add-note-${hub.id}`}
           >
             <HugeiconsIcon icon={AddIcon} size={16} data-slot="icon" />
-          </Button>
+          </NewQuickNoteButton>
         </div>
       </m.div>
 

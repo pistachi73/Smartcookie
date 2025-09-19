@@ -128,7 +128,10 @@ export async function jwtCallback(params: { token: JWT }): Promise<JWT> {
     role: user.role,
     isTwoFactorEnabled: user.isTwoFactorEnabled,
     stripeCustomerId: user.stripeCustomerId,
-    subscriptionTier: userSubscription?.tier ?? "free",
+    subscriptionTier:
+      userSubscription?.status === "active"
+        ? (userSubscription?.tier ?? "free")
+        : "free",
     subscriptionStatus: userSubscription?.status,
   };
 }

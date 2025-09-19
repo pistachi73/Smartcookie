@@ -14,9 +14,9 @@ import {
 import { useOptimizedDaySessions } from "@/features/calendar/hooks/use-optimized-calendar-sessions";
 import { useCalendarStore } from "@/features/calendar/providers/calendar-store-provider";
 import {
-  AgendaViewOccurrence,
   AgendaViewOccurrenceMobile,
-} from "./agenda-view-occurrence";
+  AgendaViewSession,
+} from "./agenda-view-session";
 
 const DayHeader = ({ date }: { date: Temporal.PlainDate }) => {
   const set1DayView = useCalendarStore((state) => state.set1DayView);
@@ -112,7 +112,7 @@ export const AgendaViewDay = ({ date }: { date: Temporal.PlainDate }) => {
                   session={session}
                 />
               ) : (
-                <AgendaViewOccurrence
+                <AgendaViewSession
                   key={`agenda-view-session-${session.id}`}
                   session={session}
                 />

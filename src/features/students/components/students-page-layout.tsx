@@ -1,11 +1,8 @@
-import { HugeiconsIcon } from "@hugeicons/react";
-import {
-  PlusSignIcon,
-  UserGroupIcon,
-} from "@hugeicons-pro/core-stroke-rounded";
+import { UserGroupIcon } from "@hugeicons-pro/core-solid-rounded";
 
-import { Button } from "@/shared/components/ui/button";
 import { PageHeader } from "@/shared/components/layout/page-header";
+
+import { NewStudentButton } from "./new-student-button";
 
 export const StudentsPageLayout = ({
   children,
@@ -20,12 +17,7 @@ export const StudentsPageLayout = ({
       className={{
         container: "border-none p-0!",
       }}
-      actions={
-        <Button>
-          <HugeiconsIcon icon={PlusSignIcon} data-slot="icon" />
-          Add student
-        </Button>
-      }
+      actions={<NewStudentButton />}
     />
     {children}
   </div>

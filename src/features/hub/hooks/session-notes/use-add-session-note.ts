@@ -1,43 +1,37 @@
-import { type QueryKey, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+import { useLimitToaster } from "@/shared/hooks/plan-limits/use-limit-toaster";
 import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 
+import { isDataAccessError } from "@/data-access/errors";
 import { addSessionNote } from "@/data-access/session-notes/mutations";
 import { CreateSessionNoteSchema } from "@/data-access/session-notes/schemas";
-import { getSessionNotesBySessionIdQueryOptions } from "../../lib/session-notes-query-options";
-import type {
-  ClientSessionNote,
-  ClientSessionNotesMap,
-} from "../../types/session-notes.types";
-
-interface MutationContext {
-  previousData: ClientSessionNotesMap | undefined;
-  optimisticId: number;
-  clientId: string;
-  sessionNotesQueryKey: QueryKey;
-}
+import {
+  getSessionNotesBySessionIdQueryOptions,
+  type SessionNotesWithClientId,
+} from "../../lib/session-notes-query-options";
 
 export function useAddSessionNote() {
   const queryClient = useQueryClient();
+  const limitToaster = useLimitToaster();
 
   return useProtectedMutation({
     schema: CreateSessionNoteSchema,
     mutationFn: addSessionNote,
-    onMutate: async (input): Promise<MutationContext> => {
+    onMutate: async (input) => {
       const queryKey = getSessionNotesBySessionIdQueryOptions(
         input.sessionId,
       ).queryKey;
       await queryClient.cancelQueries({
         queryKey,
       });
-      const previousData =
-        queryClient.getQueryData<ClientSessionNotesMap>(queryKey);
+      const previousData = queryClient.getQueryData(queryKey);
 
       const optimisticId = -Date.now();
       const clientId = `client-${Date.now()}`;
 
-      const optimisticNote: ClientSessionNote = {
+      const optimisticNote: SessionNotesWithClientId = {
         id: optimisticId,
         sessionId: input.sessionId,
         content: input.content,
@@ -45,21 +39,14 @@ export function useAddSessionNote() {
         clientId,
       };
 
-      queryClient.setQueryData<ClientSessionNotesMap>(
-        ["session-notes", input.sessionId],
-        (old) => {
-          if (!old) {
-            return {
-              plans: [],
-              "in-class": [],
-            };
-          }
-          return {
-            ...old,
-            [input.position]: [optimisticNote, ...(old[input.position] ?? [])],
-          };
-        },
-      );
+      queryClient.setQueryData(queryKey, (old) => {
+        if (!old) return undefined;
+
+        return {
+          ...old,
+          [input.position]: [optimisticNote, ...(old[input.position] ?? [])],
+        };
+      });
 
       return {
         previousData,
@@ -70,38 +57,35 @@ export function useAddSessionNote() {
     },
 
     onSuccess: (data, input, context) => {
-      if (!data || !context) return;
-
-      queryClient.setQueryData<ClientSessionNotesMap>(
-        context.sessionNotesQueryKey,
-        (old) => {
-          if (!old) {
-            return {
-              plans: [],
-              "in-class": [],
-            };
-          }
-          return {
-            ...old,
-            [input.position]: old[input.position].map((note) =>
-              note.id === context.optimisticId
-                ? { ...data, clientId: context.clientId }
-                : note,
-            ),
-          };
-        },
-      );
-    },
-
-    onError: (error, _, context) => {
-      toast.error("Failed to add note");
-      if (context?.previousData) {
+      if (isDataAccessError(data)) {
         queryClient.setQueryData(
           context.sessionNotesQueryKey,
           context.previousData,
         );
+        switch (data.type) {
+          case "CONTENT_LIMIT_REACHED_SESSION_NOTES":
+            limitToaster({
+              title: data.message,
+            });
+            break;
+          default:
+            toast.error(data.message);
+            break;
+        }
+        return;
       }
-      console.error(error);
+
+      queryClient.setQueryData(context.sessionNotesQueryKey, (old) => {
+        if (!old) return undefined;
+        return {
+          ...old,
+          [input.position]: old[input.position].map((note) =>
+            note.id === context.optimisticId
+              ? { ...data, clientId: context.clientId }
+              : note,
+          ),
+        };
+      });
     },
   });
 }

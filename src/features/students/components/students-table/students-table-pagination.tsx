@@ -1,8 +1,9 @@
-import { usePathname, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 import { Pagination } from "@/shared/components/ui/pagination";
 import useNavigateWithParams from "@/shared/hooks/use-navigate-with-params";
 
+import { usePathname } from "@/i18n/navigation";
 import { validateStudentsSearchParams } from "../../lib/validate-students-search-params";
 
 export const StudentsTablePagination = ({

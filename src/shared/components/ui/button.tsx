@@ -67,7 +67,7 @@ const buttonStyles = tv({
       false: "rounded-lg",
     },
     isDisabled: {
-      true: "inset-ring-0 opacity-50 forced-colors:text-[GrayText]",
+      true: " opacity-50 forced-colors:text-[GrayText]",
     },
     isPending: {
       true: "opacity-50",

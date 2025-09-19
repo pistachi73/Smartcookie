@@ -39,8 +39,6 @@ export function CreateHubForm() {
 
   const onSubmit = (data: z.infer<typeof hubInfoSchema>) => {
     createHub({
-      studentIds: [],
-      sessions: [],
       hubInfo: {
         ...data,
         startDate: data.startDate?.toString(),

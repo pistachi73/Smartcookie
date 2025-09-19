@@ -9,6 +9,7 @@ import {
   parseOptionalDateWithTimezone,
   parseRequiredDateWithTimezone,
 } from "../utils";
+import { getUserHubCountInternal } from "./internal";
 import { GetHubByIdSchema } from "./schemas";
 
 export const getHubsByUserIdForQuickNotes = withProtectedDataAccess({
@@ -89,5 +90,11 @@ export const getHubById = withProtectedDataAccess({
       .limit(1);
 
     return res[0] ?? null;
+  },
+});
+
+export const getUserHubCount = withProtectedDataAccess({
+  callback: async (user) => {
+    return getUserHubCountInternal(user.id);
   },
 });

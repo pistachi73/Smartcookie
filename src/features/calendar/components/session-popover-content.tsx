@@ -91,8 +91,8 @@ export const SessionPopover = ({
     <>
       <Popover.Content
         className={cn("sm:w-[300px]  shadow-lg", popoverClassName)}
+        showArrow={true}
         {...restPopoverProps}
-        showArrow
       >
         <Dialog className="[--gutter:--spacing(4)] sm:[--gutter:--spacing(6)]">
           <Popover.Header className="space-y-2">
@@ -149,6 +149,7 @@ export const SessionPopover = ({
                 </p>
                 <div className="flex flex-row items-center not-last:-ml-4">
                   <AvatarStack
+                    keyPrefix={`session${session.id}-popover`}
                     size="md"
                     users={session.students}
                     maxAvatars={3}

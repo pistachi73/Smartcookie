@@ -50,6 +50,34 @@ vi.mock("../note-card-list", () => ({
   ),
 }));
 
+// Mock the new-quick-note-button component
+vi.mock("../new-quick-note-button", () => ({
+  NewQuickNoteButton: (props: any) => <div {...props}>Add Note Button</div>,
+}));
+
+// Mock authentication and plan limits hooks
+vi.mock("@/shared/hooks/use-current-user", () => ({
+  useCurrentUser: vi.fn().mockReturnValue({
+    id: "test-user-id",
+    name: "Test User",
+    email: "test@example.com",
+  }),
+}));
+
+vi.mock("@/shared/hooks/plan-limits/use-notes-limits", () => ({
+  useNotesLimits: vi.fn(() => ({
+    max: 10,
+    current: 5,
+    remaining: 5,
+    isAtLimit: false,
+    canCreate: true,
+    isUnlimited: false,
+    maxCharacters: 1000,
+    isLoading: false,
+    error: null,
+  })),
+}));
+
 describe("HubNotesStack", () => {
   const mockHubId = 123;
   const mockHub = {

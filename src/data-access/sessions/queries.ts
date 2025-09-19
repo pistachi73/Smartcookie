@@ -181,8 +181,6 @@ export const getPaginatedSessionsByHubId = withProtectedDataAccess({
       .orderBy(...orderBy)
       .limit(limit + 1);
 
-    console.log({ l: rawSessions.length, rawSessions });
-
     // Check if there are more pages
     const hasMore = rawSessions.length > limit;
     const sessions = hasMore ? rawSessions.slice(0, limit) : rawSessions;
@@ -224,13 +222,6 @@ export const getPaginatedSessionsByHubId = withProtectedDataAccess({
     if (!cursor && direction === "next") {
       finalPrevCursor = now.toISOString();
     }
-
-    console.log({
-      nextCursor,
-      prevCursor: finalPrevCursor,
-      hasMore,
-      direction,
-    });
 
     return {
       sessions: formattedSessions,

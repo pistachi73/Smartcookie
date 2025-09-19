@@ -8,6 +8,7 @@ import {
 } from "@/shared/lib/testing/query-client-utils";
 import { act, renderHook, waitFor } from "@/shared/lib/testing/test-utils";
 
+import type { DataAccessError } from "@/data-access/errors";
 import { useAddQuickNote } from "../use-add-quick-note";
 
 vi.mock("sonner", () => ({
@@ -23,6 +24,19 @@ vi.mock("@/shared/hooks/use-current-user", () => ({
     email: "test@example.com",
   }),
 }));
+
+vi.mock("@/shared/hooks/plan-limits/use-limit-toaster", () => ({
+  useLimitToaster: vi.fn().mockReturnValue(vi.fn()),
+}));
+
+vi.mock(
+  "@/shared/hooks/plan-limits/query-options/notes-count-query-options",
+  () => ({
+    getUserQuickNoteCountQueryOptions: {
+      queryKey: ["user-quick-notes-count"],
+    },
+  }),
+);
 
 const mocks = vi.hoisted(() => ({
   createQuickNote: vi.fn(),
@@ -44,6 +58,7 @@ const mockQuickNoteReturn = {
 };
 
 const mockQueryKey = ["hub-notes", mockQuickNote.hubId];
+const mockUserNotesCountQueryKey = ["user-quick-notes-count"];
 
 vi.mock("@/data-access/quick-notes/mutations", () => ({
   createQuickNote: mocks.createQuickNote,
@@ -64,9 +79,24 @@ describe("useAddQuickNote", () => {
     queryClient = createTestQueryClient();
 
     vi.spyOn(queryClient, "setQueryData");
-    vi.spyOn(queryClient, "getQueryData").mockReturnValue([
-      { id: 1, content: "Existing note", hubId: 123, updatedAt: "2023-01-01" },
-    ]);
+    vi.spyOn(queryClient, "getQueryData").mockImplementation((queryKey) => {
+      if (JSON.stringify(queryKey) === JSON.stringify(mockQueryKey)) {
+        return [
+          {
+            id: 1,
+            content: "Existing note",
+            hubId: 123,
+            updatedAt: "2023-01-01",
+          },
+        ];
+      }
+      if (
+        JSON.stringify(queryKey) === JSON.stringify(mockUserNotesCountQueryKey)
+      ) {
+        return 5;
+      }
+      return undefined;
+    });
     vi.spyOn(queryClient, "cancelQueries").mockResolvedValue(undefined);
   });
 
@@ -82,23 +112,32 @@ describe("useAddQuickNote", () => {
     });
 
     expect(queryClient.getQueryData).toHaveBeenCalledWith(mockQueryKey);
+    expect(queryClient.getQueryData).toHaveBeenCalledWith(
+      mockUserNotesCountQueryKey,
+    );
     expect(queryClient.cancelQueries).toHaveBeenCalledWith({
       queryKey: mockQueryKey,
     });
-    expect(queryClient.setQueryData).toHaveBeenCalledTimes(2);
+    expect(queryClient.setQueryData).toHaveBeenCalledTimes(3);
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(result.current.data).toEqual(mockQuickNoteReturn);
   });
 
-  it("should handle errors and revert optimistic updates", async () => {
-    vi.mocked(mocks.createQuickNote).mockRejectedValue(
-      new Error("Failed to add note"),
-    );
+  it("should handle DataAccessError and revert optimistic updates", async () => {
+    const mockError: DataAccessError<"UNEXPECTED_ERROR"> = {
+      type: "UNEXPECTED_ERROR",
+      message: "Failed to create note",
+    };
+
+    vi.mocked(mocks.createQuickNote).mockResolvedValue(mockError);
     const { result } = renderHookWithQueryClient(queryClient);
 
-    const originalData = queryClient.getQueryData(["hub-notes", 123]);
+    const originalHubData = queryClient.getQueryData(mockQueryKey);
+    const originalCountData = queryClient.getQueryData(
+      mockUserNotesCountQueryKey,
+    );
 
     const errorNote = {
       content: "ERROR_CASE",
@@ -112,27 +151,32 @@ describe("useAddQuickNote", () => {
 
     expect(queryClient.setQueryData).toHaveBeenCalled();
 
-    await waitFor(() => expect(result.current.isError).toBe(true));
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(queryClient.setQueryData).toHaveBeenCalledWith(
-      ["hub-notes", 123],
-      originalData,
+      mockQueryKey,
+      originalHubData,
     );
 
-    expect(toast.error).toHaveBeenCalledWith("Failed to add note");
+    expect(queryClient.setQueryData).toHaveBeenCalledWith(
+      mockUserNotesCountQueryKey,
+      originalCountData,
+    );
+
+    expect(toast.error).toHaveBeenCalledWith("Failed to create note");
   });
 
-  it("should handle server returning null data", async () => {
+  it("should handle successful note creation with valid data", async () => {
     const { result } = renderHookWithQueryClient(queryClient);
 
-    const nullDataNote = {
-      content: "SERVER_ERROR",
+    const validNote = {
+      content: "Valid note content",
       hubId: 123,
       updatedAt: "2023-01-06T00:00:00Z",
     };
 
     await act(async () => {
-      result.current.mutate(nullDataNote);
+      result.current.mutate(validNote);
     });
 
     expect(queryClient.setQueryData).toHaveBeenCalled();
@@ -140,17 +184,18 @@ describe("useAddQuickNote", () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(result.current.isError).toBe(false);
+    expect(result.current.data).toEqual(mockQuickNoteReturn);
   });
 
-  it("should handle errors while maintaining focus registry integrity", async () => {
+  it("should handle network errors gracefully", async () => {
     vi.mocked(mocks.createQuickNote).mockRejectedValue(
-      new Error("Failed to add note"),
+      new Error("Network error"),
     );
 
     const { result } = renderHookWithQueryClient(queryClient);
 
     const errorNote = {
-      content: "ERROR_CASE",
+      content: "Network error case",
       hubId: 123,
       updatedAt: "2023-01-07T00:00:00Z",
     };
@@ -160,5 +205,76 @@ describe("useAddQuickNote", () => {
     });
 
     await waitFor(() => expect(result.current.isError).toBe(true));
+    expect(result.current.error).toEqual(new Error("Network error"));
+  });
+
+  it("should handle limit exceeded error and show limit toaster", async () => {
+    const mockLimitToaster = vi.fn();
+    vi.mocked(vi.fn()).mockReturnValue(mockLimitToaster);
+
+    const limitError: DataAccessError<"LIMIT_REACHED_NOTES"> = {
+      type: "LIMIT_REACHED_NOTES",
+      message:
+        "Quick note limit exceeded. You can have up to 10 notes on your current plan.",
+      meta: {
+        current: 10,
+        max: 10,
+        limitType: "notes",
+      },
+    };
+
+    vi.mocked(mocks.createQuickNote).mockResolvedValue(limitError);
+    const { result } = renderHookWithQueryClient(queryClient);
+
+    const originalHubData = queryClient.getQueryData(mockQueryKey);
+    const originalCountData = queryClient.getQueryData(
+      mockUserNotesCountQueryKey,
+    );
+
+    const limitNote = {
+      content: "This would exceed limit",
+      hubId: 123,
+      updatedAt: "2023-01-08T00:00:00Z",
+    };
+
+    await act(async () => {
+      result.current.mutate(limitNote);
+    });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    expect(queryClient.setQueryData).toHaveBeenCalledWith(
+      mockQueryKey,
+      originalHubData,
+    );
+
+    expect(queryClient.setQueryData).toHaveBeenCalledWith(
+      mockUserNotesCountQueryKey,
+      originalCountData,
+    );
+  });
+
+  it("should handle unexpected errors with generic toast", async () => {
+    const unexpectedError: DataAccessError<"UNEXPECTED_ERROR"> = {
+      type: "UNEXPECTED_ERROR",
+      message: "Something went wrong",
+    };
+
+    vi.mocked(mocks.createQuickNote).mockResolvedValue(unexpectedError);
+    const { result } = renderHookWithQueryClient(queryClient);
+
+    const unexpectedNote = {
+      content: "Unexpected error case",
+      hubId: 123,
+      updatedAt: "2023-01-09T00:00:00Z",
+    };
+
+    await act(async () => {
+      result.current.mutate(unexpectedNote);
+    });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+    expect(toast.error).toHaveBeenCalledWith("Something went wrong");
   });
 });

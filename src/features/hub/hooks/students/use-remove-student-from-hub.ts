@@ -3,29 +3,29 @@ import { toast } from "sonner";
 
 import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
 
+import { isDataAccessError } from "@/data-access/errors";
 import { removeStudentFromHub } from "@/data-access/students/mutations";
 import { RemoveStudentFromHubSchema } from "@/data-access/students/schemas";
+import { getStudentsByHubIdQueryOptions } from "../../lib/hub-students-query-optionts";
 
 export const useRemoveStudentFromHub = () => {
   const queryClient = useQueryClient();
 
   return useProtectedMutation({
     schema: RemoveStudentFromHubSchema,
-    mutationFn: (data) => removeStudentFromHub(data),
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: ["user-students"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["hub-students", variables.hubId],
-      });
+    mutationFn: removeStudentFromHub,
+    onSuccess: (res, variables) => {
+      if (isDataAccessError(res)) {
+        toast.error(res.message);
+        return;
+      }
 
+      const hubStudentsQueryKey = getStudentsByHubIdQueryOptions(
+        variables.hubId,
+      ).queryKey;
       queryClient.invalidateQueries({
-        queryKey: ["calendar-sessions"],
+        queryKey: hubStudentsQueryKey,
       });
-    },
-    onError: () => {
-      toast.error("Failed to remove student from hub. Please try again later.");
     },
   });
 };

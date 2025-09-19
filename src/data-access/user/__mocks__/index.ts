@@ -11,5 +11,6 @@ export const createMockUser = (overrides: Partial<User> = {}): User => ({
   role: "USER",
   isTwoFactorEnabled: false,
   stripeCustomerId: null,
+  createdAt: new Date(),
   ...overrides,
 });

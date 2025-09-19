@@ -37,13 +37,13 @@ export const getHubOverviewSessionsQueryOptions = (hubId: number) =>
     },
   });
 
-type PageParam = [string | undefined, "next" | "prev" | undefined];
+type PageParam = [string | undefined, "next" | "prev" | undefined, number];
 
 export const getPaginatedSessionsByHubIdQueryOptions = (hubId: number) =>
   infiniteQueryOptions({
     queryKey: ["hub-infinite-sessions", hubId],
     queryFn: async ({ pageParam }) => {
-      const [cursor, direction] = pageParam;
+      const [cursor, direction, page] = pageParam;
       console.log({ cursor, direction });
       const res = await getPaginatedSessionsByHubId({
         hubId,
@@ -52,18 +52,17 @@ export const getPaginatedSessionsByHubIdQueryOptions = (hubId: number) =>
         direction,
       });
 
-      console.log({ res });
-      return res;
+      return { ...res, page };
     },
-    initialPageParam: [undefined, "next"] as PageParam,
+    initialPageParam: [undefined, "next", 0] as PageParam,
     getNextPageParam: (lastPage) => {
       return lastPage.hasNextPage && lastPage.nextCursor
-        ? ([lastPage.nextCursor, "next"] as PageParam)
+        ? ([lastPage.nextCursor, "next", lastPage.page + 1] as PageParam)
         : undefined;
     },
     getPreviousPageParam: (firstPage) => {
       return firstPage.prevCursor
-        ? ([firstPage.prevCursor, "prev"] as PageParam)
+        ? ([firstPage.prevCursor, "prev", firstPage.page - 1] as PageParam)
         : undefined;
     },
   });

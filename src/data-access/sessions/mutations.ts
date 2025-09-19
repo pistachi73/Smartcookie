@@ -7,6 +7,8 @@ import { withProtectedDataAccess } from "@/data-access/with-protected-data-acces
 import { db } from "@/db";
 import { hub, type InsertSession, session, studentHub } from "@/db/schema";
 import { addAttendance } from "../attendance/mutations";
+import { authenticatedDataAccess } from "../data-access-chain";
+import { sessionLimitMiddleware } from "../limit-middleware";
 import {
   AddSessionsSchema,
   CheckSessionConflictsSchema,
@@ -15,10 +17,14 @@ import {
 } from "./schemas";
 import { findOverlappingIntervals, hasOverlappingIntervals } from "./utils";
 
-export const addSessions = withProtectedDataAccess({
-  schema: AddSessionsSchema,
-  callback: async ({ sessions, hubId, trx = db }, user) => {
-    return await trx.transaction(async (trx) => {
+export const addSessions = authenticatedDataAccess()
+  .input(AddSessionsSchema)
+  .onError({
+    message: "Failed to add sessions",
+  })
+  .use(sessionLimitMiddleware)
+  .execute(async ({ sessions, hubId }, user) => {
+    return await db.transaction(async (trx) => {
       const toAddSessions: InsertSession[] = sessions.map((s) => ({
         ...s,
         userId: user.id,
@@ -40,10 +46,6 @@ export const addSessions = withProtectedDataAccess({
           .where(eq(studentHub.hubId, hubId)),
       ]);
 
-      if (!addedSessions.length) {
-        throw new Error("Failed to add sessions");
-      }
-
       await addAttendance({
         data: {
           sessionIds: addedSessions.map((s) => s.id),
@@ -54,8 +56,7 @@ export const addSessions = withProtectedDataAccess({
       });
       return addedSessions;
     });
-  },
-});
+  });
 
 export const checkSessionConflicts = withProtectedDataAccess({
   schema: CheckSessionConflictsSchema,

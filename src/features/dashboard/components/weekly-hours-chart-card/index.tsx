@@ -82,32 +82,34 @@ export function WeeklyHoursCard() {
                   </>
                 )}
               </p>
-              <Tooltip delay={0} closeDelay={0}>
-                <Tooltip.Trigger className="text-sm text-muted-fg hover:text-fg transition-colors">
-                  View hubs
-                </Tooltip.Trigger>
-                <Tooltip.Content
-                  className="flex flex-col gap-2"
-                  placement="bottom end"
-                >
-                  {Object.entries(chartData!.chartConfig).map(
-                    ([key, value]) => (
-                      <div
-                        key={key}
-                        className="flex flex-row items-center gap-1"
-                        style={
-                          {
-                            "--color-bg": value.color,
-                          } as React.CSSProperties
-                        }
-                      >
-                        <div className="size-2.5 shrink-0 rounded-[2px] bg-[var(--color-bg)]" />
-                        <span className="text-xs font-medium">{key}</span>
-                      </div>
-                    ),
-                  )}
-                </Tooltip.Content>
-              </Tooltip>
+              {Object.entries(chartData!.chartConfig).length > 0 && (
+                <Tooltip delay={0} closeDelay={0}>
+                  <Tooltip.Trigger className="text-sm text-muted-fg hover:text-fg transition-colors">
+                    View hubs
+                  </Tooltip.Trigger>
+                  <Tooltip.Content
+                    className="flex flex-col gap-2"
+                    placement="bottom end"
+                  >
+                    {Object.entries(chartData!.chartConfig).map(
+                      ([key, value]) => (
+                        <div
+                          key={key}
+                          className="flex flex-row items-center gap-1"
+                          style={
+                            {
+                              "--color-bg": value.color,
+                            } as React.CSSProperties
+                          }
+                        >
+                          <div className="size-2.5 shrink-0 rounded-[2px] bg-[var(--color-bg)]" />
+                          <span className="text-xs font-medium">{key}</span>
+                        </div>
+                      ),
+                    )}
+                  </Tooltip.Content>
+                </Tooltip>
+              )}
             </>
           )}
         </div>

@@ -10,6 +10,7 @@ import { useState } from "react";
 import { Button } from "@/shared/components/ui/button";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import { Menu } from "@/shared/components/ui/menu";
+import { useStudentLimits } from "@/shared/hooks/plan-limits/use-student-limits";
 
 import { useStudentsByHubId } from "../../hooks/students/use-students-by-hub-id";
 import { HubPanelHeader } from "../hub-panel-header";
@@ -36,8 +37,20 @@ const DynamicAddStudentModal = dynamic(
 export const Students = ({ hubId }: { hubId: number }) => {
   const [isAddStudentFormModalOpen, setIsAddStudentFormModalOpen] =
     useState(false);
+  const studentLimit = useStudentLimits();
   const [isAddStudentModalOpen, setIsAddStudentModalOpen] = useState(false);
   const { data: students, isPending } = useStudentsByHubId(hubId);
+
+  const getFromScratchAriaLabel = () => {
+    if (studentLimit.isAtLimit)
+      return `Student limit reached. ${studentLimit.current} of ${studentLimit.max} students used`;
+    return `Create new student${!studentLimit.isUnlimited ? `. ${studentLimit.remaining} remaining` : ""}`;
+  };
+
+  const getFromScratchLabel = () => {
+    if (studentLimit.isAtLimit) return "From scratch (limit reached)";
+    return "From scratch";
+  };
 
   return (
     <>
@@ -46,11 +59,10 @@ export const Students = ({ hubId }: { hubId: number }) => {
           title="Course Students"
           actions={
             <Menu>
-              <Button className={"w-full sm:w-fit"} size="sm" intent="primary">
+              <Button className={"w-full sm:w-fit"} intent="primary">
                 <HugeiconsIcon
                   icon={UserAdd02Icon}
                   altIcon={DeleteIcon}
-                  size={16}
                   data-slot="icon"
                 />
                 <p>Add student</p>
@@ -60,15 +72,18 @@ export const Students = ({ hubId }: { hubId: number }) => {
                   onAction={() => setIsAddStudentModalOpen(true)}
                   id="from-students"
                   className="text-sm"
+                  aria-label={getFromScratchAriaLabel()}
                 >
                   From students
                 </Menu.Item>
+
                 <Menu.Item
                   onAction={() => setIsAddStudentFormModalOpen(true)}
                   id="from-scratch"
                   className="text-sm"
+                  isDisabled={studentLimit.isAtLimit}
                 >
-                  From scratch
+                  {getFromScratchLabel()}
                 </Menu.Item>
               </Menu.Content>
             </Menu>

@@ -1,11 +1,11 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-import { getStudentsByUserId } from "@/data-access/students/queries";
+import { getAllStudents } from "@/data-access/students/queries";
 
 export async function GET(_request: NextRequest) {
   try {
-    const students = await getStudentsByUserId();
+    const students = await getAllStudents();
 
     return NextResponse.json(students);
   } catch (error) {

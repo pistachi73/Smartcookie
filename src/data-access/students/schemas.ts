@@ -10,12 +10,15 @@ export const AddStudentSchema = z.object({
   phone: z.string(),
 });
 
-export const AddStudentToHubSchema = z.object({
-  studentId: z.number(),
+export const AddStudentsToHubSchema = z.object({
+  studentIds: z.array(z.number()).min(1, "Please select at least one student"),
   hubId: z.number(),
 });
 
-export const RemoveStudentFromHubSchema = AddStudentToHubSchema;
+export const RemoveStudentFromHubSchema = z.object({
+  studentId: z.number(),
+  hubId: z.number(),
+});
 
 export const CreateStudentInHubSchema = z.object({
   student: z.object({
