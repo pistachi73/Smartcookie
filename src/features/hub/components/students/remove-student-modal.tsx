@@ -45,7 +45,7 @@ export const RemoveStudentModal = ({
     >
       <Modal.Header title="Remove Student" />
 
-      <div className="px-6">
+      <Modal.Body className="px-6">
         <Note intent="danger">
           <strong>Permanent Data Loss</strong>
           <p className="mt-1">
@@ -69,7 +69,7 @@ export const RemoveStudentModal = ({
             </p>
           </Note>
         </div>
-      </div>
+      </Modal.Body>
 
       <Modal.Footer>
         <Modal.Close size="sm" isDisabled={isPending}>

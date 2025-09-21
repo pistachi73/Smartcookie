@@ -6,6 +6,7 @@ import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Form } from "@/shared/components/ui/form";
+import { useUserPlanLimits } from "@/shared/hooks/plan-limits/use-user-plan-limits";
 import { regularSpring } from "@/shared/lib/animation";
 import { cn } from "@/shared/lib/classes";
 
@@ -13,24 +14,31 @@ import type { SessionNotePosition } from "@/db/schema";
 import { useAddSessionNote } from "../../../hooks/session-notes/use-add-session-note";
 
 type AddSessionNoteProps = {
+  hubId: number;
   sessionId: number;
   position: SessionNotePosition;
   onCancel: () => void;
 };
 
-const AddSessionNoteFormSchema = z.object({
-  content: z.string().min(1),
-});
+const AddSessionNoteFormSchema = (maxChars: number) =>
+  z.object({
+    content: z.string().min(1).max(maxChars),
+  });
 
 const MotionForm = m.create(Form);
 
 export const AddSessionNoteForm = ({
+  hubId,
   onCancel,
   sessionId,
   position,
 }: AddSessionNoteProps) => {
-  const form = useForm<z.infer<typeof AddSessionNoteFormSchema>>({
-    resolver: zodResolver(AddSessionNoteFormSchema),
+  const {
+    sessions: { maxCharactersPerNote },
+  } = useUserPlanLimits();
+  const formSchema = AddSessionNoteFormSchema(maxCharactersPerNote);
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(AddSessionNoteFormSchema(maxCharactersPerNote)),
     defaultValues: {
       content: "",
     },
@@ -45,12 +53,12 @@ export const AddSessionNoteForm = ({
     }, 500);
   };
 
-  const onSubmit = (data: z.infer<typeof AddSessionNoteFormSchema>) => {
+  const onSubmit = (data: z.infer<typeof formSchema>) => {
     if (isSubmitted.current) return;
     if (!data.content.trim()) return;
 
     handleRemoveAddingNote();
-    addNote({ sessionId, content: data.content, position });
+    addNote({ hubId, sessionId, content: data.content, position });
     isSubmitted.current = true;
   };
 
@@ -102,6 +110,7 @@ export const AddSessionNoteForm = ({
             )}
             placeholder={"Type and press enter..."}
             aria-label="Add session note"
+            maxLength={maxCharactersPerNote}
           />
         )}
       />

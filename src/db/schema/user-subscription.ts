@@ -31,6 +31,7 @@ export const userSubscription = pgTable(
     // Stripe identifiers
     stripeSubscriptionId: text().notNull().unique(),
     stripePriceId: text().notNull(),
+    stripeSubscriptionStatus: text(),
 
     // Subscription details
     status: subscriptionStatusEnum().notNull().default("active"),
@@ -72,3 +73,4 @@ export type InsertUserSubscription = typeof userSubscription.$inferInsert;
 export type UserSubscription = typeof userSubscription.$inferSelect;
 export type UserSubscriptionStatus =
   (typeof subscriptionStatusEnum.enumValues)[number];
+export type SubscriptionTier = (typeof subscriptionTierEnum.enumValues)[number];

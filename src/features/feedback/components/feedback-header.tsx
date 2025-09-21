@@ -9,7 +9,11 @@ import { Link } from "@/shared/components/ui/link";
 import { PageHeader } from "@/shared/components/layout/page-header";
 import { useNavigateWithParams } from "@/shared/hooks/use-navigate-with-params";
 
-export const FeedbackHeader = () => {
+export const FeedbackHeader = ({
+  isBlocked = false,
+}: {
+  isBlocked?: boolean;
+}) => {
   const { createHrefWithParams } = useNavigateWithParams();
 
   const addQuestionHref = createHrefWithParams(
@@ -28,21 +32,23 @@ export const FeedbackHeader = () => {
         container: "bg-bg",
       }}
       actions={
-        <>
-          <Link
-            href={addQuestionHref}
-            className={buttonStyles({
-              intent: "outline",
-            })}
-          >
-            <HugeiconsIcon icon={AddIcon} size={16} data-slot="icon" />
-            Create Question
-          </Link>
-          <Link href={createSurveyHref} className={buttonStyles()}>
-            <HugeiconsIcon icon={AddIcon} size={16} data-slot="icon" />
-            Create Survey
-          </Link>
-        </>
+        !isBlocked && (
+          <>
+            <Link
+              href={addQuestionHref}
+              className={buttonStyles({
+                intent: "outline",
+              })}
+            >
+              <HugeiconsIcon icon={AddIcon} size={16} data-slot="icon" />
+              Create Question
+            </Link>
+            <Link href={createSurveyHref} className={buttonStyles()}>
+              <HugeiconsIcon icon={AddIcon} size={16} data-slot="icon" />
+              Create Survey
+            </Link>
+          </>
+        )
       }
     />
   );

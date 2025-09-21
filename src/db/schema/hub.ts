@@ -35,10 +35,7 @@ export const hub = pgTable(
     endDate: timestamp({ mode: "string" }),
     level: varchar({ length: 20 }),
     createdAt: timestamp({ mode: "string" }).defaultNow().notNull(),
-    updatedAt: timestamp({ mode: "string" })
-      .defaultNow()
-      .$onUpdate(() => new Date().toISOString())
-      .notNull(),
+    lastActivityAt: timestamp({ mode: "string" }).defaultNow().notNull(),
   },
   (t) => [index("user_id_idx").on(t.userId)],
 );

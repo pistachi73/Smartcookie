@@ -6,6 +6,7 @@ import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Form } from "@/shared/components/ui/form";
+import { useNotesLimits } from "@/shared/hooks/plan-limits/use-notes-limits";
 import { regularSpring } from "@/shared/lib/animation";
 import { cn } from "@/shared/lib/classes";
 
@@ -16,13 +17,15 @@ type AddQuickNoteProps = {
   onCancel: () => void;
 };
 
-const AddQuickNoteFormSchema = z.object({
-  content: z.string().min(1),
-});
-
 const MotionForm = m.create(Form);
 
 export const AddQuickNoteForm = ({ onCancel, hubId }: AddQuickNoteProps) => {
+  const { maxCharacters } = useNotesLimits();
+
+  const AddQuickNoteFormSchema = z.object({
+    content: z.string().min(1).max(maxCharacters),
+  });
+
   const form = useForm<z.infer<typeof AddQuickNoteFormSchema>>({
     resolver: zodResolver(AddQuickNoteFormSchema),
     defaultValues: {
@@ -100,6 +103,7 @@ export const AddQuickNoteForm = ({ onCancel, hubId }: AddQuickNoteProps) => {
             )}
             placeholder={"Type and press enter..."}
             aria-label="Add session note"
+            maxLength={maxCharacters}
           />
         )}
       />

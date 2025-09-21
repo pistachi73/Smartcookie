@@ -7,8 +7,9 @@ export const getHubsByUserIdQueryOptions = queryOptions({
   queryFn: getHubsByUserId,
 });
 
-export const getHubByIdQueryOptions = (hubId: number) =>
+export const getHubByIdQueryOptions = (hubId?: number) =>
   queryOptions({
     queryKey: ["hub", hubId],
-    queryFn: () => getHubById({ hubId }),
+    queryFn: () => getHubById({ hubId: hubId ?? 0 }),
+    enabled: !!hubId,
   });

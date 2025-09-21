@@ -1,6 +1,6 @@
 "use server";
 
-import { asc, eq, sql } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
 
 import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
@@ -9,6 +9,7 @@ import {
   parseOptionalDateWithTimezone,
   parseRequiredDateWithTimezone,
 } from "../utils";
+import { getUserHubCountInternal } from "./internal";
 import { GetHubByIdSchema } from "./schemas";
 
 export const getHubsByUserIdForQuickNotes = withProtectedDataAccess({
@@ -35,6 +36,7 @@ export const getHubsByUserId = withProtectedDataAccess({
         level: true,
         color: true,
         schedule: true,
+        lastActivityAt: true,
       },
       extras: {
         startDate: parseRequiredDateWithTimezone(hub.startDate, "startDate"),
@@ -56,7 +58,7 @@ export const getHubsByUserId = withProtectedDataAccess({
         },
       },
       where: eq(hub.userId, user.id),
-      orderBy: [asc(sql`LOWER(${hub.name})`)],
+      orderBy: [desc(hub.lastActivityAt)],
     });
 
     const formattedHubs = hubs.map((hub) => {
@@ -89,5 +91,11 @@ export const getHubById = withProtectedDataAccess({
       .limit(1);
 
     return res[0] ?? null;
+  },
+});
+
+export const getUserHubCount = withProtectedDataAccess({
+  callback: async (user) => {
+    return getUserHubCountInternal(user.id);
   },
 });

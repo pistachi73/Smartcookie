@@ -26,6 +26,7 @@ export const StudentProfile = ({
   avatarSize?: UserAvatarProps["size"];
 }) => {
   const size = avatarSizes[avatarSize];
+
   return (
     <div className={cn("flex items-center gap-2", className)}>
       <div className="relative h-full">

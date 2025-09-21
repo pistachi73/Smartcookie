@@ -3,10 +3,14 @@
 import { endOfDay, startOfDay } from "date-fns";
 import { and, between, eq, inArray, notInArray } from "drizzle-orm";
 
+import { sideEffects } from "@/core/side-effects";
 import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { hub, type InsertSession, session, studentHub } from "@/db/schema";
 import { addAttendance } from "../attendance/mutations";
+import { authenticatedDataAccess } from "../data-access-chain";
+import { createDataAccessError } from "../errors";
+import { sessionLimitMiddleware } from "../limit-middleware";
 import {
   AddSessionsSchema,
   CheckSessionConflictsSchema,
@@ -15,10 +19,14 @@ import {
 } from "./schemas";
 import { findOverlappingIntervals, hasOverlappingIntervals } from "./utils";
 
-export const addSessions = withProtectedDataAccess({
-  schema: AddSessionsSchema,
-  callback: async ({ sessions, hubId, trx = db }, user) => {
-    return await trx.transaction(async (trx) => {
+export const addSessions = authenticatedDataAccess()
+  .input(AddSessionsSchema)
+  .onError({
+    message: "Failed to add sessions",
+  })
+  .use(sessionLimitMiddleware)
+  .execute(async ({ sessions, hubId }, user) => {
+    const res = await db.transaction(async (trx) => {
       const toAddSessions: InsertSession[] = sessions.map((s) => ({
         ...s,
         userId: user.id,
@@ -40,10 +48,6 @@ export const addSessions = withProtectedDataAccess({
           .where(eq(studentHub.hubId, hubId)),
       ]);
 
-      if (!addedSessions.length) {
-        throw new Error("Failed to add sessions");
-      }
-
       await addAttendance({
         data: {
           sessionIds: addedSessions.map((s) => s.id),
@@ -54,8 +58,10 @@ export const addSessions = withProtectedDataAccess({
       });
       return addedSessions;
     });
-  },
-});
+
+    sideEffects.enqueue("updateHubLastActivity", { hubId, userid: user.id });
+    return res;
+  });
 
 export const checkSessionConflicts = withProtectedDataAccess({
   schema: CheckSessionConflictsSchema,
@@ -184,7 +190,7 @@ export const updateSession = withProtectedDataAccess({
   callback: async (data, user) => {
     const { sessionId, data: updateData } = data;
 
-    const updatedSessions = await db
+    const [updatedSession] = await db
       .update(session)
       .set({
         startTime: updateData.startTime,
@@ -193,28 +199,58 @@ export const updateSession = withProtectedDataAccess({
       })
       .where(and(eq(session.id, sessionId), eq(session.userId, user.id)))
       .returning({
+        hubId: session.hubId,
         startTime: session.startTime,
         endTime: session.endTime,
         status: session.status,
       });
 
-    return updatedSessions[0];
+    if (!updatedSession) {
+      return createDataAccessError({
+        type: "UNEXPECTED_ERROR",
+        message: "Failed to update session",
+      });
+    }
+
+    sideEffects.enqueue("updateHubLastActivity", {
+      hubId: updatedSession.hubId,
+      userid: user.id,
+    });
+
+    return updatedSession;
   },
 });
 
 export const deleteSession = withProtectedDataAccess({
   schema: DeleteSessionsSchema,
   callback: async (data, user) => {
-    await db.delete(session).where(
-      and(
-        inArray(
-          session.id,
-          data.sessions.map((s) => s.id),
+    const [deletedSession] = await db
+      .delete(session)
+      .where(
+        and(
+          inArray(
+            session.id,
+            data.sessions.map((s) => s.id),
+          ),
+          eq(session.userId, user.id),
         ),
-        eq(session.userId, user.id),
-      ),
-    );
+      )
+      .returning({
+        hubId: session.hubId,
+      });
 
-    return { success: true };
+    if (!deletedSession) {
+      return createDataAccessError({
+        type: "UNEXPECTED_ERROR",
+        message: "Failed to delete session",
+      });
+    }
+
+    sideEffects.enqueue("updateHubLastActivity", {
+      hubId: deletedSession.hubId,
+      userid: user.id,
+    });
+
+    return deletedSession;
   },
 });

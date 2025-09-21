@@ -1,6 +1,6 @@
 "use server";
 
-import { and, desc, eq, isNull } from "drizzle-orm";
+import { and, count, desc, eq, isNull } from "drizzle-orm";
 
 import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
@@ -15,7 +15,6 @@ export const getNotesByHubId = withProtectedDataAccess({
       .select({
         id: quickNote.id,
         content: quickNote.content,
-        updatedAt: quickNote.updatedAt,
         hubId: quickNote.hubId,
       })
       .from(quickNote)
@@ -25,8 +24,19 @@ export const getNotesByHubId = withProtectedDataAccess({
           hubId === 0 ? isNull(quickNote.hubId) : eq(quickNote.hubId, hubId),
         ),
       )
-      .orderBy(desc(quickNote.updatedAt));
+      .orderBy(desc(quickNote.createdAt));
 
     return notes as NoteSummary[];
+  },
+});
+
+export const getUserQuickNoteCount = withProtectedDataAccess({
+  callback: async (user) => {
+    const result = await db
+      .select({ count: count() })
+      .from(quickNote)
+      .where(eq(quickNote.userId, user.id));
+
+    return result[0]?.count || 0;
   },
 });

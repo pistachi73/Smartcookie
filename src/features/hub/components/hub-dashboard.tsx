@@ -76,7 +76,7 @@ export function HubDashboard({ hubId }: { hubId: number }) {
   if (!hub) return <HubNotFound />;
 
   return (
-    <HubDashboardLayout hubName={hub.name}>
+    <HubDashboardLayout hub={hub}>
       <div className="flex-1 flex flex-col lg:flex-row p-0 sm:p-6 sm:pt-0 gap-6">
         <div className="bg-white sm:rounded-lg border flex-1">
           <Tabs

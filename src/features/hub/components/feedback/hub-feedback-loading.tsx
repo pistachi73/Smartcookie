@@ -15,7 +15,7 @@ export const HubFeedbackLoading = () => {
       <HubPanelHeader
         title="Course Feedback"
         actions={
-          <Button size="sm" intent="primary" className="w-full sm:w-fit">
+          <Button intent="primary" className="w-full sm:w-fit">
             <HugeiconsIcon
               icon={CommentAdd01Icon}
               altIcon={DeleteIcon}

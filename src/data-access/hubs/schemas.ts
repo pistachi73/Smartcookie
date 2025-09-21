@@ -13,13 +13,4 @@ const HubInfoSchema =
 
 export const CreateHubUseCaseSchema = z.object({
   hubInfo: HubInfoSchema,
-  studentIds: z.array(z.number()).optional(),
-  sessions: z
-    .array(
-      z.object({
-        startTime: z.string(),
-        endTime: z.string(),
-      }),
-    )
-    .optional(),
 });

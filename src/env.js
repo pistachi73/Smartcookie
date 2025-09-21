@@ -22,6 +22,8 @@ export const env = createEnv({
 
     // MAILER
     MAILER_API_KEY: z.string(),
+
+    CRON_SECRET: z.string(),
   },
 
   client: {
@@ -59,6 +61,8 @@ export const env = createEnv({
 
     // MAILER
     MAILER_API_KEY: process.env.MAILER_API_KEY,
+
+    CRON_SECRET: process.env.CRON_SECRET,
   },
 
   skipValidation: !!process.env.SKIP_ENV_VALIDATION,

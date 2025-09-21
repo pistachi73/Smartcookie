@@ -13,6 +13,7 @@ import type { NoteSummary } from "../../types/quick-notes.types";
 import "./note-card.css";
 
 import { DeleteProgressButton } from "@/shared/components/ui/delete-progress-button";
+import { useNotesLimits } from "@/shared/hooks/plan-limits/use-notes-limits";
 
 interface NoteCardProps {
   note: NoteSummary;
@@ -20,6 +21,7 @@ interface NoteCardProps {
 }
 
 const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
+  const { maxCharacters } = useNotesLimits();
   const [isEditingNote, setIsEditingNote] = useState(false);
 
   const { content, isUnsaved, isSaving, handleContentChange } =
@@ -27,12 +29,10 @@ const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
       noteId: note.id,
       initialContent: note.content,
       hubId: note.hubId || 0,
-      clientId: note.clientId, // Add clientId for optimistic note retry mechanism
+      clientId: note.clientId,
     });
 
   const { mutate: deleteNote } = useDeleteQuickNote({
-    noteId: note.id,
-    clientId: note.clientId,
     hubId: note.hubId || 0,
   });
 
@@ -87,6 +87,7 @@ const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
           "p-3 pr-8 pb-9",
         )}
         onChange={(e) => handleContentChange(e.target.value)}
+        maxLength={maxCharacters}
       />
       <div className="absolute bottom-1 left-3  min-h-7">
         {isSaving && (
@@ -95,6 +96,11 @@ const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
         {!isSaving && isUnsaved && (
           <span className="text-xs text-muted-fg/50">Unsaved</span>
         )}
+      </div>
+      <div className="absolute bottom-1 right-3  min-h-7">
+        <span className="text-xs text-muted-fg/50">
+          {content.length}/{maxCharacters}
+        </span>
       </div>
     </div>
   );
@@ -106,7 +112,6 @@ export const NoteCard = memo(NoteCardComponent, (prevProps, nextProps) => {
   return (
     prevProps.note.id === nextProps.note.id &&
     prevProps.note.content === nextProps.note.content &&
-    prevProps.note.updatedAt === nextProps.note.updatedAt &&
     prevProps.hubColor === nextProps.hubColor
   );
 });

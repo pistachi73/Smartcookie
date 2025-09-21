@@ -41,6 +41,7 @@ export const student = pgTable(
     image: text(),
     interests: text(),
     age: integer(),
+    createdAt: timestamp({ mode: "string", withTimezone: true }).defaultNow(),
   },
   (table) => [
     index().on(table.name),

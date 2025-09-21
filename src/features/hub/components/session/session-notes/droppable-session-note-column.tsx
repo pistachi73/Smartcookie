@@ -11,10 +11,12 @@ import type { ClientSessionNote } from "../../../types/session-notes.types";
 export const DroppableSessionNoteColumn = ({
   children,
   sessionId,
+  hubId,
   position,
 }: {
   children?: React.ReactNode;
   sessionId: number;
+  hubId: number;
   position: SessionNotePosition;
 }) => {
   const { mutate: updateSessionNote } = useUpdateSessionNotePosition();
@@ -47,6 +49,7 @@ export const DroppableSessionNoteColumn = ({
       console.log({ source, target });
 
       updateSessionNote({
+        hubId,
         noteId: item.id,
         source,
         target,

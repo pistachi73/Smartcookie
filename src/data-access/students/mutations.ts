@@ -2,6 +2,7 @@
 
 import { and, eq } from "drizzle-orm";
 
+import { sideEffects } from "@/core/side-effects";
 import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { session, student, studentHub } from "@/db/schema";
@@ -9,20 +10,27 @@ import {
   addAttendance,
   removeAllStudentAttendance,
 } from "../attendance/mutations";
+import { authenticatedDataAccess } from "../data-access-chain";
 import { createDataAccessError } from "../errors";
+import { studentLimitMiddleware } from "../limit-middleware";
 import { archiveStudentSurveyResponsesInHub } from "../survey-response/mutations";
 import {
   AddStudentSchema,
-  AddStudentToHubSchema,
+  AddStudentsToHubSchema,
   CreateStudentInHubSchema,
   DeleteStudentSchema,
   RemoveStudentFromHubSchema,
   UpdateStudentSchema,
 } from "./schemas";
 
-export const addStudent = withProtectedDataAccess({
-  schema: AddStudentSchema,
-  callback: async (data, user) => {
+// Example using the predefined middleware
+export const addStudent = authenticatedDataAccess()
+  .input(AddStudentSchema)
+  .onError({
+    message: "Failed to add student",
+    type: "UNEXPECTED_ERROR",
+  })
+  .execute(async (data, user) => {
     const [createdStudent] = await db
       .insert(student)
       .values({
@@ -32,39 +40,53 @@ export const addStudent = withProtectedDataAccess({
       .returning();
 
     return createdStudent;
-  },
-});
+  });
 
-export const addStudentToHub = withProtectedDataAccess({
-  schema: AddStudentToHubSchema,
-  callback: async ({ studentId, hubId }) => {
+export const addStudentsToHub = authenticatedDataAccess()
+  .input(AddStudentsToHubSchema)
+  .onError({
+    message: "Failed to add students to hub",
+    type: "UNEXPECTED_ERROR",
+  })
+  .execute(async ({ studentIds, hubId }, user) => {
     await db.transaction(async (trx) => {
       const sessions = await trx
         .select({ id: session.id })
         .from(session)
-        .where(eq(session.hubId, hubId));
+        .where(and(eq(session.hubId, hubId), eq(session.userId, user.id)));
+
+      const studentHubValues = studentIds.map((studentId) => ({
+        studentId,
+        hubId,
+      }));
 
       await Promise.all([
-        trx.insert(studentHub).values({
-          studentId,
-          hubId,
-        }),
-        addAttendance({
-          data: {
-            sessionIds: sessions.map((session) => session.id),
-            studentIds: [studentId],
-            hubId,
-          },
-          trx,
-        }),
+        trx.insert(studentHub).values(studentHubValues),
+        sessions.length > 0
+          ? addAttendance({
+              data: {
+                sessionIds: sessions.map((session) => session.id),
+                studentIds,
+                hubId,
+              },
+              trx,
+            })
+          : Promise.resolve(),
       ]);
-    });
-  },
-});
 
-export const removeStudentFromHub = withProtectedDataAccess({
-  schema: RemoveStudentFromHubSchema,
-  callback: async ({ studentId, hubId }) => {
+      return { hubId };
+    });
+
+    sideEffects.enqueue("updateHubLastActivity", { hubId, userid: user.id });
+  });
+
+export const removeStudentFromHub = authenticatedDataAccess()
+  .input(RemoveStudentFromHubSchema)
+  .onError({
+    message: "Failed to remove student from hub",
+    type: "UNEXPECTED_ERROR",
+  })
+  .execute(async ({ studentId, hubId }, user) => {
     await db.transaction(async (trx) => {
       await Promise.all([
         trx
@@ -87,13 +109,16 @@ export const removeStudentFromHub = withProtectedDataAccess({
       ]);
     });
 
-    return { success: true };
-  },
-});
+    sideEffects.enqueue("updateHubLastActivity", { hubId, userid: user.id });
+  });
 
-export const createStudentInHub = withProtectedDataAccess({
-  schema: CreateStudentInHubSchema,
-  callback: async ({ student: studentData, hubId }, user) => {
+export const createStudentInHub = authenticatedDataAccess()
+  .input(CreateStudentInHubSchema)
+  .onError({
+    message: "Failed to create student in hub",
+  })
+  .use(studentLimitMiddleware)
+  .execute(async ({ student: studentData, hubId }, user) => {
     // Check for existing student first to avoid unnecessary transaction
     const existingStudent = await db
       .select({ id: student.id })
@@ -104,17 +129,13 @@ export const createStudentInHub = withProtectedDataAccess({
       .limit(1);
 
     if (existingStudent.length > 0) {
-      return {
-        success: false,
+      return createDataAccessError({
+        type: "DUPLICATE_RESOURCE",
         message: "Student with this email already exists",
-        data: null,
-      };
+      });
     }
 
-    let createdStudentId: number;
-
     await db.transaction(async (trx) => {
-      // Parallel fetch of sessions while creating student
       const [createdStudents, sessions] = await Promise.all([
         trx
           .insert(student)
@@ -128,12 +149,12 @@ export const createStudentInHub = withProtectedDataAccess({
 
       const createdStudent = createdStudents[0];
       if (!createdStudent) {
-        throw new Error("Failed to create student");
+        return createDataAccessError({
+          type: "UNEXPECTED_ERROR",
+          message: "Failed to create student",
+        });
       }
 
-      createdStudentId = createdStudent.id;
-
-      // Parallel execution of student-hub association and attendance creation
       await Promise.all([
         trx.insert(studentHub).values({
           studentId: createdStudent.id,
@@ -152,13 +173,8 @@ export const createStudentInHub = withProtectedDataAccess({
       ]);
     });
 
-    return {
-      success: true,
-      message: "Student created successfully",
-      data: { studentId: createdStudentId! },
-    };
-  },
-});
+    sideEffects.enqueue("updateHubLastActivity", { hubId, userid: user.id });
+  });
 
 export const deleteStudent = withProtectedDataAccess({
   schema: DeleteStudentSchema,

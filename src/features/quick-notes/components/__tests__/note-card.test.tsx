@@ -10,6 +10,7 @@ import {
 import { useDeleteQuickNote } from "../../hooks/use-delete-quick-note";
 import { useUpdateQuickNote } from "../../hooks/use-update-quick-note";
 import { useQuickNotesStore } from "../../store/quick-notes-store-provider";
+import type { NoteSummary } from "../../types/quick-notes.types";
 import { NoteCard } from "../note-card";
 
 // Mock the hooks
@@ -31,15 +32,37 @@ vi.mock("../../hooks/use-add-quick-note", () => ({
   },
 }));
 
+vi.mock("@/shared/hooks/plan-limits/use-notes-limits", () => ({
+  useNotesLimits: vi.fn(() => ({
+    max: 10,
+    current: 5,
+    remaining: 5,
+    isAtLimit: false,
+    canCreate: true,
+    isUnlimited: false,
+    maxCharacters: 1000,
+    isLoading: false,
+    error: null,
+  })),
+}));
+
+vi.mock("@/shared/hooks/use-current-user", () => ({
+  useCurrentUser: vi.fn().mockReturnValue({
+    id: "test-user-id",
+    name: "Test User",
+    email: "test@example.com",
+  }),
+}));
+
 describe("NoteCard", () => {
   const mockHandleContentChange = vi.fn();
   const mockSetEdittingHub = vi.fn();
   const mockDeleteNote = vi.fn();
 
-  const mockNote = {
+  const mockNote: NoteSummary = {
     id: 1,
     content: "Test note content",
-    updatedAt: "2023-01-01T00:00:00.000Z",
+    status: "active",
     hubId: 123,
     clientId: "test-client-id",
   };

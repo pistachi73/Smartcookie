@@ -1,15 +1,17 @@
 "use server";
 
-import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
-import { hub, studentHub } from "@/db/schema";
-import { addSessions } from "../sessions/mutations";
+import { hub } from "@/db/schema";
+import { authenticatedDataAccess } from "../data-access-chain";
+import { createDataAccessError } from "../errors";
+import { getHubLimitMiddleware } from "../limit-middleware";
 import { CreateHubUseCaseSchema } from "./schemas";
 
-export const createHub = withProtectedDataAccess({
-  schema: CreateHubUseCaseSchema,
-  callback: async (data, user) => {
-    const { sessions, studentIds, hubInfo } = data;
+export const createHub = authenticatedDataAccess()
+  .input(CreateHubUseCaseSchema)
+  .use(getHubLimitMiddleware)
+  .execute(async (data, user) => {
+    const { hubInfo } = data;
     const { description, level, schedule, endDate, name, ...rest } = hubInfo;
 
     const trimOrNull = (value: string | null | undefined): string | null =>
@@ -25,33 +27,16 @@ export const createHub = withProtectedDataAccess({
       ...rest,
     };
 
-    return await db.transaction(async (trx) => {
-      const [createdHub] = await trx.insert(hub).values(hubData).returning();
+    const [createdHub] = await db.insert(hub).values(hubData).returning();
 
-      const hubId = createdHub?.id;
-      if (!hubId) {
-        throw new Error("Hub not created");
-      }
+    const hubId = createdHub?.id;
 
-      await Promise.all([
-        studentIds?.length
-          ? trx.insert(studentHub).values(
-              studentIds.map((studentId) => ({
-                hubId,
-                studentId,
-              })),
-            )
-          : Promise.resolve(),
-        sessions?.length
-          ? addSessions({
-              sessions,
-              hubId,
-              trx,
-            })
-          : Promise.resolve(),
-      ]);
+    if (!hubId) {
+      return createDataAccessError({
+        type: "UNEXPECTED_ERROR",
+        message: "Hub not created successfully. Please try again.",
+      });
+    }
 
-      return createdHub;
-    });
-  },
-});
+    return createdHub;
+  });

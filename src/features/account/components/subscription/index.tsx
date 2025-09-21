@@ -50,12 +50,15 @@ export const Subscription = () => {
     price,
     invoices,
     upcomingInvoice,
-  } = data ?? {};
+  } = data;
 
   const isBasicProduct =
     product?.id === env.NEXT_PUBLIC_STRIPE_BASIC_PRODUCT_ID;
   const isPremiumProduct =
     product?.id === env.NEXT_PUBLIC_STRIPE_PREMIUM_PRODUCT_ID;
+
+  console.log({ subscription });
+  const isActive = ["active", "trialing"].includes(subscription?.status ?? "");
   return (
     <SubscriptionLayout>
       <AccountTabs selectedTab="subscription">
@@ -76,7 +79,7 @@ export const Subscription = () => {
             </p>
           </div>
           <div className="@container space-y-6">
-            {subscription ? (
+            {isActive ? (
               <>
                 {isBasicProduct && (
                   <BasicSubscriptionCard

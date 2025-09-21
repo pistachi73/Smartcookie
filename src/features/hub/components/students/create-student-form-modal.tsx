@@ -7,6 +7,7 @@ import { Form } from "@/shared/components/ui/form";
 import { Modal } from "@/shared/components/ui/modal";
 import { ProgressCircle } from "@/shared/components/ui/progress-circle";
 
+import { isDataAccessError } from "@/data-access/errors";
 import { useCreateStudentInHub } from "../../hooks/students/use-create-student-in-hub";
 import { useHubById } from "../../hooks/use-hub-by-id";
 import {
@@ -54,10 +55,12 @@ export const CreateStudentFormModal = ({
 
   const onSubmit = async (data: z.infer<typeof CreateStudentFormSchema>) => {
     const res = await createStudentInHub({ student: data, hubId });
-    if (res.success) {
-      handleOpenChange(false);
+    if (isDataAccessError(res)) {
+      if (res.type === "DUPLICATE_RESOURCE") {
+        form.setError("email", { message: res.message });
+      }
     } else {
-      form.setError("email", { message: res.message });
+      handleOpenChange(false);
     }
   };
 

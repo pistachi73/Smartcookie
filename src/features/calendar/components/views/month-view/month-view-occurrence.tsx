@@ -28,10 +28,15 @@ const monthViewOccurrenceVariants = tv({
       true: "opacity-50",
       false: "",
     },
+    isCancelled: {
+      true: "opacity-40 saturate-75",
+      false: "",
+    },
   },
   defaultVariants: {
     isEditing: false,
     isDragging: false,
+    isCancelled: false,
   },
 });
 
@@ -42,11 +47,28 @@ const timeTextVariants = tv({
       true: "block",
       false: "hidden sm:block",
     },
+    isCancelled: {
+      true: "line-through",
+      false: "",
+    },
+  },
+  defaultVariants: {
+    showTime: true,
+    isCancelled: false,
   },
 });
 
 const titleTextVariants = tv({
   base: "whitespace-nowrap sm:truncate font-medium leading-tight",
+  variants: {
+    isCancelled: {
+      true: "line-through",
+      false: "",
+    },
+  },
+  defaultVariants: {
+    isCancelled: false,
+  },
 });
 
 export const MonthViewOccurrence = ({
@@ -89,21 +111,36 @@ export const MonthViewOccurrence = ({
     preview: previewRef,
   });
 
+  const isCancelled = session.status === "cancelled";
+
   return (
     <>
       <Popover>
         <div ref={ref} {...dragProps}>
           <Button
             className={cn(
-              monthViewOccurrenceVariants({ isEditing, isDragging }),
+              monthViewOccurrenceVariants({
+                isEditing,
+                isDragging,
+                isCancelled,
+              }),
               className,
               color?.className,
             )}
           >
-            <p className={timeTextVariants({ showTime })}>
+            <p
+              className={timeTextVariants({
+                showTime,
+                isCancelled,
+              })}
+            >
               {format(session.startTime, "HH:mm")}
             </p>
-            <p className={titleTextVariants()}>
+            <p
+              className={titleTextVariants({
+                isCancelled,
+              })}
+            >
               {session.hub?.name || "Untitled"}
             </p>
           </Button>
@@ -141,13 +178,25 @@ export const MonthViewPreviewOccurrence = ({
   className?: string;
 }) => {
   const color = getCalendarColor(session.hub?.color);
-
+  const isCancelled = session.status === "cancelled";
   return (
     <div
       className={cn(monthViewOccurrenceVariants(), className, color?.className)}
     >
-      <p className={timeTextVariants()}>{format(session.startTime, "HH:mm")}</p>
-      <p className={titleTextVariants()}>{session.hub?.name || "Untitled"}</p>
+      <p
+        className={timeTextVariants({
+          isCancelled,
+        })}
+      >
+        {format(session.startTime, "HH:mm")}
+      </p>
+      <p
+        className={titleTextVariants({
+          isCancelled,
+        })}
+      >
+        {session.hub?.name || "Untitled"}
+      </p>
     </div>
   );
 };

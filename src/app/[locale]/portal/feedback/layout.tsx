@@ -1,5 +1,9 @@
 import type { ReactNode } from "react";
 
+import { PremiumLockedSection } from "@/shared/components/premium-locked-section";
+import { currentUser } from "@/shared/lib/auth";
+
+import { getPlanLimits } from "@/core/config/plan-limits";
 import { FeedbackHeader } from "@/features/feedback/components/feedback-header";
 
 export default async function FeedbackLayout({
@@ -11,6 +15,24 @@ export default async function FeedbackLayout({
   sidebar: ReactNode;
   details: ReactNode;
 }) {
+  const user = await currentUser();
+  const limits = getPlanLimits(user?.subscriptionTier);
+
+  if (!limits.features.feedbackProgressTracking) {
+    return (
+      <div className="min-h-0 h-full flex flex-col overflow-hidden relative">
+        <FeedbackHeader isBlocked={true} />
+        <div className="flex pt-40 justify-center p-6 bg-white h-full">
+          <PremiumLockedSection
+            className="h-fit"
+            title="Feedback Progress Tracking"
+            description="Track student progress, analyze feedback patterns, and generate detailed reports with our advanced feedback system. Available with Premium."
+          />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-0 h-full flex flex-col overflow-hidden relative">
       <FeedbackHeader />

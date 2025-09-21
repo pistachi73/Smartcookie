@@ -46,13 +46,19 @@ export const getSubscription = withProtectedDataAccess({
     }
 
     if (!subscriptionId) {
-      return null;
+      return createDataAccessError({
+        type: "SUBSCRIPTION_NOT_FOUND",
+        message: "User has no subscription",
+      });
     }
 
     const subscription = await stripe.subscriptions.retrieve(subscriptionId);
 
     if (!subscription) {
-      return null;
+      return createDataAccessError({
+        type: "SUBSCRIPTION_NOT_FOUND",
+        message: "Subscription not found",
+      });
     }
 
     const defaultPaymentMethodId = subscription.default_payment_method;

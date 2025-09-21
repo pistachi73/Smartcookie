@@ -172,6 +172,7 @@ export const SurveyTemplateDetails = ({
                   </p>
                 )}
               </div>
+
               <SurveyTemplateDetailsMenu
                 editHref={editHref}
                 setShowInitSurveySheet={setShowInitSurveySheet}
