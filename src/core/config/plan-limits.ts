@@ -71,7 +71,7 @@ export const PLAN_LIMITS: Record<
   },
   basic: {
     hubs: {
-      maxCount: 2,
+      maxCount: 20,
     },
     sessions: {
       maxPerHub: 40,
@@ -82,7 +82,7 @@ export const PLAN_LIMITS: Record<
       maxCount: 40,
     },
     notes: {
-      maxCount: 10,
+      maxCount: 500,
       maxCharactersPerNote: 280,
     },
     community: {
