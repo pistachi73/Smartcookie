@@ -9,8 +9,8 @@ import { getHubsByUserIdQueryOptions } from "@/features/hub/lib/hub-query-option
 const HubsPage = async () => {
   const queryClient = getQueryClient();
 
-  const hubs = await queryClient.fetchQuery(getHubsByUserIdQueryOptions);
-  queryClient.setQueryData(getUserHubCountQueryOptions.queryKey, hubs.length);
+  void queryClient.prefetchQuery(getHubsByUserIdQueryOptions);
+  void queryClient.prefetchQuery(getUserHubCountQueryOptions);
 
   const dehydratedState = dehydrate(queryClient);
 

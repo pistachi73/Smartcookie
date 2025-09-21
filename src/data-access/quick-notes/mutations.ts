@@ -2,6 +2,7 @@
 
 import { and, eq } from "drizzle-orm";
 
+import { sideEffects } from "@/core/side-effects";
 import { db } from "@/db";
 import type { InsertQuickNote } from "@/db/schema";
 import { quickNote } from "@/db/schema";
@@ -40,6 +41,13 @@ export const createQuickNote = authenticatedDataAccess()
       });
     }
 
+    if (actualHubId) {
+      sideEffects.enqueue("updateHubLastActivity", {
+        hubId: actualHubId,
+        userid: user.id,
+      });
+    }
+
     return newNote[0];
   });
 
@@ -48,33 +56,49 @@ export const updateQuickNote = authenticatedDataAccess()
   .use(async ({ data, user }) =>
     quickNoteContentLimitMiddleware({ user, content: data.content }),
   )
-  .execute(async ({ id, content, updatedAt }, user) => {
+  .execute(async ({ id, content }, user) => {
     const updateData: Partial<InsertQuickNote> = {
       content,
     };
 
-    if (updatedAt) {
-      updateData.updatedAt = updatedAt;
-    }
-
-    const updatedNote = await db
+    const [updatedNote] = await db
       .update(quickNote)
       .set(updateData)
       .where(and(eq(quickNote.id, id), eq(quickNote.userId, user.id)))
       .returning({
         id: quickNote.id,
         content: quickNote.content,
-        updatedAt: quickNote.updatedAt,
         hubId: quickNote.hubId,
       });
+    if (!updatedNote) {
+      return createDataAccessError({
+        type: "UNEXPECTED_ERROR",
+        message: "Failed to update note",
+      });
+    }
 
-    return updatedNote[0];
+    if (updatedNote.hubId) {
+      sideEffects.enqueue("updateHubLastActivity", {
+        hubId: updatedNote.hubId,
+        userid: user.id,
+      });
+    }
+    return updatedNote;
   });
 
 export const deleteQuickNote = authenticatedDataAccess()
   .input(DeleteQuickNoteSchema)
   .execute(async ({ id }, user) => {
-    await db
+    const [deletedNote] = await db
       .delete(quickNote)
-      .where(and(eq(quickNote.id, id), eq(quickNote.userId, user.id)));
+      .where(and(eq(quickNote.id, id), eq(quickNote.userId, user.id)))
+      .returning();
+
+    if (deletedNote?.hubId) {
+      console.log("Updating lastActivity for hub", deletedNote.hubId);
+      sideEffects.enqueue("updateHubLastActivity", {
+        hubId: deletedNote.hubId,
+        userid: user.id,
+      });
+    }
   });

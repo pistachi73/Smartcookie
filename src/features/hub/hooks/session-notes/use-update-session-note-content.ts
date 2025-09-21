@@ -10,6 +10,7 @@ import type { SessionNotePosition } from "@/db/schema";
 import { getSessionNotesBySessionIdQueryOptions } from "../../lib/session-notes-query-options";
 
 export interface UseUpdateSessionNoteContentProps {
+  hubId: number;
   sessionId: number;
   noteId: number;
   initialContent: string;
@@ -25,6 +26,7 @@ interface PendingSave {
 }
 
 export const useUpdateSessionNoteContent = ({
+  hubId,
   sessionId,
   noteId,
   initialContent,
@@ -39,6 +41,7 @@ export const useUpdateSessionNoteContent = ({
 
   const { mutate, isPending: isSaving } = useProtectedMutation({
     schema: z.object({
+      hubId: z.number(),
       noteId: z.number(),
       sessionId: z.number(),
       content: z.string(),
@@ -46,6 +49,7 @@ export const useUpdateSessionNoteContent = ({
     }),
     mutationFn: (data) =>
       updateSessionNote({
+        hubId: data.hubId,
         noteId: data.noteId,
         sessionId: data.sessionId,
         content: data.content,
@@ -129,6 +133,7 @@ export const useUpdateSessionNoteContent = ({
 
       if (content !== initialContent) {
         mutate({
+          hubId,
           noteId: noteId,
           sessionId: sessionId,
           position,
@@ -178,6 +183,7 @@ export const useUpdateSessionNoteContent = ({
 
         // Attempt to save the pending content
         mutate({
+          hubId,
           noteId: noteId,
           sessionId: sessionId,
           position: pendingSave.position,

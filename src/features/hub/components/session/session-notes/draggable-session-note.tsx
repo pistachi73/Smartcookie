@@ -1,5 +1,6 @@
 import { HugeiconsIcon } from "@hugeicons/react";
 import { DragDropVerticalIcon } from "@hugeicons-pro/core-solid-rounded";
+import { useQuery } from "@tanstack/react-query";
 import { useRef } from "react";
 import { useButton, useDrag } from "react-aria";
 import { TextArea } from "react-aria-components";
@@ -9,24 +10,30 @@ import { useUserPlanLimits } from "@/shared/hooks/plan-limits/use-user-plan-limi
 import { cn } from "@/shared/lib/classes";
 
 import { useUpdateSessionNoteContent } from "@/features/hub/hooks/session-notes/use-update-session-note-content";
+import { getHubByIdQueryOptions } from "@/features/hub/lib/hub-query-options";
 import { useDeleteSessionNote } from "../../../hooks/session-notes/use-delete-session-note";
 import type { ClientSessionNote } from "../../../types/session-notes.types";
 
 type DraggableSessionNoteProps = {
   note: ClientSessionNote;
+  hubId: number;
   sessionId: number;
 };
 
 export const DraggableSessionNote = ({
   note,
+  hubId,
   sessionId,
 }: DraggableSessionNoteProps) => {
   const {
     sessions: { maxCharactersPerNote },
   } = useUserPlanLimits();
+  const { data: hub } = useQuery(getHubByIdQueryOptions(hubId));
+  const viewOnlyMode = hub?.status === "inactive";
   const { mutate: handleDelete } = useDeleteSessionNote();
   const { content, isSaving, handleContentChange } =
     useUpdateSessionNoteContent({
+      hubId,
       noteId: note.id,
       initialContent: note.content,
       sessionId,
@@ -42,7 +49,7 @@ export const DraggableSessionNote = ({
         },
       ];
     },
-    isDisabled: isSaving,
+    isDisabled: isSaving || viewOnlyMode,
   });
 
   const dragButtonRef = useRef(null);
@@ -52,7 +59,7 @@ export const DraggableSessionNote = ({
   );
 
   const onDelete = () => {
-    handleDelete({ noteId: note.id, sessionId });
+    handleDelete({ hubId, noteId: note.id, sessionId });
   };
 
   return (
@@ -70,7 +77,10 @@ export const DraggableSessionNote = ({
       <span
         {...buttonProps}
         ref={dragButtonRef}
-        className="rounded-xs focus-visible:ring-2 p-0.5 pl-2 ring-primary text-muted-fg shrink-0 cursor-grab"
+        className={cn(
+          "rounded-xs focus-visible:ring-2 p-0.5 pl-2 ring-primary text-muted-fg shrink-0 cursor-grab",
+          viewOnlyMode && "opacity-50 cursor-auto",
+        )}
       >
         <HugeiconsIcon
           icon={DragDropVerticalIcon}
@@ -84,10 +94,11 @@ export const DraggableSessionNote = ({
         placeholder="Write something..."
         className={cn(
           "w-full py-3 pr-4 placeholder:text-muted-fg/40 field-sizing-content resize-none text-sm",
-          "pr-8 ",
+          "pr-8",
         )}
         onChange={(e) => handleContentChange(e.target.value, note.position)}
         maxLength={maxCharactersPerNote}
+        readOnly={viewOnlyMode}
       />
 
       <DeleteProgressButton

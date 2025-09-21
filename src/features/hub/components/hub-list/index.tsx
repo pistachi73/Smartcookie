@@ -8,6 +8,7 @@ import {
 import {
   Calendar01Icon,
   FolderAddIcon,
+  InformationCircleIcon,
   SortByUp02Icon,
   SortingAZ02Icon,
   SortingZA01Icon,
@@ -19,6 +20,7 @@ import { Link } from "react-aria-components";
 import { Button, buttonStyles } from "@/shared/components/ui/button";
 import { Menu } from "@/shared/components/ui/menu";
 import { SearchField } from "@/shared/components/ui/search-field";
+import { Tooltip } from "@/shared/components/ui/tooltip";
 import { Heading } from "@/ui/heading";
 import { PageHeader } from "@/shared/components/layout/page-header";
 import { cn } from "@/shared/lib/classes";
@@ -26,6 +28,7 @@ import { cn } from "@/shared/lib/classes";
 import { getHubsByUserIdQueryOptions } from "../../lib/hub-query-options";
 import type { Hub } from "../../types/hub.types";
 import { HubCard } from "../hub-card";
+import { UpgradePlanButton } from "../upgrade-plan-button";
 import { NewHubButton } from "./new-hub-button";
 
 type SortOption = {
@@ -37,9 +40,10 @@ type SortOption = {
 export function HubList() {
   const { data: hubs } = useSuspenseQuery(getHubsByUserIdQueryOptions);
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState<SortOption["key"]>("name");
+  const [sortBy, setSortBy] = useState<SortOption["key"]>("lastActivityAt");
 
   const sortOptions: SortOption[] = [
+    { key: "lastActivityAt", label: "Last Activity", icon: Calendar01Icon },
     { key: "name", label: "Name (A-Z)", icon: SortingAZ02Icon },
     { key: "name-desc", label: "Name (Z-A)", icon: SortingZA01Icon },
     { key: "startDate", label: "Start Date", icon: Calendar01Icon },
@@ -60,6 +64,13 @@ export function HubList() {
 
     // Sort based on selected option
     return [...filtered].sort((a, b) => {
+      if (sortBy === "lastActivityAt") {
+        return (
+          new Date(b.lastActivityAt).getTime() -
+          new Date(a.lastActivityAt).getTime()
+        );
+      }
+
       if (sortBy === "name") {
         return a.name.localeCompare(b.name);
       }
@@ -88,6 +99,13 @@ export function HubList() {
   const handleSortChange = useCallback((key: SortOption["key"]) => {
     setSortBy(key);
   }, []);
+
+  const archivedHubs = useMemo(() => {
+    return filteredAndSortedHubs?.filter((hub) => hub.status === "inactive");
+  }, [filteredAndSortedHubs]);
+  const activeHubs = useMemo(() => {
+    return filteredAndSortedHubs?.filter((hub) => hub.status === "active");
+  }, [filteredAndSortedHubs]);
 
   return (
     <div className="@container h-full overflow-y-auto p-4 sm:p-6 space-y-6 bg-bg">
@@ -193,10 +211,73 @@ export function HubList() {
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 @2xl:grid-cols-2 @4xl:grid-cols-3 gap-4">
-          {filteredAndSortedHubs?.map((hub) => (
-            <HubCard key={hub.id} hub={hub} />
-          ))}
+        <div className="space-y-8">
+          {/* Active Hubs Section */}
+          {activeHubs.length > 0 && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Heading level={2}>Active Hubs ({activeHubs.length})</Heading>
+              </div>
+              <div className="grid grid-cols-1 @2xl:grid-cols-2 @4xl:grid-cols-3 gap-4">
+                {activeHubs.map((hub) => (
+                  <HubCard key={hub.id} hub={hub} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Inactive Hubs Section */}
+          {archivedHubs.length > 0 && (
+            <div className="space-y-4">
+              <div className="flex  flex-col @2xl:flex-row @2xl:items-end justify-between gap-4">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-1.5">
+                    <Heading level={2}>
+                      Archived Hubs ({archivedHubs.length})
+                    </Heading>
+                    <Tooltip delay={0} closeDelay={0}>
+                      <Tooltip.Trigger>
+                        <HugeiconsIcon
+                          icon={InformationCircleIcon}
+                          size={16}
+                          className="text-muted-fg hover:text-fg transition-colors cursor-help"
+                        />
+                      </Tooltip.Trigger>
+                      <Tooltip.Content>
+                        <div className="max-w-xs">
+                          <p className="font-medium mb-1">
+                            Why are hubs archived?
+                          </p>
+                          <p className="text-sm">
+                            Hubs are automatically archived when you exceed your
+                            plan's hub limit. Free and Basic plans allow up to 2
+                            active hubs. Upgrade to Premium for unlimited hubs.
+                          </p>
+                        </div>
+                      </Tooltip.Content>
+                    </Tooltip>
+                  </div>
+
+                  <p className="text-sm text-muted-fg @2xl:text-balance">
+                    These hubs are in read-only mode. You can view content but
+                    cannot make changes.
+                  </p>
+                </div>
+
+                <UpgradePlanButton
+                  intent="primary"
+                  size="md"
+                  className={"w-full shrink-0 @2xl:w-auto"}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 @2xl:grid-cols-2 @4xl:grid-cols-3 gap-4">
+                {archivedHubs.map((hub) => (
+                  <HubCard key={hub.id} hub={hub} />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

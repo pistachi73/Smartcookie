@@ -2,6 +2,7 @@
 
 import { and, eq } from "drizzle-orm";
 
+import { sideEffects } from "@/core/side-effects";
 import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { sessionNote } from "@/db/schema";
@@ -18,11 +19,13 @@ export const addSessionNote = authenticatedDataAccess()
   .use(async ({ data, user }) =>
     sessionNoteLimitMiddleware({ user, content: data.content }),
   )
-  .execute(async (data, user) => {
+  .execute(async ({ hubId, ...data }, user) => {
     const [createdSessonNote] = await db
       .insert(sessionNote)
       .values({ ...data, userId: user.id })
       .returning();
+
+    sideEffects.enqueue("updateHubLastActivity", { hubId, userid: user.id });
 
     return createdSessonNote;
   });
@@ -33,7 +36,7 @@ export const updateSessionNote = authenticatedDataAccess()
     sessionNoteLimitMiddleware({ user, content: data.content || "" }),
   )
   .execute(async (data, user) => {
-    const { noteId, ...noteData } = data;
+    const { noteId, hubId, ...noteData } = data;
 
     const [updatedNote] = await db
       .update(sessionNote)
@@ -47,16 +50,20 @@ export const updateSessionNote = authenticatedDataAccess()
         updatedAt: sessionNote.updatedAt,
       });
 
+    sideEffects.enqueue("updateHubLastActivity", { hubId, userid: user.id });
+
     return updatedNote;
   });
 
 export const deleteSessionNote = withProtectedDataAccess({
   schema: DeleteSessionNoteSchema,
-  callback: async ({ noteId, sessionId: _sessionId }, user) => {
+  callback: async ({ noteId, sessionId: _sessionId, hubId }, user) => {
     const [deletedNote] = await db
       .delete(sessionNote)
       .where(and(eq(sessionNote.id, noteId), eq(sessionNote.userId, user.id)))
       .returning();
+
+    sideEffects.enqueue("updateHubLastActivity", { hubId, userid: user.id });
 
     return deletedNote;
   },

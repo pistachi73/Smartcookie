@@ -7,9 +7,9 @@ import { linkOAuthAccount } from "@/data-access/accounts/mutations";
 import { getAccountByProviderAndUserId } from "@/data-access/accounts/queries";
 import { deleteTwoFactorConfirmationByToken } from "@/data-access/two-factor-confirmation/mutations";
 import { getTwoFactorConirmationByUserId } from "@/data-access/two-factor-confirmation/queries";
-import { getUserByIdInternal } from "@/data-access/user/internal";
 import { updateUser } from "@/data-access/user/mutations";
 import { getUserByEmail } from "@/data-access/user/queries";
+import { getUserById } from "@/data-access/user/utils";
 import { getUserSubscriptionByUserIdInternal } from "@/data-access/user-subscription/internal";
 import { db } from "@/db";
 
@@ -111,7 +111,7 @@ export async function jwtCallback(params: { token: JWT }): Promise<JWT> {
     return token;
   }
 
-  const user = await getUserByIdInternal(token.sub);
+  const user = await getUserById(token.sub);
 
   if (!user) return token;
 

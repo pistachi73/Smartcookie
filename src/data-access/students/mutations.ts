@@ -2,6 +2,7 @@
 
 import { and, eq } from "drizzle-orm";
 
+import { sideEffects } from "@/core/side-effects";
 import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
 import { session, student, studentHub } from "@/db/schema";
@@ -41,25 +42,6 @@ export const addStudent = authenticatedDataAccess()
     return createdStudent;
   });
 
-// Alternative example using checkLimit method directly
-export const addStudentAlternative = authenticatedDataAccess()
-  .input(AddStudentSchema)
-  .onError({
-    message: "Failed to add student",
-    type: "UNEXPECTED_ERROR",
-  })
-  .execute(async (data, user) => {
-    const [createdStudent] = await db
-      .insert(student)
-      .values({
-        ...data,
-        userId: user.id,
-      })
-      .returning();
-
-    return createdStudent;
-  });
-
 export const addStudentsToHub = authenticatedDataAccess()
   .input(AddStudentsToHubSchema)
   .onError({
@@ -67,7 +49,7 @@ export const addStudentsToHub = authenticatedDataAccess()
     type: "UNEXPECTED_ERROR",
   })
   .execute(async ({ studentIds, hubId }, user) => {
-    return await db.transaction(async (trx) => {
+    await db.transaction(async (trx) => {
       const sessions = await trx
         .select({ id: session.id })
         .from(session)
@@ -94,6 +76,8 @@ export const addStudentsToHub = authenticatedDataAccess()
 
       return { hubId };
     });
+
+    sideEffects.enqueue("updateHubLastActivity", { hubId, userid: user.id });
   });
 
 export const removeStudentFromHub = authenticatedDataAccess()
@@ -102,7 +86,7 @@ export const removeStudentFromHub = authenticatedDataAccess()
     message: "Failed to remove student from hub",
     type: "UNEXPECTED_ERROR",
   })
-  .execute(async ({ studentId, hubId }) => {
+  .execute(async ({ studentId, hubId }, user) => {
     await db.transaction(async (trx) => {
       await Promise.all([
         trx
@@ -124,6 +108,8 @@ export const removeStudentFromHub = authenticatedDataAccess()
         }),
       ]);
     });
+
+    sideEffects.enqueue("updateHubLastActivity", { hubId, userid: user.id });
   });
 
 export const createStudentInHub = authenticatedDataAccess()
@@ -186,6 +172,8 @@ export const createStudentInHub = authenticatedDataAccess()
           : Promise.resolve(),
       ]);
     });
+
+    sideEffects.enqueue("updateHubLastActivity", { hubId, userid: user.id });
   });
 
 export const deleteStudent = withProtectedDataAccess({

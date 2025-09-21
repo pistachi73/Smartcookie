@@ -112,7 +112,6 @@ export const NoteCard = memo(NoteCardComponent, (prevProps, nextProps) => {
   return (
     prevProps.note.id === nextProps.note.id &&
     prevProps.note.content === nextProps.note.content &&
-    prevProps.note.updatedAt === nextProps.note.updatedAt &&
     prevProps.hubColor === nextProps.hubColor
   );
 });

@@ -15,7 +15,6 @@ export const getNotesByHubId = withProtectedDataAccess({
       .select({
         id: quickNote.id,
         content: quickNote.content,
-        updatedAt: quickNote.updatedAt,
         hubId: quickNote.hubId,
       })
       .from(quickNote)
@@ -25,7 +24,7 @@ export const getNotesByHubId = withProtectedDataAccess({
           hubId === 0 ? isNull(quickNote.hubId) : eq(quickNote.hubId, hubId),
         ),
       )
-      .orderBy(desc(quickNote.updatedAt));
+      .orderBy(desc(quickNote.createdAt));
 
     return notes as NoteSummary[];
   },

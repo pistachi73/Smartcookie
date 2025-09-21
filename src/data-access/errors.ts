@@ -8,6 +8,21 @@ export type DataAccessError<TKey extends string, TMeta = any> = {
 };
 
 /**
+ * Plan management specific error types
+ */
+export type PlanManagementError =
+  | "INVALID_PLAN_TRANSITION"
+  | "NOT_AN_UPGRADE"
+  | "NOT_A_DOWNGRADE"
+  | "UPGRADE_FAILED"
+  | "DOWNGRADE_FAILED"
+  | "ARCHIVE_FAILED"
+  | "UNARCHIVE_FAILED"
+  | "INVALID_RESOURCE_TYPE"
+  | "UNAUTHORIZED"
+  | "USER_NOT_FOUND";
+
+/**
  * Type guard to check if a value is a DataAccessError
  */
 export const isDataAccessError = <TKey extends string, TMeta = any>(

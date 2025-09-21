@@ -2,9 +2,11 @@
 
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
+  Archive02Icon,
   Calendar01Icon,
   Clock01Icon,
   HelpCircleIcon,
+  SquareLock01Icon,
   UserMultiple02Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import { Link } from "react-aria-components";
@@ -56,14 +58,17 @@ export function HubCard({ hub }: HubCardProps) {
           <div className="space-y-3">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2">
+                <Badge intent={status === "active" ? "success" : "secondary"}>
+                  {status === "inactive" && (
+                    <HugeiconsIcon icon={Archive02Icon} size={12} />
+                  )}
+                  {status === "active" ? "Active" : "Archived"}
+                </Badge>
                 {level && (
                   <Badge className="text-xs py-1" intent="primary">
                     {level}
                   </Badge>
                 )}
-                <Badge intent={status === "active" ? "success" : "secondary"}>
-                  {status === "active" ? "Active" : "Inactive"}
-                </Badge>
               </div>
               <p className="text-muted-fg flex items-center gap-1">
                 <HugeiconsIcon icon={UserMultiple02Icon} size={16} />
@@ -75,7 +80,16 @@ export function HubCard({ hub }: HubCardProps) {
                 className={cn("w-3 h-3 rounded-full", colorClasses.dot)}
                 title={`Color: ${hub.color}`}
               />
-              <Card.Title>{name}</Card.Title>
+              <Card.Title className="flex items-center gap-2">
+                {name}
+                {status === "inactive" && (
+                  <HugeiconsIcon
+                    icon={SquareLock01Icon}
+                    size={20}
+                    className="text-muted-fg/60"
+                  />
+                )}
+              </Card.Title>
             </div>
           </div>
           {description && (

@@ -11,6 +11,7 @@ import { regularSpring } from "@/shared/lib/animation";
 import { cn } from "@/shared/lib/classes";
 
 import type { SessionNotePosition } from "@/db/schema";
+import { getHubByIdQueryOptions } from "@/features/hub/lib/hub-query-options";
 import { getSessionNotesBySessionIdQueryOptions } from "@/features/hub/lib/session-notes-query-options";
 import { AddSessionNoteForm } from "./add-session-note-form";
 import { DraggableSessionNote } from "./draggable-session-note";
@@ -35,6 +36,7 @@ const variants: Variants = {
 type SessionNoteColumnProps<T extends SessionNotePosition> = {
   position: T;
   sessionId: number;
+  hubId: number;
 };
 
 const headerMap: Record<SessionNotePosition, string> = {
@@ -43,9 +45,12 @@ const headerMap: Record<SessionNotePosition, string> = {
 } as const;
 
 export const SessionNoteColumn = <T extends SessionNotePosition>({
+  hubId,
   position,
   sessionId,
 }: SessionNoteColumnProps<T>) => {
+  const { data: hub } = useQuery(getHubByIdQueryOptions(hubId));
+  const viewOnlyMode = hub?.status === "inactive";
   const [isAddingNote, setIsAddingNote] = useState(false);
 
   const { data: sessionNotes } = useQuery({
@@ -55,7 +60,11 @@ export const SessionNoteColumn = <T extends SessionNotePosition>({
   const notes = sessionNotes?.[position] ?? [];
 
   return (
-    <DroppableSessionNoteColumn sessionId={sessionId} position={position}>
+    <DroppableSessionNoteColumn
+      hubId={hubId}
+      sessionId={sessionId}
+      position={position}
+    >
       <m.div
         layout
         className="mb-1 pr-0 flex flex-row items-center justify-between gap-x-2"
@@ -77,7 +86,7 @@ export const SessionNoteColumn = <T extends SessionNotePosition>({
           size="sq-sm"
           className="size-6"
           onPress={() => setIsAddingNote(true)}
-          isDisabled={isAddingNote}
+          isDisabled={isAddingNote || viewOnlyMode}
         >
           <HugeiconsIcon icon={Add01Icon} size={12} />
         </Button>
@@ -95,6 +104,7 @@ export const SessionNoteColumn = <T extends SessionNotePosition>({
               transition={regularSpring}
             >
               <AddSessionNoteForm
+                hubId={hubId}
                 onCancel={() => setIsAddingNote(false)}
                 sessionId={sessionId}
                 position={position}
@@ -112,7 +122,11 @@ export const SessionNoteColumn = <T extends SessionNotePosition>({
                 exit="exit"
                 transition={regularSpring}
               >
-                <DraggableSessionNote note={note} sessionId={sessionId} />
+                <DraggableSessionNote
+                  note={note}
+                  sessionId={sessionId}
+                  hubId={hubId}
+                />
               </m.div>
             ))}
           {!notes?.length && !isAddingNote && (

@@ -14,6 +14,7 @@ import type { SessionNotePosition } from "@/db/schema";
 import { useAddSessionNote } from "../../../hooks/session-notes/use-add-session-note";
 
 type AddSessionNoteProps = {
+  hubId: number;
   sessionId: number;
   position: SessionNotePosition;
   onCancel: () => void;
@@ -27,6 +28,7 @@ const AddSessionNoteFormSchema = (maxChars: number) =>
 const MotionForm = m.create(Form);
 
 export const AddSessionNoteForm = ({
+  hubId,
   onCancel,
   sessionId,
   position,
@@ -56,7 +58,7 @@ export const AddSessionNoteForm = ({
     if (!data.content.trim()) return;
 
     handleRemoveAddingNote();
-    addNote({ sessionId, content: data.content, position });
+    addNote({ hubId, sessionId, content: data.content, position });
     isSubmitted.current = true;
   };
 

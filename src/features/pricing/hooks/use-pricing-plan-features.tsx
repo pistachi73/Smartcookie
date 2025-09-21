@@ -9,6 +9,10 @@ export const useFreePricingPlanFeatures = () => {
       label: t("coursesLimit"),
     },
     {
+      id: "sessions-limit",
+      label: t("sessionsLimit"),
+    },
+    {
       id: "students-limit",
       label: t("studentsLimit"),
     },
@@ -34,6 +38,10 @@ export const useBasicPricingPlanFeatures = () => {
     {
       id: "courses-limit",
       label: t("coursesLimit"),
+    },
+    {
+      id: "sessions-limit",
+      label: t("sessionsLimit"),
     },
     {
       id: "students-limit",
@@ -73,6 +81,10 @@ export const usePremiumPricingPlanFeatures = () => {
     {
       id: "courses-limit",
       label: t("coursesLimit"),
+    },
+    {
+      id: "sessions-limit",
+      label: t("sessionsLimit"),
     },
     {
       id: "students-limit",

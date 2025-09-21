@@ -1,0 +1,1 @@
+ALTER TABLE "hub" RENAME COLUMN "updated_at" TO "last_activity_at";

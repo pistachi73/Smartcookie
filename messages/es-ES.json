@@ -70,6 +70,7 @@
         "featuresHeading": "Incluye",
         "features": {
           "coursesLimit": "Hasta 2 cursos",
+          "sessionsLimit": "Hasta 20 sesiones",
           "studentsLimit": "Hasta 10 estudiantes",
           "notesLimit": "Hasta 20 notas",
           "notesCharacterLimit": "Hasta 100 caracteres por nota",
@@ -84,6 +85,7 @@
         "featuresHeading": "Todo lo del plan Gratis, más:",
         "features": {
           "coursesLimit": "Hasta 20 cursos",
+          "sessionsLimit": "Hasta 40 sesiones",
           "studentsLimit": "Hasta 40 estudiantes",
           "notesLimit": "Hasta 500 notas",
           "notesCharacterLimit": "Hasta 280 caracteres por nota",
@@ -100,6 +102,7 @@
         "featuresHeading": "Todo lo del plan Básico, más:",
         "features": {
           "coursesLimit": "Cursos ilimitados",
+          "sessionsLimit": "Sesiones ilimitadas",
           "studentsLimit": "Estudiantes ilimitados",
           "notesLimit": "Notas ilimitadas",
           "notesCharacterLimit": "Hasta 500 caracteres por nota",

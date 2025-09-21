@@ -11,7 +11,7 @@ import {
   Pen01Icon,
   Tick01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { LayoutGroup } from "motion/react";
 import * as m from "motion/react-m";
 import dynamic from "next/dynamic";
@@ -24,6 +24,7 @@ import { ProgressCircle } from "@/shared/components/ui/progress-circle";
 import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
 import { regularSpring } from "@/shared/lib/animation";
 
+import { getHubByIdQueryOptions } from "../../lib/hub-query-options";
 import { getPaginatedSessionsByHubIdQueryOptions } from "../../lib/hub-sessions-query-options";
 import { useSessionStore } from "../../store/session-store";
 import { HubPanelHeader } from "../hub-panel-header";
@@ -50,6 +51,7 @@ const DynamicDeleteSessionsModal = dynamic(
 );
 
 export function SessionsList({ hubId }: { hubId: number }) {
+  const { data: hub } = useQuery(getHubByIdQueryOptions(hubId));
   const [allSessionsExpanded, setAllSessionsExpanded] = useState(false);
   const { down } = useViewport();
 
@@ -96,13 +98,16 @@ export function SessionsList({ hubId }: { hubId: number }) {
 
   const hasSessions = sessions?.length > 0 && !isLoadingSessions;
 
+  const viewOnlyMode = hub?.status === "inactive";
+
   const actions = (
     <div className="flex gap-2 sm:flex-row justify-between sm:justify-end flex-1">
       {hasSessions && (
         <>
           <Button
-            size="sq-md"
+            size="sq-sm"
             intent="outline"
+            isDisabled={viewOnlyMode}
             onPress={() => {
               setAllSessionsExpanded(!allSessionsExpanded);
             }}
@@ -116,10 +121,10 @@ export function SessionsList({ hubId }: { hubId: number }) {
             />
           </Button>
           <Button
-            size={isMobile ? "sq-md" : "md"}
+            size={isMobile ? "sq-sm" : "sm"}
             intent={isEditingMode ? "secondary" : "outline"}
             onPress={handleEditModeToggle}
-            isDisabled={isLoadingSessions}
+            isDisabled={isLoadingSessions || viewOnlyMode}
             className="shrink-0"
           >
             {isEditingMode ? (
@@ -139,19 +144,24 @@ export function SessionsList({ hubId }: { hubId: number }) {
       {isEditingMode ? (
         <Button
           intent="danger"
+          size="sm"
           onPress={() => setIsDeleteModalOpen(true)}
           className={"w-full sm:w-fit"}
-          isDisabled={isLoadingSessions || selectedSessions.length === 0}
+          isDisabled={
+            isLoadingSessions || selectedSessions.length === 0 || viewOnlyMode
+          }
         >
           <HugeiconsIcon icon={DeleteIcon} data-slot="icon" />
           <p>Delete sessions</p>
         </Button>
       ) : (
         <AddSessionsButton
+          size={"sm"}
           intent="primary"
           onPress={() => setIsAddModalOpen(true)}
           hubId={hubId}
           className={"w-full sm:w-fit"}
+          isDisabled={viewOnlyMode}
         >
           <HugeiconsIcon icon={CalendarAdd02Icon} data-slot="icon" />
           <p>Add session</p>
@@ -162,7 +172,7 @@ export function SessionsList({ hubId }: { hubId: number }) {
 
   return (
     <>
-      <div className="min-h-0 pb-12 sm:pb-0">
+      <div className="min-h-0 pb-20 sm:pb-0">
         <HubPanelHeader title="Sessions timeline" actions={actions} />
         {sessions?.length !== 0 && !isLoadingSessions && (
           <div className="w-full flex justify-center">
@@ -190,7 +200,11 @@ export function SessionsList({ hubId }: { hubId: number }) {
             viewed using the 'Show past sessions' button above."
             icon={Calendar02Icon}
             action={
-              <Button intent="primary" onPress={() => setIsAddModalOpen(true)}>
+              <Button
+                intent="primary"
+                onPress={() => setIsAddModalOpen(true)}
+                isDisabled={viewOnlyMode}
+              >
                 Create session
               </Button>
             }
@@ -203,13 +217,16 @@ export function SessionsList({ hubId }: { hubId: number }) {
             icon={Calendar02Icon}
             action={
               <div className="flex flex-col sm:flex-row gap-3 items-center w-full justify-center">
-                <AddSessionsButton
-                  hubId={hubId}
-                  onPress={() => setIsAddModalOpen(true)}
-                >
-                  <HugeiconsIcon icon={CalendarAdd02Icon} data-slot="icon" />
-                  Create session
-                </AddSessionsButton>
+                {!viewOnlyMode && (
+                  <AddSessionsButton
+                    hubId={hubId}
+                    onPress={() => setIsAddModalOpen(true)}
+                    isDisabled={viewOnlyMode}
+                  >
+                    <HugeiconsIcon icon={CalendarAdd02Icon} data-slot="icon" />
+                    Create session
+                  </AddSessionsButton>
+                )}
                 <Button
                   intent="outline"
                   onPress={() => fetchPreviousPage()}

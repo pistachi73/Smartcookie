@@ -1,6 +1,6 @@
 "use server";
 
-import { asc, eq, sql } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
 
 import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
@@ -36,6 +36,7 @@ export const getHubsByUserId = withProtectedDataAccess({
         level: true,
         color: true,
         schedule: true,
+        lastActivityAt: true,
       },
       extras: {
         startDate: parseRequiredDateWithTimezone(hub.startDate, "startDate"),
@@ -57,7 +58,7 @@ export const getHubsByUserId = withProtectedDataAccess({
         },
       },
       where: eq(hub.userId, user.id),
-      orderBy: [asc(sql`LOWER(${hub.name})`)],
+      orderBy: [desc(hub.lastActivityAt)],
     });
 
     const formattedHubs = hubs.map((hub) => {

@@ -1,5 +1,7 @@
 "use client";
 
+import { HugeiconsIcon } from "@hugeicons/react";
+import { LinkSquare02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { Temporal } from "temporal-polyfill";
 
 import { buttonStyles } from "@/shared/components/ui/button";
@@ -20,10 +22,10 @@ export const AgendaCardSkeleton = () => {
             href="/portal/calendar"
             className={buttonStyles({
               intent: "outline",
-              size: "sm",
+              size: "sq-sm",
             })}
           >
-            See all
+            <HugeiconsIcon icon={LinkSquare02Icon} data-slot="icon" size={14} />
           </Link>
         </Card.Action>
       </Card.Header>

@@ -46,7 +46,7 @@ vi.mock("@/shared/hooks/plan-limits/use-notes-limits", () => ({
 const mockUpdateQuickNoteReturn = {
   id: 123,
   content: "Updated content",
-  updatedAt: "2023-01-02T00:00:00Z",
+  status: "active",
 };
 
 const mockHubId = 456;
@@ -182,7 +182,7 @@ describe("useUpdateQuickNote", () => {
         {
           id: optimisticId,
           content: "",
-          updatedAt: "2023-01-01T00:00:00Z",
+          status: "active",
           hubId: mockHubId,
           clientId: clientId,
         },
@@ -207,7 +207,7 @@ describe("useUpdateQuickNote", () => {
         {
           id: 999, // Real ID from server
           content: "New content",
-          updatedAt: "2023-01-01T00:00:00Z",
+          status: "active",
           hubId: mockHubId,
           clientId: clientId, // Same clientId
         },
@@ -252,7 +252,7 @@ describe("useUpdateQuickNote", () => {
         {
           id: optimisticId,
           content: "",
-          updatedAt: "2023-01-01T00:00:00Z",
+          status: "active",
           hubId: mockHubId,
           clientId: testClientId,
         },
@@ -276,7 +276,7 @@ describe("useUpdateQuickNote", () => {
         {
           id: 888,
           content: "Unique content",
-          updatedAt: "2023-01-01T00:00:00Z",
+          status: "active",
           hubId: mockHubId,
           clientId: testClientId, // Same clientId to match
         },
@@ -372,7 +372,7 @@ describe("useUpdateQuickNote", () => {
         {
           id: 123,
           content: "Original content",
-          updatedAt: "2023-01-01T00:00:00Z",
+          status: "active",
           hubId: mockHubId,
         },
       ];
@@ -420,7 +420,7 @@ describe("useUpdateQuickNote", () => {
         {
           id: 123,
           content: "Original content",
-          updatedAt: "2023-01-01T00:00:00Z",
+          status: "active",
           hubId: mockHubId,
         },
       ];
@@ -468,7 +468,7 @@ describe("useUpdateQuickNote", () => {
         {
           id: 123,
           content: "Original content",
-          updatedAt: "2023-01-01T00:00:00Z",
+          status: "active",
           hubId: mockHubId,
         },
       ];

@@ -29,7 +29,10 @@ export class DataAccessChain<
   private _unexpectedErrorType = "UNEXPECTED_ERROR" as TUnexpectedError;
   private _logError = false;
   private _middleware: Array<
-    (context: any) => Promise<void | DataAccessError<any>>
+    (context: any) => Promise<DataAccessError<any> | void>
+  > = [];
+  private _postExecutionHooks: Array<
+    (context: { input: any; user: any; result: any }) => Promise<void> | void
   > = [];
 
   /**
@@ -82,7 +85,7 @@ export class DataAccessChain<
       data: TInput;
       user: TUser;
       metadata: Record<string, any>;
-    }) => Promise<void | DataAccessError<TNewErrors>>,
+    }) => Promise<DataAccessError<TNewErrors> | void>,
   ): DataAccessChain<
     TInput,
     TUser,
@@ -101,10 +104,7 @@ export class DataAccessChain<
     window: number; // in seconds
     keyGenerator?: (user: TUser, data: TInput) => string;
   }): DataAccessChain<TInput, TUser, TMiddlewareErrors, TUnexpectedError> {
-    return this.use(async () => {
-      // Rate limiting logic would go here
-      // This is just a placeholder to show the concept
-    });
+    return this.use(async () => {});
   }
 
   /**
@@ -168,10 +168,14 @@ export class DataAccessChain<
         }
 
         // 4. Execute callback
+        let result: TResult;
         if (this._schema && args.length > 0) {
-          return await callback(validatedData, authenticatedUser as any);
+          result = await callback(validatedData, authenticatedUser as any);
+        } else {
+          result = await (callback as any)(authenticatedUser);
         }
-        return await (callback as any)(authenticatedUser);
+
+        return result;
       } catch (error) {
         if (this._logError) {
           console.error("DataAccessChain caught error:", error);

@@ -6,7 +6,7 @@
         "2": "forget about",
         "3": "{id, select, admin {admin} spreadsheets {spreadsheets} last_minute_prep {last-minute prep} chaotic_notes {chaotic notes} other {admin}}."
       },
-      "Subtitle": "SmartCookie is an all-in-one tool that simplifies admin, tracks lessons, and boosts motivation. A second brain to teach smarter.",
+      "Subtitle": "SmartCookie is an all-in-one tool that simplifies teaching admin, tracks lessons, and boosts motivation. A second brain to teach smarter.",
       "EmailMarketingForm": {
         "Placeholder": "Enter your email",
         "Button": "Discover SmartCookie"
@@ -70,6 +70,7 @@
         "featuresHeading": "What's included",
         "features": {
           "coursesLimit": "Up to 2 courses",
+          "sessionsLimit": "Up to 20 sessions",
           "studentsLimit": "Up to 10 students",
           "notesLimit": "Up to 20 notes",
           "notesCharacterLimit": "Up to 100 chars per note",
@@ -83,6 +84,7 @@
         "featuresHeading": "Everything in Free, plus:",
         "features": {
           "coursesLimit": "Up to 20 courses",
+          "sessionsLimit": "Up to 40 sessions",
           "studentsLimit": "Up to 40 students",
           "notesLimit": "Up to 500 notes",
           "notesCharacterLimit": "Up to 280 chars per note",
@@ -99,6 +101,7 @@
         "featuresHeading": "Everything in Basic, plus:",
         "features": {
           "coursesLimit": "Unlimited courses",
+          "sessionsLimit": "Unlimited sessions",
           "studentsLimit": "Unlimited students",
           "notesLimit": "Unlimited notes",
           "notesCharacterLimit": "Up to 500 chars per note",
@@ -145,5 +148,9 @@
   "LocaleSwitcher": {
     "label": "Change language",
     "locale": "{locale, select, en_GB {English} es_ES {Spanish} other {Unknown}}"
+  },
+  "Manifest": {
+    "name": "SmartCookie",
+    "shortName": "SmartCookie"
   }
 }

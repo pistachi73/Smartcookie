@@ -10,6 +10,7 @@ import {
 import { useDeleteQuickNote } from "../../hooks/use-delete-quick-note";
 import { useUpdateQuickNote } from "../../hooks/use-update-quick-note";
 import { useQuickNotesStore } from "../../store/quick-notes-store-provider";
+import type { NoteSummary } from "../../types/quick-notes.types";
 import { NoteCard } from "../note-card";
 
 // Mock the hooks
@@ -58,10 +59,10 @@ describe("NoteCard", () => {
   const mockSetEdittingHub = vi.fn();
   const mockDeleteNote = vi.fn();
 
-  const mockNote = {
+  const mockNote: NoteSummary = {
     id: 1,
     content: "Test note content",
-    updatedAt: "2023-01-01T00:00:00.000Z",
+    status: "active",
     hubId: 123,
     clientId: "test-client-id",
   };

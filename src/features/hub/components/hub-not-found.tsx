@@ -12,7 +12,11 @@ import { HubDashboardLayout } from "./hub-dashboard-layout";
 
 export const HubNotFound = () => {
   return (
-    <HubDashboardLayout hubName={"Hub not found"}>
+    <HubDashboardLayout
+      hub={{
+        name: "Hub not found",
+      }}
+    >
       <div className="sm:p-6 p-4 pt-0!">
         <EmptyState
           title="Hub not found"

@@ -5,6 +5,7 @@ export const createMockUserSubscription = (
 ): UserSubscription => ({
   userId: "user-123",
   stripeSubscriptionId: "sub_123",
+  stripeSubscriptionStatus: "active",
   stripePriceId: "price_123",
   status: "active",
   tier: "basic",

@@ -63,9 +63,9 @@ import { getAccountByProviderAndUserId } from "@/data-access/accounts/queries";
 import { deleteTwoFactorConfirmationByToken } from "@/data-access/two-factor-confirmation/mutations";
 import { getTwoFactorConirmationByUserId } from "@/data-access/two-factor-confirmation/queries";
 import { createMockUser } from "@/data-access/user/__mocks__";
-import { getUserByIdInternal } from "@/data-access/user/internal";
 import { updateUser } from "@/data-access/user/mutations";
 import { getUserByEmail } from "@/data-access/user/queries";
+import { getUserById } from "@/data-access/user/utils";
 import { createMockUserSubscription } from "@/data-access/user-subscription/__mocks__";
 import { getUserSubscriptionByUserIdInternal } from "@/data-access/user-subscription/internal";
 import { db } from "@/db";
@@ -95,8 +95,8 @@ const mockGetTwoFactorConirmationByUserId =
 const mockGetUserByEmail = getUserByEmail as MockedFunction<
   typeof getUserByEmail
 >;
-const mockGetUserByIdInternal = getUserByIdInternal as MockedFunction<
-  typeof getUserByIdInternal
+const mockGetUserByIdInternal = getUserById as MockedFunction<
+  typeof getUserById
 >;
 const mockUpdateUser = updateUser as MockedFunction<typeof updateUser>;
 const mockGetUserSubscriptionByUserIdInternal =

@@ -13,6 +13,7 @@ export function useUpdateSessionNotePosition() {
 
   return useProtectedMutation({
     schema: z.object({
+      hubId: z.number(),
       noteId: z.number(),
       source: z.object({
         sessionId: z.number(),
@@ -26,6 +27,7 @@ export function useUpdateSessionNotePosition() {
     mutationFn: (data) => {
       return updateSessionNote({
         noteId: data.noteId,
+        hubId: data.hubId,
         sessionId: data.target.sessionId,
         position: data.target.position,
       });

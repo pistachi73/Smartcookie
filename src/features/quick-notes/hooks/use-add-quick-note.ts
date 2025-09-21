@@ -37,8 +37,8 @@ export const useAddQuickNote = () => {
       const optimisticNote: NoteSummary = {
         id: optimisticId,
         content: newNote.content,
-        updatedAt: newNote.updatedAt,
         hubId: newNote.hubId,
+        status: "active",
         clientId,
       };
 

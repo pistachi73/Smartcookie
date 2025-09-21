@@ -125,39 +125,32 @@ export const Session = ({
             "transition-colors",
           )}
         >
-          <div className="flex flex-row items-center gap-4">
-            {/* <m.div
-              layout
-              className={cn(
-                "hidden sm:flex transition-colors flex-col items-center justify-center size-12 bg-bg dark:bg-overlay-highlight rounded-sm",
-                isExpanded && "bg-overlay-highlight dark:bg-overlay-elevated",
-              )}
-            >
-              <p className="text-xs text-muted-fg tabular-nums">
-                {format(session.startTime, "MMM")}
-              </p>
-              <p className="text-base font-semibold tabular-nums">
-                {format(session.startTime, "dd")}
-              </p>
-            </m.div> */}
-
+          <div className="@container flex flex-row items-center gap-2.5 w-full">
             <SessionBubble session={session} className="flex sm:hidden" />
 
-            <Heading level={3} className="text-base font-medium tabular-nums">
-              {format(session.startTime, "eee, dd MMM ")}
-            </Heading>
-            <Separator orientation="vertical" className="h-4" />
-            <p className="tabular-nums text-sm text-muted-fg flex flex-row items-center gap-1">
-              <HugeiconsIcon
-                icon={Clock01Icon}
-                size={14}
-                className="hidden sm:block"
+            <div className="flex flex-col @xs:flex-row @xs:items-center gap-0.5 @xs:gap-2 w-full">
+              <Heading
+                level={3}
+                className="text-base font-medium tabular-nums w-27"
+              >
+                {format(session.startTime, "eee, dd MMM ")}
+              </Heading>
+              <Separator
+                orientation="vertical"
+                className="h-4 @xs:block hidden"
               />
-              {format(session.startTime, "HH:mm")} -{" "}
-              {format(session.endTime, "HH:mm")}
-            </p>
-            {isTodaySession && <Badge intent="primary">Today</Badge>}
-            {isTomorrowSession && <Badge intent="secondary">Tomorrow</Badge>}
+              <p className="tabular-nums text-xs @xs:text-sm text-muted-fg flex flex-row items-center gap-1">
+                <HugeiconsIcon
+                  icon={Clock01Icon}
+                  size={14}
+                  className="hidden sm:block"
+                />
+                {format(session.startTime, "HH:mm")} -{" "}
+                {format(session.endTime, "HH:mm")}
+              </p>
+              {isTodaySession && <Badge intent="primary">Today</Badge>}
+              {isTomorrowSession && <Badge intent="secondary">Tomorrow</Badge>}
+            </div>
           </div>
 
           <div className="flex items-center gap-1">
@@ -204,8 +197,16 @@ export const Session = ({
               className="overflow-hidden"
             >
               <div className="p-2 flex flex-col sm:grid sm:grid-rows-1 sm:grid-cols-2">
-                <SessionNoteColumn position="plans" sessionId={session.id} />
-                <SessionNoteColumn position="in-class" sessionId={session.id} />
+                <SessionNoteColumn
+                  position="plans"
+                  sessionId={session.id}
+                  hubId={hubId}
+                />
+                <SessionNoteColumn
+                  position="in-class"
+                  sessionId={session.id}
+                  hubId={hubId}
+                />
               </div>
             </m.div>
           )}
