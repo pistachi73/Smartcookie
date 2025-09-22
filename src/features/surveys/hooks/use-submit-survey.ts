@@ -11,6 +11,7 @@ export const useSubmitSurvey = ({
   onSuccess?: (res: unknown) => void;
 }) => {
   return useProtectedMutation({
+    requireAuth: false,
     schema: SubmitSurveySchema,
     mutationFn: submitSurvey,
     onSuccess: (res) => {

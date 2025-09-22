@@ -111,6 +111,7 @@ const QuickNotesSidebarFilter = ({ searchQuery }: { searchQuery: string }) => {
         <HubToggle
           key={hub.id}
           label={hub.name}
+          isViewOnlyMode={hub.status === "inactive"}
           isVisible={visibleHubs.includes(hub.id)}
           onPress={() => toggleHub(hub.id)}
           color={hub.color as CustomColor}

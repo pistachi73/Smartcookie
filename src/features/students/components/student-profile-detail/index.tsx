@@ -2,6 +2,8 @@
 
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
+  Archive02Icon,
+  ArrowLeft02Icon,
   Briefcase01Icon,
   Calendar01Icon,
   CallIcon,
@@ -38,7 +40,6 @@ type UpdatableStudentFields = keyof Omit<
 >;
 
 export const StudentProfileDetail = ({ id }: { id: number }) => {
-  console.log("id", id);
   const { mutate: updateStudent } = useUpdateStudent();
   const { data: student } = useSuspenseQuery(
     getUserStudentByIdQueryOptions(id),
@@ -59,35 +60,51 @@ export const StudentProfileDetail = ({ id }: { id: number }) => {
     ? today(getLocalTimeZone()).year - birthDate.getFullYear()
     : null;
 
+  const isViewOnly = student.status !== "active";
   return (
     <StudentProfileLayout>
-      <div className="grid grid-cols-1 @6xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 @6xl:grid-cols-3 gap-6 overflow-y-auto">
         <div className="@6xl:col-span-2 space-y-6">
           <Card className="relative @container">
-            <Card.Header className="flex items-center gap-4 justify-between ">
-              <div className="flex items-center gap-4">
+            <Card.Header className="flex flex-col gap-6 ">
+              <Link
+                href={"/portal/students"}
+                intent="primary"
+                className="flex items-center gap-2 text-sm text-muted-fg"
+              >
+                <HugeiconsIcon icon={ArrowLeft02Icon} size={16} />
+                Back to students
+              </Link>
+              <div className="flex items-center gap-3">
                 <UserAvatar
                   userImage={student.image}
                   userName={student.name}
                   size="xl"
                 />
 
-                <div>
-                  <h2 className="text-xl font-semibold text-fg">
-                    {student.name}
-                  </h2>
-                  <p className="text-muted-fg">
-                    Age {studentAge} - {student.nationality}
-                  </p>
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-xl font-semibold text-fg">
+                      {student.name}
+                    </h2>
+                    <Badge
+                      intent={
+                        student.status === "active" ? "success" : "secondary"
+                      }
+                    >
+                      {student.status === "inactive" && (
+                        <HugeiconsIcon icon={Archive02Icon} size={16} />
+                      )}
+                      {student.status === "active" ? "Active" : "Archived"}
+                    </Badge>
+                  </div>
+                  {studentAge && student.nationality && (
+                    <p className="text-muted-fg">
+                      Age {studentAge} - {student.nationality}
+                    </p>
+                  )}
                 </div>
               </div>
-
-              <Badge
-                intent={student.status === "active" ? "success" : "danger"}
-                className="absolute top-4 right-4"
-              >
-                {student.status}
-              </Badge>
             </Card.Header>
             <Card.Content className="space-y-4">
               <div className="grid grid-cols-1 @2xl:grid-cols-2 gap-4 ">
@@ -98,6 +115,7 @@ export const StudentProfileDetail = ({ id }: { id: number }) => {
                   value={student.name ?? undefined}
                   onSave={(value) => handleFieldSave("name", value)}
                   placeholder="Enter student name..."
+                  readOnly={isViewOnly}
                 />
 
                 <EditableTextField
@@ -108,6 +126,7 @@ export const StudentProfileDetail = ({ id }: { id: number }) => {
                   onSave={(value) => handleFieldSave("email", value)}
                   type="email"
                   placeholder="Enter student email..."
+                  readOnly={isViewOnly}
                 />
 
                 <EditablePhoneField
@@ -117,6 +136,7 @@ export const StudentProfileDetail = ({ id }: { id: number }) => {
                   onSave={(value) => handleFieldSave("phone", value)}
                   type="tel"
                   placeholder="Enter student phone..."
+                  readOnly={isViewOnly}
                 />
 
                 <EditableTextField
@@ -125,6 +145,7 @@ export const StudentProfileDetail = ({ id }: { id: number }) => {
                   value={student.location ?? undefined}
                   onSave={(value) => handleFieldSave("location", value)}
                   placeholder="Enter student location..."
+                  readOnly={isViewOnly}
                 />
 
                 <EditableTextField
@@ -133,6 +154,7 @@ export const StudentProfileDetail = ({ id }: { id: number }) => {
                   value={student.nationality ?? undefined}
                   onSave={(value) => handleFieldSave("nationality", value)}
                   placeholder="Enter student nationality..."
+                  readOnly={isViewOnly}
                 />
 
                 <EditableTextField
@@ -141,6 +163,7 @@ export const StudentProfileDetail = ({ id }: { id: number }) => {
                   onSave={(value) => handleFieldSave("job", value)}
                   placeholder="Enter student job..."
                   icon={Briefcase01Icon}
+                  readOnly={isViewOnly}
                 />
 
                 <EditableDateField
@@ -161,6 +184,7 @@ export const StudentProfileDetail = ({ id }: { id: number }) => {
                     handleFieldSave("birthDate", date.toISOString());
                   }}
                   placeholder="Enter student birth date..."
+                  readOnly={isViewOnly}
                 />
 
                 <EditableTextField
@@ -169,6 +193,7 @@ export const StudentProfileDetail = ({ id }: { id: number }) => {
                   value={student.learningLanguage ?? undefined}
                   onSave={(value) => handleFieldSave("learningLanguage", value)}
                   placeholder="Enter student learning language..."
+                  readOnly={isViewOnly}
                 />
               </div>
 
@@ -177,6 +202,7 @@ export const StudentProfileDetail = ({ id }: { id: number }) => {
                 value={student.interests ?? undefined}
                 onSave={(value) => handleFieldSave("interests", value)}
                 type="textarea"
+                readOnly={isViewOnly}
               />
             </Card.Content>
           </Card>

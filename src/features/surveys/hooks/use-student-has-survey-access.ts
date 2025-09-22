@@ -5,6 +5,7 @@ import { CheckStudentHasSurveyAccessSchema } from "@/data-access/surveys/schemas
 
 export const useStudentHasSurveyAccess = () => {
   return useProtectedMutation({
+    requireAuth: false,
     schema: CheckStudentHasSurveyAccessSchema,
     mutationFn: checkStudentHasSurveyAccess,
   });

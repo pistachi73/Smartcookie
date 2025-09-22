@@ -41,6 +41,7 @@ interface NoteCardListProps {
   hubColor: CustomColor;
   isAddingNote: boolean;
   setIsAddingNote: React.Dispatch<React.SetStateAction<boolean>>;
+  isViewOnlyMode?: boolean;
 }
 
 export const NoteCardList = ({
@@ -48,6 +49,7 @@ export const NoteCardList = ({
   hubColor,
   isAddingNote,
   setIsAddingNote,
+  isViewOnlyMode = false,
 }: NoteCardListProps) => {
   const { data: notes, isLoading } = useQuery(
     quickNotesByHubIdQueryOptions(hubId),
@@ -63,7 +65,7 @@ export const NoteCardList = ({
               "columns-1 @lg:columns-2 @4xl:columns-3  gap-3 space-y-3",
           )}
         >
-          {isAddingNote && (
+          {!isViewOnlyMode && isAddingNote && (
             <m.div
               layout
               key="adding-note"
@@ -102,9 +104,16 @@ export const NoteCardList = ({
                   initial="hidden"
                   animate="visible"
                   exit="hidden"
-                  className="will-change-transform origin-top mb-3 inline-block w-full"
+                  className={cn(
+                    "will-change-transform origin-top mb-3 inline-block w-full",
+                    isViewOnlyMode && "pointer-events-none",
+                  )}
                 >
-                  <NoteCard note={note} hubColor={hubColor} />
+                  <NoteCard
+                    note={note}
+                    hubColor={hubColor}
+                    isViewOnlyMode={isViewOnlyMode}
+                  />
                 </m.div>
               ))}
 

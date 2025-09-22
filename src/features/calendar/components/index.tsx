@@ -26,7 +26,7 @@ const MainCalendar = dynamic(
       <div className="h-full w-full flex-col gap-4  bg-white flex items-center justify-center">
         <ProgressCircle
           isIndeterminate
-          className="size-16 text-primary"
+          className="size-10 sm:size-12 text-primary"
           strokeWidth={2.5}
         />
         <p className="block text-sm font-medium text-muted-fg">

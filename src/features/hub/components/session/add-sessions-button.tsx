@@ -42,8 +42,6 @@ export const AddSessionsButton = ({
   };
 
   const getTooltipContent = () => {
-    if (canCreateSession)
-      return `You can create ${remainingCount} more sessions for this hub`;
     if (!canCreateSession)
       return `Limit reached: ${currentCount} of ${maxSessions} sessions used for this hub`;
     return null;

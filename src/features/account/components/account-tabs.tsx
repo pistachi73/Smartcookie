@@ -14,13 +14,13 @@ export const AccountTabs = ({
   const router = useRouter();
   return (
     <Tabs
-      className={"relative h-full overflow-hidden "}
+      className={"relative h-full"}
       selectedKey={selectedTab}
       onSelectionChange={(key) => {
         router.push(`/portal/account/${key}`);
       }}
     >
-      <Tabs.List className="w-full sticky top-0 px-5 h-12 pt-3 bg-white">
+      <Tabs.List className="w-full px-5 h-12 pt-3 bg-white">
         {ACCOUNT_TABS.map((tab) => (
           <Tabs.Tab
             key={tab.id}

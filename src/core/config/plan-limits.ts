@@ -98,17 +98,17 @@ export const PLAN_LIMITS: Record<
   },
   premium: {
     hubs: {
-      maxCount: Number.POSITIVE_INFINITY,
+      maxCount: 500,
     },
     sessions: {
-      maxPerHub: Number.POSITIVE_INFINITY,
+      maxPerHub: 1000,
       maxCharactersPerNote: 100,
     },
     students: {
-      maxCount: Number.POSITIVE_INFINITY,
+      maxCount: 500,
     },
     notes: {
-      maxCount: Number.POSITIVE_INFINITY,
+      maxCount: 3000,
       maxCharactersPerNote: 500,
     },
     community: {

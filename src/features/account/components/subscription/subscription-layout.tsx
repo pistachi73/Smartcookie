@@ -14,7 +14,7 @@ export const SubscriptionLayout = ({
         subTitle="Manage your billing and subscription preferences"
         icon={Invoice02Icon}
         className={{
-          container: "bg-bg ",
+          container: "bg-bg",
         }}
       />
       <div className="min-h-0 overflow-y-auto">{children}</div>

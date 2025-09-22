@@ -19,6 +19,7 @@ export const getHubsByUserIdForQuickNotes = withProtectedDataAccess({
         id: hub.id,
         name: hub.name,
         color: hub.color,
+        status: hub.status,
       })
       .from(hub)
       .where(eq(hub.userId, user.id));

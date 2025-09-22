@@ -16,7 +16,6 @@ export const StudentProfileLoading = () => (
                 <Skeleton className="h-4 w-24" />
               </div>
             </div>
-            <Skeleton className="h-6 w-16 rounded-full absolute top-4 right-4" />
           </Card.Header>
           <Card.Content className="space-y-4">
             <div className="grid grid-cols-1 @2xl:grid-cols-2 gap-4">

@@ -73,8 +73,7 @@
           "sessionsLimit": "Hasta 20 sesiones",
           "studentsLimit": "Hasta 10 estudiantes",
           "notesLimit": "Hasta 20 notas",
-          "notesCharacterLimit": "Hasta 100 caracteres por nota",
-          "communityAccess": "1 webinar al mes"
+          "notesCharacterLimit": "Hasta 100 caracteres por nota"
         }
       },
 

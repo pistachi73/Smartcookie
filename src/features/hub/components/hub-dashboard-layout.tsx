@@ -3,7 +3,6 @@ import {
   Archive02Icon,
   ArrowLeft02Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { div } from "motion/react-m";
 
 import { Badge } from "@/shared/components/ui/badge";
 import { Heading } from "@/shared/components/ui/heading";
@@ -65,7 +64,9 @@ export const HubDashboardLayout = ({
                 </Badge>
               )}
             </div>
-            <UpgradePlanButton intent="primary" />
+            {hub.status === "inactive" && (
+              <UpgradePlanButton intent="primary" />
+            )}
           </div>
         ) : (
           <Skeleton className="h-7 sm:h-8 w-64" soft={false} />

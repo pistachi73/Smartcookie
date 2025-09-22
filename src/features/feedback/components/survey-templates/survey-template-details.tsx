@@ -8,19 +8,20 @@ import {
 import {
   ArrowLeft02Icon,
   BubbleChatQuestionIcon,
+  Rocket01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import { useQueries } from "@tanstack/react-query";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 
 import { Badge } from "@/shared/components/ui/badge";
+import { Button } from "@/shared/components/ui/button";
 import { Card } from "@/shared/components/ui/card";
 import { Heading } from "@/shared/components/ui/heading";
 import { Link } from "@/shared/components/ui/link";
 import useNavigateWithParams from "@/shared/hooks/use-navigate-with-params";
 
 import { surveyTemplateByIdQueryOptions } from "@/features/feedback/lib/survey-template-query-options";
-import { useRouter } from "@/i18n/navigation";
 import { surveyTemplateResponsesQueryOptions } from "../../lib/survey-template-responses-query-options";
 import { DataCard } from "../questions/question-details/question-answers/shared-cards";
 import { FeedbackLoading } from "../shared/feedback-loading";
@@ -95,7 +96,6 @@ const getCompletionRateColors = (rate: number) => {
 export const SurveyTemplateDetails = ({
   surveyTemplateId,
 }: SurveyTemplateDetailsProps) => {
-  const router = useRouter();
   const { createHrefWithParams } = useNavigateWithParams();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showInitSurveySheet, setShowInitSurveySheet] = useState(false);
@@ -172,12 +172,25 @@ export const SurveyTemplateDetails = ({
                   </p>
                 )}
               </div>
-
-              <SurveyTemplateDetailsMenu
-                editHref={editHref}
-                setShowInitSurveySheet={setShowInitSurveySheet}
-                setShowDeleteModal={setShowDeleteModal}
-              />
+              <div className="flex items-center gap-2">
+                <SurveyTemplateDetailsMenu
+                  editHref={editHref}
+                  setShowInitSurveySheet={setShowInitSurveySheet}
+                  setShowDeleteModal={setShowDeleteModal}
+                />
+                <Button
+                  intent="secondary"
+                  size="sm"
+                  onPress={() => setShowInitSurveySheet(true)}
+                >
+                  <HugeiconsIcon
+                    icon={Rocket01Icon}
+                    size={16}
+                    data-slot="icon"
+                  />
+                  Init survey
+                </Button>
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-3">

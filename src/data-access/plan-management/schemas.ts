@@ -17,7 +17,6 @@ export const downgradePlanSchema = z.object({
 export const resourceCountsSchema = z.object({
   hubs: z.number().int().min(0),
   students: z.number().int().min(0),
-  notes: z.number().int().min(0),
 });
 
 export const archiveResourcesSchema = z.object({

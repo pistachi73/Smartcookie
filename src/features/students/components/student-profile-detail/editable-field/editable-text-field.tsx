@@ -39,6 +39,7 @@ export const EditableTextField = ({
   isRequired = false,
   customErrorMessage,
   icon: Icon,
+  readOnly = false,
 }: EditableTextFieldComponentProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const fieldSchema = getValidationSchema(type, isRequired, customErrorMessage);
@@ -70,6 +71,7 @@ export const EditableTextField = ({
   };
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
+    console.log("data", data);
     if (isRequired && !data.field) {
       handleCancel();
       return;
@@ -89,10 +91,14 @@ export const EditableTextField = ({
             type={type}
             label={label}
             placeholder={placeholder}
-            onFocus={() => setIsEditing(true)}
+            onFocus={() => {
+              if (readOnly) return;
+              setIsEditing(true);
+            }}
             onBlur={handleBlur}
             isRequired={isRequired}
             className={{
+              primitive: cn(readOnly && "pointer-events-none"),
               fieldGroup: cn(
                 "bg-bg py-1.5 pr-2 *:sm:text-base",
                 isEditing
@@ -100,7 +106,7 @@ export const EditableTextField = ({
                   : "inset-ring-transparent shadow-none",
               ),
             }}
-            isReadOnly={!isEditing}
+            isReadOnly={!isEditing || readOnly}
             errorMessage={fieldState.error?.message}
             isInvalid={fieldState.invalid}
             prefix={Icon && <HugeiconsIcon icon={Icon} data-slot="icon" />}

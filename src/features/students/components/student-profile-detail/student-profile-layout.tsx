@@ -11,7 +11,7 @@ export type StudentProfileLayoutProps = {
 export const StudentProfileLayout = ({
   children,
 }: StudentProfileLayoutProps) => (
-  <div className="space-y-6 p-4 sm:p-6">
+  <div className="space-y-6 p-4 sm:p-6 overflow-y-auto">
     <PageHeader
       title="Student Profile"
       subTitle="Manage student information and track progress"
@@ -20,6 +20,6 @@ export const StudentProfileLayout = ({
         container: "border-none p-0!",
       }}
     />
-    <div className="@container">{children}</div>
+    <div className="@container min-h-0">{children}</div>
   </div>
 );

@@ -50,39 +50,43 @@ export const SessionConflictModalContent = ({
           return (
             <div key={index} className="p-1 border rounded-md mb-2">
               <div className="flex items-center gap-3">
-                <div className="size-12 flex flex-col items-center justify-center rounded-md bg-bg dark:bg-overlay">
-                  <p className="text-xs text-muted-fg">
-                    {format(start1, "MMM")}
+                <div className="size-14 shrink-0 flex flex-col items-center justify-center rounded-md bg-bg dark:bg-overlay gap-0.5">
+                  <p className="text-xs text-muted-fg leading-none">
+                    {format(start1, "EEE")}
                   </p>
-                  <p className="text-sm font-medium">{format(start1, "dd")}</p>
-                </div>
-                <div className="flex-1">
-                  <p className="text-muted-fg text-xs line-clamp-1">
-                    {conflictPair.s1.hubName
-                      ? conflictPair.s1.hubName
-                      : "New Session"}
-                  </p>
-                  <p className="font-medium text-sm">
-                    {format(start1, "HH:mm")} - {format(end1, "HH:mm")}
+                  <p className="text-sm font-medium leading-none tabular-nums">
+                    {format(start1, "dd/M")}
                   </p>
                 </div>
+                <div className="flex  gap-5 justify-between items-center w-full">
+                  <div>
+                    <p className="text-muted-fg text-xs line-clamp-1">
+                      {conflictPair.s1.hubName
+                        ? conflictPair.s1.hubName
+                        : "New Session"}
+                    </p>
+                    <p className="font-medium text-sm tabular-nums">
+                      {format(start1, "HH:mm")} - {format(end1, "HH:mm")}
+                    </p>
+                  </div>
 
-                <div className="size-7 sm:size-9 flex items-center justify-center rounded-md bg-danger/10">
-                  <HugeiconsIcon
-                    icon={CalendarBlock02Icon}
-                    className="text-danger size-3 sm:size-4"
-                  />
-                </div>
+                  <div className="size-7 sm:size-9 flex items-center justify-center rounded-md bg-danger/10">
+                    <HugeiconsIcon
+                      icon={CalendarBlock02Icon}
+                      className="text-danger size-3 sm:size-4"
+                    />
+                  </div>
 
-                <div className="flex-1">
-                  <p className="text-muted-fg text-xs line-clamp-1">
-                    {conflictPair.s2.hubName
-                      ? conflictPair.s2.hubName
-                      : "New Session"}
-                  </p>
-                  <p className="font-medium text-sm">
-                    {format(start2, "HH:mm")} - {format(end2, "HH:mm")}
-                  </p>
+                  <div className="flex-1">
+                    <p className="text-muted-fg text-xs line-clamp-1 tabular-nums">
+                      {conflictPair.s2.hubName
+                        ? conflictPair.s2.hubName
+                        : "New Session"}
+                    </p>
+                    <p className="font-medium text-sm">
+                      {format(start2, "HH:mm")} - {format(end2, "HH:mm")}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

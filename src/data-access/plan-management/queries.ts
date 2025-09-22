@@ -161,13 +161,10 @@ const generateDowngradeWarnings = (
   _currentCounts: {
     hubs: number;
     students: number;
-    notes: number;
   },
   archivingResults: {
     hubs: { archived: number };
     students: { archived: number };
-    notes: { archived: number };
-    sessions: { archived: number };
   },
 ) => {
   const warnings: string[] = [];
@@ -181,12 +178,6 @@ const generateDowngradeWarnings = (
   if (archivingResults.students.archived > 0) {
     warnings.push(
       `${archivingResults.students.archived} student(s) have been archived and will be hidden`,
-    );
-  }
-
-  if (archivingResults.notes.archived > 0) {
-    warnings.push(
-      `${archivingResults.notes.archived} quick note(s) have been archived and will be hidden`,
     );
   }
 

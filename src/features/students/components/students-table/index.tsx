@@ -1,7 +1,10 @@
 "use client";
 
 import { HugeiconsIcon } from "@hugeicons/react";
-import { MoreHorizontalIcon } from "@hugeicons-pro/core-stroke-rounded";
+import {
+  Archive02Icon,
+  MoreHorizontalIcon,
+} from "@hugeicons-pro/core-stroke-rounded";
 import { useState } from "react";
 
 import { Badge } from "@/shared/components/ui/badge";
@@ -52,6 +55,7 @@ export const StudentsTable = ({ students }: { students: Student[] }) => {
           )}
         >
           {(student) => {
+            const isActive = student.status === "active";
             return (
               <Table.Row
                 key={`${student.id}-${student.name}`}
@@ -71,9 +75,14 @@ export const StudentsTable = ({ students }: { students: Student[] }) => {
                 <Table.Cell>
                   <Badge
                     className="first-letter:uppercase!"
-                    intent={student.status === "active" ? "success" : "danger"}
+                    intent={
+                      student.status === "active" ? "success" : "secondary"
+                    }
                   >
-                    {student.status ?? "-"}
+                    {!isActive && (
+                      <HugeiconsIcon icon={Archive02Icon} size={12} />
+                    )}
+                    {isActive ? "Active" : "Archived"}
                   </Badge>
                 </Table.Cell>
 

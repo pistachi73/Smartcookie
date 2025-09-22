@@ -2,7 +2,7 @@ import { inArray } from "drizzle-orm";
 
 import { PLAN_LIMITS } from "@/core/config/plan-limits";
 import { db } from "@/db";
-import { hub, quickNote, student } from "@/db/schema";
+import { hub, student } from "@/db/schema";
 import { createDataAccessError } from "../errors";
 import type {
   ArchiveResourcesInput,
@@ -11,10 +11,8 @@ import type {
 } from "./schemas";
 import {
   getArchivedHubsToRestore,
-  getArchivedQuickNotesToRestore,
   getArchivedStudentsToRestore,
   getOldestHubsToArchive,
-  getOldestQuickNotesToArchive,
   getOldestStudentsToArchive,
   getUserResourceCounts,
 } from "./utils";
@@ -54,26 +52,6 @@ export const archiveExcessResources = async ({
             .where(inArray(student.id, studentsToArchive));
         }
         return { archived: studentsToArchive.length };
-      }
-
-      case "quick-notes": {
-        const notesToArchive = await getOldestQuickNotesToArchive(
-          userId,
-          keepCount,
-        );
-        if (notesToArchive.length > 0) {
-          await db
-            .update(quickNote)
-            .set({ status: "inactive" })
-            .where(inArray(quickNote.id, notesToArchive));
-        }
-        return { archived: notesToArchive.length };
-      }
-
-      case "sessions": {
-        // Sessions are automatically handled when hubs are archived
-        // due to the hub-session relationship
-        return { archived: 0 };
       }
 
       default:
@@ -138,27 +116,6 @@ export const unarchiveResources = async ({
         return { unarchived: studentsToRestore.length };
       }
 
-      case "quick-notes": {
-        const availableSlots = Math.max(0, maxCount - currentCounts.notes);
-        if (availableSlots === 0) return { unarchived: 0 };
-
-        const notesToRestore = await getArchivedQuickNotesToRestore(
-          userId,
-          availableSlots,
-        );
-        if (notesToRestore.length > 0) {
-          await db
-            .update(quickNote)
-            .set({ status: "active" })
-            .where(inArray(quickNote.id, notesToRestore));
-        }
-        return { unarchived: notesToRestore.length };
-      }
-
-      case "sessions":
-        // Sessions are automatically handled when hubs are archived
-        return { unarchived: 0 };
-
       default:
         return createDataAccessError({
           type: "INVALID_RESOURCE_TYPE",
@@ -216,21 +173,6 @@ export const handleDowngradeResourceLimits = async (
     });
     if ("archived" in studentResult) {
       results.students = studentResult;
-    }
-  }
-
-  // Archive excess quick notes
-  if (
-    Number.isFinite(newLimits.notes.maxCount) &&
-    currentCounts.notes > newLimits.notes.maxCount
-  ) {
-    const noteResult = await archiveExcessResources({
-      userId,
-      resourceType: "quick-notes",
-      keepCount: newLimits.notes.maxCount,
-    });
-    if ("archived" in noteResult) {
-      results.notes = noteResult;
     }
   }
 
