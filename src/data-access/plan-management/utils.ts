@@ -1,8 +1,8 @@
-import { and, asc, count, desc, eq } from "drizzle-orm";
+import { and, count, desc, eq } from "drizzle-orm";
 import { cache } from "react";
 
 import { db } from "@/db";
-import { hub, quickNote, student } from "@/db/schema";
+import { hub, student } from "@/db/schema";
 import type { PlanTier, ResourceCounts } from "./schemas";
 
 /**
@@ -10,7 +10,7 @@ import type { PlanTier, ResourceCounts } from "./schemas";
  */
 export const getUserResourceCounts = cache(
   async (userId: string): Promise<ResourceCounts> => {
-    const [hubsCount, studentsCount, notesCount] = await Promise.all([
+    const [hubsCount, studentsCount] = await Promise.all([
       db
         .select({ count: count() })
         .from(hub)
@@ -20,19 +20,11 @@ export const getUserResourceCounts = cache(
         .select({ count: count() })
         .from(student)
         .where(and(eq(student.userId, userId), eq(student.status, "active"))),
-
-      db
-        .select({ count: count() })
-        .from(quickNote)
-        .where(
-          and(eq(quickNote.userId, userId), eq(quickNote.status, "active")),
-        ),
     ]);
 
     return {
       hubs: hubsCount[0]?.count || 0,
       students: studentsCount[0]?.count || 0,
-      notes: notesCount[0]?.count || 0,
     };
   },
 );
@@ -101,20 +93,6 @@ export const getOldestStudentsToArchive = async (
   return students.map((s) => s.id);
 };
 
-export const getOldestQuickNotesToArchive = async (
-  userId: string,
-  keepCount: number,
-) => {
-  const notes = await db
-    .select({ id: quickNote.id })
-    .from(quickNote)
-    .where(and(eq(quickNote.userId, userId), eq(quickNote.status, "active")))
-    .orderBy(desc(quickNote.createdAt))
-    .offset(keepCount);
-
-  return notes.map((n) => n.id);
-};
-
 // Sessions are automatically handled when hubs are archived due to cascade relationship
 // No separate session archiving needed
 
@@ -147,18 +125,4 @@ export const getArchivedStudentsToRestore = async (
     .limit(maxCount);
 
   return students.map((s) => s.id);
-};
-
-export const getArchivedQuickNotesToRestore = async (
-  userId: string,
-  maxCount: number,
-) => {
-  const notes = await db
-    .select({ id: quickNote.id })
-    .from(quickNote)
-    .where(and(eq(quickNote.userId, userId), eq(quickNote.status, "inactive")))
-    .orderBy(desc(quickNote.createdAt))
-    .limit(maxCount);
-
-  return notes.map((n) => n.id);
 };

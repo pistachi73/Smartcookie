@@ -21,8 +21,6 @@ export default async function StudentPage({ params }: StudentPageProps) {
 
   const dehydratedState = dehydrate(queryClient);
 
-  console.log("studentId", studentId, Number.parseInt(studentId));
-
   return (
     <HydrationBoundary state={dehydratedState}>
       <StudentProfileDetail id={Number.parseInt(studentId)} />

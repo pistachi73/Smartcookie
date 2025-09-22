@@ -1,3 +1,5 @@
+import { HugeiconsIcon } from "@hugeicons/react";
+import { ViewIcon } from "@hugeicons-pro/core-stroke-rounded";
 import { Button } from "react-aria-components";
 import { tv } from "tailwind-variants";
 
@@ -13,6 +15,7 @@ type HubToggleProps = {
   color?: CustomColor;
   prefix?: React.ReactNode | "dot";
   className?: string;
+  isViewOnlyMode?: boolean;
 };
 
 const toggleStyles = tv({
@@ -33,6 +36,7 @@ const dotStyles = "size-2.5 rounded-full border shrink-0";
 
 export function HubToggle({
   label,
+  isViewOnlyMode = false,
   isVisible,
   onPress,
   color,
@@ -76,6 +80,9 @@ export function HubToggle({
       >
         {label}
       </h3>
+      {isViewOnlyMode && (
+        <HugeiconsIcon icon={ViewIcon} size={16} className="text-muted-fg" />
+      )}
     </Button>
   );
 }

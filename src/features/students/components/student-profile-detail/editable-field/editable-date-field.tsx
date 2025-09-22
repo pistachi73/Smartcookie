@@ -18,6 +18,7 @@ export const EditableDateField = ({
   icon: Icon,
   onSave,
   isRequired = false,
+  readOnly = false,
 }: EditableFieldProps<DateValue>) => {
   const [isEditing, setIsEditing] = useState(false);
 
@@ -43,6 +44,7 @@ export const EditableDateField = ({
   };
 
   const handleBlur = () => {
+    if (readOnly) return;
     if (value && fieldValue?.compare(value) === 0) {
       handleCancel();
     }
@@ -63,9 +65,13 @@ export const EditableDateField = ({
             {...field}
             label={label}
             isRequired={isRequired}
-            onFocus={() => setIsEditing(true)}
+            onFocus={() => {
+              if (readOnly) return;
+              setIsEditing(true);
+            }}
             onBlur={handleBlur}
             className={{
+              primitive: cn(readOnly && "pointer-events-none"),
               fieldGroup: cn(
                 "bg-bg py-1.5 pr-2 *:sm:text-base w-full pl-1.5",
                 isEditing
@@ -76,7 +82,7 @@ export const EditableDateField = ({
             }}
             isInvalid={fieldState.invalid}
             errorMessage={fieldState.error?.message}
-            isReadOnly={false}
+            isReadOnly={!isEditing || readOnly}
             prefix={Icon && <HugeiconsIcon icon={Icon} data-slot="icon" />}
             suffix={
               <EditableFieldSuffix

@@ -15,6 +15,7 @@ import {
   surveys,
   surveyTemplates,
 } from "@/db/schema";
+import { dataAccess } from "../data-access-chain";
 import { createDataAccessError } from "../errors";
 import {
   CheckStudentHasSurveyAccessSchema,
@@ -80,10 +81,9 @@ export const createHubSurvey = withProtectedDataAccess({
   },
 });
 
-export const checkStudentHasSurveyAccess = withProtectedDataAccess({
-  options: { requireAuth: false },
-  schema: CheckStudentHasSurveyAccessSchema,
-  callback: async ({ email, surveyId }) => {
+export const checkStudentHasSurveyAccess = dataAccess()
+  .input(CheckStudentHasSurveyAccessSchema)
+  .execute(async ({ email, surveyId }) => {
     const [response] = await db
       .select({
         id: surveyResponses.id,
@@ -122,93 +122,86 @@ export const checkStudentHasSurveyAccess = withProtectedDataAccess({
       ...response,
       startedAt,
     };
-  },
-});
+  });
 
-export const submitSurvey = withProtectedDataAccess({
-  options: { requireAuth: false },
-  schema: SubmitSurveySchema,
-  callback: async ({
-    surveyResponseId,
-    surveyTemplateId,
-    responses,
-    startedAt,
-  }) => {
-    // Filter out empty/undefined responses
-    const filteredResponses = Object.entries(responses).filter(
-      ([, value]) => value !== "" && value !== undefined,
-    );
+export const submitSurvey = dataAccess()
+  .input(SubmitSurveySchema)
+  .execute(
+    async ({ surveyResponseId, surveyTemplateId, startedAt, responses }) => {
+      const filteredResponses = Object.entries(responses).filter(
+        ([, value]) => value !== "" && value !== undefined,
+      );
 
-    if (filteredResponses.length === 0) {
-      return createDataAccessError({
-        type: "NOT_FOUND",
-        message: "No valid responses to submit.",
-      });
-    }
+      if (filteredResponses.length === 0) {
+        return createDataAccessError({
+          type: "NOT_FOUND",
+          message: "No valid responses to submit.",
+        });
+      }
 
-    const [surveyResponded] = await db
-      .select({
-        id: surveyResponses.id,
-      })
-      .from(surveyResponses)
-      .where(
-        and(
-          eq(surveyResponses.id, surveyResponseId),
-          eq(surveyResponses.completed, true),
+      const [surveyResponded] = await db
+        .select({
+          id: surveyResponses.id,
+        })
+        .from(surveyResponses)
+        .where(
+          and(
+            eq(surveyResponses.id, surveyResponseId),
+            eq(surveyResponses.completed, true),
+          ),
+        )
+        .limit(1);
+
+      if (surveyResponded) {
+        return createDataAccessError({
+          type: "SURVEY_ALREADY_COMPLETED",
+          message: "Survey already completed.",
+        });
+      }
+
+      const toInsertAnswers: InsertAnswer[] = filteredResponses.map(
+        ([questionId, value]) => ({
+          surveyResponseId: surveyResponseId,
+          questionId: Number(questionId),
+          value,
+        }),
+      );
+
+      const questionIds = [
+        ...new Set(
+          toInsertAnswers.map((a) => a.questionId).filter(Boolean) as number[],
         ),
-      )
-      .limit(1);
+      ];
 
-    if (surveyResponded) {
-      return createDataAccessError({
-        type: "SURVEY_ALREADY_COMPLETED",
-        message: "Survey already completed.",
-      });
-    }
+      const responseTimeInMilliseconds = Math.round(
+        Date.now() - new Date(startedAt).getTime(),
+      );
 
-    const toInsertAnswers: InsertAnswer[] = filteredResponses.map(
-      ([questionId, value]) => ({
-        surveyResponseId: surveyResponseId,
-        questionId: Number(questionId),
-        value,
-      }),
-    );
-
-    const questionIds = [
-      ...new Set(
-        toInsertAnswers.map((a) => a.questionId).filter(Boolean) as number[],
-      ),
-    ];
-
-    const responseTimeInMilliseconds = Math.round(
-      Date.now() - new Date(startedAt).getTime(),
-    );
-
-    await db.transaction(async (tx) => {
-      await Promise.all([
-        tx
-          .update(surveyResponses)
-          .set({ completed: true, completedAt: new Date().toISOString() })
-          .where(eq(surveyResponses.id, surveyResponseId)),
-        tx.insert(answers).values(toInsertAnswers),
-        tx
-          .update(surveyTemplates)
-          .set({
-            totalResponses: sql`${surveyTemplates.totalResponses} + 1`,
-            averageResponseTime: sql`(${surveyTemplates.averageResponseTime} * ${surveyTemplates.totalResponses} + ${responseTimeInMilliseconds}) / (${surveyTemplates.totalResponses} + 1)`,
-          })
-          .where(eq(surveyTemplates.id, surveyTemplateId)),
-        ...questionIds.map((questionId) =>
+      await db.transaction(async (tx) => {
+        await Promise.all([
           tx
-            .update(questions)
+            .update(surveyResponses)
+            .set({ completed: true, completedAt: new Date().toISOString() })
+            .where(eq(surveyResponses.id, surveyResponseId)),
+          tx.insert(answers).values(toInsertAnswers),
+          tx
+            .update(surveyTemplates)
             .set({
-              totalAnswers: sql`${questions.totalAnswers} + 1`,
+              totalResponses: sql`${surveyTemplates.totalResponses} + 1`,
+              averageResponseTime: sql`(${surveyTemplates.averageResponseTime} * ${surveyTemplates.totalResponses} + ${responseTimeInMilliseconds}) / (${surveyTemplates.totalResponses} + 1)`,
             })
-            .where(eq(questions.id, questionId)),
-        ),
-      ]);
-    });
+            .where(eq(surveyTemplates.id, surveyTemplateId)),
+          ...questionIds.map((questionId) =>
+            tx
+              .update(questions)
+              .set({
+                totalAnswers: sql`${questions.totalAnswers} + 1`,
+              })
+              .where(eq(questions.id, questionId)),
+          ),
+        ]);
+      });
 
-    return { success: true };
-  },
-});
+      return true;
+    },
+  );

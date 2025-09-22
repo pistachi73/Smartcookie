@@ -35,6 +35,7 @@ export const EditablePhoneField = ({
   onSave,
   placeholder,
   isRequired = false,
+  readOnly = false,
 }: EditableTextFieldComponentProps) => {
   const [isEditing, setIsEditing] = useState(false);
 
@@ -96,6 +97,7 @@ export const EditablePhoneField = ({
             isRequired={isRequired}
             onValidityChange={(isValid) => handlePhoneValidityChange(isValid)}
             className={{
+              primitive: cn(readOnly && "pointer-events-none"),
               fieldGroup: cn(
                 "bg-bg py-1.5 pr-2 *:sm:text-base",
                 isEditing

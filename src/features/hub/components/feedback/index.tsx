@@ -35,6 +35,7 @@ export const CourseFeedback = ({ hubId }: { hubId: number }) => {
 
   const [isInitSurveySheetOpen, setIsInitSurveySheetOpen] = useState(false);
   const user = useCurrentUser();
+  const viewOnlyMode = hub?.status === "inactive";
 
   const header = (
     <HubPanelHeader
@@ -46,7 +47,7 @@ export const CourseFeedback = ({ hubId }: { hubId: number }) => {
           onPress={() => {
             setIsInitSurveySheetOpen(true);
           }}
-          isDisabled={!user?.hasActiveSubscription}
+          isDisabled={!user?.hasActiveSubscription || viewOnlyMode}
         >
           <HugeiconsIcon
             icon={CommentAdd01Icon}
@@ -84,6 +85,7 @@ export const CourseFeedback = ({ hubId }: { hubId: number }) => {
               action={
                 <Button
                   intent="primary"
+                  isDisabled={viewOnlyMode}
                   onPress={() => {
                     setIsInitSurveySheetOpen(true);
                   }}

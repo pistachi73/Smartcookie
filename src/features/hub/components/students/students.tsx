@@ -4,6 +4,7 @@ import {
   UserAdd01Icon,
   UserAdd02Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
+import { useQuery } from "@tanstack/react-query";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 
@@ -13,6 +14,7 @@ import { Menu } from "@/shared/components/ui/menu";
 import { useStudentLimits } from "@/shared/hooks/plan-limits/use-student-limits";
 
 import { useStudentsByHubId } from "../../hooks/students/use-students-by-hub-id";
+import { getHubByIdQueryOptions } from "../../lib/hub-query-options";
 import { HubPanelHeader } from "../hub-panel-header";
 import { SkeletonStudentListView } from "./skeleton-student-list-view";
 import { StudentsListView } from "./students-list-view";
@@ -40,6 +42,8 @@ export const Students = ({ hubId }: { hubId: number }) => {
   const studentLimit = useStudentLimits();
   const [isAddStudentModalOpen, setIsAddStudentModalOpen] = useState(false);
   const { data: students, isPending } = useStudentsByHubId(hubId);
+  const { data: hub } = useQuery(getHubByIdQueryOptions(hubId));
+  const viewOnlyMode = hub?.status === "inactive";
 
   const getFromScratchAriaLabel = () => {
     if (studentLimit.isAtLimit)
@@ -59,7 +63,11 @@ export const Students = ({ hubId }: { hubId: number }) => {
           title="Course Students"
           actions={
             <Menu>
-              <Button className={"w-full sm:w-fit"} intent="primary">
+              <Button
+                className={"w-full sm:w-fit"}
+                intent="primary"
+                isDisabled={viewOnlyMode}
+              >
                 <HugeiconsIcon
                   icon={UserAdd02Icon}
                   altIcon={DeleteIcon}
@@ -100,6 +108,7 @@ export const Students = ({ hubId }: { hubId: number }) => {
             action={
               <Button
                 intent="primary"
+                isDisabled={viewOnlyMode}
                 onPress={() => setIsAddStudentModalOpen(true)}
               >
                 Add student

@@ -128,10 +128,10 @@ export const Session = ({
           <div className="@container flex flex-row items-center gap-2.5 w-full">
             <SessionBubble session={session} className="flex sm:hidden" />
 
-            <div className="flex flex-col @xs:flex-row @xs:items-center gap-0.5 @xs:gap-2 w-full">
+            <div className="flex flex-col @xs:flex-row @xs:items-center gap-0.5 @xs:gap-2 @sm:gap-4 w-full">
               <Heading
                 level={3}
-                className="text-base font-medium tabular-nums w-27"
+                className="text-base font-medium tabular-nums w-27 @sm:w-30"
               >
                 {format(session.startTime, "eee, dd MMM ")}
               </Heading>

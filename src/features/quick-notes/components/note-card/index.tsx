@@ -18,9 +18,14 @@ import { useNotesLimits } from "@/shared/hooks/plan-limits/use-notes-limits";
 interface NoteCardProps {
   note: NoteSummary;
   hubColor: CustomColor | null;
+  isViewOnlyMode?: boolean;
 }
 
-const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
+const NoteCardComponent = ({
+  note,
+  hubColor,
+  isViewOnlyMode = false,
+}: NoteCardProps) => {
   const { maxCharacters } = useNotesLimits();
   const [isEditingNote, setIsEditingNote] = useState(false);
 
@@ -62,20 +67,22 @@ const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
         isEditingNote && `${colorClasses.border}`,
       )}
     >
-      <DeleteProgressButton
-        pressDuration={400}
-        intent="plain"
-        size="sq-xs"
-        className={{
-          container: cn(
-            "block sm:hidden sm:group-hover:block absolute top-1.5 right-1.5",
-          ),
-          button:
-            "size-6 **:data-[slot=icon]:size-3 **:data-[slot=icon]:text-danger rounded-full",
-          progressCircle: "size-8",
-        }}
-        onDelete={onDelete}
-      />
+      {!isViewOnlyMode && (
+        <DeleteProgressButton
+          pressDuration={400}
+          intent="plain"
+          size="sq-xs"
+          className={{
+            container: cn(
+              "block sm:hidden sm:group-hover:block absolute top-1.5 right-1.5",
+            ),
+            button:
+              "size-6 **:data-[slot=icon]:size-3 **:data-[slot=icon]:text-danger rounded-full",
+            progressCircle: "size-8",
+          }}
+          onDelete={onDelete}
+        />
+      )}
 
       <TextArea
         value={content}
@@ -88,6 +95,7 @@ const NoteCardComponent = ({ note, hubColor }: NoteCardProps) => {
         )}
         onChange={(e) => handleContentChange(e.target.value)}
         maxLength={maxCharacters}
+        readOnly={isViewOnlyMode}
       />
       <div className="absolute bottom-1 left-3  min-h-7">
         {isSaving && (

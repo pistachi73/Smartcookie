@@ -24,10 +24,6 @@ export const useFreePricingPlanFeatures = () => {
       id: "notes-character-limit",
       label: t("notesCharacterLimit"),
     },
-    {
-      id: "community-access",
-      label: t("communityAccess"),
-    },
   ];
 };
 

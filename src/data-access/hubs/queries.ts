@@ -1,6 +1,6 @@
 "use server";
 
-import { asc, desc, eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
@@ -19,6 +19,7 @@ export const getHubsByUserIdForQuickNotes = withProtectedDataAccess({
         id: hub.id,
         name: hub.name,
         color: hub.color,
+        status: hub.status,
       })
       .from(hub)
       .where(eq(hub.userId, user.id));

@@ -40,12 +40,14 @@ interface HubRadioItemProps {
 
 function HubRadioItem({ hub }: HubRadioItemProps) {
   const colorClasses = getCustomColorClasses(hub.color);
+  const isViewOnlyMode = hub.status === "inactive";
 
   return (
     <RadioToggle
       aria-label={`Select hub: ${hub.name}`}
       value={hub.id.toString()}
       className={cn("w-full h-12 justify-between")}
+      isDisabled={isViewOnlyMode}
     >
       {({ isSelected }) => (
         <>
@@ -228,14 +230,15 @@ export function InitSurveyFromFeedbackSheet({
             onPress={handleInitSurvey}
             isDisabled={!selectedHubId || isInitializing}
           >
-            {isInitializing && (
+            {isInitializing ? (
               <ProgressCircle
                 isIndeterminate
                 aria-label="Initializing survey..."
                 className="size-4"
               />
+            ) : (
+              <HugeiconsIcon icon={Rocket01Icon} size={16} data-slot="icon" />
             )}
-            <HugeiconsIcon icon={Rocket01Icon} size={16} data-slot="icon" />
             Initialize Survey
           </Button>
         </Sheet.Footer>

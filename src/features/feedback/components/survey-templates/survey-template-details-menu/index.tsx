@@ -1,8 +1,7 @@
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
-  Delete02Icon,
+  Delete01Icon,
   MessageEdit01Icon,
-  Rocket01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import type React from "react";
 
@@ -19,7 +18,7 @@ type SurveyTemplateDetailsMenutProps = {
 
 export const SurveyTemplateDetailsMenu = ({
   editHref,
-  setShowInitSurveySheet,
+
   setShowDeleteModal,
 }: SurveyTemplateDetailsMenutProps) => {
   const router = useRouter();
@@ -29,24 +28,15 @@ export const SurveyTemplateDetailsMenu = ({
       <Menu.Content placement="bottom end" popover={{ showArrow: true }}>
         <Menu.Item
           onAction={() => {
-            setShowInitSurveySheet(true);
-          }}
-        >
-          <HugeiconsIcon icon={Rocket01Icon} size={16} data-slot="icon" />
-          Initiate Survey
-        </Menu.Item>
-        <Menu.Separator />
-        <Menu.Item
-          onAction={() => {
             router.push(editHref);
           }}
         >
           <HugeiconsIcon icon={MessageEdit01Icon} size={16} data-slot="icon" />
-          Edit Template
+          Edit
         </Menu.Item>
         <Menu.Item isDanger onAction={() => setShowDeleteModal(true)}>
-          <HugeiconsIcon icon={Delete02Icon} size={16} data-slot="icon" />
-          Delete Template
+          <HugeiconsIcon icon={Delete01Icon} size={16} data-slot="icon" />
+          Delete
         </Menu.Item>
       </Menu.Content>
     </Menu>

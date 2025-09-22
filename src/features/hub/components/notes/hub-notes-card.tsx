@@ -1,5 +1,6 @@
 import { HugeiconsIcon } from "@hugeicons/react";
 import { AddIcon } from "@hugeicons-pro/core-stroke-rounded";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
 import { Card } from "@/shared/components/ui/card";
@@ -7,6 +8,7 @@ import { Card } from "@/shared/components/ui/card";
 import type { CustomColor } from "@/db/schema";
 import { NewQuickNoteButton } from "@/features/quick-notes/components/new-quick-note-button";
 import { NoteCardList } from "@/features/quick-notes/components/note-card-list";
+import { getHubByIdQueryOptions } from "../../lib/hub-query-options";
 
 export const HubNotesCard = ({
   hubId,
@@ -15,7 +17,9 @@ export const HubNotesCard = ({
   hubId: number;
   hubColor: CustomColor;
 }) => {
+  const { data: hub } = useQuery(getHubByIdQueryOptions(hubId));
   const [isAddingNote, setIsAddingNote] = useState(false);
+  const isViewOnlyMode = hub?.status === "inactive";
   return (
     <Card className="w-full">
       <Card.Header>
@@ -26,7 +30,7 @@ export const HubNotesCard = ({
             intent="outline"
             size="sq-sm"
             onPress={() => setIsAddingNote(true)}
-            isDisabled={isAddingNote}
+            isDisabled={isAddingNote || isViewOnlyMode}
           >
             <HugeiconsIcon icon={AddIcon} size={16} />
           </NewQuickNoteButton>
@@ -38,6 +42,7 @@ export const HubNotesCard = ({
           hubColor={hubColor}
           isAddingNote={isAddingNote}
           setIsAddingNote={setIsAddingNote}
+          isViewOnlyMode={isViewOnlyMode}
         />
       </Card.Content>
     </Card>

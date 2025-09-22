@@ -9,6 +9,7 @@ export interface EditableFieldProps<T> {
   customErrorMessage?: string;
   isRequired?: boolean;
   icon?: typeof User02Icon;
+  readOnly?: boolean;
 }
 
 export type TextFieldType = Exclude<InputProps["type"], "password">;

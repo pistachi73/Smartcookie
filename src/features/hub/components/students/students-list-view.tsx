@@ -1,5 +1,6 @@
 import { HugeiconsIcon } from "@hugeicons/react";
 import { MoreHorizontalIcon } from "@hugeicons-pro/core-stroke-rounded";
+import { useQuery } from "@tanstack/react-query";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 
@@ -10,6 +11,7 @@ import { StudentProfile } from "@/shared/components/students/student-profile";
 import { cn } from "@/shared/lib/utils";
 
 import { useStudentsByHubId } from "../../hooks/students/use-students-by-hub-id";
+import { getHubByIdQueryOptions } from "../../lib/hub-query-options";
 import { AttendanceBar } from "./attendance-bar";
 
 const DynamicRemoveStudentModal = dynamic(
@@ -21,6 +23,7 @@ const DynamicRemoveStudentModal = dynamic(
 
 export const StudentsListView = ({ hubId }: { hubId: number }) => {
   const { data: students } = useStudentsByHubId(hubId);
+  const { data: hub } = useQuery(getHubByIdQueryOptions(hubId));
   const [selectedStudent, setSelectedStudent] = useState<number>();
   const [isRemoveStudentModalOpen, setIsRemoveStudentModalOpen] =
     useState(false);
@@ -29,6 +32,8 @@ export const StudentsListView = ({ hubId }: { hubId: number }) => {
     setSelectedStudent(studentId);
     setIsRemoveStudentModalOpen(true);
   };
+
+  const viewOnlyMode = hub?.status === "inactive";
 
   return (
     <>
@@ -87,6 +92,8 @@ export const StudentsListView = ({ hubId }: { hubId: number }) => {
                       <Menu.Item
                         isDanger
                         onAction={() => handleRemoveStudent(id)}
+                        className={cn(viewOnlyMode && "opacity-50")}
+                        isDisabled={viewOnlyMode}
                       >
                         Delete
                       </Menu.Item>

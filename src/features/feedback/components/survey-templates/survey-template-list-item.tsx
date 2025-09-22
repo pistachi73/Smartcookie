@@ -2,8 +2,8 @@
 
 import { HugeiconsIcon } from "@hugeicons/react";
 import {
-  BubbleChatEditIcon,
   Delete01Icon,
+  MessageEdit01Icon,
   MoreVerticalIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import { useParams } from "next/navigation";
@@ -88,7 +88,7 @@ export const SurveyTemplateListItem = ({
             <Menu.Content placement="bottom end">
               <Menu.Item className="gap-1" href={editHref}>
                 <HugeiconsIcon
-                  icon={BubbleChatEditIcon}
+                  icon={MessageEdit01Icon}
                   size={16}
                   data-slot="icon"
                 />

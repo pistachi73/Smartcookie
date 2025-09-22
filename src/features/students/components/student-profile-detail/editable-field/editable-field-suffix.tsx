@@ -39,15 +39,9 @@ export const EditableFieldSuffix = ({
           </Button>
         </>
       ) : (
-        <Button
-          size="sq-xs"
-          type="button"
-          intent="plain"
-          onPress={onEdit}
-          className="shrink-0 hover:bg-secondary group-hover:flex hidden"
-        >
+        <div className="size-8 items-center justify-center shrink-0 group-hover:flex hidden pointer-events-none">
           <HugeiconsIcon icon={PencilEdit01Icon} size={16} />
-        </Button>
+        </div>
       )}
     </div>
   );

@@ -107,7 +107,6 @@ export function SessionsList({ hubId }: { hubId: number }) {
           <Button
             size="sq-sm"
             intent="outline"
-            isDisabled={viewOnlyMode}
             onPress={() => {
               setAllSessionsExpanded(!allSessionsExpanded);
             }}
