@@ -1,6 +1,6 @@
 "use server";
 
-import { asc, desc, eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
