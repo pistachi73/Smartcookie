@@ -132,11 +132,9 @@ export function InitSurveyFromHubSheet({
       }}
     >
       <Sheet.Content side="right" className="w-[480px] max-w-[96vw]">
-        <Sheet.Header className="border-b">
-          <Sheet.Title className="flex items-start gap-2">
-            Initialize Survey
-          </Sheet.Title>
-          <Sheet.Description className="text-pretty">
+        <Sheet.Header className="border-b pb-[var(--gutter)]">
+          <Sheet.Title>Initialize Survey</Sheet.Title>
+          <Sheet.Description>
             Select a survey template to create a new survey for this course.
           </Sheet.Description>
         </Sheet.Header>
@@ -148,12 +146,12 @@ export function InitSurveyFromHubSheet({
                 Available Templates ({data?.totalCount})
               </Heading>
               <SearchField
-                placeholder="Search survey templates by name or description..."
+                placeholder="Search survey templates..."
                 value={searchQuery}
                 onChange={setSearchQuery}
                 className={{
                   primitive: "w-full",
-                  input: "text-sm",
+                  input: "text-sm! placeholder:text-sm",
                 }}
               />
             </div>

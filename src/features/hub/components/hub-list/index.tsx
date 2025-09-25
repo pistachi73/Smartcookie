@@ -18,6 +18,7 @@ import { useCallback, useMemo, useState } from "react";
 import { Link } from "react-aria-components";
 
 import { Button, buttonStyles } from "@/shared/components/ui/button";
+import { EmptyState } from "@/shared/components/ui/empty-state";
 import { Menu } from "@/shared/components/ui/menu";
 import { SearchField } from "@/shared/components/ui/search-field";
 import { Tooltip } from "@/shared/components/ui/tooltip";
@@ -112,8 +113,8 @@ export function HubList() {
       <div className="flex flex-col @2xl:flex-row justify-between gap-4 items-start @2xl:items-center">
         <PageHeader
           icon={FolderLibraryIcon}
-          title="Hubs"
-          subTitle="Manage your hubs and content"
+          title="Courses"
+          subTitle="Manage your courses and content"
           className={{
             container: "p-0! border-none",
           }}
@@ -121,7 +122,7 @@ export function HubList() {
 
         <div className="flex gap-2 items-center justify-end w-full @2xl:w-auto">
           <SearchField
-            placeholder="Search hubs..."
+            placeholder="Search courses..."
             value={searchQuery}
             onChange={(value) => setSearchQuery(value)}
             className={{
@@ -135,7 +136,7 @@ export function HubList() {
               intent="outline"
               size="sm"
               className="px-0 size-10 @2xl:h-10 @2xl:w-auto @2xl:px-4 bg-overlay"
-              aria-label="Sort hubs"
+              aria-label="Sort courses"
             >
               <HugeiconsIcon icon={SortByUp02Icon} size={16} />
               <span className="hidden @2xl:block">Sort by</span>
@@ -175,41 +176,28 @@ export function HubList() {
             className="px-0 size-10 @2xl:h-10 @2xl:w-auto @2xl:px-4"
           >
             <HugeiconsIcon icon={FolderAddIcon} size={16} />
-            <span className="hidden @2xl:block">New hub</span>
+            <span className="hidden @2xl:block">New course</span>
           </NewHubButton>
         </div>
       </div>
 
       {filteredAndSortedHubs?.length === 0 ? (
-        <div className="flex flex-col items-center justify-center w-full p-6 mt-10">
-          <div className="mb-4 text-primary">
-            <HugeiconsIcon
-              icon={FolderSearchIcon}
-              altIcon={FolderSearchIcon}
-              showAlt={!!searchQuery}
-              size={48}
-            />
-          </div>
-          <Heading level={2}>
-            {searchQuery ? "No matching hubs found" : "No hubs yet"}
-          </Heading>
-          <p className="text-muted-fg text-base text-center max-w-xs mb-4">
-            {searchQuery
-              ? "Try adjusting your search query or create a new hub."
-              : "Create your first hub to start organizing your content."}
-          </p>
-          <Link
-            className={cn(
-              buttonStyles({
-                intent: "primary",
-                size: "sm",
-              }),
-            )}
-            href="/portal/hubs/new"
-          >
-            {searchQuery ? "Create New Hub" : "Create Your First Hub"}
-          </Link>
-        </div>
+        <EmptyState
+          title={searchQuery ? "No matching courses found" : "No courses yet"}
+          description={
+            searchQuery
+              ? "Try rewriting your search or creating a new course."
+              : "Create your first course to start organizing your content."
+          }
+          icon={FolderSearchIcon}
+          className="bg-white"
+          action={
+            <NewHubButton size="sm" intent="primary">
+              <HugeiconsIcon icon={FolderAddIcon} size={16} />
+              <span className="hidden @2xl:block">New course</span>
+            </NewHubButton>
+          }
+        />
       ) : (
         <div className="space-y-8">
           {/* Active Hubs Section */}
@@ -233,7 +221,7 @@ export function HubList() {
                 <div className="space-y-1">
                   <div className="flex items-center gap-1.5">
                     <Heading level={2}>
-                      Archived Hubs ({archivedHubs.length})
+                      Archived Courses ({archivedHubs.length})
                     </Heading>
                     <Tooltip delay={0} closeDelay={0}>
                       <Tooltip.Trigger>
@@ -246,12 +234,13 @@ export function HubList() {
                       <Tooltip.Content>
                         <div className="max-w-xs">
                           <p className="font-medium mb-1">
-                            Why are hubs archived?
+                            Why are courses archived?
                           </p>
                           <p className="text-sm">
-                            Hubs are automatically archived when you exceed your
-                            plan's hub limit. Free and Basic plans allow up to 2
-                            active hubs. Upgrade to Premium for unlimited hubs.
+                            Courses are automatically archived when you exceed
+                            your plan's hub limit. Free and Basic plans allow up
+                            to 2 active hubs. Upgrade to Premium for unlimited
+                            hubs.
                           </p>
                         </div>
                       </Tooltip.Content>
@@ -259,8 +248,8 @@ export function HubList() {
                   </div>
 
                   <p className="text-sm text-muted-fg @2xl:text-balance">
-                    These hubs are in read-only mode. You can view content but
-                    cannot make changes.
+                    These courses are in read-only mode. You can view content
+                    but cannot make changes.
                   </p>
                 </div>
 

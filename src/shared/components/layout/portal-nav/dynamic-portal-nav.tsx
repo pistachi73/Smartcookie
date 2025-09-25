@@ -7,7 +7,7 @@ import { PortalNav } from "./portal-nav";
 
 export function DynamicPortalNav({
   className,
-  showSearchField = true,
+  showSearchField = false,
 }: {
   className?: string;
   showSearchField?: boolean;

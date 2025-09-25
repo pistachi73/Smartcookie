@@ -47,12 +47,8 @@ export function WeeklyHoursCard() {
 
   return (
     <Card className="@container">
-      <Card.Header>
+      <Card.Header className="flex flex-row items-center justify-between">
         <Card.Title>Weekly teaching hours</Card.Title>
-        <Card.Description className="hidden @2xl:block">
-          View your weekly teaching hours and how they are distributed across
-          different hubs.
-        </Card.Description>
         <Card.Action>
           <LazyDatePicker
             onChange={(value) => value && setDate(value as CalendarDate)}
@@ -85,7 +81,7 @@ export function WeeklyHoursCard() {
               {Object.entries(chartData!.chartConfig).length > 0 && (
                 <Tooltip delay={0} closeDelay={0}>
                   <Tooltip.Trigger className="text-sm text-muted-fg hover:text-fg transition-colors">
-                    View hubs
+                    View courses
                   </Tooltip.Trigger>
                   <Tooltip.Content
                     className="flex flex-col gap-2"

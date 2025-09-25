@@ -58,6 +58,7 @@
     "next": "15.5.0",
     "next-auth": "5.0.0-beta.29",
     "next-intl": "^4.3.7",
+    "open-graph-scraper": "^6.10.0",
     "react": "19.1.0",
     "react-aria": "^3.42.0",
     "react-aria-components": "^1.11.0",

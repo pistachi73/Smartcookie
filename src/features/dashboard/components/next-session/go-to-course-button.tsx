@@ -15,7 +15,7 @@ export const GoToCourseLink = ({ hubId }: { hubId?: number }) => {
         size: "sm",
       })}
     >
-      <span className="hidden @2xl:block">Go to course</span>
+      <span className="hidden @2xl:block">View course</span>
       <HugeiconsIcon icon={LinkSquare02Icon} data-slot="icon" size={14} />
     </Link>
   );

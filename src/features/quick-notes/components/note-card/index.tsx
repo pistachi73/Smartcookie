@@ -1,7 +1,6 @@
 "use client";
 
-import { memo, useState } from "react";
-import { TextArea } from "react-aria-components";
+import { useState } from "react";
 
 import { cn } from "@/shared/lib/classes";
 import { getCustomColorClasses } from "@/shared/lib/custom-colors";
@@ -12,7 +11,10 @@ import { useUpdateQuickNote } from "../../hooks/use-update-quick-note";
 import type { NoteSummary } from "../../types/quick-notes.types";
 import "./note-card.css";
 
+import { TextArea } from "react-aria-components";
+
 import { DeleteProgressButton } from "@/shared/components/ui/delete-progress-button";
+import { PreviewLinks } from "@/shared/components/ui/preview-links";
 import { useNotesLimits } from "@/shared/hooks/plan-limits/use-notes-limits";
 
 interface NoteCardProps {
@@ -21,7 +23,7 @@ interface NoteCardProps {
   isViewOnlyMode?: boolean;
 }
 
-const NoteCardComponent = ({
+export const NoteCard = ({
   note,
   hubColor,
   isViewOnlyMode = false,
@@ -29,7 +31,7 @@ const NoteCardComponent = ({
   const { maxCharacters } = useNotesLimits();
   const [isEditingNote, setIsEditingNote] = useState(false);
 
-  const { content, isUnsaved, isSaving, handleContentChange } =
+  const { content, isUnsaved, isSaving, handleContentChange, urls } =
     useUpdateQuickNote({
       noteId: note.id,
       initialContent: note.content,
@@ -61,7 +63,7 @@ const NoteCardComponent = ({
     <div
       data-hub-id={note.hubId}
       className={cn(
-        "bg-white group flex flex-col shadow-xs rounded-lg border-1 border-border relative transition duration-250",
+        "relative bg-white group flex flex-col shadow-xs rounded-lg border-1 border-border transition duration-250",
         "note-card focus-within:opacity-100! hover:shadow-sm",
         `hover:${colorClasses.border}`,
         isEditingNote && `${colorClasses.border}`,
@@ -91,35 +93,35 @@ const NoteCardComponent = ({
         placeholder="Write something..."
         className={cn(
           "placeholder:text-muted-fg/40 field-sizing-content resize-none text-sm",
-          "p-3 pr-8 pb-9",
+          "p-3 pr-8 pb-3",
         )}
-        onChange={(e) => handleContentChange(e.target.value)}
+        onChange={(e) => {
+          handleContentChange(e.target.value);
+        }}
         maxLength={maxCharacters}
         readOnly={isViewOnlyMode}
       />
-      <div className="absolute bottom-1 left-3  min-h-7">
-        {isSaving && (
-          <span className="text-xs text-muted-fg/50">Saving...</span>
-        )}
-        {!isSaving && isUnsaved && (
-          <span className="text-xs text-muted-fg/50">Unsaved</span>
-        )}
-      </div>
-      <div className="absolute bottom-1 right-3  min-h-7">
+
+      <div className="px-3 pb-1 flex items-center justify-between h-8">
+        <div className="">
+          {isSaving && (
+            <span className="text-xs text-muted-fg/50">Saving...</span>
+          )}
+          {!isSaving && isUnsaved && (
+            <span className="text-xs text-muted-fg/50">Unsaved</span>
+          )}
+        </div>
+
         <span className="text-xs text-muted-fg/50">
           {content.length}/{maxCharacters}
         </span>
       </div>
+
+      <PreviewLinks
+        urls={urls}
+        isViewOnlyMode={isViewOnlyMode}
+        className="px-3 pb-3 space-y-2"
+      />
     </div>
   );
 };
-
-// Memoize the component to prevent unnecessary re-renders
-export const NoteCard = memo(NoteCardComponent, (prevProps, nextProps) => {
-  // Return true if the component should NOT re-render
-  return (
-    prevProps.note.id === nextProps.note.id &&
-    prevProps.note.content === nextProps.note.content &&
-    prevProps.hubColor === nextProps.hubColor
-  );
-});

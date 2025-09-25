@@ -1,6 +1,8 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import type { Metadata } from "next";
 import { cookies } from "next/headers";
 
+import { generatePortalMetadata } from "@/shared/lib/generate-metadata";
 import { getQueryClient } from "@/shared/lib/get-query-client";
 
 import { QuickNotes } from "@/features/quick-notes/components/quick-notes";
@@ -11,9 +13,8 @@ import {
 import { VISIBLE_HUBS_COOKIE_NAME } from "@/features/quick-notes/store/quick-notes-store";
 import { QuickNotesStoreProvider } from "@/features/quick-notes/store/quick-notes-store-provider";
 
-export const metadata = {
-  title: "Quick Notes | Private Tutoring Manager",
-  description: "Manage your quick notes for courses and general information",
+export const generateMetadata = async (): Promise<Metadata> => {
+  return generatePortalMetadata({ namespace: "Metadata.QuickNotes" });
 };
 
 export default async function QuickNotesPage({
@@ -39,10 +40,7 @@ export default async function QuickNotesPage({
 
   const allVisibleHubs = Array.from(vHubs);
 
-  void queryClient.prefetchQuery({
-    ...quickNotesHubsQueryOptions,
-    staleTime: 1000 * 60 * 60 * 24,
-  });
+  void queryClient.prefetchQuery(quickNotesHubsQueryOptions);
 
   if (allVisibleHubs) {
     for (const visibleHubId of allVisibleHubs) {

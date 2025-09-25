@@ -8,6 +8,7 @@ import { Temporal } from "temporal-polyfill";
 import { buttonStyles } from "@/shared/components/ui/button";
 import { Card } from "@/shared/components/ui/card";
 import { Link } from "@/shared/components/ui/link";
+import { Tooltip } from "@/shared/components/ui/tooltip";
 import { AgendaSessionCardSkeleton } from "@/shared/components/sessions/agenda-session-card-skeleton";
 
 import { DaySessions } from "@/features/calendar/components/upcoming-sessions";
@@ -34,20 +35,21 @@ export const AgendaCard = () => {
 
   return (
     <Card className="min-h-full overflow-auto @4xl:h-0 w-full">
-      <Card.Header>
-        <Card.Title>Schedule</Card.Title>
-        <Card.Description>Showing events for the next 7 days</Card.Description>
-        <Card.Action>
+      <Card.Header className="flex flex-row items-center justify-between">
+        <Card.Title>Agenda</Card.Title>
+
+        <Tooltip delay={200} closeDelay={0}>
           <Link
             href="/portal/calendar"
             className={buttonStyles({
               intent: "outline",
-              size: "sq-sm",
+              size: "sq-xs",
             })}
           >
-            <HugeiconsIcon icon={LinkSquare02Icon} data-slot="icon" />
+            <HugeiconsIcon icon={LinkSquare02Icon} size={14} />
           </Link>
-        </Card.Action>
+          <Tooltip.Content intent="inverse">View calendar</Tooltip.Content>
+        </Tooltip>
       </Card.Header>
       <Card.Content className="space-y-4">
         <AgendaWeekPicker date={date} setDate={setDate} />

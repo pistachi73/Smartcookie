@@ -14,13 +14,13 @@ export const HubNotFound = () => {
   return (
     <HubDashboardLayout
       hub={{
-        name: "Hub not found",
+        name: "Course not found",
       }}
     >
       <div className="sm:p-6 p-4 pt-0!">
         <EmptyState
-          title="Hub not found"
-          description="The hub you are looking for does not exist."
+          title="Course not found"
+          description="The course you are looking for does not exist."
           className="bg-white"
           icon={Folder01Icon}
           action={

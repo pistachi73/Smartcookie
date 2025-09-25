@@ -9,7 +9,7 @@ export const SubscriptionLoading = () => {
   return (
     <SubscriptionLayout>
       <LoadingTabs
-        aria-label="Hub Dashboard"
+        aria-label="Subscription"
         className="flex-1 gap-4 sm:gap-6 h-full"
       >
         <LoadingTabs.List

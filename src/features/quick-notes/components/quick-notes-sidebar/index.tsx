@@ -1,6 +1,6 @@
 "use client";
 
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
@@ -74,7 +74,7 @@ export const QuickNotesSidebar = ({
 };
 
 const QuickNotesSidebarFilter = ({ searchQuery }: { searchQuery: string }) => {
-  const { data: hubs } = useSuspenseQuery(quickNotesHubsQueryOptions);
+  const { data: hubs } = useQuery(quickNotesHubsQueryOptions);
 
   const { visibleHubs, toggleHub, toggleAllHubsVisibility } =
     useQuickNotesStore(

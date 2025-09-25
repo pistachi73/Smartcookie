@@ -80,7 +80,7 @@ export function HubDashboard({ hubId }: { hubId: number }) {
       <div className="flex-1 flex flex-col lg:flex-row p-0 sm:p-6 sm:pt-0 gap-6">
         <div className="bg-white sm:rounded-lg border flex-1">
           <Tabs
-            aria-label="Hub Dashboard"
+            aria-label="Course Dashboard"
             selectedKey={selectedTab}
             onSelectionChange={(key) => setSelectedTab(key as Tab)}
             className="flex-1 gap-4 sm:gap-6 h-full"

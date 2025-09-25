@@ -29,7 +29,7 @@ export const DaySessions = ({ date }: DayEventsProps) => {
   const isTomorrow = date.equals(tomorrow);
 
   const getDateLabel = () => {
-    const formattedDate = format(new Date(date.toString()), "EEEE, MMMM dd");
+    const formattedDate = format(new Date(date.toString()), "EEEE, MMMM do");
     if (isToday) return `Today · ${formattedDate}`;
     if (isTomorrow) return `Tomorrow · ${formattedDate}`;
     return formattedDate;
@@ -67,7 +67,7 @@ export const DaySessions = ({ date }: DayEventsProps) => {
             </Popover>
           ))
         ) : (
-          <p className="text-sm px-2">No programed sessions</p>
+          <p className="text-sm px-2">No sessions scheduled</p>
         )}
       </div>
     </div>
@@ -86,11 +86,8 @@ export const UpcomingSessions = () => {
     <div className="flex flex-col gap-4 relative items-stretch w-full min-w-0">
       <div className="flex flex-col gap-0.5 min-w-0">
         <Heading level={4} className="font-semibold truncate">
-          Upcoming Events
+          Upcoming Sessions
         </Heading>
-        <p className="text-xs text-muted-fg truncate">
-          Showing events for the next 7 days
-        </p>
       </div>
 
       <div className="space-y-4 w-full min-w-0">

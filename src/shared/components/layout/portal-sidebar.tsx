@@ -132,7 +132,7 @@ const navigation = [
     iconActive: Calendar01IconSolid,
   },
   {
-    label: "Hubs",
+    label: "Courses",
     href: "/portal/hubs",
     icon: FolderLibraryIcon,
     iconActive: FolderLibraryIconSolid,

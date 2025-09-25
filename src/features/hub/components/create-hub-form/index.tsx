@@ -57,11 +57,11 @@ export function CreateHubForm() {
               tracking="tight"
               className="sm:text-2xl font-bold"
             >
-              Create New Hub
+              Create New Course
             </Heading>
             <p className="text-base text-muted-fg leading-relaxed max-w-[34ch]">
-              Create your hub with basic information. You can add students and
-              sessions later.
+              Create your course with basic information. You can add students
+              and sessions later.
             </p>
           </div>
 
@@ -76,10 +76,10 @@ export function CreateHubForm() {
               </div>
               <div className="flex flex-col gap-0.5">
                 <Card.Title className="text-xl font-semibold">
-                  Hub Information
+                  Course Information
                 </Card.Title>
                 <Card.Description>
-                  Let's start with the basic information about your hub.
+                  Let's start with the basic information about your course.
                 </Card.Description>
               </div>
             </Card.Header>
@@ -104,7 +104,7 @@ export function CreateHubForm() {
                           <CustomColorPicker
                             selectedKey={value}
                             onSelectionChange={onChange}
-                            aria-label="Hub color picker"
+                            aria-label="Course color picker"
                           />
                         </div>
                       )}
@@ -114,7 +114,7 @@ export function CreateHubForm() {
                       control={control}
                       render={({ field, fieldState }) => (
                         <TextField
-                          placeholder="My Hub"
+                          placeholder="My Course"
                           isRequired
                           isInvalid={fieldState.invalid}
                           errorMessage={fieldState.error?.message}
@@ -173,9 +173,9 @@ export function CreateHubForm() {
                   render={({ field, fieldState }) => (
                     <Textarea
                       label="Description"
-                      placeholder="This hub is for..."
+                      placeholder="This course is for..."
                       errorMessage={fieldState.error?.message}
-                      description="Briefly describe what this hub is about"
+                      description="Briefly describe what this course is about"
                       {...field}
                     />
                   )}
@@ -224,7 +224,7 @@ export function CreateHubForm() {
                   )}
                 >
                   <Button type="submit" className="px-6" isDisabled={isPending}>
-                    {isPending ? "Creating Hub..." : "Create Hub"}
+                    {isPending ? "Creating Course..." : "Create Course"}
                     <HugeiconsIcon
                       icon={ArrowRight02Icon}
                       size={16}

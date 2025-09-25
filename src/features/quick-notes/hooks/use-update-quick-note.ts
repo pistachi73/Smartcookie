@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { useLimitToaster } from "@/shared/hooks/plan-limits/use-limit-toaster";
 import { useNotesLimits } from "@/shared/hooks/plan-limits/use-notes-limits";
 import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
+import { extractUrls } from "@/shared/lib/url-utils";
 
 import { isDataAccessError } from "@/data-access/errors";
 import { updateQuickNote } from "@/data-access/quick-notes/mutations";
@@ -33,6 +34,7 @@ export const useUpdateQuickNote = ({
 }: UseUpdateQuickNoteProps) => {
   const [content, setContent] = useState(initialContent);
   const [isUnsaved, setIsUnsaved] = useState(false);
+  const [urls, setUrls] = useState<string[]>(extractUrls(initialContent));
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const retryIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const pendingSaveRef = useRef<PendingSave | null>(null);
@@ -160,6 +162,10 @@ export const useUpdateQuickNote = ({
     }
 
     saveTimeoutRef.current = setTimeout(() => {
+      // Extract URLs from the content as part of the debounced save
+      const extractedUrls = extractUrls(newContent);
+      setUrls(extractedUrls);
+
       if (noteId < 0) {
         startRetryPolling({
           content: newContent,
@@ -178,7 +184,7 @@ export const useUpdateQuickNote = ({
           updatedAt: newUpdatedAt,
         });
       }
-    }, 800);
+    }, 1000);
   };
 
   const handleContentChange = (newContent: string) => {
@@ -203,6 +209,7 @@ export const useUpdateQuickNote = ({
     content,
     isUnsaved,
     isSaving,
+    urls,
     handleContentChange,
   };
 };

@@ -12,7 +12,6 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence } from "motion/react";
 import * as m from "motion/react-m";
-import dynamic from "next/dynamic";
 import { useState } from "react";
 import { Button as RAButton } from "react-aria-components";
 import { toast } from "sonner";
@@ -26,8 +25,8 @@ import { Textarea } from "@/ui/textarea";
 import { cn } from "@/shared/lib/classes";
 import { getCustomColorClasses } from "@/shared/lib/custom-colors";
 
-import { useAddQuickNote } from "../hooks/use-add-quick-note";
-import { quickNotesHubsQueryOptions } from "../lib/quick-notes-query-options";
+import { useAddQuickNote } from "../../hooks/use-add-quick-note";
+import { quickNotesHubsQueryOptions } from "../../lib/quick-notes-query-options";
 
 type NoteFormState = {
   content: string;
@@ -38,7 +37,7 @@ const hubButtonStyles = tv({
   base: "p-2 ring-offset-overlay relative group cursor-pointer rounded-lg transition-colors justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
 });
 
-const QuickNotesMenuComponent = () => {
+export const QuickNotesMenu = () => {
   const [isAddingNote, setIsAddingNote] = useState(false);
   const [selectedHub, setSelectedHub] = useState<number | null>(null);
   const [noteForm, setNoteForm] = useState<NoteFormState>({
@@ -119,7 +118,7 @@ const QuickNotesMenuComponent = () => {
       <Button
         intent="secondary"
         size="sq-sm"
-        className="flex items-center gap-2 fixed bottom-4 right-4"
+        className="flex items-center gap-2 fixed bottom-4 left-4"
       >
         <HugeiconsIcon icon={NoteAddIcon} className="size-5" data-slot="icon" />
       </Button>
@@ -148,7 +147,7 @@ const QuickNotesMenuComponent = () => {
               <Popover.Header>
                 <Popover.Title className="flex items-center gap-2">
                   <Button
-                    aria-label="Back to hub selection"
+                    aria-label="Back to course selection"
                     intent="plain"
                     onPress={resetMenu}
                     className={"size-6"}

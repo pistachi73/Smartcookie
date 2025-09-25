@@ -12,7 +12,7 @@ export const HubLoading = () => {
       <div className="flex-1 flex flex-col lg:flex-row p-0 sm:p-6 sm:pt-0 gap-6 h-full">
         <div className="bg-white sm:rounded-lg border flex-1">
           <LoadingTabs
-            aria-label="Hub Dashboard"
+            aria-label="Course Dashboard"
             className="flex-1 gap-4 sm:gap-6 h-full"
           >
             <LoadingTabs.List className={"px-4 sm:px-6 h-10 "}>

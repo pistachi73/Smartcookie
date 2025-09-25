@@ -73,7 +73,7 @@ export const breadcrumbConfig: RouteBreadcrumbConfig = {
   "/portal/hubs": [
     { label: "Portal", href: "/portal/dashboard" },
     {
-      label: "Hubs",
+      label: "Courses",
       href: "/portal/hubs",
       icon: FolderLibraryIcon,
       iconSolid: FolderLibraryIconSolid,
@@ -133,7 +133,7 @@ function getIdSegmentLabel(segment: string, pathContext: string[]): string {
       pathContext.length >= 2 ? pathContext[pathContext.length - 2] : undefined;
     switch (parentSegment) {
       case "hubs":
-        return "Hub Details";
+        return "Course Details";
       case "students":
         return "Student Profile";
       case "questions":
