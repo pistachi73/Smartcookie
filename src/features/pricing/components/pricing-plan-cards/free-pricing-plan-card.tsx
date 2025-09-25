@@ -29,7 +29,7 @@ export const FreePricingPlanCard = () => {
           <HugeiconsIcon
             icon={ArrowRight02Icon}
             size={20}
-            className="shrink-0 group-hover:translate-x-1 transition-transform"
+            className="shrink-0 -translate-x-1 group-hover:translate-x-0  transition-transform"
             data-slot="icon"
           />
         </Button>

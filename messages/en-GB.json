@@ -151,5 +151,47 @@
   "Manifest": {
     "name": "SmartCookie",
     "shortName": "SmartCookie"
+  },
+  "Metadata": {
+    "Landing": {
+      "title": "SmartCookie - Teacher organization app",
+      "description": "SmartCookie is the all-in-one app for language teachers to manage calendars, track lesson progress, and motivate students with actionable feedback."
+    },
+    "Dashboard": {
+      "title": "Dashboard {name} - SmartCookie",
+      "description": "Get a complete overview of your teaching activity: track hours, monitor student progress, and see recent updates in one central dashboard."
+    },
+    "Calendar": {
+      "title": "Calendar {name} - SmartCookie",
+      "description": "Plan, edit, and manage all your lessons with SmartCookie’s intuitive teacher calendar designed for recurring sessions and daily schedules."
+    },
+    "QuickNotes": {
+      "title": "Quick Notes {name} - SmartCookie",
+      "description": "Capture teaching insights instantly. Write, view, and organize notes connected to courses with Quick Notes."
+    },
+    "Feedback": {
+      "title": "Feedback {name} - SmartCookie",
+      "description": "Give students actionable feedback to boost motivation and learning. Keep a clear record of all feedback shared within SmartCookie."
+    },
+    "Courses": {
+      "title": "Courses {name} - SmartCookie",
+      "description": "Organize courses by sessions, students, and progress. Create, edit, or manage entire lesson series with SmartCookie’s Courses view."
+    },
+    "Students": {
+      "title": "Students {name} - SmartCookie",
+      "description": "Manage students info and track their progress in all lessons and courses."
+    },
+    "Subscription": {
+      "title": "Billing & Subscription {name} - SmartCookie",
+      "description": "Manage your SmartCookie subscription, billing details, and payment history."
+    },
+    "Account": {
+      "title": "Account Settings {name} - SmartCookie",
+      "description": "Update your personal information, email, password, and preferences to customize your SmartCookie experience."
+    },
+    "Survey": {
+      "title": "Survey - SmartCookie",
+      "description": "Complete the survey and share your feedback."
+    }
   }
 }

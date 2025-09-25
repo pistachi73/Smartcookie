@@ -192,11 +192,11 @@ export function InitSurveyFromFeedbackSheet({
 
               {filteredHubs.length === 0 ? (
                 <p className="text-muted-fg text-sm w-full text-center py-6">
-                  No hubs found matching "{deferredSearchQuery}"
+                  No courses found matching "{deferredSearchQuery}"
                 </p>
               ) : (
                 <RadioToggleGroup
-                  aria-label="Select hub"
+                  aria-label="Select course"
                   value={selectedHubId}
                   onChange={setSelectedHubId}
                   orientation="vertical"

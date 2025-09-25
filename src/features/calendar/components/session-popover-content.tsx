@@ -120,7 +120,7 @@ export const SessionPopover = ({
               </div>
 
               <div className="space-y-0.5">
-                <p>{format(session.startTime, "EEEE, dd MMMM yyyy")}</p>
+                <p>{format(session.startTime, "EEEE, MMM do")}</p>
                 <div className="text-sm flex items-center gap-1.5">
                   <p className=" text-text-sub">
                     {format(session.startTime, "HH:mm")}
@@ -144,9 +144,7 @@ export const SessionPopover = ({
                 <HugeiconsIcon icon={UserGroupIcon} size={16} />
               </div>
               <div className="space-y-2 w-full">
-                <p className="text-sm">
-                  Participants ({session.students.length})
-                </p>
+                <p className="text-sm">Students ({session.students.length})</p>
                 <div className="flex flex-row items-center not-last:-ml-4">
                   <AvatarStack
                     keyPrefix={`session${session.id}-popover`}

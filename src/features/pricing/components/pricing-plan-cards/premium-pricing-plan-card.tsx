@@ -70,7 +70,7 @@ export const PremiumPricingPlanCard = ({
           ) : (
             <HugeiconsIcon
               icon={ArrowRight02Icon}
-              className="shrink-0 group-hover:translate-x-1 transition-transform"
+              className="shrink-0 -translate-x-1 group-hover:translate-x-0 transition-transform"
               data-slot="icon"
             />
           )}

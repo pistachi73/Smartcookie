@@ -418,7 +418,7 @@ export const getWeeklyHours = withProtectedDataAccess({
 
     const formattedData: DayHours[] = Object.entries(sessionsByDay).map(
       ([day, hubs]) => ({
-        day: format(day, "MMM d"),
+        day: format(day, "dd/MM"),
         ...hubs,
       }),
     );

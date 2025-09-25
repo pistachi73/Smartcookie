@@ -34,13 +34,14 @@ export const NewHubButton = ({
     onPress?.(e);
   };
   const getAriaLabel = () => {
-    if (isLoading) return "Loading hub limits";
-    if (isAtLimit) return `Hub limit reached. ${current} of ${max} hubs used`;
-    return `Create new hub${!isUnlimited ? `. ${remaining} remaining` : ""}`;
+    if (isLoading) return "Loading course limits";
+    if (isAtLimit)
+      return `Course limit reached. ${current} of ${max} courses used`;
+    return `Create new course${!isUnlimited ? `. ${remaining} remaining` : ""}`;
   };
 
   const tooltipContent = isAtLimit
-    ? `Limit reached: ${current} of ${max} hubs used`
+    ? `Limit reached: ${current} of ${max} courses used`
     : null;
   const shouldShowTooltip = tooltipContent !== null;
 

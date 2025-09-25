@@ -18,8 +18,8 @@ const intlMiddleware = createI18nMiddleware(routing);
 const authMiddleware = auth((req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
-  const isApiAuthRoute = nextUrl.pathname.startsWith(API_AUTH_PREFIX);
-  const isPortalRoute = nextUrl.pathname.startsWith(PORTAL_ROUTES_PREFIX);
+  const isApiAuthRoute = nextUrl.pathname.includes(API_AUTH_PREFIX);
+  const isPortalRoute = nextUrl.pathname.includes(PORTAL_ROUTES_PREFIX);
   const isAuthRoute = AUTH_ROUTES.includes(nextUrl.pathname);
 
   if (isApiAuthRoute) {
@@ -33,6 +33,7 @@ const authMiddleware = auth((req) => {
     return NextResponse.next();
   }
 
+  console.log({ isLoggedIn, isPortalRoute });
   if (!isLoggedIn && isPortalRoute) {
     let callbackUrl = nextUrl.pathname;
     if (nextUrl.search) {

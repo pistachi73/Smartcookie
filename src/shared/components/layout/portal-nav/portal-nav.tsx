@@ -2,13 +2,13 @@
 
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Diamond02Icon, Search01Icon } from "@hugeicons-pro/core-solid-rounded";
-import { Notification01Icon } from "@hugeicons-pro/core-stroke-rounded";
 
 import { Breadcrumbs } from "@/shared/components/ui/breadcrumbs";
 import { useCurrentUser } from "@/shared/hooks/use-current-user";
 import { cn } from "@/shared/lib/classes";
 
 import { UserButton } from "@/features/auth/components/user-button";
+import { BasicSubscriptionCard } from "../../../../features/account/components/subscription/subscription-cards/basic-subscription-card";
 import { ExplorePremiumModal } from "../../explore-premium-modal";
 import { Button } from "../../ui/button";
 import { FieldGroup, Input } from "../../ui/field";
@@ -98,13 +98,14 @@ export const PortalNav = ({
               </FieldGroup>
             </div>
           )}
-          <Button
+
+          {/* <Button
             intent="outline"
             size="sq-md"
             className="size-9 sm:size-10 bg-white"
           >
             <HugeiconsIcon icon={Notification01Icon} size={16} />
-          </Button>
+          </Button> */}
 
           {!user?.hasActiveSubscription && (
             <ExplorePremiumModal>

@@ -1,42 +1,39 @@
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from "@tanstack/react-query";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
+
+import { getQueryClient } from "@/shared/lib/get-query-client";
 
 import { Survey } from "@/features/surveys/components/survey";
-import { SurveyNotFound } from "@/features/surveys/components/survey-not-found";
 import { getSurveyByIdQueryOptions } from "@/features/surveys/lib/survey-query-options";
-import { SurveyStoreProvider } from "@/features/surveys/store/survey-store-provider";
 
-type SurveyPageProps = {
-  params: Promise<{
-    surveyId: string;
-  }>;
+export const generateMetadata = async (): Promise<Metadata> => {
+  const t = (await getTranslations({
+    namespace: "Metadata.Survey",
+    locale: "en-GB",
+  })) as any;
+
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
 };
 
-const SurveyPage = async ({ params }: SurveyPageProps) => {
-  const queryClient = new QueryClient();
+const SurveyPage = async ({
+  params,
+}: PageProps<"/[locale]/survey/[surveyId]">) => {
+  const queryClient = getQueryClient();
 
   const { surveyId } = await params;
 
-  const survey = await queryClient.fetchQuery(
-    getSurveyByIdQueryOptions(surveyId),
-  );
+  void queryClient.prefetchQuery(getSurveyByIdQueryOptions(surveyId));
 
-  if (!survey) {
-    return <SurveyNotFound />;
-  }
+  const dehydratedState = dehydrate(queryClient);
 
   return (
-    <SurveyStoreProvider
-      surveyId={surveyId}
-      totalQuestions={survey.questions.length}
-    >
-      <HydrationBoundary state={dehydrate(queryClient)}>
-        <Survey surveyId={surveyId} />
-      </HydrationBoundary>
-    </SurveyStoreProvider>
+    <HydrationBoundary state={dehydratedState}>
+      <Survey surveyId={surveyId} />
+    </HydrationBoundary>
   );
 };
 

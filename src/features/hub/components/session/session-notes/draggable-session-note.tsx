@@ -6,6 +6,7 @@ import { useButton, useDrag } from "react-aria";
 import { TextArea } from "react-aria-components";
 
 import { DeleteProgressButton } from "@/shared/components/ui/delete-progress-button";
+import { PreviewLinks } from "@/shared/components/ui/preview-links";
 import { useUserPlanLimits } from "@/shared/hooks/plan-limits/use-user-plan-limits";
 import { cn } from "@/shared/lib/classes";
 
@@ -29,9 +30,9 @@ export const DraggableSessionNote = ({
     sessions: { maxCharactersPerNote },
   } = useUserPlanLimits();
   const { data: hub } = useQuery(getHubByIdQueryOptions(hubId));
-  const viewOnlyMode = hub?.status === "inactive";
+  const isViewOnlyMode = hub?.status === "inactive";
   const { mutate: handleDelete } = useDeleteSessionNote();
-  const { content, isSaving, handleContentChange } =
+  const { content, isSaving, handleContentChange, urls } =
     useUpdateSessionNoteContent({
       hubId,
       noteId: note.id,
@@ -49,7 +50,7 @@ export const DraggableSessionNote = ({
         },
       ];
     },
-    isDisabled: isSaving || viewOnlyMode,
+    isDisabled: isSaving || isViewOnlyMode,
   });
 
   const dragButtonRef = useRef(null);
@@ -66,7 +67,7 @@ export const DraggableSessionNote = ({
     <div
       {...dragProps}
       className={cn(
-        "group relative flex flex-row items-center gap-1",
+        "@container group relative flex flex-row items-center gap-1",
         "rounded-lg  transition-all duration-200 not-last:mb-1",
         "focus-visible:border-primary focus-visible:bg-primary/10",
         "border dark:border-transparent hover:border-fg/30",
@@ -79,7 +80,7 @@ export const DraggableSessionNote = ({
         ref={dragButtonRef}
         className={cn(
           "rounded-xs focus-visible:ring-2 p-0.5 pl-2 ring-primary text-muted-fg shrink-0 cursor-grab",
-          viewOnlyMode && "opacity-50 cursor-auto",
+          isViewOnlyMode && "opacity-50 cursor-auto",
         )}
       >
         <HugeiconsIcon
@@ -89,17 +90,25 @@ export const DraggableSessionNote = ({
         />
       </span>
 
-      <TextArea
-        value={content}
-        placeholder="Write something..."
-        className={cn(
-          "w-full py-3 pr-4 placeholder:text-muted-fg/40 field-sizing-content resize-none text-sm",
-          "pr-8",
-        )}
-        onChange={(e) => handleContentChange(e.target.value, note.position)}
-        maxLength={maxCharactersPerNote}
-        readOnly={viewOnlyMode}
-      />
+      <div className="flex flex-col w-full">
+        <TextArea
+          value={content}
+          placeholder="Write something..."
+          className={cn(
+            "w-full py-3 pr-4 placeholder:text-muted-fg/40 field-sizing-content resize-none text-sm",
+            "pr-8",
+          )}
+          onChange={(e) => handleContentChange(e.target.value, note.position)}
+          maxLength={maxCharactersPerNote}
+          readOnly={isViewOnlyMode}
+        />
+
+        <PreviewLinks
+          urls={urls}
+          isViewOnlyMode={isViewOnlyMode}
+          className="pb-3  w-full grid @sm:grid-cols-2 grid-cols-1 gap-1 pr-3"
+        />
+      </div>
 
       <DeleteProgressButton
         pressDuration={400}

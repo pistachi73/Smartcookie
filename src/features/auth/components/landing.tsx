@@ -105,12 +105,12 @@ export const Landing = () => {
         </Button>
       </Form>
 
-      <span className="my-6 block w-full text-center text-xs font-medium text-muted-foreground">
+      {/* <span className="my-6 block w-full text-center text-xs font-medium text-muted-foreground">
         OR
       </span>
       <div className="space-y-3">
         <SocialButton provider="google" />
-      </div>
+      </div> */}
     </FormWrapper>
   );
 };

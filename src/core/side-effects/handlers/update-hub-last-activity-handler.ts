@@ -7,7 +7,6 @@ import type { SideEffectPayloadMap } from "../side-effects-types";
 export async function handleUpdateHubLastActivity(
   payload: SideEffectPayloadMap["updateHubLastActivity"],
 ) {
-  console.log("Updating lastActivity for hub", payload.hubId);
   await db
     .update(hub)
     .set({ lastActivityAt: new Date().toISOString() })

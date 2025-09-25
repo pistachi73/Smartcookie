@@ -1,10 +1,11 @@
 import "@/styles/globals.css";
 import "@/styles/scrollbar.css";
 
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SessionProvider } from "next-auth/react";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { LocalizedStringProvider } from "react-aria-components/i18n";
 
 import { Toast } from "@/ui/toast";
@@ -19,41 +20,50 @@ import { routing } from "@/i18n/routing";
 import { sans } from "./fonts";
 
 // app/layout.tsx
-export const metadata = {
-  title: "SmartCookie – A Second Brain for Teachers",
-  description:
-    "SmartCookie is the all-in-one app that acts as a second brain for language teachers, helping them organize their calendars, track lesson progress, and boost student motivation through actionable feedback.",
-  keywords: [
-    "language teacher app",
-    "teaching organization",
-    "lesson tracking",
-    "student motivation",
-    "second brain for teachers",
-  ],
-  authors: [{ name: "SmartCookie Team" }],
-  creator: "SmartCookie",
-  publisher: "SmartCookie",
-  metadataBase: new URL("https://smartcookieapp.com"),
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+
+export const generateMetadata = async (): Promise<Metadata> => {
+  const locale = await getLocale();
+
+  const t = await getTranslations({
+    namespace: "Manifest",
+    locale,
+  });
+
+  return {
+    title: "SmartCookie – A Second Brain for Teachers",
+    description:
+      "SmartCookie is the all-in-one app that acts as a second brain for language teachers, helping them organize their calendars, track lesson progress, and boost student motivation through actionable feedback.",
+    keywords: [
+      "language teacher app",
+      "teaching organization",
+      "lesson tracking",
+      "student motivation",
+      "second brain for teachers",
+    ],
+    authors: [{ name: "Martina Monreal" }, { name: "Óscar Pulido" }],
+    creator: "SmartCookie",
+    publisher: "SmartCookie",
+    metadataBase: new URL("https://smartcookieapp.com"),
+    robots: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
     },
-  },
-  icons: {
-    icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
-    ],
-    apple: "/apple-touch-icon.png",
-  },
-  manifest: "/site.webmanifest",
+    icons: {
+      icon: [
+        { url: "/favicon.svg", type: "image/svg+xml" },
+        { url: "/favicon.ico", sizes: "any" },
+        { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+      ],
+      apple: "/apple-touch-icon.png",
+    },
+  };
 };
 
 export default async function RootLayout({

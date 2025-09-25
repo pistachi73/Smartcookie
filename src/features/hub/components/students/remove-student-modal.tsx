@@ -63,9 +63,9 @@ export const RemoveStudentModal = ({
             <strong>Data Preservation</strong>
             <p className="mt-1">
               Survey responses will be archived and preserved for historical
-              data analysis. These responses will no longer appear in this hub's
-              feedback reports but will remain accessible in general feedback
-              analytics.
+              data analysis. These responses will no longer appear in this
+              course's feedback reports but will remain accessible in general
+              feedback analytics.
             </p>
           </Note>
         </div>

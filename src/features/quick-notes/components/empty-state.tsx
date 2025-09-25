@@ -14,7 +14,7 @@ export const QuickNotesEmptyState = () => {
       <EmptyState
         icon={NoteAddIcon}
         title="No notes to display"
-        description="Select a hub from the sidebar to view your notes or create new ones."
+        description="Select a course from the sidebar to view your notes or create new ones."
       />
     </m.div>
   );

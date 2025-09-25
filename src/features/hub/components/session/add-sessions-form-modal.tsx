@@ -214,7 +214,7 @@ export const AddSessionsFormModal = ({
                   <div className="space-y-1">
                     <p className="font-medium">Recurrence limitation</p>
                     <p className="text-sm opacity-80">
-                      Since this hub doesn't have an end date, recurring
+                      Since this course doesn't have an end date, recurring
                       sessions will be calculated for a maximum of 2 months from
                       the start date.
                     </p>

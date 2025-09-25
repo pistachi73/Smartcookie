@@ -50,7 +50,7 @@ export const SurveyResponse = ({
   const [selectedTab, setSelectedTab] = useState<string>("by-question");
   return (
     <Tabs
-      aria-label="Hub Dashboard"
+      aria-label="Course Dashboard"
       selectedKey={selectedTab}
       onSelectionChange={(key) => setSelectedTab(key as string)}
       className="flex-1 gap-4 sm:gap-6"

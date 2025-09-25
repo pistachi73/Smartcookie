@@ -40,7 +40,7 @@ export const ViewSelector = () => {
           },
           {
             id: "weekday",
-            name: "Weekdays",
+            name: "Work week",
           },
           {
             id: "week",

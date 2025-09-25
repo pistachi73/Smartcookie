@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 
 import { useProtectedMutation } from "@/shared/hooks/use-protected-mutation";
+import { extractUrls } from "@/shared/lib/url-utils";
 
 import { updateSessionNote } from "@/data-access/session-notes/mutations";
 import type { SessionNotePosition } from "@/db/schema";
@@ -32,6 +33,7 @@ export const useUpdateSessionNoteContent = ({
   initialContent,
   clientId,
 }: UseUpdateSessionNoteContentProps) => {
+  const [urls, setUrls] = useState<string[]>(extractUrls(initialContent));
   const [content, setContent] = useState(initialContent);
   const [isUnsaved, setIsUnsaved] = useState(false);
   const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -118,6 +120,8 @@ export const useUpdateSessionNoteContent = ({
     }
 
     saveTimeoutRef.current = setTimeout(() => {
+      setUrls(extractUrls(content));
+
       if (noteId < 0) {
         // Store pending save for retry when noteId becomes positive
         pendingSaveRef.current = {
@@ -217,6 +221,7 @@ export const useUpdateSessionNoteContent = ({
     content,
     isUnsaved,
     isSaving,
+    urls,
     handleContentChange,
   };
 };

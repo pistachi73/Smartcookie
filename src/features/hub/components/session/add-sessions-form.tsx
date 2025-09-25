@@ -128,9 +128,9 @@ export function AddSessionsForm({
               {...field}
               selectedKey={field.value}
               onSelectionChange={(key) => field.onChange(key as number)}
-              aria-label="Select hub"
+              aria-label="Select course"
               menuTrigger="focus"
-              label="Hub"
+              label="Course"
               isRequired={true}
               validationBehavior="aria"
               isInvalid={invalid}
@@ -139,7 +139,9 @@ export function AddSessionsForm({
               isReadOnly={disableHubSelection || isLoading}
             >
               <ComboBox.Input
-                placeholder={isLoading ? "Loading hubs..." : "Select a hub"}
+                placeholder={
+                  isLoading ? "Loading courses..." : "Select a course"
+                }
                 className="h-10"
               />
               <ComboBox.List items={hubOptions}>

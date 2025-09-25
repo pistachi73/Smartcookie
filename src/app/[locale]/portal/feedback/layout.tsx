@@ -1,10 +1,16 @@
+import type { Metadata } from "next";
 import type { ReactNode } from "react";
 
 import { PremiumLockedSection } from "@/shared/components/premium-locked-section";
 import { currentUser } from "@/shared/lib/auth";
+import { generatePortalMetadata } from "@/shared/lib/generate-metadata";
 
 import { getPlanLimits } from "@/core/config/plan-limits";
 import { FeedbackHeader } from "@/features/feedback/components/feedback-header";
+
+export const generateMetadata = async (): Promise<Metadata> => {
+  return generatePortalMetadata({ namespace: "Metadata.Feedback" });
+};
 
 export default async function FeedbackLayout({
   children: _children,

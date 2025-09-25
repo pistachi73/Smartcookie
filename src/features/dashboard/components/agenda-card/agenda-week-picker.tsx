@@ -24,7 +24,7 @@ export const AgendaWeekPicker = ({ date, setDate }: AgendaWeekPickerProps) => {
 
   const next7Days = Array.from({ length: 7 }, (_, i) => date.add({ days: i }));
   return (
-    <div className="flex flex-row items-center justify-between gap-2 p-1 bg-secondary dark:bg-overlay-highlight rounded-lg">
+    <div className="flex flex-row items-center justify-between gap-2 p-1 bg-accent rounded-lg">
       <Button
         intent="plain"
         size="sq-sm"

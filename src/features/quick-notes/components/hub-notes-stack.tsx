@@ -5,6 +5,7 @@ import * as m from "motion/react-m";
 import { useState } from "react";
 
 import { buttonStyles } from "@/shared/components/ui/button";
+import { Link } from "@/shared/components/ui/link";
 import { Heading } from "@/ui/heading";
 import { cn } from "@/shared/lib/classes";
 import { getCustomColorClasses } from "@/shared/lib/custom-colors";
@@ -26,6 +27,8 @@ export const HubNotesStack = ({ hubId }: HubNotesStackProps) => {
   const { data: hubs } = useSuspenseQuery(quickNotesHubsQueryOptions);
   const { data: notes } = useQuery(quickNotesByHubIdQueryOptions(hubId));
 
+  console.log({ hubs });
+
   const hub = hubs?.find((h) => h.id === hubId);
 
   if (!hub) return null;
@@ -46,7 +49,13 @@ export const HubNotesStack = ({ hubId }: HubNotesStackProps) => {
                 colorClasses.bg,
               )}
             />
-            <span className="truncate">{hub.name}</span>
+            <Link
+              intent="primary"
+              href={`/portal/hubs/${hub.id}`}
+              className="truncate"
+            >
+              {hub.name}
+            </Link>
             <span className={cn("text-xs text-muted-fg font-normal")}>
               {notes?.length || 0} notes
             </span>

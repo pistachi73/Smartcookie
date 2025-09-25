@@ -121,14 +121,14 @@ export const SessionNavigationBar = ({
       </div>
       <div className=" items-center gap-2 w-full sm:w-auto hidden sm:flex">
         <Badge
-          intent="secondary"
+          intent="outline"
           isCircle={false}
-          className="hidden @2xl:block"
+          className="hidden @2xl:block text-muted-fg"
         >
           {getSessionCountText()} loaded
         </Badge>
         <Button
-          intent="secondary"
+          intent="outline"
           size="sm"
           onPress={onToggleAllSessionsExpanded}
           className="block"

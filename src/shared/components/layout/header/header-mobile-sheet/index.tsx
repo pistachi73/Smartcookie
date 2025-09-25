@@ -62,7 +62,7 @@ export const MobileSheet = () => {
             </Button>
           ))}
         </Sheet.Body>
-        <Sheet.Footer className="border-t flex-col pt-4 justify-end ">
+        <Sheet.Footer className="border-t flex-col pt-4 justify-end sm:w-full">
           {user ? (
             <Link
               href="/portal/dashboard"
@@ -82,7 +82,7 @@ export const MobileSheet = () => {
                 }}
                 intent="outline"
                 size="lg"
-                className={cn("text-base", buttonCustomStyles)}
+                className={cn("text-base sm:flex-1", buttonCustomStyles)}
               >
                 Log in
               </Button>
@@ -90,9 +90,9 @@ export const MobileSheet = () => {
                 onPress={() => {
                   goToLogin();
                 }}
-                intent="outline"
+                intent="secondary"
                 size="lg"
-                className={cn("text-base", buttonCustomStyles)}
+                className={cn("text-base sm:flex-1", buttonCustomStyles)}
               >
                 Start free trial
               </Button>

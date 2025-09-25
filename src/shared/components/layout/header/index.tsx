@@ -78,13 +78,13 @@ export const Header = ({
         as="header"
         className="fixed top-[2vw] md:top-4 left-1/2 -translate-x-1/2 flex md:gap-2 z-50 items-center justify-center w-full"
       >
-        <div className="w-full flex gap-2 bg-[color-mix(in_oklab,var(--color-secondary)_60%,white_80%)] rounded-2xl shadow-lg p-2 relative justify-between items-center backdrop-blur-2xl border border-border/20 h-[62px]">
+        <div className="w-full flex gap-2 bg-[color-mix(in_oklab,var(--color-secondary)_60%,white_80%)] rounded-2xl shadow-lg p-1 relative justify-between items-center backdrop-blur-2xl border border-border/20 ">
           <div className="px-2 flex items-center gap-2">
             <Image
               src="/logos/smartcookie_logo.svg"
               alt="SmartCookie"
-              height={40}
-              width={20}
+              height={36}
+              width={18}
             />
           </div>
 
@@ -96,9 +96,9 @@ export const Header = ({
                   onPress={() => handleNavigation(item.id, item.href)}
                   className={buttonStyles({
                     intent: "plain",
-                    size: "lg",
+
                     className:
-                      "relative sm:text-base shrink-0 tracking-tight hover:bg-fg/90 pressed:bg-fg/80 hover:text-bg cursor-pointer transition-colors",
+                      "relative  text-base  shrink-0 tracking-tight hover:bg-fg/90 pressed:bg-fg/80 hover:text-bg cursor-pointer transition-colors",
                   })}
                 >
                   <span>{item.label}</span>
@@ -111,7 +111,7 @@ export const Header = ({
               <Link
                 href="/portal/dashboard"
                 className={cn(
-                  buttonStyles({ size: "lg", intent: "outline" }),
+                  buttonStyles({ size: "lg", intent: "secondary" }),
                   "group",
                   "sm:text-base shrink-0 tracking-tight hover:bg-fg/90 pressed:bg-fg/80 hover:text-bg cursor-pointer transition-colors",
                 )}
@@ -138,7 +138,7 @@ export const Header = ({
                 <Link
                   href="/login"
                   className={cn(
-                    buttonStyles({ size: "lg", intent: "outline" }),
+                    buttonStyles({ size: "lg", intent: "secondary" }),
                     "group sm:text-base",
                     buttonCustomStyles,
                   )}

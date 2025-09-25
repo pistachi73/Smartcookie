@@ -147,5 +147,47 @@
   "LocaleSwitcher": {
     "label": "Cambiar idioma",
     "locale": "{locale, select, en_GB {Inglés} es_ES {Español} other {Desconocido}}"
+  },
+  "Metadata": {
+    "Landing": {
+      "title": "SmartCookie - App de organización para profes",
+      "description": "SmartCookie es la app todo en uno para profes de idiomas: organiza calendarios, sigue su progreso y motiva a tus estudiantes."
+    },
+    "Dashboard": {
+      "title": "Panel {name} - SmartCookie",
+      "description": "Tu centro de control docente: consulta horas, sigue el progreso y revisa la actividad reciente en un solo panel."
+    },
+    "Calendar": {
+      "title": "Calendario {name} - SmartCookie",
+      "description": "Planifica, edita y gestiona tus clases con un calendario intuitivo, diseñado para sesiones recurrentes y agendas diarias."
+    },
+    "QuickNotes": {
+      "title": "Notas rápidas {name} - SmartCookie",
+      "description": "Anota ideas al instante. Escribe, consulta y organiza notas vinculadas a cursos."
+    },
+    "Feedback": {
+      "title": "Feedback {name} - SmartCookie",
+      "description": "Ofrece feedback útil para motivar a tus estudiantes y guarda un registro claro de cada comentario en SmartCookie."
+    },
+    "Courses": {
+      "title": "Cursos {name} - SmartCookie",
+      "description": "Organiza cursos por sesiones, estudiantes y progreso. Crea, edita o gestiona series completas de clases fácilmente."
+    },
+    "Students": {
+      "title": "Estudiantes {name} - SmartCookie",
+      "description": "Gestiona la información de tus estudiantes y realiza un seguimiento de su progreso en todas las clases y cursos."
+    },
+    "Subscription": {
+      "title": "Facturación y suscripción {name} - SmartCookie",
+      "description": "Gestiona tu suscripción a SmartCookie, los datos de facturación y el historial de pagos."
+    },
+    "Account": {
+      "title": "Configuración de cuenta {name} - SmartCookie",
+      "description": "Actualiza tu información personal, correo electrónico, contraseña y preferencias para personalizar tu experiencia en SmartCookie."
+    },
+    "Survey": {
+      "title": "Encuesta - SmartCookie",
+      "description": "Completa la encuesta y comparte tu feedback."
+    }
   }
 }

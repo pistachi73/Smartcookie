@@ -89,7 +89,7 @@ export const SurveyPresentation = ({ surveyId }: SurveyPresentationProps) => {
 
   return (
     <div className="flex flex-col gap-8 items-center max-w-2xl mx-auto mb-16 w-full">
-      <div className="space-y-4 flex flex-col items-center">
+      <div className="space-y-2 md:space-y-4 flex flex-col items-center">
         <Heading
           level={1}
           className="text-2xl md:text-4xl! text-center"
@@ -103,7 +103,7 @@ export const SurveyPresentation = ({ surveyId }: SurveyPresentationProps) => {
       </div>
 
       <Form
-        className="w-full flex flex-col items-center gap-6"
+        className="w-full flex flex-col items-center gap-4 md:gap-6"
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <div className="w-full flex flex-col items-center gap-2">
@@ -123,6 +123,7 @@ export const SurveyPresentation = ({ surveyId }: SurveyPresentationProps) => {
                 placeholder="Enter your email to start the survey"
                 className={{
                   primitive: "w-full",
+                  input: "text-base!",
                   fieldGroup: "h-16 bg-overlay w-full px-2",
                 }}
                 isInvalid={fieldState.invalid || isDataAccessError(accessData)}
@@ -147,11 +148,11 @@ export const SurveyPresentation = ({ surveyId }: SurveyPresentationProps) => {
           )}
         </div>
 
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center w-full">
           <Button
             intent="primary"
             size="lg"
-            className="h-14 px-6 text-xl! text-primary-fg mb-4 w-52 justify-between"
+            className="w-full md:w-52 h-13 md:h-14 px-6 text-xl! text-primary-fg mb-4 justify-between"
             type="submit"
             isPending={isPending}
           >
