@@ -1,8 +1,10 @@
 import type { MetadataRoute } from "next";
 import { getTranslations } from "next-intl/server";
 
+import { routing } from "@/i18n/routing";
+
 export default async function manifest(): Promise<MetadataRoute.Manifest> {
-  const locale = "en-GB";
+  const locale = routing.defaultLocale;
 
   const t = await getTranslations({
     namespace: "Manifest",
@@ -29,5 +31,7 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
     theme_color: "#090b0f",
     background_color: "#090b0f",
     display: "standalone",
+    start_url: "/",
+    scope: "/",
   };
 }

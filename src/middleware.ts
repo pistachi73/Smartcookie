@@ -33,7 +33,6 @@ const authMiddleware = auth((req) => {
     return NextResponse.next();
   }
 
-  console.log({ isLoggedIn, isPortalRoute });
   if (!isLoggedIn && isPortalRoute) {
     let callbackUrl = nextUrl.pathname;
     if (nextUrl.search) {
@@ -99,7 +98,7 @@ export const config = {
   matcher: [
     {
       source:
-        "/((?!api|_next/static|_next/image|favicon.ico|images|logos|public).*)",
+        "/((?!api|_next/static|_next/image|favicon.ico|images|logos|public|manifest).*)",
     },
   ],
 };
