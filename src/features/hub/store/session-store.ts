@@ -26,11 +26,14 @@ export const useSessionStore = create<SessionStore>((set) => ({
       return { isEditingMode: isEditing };
     }),
 
-  toggleSessionSelection: ({ id, startTime }, isSelected) =>
+  toggleSessionSelection: ({ id, startTime, endTime }, isSelected) =>
     set((state) => {
       if (isSelected) {
         return {
-          selectedSessions: [...state.selectedSessions, { id, startTime }],
+          selectedSessions: [
+            ...state.selectedSessions,
+            { id, startTime, endTime },
+          ],
         };
       }
 

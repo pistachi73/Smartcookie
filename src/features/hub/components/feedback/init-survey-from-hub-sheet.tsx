@@ -133,9 +133,9 @@ export function InitSurveyFromHubSheet({
     >
       <Sheet.Content side="right" className="w-[480px] max-w-[96vw]">
         <Sheet.Header className="border-b pb-[var(--gutter)]">
-          <Sheet.Title>Initialize Survey</Sheet.Title>
+          <Sheet.Title>Start Survey</Sheet.Title>
           <Sheet.Description>
-            Select a survey template to create a new survey for this course.
+            Select a template to start a new survey for this course.
           </Sheet.Description>
         </Sheet.Header>
 
@@ -248,7 +248,7 @@ export function InitSurveyFromHubSheet({
               />
             )}
             <HugeiconsIcon icon={Rocket01Icon} size={16} data-slot="icon" />
-            Initialize Survey
+            Start Survey
           </Button>
         </Sheet.Footer>
       </Sheet.Content>

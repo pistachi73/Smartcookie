@@ -14,3 +14,12 @@ const HubInfoSchema =
 export const CreateHubUseCaseSchema = z.object({
   hubInfo: HubInfoSchema,
 });
+
+export const UpdateHubSchema = z.object({
+  hubId: z.number(),
+  data: HubInfoSchema,
+});
+
+export const DeleteHubSchema = z.object({
+  hubId: z.number(),
+});

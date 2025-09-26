@@ -45,6 +45,7 @@ const PopoverContent = ({
   ...props
 }: PopoverContentProps) => {
   const offset = props.offset ?? (showArrow ? 12 : 8);
+  console.log({ className });
   return (
     <PopoverPrimitive
       ref={ref}

@@ -1,7 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-
+import { usePathname } from "@/i18n/navigation";
 import { getBreadcrumbsForPath } from "./breadcrumb-config";
 import { PortalNav } from "./portal-nav";
 

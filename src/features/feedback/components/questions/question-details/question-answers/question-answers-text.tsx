@@ -9,6 +9,9 @@ import { DataCard, ResponseCard } from "./shared-cards";
 type QuestionAnswersTextProps = {
   answers: Answer[];
 };
+const getTestWords = (answer: string) => {
+  return answer.trim().split(" ").length;
+};
 
 export const QuestionAnswersText = ({ answers }: QuestionAnswersTextProps) => {
   // Filter valid text answers (non-empty) and ensure surveyResponse exists
@@ -21,7 +24,7 @@ export const QuestionAnswersText = ({ answers }: QuestionAnswersTextProps) => {
   }
 
   const averageLength = Math.round(
-    validAnswers.reduce((sum, answer) => sum + answer.value.length, 0) /
+    validAnswers.reduce((sum, answer) => sum + getTestWords(answer.value), 0) /
       validAnswers.length,
   );
 
@@ -38,7 +41,7 @@ export const QuestionAnswersText = ({ answers }: QuestionAnswersTextProps) => {
           value={
             <>
               {averageLength}
-              <span className="text-sm font-normal text-muted-fg"> chars</span>
+              <span className="text-sm font-normal text-muted-fg"> words</span>
             </>
           }
           className={{
@@ -58,7 +61,7 @@ export const QuestionAnswersText = ({ answers }: QuestionAnswersTextProps) => {
             >
               <p className="flex-1 first-letter:uppercase">{answer.value}</p>
               <span className="text-xs text-muted-fg bg-muted px-2 py-1 rounded-md shrink-0">
-                {answer.value.length} chars
+                {getTestWords(answer.value)} words
               </span>
             </div>
           ))}

@@ -64,7 +64,7 @@ export const DeleteSurveyTemplateModal = ({
             </div>
           </div>
         </div>
-        <Note intent="warning">
+        <Note intent="danger">
           <strong>Important:</strong> This survey template will be permanently
           deleted along with all associated surveys and responses. This action
           cannot be undone.

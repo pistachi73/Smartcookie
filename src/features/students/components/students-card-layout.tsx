@@ -13,8 +13,7 @@ export const StudentsCardLayout = ({
         <div className="space-y-1 w-full">
           <CardTitle>Explore students</CardTitle>
           <CardDescription>
-            Manage your students and their progress. Add, edit, and delete
-            students as needed.
+            Manage your students. Add, edit, and delete students as needed.
           </CardDescription>
         </div>
         <div className="flex-1 w-full md:w-fit flex items-end h-full">

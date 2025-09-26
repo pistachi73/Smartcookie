@@ -48,7 +48,19 @@
         "noUnusedTemplateLiteral": "error",
         "useNumberNamespace": "error",
         "noInferrableTypes": "error",
-        "noUselessElse": "error"
+        "noUselessElse": "error",
+        "noRestrictedImports": {
+          "level": "error",
+          "options": {
+            "paths": {
+              "next/link": "Use Link from '@/shared/components/ui/link' instead of Link from 'next/link'",
+              "next/navigation": {
+                "message": "Use useRouter from '@/i18n/navigation' instead of useRouter from 'next/navigation'",
+                "importNames": ["useRouter", "usePathname"]
+              }
+            }
+          }
+        }
       },
       "recommended": true,
       "suspicious": {

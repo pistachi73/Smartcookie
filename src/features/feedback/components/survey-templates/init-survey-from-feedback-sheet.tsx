@@ -137,10 +137,10 @@ export function InitSurveyFromFeedbackSheet({
               size={20}
               color="var(--color-primary)"
             />
-            Initialize Survey
+            Start Survey
           </Sheet.Title>
           <Sheet.Description className="text-pretty">
-            Initialize a new survey using this template for any of your courses
+            Start a new survey using this template for any of your courses
             below.
           </Sheet.Description>
         </Sheet.Header>
@@ -165,23 +165,23 @@ export function InitSurveyFromFeedbackSheet({
                 />
               </div>
               <Heading level={3} className="text-lg mb-2">
-                No hubs available
+                No courses available
               </Heading>
               <p className="text-muted-fg text-sm">
-                Create a hub first to initialize surveys.
+                Create a hub first to start surveys.
               </p>
             </div>
           ) : (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <Heading level={3} className="text-base font-medium">
-                  Available Hubs ({filteredHubs.length})
+                  Available Courses ({filteredHubs.length})
                 </Heading>
               </div>
 
               <SearchField
-                aria-label="Search hubs by name"
-                placeholder="Search hubs by name..."
+                aria-label="Search courses by name"
+                placeholder="Search courses by name..."
                 value={searchQuery}
                 onChange={setSearchQuery}
                 className={{
@@ -233,13 +233,13 @@ export function InitSurveyFromFeedbackSheet({
             {isInitializing ? (
               <ProgressCircle
                 isIndeterminate
-                aria-label="Initializing survey..."
+                aria-label="Starting survey..."
                 className="size-4"
               />
             ) : (
               <HugeiconsIcon icon={Rocket01Icon} size={16} data-slot="icon" />
             )}
-            Initialize Survey
+            Start Survey
           </Button>
         </Sheet.Footer>
       </Sheet.Content>

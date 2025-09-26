@@ -3,8 +3,8 @@
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ArrowLeft02Icon } from "@hugeicons-pro/core-stroke-rounded";
 
-import { buttonStyles } from "@/ui/button";
-import { Link } from "@/ui/link";
+import { buttonStyles } from "@/shared/components/ui/button";
+import { Link } from "@/shared/components/ui/link";
 
 export const BackToHomePageButton = () => {
   return (

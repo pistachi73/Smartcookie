@@ -1,7 +1,10 @@
 "use client";
 
 import { HugeiconsIcon } from "@hugeicons/react";
-import { ArrowRight02Icon } from "@hugeicons-pro/core-stroke-rounded";
+import {
+  ArrowRight02Icon,
+  SquareLock01Icon,
+} from "@hugeicons-pro/core-stroke-rounded";
 import {
   type CalendarDate,
   parseDateTime,
@@ -47,7 +50,7 @@ function ColorDot({ color, className, ...props }: ColorDotProps) {
 
 export const AddSessionFormSchema = z
   .object({
-    hubId: z.number(),
+    hubId: z.number({ message: "Course is required" }),
     date: z.custom<CalendarDate>(),
     startTime: z.custom<Time>(),
     endTime: z.custom<Time>(),
@@ -115,6 +118,7 @@ export function AddSessionsForm({
       value: hub.id,
       label: hub.name,
       color: hub.color,
+      isDisabled: hub.status === "inactive",
     })) ?? [];
 
   return (
@@ -129,7 +133,6 @@ export function AddSessionsForm({
               selectedKey={field.value}
               onSelectionChange={(key) => field.onChange(key as number)}
               aria-label="Select course"
-              menuTrigger="focus"
               label="Course"
               isRequired={true}
               validationBehavior="aria"
@@ -147,12 +150,18 @@ export function AddSessionsForm({
               <ComboBox.List items={hubOptions}>
                 {(item) => (
                   <ComboBox.Option
+                    isDisabled={item.isDisabled}
                     key={item.value}
                     id={item.value}
                     textValue={item.label}
                   >
                     <ColorDot color={item.color} data-slot="icon" />
-                    <ComboBox.Label>{item.label}</ComboBox.Label>
+                    <ComboBox.Label className="flex items-center justify-between gap-2">
+                      {item.label}
+                      {item.isDisabled && (
+                        <HugeiconsIcon icon={SquareLock01Icon} size={14} />
+                      )}
+                    </ComboBox.Label>
                   </ComboBox.Option>
                 )}
               </ComboBox.List>

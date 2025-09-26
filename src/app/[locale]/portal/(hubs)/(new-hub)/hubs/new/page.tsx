@@ -3,7 +3,7 @@ import { currentUser } from "@/shared/lib/auth";
 import { getQueryClient } from "@/shared/lib/get-query-client";
 
 import { getPlanLimits } from "@/core/config/plan-limits";
-import { CreateHubForm } from "@/features/hub/components/create-hub-form";
+import { CreateHubForm } from "@/features/hub/components/hub-form";
 import { redirect } from "@/i18n/navigation";
 
 const NewHubPage = async (props: PageProps<"/[locale]/portal/hubs/new">) => {

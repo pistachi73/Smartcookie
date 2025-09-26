@@ -15,7 +15,6 @@ import { Badge } from "@/shared/components/ui/badge";
 import { Button, buttonStyles } from "@/shared/components/ui/button";
 import { Heading } from "@/shared/components/ui/heading";
 import { ProgressCircle } from "@/shared/components/ui/progress-circle";
-import { Separator } from "@/shared/components/ui/separator";
 import { regularSpring } from "@/shared/lib/animation";
 import { cn } from "@/shared/lib/classes";
 
@@ -103,7 +102,7 @@ export const Session = ({
     <>
       <div
         className={cn(
-          "border rounded-lg flex-1 mb-2 sm:mb-4 shadow-sm bg-overlay transition-shadow",
+          "@container border rounded-lg flex-1 mb-2 sm:mb-4 shadow-sm bg-overlay transition-shadow",
           isExpanded && "shadow-md",
         )}
       >
@@ -125,43 +124,48 @@ export const Session = ({
             "transition-colors",
           )}
         >
-          <div className="@container flex flex-row items-center gap-2.5 w-full">
+          <div className=" flex flex-row items-center gap-2.5 w-full">
             <SessionBubble session={session} className="flex sm:hidden" />
 
-            <div className="flex flex-col @xs:flex-row @xs:items-center gap-0.5 @xs:gap-2 @sm:gap-4 w-full">
-              <Heading
-                level={3}
-                className="text-base font-medium tabular-nums w-27 @sm:w-30"
-              >
-                {format(session.startTime, "eee, dd MMM ")}
-              </Heading>
-              <Separator
-                orientation="vertical"
-                className="h-4 @xs:block hidden"
-              />
-              <p className="tabular-nums text-xs @xs:text-sm text-muted-fg flex flex-row items-center gap-1">
-                <HugeiconsIcon
-                  icon={Clock01Icon}
-                  size={14}
-                  className="hidden sm:block"
-                />
-                {format(session.startTime, "HH:mm")} -{" "}
-                {format(session.endTime, "HH:mm")}
-              </p>
-              {isTodaySession && <Badge intent="primary">Today</Badge>}
-              {isTomorrowSession && <Badge intent="secondary">Tomorrow</Badge>}
+            <div className="flex items-center gap-1 @md:gap-3">
+              <div className="flex flex-col @md:flex-row @md:items-center gap-0.5 @md:gap-2  w-full">
+                <Heading
+                  level={3}
+                  className="text-sm sm:text-base font-medium tabular-nums w-26 @md:w-28"
+                >
+                  {format(session.startTime, "eee, do MMM ")}
+                </Heading>
+                {/* <Separator
+                  orientation="vertical"
+                  className="h-4 @md:block hidden"
+                /> */}
+                <p className="tabular-nums text-xs @md:text-sm text-muted-fg flex flex-row items-center gap-1">
+                  <HugeiconsIcon
+                    icon={Clock01Icon}
+                    size={14}
+                    className="hidden @md:block"
+                  />
+                  {format(session.startTime, "HH:mm")} -{" "}
+                  {format(session.endTime, "HH:mm")}
+                </p>
+              </div>
+              {isTodaySession && (
+                <Badge className="text-xs w-fit" intent="primary">
+                  Today
+                </Badge>
+              )}
+              {isTomorrowSession && (
+                <Badge className="text-xs w-fit" intent="secondary">
+                  Tomorrow
+                </Badge>
+              )}
             </div>
           </div>
 
           <div className="flex items-center gap-1">
             {isEditingMode && (
               <div className="flex gap-1 items-center">
-                <Button
-                  intent="plain"
-                  size="sq-sm"
-                  className="size-9"
-                  onPress={onEditSession}
-                >
+                <Button intent="plain" size="sq-xs" onPress={onEditSession}>
                   <HugeiconsIcon icon={PropertyEditIcon} size={16} />
                 </Button>
               </div>

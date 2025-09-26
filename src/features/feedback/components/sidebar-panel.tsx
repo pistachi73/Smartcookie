@@ -8,7 +8,7 @@ import {
   PreferenceHorizontalIcon,
   SearchIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Input } from "react-aria-components";
 
@@ -19,6 +19,7 @@ import { useDebouncedValue } from "@/shared/hooks/use-debounced-value";
 import useNavigateWithParams from "@/shared/hooks/use-navigate-with-params";
 
 import type { SortBy } from "@/data-access/questions/schemas";
+import { usePathname, useRouter } from "@/i18n/navigation";
 import { validateSearchParams } from "../lib/validate-search-params";
 
 const sortByOptions: {

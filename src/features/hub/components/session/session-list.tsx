@@ -61,7 +61,9 @@ export function SessionsList({ hubId }: { hubId: number }) {
     setIsEditingMode,
     setIsAddModalOpen,
     setIsDeleteModalOpen,
+    isDeleteModalOpen,
     isAddModalOpen,
+    clearSelectedSessions,
   } = useSessionStore(
     useShallow((store) => ({
       isEditingMode: store.isEditingMode,
@@ -69,7 +71,9 @@ export function SessionsList({ hubId }: { hubId: number }) {
       setIsEditingMode: store.setIsEditingMode,
       setIsAddModalOpen: store.setIsAddModalOpen,
       setIsDeleteModalOpen: store.setIsDeleteModalOpen,
+      isDeleteModalOpen: store.isDeleteModalOpen,
       isAddModalOpen: store.isAddModalOpen,
+      clearSelectedSessions: store.clearSelectedSessions,
     })),
   );
 
@@ -295,7 +299,15 @@ export function SessionsList({ hubId }: { hubId: number }) {
           refetch();
         }}
       />
-      <DynamicDeleteSessionsModal hubId={hubId} />
+      <DynamicDeleteSessionsModal
+        hubId={hubId}
+        open={isDeleteModalOpen}
+        onOpenChange={setIsDeleteModalOpen}
+        onSuccessfullyDeletedSessions={() => {
+          clearSelectedSessions();
+        }}
+        sessions={selectedSessions}
+      />
     </>
   );
 }

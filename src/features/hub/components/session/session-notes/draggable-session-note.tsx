@@ -111,7 +111,7 @@ export const DraggableSessionNote = ({
       </div>
 
       <DeleteProgressButton
-        pressDuration={400}
+        pressDuration={300}
         intent="plain"
         size="sq-xs"
         className={{

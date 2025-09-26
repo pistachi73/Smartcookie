@@ -1,7 +1,7 @@
 "use client";
 
 import { HugeiconsIcon } from "@hugeicons/react";
-import { HelpSquareIcon, News01Icon } from "@hugeicons-pro/core-stroke-rounded";
+import { AddIcon } from "@hugeicons-pro/core-stroke-rounded";
 
 import { Heading } from "@/shared/components/ui/heading";
 import { Link } from "@/shared/components/ui/link";
@@ -31,7 +31,7 @@ export const FeedbackHall = () => {
             level={3}
             className="text-base! w-fit flex items-center gap-2"
           >
-            <HugeiconsIcon icon={HelpSquareIcon} size={18} />
+            <HugeiconsIcon icon={AddIcon} size={18} />
             Create Question
           </Heading>
         </Link>
@@ -44,7 +44,7 @@ export const FeedbackHall = () => {
             level={3}
             className="text-base! w-fit flex items-center gap-2"
           >
-            <HugeiconsIcon icon={News01Icon} size={18} />
+            <HugeiconsIcon icon={AddIcon} size={18} />
             Create Survey
           </Heading>
         </Link>

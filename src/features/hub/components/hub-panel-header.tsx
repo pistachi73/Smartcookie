@@ -12,8 +12,8 @@ export const HubPanelHeader = ({ title, actions }: HubPanelHeaderProps) => {
       <Heading level={2}>{title}</Heading>
       <div
         className={cn(
-          "fixed bottom-0 py-4  left-0 px-4  w-full  z-10  bg-gradient-to-t from-white from-80% to-transparent",
-          "items-center sm:py-0 sm:px-0 sm:w-fit sm:flex sm:static sm:bg-transparent",
+          "fixed bottom-0 py-3  left-0 px-3  w-full  z-10  bg-white border-t",
+          "items-center sm:py-0 sm:px-0 sm:w-fit sm:flex sm:static sm:bg-transparent sm:border-none",
         )}
       >
         {actions}

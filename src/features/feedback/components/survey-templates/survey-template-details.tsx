@@ -188,7 +188,7 @@ export const SurveyTemplateDetails = ({
                     size={16}
                     data-slot="icon"
                   />
-                  Init survey
+                  Start Survey
                 </Button>
               </div>
             </div>

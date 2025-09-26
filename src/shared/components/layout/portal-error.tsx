@@ -6,10 +6,10 @@ import {
   ArrowLeft02Icon,
   RefreshIcon,
 } from "@hugeicons-pro/core-solid-rounded";
-import Link from "next/link";
 
 import { Button, buttonStyles } from "@/shared/components/ui/button";
 import { Heading } from "@/shared/components/ui/heading";
+import { Link } from "@/shared/components/ui/link";
 
 interface PortalErrorProps {
   /** Error object with message and optional digest */

@@ -72,12 +72,17 @@ export const PreviewLinks = ({
   isViewOnlyMode: boolean;
   className?: string;
 }) => {
+  const uniqueUrls = new Set(urls);
+
   const metadataQueries = useQueries({
-    queries: urls.map((url) => getUrlMetadataQueryOptions(url)),
+    queries: Array.from(uniqueUrls).map((url) =>
+      getUrlMetadataQueryOptions(url),
+    ),
   });
+
+  console.log({ metadataQueries });
   return (
-    metadataQueries.some((query) => query.data) &&
-    !isViewOnlyMode && (
+    metadataQueries.some((query) => query.data) && (
       <div className={cn(className)}>
         {metadataQueries.map(
           ({ data: urlMetadata }) =>

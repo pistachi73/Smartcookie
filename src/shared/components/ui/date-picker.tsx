@@ -42,7 +42,7 @@ const DatePickerOverlay = ({
   ...props
 }: DatePickerOverlayProps) => {
   const { down } = useViewport();
-  const isMobile = down("sm");
+  const isMobile = down("md");
   return isMobile ? (
     <Modal.Content aria-label="Date picker" closeButton={false}>
       <div className="flex justify-center p-6">
@@ -98,6 +98,7 @@ const DatePicker = <T extends DateValue>({
   description,
   errorMessage,
   placement,
+
   ...props
 }: DatePickerProps<T>) => {
   return (

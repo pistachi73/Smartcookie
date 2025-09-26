@@ -22,9 +22,8 @@ export const HubNotesCard = ({
   const isViewOnlyMode = hub?.status === "inactive";
   return (
     <Card className="w-full">
-      <Card.Header>
+      <Card.Header className="flex flex-row items-center justify-between">
         <Card.Title>Quick Notes</Card.Title>
-        <Card.Description>View the course notes</Card.Description>
         <Card.Action>
           <NewQuickNoteButton
             intent="outline"

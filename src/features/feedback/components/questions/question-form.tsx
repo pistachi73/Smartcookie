@@ -7,6 +7,7 @@ import {
   ThumbsUpIcon as ThumbsUpIconSolid,
 } from "@hugeicons-pro/core-solid-rounded";
 import {
+  AddIcon,
   RankingIcon,
   TextIcon,
   ThumbsUpIcon,
@@ -15,15 +16,12 @@ import { Controller, type UseFormReturn } from "react-hook-form";
 import type { z } from "zod";
 
 import { Button } from "@/shared/components/ui/button";
-import { Checkbox } from "@/shared/components/ui/checkbox";
 import { Form } from "@/shared/components/ui/form";
-import { Heading } from "@/shared/components/ui/heading";
 import { ProgressCircle } from "@/shared/components/ui/progress-circle";
 import {
   RadioToggle,
   RadioToggleGroup,
 } from "@/shared/components/ui/radio-toggle-group";
-import { Separator } from "@/shared/components/ui/separator";
 import { TextField } from "@/shared/components/ui/text-field";
 import { Textarea } from "@/shared/components/ui/textarea";
 import { cn } from "@/shared/lib/classes";
@@ -91,7 +89,6 @@ export const QuestionForm = ({
             {...field}
             isRequired
             label="Question Title"
-            description="Write a clear, specific question for actionable feedback."
             placeholder="e.g., What improvements would you suggest for our classes?"
             errorMessage={fieldState.error?.message}
             isInvalid={!!fieldState.error}
@@ -157,7 +154,6 @@ export const QuestionForm = ({
         render={({ field, fieldState }) => (
           <Textarea
             label="Description"
-            description="Optional context to help users understand your question."
             {...field}
             placeholder="Provide additional context or instructions for this question (optional)"
             className={{
@@ -170,7 +166,7 @@ export const QuestionForm = ({
       />
 
       {/* Additional Options Section */}
-      <div className="rounded-lg border border-input">
+      {/* <div className="rounded-lg border border-input">
         <Heading level={4} className="px-4 py-3 text-sm">
           Additional Options
         </Heading>
@@ -186,18 +182,19 @@ export const QuestionForm = ({
                 field.onChange(isSelected);
               }}
               label="Allow additional comments"
-              description="Let users add extra feedback beyond their main response"
               className="w-full px-4 py-4"
             />
           )}
         />
-      </div>
+      </div> */}
 
       {/* Submit Button */}
       <div className="flex justify-end">
         <Button type="submit" className="w-fit px-6" isPending={isPending}>
-          {isPending && (
+          {isPending ? (
             <ProgressCircle isIndeterminate aria-label={loadingText} />
+          ) : (
+            <HugeiconsIcon icon={AddIcon} data-slot="icon" />
           )}
           {isPending ? loadingText : submitButtonText}
         </Button>

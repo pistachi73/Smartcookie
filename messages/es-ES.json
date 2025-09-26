@@ -148,6 +148,10 @@
     "label": "Cambiar idioma",
     "locale": "{locale, select, en_GB {Inglés} es_ES {Español} other {Desconocido}}"
   },
+  "Manifest": {
+    "name": "SmartCookie",
+    "shortName": "SmartCookie"
+  },
   "Metadata": {
     "Landing": {
       "title": "SmartCookie - App de organización para profes",

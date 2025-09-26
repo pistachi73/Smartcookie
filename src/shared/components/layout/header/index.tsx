@@ -5,19 +5,20 @@ import { ArrowRight02Icon } from "@hugeicons-pro/core-solid-rounded";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { Button, Link } from "react-aria-components";
+import { Button } from "react-aria-components";
 
 import { buttonStyles } from "@/shared/components/ui/button";
+import { Link } from "@/shared/components/ui/link";
+import { MaxWidthWrapper } from "@/shared/components/layout/max-width-wrapper";
+import { useViewport } from "@/shared/components/layout/viewport-context/viewport-context";
 import { cn } from "@/shared/lib/classes";
 
 import { usePathname, useRouter } from "@/i18n/navigation";
 import type { AuthUser } from "@/types/next-auth";
-import { MaxWidthWrapper } from "../max-width-wrapper";
-import { useViewport } from "../viewport-context/viewport-context";
 import { HeaderMobileSheetTrigger } from "./header-mobile-sheet/header-mobile-sheet-trigger";
 
 export const buttonCustomStyles =
-  "relative sm:text-base shrink-0 tracking-tight hover:bg-fg/90 pressed:bg-fg/80 hover:text-bg cursor-pointer transition-colors";
+  "relative sm:text-base shrink-0 tracking-tight hover:bg-secondary pressed:bg-secondary/80 cursor-pointer transition-colors";
 
 const DynamicMobileSheet = dynamic(
   () => import("./header-mobile-sheet").then((mod) => mod.MobileSheet),
@@ -97,8 +98,7 @@ export const Header = ({
                   className={buttonStyles({
                     intent: "plain",
 
-                    className:
-                      "relative  text-base  shrink-0 tracking-tight hover:bg-fg/90 pressed:bg-fg/80 hover:text-bg cursor-pointer transition-colors",
+                    className: buttonCustomStyles,
                   })}
                 >
                   <span>{item.label}</span>
@@ -113,7 +113,7 @@ export const Header = ({
                 className={cn(
                   buttonStyles({ size: "lg", intent: "secondary" }),
                   "group",
-                  "sm:text-base shrink-0 tracking-tight hover:bg-fg/90 pressed:bg-fg/80 hover:text-bg cursor-pointer transition-colors",
+                  buttonCustomStyles,
                 )}
               >
                 Go to dashboard

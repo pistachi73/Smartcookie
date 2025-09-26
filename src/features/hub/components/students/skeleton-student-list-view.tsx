@@ -1,5 +1,8 @@
 "use client";
 
+import { HugeiconsIcon } from "@hugeicons/react";
+import { InformationCircleIcon } from "@hugeicons-pro/core-stroke-rounded";
+
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { Table } from "@/shared/components/ui/table";
 import { cn } from "@/shared/lib/utils";
@@ -30,9 +33,10 @@ export const SkeletonStudentListView = () => {
       )}
     >
       <Table.Header columns={columns} className={"bg-muted"}>
-        <Table.Column isRowHeader>Student Name</Table.Column>
+        <Table.Column isRowHeader>Student</Table.Column>
         <Table.Column className="h-full">
-          Attended Sessions (completed sessions)
+          Attendance
+          <HugeiconsIcon icon={InformationCircleIcon} size={14} />
         </Table.Column>
         <Table.Column />
       </Table.Header>

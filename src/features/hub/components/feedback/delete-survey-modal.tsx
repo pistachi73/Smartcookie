@@ -67,7 +67,7 @@ export const DeleteSurveyModal = ({
           </div>
         </div>
 
-        <Note intent="warning">
+        <Note intent="danger">
           <strong>Survey Deletion</strong>
           <p className="mt-1">
             This survey will be permanently deleted. However, all survey

@@ -1,6 +1,6 @@
 export interface SessionState {
   isEditingMode: boolean;
-  selectedSessions: { id: number; startTime: string }[];
+  selectedSessions: { id: number; startTime: string; endTime: string }[];
   sessionToEdit: number | null;
 
   isDeleteModalOpen: boolean;
@@ -12,10 +12,12 @@ export interface SessionActions {
   setSessionToEdit: (sessionId: number | null) => void;
 
   toggleSessionSelection: (
-    session: { id: number; startTime: string },
+    session: { id: number; startTime: string; endTime: string },
     isSelected: boolean,
   ) => void;
-  selectAllSessions: (sessions: { id: number; startTime: string }[]) => void;
+  selectAllSessions: (
+    sessions: { id: number; startTime: string; endTime: string }[],
+  ) => void;
   clearSelectedSessions: () => void;
 
   setIsEditingMode: (isEditing: boolean) => void;

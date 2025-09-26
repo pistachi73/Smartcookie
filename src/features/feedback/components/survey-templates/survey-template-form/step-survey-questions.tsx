@@ -11,7 +11,7 @@ import {
   Settings01Icon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import { AnimatePresence, LayoutGroup, motion, Reorder } from "motion/react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { useDrop } from "react-aria";
 import {
@@ -27,6 +27,7 @@ import useNavigateWithParams from "@/shared/hooks/use-navigate-with-params";
 import { regularSpring } from "@/shared/lib/animation";
 import { cn } from "@/shared/lib/classes";
 
+import { usePathname, useRouter } from "@/i18n/navigation";
 import { useSurveyTemplateFormStore } from "../../../store/survey-template-form.store";
 import type { FeedbackQuestion } from "../../questions/question-list-item";
 import { TemplateQuestion } from "../template-question";

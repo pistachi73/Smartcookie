@@ -1,8 +1,10 @@
 "use client";
 
-import { usePathname, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
+
+import { usePathname } from "@/i18n/navigation";
 
 export enum ToastNotificationError {
   OAUTH_ACCOUNT_NOT_LINKED = "OAuthAccountNotLinked",

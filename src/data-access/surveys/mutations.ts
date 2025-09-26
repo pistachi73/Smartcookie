@@ -46,7 +46,7 @@ export const createHubSurvey = withProtectedDataAccess({
       if (students.length === 0) {
         return createDataAccessError({
           type: "NOT_FOUND",
-          message: "No students found for this hub",
+          message: "No students found for this course",
         });
       }
 

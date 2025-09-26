@@ -26,7 +26,7 @@ export const FeedbackHeader = ({
   return (
     <PageHeader
       title="Feedback"
-      subTitle="Manage your feedback"
+      subTitle="Manage your feedback. Create questions and surveys"
       icon={HealtcareIcon}
       className={{
         container: "bg-bg",
