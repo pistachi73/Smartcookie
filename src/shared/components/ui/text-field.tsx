@@ -62,6 +62,7 @@ const TextField = ({
   return (
     <TextFieldPrimitive
       type={inputType}
+      isDisabled={props.isDisabled}
       {...props}
       className={composeTailwindRenderProps(
         className?.primitive,

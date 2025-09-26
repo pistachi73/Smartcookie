@@ -1,5 +1,8 @@
 import { HugeiconsIcon } from "@hugeicons/react";
-import { MoreHorizontalIcon } from "@hugeicons-pro/core-stroke-rounded";
+import {
+  InformationCircleIcon,
+  MoreHorizontalIcon,
+} from "@hugeicons-pro/core-stroke-rounded";
 import { useQuery } from "@tanstack/react-query";
 import dynamic from "next/dynamic";
 import { useState } from "react";
@@ -7,6 +10,7 @@ import { useState } from "react";
 import { Button } from "@/shared/components/ui/button";
 import { Menu } from "@/shared/components/ui/menu";
 import { Table } from "@/shared/components/ui/table";
+import { Tooltip } from "@/shared/components/ui/tooltip";
 import { StudentProfile } from "@/shared/components/students/student-profile";
 import { cn } from "@/shared/lib/utils";
 
@@ -48,10 +52,18 @@ export const StudentsListView = ({ hubId }: { hubId: number }) => {
       >
         <Table.Header className={"bg-muted "}>
           <Table.Column isRowHeader id="name">
-            Student Name
+            Student
           </Table.Column>
-          <Table.Column className="h-full">
-            Attendance (completed sessions)
+          <Table.Column className="h-full gap-1 flex items-center">
+            Attendance
+            <Tooltip delay={0} closeDelay={0}>
+              <Tooltip.Trigger className="hidden sm:block">
+                <HugeiconsIcon icon={InformationCircleIcon} size={14} />
+              </Tooltip.Trigger>
+              <Tooltip.Content>
+                The number of past sessions that the student has attended.
+              </Tooltip.Content>
+            </Tooltip>
           </Table.Column>
           <Table.Column />
         </Table.Header>

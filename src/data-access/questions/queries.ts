@@ -1,6 +1,6 @@
 "use server";
 
-import { and, count, desc, eq, sql } from "drizzle-orm";
+import { and, asc, count, desc, eq, sql } from "drizzle-orm";
 import { cache } from "react";
 import { z } from "zod";
 
@@ -60,7 +60,7 @@ export const getQuestions = withProtectedDataAccess({
         .offset((page - 1) * pageSize)
         .orderBy(
           sortBy === "alphabetical"
-            ? desc(questions.title)
+            ? asc(questions.title)
             : sortBy === "response-count"
               ? desc(questions.totalAnswers)
               : desc(questions.updatedAt),

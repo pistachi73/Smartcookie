@@ -1,4 +1,4 @@
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import {
@@ -10,6 +10,7 @@ import {
 import { mockZustandStoreImplementation } from "@/shared/lib/testing/zustand-utils";
 
 import type { SurveyTemplateFormState } from "@/features/feedback/types/survey-template-form-store.types";
+import { usePathname, useRouter } from "@/i18n/navigation";
 import { useSurveyTemplateFormStore } from "../../../store/survey-template-form.store";
 import { type FeedbackQuestion, QuestionListItem } from "../question-list-item";
 

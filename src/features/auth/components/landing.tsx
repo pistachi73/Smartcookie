@@ -16,7 +16,6 @@ import { GetUserAndAccountByEmailSchema } from "@/data-access/user/schemas";
 import { useAuthStore } from "@/features/auth/store/auth-store-provider";
 import { authSchema } from "../lib/validation";
 import { FormWrapper } from "./form-wrapper";
-import { SocialButton } from "./oauth-button";
 
 const authLandingSchema = authSchema.pick({
   email: true,

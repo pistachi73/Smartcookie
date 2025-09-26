@@ -8,7 +8,6 @@ import { useCurrentUser } from "@/shared/hooks/use-current-user";
 import { cn } from "@/shared/lib/classes";
 
 import { UserButton } from "@/features/auth/components/user-button";
-import { BasicSubscriptionCard } from "../../../../features/account/components/subscription/subscription-cards/basic-subscription-card";
 import { ExplorePremiumModal } from "../../explore-premium-modal";
 import { Button } from "../../ui/button";
 import { FieldGroup, Input } from "../../ui/field";

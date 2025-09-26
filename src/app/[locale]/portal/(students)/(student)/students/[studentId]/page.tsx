@@ -1,17 +1,19 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import type { Metadata } from "next";
 
+import { generatePortalMetadata } from "@/shared/lib/generate-metadata";
 import { getQueryClient } from "@/shared/lib/get-query-client";
 
 import { StudentProfileDetail } from "@/features/students/components/student-profile-detail";
 import { getUserStudentByIdQueryOptions } from "@/features/students/lib/user-students-query-options";
 
-interface StudentPageProps {
-  params: Promise<{
-    studentId: string;
-  }>;
-}
+export const generateMetadata = async (): Promise<Metadata> => {
+  return generatePortalMetadata({ namespace: "Metadata.Students" });
+};
 
-export default async function StudentPage({ params }: StudentPageProps) {
+export default async function StudentPage({
+  params,
+}: PageProps<"/[locale]/portal/students/[studentId]">) {
   const { studentId } = await params;
   const queryClient = getQueryClient();
 

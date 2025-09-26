@@ -30,7 +30,7 @@ export const QuickNotes = () => {
               intent="secondary"
               size="sm"
             >
-              <span className="hidden @2xl:block">Filter by hubs</span>
+              <span className="hidden @2xl:block">Filter by courses</span>
               <HugeiconsIcon
                 icon={FilterIcon}
                 size={16}

@@ -1,7 +1,7 @@
 "use client";
 
 import { HugeiconsIcon } from "@hugeicons/react";
-import { ArrowLeft02Icon } from "@hugeicons-pro/core-stroke-rounded";
+import { AddIcon, ArrowLeft02Icon } from "@hugeicons-pro/core-stroke-rounded";
 import { toast } from "sonner";
 
 import { Button } from "@/shared/components/ui/button";
@@ -151,8 +151,10 @@ export function StepPreview() {
         </Button>
 
         <Button onPress={handleSubmit} isPending={isPending}>
-          {isPending && (
+          {isPending ? (
             <ProgressCircle isIndeterminate aria-label={loadingText} />
+          ) : (
+            <HugeiconsIcon icon={AddIcon} data-slot="icon" />
           )}
           {isPending ? loadingText : buttonText}
         </Button>

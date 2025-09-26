@@ -40,8 +40,8 @@ type SessionNoteColumnProps<T extends SessionNotePosition> = {
 };
 
 const headerMap: Record<SessionNotePosition, string> = {
-  plans: "Plans",
-  "in-class": "In-Class",
+  plans: "To-Do",
+  "in-class": "Done",
 } as const;
 
 export const SessionNoteColumn = <T extends SessionNotePosition>({

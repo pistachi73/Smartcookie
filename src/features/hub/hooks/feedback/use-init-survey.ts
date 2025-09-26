@@ -19,14 +19,14 @@ export const useInitSurvey = ({ onSuccess }: { onSuccess?: () => void }) => {
         return;
       }
 
-      toast.success("Survey created successfully");
+      toast.success("Survey started successfully");
       queryClient.invalidateQueries({
         queryKey: ["hub-surveys", data.hubId],
       });
       onSuccess?.();
     },
     onError: () => {
-      toast.error("Failed to create survey");
+      toast.error("Failed to start survey");
     },
   });
 };

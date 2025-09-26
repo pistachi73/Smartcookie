@@ -1,7 +1,8 @@
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 
 import { DEFAULT_LOGIN_REDIRECT } from "@/core/config/app-config";
+import { useRouter } from "@/i18n/navigation";
 
 export const useLoginSuccess = () => {
   const router = useRouter();

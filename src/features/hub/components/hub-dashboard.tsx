@@ -67,70 +67,93 @@ const LazyHubNotesPanel = dynamic(
   },
 );
 
+const DynamicDeleteHubModal = dynamic(
+  () =>
+    import("./hub-form/delete-hub-modal").then((mod) => ({
+      default: mod.DeleteHubModal,
+    })),
+  {
+    ssr: false,
+  },
+);
+
 type Tab = (typeof TABS)[number]["id"];
 
 export function HubDashboard({ hubId }: { hubId: number }) {
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const { data: hub } = useSuspenseQuery(getHubByIdQueryOptions(hubId));
   const [selectedTab, setSelectedTab] = useState<Tab>("sessions");
 
   if (!hub) return <HubNotFound />;
 
   return (
-    <HubDashboardLayout hub={hub}>
-      <div className="flex-1 flex flex-col lg:flex-row p-0 sm:p-6 sm:pt-0 gap-6">
-        <div className="bg-white sm:rounded-lg border flex-1">
-          <Tabs
-            aria-label="Course Dashboard"
-            selectedKey={selectedTab}
-            onSelectionChange={(key) => setSelectedTab(key as Tab)}
-            className="flex-1 gap-4 sm:gap-6 h-full"
-          >
-            <Tabs.List className={"px-4 sm:px-6 h-10 "}>
-              {TABS.map((tab) => {
-                return (
-                  <Tabs.Tab
-                    key={tab.id}
-                    id={tab.id}
-                    className={cn(
-                      "px-2 pb-0!",
-                      tab.id === "quick-notes" && "lg:hidden",
-                    )}
-                  >
-                    {({ isSelected }) => {
-                      return (
-                        <p
-                          className={cn(
-                            "flex items-center gap-2",
-                            isSelected && "text-primary",
-                          )}
-                        >
-                          {tab.label}
-                        </p>
-                      );
-                    }}
-                  </Tabs.Tab>
-                );
-              })}
-            </Tabs.List>
+    <>
+      <HubDashboardLayout hub={hub} onDelete={() => setIsDeleteModalOpen(true)}>
+        <div className="flex-1 flex flex-col lg:flex-row p-0 sm:p-6 sm:pt-0 gap-6">
+          <div className="bg-white sm:rounded-lg border flex-1">
+            <Tabs
+              aria-label="Course Dashboard"
+              selectedKey={selectedTab}
+              onSelectionChange={(key) => setSelectedTab(key as Tab)}
+              className="flex-1 gap-4 sm:gap-6 h-full"
+            >
+              <Tabs.List className={"px-4 sm:px-6 h-10 "}>
+                {TABS.map((tab) => {
+                  return (
+                    <Tabs.Tab
+                      key={tab.id}
+                      id={tab.id}
+                      className={cn(
+                        "px-2 pb-0!",
+                        tab.id === "quick-notes" && "lg:hidden",
+                      )}
+                    >
+                      {({ isSelected }) => {
+                        return (
+                          <p
+                            className={cn(
+                              "flex items-center gap-2",
+                              isSelected && "text-primary",
+                            )}
+                          >
+                            {tab.label}
+                          </p>
+                        );
+                      }}
+                    </Tabs.Tab>
+                  );
+                })}
+              </Tabs.List>
 
-            <Tabs.Panel id="sessions" className={"px-4 sm:px-6"}>
-              <LazySessionsList hubId={hubId} />
-            </Tabs.Panel>
-            <Tabs.Panel id="students" className={"px-4 sm:px-6"}>
-              <LazyStudents hubId={hubId} />
-            </Tabs.Panel>
-            <Tabs.Panel id="feedback" className={"px-4 sm:px-6"}>
-              <LazyCourseFeedback hubId={hubId} />
-            </Tabs.Panel>
-            <Tabs.Panel id="quick-notes" className={"px-4 sm:px-6 lg:hidden"}>
-              <LazyHubNotesPanel hubId={hubId} hubColor={hub.color} />
-            </Tabs.Panel>
-          </Tabs>
+              <Tabs.Panel id="sessions" className={"px-4 sm:px-6"}>
+                <LazySessionsList hubId={hubId} />
+              </Tabs.Panel>
+              <Tabs.Panel id="students" className={"px-4 sm:px-6"}>
+                <LazyStudents hubId={hubId} />
+              </Tabs.Panel>
+              <Tabs.Panel id="feedback" className={"px-4 sm:px-6"}>
+                <LazyCourseFeedback hubId={hubId} />
+              </Tabs.Panel>
+              <Tabs.Panel id="quick-notes" className={"px-4 sm:px-6 lg:hidden"}>
+                <LazyHubNotesPanel hubId={hubId} hubColor={hub.color} />
+              </Tabs.Panel>
+            </Tabs>
+          </div>
+          <div className="w-full lg:w-[350px] hidden lg:flex">
+            <LazyHubNotesCard hubId={hubId} hubColor={hub.color} />
+          </div>
         </div>
-        <div className="w-full lg:w-[350px] hidden lg:flex">
-          <LazyHubNotesCard hubId={hubId} hubColor={hub.color} />
-        </div>
-      </div>
-    </HubDashboardLayout>
+      </HubDashboardLayout>
+
+      <DynamicDeleteHubModal
+        isOpen={isDeleteModalOpen}
+        onOpenChange={setIsDeleteModalOpen}
+        hub={{
+          description: hub.description,
+          id: hub.id,
+          name: hub.name,
+        }}
+      />
+    </>
   );
 }

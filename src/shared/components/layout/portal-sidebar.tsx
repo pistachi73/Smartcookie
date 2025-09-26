@@ -18,7 +18,6 @@ import {
   UserGroupIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
 
 import {
   Sidebar,
@@ -33,6 +32,7 @@ import { SidebarItem } from "@/shared/components/ui/sidebar/sidebar-item";
 import { SidebarSection } from "@/shared/components/ui/sidebar/sidebar-section";
 import { cn } from "@/shared/lib/classes";
 
+import { usePathname } from "@/i18n/navigation";
 import { SidebarTrigger } from "../ui/sidebar/sidebar-trigger";
 
 type AppSidebarProps = React.ComponentProps<typeof Sidebar>;

@@ -14,6 +14,7 @@ export const HubNotFound = () => {
   return (
     <HubDashboardLayout
       hub={{
+        id: 0,
         name: "Course not found",
       }}
     >

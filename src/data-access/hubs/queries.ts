@@ -1,6 +1,6 @@
 "use server";
 
-import { desc, eq } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
 
 import { withProtectedDataAccess } from "@/data-access/with-protected-data-access";
 import { db } from "@/db";
@@ -22,7 +22,8 @@ export const getHubsByUserIdForQuickNotes = withProtectedDataAccess({
         status: hub.status,
       })
       .from(hub)
-      .where(eq(hub.userId, user.id));
+      .where(eq(hub.userId, user.id))
+      .orderBy(asc(hub.status), desc(hub.lastActivityAt));
   },
 });
 
@@ -59,7 +60,7 @@ export const getHubsByUserId = withProtectedDataAccess({
         },
       },
       where: eq(hub.userId, user.id),
-      orderBy: [desc(hub.lastActivityAt)],
+      orderBy: [asc(hub.status), desc(hub.lastActivityAt)],
     });
 
     const formattedHubs = hubs.map((hub) => {
@@ -86,6 +87,8 @@ export const getHubById = withProtectedDataAccess({
         startDate: parseRequiredDateWithTimezone(hub.startDate, "startDate"),
         endDate: parseOptionalDateWithTimezone(hub.endDate, "endDate"),
         color: hub.color,
+        level: hub.level,
+        schedule: hub.schedule,
       })
       .from(hub)
       .where(eq(hub.id, hubId))

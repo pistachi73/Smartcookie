@@ -81,7 +81,7 @@ export const SessionNavigationBar = ({
           <span className="hidden sm:inline">
             {!hasPrevious && !isLoadingPrevious
               ? "No previous sessions"
-              : "Load previous"}
+              : "See previous sessions"}
           </span>
           <span className="sm:hidden">
             {!hasPrevious && !isLoadingPrevious ? "No previous" : "Previous"}
@@ -99,7 +99,7 @@ export const SessionNavigationBar = ({
           <span className="hidden sm:inline">
             {!hasNext && !isLoadingNext
               ? "No upcoming sessions"
-              : "Load upcoming"}
+              : "See upcoming sessions"}
           </span>
           <span className="sm:hidden">
             {!hasNext && !isLoadingNext ? "No upcoming" : "Upcoming"}

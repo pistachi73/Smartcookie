@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
@@ -33,10 +33,10 @@ export const QuickNotesSidebar = ({
     return (
       <Sheet isOpen={isOpen} onOpenChange={onOpenChange}>
         <Sheet.Content side="right" className="w-[480px] max-w-[96vw]">
-          <Sheet.Header title="Filter by hubs" />
+          <Sheet.Header title="Filter by course" />
           <Sheet.Body className="space-y-6">
             <SearchField
-              placeholder="Search hubs..."
+              placeholder="Search courses..."
               className={{ input: "text-sm", fieldGroup: "bg-overlay h-10" }}
               value={searchQuery}
               onChange={(value) => setSearchQuery(value)}
@@ -102,7 +102,7 @@ const QuickNotesSidebarFilter = ({ searchQuery }: { searchQuery: string }) => {
   return (
     <div className="space-y-2 overflow-y-auto">
       <HubToggle
-        label={allHubsVisible ? "Hide All Hubs" : "Show All Hubs"}
+        label={allHubsVisible ? "Hide All Courses" : "Show All Courses"}
         isVisible={allHubsVisible}
         onPress={handleToggleAllHubs}
         className="mb-4"

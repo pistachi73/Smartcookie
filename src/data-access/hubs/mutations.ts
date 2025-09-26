@@ -1,11 +1,17 @@
 "use server";
 
+import { and, eq } from "drizzle-orm";
+
 import { db } from "@/db";
 import { hub } from "@/db/schema";
 import { authenticatedDataAccess } from "../data-access-chain";
 import { createDataAccessError } from "../errors";
 import { getHubLimitMiddleware } from "../limit-middleware";
-import { CreateHubUseCaseSchema } from "./schemas";
+import {
+  CreateHubUseCaseSchema,
+  DeleteHubSchema,
+  UpdateHubSchema,
+} from "./schemas";
 
 export const createHub = authenticatedDataAccess()
   .input(CreateHubUseCaseSchema)
@@ -39,4 +45,33 @@ export const createHub = authenticatedDataAccess()
     }
 
     return createdHub;
+  });
+
+export const updateHub = authenticatedDataAccess()
+  .input(UpdateHubSchema)
+  .execute(async (data, user) => {
+    const { hubId, data: updateData } = data;
+
+    const [updatedHub] = await db
+      .update(hub)
+      .set(updateData)
+      .where(and(eq(hub.id, hubId), eq(hub.userId, user.id)))
+      .returning();
+
+    if (!updatedHub) {
+      return createDataAccessError({
+        type: "UNEXPECTED_ERROR",
+        message: "Hub not updated successfully. Please try again.",
+      });
+    }
+
+    return updatedHub;
+  });
+
+export const deleteHub = authenticatedDataAccess()
+  .input(DeleteHubSchema)
+  .execute(async (data, user) => {
+    const { hubId } = data;
+
+    await db.delete(hub).where(and(eq(hub.id, hubId), eq(hub.userId, user.id)));
   });

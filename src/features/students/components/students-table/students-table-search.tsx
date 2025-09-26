@@ -1,10 +1,11 @@
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 import { SearchField } from "@/shared/components/ui/search-field";
 import { useDebouncedValue } from "@/shared/hooks/use-debounced-value";
 import useNavigateWithParams from "@/shared/hooks/use-navigate-with-params";
 
+import { usePathname, useRouter } from "@/i18n/navigation";
 import { validateStudentsSearchParams } from "../../lib/validate-students-search-params";
 
 export const StudentsTableSearch = () => {

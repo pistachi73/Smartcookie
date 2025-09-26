@@ -8,7 +8,6 @@ import { z } from "zod";
 import { DEFAULT_CUSTOM_COLOR } from "@/shared/lib/custom-colors";
 
 import type { CustomColor } from "@/db/schema/shared";
-import type { HubStatus } from "../../../db/schema/hub";
 
 export const hubInfoSchema = z
   .object({
@@ -23,7 +22,6 @@ export const hubInfoSchema = z
     level: z.string().max(20, "Level must be 20 characters or less").optional(),
     color: z.custom<CustomColor>(),
     schedule: z.string().optional(),
-    status: z.custom<HubStatus>(),
     startDate: z.custom<CalendarDate>(),
     endDate: z.custom<CalendarDate>().optional(),
   })
@@ -56,7 +54,6 @@ export const defaultHubInfo: HubInfoValues = {
   level: "",
   color: DEFAULT_CUSTOM_COLOR,
   schedule: "",
-  status: "active",
   startDate: today(getLocalTimeZone()),
   endDate: undefined,
 };

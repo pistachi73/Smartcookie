@@ -14,7 +14,7 @@ export const StudentProfileLayout = ({
   <div className="space-y-6 p-4 sm:p-6 overflow-y-auto">
     <PageHeader
       title="Student Profile"
-      subTitle="Manage student information and track progress"
+      subTitle="Manage student information"
       icon={UserIcon}
       className={{
         container: "border-none p-0!",

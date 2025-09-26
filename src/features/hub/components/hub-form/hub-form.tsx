@@ -10,7 +10,7 @@ import type { z } from "zod";
 import { Button } from "@/shared/components/ui/button";
 import { Card } from "@/shared/components/ui/card";
 import { CustomColorPicker } from "@/shared/components/ui/custom-color-picker";
-import { DatePicker } from "@/shared/components/ui/date-picker/index";
+import { DatePicker } from "@/shared/components/ui/date-picker";
 import { Label } from "@/shared/components/ui/field";
 import { Form } from "@/shared/components/ui/form";
 import { Heading } from "@/shared/components/ui/heading";
@@ -137,9 +137,7 @@ export function CreateHubForm() {
                       <DatePicker
                         label="Start Date"
                         isRequired
-                        className={{
-                          primitive: "flex-1",
-                        }}
+                        className="flex-1"
                         value={value}
                         onChange={onChange}
                         validationBehavior="aria"
@@ -154,9 +152,7 @@ export function CreateHubForm() {
                     render={({ field: { onChange, value }, fieldState }) => (
                       <DatePicker
                         label="End Date"
-                        className={{
-                          primitive: "flex-1",
-                        }}
+                        className="flex-1"
                         value={value}
                         onChange={onChange}
                         minValue={startDate}

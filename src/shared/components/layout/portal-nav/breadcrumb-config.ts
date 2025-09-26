@@ -168,11 +168,7 @@ function formatSegmentLabel(segment: string, pathContext: string[]): string {
     .join(" ");
 }
 
-export function getBreadcrumbsForPath(
-  pathnameWithLocale: string,
-): BreadcrumbConfig[] {
-  const pathname = `/${pathnameWithLocale.split("/").slice(2).join("/")}`;
-
+export function getBreadcrumbsForPath(pathname: string): BreadcrumbConfig[] {
   // Check cache first for performance
   if (breadcrumbCache.has(pathname)) {
     return breadcrumbCache.get(pathname)!;

@@ -31,11 +31,11 @@ const DynamicUpdateSessionFormModal = dynamic(
   },
 );
 
-const DynamicDeleteEventModalContent = dynamic(
+const DynamicDeleteSessionModalContent = dynamic(
   () =>
-    import("./delete-event-modal-content").then(
-      (mod) => mod.DeleteEventModalContent,
-    ),
+    import(
+      "@/features/hub/components/session/delete-sessions-modal-content"
+    ).then((mod) => mod.DeleteSessionsModalContent),
   {
     ssr: false,
   },
@@ -196,9 +196,11 @@ export const SessionPopover = ({
         isOpen={isUpdateSessionModalOpen}
         setIsOpen={setIsUpdateSessionModalOpen}
       />
-      <DynamicDeleteEventModalContent
-        isOpen={isDeleteSessionModalOpen}
+      <DynamicDeleteSessionModalContent
+        hubId={session.hub.id}
+        open={isDeleteSessionModalOpen}
         onOpenChange={setIsDeleteSessionModalOpen}
+        sessions={[session]}
       />
     </>
   );

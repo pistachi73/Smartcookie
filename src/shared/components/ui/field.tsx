@@ -125,7 +125,7 @@ const Input = ({ className, ref, ...props }: InputProps) => {
       {...props}
       className={composeTailwindRenderProps(
         className,
-        "relative block w-full px-3.5 py-2 placeholder-muted-fg outline-hidden sm:px-3 sm:py-1.5 text-sm/6 [&::-ms-reveal]:hidden [&::-webkit-search-cancel-button]:hidden",
+        "relative block w-full px-3.5 py-2 placeholder-muted-fg outline-hidden sm:px-3 sm:py-1.5 text-sm/6 [&::-ms-reveal]:hidden [&::-webkit-search-cancel-button]:hidden group-disabled:text-fg/50 forced-colors:group-disabled:text-[GrayText]",
       )}
     />
   );

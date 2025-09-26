@@ -4,7 +4,6 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import {
   Archive02Icon,
   ArrowLeft02Icon,
-  Briefcase01Icon,
   Calendar01Icon,
   CallIcon,
   EarthIcon,
@@ -109,7 +108,7 @@ export const StudentProfileDetail = ({ id }: { id: number }) => {
             <Card.Content className="space-y-4">
               <div className="grid grid-cols-1 @2xl:grid-cols-2 gap-4 ">
                 <EditableTextField
-                  label="Full Name"
+                  label="Name"
                   isRequired
                   icon={User02Icon}
                   value={student.name ?? undefined}
@@ -119,7 +118,7 @@ export const StudentProfileDetail = ({ id }: { id: number }) => {
                 />
 
                 <EditableTextField
-                  label="Email Address"
+                  label="Email"
                   isRequired
                   icon={Mail01Icon}
                   value={student.email ?? undefined}
@@ -149,6 +148,14 @@ export const StudentProfileDetail = ({ id }: { id: number }) => {
                 />
 
                 <EditableTextField
+                  label="Native Language(s)"
+                  icon={Flag01Icon}
+                  value={student.motherLanguage ?? undefined}
+                  onSave={(value) => handleFieldSave("motherLanguage", value)}
+                  placeholder="Enter student nationality..."
+                  readOnly={isViewOnly}
+                />
+                <EditableTextField
                   label="Nationality"
                   icon={Flag01Icon}
                   value={student.nationality ?? undefined}
@@ -157,14 +164,14 @@ export const StudentProfileDetail = ({ id }: { id: number }) => {
                   readOnly={isViewOnly}
                 />
 
-                <EditableTextField
+                {/* <EditableTextField
                   label="Job"
                   value={student.job ?? undefined}
                   onSave={(value) => handleFieldSave("job", value)}
                   placeholder="Enter student job..."
                   icon={Briefcase01Icon}
                   readOnly={isViewOnly}
-                />
+                /> */}
 
                 <EditableDateField
                   label="Birth Date"
@@ -198,7 +205,7 @@ export const StudentProfileDetail = ({ id }: { id: number }) => {
               </div>
 
               <EditableTextField
-                label="Interests & Hobbies"
+                label="Interests, hobbies, other languages, etc."
                 value={student.interests ?? undefined}
                 onSave={(value) => handleFieldSave("interests", value)}
                 type="textarea"

@@ -6,7 +6,7 @@ import {
   DragDropVerticalIcon,
   MoreVerticalIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useRef, useState } from "react";
 import { DragPreview, useButton, useDrag } from "react-aria";
 import { Button as RAButton } from "react-aria-components";
@@ -18,6 +18,7 @@ import useNavigateWithParams from "@/shared/hooks/use-navigate-with-params";
 import { cn } from "@/shared/lib/classes";
 
 import type { getQuestions } from "@/data-access/questions/queries";
+import { usePathname, useRouter } from "@/i18n/navigation";
 import { useSurveyTemplateFormStore } from "../../store/survey-template-form.store";
 import { DeleteQuestionModal } from "./delete-question-modal";
 import { QuestionTypeBadge } from "./question-type-badge";

@@ -19,7 +19,7 @@ export const sessionBubbleStyles = tv({
   base: [
     "transition-colors",
     "flex items-center justify-center shrink-0",
-    "size-8 rounded-full bg-primary border",
+    "size-7 @md:size-8 rounded-full bg-primary border",
   ],
   variants: {
     status: {
@@ -75,7 +75,11 @@ export const SessionBubble = ({ session, className }: SessionBubbleProps) => {
         onChange={(isSelected) => {
           console.log({ id: sessionId, startTime: session.startTime });
           handleSessionSelection?.(
-            { id: sessionId, startTime: session.startTime },
+            {
+              id: sessionId,
+              startTime: session.startTime,
+              endTime: session.endTime,
+            },
             isSelected,
           );
         }}
@@ -85,7 +89,7 @@ export const SessionBubble = ({ session, className }: SessionBubbleProps) => {
             className={cn([
               "relative",
               "flex items-center justify-center shrink-0",
-              "size-8 rounded-full bg-primary border",
+              "size-7 sm:size-8 rounded-full bg-primary border",
               isEditing && "bg-bg dark:bg-overlay-highlight border-border",
               isSelected && "bg-primary-tint! text-primary border-primary",
               isFocusVisible && "ring-2 ring-primary/30 border-primary",
@@ -105,7 +109,11 @@ export const SessionBubble = ({ session, className }: SessionBubbleProps) => {
                   mass: 0.1,
                 }}
               >
-                <HugeiconsIcon icon={Tick02Icon} data-slot="icon" size={20} />
+                <HugeiconsIcon
+                  icon={Tick02Icon}
+                  data-slot="icon"
+                  className="size-3 @md:size-4"
+                />
               </m.div>
             ) : null}
           </div>
@@ -127,7 +135,11 @@ export const SessionBubble = ({ session, className }: SessionBubbleProps) => {
         }),
       )}
     >
-      <HugeiconsIcon icon={Icon} size={16} strokeWidth={1.5} />
+      <HugeiconsIcon
+        icon={Icon}
+        strokeWidth={1.5}
+        className="size-3 @md:size-4"
+      />
     </m.div>
   );
 };

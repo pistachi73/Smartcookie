@@ -9,13 +9,14 @@ import {
   BubbleChatQuestionIcon,
   NewsIcon,
 } from "@hugeicons-pro/core-stroke-rounded";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 import { Tabs } from "@/shared/components/ui/tabs";
 import { useNavigateWithParams } from "@/shared/hooks/use-navigate-with-params";
 import { cn } from "@/shared/lib/classes";
 
+import { usePathname, useRouter } from "@/i18n/navigation";
 import { QuestionsPanel } from "./questions/questions-panel";
 import { SurveyTemplatesPanel } from "./survey-templates/survey-template-panel";
 
