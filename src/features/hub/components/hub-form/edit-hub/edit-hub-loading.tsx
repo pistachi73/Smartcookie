@@ -18,12 +18,11 @@ export const EditHubLoading = () => {
           <div className="size-12 rounded-xl bg-primary-tint flex items-center justify-center">
             <HugeiconsIcon
               icon={FolderDetailsIcon}
-              size={18}
-              className="text-primary"
+              className="text-primary size-4 sm:size-5"
             />
           </div>
           <div className="flex flex-col gap-0.5">
-            <Card.Title className="text-xl font-semibold">
+            <Card.Title className="sm:text-xl font-semibold">
               Course Information
             </Card.Title>
             <Card.Description>

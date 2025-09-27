@@ -12,8 +12,8 @@ import { getHubByIdQueryOptions } from "../lib/hub-query-options";
 import { HubFeedbackLoading } from "./feedback/hub-feedback-loading";
 import { HubDashboardLayout } from "./hub-dashboard-layout";
 import { HubNotFound } from "./hub-not-found";
+import { HubNotesCardLoading } from "./notes/hub-notes-card-loading";
 import { HubNotesPanelLoading } from "./notes/hub-notes-panel-loading";
-import { HubNotesCardLoading } from "./notes/hub-notest-card-loading";
 import { HubSessionsLoading } from "./session/hub-sessions-loading";
 import { HubStudentsLoading } from "./students/hub-students-loading";
 

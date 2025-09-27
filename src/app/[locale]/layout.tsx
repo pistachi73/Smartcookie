@@ -25,21 +25,24 @@ export const generateMetadata = async (): Promise<Metadata> => {
   const locale = await getLocale();
 
   const t = await getTranslations({
-    namespace: "Manifest",
+    namespace: "Metadata.Landing",
     locale,
   });
 
   return {
-    title: "SmartCookie – A Second Brain for Teachers",
-    description:
-      "SmartCookie is the all-in-one app that acts as a second brain for language teachers, helping them organize their calendars, track lesson progress, and boost student motivation through actionable feedback.",
-    keywords: [
-      "language teacher app",
-      "teaching organization",
-      "lesson tracking",
-      "student motivation",
-      "second brain for teachers",
-    ],
+    title: t("title"),
+    description: t("description"),
+    openGraph: {
+      title: t("title"),
+      description: t("description"),
+      images: ["/og-image.png"],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t("title"),
+      description: t("description"),
+      images: ["/og-image.png"],
+    },
     authors: [{ name: "Martina Monreal" }, { name: "Óscar Pulido" }],
     creator: "SmartCookie",
     publisher: "SmartCookie",
@@ -63,6 +66,13 @@ export const generateMetadata = async (): Promise<Metadata> => {
       ],
       apple: "/apple-touch-icon.png",
     },
+    keywords: [
+      "language teacher app",
+      "teaching organization",
+      "lesson tracking",
+      "student motivation",
+      "second brain for teachers",
+    ],
   };
 };
 

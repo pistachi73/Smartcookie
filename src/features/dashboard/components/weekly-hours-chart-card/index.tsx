@@ -48,7 +48,7 @@ export function WeeklyHoursCard() {
   return (
     <Card className="@container">
       <Card.Header className="flex flex-row items-center justify-between">
-        <Card.Title>Weekly teaching hours</Card.Title>
+        <Card.Title>Weekly working hours</Card.Title>
         <Card.Action>
           <LazyDatePicker
             onChange={(value) => value && setDate(value as CalendarDate)}

@@ -50,7 +50,7 @@ export const Subscription = () => {
     price,
     invoices,
     upcomingInvoice,
-  } = data;
+  } = data ?? {};
 
   const isBasicProduct =
     product?.id === env.NEXT_PUBLIC_STRIPE_BASIC_PRODUCT_ID;
@@ -81,7 +81,7 @@ export const Subscription = () => {
           <div className="@container space-y-6">
             {isActive ? (
               <>
-                {isBasicProduct && (
+                {isBasicProduct && subscription && (
                   <BasicSubscriptionCard
                     subscription={subscription}
                     product={product}
@@ -89,7 +89,7 @@ export const Subscription = () => {
                     hasUpcomingInvoice={!!upcomingInvoice}
                   />
                 )}
-                {isPremiumProduct && (
+                {isPremiumProduct && subscription && (
                   <PremiumSubscriptionCard
                     subscription={subscription}
                     product={product}
@@ -102,7 +102,7 @@ export const Subscription = () => {
                   <PaymentDetails paymentMethod={paymentMethod ?? null} />
                   <UpcomingInvoice
                     upcomingInvoice={upcomingInvoice ?? null}
-                    subscription={subscription}
+                    subscription={subscription ?? null}
                   />
                 </div>
 

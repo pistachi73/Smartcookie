@@ -60,6 +60,7 @@ const PasswordFieldWithValidation = ({
   return (
     <div className="relative group flex flex-col gap-y-1.5">
       <TextField
+        label={label}
         isRevealable
         type="password"
         onChange={onInputChange}

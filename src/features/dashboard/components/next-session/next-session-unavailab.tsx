@@ -25,7 +25,7 @@ export const NextSessionUnavailable = () => {
             Upcoming Session
           </span>
           <Separator orientation="vertical" className="h-4 hidden @2xl:block" />
-          <span className="text-sm @2xl:text-lg text-muted-fg">
+          <span className="text-sm @2xl:text-lg/6 text-muted-fg">
             No sessions scheduled
           </span>
         </Card.Title>

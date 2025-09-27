@@ -3,7 +3,7 @@ import { cn } from "@/shared/lib/classes";
 
 import { TABS } from "../lib/constants";
 import { HubDashboardLayout } from "./hub-dashboard-layout";
-import { HubNotesCardLoading } from "./notes/hub-notest-card-loading";
+import { HubNotesCardLoading } from "./notes/hub-notes-card-loading";
 import { HubSessionsLoading } from "./session/hub-sessions-loading";
 
 export const HubLoading = () => {

@@ -66,7 +66,7 @@
       "Free": {
         "title": "Free",
         "description": "Perfect for getting started and trying basic management with ease.",
-        "actionButtonLabel": "Comming soon",
+        "actionButtonLabel": "Get started",
         "featuresHeading": "What's included",
         "features": {
           "coursesLimit": "Up to 2 courses",
@@ -79,7 +79,7 @@
       "Basic": {
         "title": "Basic",
         "description": "Ideal for teachers who want to optimize their workflow and save time.",
-        "actionButtonLabel": "Comming soon",
+        "actionButtonLabel": "Start free trial",
         "featuresHeading": "Everything in Free, plus:",
         "features": {
           "coursesLimit": "Up to 20 courses",
@@ -96,7 +96,7 @@
       "Premium": {
         "title": "Premium",
         "description": "For teachers who want to focus on teaching while everything else runs itself.",
-        "actionButtonLabel": "Comming soon",
+        "actionButtonLabel": "Start free trial",
         "featuresHeading": "Everything in Basic, plus:",
         "features": {
           "coursesLimit": "Unlimited courses",
@@ -176,6 +176,14 @@
     "Courses": {
       "title": "Courses {name} - SmartCookie",
       "description": "Organize courses by sessions, students, and progress. Create, edit, or manage entire lesson series with SmartCookie’s Courses view."
+    },
+    "NewCourse": {
+      "title": "New Course {name} - SmartCookie",
+      "description": "Create a new course with SmartCookie."
+    },
+    "EditCourse": {
+      "title": "Edit Course {name} - SmartCookie",
+      "description": "Edit a course with SmartCookie."
     },
     "Students": {
       "title": "Students {name} - SmartCookie",

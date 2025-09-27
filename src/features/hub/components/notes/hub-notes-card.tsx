@@ -27,7 +27,7 @@ export const HubNotesCard = ({
         <Card.Action>
           <NewQuickNoteButton
             intent="outline"
-            size="sq-sm"
+            size="sq-xs"
             onPress={() => setIsAddingNote(true)}
             isDisabled={isAddingNote || isViewOnlyMode}
           >

@@ -1,13 +1,17 @@
 import { HugeiconsIcon } from "@hugeicons/react";
 import { AddIcon } from "@hugeicons-pro/core-stroke-rounded";
+import type { PressEvent } from "react-aria";
 
-import { buttonStyles } from "@/shared/components/ui/button";
-import { Link } from "@/shared/components/ui/link";
+import {
+  Button,
+  type ButtonProps,
+  buttonStyles,
+} from "@/shared/components/ui/button";
 import { Tooltip } from "@/shared/components/ui/tooltip";
 import { useStudentLimits } from "@/shared/hooks/plan-limits/use-student-limits";
 import { cn } from "@/shared/lib/classes";
 
-export const NewStudentButton = () => {
+export const NewStudentButton = (props: ButtonProps) => {
   const {
     canCreate,
     isLoading,
@@ -24,6 +28,13 @@ export const NewStudentButton = () => {
     return null;
   }
 
+  const onPress = (e: PressEvent) => {
+    if (isDisabled) {
+      return;
+    }
+    props.onPress?.(e);
+  };
+
   const getAriaLabel = () => {
     if (isLoading) return "Loading student limits";
     if (isAtLimit)
@@ -36,31 +47,31 @@ export const NewStudentButton = () => {
     : null;
   const shouldShowTooltip = tooltipContent !== null;
 
-  const link = (
-    <Link
+  const button = (
+    <Button
       className={cn(
         buttonStyles({
           intent: canCreate && !isLoading ? "primary" : "secondary",
         }),
         isDisabled && "cursor-not-allowed opacity-50",
       )}
-      href={canCreate && !isLoading ? "/portal/students/new" : "#"}
+      onPress={onPress}
       aria-disabled={isDisabled}
       aria-label={getAriaLabel()}
     >
       <HugeiconsIcon icon={AddIcon} size={16} />
       <span className="hidden @2xl:block">New Student</span>
-    </Link>
+    </Button>
   );
 
   return shouldShowTooltip ? (
     <Tooltip delay={0} closeDelay={0}>
-      {link}
+      {button}
       <Tooltip.Content intent={isAtLimit ? "inverse" : "default"}>
         {tooltipContent}
       </Tooltip.Content>
     </Tooltip>
   ) : (
-    link
+    button
   );
 };

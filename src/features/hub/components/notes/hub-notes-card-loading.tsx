@@ -9,11 +9,10 @@ import { NoteCardListLoading } from "@/features/quick-notes/components/note-card
 export const HubNotesCardLoading = () => {
   return (
     <Card className="w-full">
-      <Card.Header>
+      <Card.Header className="flex flex-row items-center justify-between">
         <Card.Title>Quick Notes</Card.Title>
-        <Card.Description>View the course notes</Card.Description>
         <Card.Action>
-          <Button intent="outline" size="sq-sm">
+          <Button intent="outline" size="sq-xs">
             <HugeiconsIcon icon={AddIcon} size={16} />
           </Button>
         </Card.Action>

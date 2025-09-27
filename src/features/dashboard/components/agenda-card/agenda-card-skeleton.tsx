@@ -14,20 +14,17 @@ import { AgendaWeekPicker } from "./agenda-week-picker";
 export const AgendaCardSkeleton = () => {
   return (
     <Card className="min-h-full overflow-auto @4xl:h-0 w-full">
-      <Card.Header>
-        <Card.Title>Schedule</Card.Title>
-        <Card.Description>Showing events for the next 7 days</Card.Description>
-        <Card.Action>
-          <Link
-            href="/portal/calendar"
-            className={buttonStyles({
-              intent: "outline",
-              size: "sq-sm",
-            })}
-          >
-            <HugeiconsIcon icon={LinkSquare02Icon} data-slot="icon" size={14} />
-          </Link>
-        </Card.Action>
+      <Card.Header className="flex flex-row items-center justify-between">
+        <Card.Title>Agenda</Card.Title>
+        <Link
+          href="/portal/calendar"
+          className={buttonStyles({
+            intent: "outline",
+            size: "sq-xs",
+          })}
+        >
+          <HugeiconsIcon icon={LinkSquare02Icon} size={14} />
+        </Link>
       </Card.Header>
 
       <Card.Content className="space-y-4">

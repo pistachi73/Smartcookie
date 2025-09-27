@@ -21,6 +21,8 @@ const DashboardPage = async () => {
 
   const dehydratedState = dehydrate(queryClient);
 
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+
   return (
     <HydrationBoundary state={dehydratedState}>
       <Dashboard />

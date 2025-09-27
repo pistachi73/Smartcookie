@@ -11,8 +11,8 @@ export function SkeletonHubList() {
     <div className="@container h-full overflow-y-auto sm:p-6 p-4 space-y-6 bg-bg">
       <PageHeader
         icon={FolderLibraryIcon}
-        title="Hubs"
-        subTitle="Manage your hubs and content"
+        title="Courses"
+        subTitle="Manage your courses and content"
         className={{
           container: "p-0! border-none",
         }}

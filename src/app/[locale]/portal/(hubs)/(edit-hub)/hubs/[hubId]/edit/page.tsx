@@ -1,9 +1,15 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import type { Metadata } from "next";
 
+import { generatePortalMetadata } from "@/shared/lib/generate-metadata";
 import { getQueryClient } from "@/shared/lib/get-query-client";
 
 import { EditHub } from "@/features/hub/components/hub-form/edit-hub";
 import { getHubByIdQueryOptions } from "@/features/hub/lib/hub-query-options";
+
+export const generateMetadata = async (): Promise<Metadata> => {
+  return generatePortalMetadata({ namespace: "Metadata.EditCourse" });
+};
 
 export default async function HubEditPage(
   pageProps: PageProps<"/[locale]/portal/hubs/[hubId]/edit">,

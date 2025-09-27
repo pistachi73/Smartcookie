@@ -6,8 +6,10 @@ import { NewStudentButton } from "./new-student-button";
 
 export const StudentsPageLayout = ({
   children,
+  onNewStudentPress,
 }: {
   children?: React.ReactNode;
+  onNewStudentPress?: () => void;
 }) => (
   <div className="space-y-6 p-4 sm:p-6 overflow-y-auto">
     <PageHeader
@@ -17,7 +19,7 @@ export const StudentsPageLayout = ({
       className={{
         container: "border-none p-0!",
       }}
-      actions={<NewStudentButton />}
+      actions={<NewStudentButton onPress={onNewStudentPress} />}
     />
     {children}
   </div>

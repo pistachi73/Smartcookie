@@ -5,8 +5,6 @@ import { Card } from "@/shared/components/ui/card";
 import { Separator } from "@/shared/components/ui/separator";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 
-import { GoToCourseLink } from "./go-to-course-button";
-
 export const SkeletonNextSession = () => {
   return (
     <Card className="shrink-0 flex flex-col h-full bg-overlay @container">
@@ -22,10 +20,6 @@ export const SkeletonNextSession = () => {
           />
           <Skeleton className="h-5 w-24" />
         </Card.Title>
-
-        <Card.Action>
-          <GoToCourseLink hubId={undefined} />
-        </Card.Action>
       </Card.Header>
 
       <Card.Content className="grid grid-cols-1 @2xl:grid-cols-[1fr_2fr] gap-8">

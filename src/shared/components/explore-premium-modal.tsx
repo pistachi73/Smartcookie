@@ -31,7 +31,7 @@ export const ExplorePremiumModal = ({
             solution
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body className="flex flex-col gap-4 items-center pb-4 md:pb-0 overflow-visible">
+        <Modal.Body className="flex flex-col gap-4 items-center pb-4 md:pb-0">
           <PlanFrequencySwitch
             paymentFrequency={paymentFrequency}
             setPaymentFrequency={setPaymentFrequency}

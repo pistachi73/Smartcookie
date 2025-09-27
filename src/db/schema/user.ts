@@ -15,7 +15,7 @@ export const user = pgTable(
     emailVerified: timestamp({ mode: "date" }).defaultNow(),
     password: text(),
     salt: text(),
-    role: text({ enum: ["ADMIN", "USER"] }).default("USER"),
+    role: text({ enum: ["ADMIN", "USER", "TEST"] }).default("USER"),
     createdAt: timestamp({ mode: "date" }).defaultNow(),
     isTwoFactorEnabled: boolean().default(false),
     stripeCustomerId: text().unique(),

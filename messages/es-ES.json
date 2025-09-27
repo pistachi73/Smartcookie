@@ -66,7 +66,7 @@
       "Free": {
         "title": "Gratis",
         "description": "Perfecto para empezar con la gestión básica.",
-        "actionButtonLabel": "Próximamente",
+        "actionButtonLabel": "Empieza ya",
         "featuresHeading": "Incluye",
         "features": {
           "coursesLimit": "Hasta 2 cursos",
@@ -80,7 +80,7 @@
       "Basic": {
         "title": "Básico",
         "description": "Ideal para profes que necesitan una mano derecha para optimizar su gestión.",
-        "actionButtonLabel": "Próximamente",
+        "actionButtonLabel": "Pruébalo gratis",
         "featuresHeading": "Todo lo del plan Gratis, más:",
         "features": {
           "coursesLimit": "Hasta 20 cursos",
@@ -97,7 +97,7 @@
       "Premium": {
         "title": "Premium",
         "description": "Diseñado para profes quieren enfocarse en la enseñanza mientras todo lo demás se gestiona por sí solo.",
-        "actionButtonLabel": "Próximamente",
+        "actionButtonLabel": "Pruébalo gratis",
         "featuresHeading": "Todo lo del plan Básico, más:",
         "features": {
           "coursesLimit": "Cursos ilimitados",
@@ -176,6 +176,14 @@
     "Courses": {
       "title": "Cursos {name} - SmartCookie",
       "description": "Organiza cursos por sesiones, estudiantes y progreso. Crea, edita o gestiona series completas de clases fácilmente."
+    },
+    "NewCourse": {
+      "title": "Nuevo Curso {name} - SmartCookie",
+      "description": "Crea un nuevo curso con SmartCookie."
+    },
+    "EditCourse": {
+      "title": "Editar Curso {name} - SmartCookie",
+      "description": "Edita un curso con SmartCookie."
     },
     "Students": {
       "title": "Estudiantes {name} - SmartCookie",

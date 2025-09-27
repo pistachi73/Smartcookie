@@ -5,8 +5,12 @@ import { Button, type ButtonProps } from "@/shared/components/ui/button";
 
 export const HubActionsMenuTrigger = (props: ButtonProps) => {
   return (
-    <Button intent="secondary" size="sq-sm" className={"shrink-0"} {...props}>
-      <HugeiconsIcon icon={Settings01Icon} data-slot="icon" />
+    <Button intent="secondary" size="sq-xs" className={"shrink-0"} {...props}>
+      <HugeiconsIcon
+        icon={Settings01Icon}
+        data-slot="icon"
+        className="size-4! sm:size-4!"
+      />
     </Button>
   );
 };

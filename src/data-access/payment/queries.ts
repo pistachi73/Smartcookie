@@ -46,18 +46,23 @@ export const getSubscription = withProtectedDataAccess({
     }
 
     if (!subscriptionId) {
+      return null;
+    }
+
+    let subscription: Stripe.Response<Stripe.Subscription>;
+    try {
+      subscription = await stripe.subscriptions.retrieve(subscriptionId);
+    } catch {
       return createDataAccessError({
-        type: "SUBSCRIPTION_NOT_FOUND",
-        message: "User has no subscription",
+        type: "STRIPE_SUBSCRIPTION_NOT_FOUND",
+        message: "Stripe subscription not found",
       });
     }
 
-    const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-
     if (!subscription) {
       return createDataAccessError({
-        type: "SUBSCRIPTION_NOT_FOUND",
-        message: "Subscription not found",
+        type: "STRIPE_SUBSCRIPTION_NOT_FOUND",
+        message: "Stripe subscription not found",
       });
     }
 

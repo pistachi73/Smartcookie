@@ -98,7 +98,7 @@ export const config = {
   matcher: [
     {
       source:
-        "/((?!api|_next/static|_next/image|favicon.ico|images|logos|public|manifest).*)",
+        "/((?!api|_next/static|_next/image|favicon.ico|images|logos|public|manifest|sitemap).*)",
     },
   ],
 };

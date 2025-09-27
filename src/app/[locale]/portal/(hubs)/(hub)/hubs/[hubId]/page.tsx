@@ -1,6 +1,8 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import type { Metadata } from "next";
 
 import { getSessionsCountByHubIdQueryOptions } from "@/shared/hooks/plan-limits/query-options/sessions-count-query-options";
+import { generatePortalMetadata } from "@/shared/lib/generate-metadata";
 import { getQueryClient } from "@/shared/lib/get-query-client";
 
 import { HubDashboard } from "@/features/hub/components/hub-dashboard";
@@ -8,6 +10,10 @@ import { HubNotFound } from "@/features/hub/components/hub-not-found";
 import { getHubByIdQueryOptions } from "@/features/hub/lib/hub-query-options";
 import { getPaginatedSessionsByHubIdQueryOptions } from "@/features/hub/lib/hub-sessions-query-options";
 import { quickNotesByHubIdQueryOptions } from "@/features/quick-notes/lib/quick-notes-query-options";
+
+export const generateMetadata = async (): Promise<Metadata> => {
+  return generatePortalMetadata({ namespace: "Metadata.Courses" });
+};
 
 const HubPage = async (props: PageProps<"/[locale]/portal/hubs/[hubId]">) => {
   const queryClient = getQueryClient();

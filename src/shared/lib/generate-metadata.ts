@@ -10,6 +10,8 @@ type MetadataNamespace =
   | "Metadata.QuickNotes"
   | "Metadata.Feedback"
   | "Metadata.Courses"
+  | "Metadata.NewCourse"
+  | "Metadata.EditCourse"
   | "Metadata.Students"
   | "Metadata.Subscription"
   | "Metadata.Account"

@@ -9,10 +9,6 @@ export function SkeletonWeeklyHoursChartCard() {
     <Card className="@container">
       <Card.Header>
         <Card.Title>Weekly teaching hours</Card.Title>
-        <Card.Description className="hidden @2xl:block">
-          View your weekly teaching hours and how they are distributed across
-          different hubs.
-        </Card.Description>
         <Card.Action>
           <Skeleton className="h-9 w-40" soft />
         </Card.Action>

@@ -41,6 +41,7 @@ export const AddStudentModal = ({
     useAddStudentsToHub();
 
   const handleOpenChange = (open: boolean) => {
+    243;
     onOpenChange(open);
     setTimeout(() => {
       form.reset();

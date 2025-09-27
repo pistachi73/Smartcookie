@@ -51,7 +51,7 @@ export const EditHub = ({ hubId }: { hubId: number }) => {
             endDate.getDate(),
           )
         : undefined,
-      description: data?.description as string,
+      description: data?.description ?? "",
       level: data?.level ?? "",
       schedule: data?.schedule ?? "",
     },
@@ -78,7 +78,7 @@ export const EditHub = ({ hubId }: { hubId: number }) => {
             endDate.getDate(),
           )
         : undefined,
-      description: data?.description as string,
+      description: data?.description ?? "",
       level: data?.level ?? "",
       schedule: data?.schedule ?? "",
     });

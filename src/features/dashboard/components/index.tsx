@@ -20,7 +20,7 @@ export const Dashboard = () => {
 
       <div className="grid grid-cols-1 @4xl:grid-cols-3 gap-4 sm:gap-6">
         <div className="space-y-4 sm:space-y-6 col-span-1 @4xl:col-span-2">
-          <div>
+          <div className="flex flex-col gap-4">
             <NextSession />
           </div>
 
